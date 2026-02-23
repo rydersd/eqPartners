@@ -94,12 +94,12 @@ html.wireframe body::after {
 /* ── Portal Header ──────────────────────────────────────────── */
 html.wireframe .wf-header {
   background: var(--wf-ink);
-  height: 48px;
+  height: 56px;
   display: flex;
   align-items: center;
-  padding: 0 20px;
+  padding: 0 24px;
   gap: 12px;
-  border-bottom: 2px solid var(--wf-line);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.12);
 }
 html.wireframe .wf-header .wf-logo {
   width: 28px; height: 28px;
@@ -113,9 +113,9 @@ html.wireframe .wf-header .wf-portal-name {
   font-weight: 600;
   font-size: 13px;
 }
-html.wireframe .wf-header nav { display: flex; gap: 0; flex: 1; padding-left: 8px; height: 48px; align-items: center; }
+html.wireframe .wf-header nav { display: flex; gap: 0; flex: 1; padding-left: 8px; height: 56px; align-items: center; }
 html.wireframe .wf-header nav a {
-  padding: 0 14px; height: 48px; display: flex; align-items: center;
+  padding: 0 14px; height: 56px; display: flex; align-items: center;
   font-size: 12px; color: var(--wf-muted); text-decoration: none;
   border-bottom: 2px solid transparent;
   transition: color 0.15s, border-color 0.15s;
@@ -146,10 +146,10 @@ html.wireframe .wf-header-title {
   color: var(--wf-tint); font-weight: 600; font-size: 13px;
 }
 html.wireframe .wf-header-nav {
-  display: flex; gap: 0; flex: 1; padding-left: 8px; height: 48px; align-items: center;
+  display: flex; gap: 0; flex: 1; padding-left: 8px; height: 56px; align-items: center;
 }
 html.wireframe .wf-header-nav a {
-  padding: 0 14px; height: 48px; display: flex; align-items: center;
+  padding: 0 14px; height: 56px; display: flex; align-items: center;
   font-size: 12px; color: var(--wf-muted); text-decoration: none;
   border-bottom: 2px solid transparent;
   transition: color 0.15s, border-color 0.15s;
@@ -174,10 +174,10 @@ html.wireframe .wf-header-left h1 {
   color: var(--wf-tint); font-weight: 600; font-size: 13px; margin: 0;
 }
 html.wireframe .wf-nav {
-  display: flex; gap: 0; flex: 1; padding-left: 8px; height: 48px; align-items: center;
+  display: flex; gap: 0; flex: 1; padding-left: 8px; height: 56px; align-items: center;
 }
 html.wireframe .wf-nav a {
-  padding: 0 14px; height: 48px; display: flex; align-items: center;
+  padding: 0 14px; height: 56px; display: flex; align-items: center;
   font-size: 12px; color: var(--wf-muted); text-decoration: none;
   border-bottom: 2px solid transparent;
   transition: color 0.15s, border-color 0.15s;

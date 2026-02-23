@@ -35,7 +35,7 @@
         header.wf-header .wf-header-title {
             font-size: 14px;
             font-weight: 600;
-            color: var(--wf-text, #3b4f68);
+            color: var(--wf-tint);
         }
 
         header.wf-header .wf-header-nav {
@@ -46,13 +46,13 @@
         }
 
         header.wf-header .wf-header-nav a {
-            color: var(--wf-text, #3b4f68);
+            color: var(--wf-muted);
             text-decoration: none;
             font-size: 13px;
             font-weight: 500;
             padding: 8px 0;
             border-bottom: 2px solid transparent;
-            transition: border-color 0.2s;
+            transition: color 0.15s, border-color 0.2s;
         }
 
         header.wf-header .wf-header-nav a:hover {
@@ -73,7 +73,7 @@
         .wf-icon-sm {
             width: 18px;
             height: 18px;
-            color: var(--wf-text, #3b4f68);
+            color: var(--wf-muted);
         }
 
         .page-context-bar {
