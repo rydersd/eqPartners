@@ -373,8 +373,23 @@
   <section class="step-section active" id="step-0" aria-label="Step 0: Choose partner type">
     <div class="card">
       <p class="card-title">How will you work with Equinix? <span class="req">*</span></p>
-      <p class="card-desc">Your answer determines your portal features, deal flows, and which steps come next. Not sure? The table below explains the difference.</p>
+      <p class="card-desc">Choose the partner type that matches how you work with customers. The main difference is whether you refer opportunities for Equinix to sell directly, or resell Equinix services as part of what you offer.</p>
+      <p class="card-desc" style="margin-top:-12px;">Not sure which one fits? Use the quick descriptions below — pick the option that matches your go-to-market today. If your motion is mixed, choose the one you'll use most often and we'll validate the best fit during review.</p>
 
+      <div class="type-cards" role="radiogroup" aria-label="Partner type selection">
+        <div class="type-card selected" role="radio" aria-checked="true" tabindex="0" id="type-referral" onclick="selectType('referral')" onkeydown="if(event.key==='Enter'||event.key===' ')selectType('referral')">
+          <div class="type-radio"><div class="type-radio-dot"></div><span class="type-radio-label">Lead Referral Partner</span></div>
+          <h4>You refer. Equinix sells.</h4>
+          <p>You introduce qualified opportunities. Equinix owns the contract, billing, and delivery. Best when you influence deals but don't transact.</p>
+        </div>
+        <div class="type-card" role="radio" aria-checked="false" tabindex="0" id="type-reseller" onclick="selectType('reseller')" onkeydown="if(event.key==='Enter'||event.key===' ')selectType('reseller')">
+          <div class="type-radio"><div class="type-radio-dot"></div><span class="type-radio-label">Reseller</span></div>
+          <h4>You sell Equinix services.</h4>
+          <p>You own the commercial relationship, handle quoting, and may bundle Equinix into your offerings. Best when you transact directly with customers.</p>
+        </div>
+      </div>
+
+      <p style="font-size:12px; font-weight:600; color:var(--wf-muted,#6b7f99); text-transform:uppercase; letter-spacing:.05em; margin:20px 0 8px;">Compare the two tracks</p>
       <div class="type-matrix" role="presentation">
         <table>
           <thead>
@@ -417,19 +432,6 @@
             </tr>
           </tbody>
         </table>
-      </div>
-
-      <div class="type-cards" role="radiogroup" aria-label="Partner type selection">
-        <div class="type-card selected" role="radio" aria-checked="true" tabindex="0" id="type-referral" onclick="selectType('referral')" onkeydown="if(event.key==='Enter'||event.key===' ')selectType('referral')">
-          <div class="type-radio"><div class="type-radio-dot"></div><span class="type-radio-label">Lead Referral Partner</span></div>
-          <h4>You refer. Equinix sells.</h4>
-          <p>You introduce qualified opportunities. Equinix owns the contract, billing, and delivery. Best when you influence deals but don't transact.</p>
-        </div>
-        <div class="type-card" role="radio" aria-checked="false" tabindex="0" id="type-reseller" onclick="selectType('reseller')" onkeydown="if(event.key==='Enter'||event.key===' ')selectType('reseller')">
-          <div class="type-radio"><div class="type-radio-dot"></div><span class="type-radio-label">Reseller</span></div>
-          <h4>You sell Equinix services.</h4>
-          <p>You own the commercial relationship, handle quoting, and may bundle Equinix into your offerings. Best when you transact directly with customers.</p>
-        </div>
       </div>
     </div>
     <div class="step-nav">
