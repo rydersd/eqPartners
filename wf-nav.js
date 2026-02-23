@@ -336,7 +336,7 @@
     var html = '';
 
     // Top shortcut: full sitemap
-    html += '<a href="sitemap-pcp-v2.html" class="wf-nav-sitemap-link" aria-label="View full sitemap">';
+    html += '<a href="index.html" class="wf-nav-sitemap-link" aria-label="View full sitemap">';
     html += '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" style="width:13px;height:13px;flex-shrink:0" aria-hidden="true">';
     html += '<rect x="1" y="1" width="5" height="4" rx="1"/><rect x="10" y="1" width="5" height="4" rx="1"/>';
     html += '<rect x="1" y="11" width="5" height="4" rx="1"/><rect x="10" y="11" width="5" height="4" rx="1"/>';
