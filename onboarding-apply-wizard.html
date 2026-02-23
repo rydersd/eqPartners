@@ -160,6 +160,21 @@
     #mix-total.invalid { color: var(--wf-red, #8b4553); }
     #mix-total.valid   { color: var(--wf-accent, #3d6daa); }
 
+    /* ── Comparison matrix ────────────────────────────────── */
+    .type-matrix { margin: 4px 0 20px; border-radius: 6px; overflow: hidden; border: 1px solid var(--wf-line, #b0bdd0); }
+    .type-matrix table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .type-matrix thead th { padding: 10px 14px; text-align: center; font-weight: 700; background: var(--wf-tint, #dce4ef); border-bottom: 2px solid var(--wf-line, #b0bdd0); }
+    .type-matrix thead th.matrix-row-label { text-align: left; background: transparent; font-weight: 400; font-size: 11px; color: var(--wf-muted, #6b7f99); text-transform: uppercase; letter-spacing: .04em; width: 36%; }
+    .type-matrix thead th.matrix-col { cursor: pointer; transition: background .15s, color .15s; }
+    .type-matrix thead th.matrix-col:hover { background: var(--wf-accent, #3d6daa); color: white; }
+    .type-matrix thead th.matrix-col.selected { background: var(--wf-accent, #3d6daa); color: white; }
+    .type-matrix tbody td { padding: 8px 14px; border-bottom: 1px solid var(--wf-line, #b0bdd0); vertical-align: top; }
+    .type-matrix tbody tr:last-child td { border-bottom: none; }
+    .type-matrix tbody td.matrix-row-label { font-weight: 600; font-size: 12px; color: var(--wf-muted, #6b7f99); }
+    .type-matrix tbody td.matrix-col { text-align: center; color: var(--wf-ink, #1e2a3a); font-size: 12px; transition: background .15s; }
+    .type-matrix tbody td.matrix-col.selected { background: rgba(61,109,170,.06); }
+    .type-matrix tbody tr:last-child td.matrix-col.selected { background: rgba(61,109,170,.06); }
+
     /* ── Conditional step 3 ───────────────────────────────── */
     .reseller-only, .referral-only { display: none; }
     .reseller-only.visible, .referral-only.visible { display: block; }
@@ -354,9 +369,80 @@
     <p>About 10 minutes. You'll receive a confirmation email once your application is reviewed.</p>
   </div>
 
-  <!-- Stepper (3 steps) -->
-  <nav class="stepper" aria-label="Application steps">
-    <div class="stepper-step active" id="sn-1">
+  <!-- ══ STEP 0: Partner type selection (pre-stepper) ═══════ -->
+  <section class="step-section active" id="step-0" aria-label="Step 0: Choose partner type">
+    <div class="card">
+      <p class="card-title">How will you work with Equinix? <span class="req">*</span></p>
+      <p class="card-desc">Your answer determines your portal features, deal flows, and which steps come next. Not sure? The table below explains the difference.</p>
+
+      <div class="type-matrix" role="presentation">
+        <table>
+          <thead>
+            <tr>
+              <th class="matrix-row-label"></th>
+              <th class="matrix-col" id="matrix-col-referral" onclick="selectType('referral')" title="Select Lead Referral Partner">Lead Referral</th>
+              <th class="matrix-col" id="matrix-col-reseller" onclick="selectType('reseller')" title="Select Reseller">Reseller</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="matrix-row-label">Contract with customer</td>
+              <td class="matrix-col" id="matrix-data-referral-1">Equinix owns</td>
+              <td class="matrix-col" id="matrix-data-reseller-1">You own</td>
+            </tr>
+            <tr>
+              <td class="matrix-row-label">Billing to customer</td>
+              <td class="matrix-col" id="matrix-data-referral-2">Equinix handles</td>
+              <td class="matrix-col" id="matrix-data-reseller-2">You handle</td>
+            </tr>
+            <tr>
+              <td class="matrix-row-label">Revenue model</td>
+              <td class="matrix-col" id="matrix-data-referral-3">Referral fee</td>
+              <td class="matrix-col" id="matrix-data-reseller-3">Resale margin</td>
+            </tr>
+            <tr>
+              <td class="matrix-row-label">Your involvement</td>
+              <td class="matrix-col" id="matrix-data-referral-4">You introduce the deal</td>
+              <td class="matrix-col" id="matrix-data-reseller-4">You transact directly</td>
+            </tr>
+            <tr>
+              <td class="matrix-row-label">Complexity</td>
+              <td class="matrix-col" id="matrix-data-referral-5">Simpler setup</td>
+              <td class="matrix-col" id="matrix-data-reseller-5">More involved</td>
+            </tr>
+            <tr>
+              <td class="matrix-row-label">Best for</td>
+              <td class="matrix-col" id="matrix-data-referral-6">You influence deals but don't transact directly</td>
+              <td class="matrix-col" id="matrix-data-reseller-6">You bundle Equinix services into your customer offerings</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="type-cards" role="radiogroup" aria-label="Partner type selection">
+        <div class="type-card selected" role="radio" aria-checked="true" tabindex="0" id="type-referral" onclick="selectType('referral')" onkeydown="if(event.key==='Enter'||event.key===' ')selectType('referral')">
+          <div class="type-radio"><div class="type-radio-dot"></div><span class="type-radio-label">Lead Referral Partner</span></div>
+          <h4>You refer. Equinix sells.</h4>
+          <p>You introduce qualified opportunities. Equinix owns the contract, billing, and delivery. Best when you influence deals but don't transact.</p>
+        </div>
+        <div class="type-card" role="radio" aria-checked="false" tabindex="0" id="type-reseller" onclick="selectType('reseller')" onkeydown="if(event.key==='Enter'||event.key===' ')selectType('reseller')">
+          <div class="type-radio"><div class="type-radio-dot"></div><span class="type-radio-label">Reseller</span></div>
+          <h4>You sell Equinix services.</h4>
+          <p>You own the commercial relationship, handle quoting, and may bundle Equinix into your offerings. Best when you transact directly with customers.</p>
+        </div>
+      </div>
+    </div>
+    <div class="step-nav">
+      <span></span>
+      <div class="step-nav-right">
+        <button class="btn btn-primary" onclick="goToStep(1)" type="button">Continue →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stepper (hidden until type is chosen) -->
+  <nav class="stepper" id="main-stepper" aria-label="Application steps" style="display:none">
+    <div class="stepper-step" id="sn-1">
       <div class="step-circle">1</div>
       <div class="step-label">Company &amp; You</div>
     </div>
@@ -375,25 +461,7 @@
   </nav>
 
   <!-- ══ STEP 1: Company & Contact ══════════════════════════ -->
-  <section class="step-section active" id="step-1" aria-label="Step 1: Company and your information">
-
-    <!-- Partner type -->
-    <div class="card">
-      <p class="card-title">How will you work with Equinix? <span class="req">*</span></p>
-      <p class="card-desc">This determines your portal features and which deal flows you're set up for. See the <a href="pc-dr-deal-type.html" style="color:var(--wf-accent,#3d6daa);">Partner Type Guide</a> if you're not sure.</p>
-      <div class="type-cards" role="radiogroup" aria-label="Partner type selection">
-        <div class="type-card selected" role="radio" aria-checked="true" tabindex="0" id="type-referral" onclick="selectType('referral')" onkeydown="if(event.key==='Enter'||event.key===' ')selectType('referral')">
-          <div class="type-radio"><div class="type-radio-dot"></div><span class="type-radio-label">Lead Referral Partner</span></div>
-          <h4>You refer. Equinix sells.</h4>
-          <p>You introduce qualified opportunities. Equinix owns the contract, billing, and delivery. Best when you influence deals but don't transact.</p>
-        </div>
-        <div class="type-card" role="radio" aria-checked="false" tabindex="0" id="type-reseller" onclick="selectType('reseller')" onkeydown="if(event.key==='Enter'||event.key===' ')selectType('reseller')">
-          <div class="type-radio"><div class="type-radio-dot"></div><span class="type-radio-label">Reseller</span></div>
-          <h4>You sell Equinix services.</h4>
-          <p>You own the commercial relationship, handle quoting, and may bundle Equinix into your offerings. Best when you transact directly with customers.</p>
-        </div>
-      </div>
-    </div>
+  <section class="step-section" id="step-1" aria-label="Step 1: Company and your information">
 
     <!-- Company search + fields -->
     <div class="card">
@@ -1001,7 +1069,7 @@
 
 <!-- ── Script ──────────────────────────────────────────────── -->
 <script>
-  let currentStep  = 1;
+  let currentStep  = 0;
   let currentType  = 'referral';
   let companyChosen = false; // true once search result selected or manual entry shown
 
@@ -1009,8 +1077,13 @@
   function goToStep(n) {
     document.querySelectorAll('.step-section').forEach(el => el.classList.remove('active'));
     document.getElementById('step-' + n).classList.add('active');
+    // Show/hide the stepper — hidden on step 0
+    const stepper = document.getElementById('main-stepper');
+    if (stepper) stepper.style.display = (n === 0) ? 'none' : '';
+    // Update stepper node states (only meaningful for steps 1–4)
     for (let i = 1; i <= 4; i++) {
       const sn = document.getElementById('sn-' + i);
+      if (!sn) continue;
       sn.classList.remove('active', 'completed');
       if (i < n)  sn.classList.add('completed');
       if (i === n) sn.classList.add('active');
@@ -1024,10 +1097,12 @@
 
   /* ── Deep-link: read hash on load ───────────────────────── */
   (function initFromHash() {
+    // Apply default type highlight before possibly jumping steps
+    selectType(currentType);
     const m = window.location.hash.match(/^#step-(\d+)$/);
     if (m) {
       const n = parseInt(m[1], 10);
-      if (n >= 1 && n <= 4) goToStep(n);
+      if (n >= 0 && n <= 4) goToStep(n);
     }
   })();
 
@@ -1113,10 +1188,22 @@
   /* ── Partner type ────────────────────────────────────────── */
   function selectType(type) {
     currentType = type;
+    // Update type cards
     ['referral', 'reseller'].forEach(t => {
       const card = document.getElementById('type-' + t);
-      card.classList.toggle('selected', t === type);
-      card.setAttribute('aria-checked', t === type ? 'true' : 'false');
+      if (card) {
+        card.classList.toggle('selected', t === type);
+        card.setAttribute('aria-checked', t === type ? 'true' : 'false');
+      }
+    });
+    // Sync matrix column highlight
+    ['referral', 'reseller'].forEach(t => {
+      const colHeader = document.getElementById('matrix-col-' + t);
+      if (colHeader) colHeader.classList.toggle('selected', t === type);
+      for (let i = 1; i <= 6; i++) {
+        const cell = document.getElementById('matrix-data-' + t + '-' + i);
+        if (cell) cell.classList.toggle('selected', t === type);
+      }
     });
   }
 
