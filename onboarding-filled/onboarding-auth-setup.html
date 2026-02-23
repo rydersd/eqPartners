@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Set Up Secure Access — Partner Central</title>
+  <link rel="stylesheet" href="../wireframe.css">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); }
+
+    /* ── Auth shell ────────────────────────────────────────── */
+    .auth-shell {
+      max-width: 520px; margin: 0 auto; padding: 48px 24px 80px;
+    }
+
+    .auth-intro { text-align: center; margin-bottom: 32px; }
+    .auth-lock-icon {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: var(--wf-tint, #dce4ef);
+      border: 2px solid var(--wf-accent, #3d6daa);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; margin: 0 auto 16px;
+    }
+    .auth-intro h1 { font-size: 22px; font-weight: 700; margin: 0 0 6px; }
+    .auth-intro p  { font-size: 14px; color: var(--wf-muted, #6b7f99); margin: 0; line-height: 1.55; }
+
+    .verified-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #e6f4ec; border: 1px solid #86d9a4;
+      border-radius: 20px; padding: 4px 12px;
+      font-size: 12px; font-weight: 700; color: #1d6b3c;
+      margin-bottom: 20px;
+    }
+    .badge-dot { width: 7px; height: 7px; border-radius: 50%; background: #2d9e5a; }
+
+    /* ── Cards ─────────────────────────────────────────────── */
+    .card {
+      background: white; border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.10);
+      padding: 24px 28px; margin-bottom: 16px;
+    }
+    .card-title { font-size: 15px; font-weight: 700; color: var(--wf-ink, #1e2a3a); margin: 0 0 4px; }
+    .card-desc  { font-size: 13px; color: var(--wf-muted, #6b7f99); margin: 0 0 20px; line-height: 1.5; }
+
+    /* ── Step indicator (simplified, no stepper nav) ────────── */
+    .step-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.06em; color: var(--wf-accent, #3d6daa);
+      background: var(--wf-tint, #dce4ef);
+      border-radius: 20px; padding: 4px 10px; margin-bottom: 16px;
+    }
+
+    /* ── Auth method selector ───────────────────────────────── */
+    .auth-methods { display: grid; gap: 10px; margin-bottom: 20px; }
+    .auth-method-card {
+      border: 2px solid var(--wf-line, #b0bdd0);
+      border-radius: 8px; padding: 14px 16px;
+      cursor: pointer; transition: all 0.15s; background: white;
+      display: flex; align-items: flex-start; gap: 12px;
+    }
+    .auth-method-card:hover { border-color: var(--wf-accent, #3d6daa); }
+    .auth-method-card.selected {
+      border-color: var(--wf-accent, #3d6daa);
+      background: var(--wf-tint, #dce4ef);
+    }
+    .am-radio {
+      width: 18px; height: 18px; border-radius: 50%;
+      border: 2px solid var(--wf-line, #b0bdd0);
+      flex-shrink: 0; margin-top: 1px; background: white;
+      transition: all 0.15s;
+    }
+    .auth-method-card.selected .am-radio {
+      border-color: var(--wf-accent, #3d6daa);
+      background: var(--wf-accent, #3d6daa);
+      box-shadow: inset 0 0 0 3px white;
+    }
+    .am-icon {
+      width: 32px; height: 32px; border-radius: 6px;
+      background: var(--wf-canvas, #f5f7fb); border: 1px solid var(--wf-line, #b0bdd0);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; flex-shrink: 0;
+    }
+    .am-body { flex: 1; }
+    .am-title { font-size: 13px; font-weight: 700; color: var(--wf-ink, #1e2a3a); margin-bottom: 2px; }
+    .am-desc  { font-size: 12px; color: var(--wf-muted, #6b7f99); line-height: 1.45; }
+    .am-badge { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; background: var(--wf-accent, #3d6daa); color: white; border-radius: 3px; padding: 1px 5px; margin-left: 6px; }
+
+    /* ── SSO buttons ────────────────────────────────────────── */
+    .sso-panel { display: none; }
+    .sso-panel.visible { display: block; }
+    .sso-btn-group { display: grid; gap: 10px; margin-top: 16px; }
+    .sso-btn {
+      display: flex; align-items: center; gap: 10px;
+      padding: 12px 16px; border-radius: 6px; cursor: pointer;
+      font-size: 13px; font-weight: 600; font-family: inherit;
+      border: 1px solid var(--wf-line, #b0bdd0); background: white;
+      color: var(--wf-ink, #1e2a3a); transition: background 0.15s;
+    }
+    .sso-btn:hover { background: var(--wf-tint, #dce4ef); }
+    .sso-icon {
+      width: 22px; height: 22px; border-radius: 4px;
+      background: var(--wf-canvas, #f5f7fb);
+      border: 1px solid var(--wf-line, #b0bdd0);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; flex-shrink: 0;
+    }
+    .sso-sub { font-size: 11px; color: var(--wf-muted, #6b7f99); margin-top: 12px; text-align: center; }
+
+    /* ── Authenticator panel ─────────────────────────────── */
+    .totp-panel { display: none; }
+    .totp-panel.visible { display: block; }
+
+    .totp-steps { counter-reset: totp-counter; margin-bottom: 20px; }
+    .totp-step {
+      display: flex; gap: 14px; margin-bottom: 18px; align-items: flex-start;
+    }
+    .totp-step-num {
+      width: 24px; height: 24px; border-radius: 50%;
+      background: var(--wf-tint, #dce4ef); border: 2px solid var(--wf-accent, #3d6daa);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; color: var(--wf-accent, #3d6daa);
+      flex-shrink: 0; margin-top: 2px;
+    }
+    .totp-step-body { font-size: 13px; line-height: 1.55; color: var(--wf-ink, #1e2a3a); flex: 1; }
+    .totp-step-body strong { font-weight: 700; }
+    .totp-step-body .app-links { display: flex; gap: 8px; margin-top: 8px; }
+    .app-link {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 12px; font-weight: 600; color: var(--wf-accent, #3d6daa);
+      text-decoration: none; padding: 5px 10px;
+      border: 1px solid var(--wf-line, #b0bdd0); border-radius: 5px;
+      background: white;
+    }
+    .app-link:hover { background: var(--wf-tint, #dce4ef); }
+
+    /* QR code placeholder */
+    .qr-placeholder {
+      width: 160px; height: 160px;
+      border: 2px dashed var(--wf-line, #b0bdd0);
+      border-radius: 6px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      background: var(--wf-canvas, #f5f7fb);
+      margin: 12px 0;
+    }
+    .qr-grid {
+      display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px;
+      width: 100px; margin-bottom: 8px;
+    }
+    .qr-cell { width: 12px; height: 12px; border-radius: 1px; }
+    .qr-dark { background: var(--wf-ink, #1e2a3a); }
+    .qr-light { background: white; }
+    .qr-label { font-size: 10px; color: var(--wf-muted, #6b7f99); }
+
+    .manual-key {
+      font-size: 12px; color: var(--wf-muted, #6b7f99);
+      margin-top: 10px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .manual-key code {
+      font-family: "SF Mono", "Consolas", monospace;
+      background: var(--wf-tint, #dce4ef); padding: 3px 8px;
+      border-radius: 4px; font-size: 11px; letter-spacing: 0.08em;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    /* 6-digit code input */
+    .code-input-row {
+      display: flex; gap: 8px; margin: 16px 0;
+      justify-content: flex-start;
+    }
+    .digit-box {
+      width: 44px; height: 52px;
+      border: 2px solid var(--wf-line, #b0bdd0);
+      border-radius: 6px; background: white;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; font-weight: 700; color: var(--wf-ink, #1e2a3a);
+      cursor: text;
+    }
+    .digit-box:first-child { border-color: var(--wf-accent, #3d6daa); box-shadow: 0 0 0 3px rgba(61,109,170,0.12); }
+    .digit-box.filled { background: var(--wf-tint, #dce4ef); border-color: var(--wf-accent, #3d6daa); }
+    .code-input-sep { width: 8px; height: 2px; background: var(--wf-line, #b0bdd0); align-self: center; }
+    .code-hint { font-size: 12px; color: var(--wf-muted, #6b7f99); margin-top: 6px; }
+
+    /* Verify state */
+    .verify-block { display: none; }
+    .verify-block.visible { display: block; }
+    .verify-success {
+      display: flex; align-items: center; gap: 10px;
+      background: #e6f4ec; border: 1px solid #86d9a4;
+      border-radius: 6px; padding: 12px 16px; margin-top: 16px;
+      font-size: 13px; font-weight: 600; color: #1d6b3c;
+    }
+    .vs-icon { font-size: 16px; }
+
+    /* ── Form / Buttons ─────────────────────────────────────── */
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: 6px; font-size: 13px; font-weight: 600; border: none; cursor: pointer; transition: background 0.15s; font-family: inherit; }
+    .btn-primary   { background: var(--wf-accent, #3d6daa); color: white; width: 100%; justify-content: center; }
+    .btn-primary:hover  { background: var(--wf-ink, #1e2a3a); }
+    .btn-secondary { background: var(--wf-tint, #dce4ef); color: var(--wf-ink, #1e2a3a); }
+    .btn-secondary:hover { background: var(--wf-line, #b0bdd0); }
+    .btn-link  { background: none; border: none; color: var(--wf-accent, #3d6daa); font-size: 13px; font-weight: 600; cursor: pointer; padding: 0; font-family: inherit; }
+    .btn-link:hover { text-decoration: underline; }
+    .btn-sm { padding: 8px 14px; font-size: 12px; }
+
+    .divider { border: none; border-top: 1px solid var(--wf-line, #b0bdd0); margin: 20px 0; }
+
+    /* ── Security note ──────────────────────────────────────── */
+    .security-note {
+      display: flex; gap: 10px; align-items: flex-start;
+      background: var(--wf-canvas, #f5f7fb);
+      border: 1px solid var(--wf-line, #b0bdd0);
+      border-radius: 6px; padding: 12px 14px; margin-top: 16px;
+    }
+    .security-note .sn-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+    .security-note p { font-size: 12px; color: var(--wf-muted, #6b7f99); margin: 0; line-height: 1.55; }
+
+    /* ── Context bar ────────────────────────────────────────── */
+    .context-bar {
+      display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 600;
+      color: var(--wf-muted, #6b7f99); text-transform: uppercase; letter-spacing: 0.06em;
+      margin-bottom: 32px; padding-bottom: 16px; border-bottom: 1px solid var(--wf-line, #b0bdd0);
+    }
+    .context-bar a { color: var(--wf-accent, #3d6daa); font-weight: 600; text-decoration: none; text-transform: none; letter-spacing: 0; font-size: 12px; }
+    .context-bar a:hover { text-decoration: underline; }
+    .cb-sep { color: var(--wf-line, #b0bdd0); }
+
+    /* ── Completion redirect notice ─────────────────────────── */
+    .redirect-notice {
+      display: none; text-align: center;
+      padding: 20px; font-size: 13px; color: var(--wf-muted, #6b7f99);
+    }
+    .redirect-notice.visible { display: block; }
+    .redirect-notice a { color: var(--wf-accent, #3d6daa); font-weight: 600; }
+  </style>
+</head>
+<body>
+
+<!-- Story-reference banner -->
+<div id="story-ref-banner" style="
+  position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+  background: #f59e0b; color: #1c1917; font-family: sans-serif;
+  font-size: 12px; font-weight: 600; letter-spacing: .04em;
+  padding: 5px 16px; display: flex; align-items: center; gap: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.18);">
+  <span style="background:#1c1917;color:#f59e0b;border-radius:3px;padding:2px 7px;font-size:11px;">STORY REF</span>
+  CloudBridge Technologies Inc. &nbsp;·&nbsp; Jordan Reeves &nbsp;·&nbsp; PCP-APP-2026-0089
+  <span style="margin-left:auto;opacity:.7;font-weight:400;">Pre-filled for screen builds</span>
+</div>
+<style>#story-ref-banner ~ * { /* banner pushes nothing — content scrolls under */ }</style>
+
+
+<!-- Site header (pre-auth, light) -->
+<header class="wf-header">
+  <div class="wf-header-inner">
+    <div class="wf-logo">
+      <span class="wf-logo-mark">EQ</span>
+      <div class="wf-logo-text">
+        <span class="wf-product-name">Partner Central</span>
+        <span class="wf-product-sub">Equinix</span>
+      </div>
+    </div>
+    <nav class="wf-nav" aria-label="Site navigation">
+      <a href="#" class="wf-nav-link wf-nav-cta">Log In</a>
+    </nav>
+  </div>
+</header>
+
+<div class="auth-shell">
+
+  <div class="context-bar">
+    <span>Registration &amp; Onboarding Flow</span>
+    <span class="cb-sep">·</span>
+    <a href="../onboarding-acceptance-email.html">← Acceptance Email</a>
+    <span class="cb-sep">·</span>
+    <a href="../onboarding-wizard.html">Onboarding →</a>
+  </div>
+
+  <div class="auth-intro">
+    <div class="auth-lock-icon" aria-hidden="true">🔐</div>
+    <div class="verified-badge">
+      <div class="badge-dot"></div>
+      Invitation verified — Steve Rogers
+    </div>
+    <h1>Set Up Secure Access</h1>
+    <p>Choose how you'll log in to Partner Central. This keeps your deal data and account protected.</p>
+  </div>
+
+  <!-- Method selection card -->
+  <div class="card" id="method-card">
+    <div class="step-pill">Step 1 of 2 — Choose method</div>
+    <p class="card-title">How would you like to sign in?</p>
+    <p class="card-desc">You'll use this method every time you log in to Partner Central.</p>
+
+    <div class="auth-methods" role="radiogroup" aria-label="Authentication method">
+      <div class="auth-method-card selected" id="method-sso" role="radio" aria-checked="true" tabindex="0" onclick="selectMethod('sso')" onkeydown="if(event.key==='Enter'||event.key===' ')selectMethod('sso')">
+        <div class="am-radio" id="radio-sso"></div>
+        <div class="am-icon" aria-hidden="true">G / M</div>
+        <div class="am-body">
+          <div class="am-title">Single Sign-On <span class="am-badge">Recommended</span></div>
+          <div class="am-desc">Sign in with your existing Google or Microsoft work account. No additional passwords to manage.</div>
+        </div>
+      </div>
+      <div class="auth-method-card" id="method-totp" role="radio" aria-checked="false" tabindex="0" onclick="selectMethod('totp')" onkeydown="if(event.key==='Enter'||event.key===' ')selectMethod('totp')">
+        <div class="am-radio" id="radio-totp"></div>
+        <div class="am-icon" aria-hidden="true">🔑</div>
+        <div class="am-body">
+          <div class="am-title">Authenticator App</div>
+          <div class="am-desc">Use Google Authenticator, Authy, or any TOTP-compatible app to generate a 6-digit login code.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SSO panel -->
+    <div class="sso-panel visible" id="sso-panel">
+      <p style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--wf-muted, #6b7f99); margin-bottom:10px;">Choose your provider</p>
+      <div class="sso-btn-group">
+        <button class="sso-btn" onclick="triggerSSOFlow('google')" aria-label="Continue with Google">
+          <div class="sso-icon">G</div>
+          Continue with Google
+        </button>
+        <button class="sso-btn" onclick="triggerSSOFlow('microsoft')" aria-label="Continue with Microsoft">
+          <div class="sso-icon">M</div>
+          Continue with Microsoft
+        </button>
+      </div>
+      <p class="sso-sub">We'll confirm your work email (<strong>steve.rogers@cloudbridge.com</strong>) during sign-in.</p>
+    </div>
+
+    <!-- TOTP / Authenticator panel -->
+    <div class="totp-panel" id="totp-panel">
+      <div class="totp-steps">
+        <div class="totp-step">
+          <div class="totp-step-num">1</div>
+          <div class="totp-step-body">
+            <strong>Install an authenticator app</strong> if you don't have one already.
+            <div class="app-links">
+              <a href="#" class="app-link" aria-label="Google Authenticator (link placeholder)">Google Authenticator</a>
+              <a href="#" class="app-link" aria-label="Authy (link placeholder)">Authy</a>
+            </div>
+          </div>
+        </div>
+        <div class="totp-step">
+          <div class="totp-step-num">2</div>
+          <div class="totp-step-body">
+            <strong>Scan this QR code</strong> with your authenticator app, or enter the key manually.
+            <div class="qr-placeholder" role="img" aria-label="QR code placeholder — will be generated per user in production">
+              <!-- Decorative QR grid (wireframe placeholder) -->
+              <div class="qr-grid" aria-hidden="true">
+                <div class="qr-cell qr-dark"></div><div class="qr-cell qr-dark"></div><div class="qr-cell qr-dark"></div><div class="qr-cell qr-dark"></div><div class="qr-cell qr-dark"></div><div class="qr-cell qr-dark"></div><div class="qr-cell qr-dark"></div>
+                <div class="qr-cell qr-dark"></div><div class="qr-cell qr-light"></div><div class="qr-cell qr-light"></div><div class="qr-cell qr-dark"></div><div class="qr-cell qr-light"></div><div class="qr-cell qr-light"></div><div class="qr-cell qr-dark"></div>
+                <div class="qr-cell qr-dark"></div><div class="qr-cell qr-light"></div><div class="qr-cell qr-dark"></div><div class="qr-cell qr-light"></div><div class="qr-cell qr-dark"></div><div class="qr-cell qr-light"></div><div class="qr-cell qr-dark"></div>
+                <div class="qr-cell qr-dark"></div><div class="qr-cell qr-light"></div><div class="qr-cell qr-dark"></div><div class="qr-cell qr-dark"></div><div class="qr-cell qr-dark"></div><div class="qr-cell qr-light"></div><div class="qr-cell qr-dark"></div>
+                <div class="qr-cell qr-dark"></div><div class="qr-cell qr-light"></div><div class="qr-cell qr-dark"></div><div class="qr-cell qr-light"></div><div class="qr-cell qr-dark"></div><div class="qr-cell qr-light"></div><div class="qr-cell qr-dark"></div>
+                <div class="qr-cell qr-dark"></div><div class="qr-cell qr-light"></div><div class="qr-cell qr-light"></div><div class="qr-cell qr-dark"></div><div class="qr-cell qr-light"></div><div class="qr-cell qr-light"></div><div class="qr-cell qr-dark"></div>
+                <div class="qr-cell qr-dark"></div><div class="qr-cell qr-dark"></div><div class="qr-cell qr-dark"></div><div class="qr-cell qr-dark"></div><div class="qr-cell qr-dark"></div><div class="qr-cell qr-dark"></div><div class="qr-cell qr-dark"></div>
+              </div>
+              <span class="qr-label">QR placeholder</span>
+            </div>
+            <div class="manual-key">
+              Can't scan? Manual key: <code>JBSW Y3DP EHPK 3PXP</code>
+            </div>
+          </div>
+        </div>
+        <div class="totp-step">
+          <div class="totp-step-num">3</div>
+          <div class="totp-step-body">
+            <strong>Enter the 6-digit code</strong> your app shows to confirm setup.
+            <div class="code-input-row" role="group" aria-label="6-digit verification code">
+              <div class="digit-box filled" aria-label="Digit 1">3</div>
+              <div class="digit-box filled" aria-label="Digit 2">7</div>
+              <div class="digit-box filled" aria-label="Digit 3">1</div>
+              <div class="code-input-sep" aria-hidden="true"></div>
+              <div class="digit-box filled" aria-label="Digit 4">4</div>
+              <div class="digit-box" aria-label="Digit 5, empty"></div>
+              <div class="digit-box" aria-label="Digit 6, empty"></div>
+            </div>
+            <p class="code-hint">Code refreshes every 30 seconds.</p>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" onclick="verifyTOTP()">Verify &amp; Continue →</button>
+
+      <div class="verify-block" id="verify-success">
+        <div class="verify-success" role="status">
+          <span class="vs-icon" aria-hidden="true">✓</span>
+          Authenticator app connected successfully.
+        </div>
+      </div>
+
+      <div class="security-note" style="margin-top: 16px;">
+        <span class="sn-icon" aria-hidden="true">🛡</span>
+        <p>Your secret key is stored encrypted and is never sent in plaintext. Equinix staff will never ask you for this code.</p>
+      </div>
+    </div>
+
+  </div><!-- /card -->
+
+  <!-- Recovery options card (shown after method confirmed) -->
+  <div class="card" id="recovery-card" style="display:none;" aria-hidden="true">
+    <div class="step-pill">Step 2 of 2 — Recovery</div>
+    <p class="card-title">Save your recovery codes</p>
+    <p class="card-desc">If you lose access to your authenticator, these codes let you back in. Store them somewhere safe — each can be used once.</p>
+
+    <div style="font-family: 'SF Mono', Consolas, monospace; font-size: 12px; letter-spacing: 0.06em; background: var(--wf-canvas, #f5f7fb); border: 1px solid var(--wf-line, #b0bdd0); border-radius: 6px; padding: 14px 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 16px;" role="list" aria-label="Recovery codes">
+      <span role="listitem">8XK2-JD9F-PLQM</span>
+      <span role="listitem">3YHN-WVRA-2CTB</span>
+      <span role="listitem">7FZE-MSKP-QDGR</span>
+      <span role="listitem">5LBT-NCXV-6WUJ</span>
+      <span role="listitem">4PMQ-AYFH-8ZKD</span>
+      <span role="listitem">9RGE-BXJT-UVWC</span>
+    </div>
+
+    <div style="display:flex; gap:10px; margin-bottom:16px;">
+      <button class="btn btn-secondary btn-sm" aria-label="Copy recovery codes to clipboard">Copy codes</button>
+      <button class="btn btn-secondary btn-sm" aria-label="Download recovery codes as text file">Download .txt</button>
+    </div>
+
+    <label style="display:flex; align-items:center; gap:8px; font-size:13px; cursor:pointer;" id="saved-confirm-label">
+      <input type="checkbox" id="saved-confirm" onchange="updateFinalBtn()" style="width:16px; height:16px;">
+      I've saved my recovery codes in a safe place
+    </label>
+
+    <hr class="divider">
+
+    <button class="btn btn-primary" id="finish-btn" style="opacity:0.5; cursor:not-allowed;" disabled onclick="finishSetup()">
+      Go to Onboarding →
+    </button>
+
+    <div class="redirect-notice" id="redirect-notice">
+      Setting up your account… <a href="../onboarding-wizard.html">Click here if you're not redirected</a>
+    </div>
+
+  </div><!-- /recovery-card -->
+
+  <!-- Bottom note -->
+  <p style="text-align:center; font-size:12px; color:var(--wf-muted, #6b7f99); margin-top:24px;">
+    Need help? Contact <a href="mailto:partner-support@equinix.com" style="color:var(--wf-accent, #3d6daa); font-weight:600;">partner-support@equinix.com</a>
+  </p>
+
+</div><!-- /auth-shell -->
+
+<!-- ── Spec panel ─────────────────────────────────────────────── -->
+<button class="spec-toggle" onclick="document.getElementById('spec').classList.toggle('open')" aria-label="Toggle spec panel">Spec</button>
+<aside class="spec-panel" id="spec" role="complementary" aria-label="Design specification">
+  <div class="spec-inner">
+    <button class="spec-close" onclick="document.getElementById('spec').classList.remove('open')" aria-label="Close spec panel">×</button>
+
+    <div class="spec-section">
+      <h3 class="spec-section-title">Summary</h3>
+      <p>Pre-authentication page reached from the tokenized link in the acceptance email. The user sets up their authentication method (SSO or TOTP), saves recovery codes, and is redirected to the onboarding wizard.</p>
+    </div>
+
+    <div class="spec-section">
+      <h3 class="spec-section-title">Flow Position</h3>
+      <p>Registration chain: Apply → Confirmation → Acceptance Email → <strong>Auth Setup (this)</strong> → Onboarding Wizard</p>
+    </div>
+
+    <div class="spec-section">
+      <h3 class="spec-section-title">Jobs to Be Done</h3>
+      <ul class="spec-list">
+        <li>Establish a secure, user-owned credential (not just email magic links)</li>
+        <li>Offer SSO as the low-friction path; TOTP as the fallback</li>
+        <li>Confirm the user's identity is tied to their work email domain</li>
+        <li>Surface recovery codes before first login — users who skip this get locked out</li>
+        <li>Get the user to the onboarding wizard without unnecessary friction</li>
+      </ul>
+    </div>
+
+    <div class="spec-section">
+      <h3 class="spec-section-title">Design Specification</h3>
+      <p class="spec-subsection-label">Primary Content</p>
+      <ul class="spec-list">
+        <li>Verified badge confirms invitation token is valid (checked on page load)</li>
+        <li>Step 1: Auth method selector — SSO (recommended) vs Authenticator App (TOTP)</li>
+        <li>SSO sub-panel: Google and Microsoft provider buttons</li>
+        <li>TOTP sub-panel: app download links, QR code, manual key, 6-digit code entry</li>
+        <li>Step 2 (recovery): 6 single-use recovery codes, copy/download actions, confirm-saved checkbox gates the CTA</li>
+      </ul>
+      <p class="spec-subsection-label">Interactive Elements</p>
+      <ul class="spec-list">
+        <li>Method radio selector (SSO / TOTP) — shows/hides relevant sub-panel</li>
+        <li>SSO provider buttons (Google, Microsoft) — trigger OAuth redirect</li>
+        <li>TOTP digit boxes — keyboard-navigable, auto-advance on input</li>
+        <li>Verify &amp; Continue — validates TOTP code, reveals recovery card</li>
+        <li>Copy codes / Download .txt buttons</li>
+        <li>Saved checkbox — enables "Go to Onboarding" button when checked</li>
+      </ul>
+      <p class="spec-subsection-label">Functionality</p>
+      <ul class="spec-list">
+        <li>Token validation on page load — invalid/expired tokens redirect to error page with re-send option</li>
+        <li>SSO flow: standard OAuth PKCE, scoped to user email domain</li>
+        <li>TOTP: TOTP secret generated server-side, displayed as QR + base32 key; verified against current time window ±1 step</li>
+        <li>Recovery codes: generated server-side, bcrypt-hashed in DB, displayed once</li>
+        <li>On successful setup, session established → redirect to <code>onboarding-wizard.html</code></li>
+        <li>SSO path skips Step 2 (recovery) — recovery handled by IdP</li>
+      </ul>
+    </div>
+
+    <div class="spec-section">
+      <h3 class="spec-section-title">Design Notes</h3>
+      <ul class="spec-list">
+        <li>SSO marked as "Recommended" because it has better recovery paths and lower support burden</li>
+        <li>TOTP QR code in wireframe is a decorative placeholder — production generates per-user TOTP secrets</li>
+        <li>Digit boxes are a wireframe affordance; production implementation uses a single &lt;input type="text" inputmode="numeric" maxlength="6"&gt; with visual styling</li>
+        <li>Recovery card only appears after TOTP verification (SSO users don't need it)</li>
+        <li>Checkbox on recovery step is a soft gate — forces acknowledgment but users could technically skip via keyboard</li>
+        <li>Page is intentionally minimal — single column, no nav clutter — to maximize completion rate at this high-drop-off step</li>
+      </ul>
+    </div>
+
+  </div>
+</aside>
+
+<script>
+  let currentMethod = 'sso';
+
+  function selectMethod(method) {
+    currentMethod = method;
+    ['sso', 'totp'].forEach(m => {
+      const card  = document.getElementById('method-' + m);
+      const radio = document.getElementById('radio-' + m);
+      const panel = document.getElementById(m + '-panel');
+      const isSelected = m === method;
+      card.classList.toggle('selected', isSelected);
+      card.setAttribute('aria-checked', String(isSelected));
+      panel.classList.toggle('visible', isSelected);
+    });
+  }
+
+  function triggerSSOFlow(provider) {
+    // In production: redirect to OAuth provider
+    // Wireframe: show recovery card (SSO has no TOTP recovery step)
+    document.getElementById('recovery-card').style.display = 'block';
+    document.getElementById('recovery-card').removeAttribute('aria-hidden');
+    window.scrollTo({ top: document.getElementById('recovery-card').offsetTop - 20, behavior: 'smooth' });
+  }
+
+  function verifyTOTP() {
+    // Wireframe: simulate successful verification
+    document.getElementById('verify-success').classList.add('visible');
+    setTimeout(() => {
+      document.getElementById('recovery-card').style.display = 'block';
+      document.getElementById('recovery-card').removeAttribute('aria-hidden');
+      window.scrollTo({ top: document.getElementById('recovery-card').offsetTop - 20, behavior: 'smooth' });
+    }, 600);
+  }
+
+  function updateFinalBtn() {
+    const checked = document.getElementById('saved-confirm').checked;
+    const btn = document.getElementById('finish-btn');
+    btn.disabled = !checked;
+    btn.style.opacity = checked ? '1' : '0.5';
+    btn.style.cursor  = checked ? 'pointer' : 'not-allowed';
+  }
+
+  function finishSetup() {
+    document.getElementById('redirect-notice').classList.add('visible');
+    setTimeout(() => { window.location.href = 'onboarding-wizard.html'; }, 1200);
+  }
+</script>
+<script src="../wf-nav.js"></script>
+
+<script>
+/* ── Story-reference auto-fill ───────────────────────────────────────── */
+(function() {
+  function set(id, val) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    if (el.tagName === 'SELECT') {
+      // Try by value first, then by text content
+      var opts = el.options;
+      for (var i = 0; i < opts.length; i++) {
+        if (opts[i].value === val || opts[i].text === val) {
+          el.selectedIndex = i;
+          el.dispatchEvent(new Event('change', {bubbles:true}));
+          return;
+        }
+      }
+    } else if (el.type === 'checkbox' || el.type === 'radio') {
+      el.checked = !!val;
+      el.dispatchEvent(new Event('change', {bubbles:true}));
+    } else {
+      el.value = val;
+      el.dispatchEvent(new Event('input', {bubbles:true}));
+      el.dispatchEvent(new Event('change', {bubbles:true}));
+    }
+  }
+
+  // ── Applicant / primary contact ──────────────────────────────────────
+  set('first-name',   'Jordan');
+  set('last-name',    'Reeves');
+  set('email',        'jordan.reeves@cloudbridge.com');
+  set('c-email',      'jordan.reeves@cloudbridge.com');
+  set('job-title',    'Sales Operations Manager');
+  set('c-title',      'Sales Operations Manager');
+  set('phone',        '+1 512 555 0142');
+  set('mobile',       '+1 512 555 0142');
+  set('c-phone',      '+1 512 555 0142');
+  set('c-name',       'Jordan Reeves');
+  set('lang',         'English');
+
+  // ── Company search / selection ───────────────────────────────────────
+  set('company-search', 'CloudBridge Technologies Inc.');
+  set('region-select',  'amer-us');
+
+  // ── Company detail fields ────────────────────────────────────────────
+  set('co-name',    'CloudBridge Technologies Inc.');
+  set('co-website', 'https://cloudbridge.com');
+  set('co-country', 'United States');
+  set('co-city',    'Austin');
+  set('co-street',  '7700 Parmer Lane, Suite 200');
+
+  // ── Organization fields (onboarding-apply-form style) ────────────────
+  set('o-name',     'CloudBridge Technologies Inc.');
+  set('o-website',  'https://cloudbridge.com');
+  set('o-hq',       'Austin, TX, United States');
+  set('o-country',  'United States');
+  set('o-duns',     '12-345-6789');
+  set('o-tax',      'US12-3456789');
+
+  // ── Partner / business type ──────────────────────────────────────────
+  set('partner-type',  'reseller');
+  set('biz-type',      'Systems Integrator');
+
+  // ── Deal registration defaults ───────────────────────────────────────
+  set('dr-currency', 'USD');
+  set('dr-owner',    'Jordan Reeves');
+
+  // ── Misc ─────────────────────────────────────────────────────────────
+  set('years-in-business', '10–20 years');
+  set('existing-customer', 'Yes');
+  set('existing-partner',  'No');
+  set('other-partners',    'AWS Partner Network, Microsoft CSP');
+  set('ref-notes',         'Referred by Marcus Chen, PSM at Equinix.');
+
+  // ── Invite / secondary contact ───────────────────────────────────────
+  set('invite-name',  'Steve Rogers');
+  set('invite-email', 'steve.rogers@cloudbridge.com');
+  set('invite-role',  'Sales');
+
+  // ── Checkboxes ───────────────────────────────────────────────────────
+  set('term1',        true);
+  set('term2',        true);
+  set('term3',        true);
+  set('terms-check',  true);
+  set('cert-check',   true);
+  set('auth-check',   true);
+  set('saved-confirm',true);
+
+  // ── Referral-specific ────────────────────────────────────────────────
+  var refName = document.getElementById('ref-name');
+  if (refName) refName.value = 'Marcus Chen';
+  var refEmail = document.getElementById('ref-email');
+  if (refEmail) refEmail.value = 'marcus.chen@equinix.com';
+  var refComp = document.getElementById('ref-company');
+  if (refComp) refComp.value = 'Equinix';
+
+  // ── Click reseller partner-type card if present ──────────────────────
+  var cards = document.querySelectorAll('.type-card, .partner-card, [data-type]');
+  cards.forEach(function(c) {
+    var t = (c.dataset.type || c.getAttribute('data-type') || '').toLowerCase();
+    if (t === 'reseller' || t.includes('reseller')) {
+      c.click && c.click();
+    }
+  });
+
+  // ── Show company fields if wizard has them hidden ────────────────────
+  var cf = document.getElementById('company-fields');
+  if (cf) cf.style.display = '';
+
+  // ── Show selected company banner ─────────────────────────────────────
+  var banner = document.getElementById('selected-banner');
+  var bannerName = document.getElementById('banner-name');
+  var bannerMeta = document.getElementById('banner-meta');
+  var bannerAvatar = document.getElementById('banner-avatar');
+  var searchRow = document.getElementById('search-row');
+  if (banner && bannerName) {
+    bannerName.textContent = 'CloudBridge Technologies Inc.';
+    if (bannerMeta) bannerMeta.textContent = 'Austin, TX · cloudbridge.com';
+    if (bannerAvatar) bannerAvatar.textContent = 'CB';
+    banner.style.display = 'flex';
+    if (searchRow) searchRow.style.display = 'none';
+  }
+
+})();
+</script>
+
+</body>
+</html>

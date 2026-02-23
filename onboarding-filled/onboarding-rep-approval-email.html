@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rep Account Approval Email — Equinix Partner Central</title>
+  <link rel="stylesheet" href="../wireframe.css">
+  <style>
+    body { background: var(--wf-canvas, #f5f7fb); }
+    .page-shell { max-width: 680px; margin: 40px auto; padding: 0 20px 80px; }
+
+    /* ── Email client outer frame ─────────────────── */
+    .email-client {
+      background: var(--wf-white, #fff);
+      border: 1px solid var(--wf-line, #b0bdd0);
+      border-radius: 8px; overflow: hidden;
+    }
+    .email-client-toolbar {
+      background: var(--wf-surface, #f0f4fa);
+      border-bottom: 1px solid var(--wf-line, #b0bdd0);
+      padding: 8px 16px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .toolbar-dot {
+      width: 11px; height: 11px; border-radius: 50%;
+    }
+    .toolbar-label {
+      font-size: 11px; font-weight: 700; color: var(--wf-muted, #6b7a99);
+      text-transform: uppercase; letter-spacing: .06em; margin-left: 8px;
+    }
+    .toolbar-badge {
+      margin-left: auto; font-size: 10px; font-weight: 700; padding: 2px 8px;
+      border-radius: 4px; background: var(--wf-surface, #f0f4fa);
+      border: 1px solid var(--wf-line, #b0bdd0); color: var(--wf-muted, #6b7a99);
+    }
+
+    /* ── Email metadata header ────────────────────── */
+    .email-meta {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--wf-line, #b0bdd0);
+      background: var(--wf-white, #fff);
+    }
+    .email-subject {
+      font-size: 16px; font-weight: 700; color: var(--wf-ink, #1e2a3a);
+      margin: 0 0 10px;
+    }
+    .email-meta-row {
+      display: flex; align-items: baseline; gap: 6px;
+      font-size: 12px; color: var(--wf-muted, #6b7a99); padding: 2px 0;
+    }
+    .email-meta-label {
+      font-weight: 700; color: var(--wf-ink, #1e2a3a);
+      min-width: 36px; flex-shrink: 0;
+    }
+
+    /* ── Email body (HTML email simulation) ───────── */
+    .email-body {
+      padding: 0;
+      background: #f4f4f4;
+    }
+
+    /* ─ HTML Email inner styles ─ */
+    .eml-wrap {
+      max-width: 600px; margin: 24px auto; background: #ffffff;
+      border: 1px solid #dde3ec; border-radius: 4px; overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .eml-header {
+      background: #1e2a3a; padding: 24px 32px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .eml-logo-mark {
+      width: 32px; height: 32px; border-radius: 4px;
+      background: #3d6daa; color: #fff;
+      font-size: 16px; font-weight: 800; display: flex;
+      align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .eml-brand { font-size: 14px; font-weight: 700; color: #fff; }
+    .eml-brand-sub { font-size: 11px; color: rgba(255,255,255,.6); }
+
+    .eml-hero {
+      background: #eef2f8;
+      border-bottom: 3px solid #3d6daa;
+      padding: 32px 32px 24px;
+      text-align: center;
+    }
+    .eml-hero-icon {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: #e6f4ec; margin: 0 auto 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px; border: 2px solid #9dd5b1;
+    }
+    .eml-hero-title {
+      font-size: 22px; font-weight: 700; color: #1e2a3a; margin: 0 0 8px;
+      line-height: 1.3;
+    }
+    .eml-hero-sub {
+      font-size: 13px; color: #6b7a99; margin: 0; line-height: 1.5;
+    }
+
+    .eml-body {
+      padding: 28px 32px;
+    }
+    .eml-greeting {
+      font-size: 14px; color: #1e2a3a; font-weight: 600; margin: 0 0 12px;
+    }
+    .eml-para {
+      font-size: 13px; color: #374558; line-height: 1.65; margin: 0 0 16px;
+    }
+
+    .eml-detail-box {
+      background: #f5f7fb; border: 1px solid #dde3ec; border-radius: 6px;
+      padding: 16px 18px; margin: 20px 0;
+    }
+    .eml-detail-row {
+      display: flex; gap: 10px; font-size: 12px; padding: 4px 0;
+      border-bottom: 1px solid #eaeef4;
+    }
+    .eml-detail-row:last-child { border-bottom: none; }
+    .eml-detail-label {
+      color: #6b7a99; font-weight: 600; min-width: 120px; flex-shrink: 0;
+    }
+    .eml-detail-val {
+      color: #1e2a3a; font-weight: 500;
+    }
+    .eml-detail-val.highlight { color: #1a7a3c; font-weight: 700; }
+
+    .eml-cta-wrap { text-align: center; margin: 28px 0 20px; }
+    .eml-cta-btn {
+      display: inline-block; background: #3d6daa; color: #fff;
+      font-size: 14px; font-weight: 700; padding: 14px 32px;
+      border-radius: 6px; text-decoration: none;
+      letter-spacing: .01em;
+    }
+    .eml-cta-note {
+      font-size: 11px; color: #6b7a99; margin: 10px 0 0; line-height: 1.5;
+    }
+
+    .eml-divider {
+      border: none; border-top: 1px solid #eaeef4; margin: 20px 0;
+    }
+
+    .eml-secondary-para {
+      font-size: 12px; color: #6b7a99; line-height: 1.6; margin: 0 0 12px;
+    }
+
+    .eml-footer {
+      background: #f5f7fb; border-top: 1px solid #dde3ec;
+      padding: 20px 32px; text-align: center;
+    }
+    .eml-footer p {
+      font-size: 11px; color: #8a9ab0; margin: 0 0 4px; line-height: 1.5;
+    }
+    .eml-footer a { color: #3d6daa; text-decoration: none; }
+
+    /* ── Email ID label ────────────────────────────── */
+    .email-id-strip {
+      padding: 8px 20px;
+      background: var(--wf-surface, #f0f4fa);
+      border-top: 1px solid var(--wf-line, #b0bdd0);
+      font-size: 11px; color: var(--wf-muted, #6b7a99);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .eml-id-badge {
+      font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 3px;
+      background: var(--wf-surface, #f0f4fa);
+      border: 1px solid var(--wf-line, #b0bdd0);
+      color: var(--wf-accent, #3d6daa);
+    }
+
+    /* ── Flow strip ────────────────────────────────── */
+    .flow-strip {
+      display: flex; align-items: center; flex-wrap: wrap; gap: 4px;
+      padding: 8px 12px; background: var(--wf-surface, #f0f4fa);
+      border: 1px solid var(--wf-line, #b0bdd0); border-radius: 6px;
+      margin-bottom: 16px; font-size: 11px;
+    }
+    .flow-step {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 8px; border-radius: 4px; font-weight: 600;
+      color: var(--wf-muted, #6b7a99); white-space: nowrap;
+    }
+    .flow-step.active { background: var(--wf-accent, #3d6daa); color: #fff; }
+    .flow-step.done   { color: var(--wf-ink, #1e2a3a); }
+    .flow-sep { color: var(--wf-muted, #6b7a99); font-weight: 700; }
+
+    /* ── Note strip ─────────────────────────────────── */
+    .wf-note {
+      padding: 10px 14px; background: var(--wf-surface, #f0f4fa);
+      border: 1px solid var(--wf-line, #b0bdd0);
+      border-left: 3px solid var(--wf-accent, #3d6daa);
+      border-radius: 4px; font-size: 12px; color: var(--wf-muted, #6b7a99);
+      margin-bottom: 16px; line-height: 1.5;
+    }
+    .wf-note strong { color: var(--wf-ink, #1e2a3a); }
+  </style>
+</head>
+<body>
+
+<!-- Story-reference banner -->
+<div id="story-ref-banner" style="
+  position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+  background: #f59e0b; color: #1c1917; font-family: sans-serif;
+  font-size: 12px; font-weight: 600; letter-spacing: .04em;
+  padding: 5px 16px; display: flex; align-items: center; gap: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.18);">
+  <span style="background:#1c1917;color:#f59e0b;border-radius:3px;padding:2px 7px;font-size:11px;">STORY REF</span>
+  CloudBridge Technologies Inc. &nbsp;·&nbsp; Jordan Reeves &nbsp;·&nbsp; PCP-APP-2026-0089
+  <span style="margin-left:auto;opacity:.7;font-weight:400;">Pre-filled for screen builds</span>
+</div>
+<style>#story-ref-banner ~ * { /* banner pushes nothing — content scrolls under */ }</style>
+
+
+<header class="wf-header" role="banner">
+  <div class="wf-header-inner">
+    <div class="wf-brand" aria-label="Equinix Partner Central home">
+      <div class="wf-logo" aria-hidden="true">E</div>
+      <span class="wf-brand-name">Partner Central</span>
+    </div>
+    <nav class="wf-nav" aria-label="Main navigation">
+      <a href="#" class="wf-nav-link wf-nav-link--active">Onboarding Emails</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main-content">
+<div class="page-shell">
+
+  <!-- Flow strip -->
+  <div class="flow-strip" aria-label="Subsequent user registration flow">
+    <span class="flow-step done">✓&nbsp;Check email</span>
+    <span class="flow-sep">›</span>
+    <span class="flow-step done">✓&nbsp;Org search</span>
+    <span class="flow-sep">›</span>
+    <span class="flow-step done">✓&nbsp;Submit request</span>
+    <span class="flow-sep">›</span>
+    <span class="flow-step done">✓&nbsp;Admin approval</span>
+    <span class="flow-sep">›</span>
+    <span class="flow-step active">Approval email</span>
+    <span class="flow-sep">›</span>
+    <span class="flow-step"><a href="../onboarding-auth-setup.html" style="color:inherit;text-decoration:none;">Activate →</a></span>
+  </div>
+
+  <div class="wf-note">
+    <strong>Wireframe note — PCP-REP-APPROVE email template.</strong> Triggered when a Portal Admin approves a user's join request in the Team &amp; Access view. Distinct from the org application approval email (PCP-APPROVE). Recipient is the requesting user (Alex Kim). Sent from Experience Cloud's <code>noreply@partner.equinix.com</code> transactional email queue.
+  </div>
+
+  <!-- Email client frame -->
+  <div class="email-client" role="article" aria-label="Email wireframe: rep account approval">
+
+    <!-- Toolbar -->
+    <div class="email-client-toolbar" aria-hidden="true">
+      <div class="toolbar-dot" style="background:#ff5f57;"></div>
+      <div class="toolbar-dot" style="background:#ffbd2e;"></div>
+      <div class="toolbar-dot" style="background:#28c840;"></div>
+      <span class="toolbar-label">Email preview — Alex Kim's inbox</span>
+      <span class="toolbar-badge">PCP-REP-APPROVE</span>
+    </div>
+
+    <!-- Email metadata -->
+    <div class="email-meta">
+      <p class="email-subject">Your access to CloudBridge Technologies Inc. has been approved</p>
+      <div class="email-meta-row">
+        <span class="email-meta-label">From</span>
+        <span>Equinix Partner Central &lt;noreply@partner.equinix.com&gt;</span>
+      </div>
+      <div class="email-meta-row">
+        <span class="email-meta-label">To</span>
+        <span>alex.kim@cloudbridge.com</span>
+      </div>
+      <div class="email-meta-row">
+        <span class="email-meta-label">Date</span>
+        <span>Feb 20, 2026, 2:34 PM</span>
+      </div>
+    </div>
+
+    <!-- Email body (HTML email simulation) -->
+    <div class="email-body">
+      <div class="eml-wrap">
+
+        <!-- Header -->
+        <div class="eml-header" role="banner">
+          <div class="eml-logo-mark" aria-hidden="true">E</div>
+          <div>
+            <div class="eml-brand">Equinix Partner Central</div>
+            <div class="eml-brand-sub">Partner Channel Program</div>
+          </div>
+        </div>
+
+        <!-- Hero -->
+        <div class="eml-hero">
+          <div class="eml-hero-icon" aria-hidden="true">✓</div>
+          <h1 class="eml-hero-title">You're in. Your access has been approved.</h1>
+          <p class="eml-hero-sub">CloudBridge Technologies Inc. has added you to their Partner Central team.</p>
+        </div>
+
+        <!-- Body -->
+        <div class="eml-body">
+          <p class="eml-greeting">Hi Alex,</p>
+          <p class="eml-para">Jordan Reeves, the Portal Admin for CloudBridge Technologies Inc., has approved your request to join their organization in Equinix Partner Central. You can now activate your account and start working.</p>
+
+          <!-- Approval details -->
+          <div class="eml-detail-box" role="table" aria-label="Approval details">
+            <div class="eml-detail-row">
+              <span class="eml-detail-label">Organization</span>
+              <span class="eml-detail-val">CloudBridge Technologies Inc.</span>
+            </div>
+            <div class="eml-detail-row">
+              <span class="eml-detail-label">Your access role</span>
+              <span class="eml-detail-val highlight">Deal Registration User</span>
+            </div>
+            <div class="eml-detail-row">
+              <span class="eml-detail-label">Approved by</span>
+              <span class="eml-detail-val">Jordan Reeves (Portal Admin)</span>
+            </div>
+            <div class="eml-detail-row">
+              <span class="eml-detail-label">Approved on</span>
+              <span class="eml-detail-val">February 20, 2026</span>
+            </div>
+          </div>
+
+          <!-- CTA -->
+          <div class="eml-cta-wrap">
+            <a href="../onboarding-auth-setup.html" class="eml-cta-btn" role="button">Activate your account →</a>
+            <p class="eml-cta-note">
+              You'll receive a one-time verification code at alex.kim@cloudbridge.com.<br>
+              No password needed — enter the code to activate your account.
+            </p>
+          </div>
+
+          <hr class="eml-divider">
+
+          <p class="eml-secondary-para">
+            <strong style="color:#374558;">What happens next?</strong><br>
+            Once you activate, you'll be guided through a short orientation covering deal registration, your team's pipeline, and available training. The whole thing takes about 5 minutes. You can skip it and go directly to your dashboard if you prefer.
+          </p>
+
+          <p class="eml-secondary-para">
+            <strong style="color:#374558;">Need help?</strong> Contact your Portal Admin, Jordan Reeves, or reach out to Equinix Partner Support at
+            <a href="#" style="color:#3d6daa;">partner-support@equinix.com</a>.
+          </p>
+
+          <p class="eml-secondary-para">
+            If you didn't request access to this organization, you can safely ignore this email or
+            <a href="#" style="color:#3d6daa;">report it here</a>.
+          </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="eml-footer">
+          <p>© 2026 Equinix, Inc. · One Lagoon Drive, Redwood City, CA 94065</p>
+          <p>
+            <a href="#">Privacy Policy</a> &nbsp;·&nbsp;
+            <a href="#">Unsubscribe from Partner Central notifications</a>
+          </p>
+          <p style="margin-top:8px;color:#aabbc8;">
+            This email was sent to alex.kim@cloudbridge.com because you submitted a request to join CloudBridge Technologies Inc. on Equinix Partner Central.
+          </p>
+        </div>
+
+      </div><!-- /eml-wrap -->
+    </div><!-- /email-body -->
+
+    <!-- Email ID strip -->
+    <div class="email-id-strip">
+      <span class="eml-id-badge">PCP-REP-APPROVE</span>
+      <span>Transactional · Experience Cloud auto-send on admin approval action · Trigger: PartnerUserRequest__c.Status → "Approved"</span>
+    </div>
+
+  </div><!-- /email-client -->
+
+</div><!-- /page-shell -->
+</main>
+
+<!-- ── SPEC PANEL ──────────────────────────────────────────── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design specifications">
+  <button class="spec-toggle" onclick="toggleSpec()" aria-expanded="true" aria-controls="spec-panel" id="spec-toggle-btn">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+    <span>Spec</span>
+  </button>
+
+  <div class="spec-content">
+    <p class="spec-section-title">About This Email</p>
+    <p class="spec-item">PCP-REP-APPROVE is the activation email sent to an individual user after a Portal Admin approves their join request. It is distinct from PCP-APPROVE, which is sent to the org admin after Equinix approves a new partner organization's application.</p>
+
+    <p class="spec-section-title" style="margin-top:16px;">Trigger</p>
+    <p class="spec-item">Sent automatically when <code>PartnerUserRequest__c.Status</code> is updated to "Approved" by a user with the Portal Admin role. Should fire via a Salesforce Flow or Process Builder action on the junction object, not as a manual task for the admin.</p>
+
+    <p class="spec-section-title" style="margin-top:16px;">OTP login (no password)</p>
+    <p class="spec-item">The "Activate your account" CTA links to the Experience Cloud login page in passwordless email OTP mode. The user enters their email, receives a 6-digit code, and enters it. No password is ever created or required. This is the recommended pattern for new user activation as it removes the friction of password creation and reduces support load from forgotten passwords at first login.</p>
+    <p class="spec-item">Salesforce Experience Cloud has supported passwordless email OTP natively since Winter '23. It is enabled per-community in Setup → Digital Experiences → Settings → Login.</p>
+
+    <p class="spec-section-title" style="margin-top:16px;">Role shown in email</p>
+    <p class="spec-item">The role shown is the role the admin assigned at approval time, which may differ from what the user requested. This helps set expectations before the user logs in and sees their access level.</p>
+
+    <p class="spec-section-title" style="margin-top:16px;">Difference from PCP-APPROVE</p>
+    <p class="spec-item">PCP-APPROVE goes to the org admin (Jordan Reeves) with credentials and the onboarding checklist. PCP-REP-APPROVE goes to the individual rep (Alex Kim) with an activation link. The rep flow is lighter: OTP login → orientation → dashboard. No agreement signing, no setup wizard.</p>
+
+    <p class="spec-section-title" style="margin-top:16px;">Personas</p>
+    <p class="spec-item"><strong>Recipient:</strong> Alex Kim (new CloudBridge hire, Deal Registration User). <strong>Approver who triggered this:</strong> Jordan Reeves (Portal Admin).</p>
+
+    <p class="spec-section-title" style="margin-top:16px;">Connected pages</p>
+    <p class="spec-item">CTA links to <a href="../onboarding-auth-setup.html" style="color:var(--wf-accent);">onboarding-auth-setup.html</a> (OTP login + auth setup). After activation, user lands in <a href="../rep-first-login.html" style="color:var(--wf-accent);">rep-first-login.html</a> (first-login orientation wizard). Join request form at <a href="../partner-user-request.html" style="color:var(--wf-accent);">partner-user-request.html</a>.</p>
+  </div>
+</aside>
+
+<script>
+  function toggleSpec() {
+    const panel = document.getElementById('spec-panel');
+    const btn   = document.getElementById('spec-toggle-btn');
+    const open  = panel.classList.toggle('collapsed');
+    btn.setAttribute('aria-expanded', String(!open));
+  }
+</script>
+<script src="../wf-nav.js"></script>
+
+<script>
+/* ── Story-reference auto-fill ───────────────────────────────────────── */
+(function() {
+  function set(id, val) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    if (el.tagName === 'SELECT') {
+      // Try by value first, then by text content
+      var opts = el.options;
+      for (var i = 0; i < opts.length; i++) {
+        if (opts[i].value === val || opts[i].text === val) {
+          el.selectedIndex = i;
+          el.dispatchEvent(new Event('change', {bubbles:true}));
+          return;
+        }
+      }
+    } else if (el.type === 'checkbox' || el.type === 'radio') {
+      el.checked = !!val;
+      el.dispatchEvent(new Event('change', {bubbles:true}));
+    } else {
+      el.value = val;
+      el.dispatchEvent(new Event('input', {bubbles:true}));
+      el.dispatchEvent(new Event('change', {bubbles:true}));
+    }
+  }
+
+  // ── Applicant / primary contact ──────────────────────────────────────
+  set('first-name',   'Jordan');
+  set('last-name',    'Reeves');
+  set('email',        'jordan.reeves@cloudbridge.com');
+  set('c-email',      'jordan.reeves@cloudbridge.com');
+  set('job-title',    'Sales Operations Manager');
+  set('c-title',      'Sales Operations Manager');
+  set('phone',        '+1 512 555 0142');
+  set('mobile',       '+1 512 555 0142');
+  set('c-phone',      '+1 512 555 0142');
+  set('c-name',       'Jordan Reeves');
+  set('lang',         'English');
+
+  // ── Company search / selection ───────────────────────────────────────
+  set('company-search', 'CloudBridge Technologies Inc.');
+  set('region-select',  'amer-us');
+
+  // ── Company detail fields ────────────────────────────────────────────
+  set('co-name',    'CloudBridge Technologies Inc.');
+  set('co-website', 'https://cloudbridge.com');
+  set('co-country', 'United States');
+  set('co-city',    'Austin');
+  set('co-street',  '7700 Parmer Lane, Suite 200');
+
+  // ── Organization fields (onboarding-apply-form style) ────────────────
+  set('o-name',     'CloudBridge Technologies Inc.');
+  set('o-website',  'https://cloudbridge.com');
+  set('o-hq',       'Austin, TX, United States');
+  set('o-country',  'United States');
+  set('o-duns',     '12-345-6789');
+  set('o-tax',      'US12-3456789');
+
+  // ── Partner / business type ──────────────────────────────────────────
+  set('partner-type',  'reseller');
+  set('biz-type',      'Systems Integrator');
+
+  // ── Deal registration defaults ───────────────────────────────────────
+  set('dr-currency', 'USD');
+  set('dr-owner',    'Jordan Reeves');
+
+  // ── Misc ─────────────────────────────────────────────────────────────
+  set('years-in-business', '10–20 years');
+  set('existing-customer', 'Yes');
+  set('existing-partner',  'No');
+  set('other-partners',    'AWS Partner Network, Microsoft CSP');
+  set('ref-notes',         'Referred by Marcus Chen, PSM at Equinix.');
+
+  // ── Invite / secondary contact ───────────────────────────────────────
+  set('invite-name',  'Steve Rogers');
+  set('invite-email', 'steve.rogers@cloudbridge.com');
+  set('invite-role',  'Sales');
+
+  // ── Checkboxes ───────────────────────────────────────────────────────
+  set('term1',        true);
+  set('term2',        true);
+  set('term3',        true);
+  set('terms-check',  true);
+  set('cert-check',   true);
+  set('auth-check',   true);
+  set('saved-confirm',true);
+
+  // ── Referral-specific ────────────────────────────────────────────────
+  var refName = document.getElementById('ref-name');
+  if (refName) refName.value = 'Marcus Chen';
+  var refEmail = document.getElementById('ref-email');
+  if (refEmail) refEmail.value = 'marcus.chen@equinix.com';
+  var refComp = document.getElementById('ref-company');
+  if (refComp) refComp.value = 'Equinix';
+
+  // ── Click reseller partner-type card if present ──────────────────────
+  var cards = document.querySelectorAll('.type-card, .partner-card, [data-type]');
+  cards.forEach(function(c) {
+    var t = (c.dataset.type || c.getAttribute('data-type') || '').toLowerCase();
+    if (t === 'reseller' || t.includes('reseller')) {
+      c.click && c.click();
+    }
+  });
+
+  // ── Show company fields if wizard has them hidden ────────────────────
+  var cf = document.getElementById('company-fields');
+  if (cf) cf.style.display = '';
+
+  // ── Show selected company banner ─────────────────────────────────────
+  var banner = document.getElementById('selected-banner');
+  var bannerName = document.getElementById('banner-name');
+  var bannerMeta = document.getElementById('banner-meta');
+  var bannerAvatar = document.getElementById('banner-avatar');
+  var searchRow = document.getElementById('search-row');
+  if (banner && bannerName) {
+    bannerName.textContent = 'CloudBridge Technologies Inc.';
+    if (bannerMeta) bannerMeta.textContent = 'Austin, TX · cloudbridge.com';
+    if (bannerAvatar) bannerAvatar.textContent = 'CB';
+    banner.style.display = 'flex';
+    if (searchRow) searchRow.style.display = 'none';
+  }
+
+})();
+</script>
+
+</body>
+</html>

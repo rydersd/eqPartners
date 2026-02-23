@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Application Submitted - Equinix Partner Program</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); }
+    .corp-header { background: var(--wf-ink, #1e2a3a); padding: 0 32px; height: 64px; display: flex; align-items: center; justify-content: space-between; }
+    .corp-logo { display: flex; align-items: center; gap: 12px; }
+    .corp-logo-mark { color: var(--wf-accent, var(--wf-muted, #6b7f99)); font-size: 24px; font-weight: 800; letter-spacing: -1px; }
+    .corp-logo-text { color: var(--wf-surface, #edf1f7); font-size: 14px; font-weight: 500; }
+    .corp-nav { display: flex; gap: 24px; }
+    .corp-nav a { color: rgba(255,255,255,.8); text-decoration: none; font-size: 13px; font-weight: 500; }
+
+    .steps { display: flex; align-items: center; gap: 0; max-width: 900px; margin: 0 auto; padding: 32px 32px 0; }
+    .step { display: flex; align-items: center; gap: 10px; flex: 1; position: relative; }
+    .step:not(:last-child)::after { content: ""; flex: 1; height: 2px; background: var(--wf-tint, #dce4ef); margin-left: 10px; }
+    .step.active:not(:last-child)::after, .step.completed:not(:last-child)::after { background: var(--wf-muted, #6b7f99); }
+    .step-number { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; border: 2px solid var(--wf-tint, #dce4ef); color: var(--wf-text, #3b4f68); background: var(--wf-surface, #edf1f7); }
+    .step.active .step-number { border-color: var(--wf-muted, #6b7f99); background: var(--wf-muted, #6b7f99); color: var(--wf-surface, #edf1f7); }
+    .step.completed .step-number { border-color: var(--wf-muted, #6b7f99); background: var(--wf-muted, #6b7f99); color: var(--wf-surface, #edf1f7); }
+    .step-label { font-size: 12px; font-weight: 600; color: var(--wf-text, #3b4f68); white-space: nowrap; }
+    .step.active .step-label { color: var(--wf-ink, #1e2a3a); }
+    .step.completed .step-label { color: var(--wf-muted, #6b7f99); }
+
+    .container { max-width: 900px; margin: 0 auto; padding: 32px; }
+
+    /* Success Card */
+    .success-card { background: var(--wf-surface, #edf1f7); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); padding: 48px; text-align: center; margin-bottom: 32px; }
+    .success-icon { width: 80px; height: 80px; border-radius: 50%; background: var(--wf-canvas, #f5f7fb); display: flex; align-items: center; justify-content: center; font-size: 40px; margin: 0 auto 24px; }
+    .success-card h1 { font-size: 28px; font-weight: 700; margin: 0 0 12px 0; color: var(--wf-ink, #1e2a3a); }
+    .success-card .subtitle { font-size: 16px; color: var(--wf-muted, #6b7f99); margin: 0 0 32px 0; line-height: 1.6; max-width: 560px; margin-left: auto; margin-right: auto; }
+
+    /* Application Summary */
+    .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; text-align: left; max-width: 520px; margin: 0 auto 32px; }
+    .summary-item { background: var(--wf-canvas, #f5f7fb); border-radius: 6px; padding: 14px 16px; }
+    .summary-label { font-size: 11px; font-weight: 600; color: var(--wf-muted, #6b7f99); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .summary-value { font-size: 14px; font-weight: 600; color: var(--wf-ink, #1e2a3a); }
+
+    /* Timeline */
+    .timeline-card { background: var(--wf-surface, #edf1f7); border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); padding: 32px; margin-bottom: 24px; }
+    .timeline-card h2 { font-size: 16px; font-weight: 700; margin: 0 0 24px 0; }
+    .timeline { position: relative; padding-left: 32px; }
+    .timeline::before { content: ""; position: absolute; left: 11px; top: 4px; bottom: 4px; width: 2px; background: var(--wf-line, #b0bdd0); }
+    .timeline-item { position: relative; margin-bottom: 24px; }
+    .timeline-item:last-child { margin-bottom: 0; }
+    .timeline-dot { position: absolute; left: -32px; top: 2px; width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--wf-line, #b0bdd0); background: var(--wf-surface, #edf1f7); display: flex; align-items: center; justify-content: center; font-size: 10px; }
+    .timeline-dot.done { border-color: var(--wf-muted, #6b7f99); background: var(--wf-muted, #6b7f99); color: var(--wf-surface, #edf1f7); }
+    .timeline-dot.current { border-color: var(--wf-accent, #3d6daa); background: var(--wf-canvas, #f5f7fb); color: var(--wf-accent, #3d6daa); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(6,106,254,0.3); } 50% { box-shadow: 0 0 0 6px rgba(6,106,254,0); } }
+    .timeline-title { font-size: 14px; font-weight: 600; color: var(--wf-ink, #1e2a3a); margin-bottom: 4px; }
+    .timeline-desc { font-size: 13px; color: var(--wf-muted, #6b7f99); line-height: 1.5; }
+    .timeline-time { font-size: 11px; color: var(--wf-text, #3b4f68); margin-top: 4px; }
+
+    /* Email Preview */
+    .email-preview { background: var(--wf-surface, #edf1f7); border: 1px solid var(--wf-surface, #edf1f7); border-radius: 8px; padding: 20px; margin-bottom: 24px; }
+    .email-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--wf-surface, #edf1f7); }
+    .email-icon { width: 36px; height: 36px; border-radius: 8px; background: var(--wf-accent, #3d6daa); display: flex; align-items: center; justify-content: center; color: var(--wf-surface, #edf1f7); font-size: 18px; }
+    .email-meta { flex: 1; }
+    .email-from { font-size: 13px; font-weight: 600; color: var(--wf-ink, #1e2a3a); }
+    .email-subject { font-size: 12px; color: var(--wf-muted, #6b7f99); }
+    .email-body { font-size: 13px; color: var(--wf-ink, #1e2a3a); line-height: 1.7; }
+    .email-body p { margin: 0 0 8px 0; }
+
+    .help-card { background: var(--wf-surface, #edf1f7); border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); padding: 24px; text-align: center; }
+    .help-card p { font-size: 13px; color: var(--wf-muted, #6b7f99); margin: 0 0 12px 0; }
+    .help-link { color: var(--wf-accent, #3d6daa); text-decoration: none; font-weight: 600; font-size: 13px; }
+
+    .footer { background: var(--wf-ink, #1e2a3a); color: rgba(255,255,255,.7); padding: 32px; margin-top: 48px; font-size: 12px; text-align: center; line-height: 1.8; }
+    .footer a { color: rgba(255,255,255,.9); text-decoration: none; }
+
+    @media (max-width: 768px) {
+      .summary-grid { grid-template-columns: 1fr; }
+      .steps { flex-wrap: wrap; gap: 8px; }
+      .step:not(:last-child)::after { display: none; }
+</style>
+  <link rel="stylesheet" href="../wireframe.css">
+</head>
+<body>
+
+<!-- Story-reference banner -->
+<div id="story-ref-banner" style="
+  position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+  background: #f59e0b; color: #1c1917; font-family: sans-serif;
+  font-size: 12px; font-weight: 600; letter-spacing: .04em;
+  padding: 5px 16px; display: flex; align-items: center; gap: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.18);">
+  <span style="background:#1c1917;color:#f59e0b;border-radius:3px;padding:2px 7px;font-size:11px;">STORY REF</span>
+  CloudBridge Technologies Inc. &nbsp;·&nbsp; Jordan Reeves &nbsp;·&nbsp; PCP-APP-2026-0089
+  <span style="margin-left:auto;opacity:.7;font-weight:400;">Pre-filled for screen builds</span>
+</div>
+<style>#story-ref-banner ~ * { /* banner pushes nothing — content scrolls under */ }</style>
+
+  <header class="wf-header">
+    <div class="wf-header-logo"><svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix"><path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/></svg></div>
+    <div class="wf-header-title">Partner Central</div>
+    <nav class="wf-header-nav">
+      <a href="#" class="active">Step</a>
+    </nav>
+    <div class="wf-header-util">
+      <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+    </div>
+  </header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+
+  <div class="steps" role="navigation" aria-label="Onboarding progress">
+    <div class="step completed"><div class="step-number">✓</div><div class="step-label">Apply</div></div>
+    <div class="step active" aria-current="step"><div class="step-number">2</div><div class="step-label">Confirmation</div></div>
+    <div class="step"><div class="step-number">3</div><div class="step-label">Verification</div></div>
+    <div class="step"><div class="step-number">4</div><div class="step-label">Agreement</div></div>
+    <div class="step"><div class="step-number">5</div><div class="step-label">Welcome</div></div>
+  </div>
+
+  <div class="container">
+    <!-- Success Message -->
+    <div class="success-card" role="status" aria-live="polite">
+      <div class="success-icon">✅</div>
+      <h1>Application Submitted Successfully</h1>
+      <p class="subtitle">Thank you, Jordan. Your application for CloudBridge Solutions LLC has been received. Our partner team will review your application and reach out within 3-5 business days.</p>
+
+      <div class="summary-grid">
+        <div class="summary-item">
+          <div class="summary-label">Application ID</div>
+          <div class="summary-value">APP-2026-00847</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-label">Partner Type(s)</div>
+          <div class="summary-value">Reseller</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-label">Submitted</div>
+          <div class="summary-value">Feb 16, 2026 at 2:34 PM PST</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-label">Estimated Review</div>
+          <div class="summary-value">Feb 19-23, 2026</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Email Confirmation Preview -->
+    <div class="email-preview" role="region" aria-label="Email confirmation sent">
+      <div class="email-header">
+        <div class="email-icon">📧</div>
+        <div class="email-meta">
+          <div class="email-from">Confirmation email sent to jordan.reeves@cloudbridge.io</div>
+          <div class="email-subject">Subject: Equinix Partner Program — Application Received (APP-2026-00847)</div>
+        </div>
+      </div>
+      <div class="email-body">
+        <p>Hi Jordan,</p>
+        <p>We've received your partner program application for <strong>CloudBridge Solutions LLC</strong> (Application ID: APP-2026-00847). Our partner team is reviewing your submission and will contact you within 3-5 business days.</p>
+        <p><strong>What happens next:</strong> We'll verify your company details, assess alignment with our partner requirements, and — if approved — send you the Partner Program Agreement for electronic signature. Once signed, you'll receive Partner Central access credentials.</p>
+        <p>If you have questions, reply to this email or contact partners@equinix.com.</p>
+      </div>
+    </div>
+
+    <!-- What's Next Timeline -->
+    <div class="timeline-card">
+      <h2>What Happens Next</h2>
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-dot done">✓</div>
+          <div class="timeline-title">Application Submitted</div>
+          <div class="timeline-desc">Your application has been received and a confirmation email sent to jordan.reeves@cloudbridge.io.</div>
+          <div class="timeline-time">Just now</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot current">●</div>
+          <div class="timeline-title">Equinix Review & Verification</div>
+          <div class="timeline-desc">Our partner team reviews your company details, checks references, and verifies eligibility. We may reach out for additional information during this step.</div>
+          <div class="timeline-time">Typically 3-5 business days</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot">4</div>
+          <div class="timeline-title">Agreement Signature</div>
+          <div class="timeline-desc">If approved, you'll receive the Equinix Partner Program Agreement via DocuSign for electronic signature. The agreement covers commission structure, deal protection, and program terms.</div>
+          <div class="timeline-time">After approval</div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot">5</div>
+          <div class="timeline-title">Partner Central Access</div>
+          <div class="timeline-desc">Once the agreement is countersigned, you'll receive login credentials for Partner Central — your hub for deal registration, training, commission tracking, and sales tools.</div>
+          <div class="timeline-time">Within 24 hours of agreement</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Help -->
+    <div class="help-card">
+      <p>Questions about your application? Our partner team is ready to help.</p>
+      <a href="mailto:partners@equinix.com" class="help-link">partners@equinix.com</a>
+      <span style="color:var(--wf-tint, #dce4ef); margin: 0 12px;">|</span>
+      <a href="tel:+18663784649" class="help-link">+1 (866) 378-4649</a>
+    </div>
+
+    
+<footer class="wf-footer">
+    &copy; 2026 Equinix · Wireframe specification
+  </footer>
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Application submission confirmation page providing receipt confirmation, reference ID, and transparent timeline for next onboarding steps while reducing applicant anxiety through clear progress visibility.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Confirm that application was received successfully</li>
+<li>Provide applicant with unique reference ID for status tracking</li>
+<li>Show exactly what confirmation email was sent</li>
+<li>Set expectations for timeline and next steps in process</li>
+<li>Reduce applicant anxiety with clear progression visibility</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Step indicator showing Steps 1-5 with Step 2 active and completed badge</li>
+<li>Success confirmation card with application ID, partner type, and submission date</li>
+<li>Email confirmation preview showing exactly what was sent to applicant</li>
+<li>What Happens Next timeline with 4 remaining steps and current-step animation</li>
+<li>Contact information for application questions and support</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Step indicator visually shows onboarding progress with completion checkmarks</li>
+<li>Email and phone contact links for support with click-to-call capability</li>
+<li>Timeline shows expected timing for each onboarding phase with pulsing current step</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Public Access & Authentication</strong>
+<ul>
+<li>Public access URL (no login required) using Lightning Community guest user access via shared URL parameter ?applicationId={!Partner_Application__c.Id} validated against public record link whitelist</li>
+<li>Guest page access via Salesforce guest user profile with record access enforced through SOQL WHERE clause filtering by specific Application_ID__c value from URL parameter</li>
+<li>Return link to log in with AccountLink__c stored on Partner_Application__c redirecting authenticated user to partner portal</li>
+</ul>
+</li>
+<li><strong>Email Management & Archival</strong>
+<ul>
+<li>Server-side email generation triggered by after-insert Apex trigger on Partner_Application__c calling Messaging.sendEmail() with confirmation template</li>
+<li>Email template merging Partner_Application__c fields including Contact Name, Company Name, and Application_ID__c into template body</li>
+<li>Email archival storing sent email in EmailMessage object linked to Partner_Application__c via automatic Salesforce email integration for audit trail and future reference</li>
+</ul>
+</li>
+<li><strong>Timeline & Milestone Tracking</strong>
+<ul>
+<li>Automatic timeline calculation based on Partner_Application__c.Application_Date__c field using formula field Partner_Onboarding_Task__c.Days_Remaining__c = Expected_Completion_Date__c - TODAY()</li>
+<li>Stage milestones populated on child Partner_Onboarding_Task__c records via Flow Orchestration executing after Partner_Application__c status transition to 'Submitted'</li>
+<li>Expected completion dates calculated using Stage_Duration_Days__c custom field multiplied by stage index providing 7, 14, 21, 30 day targets</li>
+</ul>
+</li>
+<li><strong>Status Display & Real-Time Updates</strong>
+<ul>
+<li>Real-time pipeline stage display synced from Partner_Application__c.Pipeline_Stage__c field using Visualforce page refresh every 60 seconds via page polling mechanism</li>
+<li>Stage indicator component rendering step-by-step progress bar with checkmark icons for completed stages and current stage highlighted with pulsing animation CSS</li>
+<li>Status text updating from Partner_Application__c picklist values ('Submitted', 'Under Review', 'Approved', 'Agreement', 'Fully Activated')</li>
+</ul>
+</li>
+<li><strong>Engagement & Support</strong>
+<ul>
+<li>Contact links for PSM support embedded with SOQL query lookup fetching Partner_Service_Manager__r.Phone__c and Email__c from related Partner_Service_Manager__c record</li>
+<li>Click-to-call capability on phone number link using <a href="tel:+1234567890"> anchor tag and SMS capability using href="sms:+1234567890"</li>
+</ul>
+</li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Key Objects</h4>
+<ul>
+<li>Partner_Application__c (Status = 'Submitted', Application_Date__c, Application_ID__c)</li>
+<li>EmailMessage — Captured confirmation email for display and audit trail</li>
+<li>Partner_Onboarding_Task__c — Child records defining timeline stages and expected completion dates</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+<script src="../wf-nav.js"></script>
+
+<script>
+/* ── Story-reference auto-fill ───────────────────────────────────────── */
+(function() {
+  function set(id, val) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    if (el.tagName === 'SELECT') {
+      // Try by value first, then by text content
+      var opts = el.options;
+      for (var i = 0; i < opts.length; i++) {
+        if (opts[i].value === val || opts[i].text === val) {
+          el.selectedIndex = i;
+          el.dispatchEvent(new Event('change', {bubbles:true}));
+          return;
+        }
+      }
+    } else if (el.type === 'checkbox' || el.type === 'radio') {
+      el.checked = !!val;
+      el.dispatchEvent(new Event('change', {bubbles:true}));
+    } else {
+      el.value = val;
+      el.dispatchEvent(new Event('input', {bubbles:true}));
+      el.dispatchEvent(new Event('change', {bubbles:true}));
+    }
+  }
+
+  // ── Applicant / primary contact ──────────────────────────────────────
+  set('first-name',   'Jordan');
+  set('last-name',    'Reeves');
+  set('email',        'jordan.reeves@cloudbridge.com');
+  set('c-email',      'jordan.reeves@cloudbridge.com');
+  set('job-title',    'Sales Operations Manager');
+  set('c-title',      'Sales Operations Manager');
+  set('phone',        '+1 512 555 0142');
+  set('mobile',       '+1 512 555 0142');
+  set('c-phone',      '+1 512 555 0142');
+  set('c-name',       'Jordan Reeves');
+  set('lang',         'English');
+
+  // ── Company search / selection ───────────────────────────────────────
+  set('company-search', 'CloudBridge Technologies Inc.');
+  set('region-select',  'amer-us');
+
+  // ── Company detail fields ────────────────────────────────────────────
+  set('co-name',    'CloudBridge Technologies Inc.');
+  set('co-website', 'https://cloudbridge.com');
+  set('co-country', 'United States');
+  set('co-city',    'Austin');
+  set('co-street',  '7700 Parmer Lane, Suite 200');
+
+  // ── Organization fields (onboarding-apply-form style) ────────────────
+  set('o-name',     'CloudBridge Technologies Inc.');
+  set('o-website',  'https://cloudbridge.com');
+  set('o-hq',       'Austin, TX, United States');
+  set('o-country',  'United States');
+  set('o-duns',     '12-345-6789');
+  set('o-tax',      'US12-3456789');
+
+  // ── Partner / business type ──────────────────────────────────────────
+  set('partner-type',  'reseller');
+  set('biz-type',      'Systems Integrator');
+
+  // ── Deal registration defaults ───────────────────────────────────────
+  set('dr-currency', 'USD');
+  set('dr-owner',    'Jordan Reeves');
+
+  // ── Misc ─────────────────────────────────────────────────────────────
+  set('years-in-business', '10–20 years');
+  set('existing-customer', 'Yes');
+  set('existing-partner',  'No');
+  set('other-partners',    'AWS Partner Network, Microsoft CSP');
+  set('ref-notes',         'Referred by Marcus Chen, PSM at Equinix.');
+
+  // ── Invite / secondary contact ───────────────────────────────────────
+  set('invite-name',  'Steve Rogers');
+  set('invite-email', 'steve.rogers@cloudbridge.com');
+  set('invite-role',  'Sales');
+
+  // ── Checkboxes ───────────────────────────────────────────────────────
+  set('term1',        true);
+  set('term2',        true);
+  set('term3',        true);
+  set('terms-check',  true);
+  set('cert-check',   true);
+  set('auth-check',   true);
+  set('saved-confirm',true);
+
+  // ── Referral-specific ────────────────────────────────────────────────
+  var refName = document.getElementById('ref-name');
+  if (refName) refName.value = 'Marcus Chen';
+  var refEmail = document.getElementById('ref-email');
+  if (refEmail) refEmail.value = 'marcus.chen@equinix.com';
+  var refComp = document.getElementById('ref-company');
+  if (refComp) refComp.value = 'Equinix';
+
+  // ── Click reseller partner-type card if present ──────────────────────
+  var cards = document.querySelectorAll('.type-card, .partner-card, [data-type]');
+  cards.forEach(function(c) {
+    var t = (c.dataset.type || c.getAttribute('data-type') || '').toLowerCase();
+    if (t === 'reseller' || t.includes('reseller')) {
+      c.click && c.click();
+    }
+  });
+
+  // ── Show company fields if wizard has them hidden ────────────────────
+  var cf = document.getElementById('company-fields');
+  if (cf) cf.style.display = '';
+
+  // ── Show selected company banner ─────────────────────────────────────
+  var banner = document.getElementById('selected-banner');
+  var bannerName = document.getElementById('banner-name');
+  var bannerMeta = document.getElementById('banner-meta');
+  var bannerAvatar = document.getElementById('banner-avatar');
+  var searchRow = document.getElementById('search-row');
+  if (banner && bannerName) {
+    bannerName.textContent = 'CloudBridge Technologies Inc.';
+    if (bannerMeta) bannerMeta.textContent = 'Austin, TX · cloudbridge.com';
+    if (bannerAvatar) bannerAvatar.textContent = 'CB';
+    banner.style.display = 'flex';
+    if (searchRow) searchRow.style.display = 'none';
+  }
+
+})();
+</script>
+
+</body>
+</html>

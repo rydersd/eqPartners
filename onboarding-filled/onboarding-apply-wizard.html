@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" class="wireframe">
 <head>
-<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Apply to Become an Equinix Partner — Partner Central</title>
-  <link rel="stylesheet" href="wireframe.css">
+  <link rel="stylesheet" href="../wireframe.css">
   <style>
     * { box-sizing: border-box; }
     body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); }
@@ -281,6 +281,20 @@
 </head>
 <body>
 
+<!-- Story-reference banner -->
+<div id="story-ref-banner" style="
+  position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
+  background: #f59e0b; color: #1c1917; font-family: sans-serif;
+  font-size: 12px; font-weight: 600; letter-spacing: .04em;
+  padding: 5px 16px; display: flex; align-items: center; gap: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.18);">
+  <span style="background:#1c1917;color:#f59e0b;border-radius:3px;padding:2px 7px;font-size:11px;">STORY REF</span>
+  CloudBridge Technologies Inc. &nbsp;·&nbsp; Jordan Reeves &nbsp;·&nbsp; PCP-APP-2026-0089
+  <span style="margin-left:auto;opacity:.7;font-weight:400;">Pre-filled for screen builds</span>
+</div>
+<style>#story-ref-banner ~ * { /* banner pushes nothing — content scrolls under */ }</style>
+
+
 <!-- ── Header ─────────────────────────────────────────────── -->
 <header class="wf-header">
   <div class="wf-header-logo"><svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix"><path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/></svg></div>
@@ -289,7 +303,7 @@
     <a href="#" class="active">Partner Application</a>
   </nav>
   <div class="wf-header-util" style="font-size:11px; color:rgba(255,255,255,.5);">
-    Variant: Search-before-create &nbsp;|&nbsp; <a href="onboarding-apply-form.html" style="color:rgba(255,255,255,.7); text-decoration:none; font-weight:600;">→ No-search variant</a>
+    Variant: Search-before-create &nbsp;|&nbsp; <a href="../onboarding-apply-form.html" style="color:rgba(255,255,255,.7); text-decoration:none; font-weight:600;">→ No-search variant</a>
   </div>
 </header>
 
@@ -380,7 +394,7 @@
     <!-- Partner type -->
     <div class="card">
       <p class="card-title">How will you work with Equinix? <span class="req">*</span></p>
-      <p class="card-desc">This determines your portal features and which deal flows you're set up for. See the <a href="pc-dr-deal-type.html" style="color:var(--wf-accent,#3d6daa);">Partner Type Guide</a> if you're not sure.</p>
+      <p class="card-desc">This determines your portal features and which deal flows you're set up for. See the <a href="../pc-dr-deal-type.html" style="color:var(--wf-accent,#3d6daa);">Partner Type Guide</a> if you're not sure.</p>
       <div class="type-cards" role="radiogroup" aria-label="Partner type selection">
         <div class="type-card selected" role="radio" aria-checked="true" tabindex="0" id="type-referral" onclick="selectType('referral')" onkeydown="if(event.key==='Enter'||event.key===' ')selectType('referral')">
           <div class="type-radio"><div class="type-radio-dot"></div><span class="type-radio-label">Lead Referral Partner</span></div>
@@ -1396,6 +1410,132 @@
     if (e.key === 'Escape') closeModal();
   });
 </script>
-<script src="wf-nav.js"></script>
+<script src="../wf-nav.js"></script>
+
+<script>
+/* ── Story-reference auto-fill ───────────────────────────────────────── */
+(function() {
+  function set(id, val) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    if (el.tagName === 'SELECT') {
+      // Try by value first, then by text content
+      var opts = el.options;
+      for (var i = 0; i < opts.length; i++) {
+        if (opts[i].value === val || opts[i].text === val) {
+          el.selectedIndex = i;
+          el.dispatchEvent(new Event('change', {bubbles:true}));
+          return;
+        }
+      }
+    } else if (el.type === 'checkbox' || el.type === 'radio') {
+      el.checked = !!val;
+      el.dispatchEvent(new Event('change', {bubbles:true}));
+    } else {
+      el.value = val;
+      el.dispatchEvent(new Event('input', {bubbles:true}));
+      el.dispatchEvent(new Event('change', {bubbles:true}));
+    }
+  }
+
+  // ── Applicant / primary contact ──────────────────────────────────────
+  set('first-name',   'Jordan');
+  set('last-name',    'Reeves');
+  set('email',        'jordan.reeves@cloudbridge.com');
+  set('c-email',      'jordan.reeves@cloudbridge.com');
+  set('job-title',    'Sales Operations Manager');
+  set('c-title',      'Sales Operations Manager');
+  set('phone',        '+1 512 555 0142');
+  set('mobile',       '+1 512 555 0142');
+  set('c-phone',      '+1 512 555 0142');
+  set('c-name',       'Jordan Reeves');
+  set('lang',         'English');
+
+  // ── Company search / selection ───────────────────────────────────────
+  set('company-search', 'CloudBridge Technologies Inc.');
+  set('region-select',  'amer-us');
+
+  // ── Company detail fields ────────────────────────────────────────────
+  set('co-name',    'CloudBridge Technologies Inc.');
+  set('co-website', 'https://cloudbridge.com');
+  set('co-country', 'United States');
+  set('co-city',    'Austin');
+  set('co-street',  '7700 Parmer Lane, Suite 200');
+
+  // ── Organization fields (onboarding-apply-form style) ────────────────
+  set('o-name',     'CloudBridge Technologies Inc.');
+  set('o-website',  'https://cloudbridge.com');
+  set('o-hq',       'Austin, TX, United States');
+  set('o-country',  'United States');
+  set('o-duns',     '12-345-6789');
+  set('o-tax',      'US12-3456789');
+
+  // ── Partner / business type ──────────────────────────────────────────
+  set('partner-type',  'reseller');
+  set('biz-type',      'Systems Integrator');
+
+  // ── Deal registration defaults ───────────────────────────────────────
+  set('dr-currency', 'USD');
+  set('dr-owner',    'Jordan Reeves');
+
+  // ── Misc ─────────────────────────────────────────────────────────────
+  set('years-in-business', '10–20 years');
+  set('existing-customer', 'Yes');
+  set('existing-partner',  'No');
+  set('other-partners',    'AWS Partner Network, Microsoft CSP');
+  set('ref-notes',         'Referred by Marcus Chen, PSM at Equinix.');
+
+  // ── Invite / secondary contact ───────────────────────────────────────
+  set('invite-name',  'Steve Rogers');
+  set('invite-email', 'steve.rogers@cloudbridge.com');
+  set('invite-role',  'Sales');
+
+  // ── Checkboxes ───────────────────────────────────────────────────────
+  set('term1',        true);
+  set('term2',        true);
+  set('term3',        true);
+  set('terms-check',  true);
+  set('cert-check',   true);
+  set('auth-check',   true);
+  set('saved-confirm',true);
+
+  // ── Referral-specific ────────────────────────────────────────────────
+  var refName = document.getElementById('ref-name');
+  if (refName) refName.value = 'Marcus Chen';
+  var refEmail = document.getElementById('ref-email');
+  if (refEmail) refEmail.value = 'marcus.chen@equinix.com';
+  var refComp = document.getElementById('ref-company');
+  if (refComp) refComp.value = 'Equinix';
+
+  // ── Click reseller partner-type card if present ──────────────────────
+  var cards = document.querySelectorAll('.type-card, .partner-card, [data-type]');
+  cards.forEach(function(c) {
+    var t = (c.dataset.type || c.getAttribute('data-type') || '').toLowerCase();
+    if (t === 'reseller' || t.includes('reseller')) {
+      c.click && c.click();
+    }
+  });
+
+  // ── Show company fields if wizard has them hidden ────────────────────
+  var cf = document.getElementById('company-fields');
+  if (cf) cf.style.display = '';
+
+  // ── Show selected company banner ─────────────────────────────────────
+  var banner = document.getElementById('selected-banner');
+  var bannerName = document.getElementById('banner-name');
+  var bannerMeta = document.getElementById('banner-meta');
+  var bannerAvatar = document.getElementById('banner-avatar');
+  var searchRow = document.getElementById('search-row');
+  if (banner && bannerName) {
+    bannerName.textContent = 'CloudBridge Technologies Inc.';
+    if (bannerMeta) bannerMeta.textContent = 'Austin, TX · cloudbridge.com';
+    if (bannerAvatar) bannerAvatar.textContent = 'CB';
+    banner.style.display = 'flex';
+    if (searchRow) searchRow.style.display = 'none';
+  }
+
+})();
+</script>
+
 </body>
 </html>
