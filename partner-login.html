@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log In — Partner Central</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: var(--wf-ink, #1e2a3a); color: var(--wf-ink, #1e2a3a); min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* Full-bleed dark background with subtle grid texture */
+    .login-bg { flex: 1; display: flex; flex-direction: column; background: var(--wf-ink, #1e2a3a); background-image: linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px); background-size: 40px 40px; }
+
+    /* Top bar */
+    .login-topbar { padding: 20px 32px; display: flex; align-items: center; justify-content: space-between; }
+    .login-topbar-logo { display: flex; align-items: center; gap: 14px; }
+    .login-topbar-divider { color: rgba(255,255,255,.2); font-size: 18px; }
+    .login-topbar-product { color: rgba(255,255,255,.65); font-size: 13px; font-weight: 500; }
+    .login-topbar-help { color: rgba(255,255,255,.5); font-size: 13px; text-decoration: none; }
+    .login-topbar-help:hover { color: rgba(255,255,255,.85); }
+
+    /* Login card */
+    .login-stage { flex: 1; display: flex; align-items: center; justify-content: center; padding: 24px 16px 64px; }
+    .login-card { background: white; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 8px 40px rgba(0,0,0,.4); overflow: hidden; }
+    .login-card-hd { padding: 32px 36px 0; text-align: center; }
+    .login-card-hd h1 { font-size: 20px; font-weight: 700; margin: 0 0 6px; color: var(--wf-ink, #1e2a3a); }
+    .login-card-hd p { font-size: 13px; color: var(--wf-muted, #6b7f99); margin: 0 0 28px; line-height: 1.5; }
+
+    .login-card-body { padding: 0 36px 32px; }
+
+    /* Form fields */
+    .form-field { margin-bottom: 16px; }
+    .form-label { display: block; font-size: 12px; font-weight: 600; color: var(--wf-text, #3b4f68); margin-bottom: 6px; }
+    .form-input { width: 100%; padding: 10px 12px; border: 1px solid var(--wf-line, #b0bdd0); border-radius: 6px; font-size: 14px; color: var(--wf-ink, #1e2a3a); background: var(--wf-canvas, #f5f7fb); outline: none; font-family: inherit; }
+    .form-input:focus { border-color: var(--wf-accent, #3d6daa); background: white; box-shadow: 0 0 0 3px rgba(61,109,170,.12); }
+    .form-input::placeholder { color: var(--wf-text, #3b4f68); opacity: .5; }
+
+    /* Password row with show/hide toggle */
+    .password-wrap { position: relative; }
+    .password-wrap .form-input { padding-right: 44px; }
+    .password-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: var(--wf-muted, #6b7f99); font-size: 12px; padding: 0; font-weight: 600; }
+
+    /* Remember me + forgot password row */
+    .login-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+    .remember-label { display: flex; align-items: center; gap: 7px; font-size: 13px; color: var(--wf-text, #3b4f68); cursor: pointer; }
+    .remember-label input { margin: 0; accent-color: var(--wf-accent, #3d6daa); }
+    .forgot-link { font-size: 13px; color: var(--wf-accent, #3d6daa); text-decoration: none; font-weight: 500; }
+    .forgot-link:hover { text-decoration: underline; }
+
+    /* Primary CTA */
+    .btn-login { width: 100%; padding: 12px; background: var(--wf-accent, #3d6daa); color: white; border: none; border-radius: 6px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; letter-spacing: .01em; margin-bottom: 16px; }
+    .btn-login:hover { background: #2f5a91; }
+
+    /* Divider */
+    .login-or { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .login-or::before, .login-or::after { content: ""; flex: 1; height: 1px; background: var(--wf-line, #b0bdd0); }
+    .login-or span { font-size: 12px; color: var(--wf-muted, #6b7f99); white-space: nowrap; }
+
+    /* SSO button */
+    .btn-sso { width: 100%; padding: 11px; border: 1px solid var(--wf-line, #b0bdd0); border-radius: 6px; background: white; color: var(--wf-ink, #1e2a3a); font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .btn-sso:hover { background: var(--wf-canvas, #f5f7fb); }
+    .btn-sso-icon { width: 18px; height: 18px; }
+
+    /* One-time link state — shown when arriving from email link */
+    .login-card.otl-mode .otl-only { display: block; }
+    .login-card.otl-mode .password-mode { display: none; }
+    .otl-only { display: none; }
+    .otl-banner { background: var(--wf-tint, #dce4ef); border: 1px solid rgba(61,109,170,.25); border-radius: 6px; padding: 12px 14px; font-size: 13px; color: var(--wf-text, #3b4f68); line-height: 1.5; margin-bottom: 20px; display: flex; gap: 10px; }
+    .otl-banner-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+    .otl-banner strong { display: block; color: var(--wf-ink, #1e2a3a); margin-bottom: 2px; }
+    .btn-login-otl { width: 100%; padding: 12px; background: var(--wf-accent, #3d6daa); color: white; border: none; border-radius: 6px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; margin-bottom: 12px; }
+    .otl-expiry-note { text-align: center; font-size: 12px; color: var(--wf-muted, #6b7f99); }
+    .otl-expiry-note strong { color: var(--wf-amber, #8b7745); }
+
+    /* Error state */
+    .login-error { background: #fff0f0; border: 1px solid #f5c6c6; border-radius: 6px; padding: 10px 14px; font-size: 13px; color: #c0392b; margin-bottom: 16px; display: flex; align-items: flex-start; gap: 8px; }
+    .login-error-icon { flex-shrink: 0; font-weight: 700; }
+
+    /* Card footer */
+    .login-card-ft { padding: 16px 36px; background: var(--wf-canvas, #f5f7fb); border-top: 1px solid var(--wf-line, #b0bdd0); text-align: center; }
+    .login-card-ft p { font-size: 12px; color: var(--wf-muted, #6b7f99); margin: 0; line-height: 1.6; }
+    .login-card-ft a { color: var(--wf-accent, #3d6daa); text-decoration: none; }
+
+    /* State switcher (wireframe utility) */
+    .state-switcher { position: fixed; bottom: 20px; right: 20px; background: var(--wf-surface, #edf1f7); border: 1px solid var(--wf-line, #b0bdd0); border-radius: 8px; padding: 12px 14px; z-index: 200; box-shadow: 0 2px 12px rgba(0,0,0,.15); }
+    .state-switcher p { font-size: 11px; font-weight: 700; color: var(--wf-muted, #6b7f99); text-transform: uppercase; letter-spacing: .05em; margin: 0 0 8px; }
+    .state-btn { display: block; width: 100%; text-align: left; background: none; border: 1px solid var(--wf-line, #b0bdd0); border-radius: 4px; padding: 5px 10px; font-size: 12px; color: var(--wf-text, #3b4f68); cursor: pointer; margin-bottom: 5px; font-family: inherit; }
+    .state-btn:last-child { margin-bottom: 0; }
+    .state-btn.active { background: var(--wf-accent, #3d6daa); color: white; border-color: var(--wf-accent, #3d6daa); font-weight: 600; }
+
+    /* Footer */
+    .login-footer { padding: 20px 32px; text-align: center; }
+    .login-footer p { font-size: 12px; color: rgba(255,255,255,.3); margin: 0; line-height: 1.8; }
+    .login-footer a { color: rgba(255,255,255,.5); text-decoration: none; }
+  </style>
+  <link rel="stylesheet" href="wireframe.css">
+</head>
+<body>
+
+  <div class="login-bg">
+
+    <!-- Top bar -->
+    <div class="login-topbar">
+      <div class="login-topbar-logo">
+        <svg height="16" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix">
+          <path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/>
+        </svg>
+        <span class="login-topbar-divider">/</span>
+        <span class="login-topbar-product">Partner Central</span>
+      </div>
+      <a href="#" class="login-topbar-help">Need help?</a>
+    </div>
+
+    <!-- Login card stage -->
+    <div class="login-stage">
+
+      <!-- === DEFAULT STATE: email + password === -->
+      <div class="login-card" id="login-card">
+        <div class="login-card-hd">
+          <h1>Log in to Partner Central</h1>
+          <p>Enter your registered email and password, or log in with your company SSO.</p>
+        </div>
+        <div class="login-card-body">
+
+          <!-- Error banner (shown on bad credentials) — hidden by default -->
+          <div class="login-error" id="login-error" style="display:none;">
+            <span class="login-error-icon">!</span>
+            <span>Incorrect email or password. <a href="#" style="color:#c0392b;">Reset your password</a> or contact support.</span>
+          </div>
+
+          <!-- === PASSWORD MODE (default) === -->
+          <div class="password-mode">
+            <div class="form-field">
+              <label class="form-label" for="login-email">Email address</label>
+              <input class="form-input" type="email" id="login-email" placeholder="you@company.com" autocomplete="email">
+            </div>
+            <div class="form-field">
+              <label class="form-label" for="login-password">Password</label>
+              <div class="password-wrap">
+                <input class="form-input" type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
+                <button class="password-toggle" type="button" onclick="togglePassword()">Show</button>
+              </div>
+            </div>
+            <div class="login-meta">
+              <label class="remember-label">
+                <input type="checkbox" id="remember-me"> Remember me
+              </label>
+              <a class="forgot-link" href="#">Forgot password?</a>
+            </div>
+            <button class="btn-login" type="button">Log in</button>
+            <div class="login-or"><span>or</span></div>
+            <button class="btn-sso" type="button">
+              <!-- Generic SSO icon -->
+              <svg class="btn-sso-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              Continue with company SSO
+            </button>
+          </div>
+
+          <!-- === ONE-TIME LINK MODE (arriving from onboarding email) === -->
+          <div class="otl-only">
+            <div class="otl-banner">
+              <span class="otl-banner-icon">&#128274;</span>
+              <div>
+                <strong>Logging in as jordan.reeves@cloudbridge.io</strong>
+                You arrived via a one-time login link. Confirm below to complete your first sign-in.
+              </div>
+            </div>
+            <button class="btn-login-otl" type="button">Confirm and log in</button>
+            <p class="otl-expiry-note">Link valid until <strong>Feb 21, 2026 at 3:43 PM EST</strong></p>
+          </div>
+
+        </div>
+        <div class="login-card-ft">
+          <p>Don't have an account? <a href="onboarding-partner-type.html">Apply to become a partner</a><br>
+          Having trouble? <a href="#">Contact Partner Support</a></p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Page footer -->
+    <div class="login-footer">
+      <p>
+        &copy; 2026 Equinix, Inc. &nbsp;·&nbsp;
+        <a href="#">Privacy Policy</a> &nbsp;·&nbsp;
+        <a href="#">Terms of Use</a> &nbsp;·&nbsp;
+        <a href="#">Partner Support</a>
+      </p>
+    </div>
+
+  </div><!-- end login-bg -->
+
+  <!-- Wireframe state switcher — shows different login states for review -->
+  <div class="state-switcher" aria-label="Wireframe state switcher">
+    <p>View state</p>
+    <button class="state-btn active" onclick="setState('default')">Default (password)</button>
+    <button class="state-btn" onclick="setState('otl')">One-time link</button>
+    <button class="state-btn" onclick="setState('error')">Error state</button>
+  </div>
+
+  <div class="spec-tab-anchor">
+    <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+      <span>&#128203;</span> Notes
+    </button>
+  </div>
+
+  <aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+    <div class="spec-panel-hd">
+      <h3>Design Specs</h3>
+      <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+    </div>
+    <div class="spec-panel-bd">
+      <h3>Summary</h3>
+      <p>Login screen for Partner Central. Three states: default email/password, one-time link (arrived from onboarding email), and error. First-time users arriving from the account-ready email land directly in the one-time link state — no password entry required for initial login.</p>
+      <hr class="spec-divider">
+      <h3>States</h3>
+      <ul>
+        <li><strong>Default:</strong> Standard email + password form with SSO option. Existing users returning to the portal.</li>
+        <li><strong>One-time link:</strong> User clicked the magic link from their onboarding email. Page detects the <code>?token=</code> param, shows a confirm-and-log-in screen. No password needed. On confirm, token is redeemed and a standard session is issued.</li>
+        <li><strong>Error:</strong> Bad credentials or expired one-time link. Inline error banner above the form. Link to password reset or support.</li>
+      </ul>
+      <hr class="spec-divider">
+      <h3>First-Login Flow</h3>
+      <ul>
+        <li>User clicks link in account-ready email → <code>partner-login.html?token=eyJ...</code></li>
+        <li>Page detects token param, shows OTL confirm state</li>
+        <li>User clicks "Confirm and log in" → token redeemed, session issued, token marked as used</li>
+        <li>Redirect to <code>onboarding-welcome.html</code> (first-login flag detected)</li>
+        <li>Subsequent logins: standard email/password or SSO</li>
+      </ul>
+      <hr class="spec-divider">
+      <h3>SSO</h3>
+      <ul>
+        <li>Email domain lookup: if user enters email matching a known SSO domain, offer SSO button as primary action</li>
+        <li>Button label updates to show provider name once domain is identified (e.g. "Continue with Okta")</li>
+        <li>For mixed orgs without SSO, email + password remains primary</li>
+      </ul>
+      <hr class="spec-divider">
+      <h3>Technical Details</h3>
+      <ul>
+        <li><strong>Auth method:</strong> Salesforce Experience Cloud login page (custom-branded) or headless auth via Connected App</li>
+        <li><strong>OTL token:</strong> JWT, single-use, 72-hour TTL, stored as Auth_Token__c on Partner_Central_User__c; redeemed via POST /auth/redeem-token</li>
+        <li><strong>SSO:</strong> SAML 2.0 or OIDC via Salesforce Identity; domain routing table stored in SSO_Domain__c object</li>
+        <li><strong>Remember me:</strong> Extends session cookie from default 8 hours to 30 days</li>
+        <li><strong>Failed attempts:</strong> Rate limit after 5 failed attempts; CAPTCHA on attempt 6+; lockout after 10</li>
+      </ul>
+    </div>
+  </aside>
+
+  <script>
+    function togglePassword() {
+      var inp = document.getElementById('login-password');
+      var btn = inp.parentElement.querySelector('.password-toggle');
+      if (inp.type === 'password') { inp.type = 'text'; btn.textContent = 'Hide'; }
+      else { inp.type = 'password'; btn.textContent = 'Show'; }
+    }
+
+    function setState(state) {
+      var card = document.getElementById('login-card');
+      var err = document.getElementById('login-error');
+      var btns = document.querySelectorAll('.state-btn');
+      btns.forEach(function(b) { b.classList.remove('active'); });
+      document.querySelector('.state-btn[onclick="setState(\'' + state + '\')"]').classList.add('active');
+      card.classList.remove('otl-mode');
+      err.style.display = 'none';
+      if (state === 'otl') { card.classList.add('otl-mode'); }
+      if (state === 'error') { err.style.display = 'flex'; }
+    }
+
+    function toggleSpec() {
+      var p = document.getElementById('spec-panel');
+      var b = document.getElementById('spec-toggle');
+      if (!p || !b) return;
+      var isOpen = p.classList.toggle('open');
+      b.setAttribute('aria-expanded', isOpen);
+    }
+  </script>
+  <script src="wf-nav.js"></script>
+</body>
+</html>
