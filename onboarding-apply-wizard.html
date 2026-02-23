@@ -70,8 +70,7 @@
     .search-row { display: flex; flex-direction: column; gap: 14px; }
     .search-field-row { display: flex; flex-direction: column; gap: 5px; }
     .search-field-row > label { font-size: 12px; font-weight: 600; color: var(--wf-ink-dim, #5a6a7e); letter-spacing: .01em; }
-    .search-field-input-row { display: flex; gap: 8px; }
-    .search-input { flex: 1; padding: 10px 12px; border: 1px solid var(--wf-line, #b0bdd0); border-radius: 6px; font-size: 13px; font-family: inherit; }
+    .search-input { width: 100%; padding: 10px 12px; border: 1px solid var(--wf-line, #b0bdd0); border-radius: 6px; font-size: 13px; font-family: inherit; box-sizing: border-box; }
     .search-input:focus { outline: none; border-color: var(--wf-accent, #3d6daa); box-shadow: 0 0 0 3px rgba(61,109,170,0.12); }
     .search-hint { font-size: 12px; color: var(--wf-muted, #6b7f99); margin-top: 8px; }
 
@@ -242,12 +241,13 @@
     /* ── Region + autocomplete search row ────────────────────── */
     .region-select {
       width: 100%;
-      padding: 10px 12px; border: 1px solid var(--wf-line, #b0bdd0); border-radius: 6px;
+      padding: 10px 12px 10px 16px; border: 1px solid var(--wf-line, #b0bdd0); border-radius: 6px;
       font-size: 13px; font-family: inherit; color: var(--wf-ink, #1e2a3a); background: white;
-      cursor: pointer; height: 40px;
+      cursor: pointer; height: 40px; box-sizing: border-box;
     }
     .region-select:focus { outline: none; border-color: var(--wf-accent, #3d6daa); box-shadow: 0 0 0 3px rgba(61,109,170,0.12); }
-    .search-input-wrap { position: relative; flex: 1; }
+    .search-input-wrap { position: relative; width: 100%; }
+    .search-row .search-btn-row { display: flex; justify-content: flex-end; margin-top: 4px; }
     .autocomplete-list {
       display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0;
       background: white; border: 1px solid var(--wf-line, #b0bdd0); border-radius: 6px;
@@ -401,20 +401,17 @@
       <p class="card-desc">Search to see if your organization is already registered. Linking to an existing record speeds up approval.</p>
 
       <div class="search-row" id="search-row">
-        <!-- Row 1: Company name search -->
+        <!-- Row 1: Company name search (full width) -->
         <div class="search-field-row">
           <label for="company-search">Company name <span class="req">*</span></label>
-          <div class="search-field-input-row">
-            <div class="search-input-wrap">
-              <input type="text" class="search-input" id="company-search" placeholder="e.g. CloudBridge Technologies Inc." aria-label="Company name" autocomplete="off" oninput="onSearchInput()" onkeydown="handleSearchKey(event)" aria-autocomplete="list" aria-controls="ac-list" maxlength="150">
-              <div class="autocomplete-list" id="ac-list" role="listbox" aria-label="Company suggestions">
-                <div class="ac-item" id="ac-cloudbridge" role="option" onclick="fillSuggest('CloudBridge Technologies')" tabindex="-1">
-                  <span class="ac-name">CloudBridge Technologies</span>
-                  <span class="ac-hint">↵ to select</span>
-                </div>
+          <div class="search-input-wrap">
+            <input type="text" class="search-input" id="company-search" placeholder="e.g. CloudBridge Technologies Inc." aria-label="Company name" autocomplete="off" oninput="onSearchInput()" onkeydown="handleSearchKey(event)" aria-autocomplete="list" aria-controls="ac-list" maxlength="150">
+            <div class="autocomplete-list" id="ac-list" role="listbox" aria-label="Company suggestions">
+              <div class="ac-item" id="ac-cloudbridge" role="option" onclick="fillSuggest('CloudBridge Technologies')" tabindex="-1">
+                <span class="ac-name">CloudBridge Technologies</span>
+                <span class="ac-hint">↵ to select</span>
               </div>
             </div>
-            <button class="btn btn-primary" id="search-btn" onclick="openSearchModal()" type="button" disabled aria-disabled="true">Search</button>
           </div>
         </div>
         <!-- Row 2: Region -->
@@ -431,8 +428,12 @@
             <option value="apac-jp">APAC — Japan</option>
           </select>
         </div>
+        <!-- Search button — enabled only when both fields have values -->
+        <div class="search-btn-row">
+          <button class="btn btn-primary" id="search-btn" onclick="openSearchModal()" type="button" disabled aria-disabled="true">Search</button>
+        </div>
       </div>
-      <p class="search-hint" id="search-hint">Select a region, then enter your company name. Can't find it? <button class="btn-link" onclick="showManualEntry()" type="button">Enter manually</button></p>
+      <p class="search-hint" id="search-hint">Both fields are required to search. Can't find your company? <button class="btn-link" onclick="showManualEntry()" type="button">Enter manually</button></p>
 
       <!-- Selected company banner (shown after picking from modal) -->
       <div class="selected-company-banner" id="selected-banner">
@@ -1138,7 +1139,7 @@
   function searchReady() {
     const name = document.getElementById('company-search').value.trim();
     const region = document.getElementById('region-select').value;
-    return name.length >= 2 && region !== '';
+    return name.length >= 1 && region !== '';
   }
 
   function onSearchInput() {

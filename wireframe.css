@@ -228,6 +228,15 @@ html.wireframe .wf-header + * { margin-top: 0; }
 html.wireframe .wf-header + .wf-container { padding-top: 24px; }
 html.wireframe .wf-header + .wf-view-toggle { margin: 24px 0 0 0; }
 
+/* ── Align custom-header pages to match ctx-bar 20px ────────── */
+/* Some pages use per-page <style> with padding: 1rem 2rem on
+   header. This override ensures the EQ logo aligns with the
+   hamburger icon in the context bar above it on all pages.     */
+html.wireframe header:not(.wf-header) {
+  padding-left:  20px !important;
+  padding-right: 20px !important;
+}
+
 /* ── Page Title & Breadcrumb ────────────────────────────────── */
 html.wireframe .wf-page-title {
   font-size: 18px;
@@ -799,8 +808,12 @@ html.wireframe .wf-ctx-bar {
   background: var(--wf-surface);
   border-bottom: 1px solid var(--wf-line);
   height: 36px;
+  min-height: 36px;
+  max-height: 36px;
   display: flex;
   align-items: stretch;
+  overflow: hidden;            /* prevent breadcrumbs from bleeding over the app bar */
+  box-sizing: border-box;
 }
 html.wireframe .wf-ctx-inner {
   width: 100%;
@@ -1143,7 +1156,7 @@ html.wireframe .wf-nav-section--open .wf-nav-section-body { display: block; }
 /* Nav items */
 html.wireframe .wf-nav-item {
   display: block;
-  padding: 4px 12px 4px 26px;
+  padding: 5px 10px 5px 12px;
   font-size: 11px;
   color: var(--wf-text);
   text-decoration: none;
@@ -1203,7 +1216,7 @@ html.wireframe .wf-nav-group--open .wf-nav-sub { display: block; }
 
 html.wireframe .wf-nav-subitem {
   display: block;
-  padding: 3px 12px 3px 38px;
+  padding: 3px 10px 3px 24px;
   font-size: 11px;
   color: var(--wf-muted);
   text-decoration: none;
