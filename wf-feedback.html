@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Wireframe Feedback — PCP</title>
@@ -604,7 +604,7 @@ var screenshotData = null; // base64 string
     document.getElementById('f-name').value = savedName;
   } else {
     // Fall back to the email they signed in with
-    var sessionEmail = sessionStorage.getItem('pcp-wf-reviewer-email') || '';
+    var sessionEmail = localStorage.getItem('pcp-wf-reviewer-email') || '';
     if (sessionEmail) document.getElementById('f-name').value = sessionEmail;
   }
   if (savedRole) document.getElementById('f-role').value = savedRole;
@@ -704,7 +704,7 @@ function submitFeedback(e) {
   showToast('Sending\u2026');
 
   // Email via Formspree → rybooth@equinix.com
-  var reviewerEmail = sessionStorage.getItem('pcp-wf-reviewer-email') || '';
+  var reviewerEmail = localStorage.getItem('pcp-wf-reviewer-email') || '';
   fetch('https://formspree.io/f/xpqjoqan', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },

@@ -197,7 +197,7 @@
     var AUTH_KEY = 'pcp-wf-auth';
 
     // If already authenticated, skip the gate
-    if (sessionStorage.getItem(AUTH_KEY) === '1') {
+    if (localStorage.getItem(AUTH_KEY) === '1') {
       window.location.replace('index.html');
     }
 
@@ -218,8 +218,8 @@
         return;
       }
 
-      sessionStorage.setItem(AUTH_KEY, '1');
-      sessionStorage.setItem('pcp-wf-reviewer-email', email);
+      localStorage.setItem(AUTH_KEY, '1');
+      localStorage.setItem('pcp-wf-reviewer-email', email);
       window.location.replace('index.html');
     }
 
