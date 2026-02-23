@@ -951,12 +951,26 @@
 
     visitedSteps.add(n);
     currentStep = n;
+    history.replaceState(null, '', '#step-' + n);
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     // Update aria-current
     document.querySelectorAll('.step-circle').forEach(el => el.removeAttribute('aria-current'));
     document.querySelector('#sn-' + n + ' .step-circle').setAttribute('aria-current', 'step');
   }
+
+  /* ── Deep-link: read hash on load ───────────────────────── */
+  (function initFromHash() {
+    const m = window.location.hash.match(/^#step-(\d+)$/);
+    if (m) {
+      const n = parseInt(m[1], 10);
+      if (n >= 1 && n <= 6) {
+        // Pre-mark all preceding steps visited so the guard doesn't block
+        for (let i = 1; i < n; i++) visitedSteps.add(i);
+        goToStep(n);
+      }
+    }
+  })();
 
   /* ── Onboarding review: populate summary ─────────────────── */
   function populateReviewOnboard() {

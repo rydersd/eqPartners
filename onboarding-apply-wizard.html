@@ -1018,8 +1018,18 @@
     if (n === 3) renderStep3();
     if (n === 4) populateReview();
     currentStep = n;
+    history.replaceState(null, '', '#step-' + n);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
+
+  /* ── Deep-link: read hash on load ───────────────────────── */
+  (function initFromHash() {
+    const m = window.location.hash.match(/^#step-(\d+)$/);
+    if (m) {
+      const n = parseInt(m[1], 10);
+      if (n >= 1 && n <= 4) goToStep(n);
+    }
+  })();
 
   /* ── Review step: populate summary ───────────────────────── */
   function populateReview() {
