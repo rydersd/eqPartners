@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deal Review Detail - Equinix PCP Portal</title>
+    <link rel="stylesheet" href="wireframe.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Salesforce Sans", sans-serif;
+            background-color: var(--wf-canvas, #f5f7fb);
+            color: var(--wf-text, #3b4f68);
+        }
+
+        /* Header */
+        header {
+            background-color: var(--wf-ink, #1e2a3a);
+            color: var(--wf-surface, #edf1f7);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .logo-icon {
+            font-size: 1.75rem;
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--wf-surface, #edf1f7);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: opacity 0.2s;
+        }
+
+        nav a:hover {
+            opacity: 0.8;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        .breadcrumb {
+            font-size: 0.875rem;
+            color: var(--wf-text, #3b4f68);
+            margin-bottom: 2rem;
+        }
+
+        /* KPI Cards */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .kpi-card {
+            background: var(--wf-surface, #edf1f7);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+        }
+
+        .kpi-label {
+            font-size: 0.75rem;
+            color: var(--wf-text, #3b4f68);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--wf-accent, var(--wf-accent, #3d6daa));
+        }
+
+        .kpi-subtext {
+            font-size: 0.875rem;
+            color: var(--wf-text, #3b4f68);
+            margin-top: 0.5rem;
+        }
+
+        /* Main Content Cards */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: var(--wf-surface, #edf1f7);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-title-icon {
+            font-size: 1.25rem;
+        }
+
+        /* Detail Table */
+        .detail-row {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--wf-canvas, #f5f7fb);
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+            font-size: 0.875rem;
+        }
+
+        .detail-value {
+            color: var(--wf-text, #3b4f68);
+            font-size: 0.875rem;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-submitted {
+            background-color: var(--wf-canvas, #f5f7fb);
+            color: var(--wf-accent, var(--wf-accent, #3d6daa));
+        }
+
+        .status-conflict {
+            background-color: var(--wf-canvas, #f5f7fb);
+            color: var(--wf-red, #8b4553);
+        }
+
+        .status-clear {
+            background-color: var(--wf-canvas, #f5f7fb);
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        /* Conflict Card */
+        .conflict-item {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background-color: var(--wf-canvas, #f5f7fb);
+            border-left: 4px solid var(--wf-red, #8b4553);
+            border-radius: 4px;
+        }
+
+        .conflict-text {
+            font-size: 0.875rem;
+            color: var(--wf-text, #3b4f68);
+            margin-bottom: 0.5rem;
+        }
+
+        .confidence-meter {
+            background-color: var(--wf-canvas, #f5f7fb);
+            height: 6px;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background-color: var(--wf-red, #8b4553);
+            width: 65%;
+        }
+
+        /* Territory Card */
+        .territory-item {
+            padding: 1rem;
+            background-color: var(--wf-canvas, #f5f7fb);
+            border-left: 4px solid var(--wf-ink, #1e2a3a);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .checkmark {
+            font-size: 1.75rem;
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        /* Pricing Card */
+        .pricing-item {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid var(--wf-tint, #dce4ef);
+            border-radius: 4px;
+        }
+
+        .pricing-label {
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--wf-ink, #1e2a3a);
+            margin-bottom: 0.5rem;
+        }
+
+        .pricing-value {
+            font-size: 1rem;
+            color: var(--wf-accent, var(--wf-accent, #3d6daa));
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background-color: var(--wf-accent, var(--wf-accent, #3d6daa));
+            color: var(--wf-surface, #edf1f7);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--wf-accent, #3d6daa);
+        }
+
+        .btn-secondary {
+            background-color: var(--wf-canvas, #f5f7fb);
+            color: var(--wf-ink, #1e2a3a);
+            border: 1px solid var(--wf-line, #b0bdd0);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--wf-tint, #dce4ef);
+        }
+
+        .btn-danger {
+            background-color: var(--wf-canvas, #f5f7fb);
+            color: var(--wf-red, #8b4553);
+        }
+
+        .btn-danger:hover {
+            background-color: var(--wf-surface, #edf1f7);
+        }
+
+        /* Activity Timeline */
+        .timeline {
+            margin-top: 2rem;
+        }
+
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 100px 1fr;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--wf-canvas, #f5f7fb);
+        }
+
+        .timeline-item:last-child {
+            border-bottom: none;
+        }
+
+        .timeline-time {
+            font-size: 0.75rem;
+            color: var(--wf-text, #3b4f68);
+            font-weight: 600;
+        }
+
+        .timeline-content {
+            font-size: 0.875rem;
+            color: var(--wf-text, #3b4f68);
+        }
+
+        .timeline-event {
+            color: var(--wf-accent, var(--wf-accent, #3d6daa));
+            font-weight: 600;
+        }
+
+        /* Sidebar */
+        .sidebar-card {
+            margin-bottom: 1.5rem;
+        }
+
+        /* Design Brief */
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            nav {
+                gap: 1rem;
+                font-size: 0.75rem;
+            }
+        }
+    
+/* ── 3-Column Record Layout ── */
+.record-layout { display:grid; grid-template-columns:280px 1fr 300px; gap:1rem; padding:1rem 2rem; max-width:1600px; }
+@media (max-width:1200px) { .record-layout { grid-template-columns:1fr; } }
+.left-rail .card, .right-rail .card { margin-bottom:1rem; }
+.center-content .card { margin-bottom:1rem; }
+.card { background:var(--wf-surface,#edf1f7); border:1px solid var(--wf-tint,#dce4ef); border-radius:6px; overflow:hidden; }
+.card-hd { padding:0.75rem 1rem; border-bottom:1px solid var(--wf-tint); display:flex; justify-content:space-between; align-items:center; }
+.card-hd h3 { font-size:13px; font-weight:700; color:var(--wf-ink); margin:0; }
+.card-hd-action { font-size:11px; color:var(--wf-accent); text-decoration:none; font-weight:600; cursor:pointer; }
+.card-bd { padding:1rem; }
+.hl-row { display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:12px; }
+.hl-row:last-child { border-bottom:none; }
+.hl-label { color:var(--wf-muted); }
+.hl-value { font-weight:700; color:var(--wf-ink); }
+.hl-value.warn { color:var(--wf-amber,#8b7745); }
+.rel-item { display:flex; align-items:center; gap:0.625rem; padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:12px; }
+.rel-item:last-child { border-bottom:none; }
+.rel-icon { width:28px; height:28px; border-radius:50%; background:var(--wf-tint); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.rel-icon svg { width:14px; height:14px; color:var(--wf-ink); }
+.rel-info { flex:1; }
+.rel-title { font-size:12px; font-weight:600; color:var(--wf-ink); }
+.rel-sub { font-size:11px; color:var(--wf-muted); }
+.rel-meta { font-size:11px; color:var(--wf-muted); text-align:right; white-space:nowrap; }
+/* Right-rail tabs */
+.rail-tabs { display:flex; border-bottom:1px solid var(--wf-tint); }
+.rail-tab { flex:1; padding:0.5rem; font-size:11px; font-weight:600; text-align:center; color:var(--wf-muted); cursor:pointer; border-bottom:2px solid transparent; background:none; border-top:none; border-left:none; border-right:none; }
+.rail-tab.active { color:var(--wf-accent); border-bottom-color:var(--wf-accent); }
+.rail-tab-content { display:none; }
+.rail-tab-content.active { display:block; }
+/* Activity feed in right rail */
+.feed-sm { padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:11px; }
+.feed-sm:last-child { border-bottom:none; }
+.feed-sm-text { color:var(--wf-text); line-height:1.4; }
+.feed-sm-text strong { color:var(--wf-ink); }
+.feed-sm-time { color:var(--wf-muted); font-size:10px; margin-top:2px; }
+/* Quick action buttons */
+.action-btn { width:100%; padding:0.5rem; border-radius:4px; font-size:12px; font-weight:600; cursor:pointer; margin-bottom:0.375rem; border:1px solid var(--wf-line); text-align:center; }
+.action-btn:last-child { margin-bottom:0; }
+.action-btn-primary { background:var(--wf-accent); color:white; border-color:var(--wf-accent); }
+.action-btn-secondary { background:var(--wf-surface); color:var(--wf-text); }
+</style>
+</head>
+<body>
+    <!-- Header --><header class="wf-header">
+  <div class="wf-header-logo">EQ</div>
+  <div class="wf-header-title">Partner Sales Manager</div>
+  <nav class="wf-header-nav">
+    <a href="#">Dashboard</a>
+    <a href="#" class="active">PSM Portal</a>
+    <a href="#">Partners</a>
+    <a href="#">Deals</a>
+    <a href="#">Programs</a>
+    <a href="#">Reports</a>
+  </nav>
+  <div class="wf-header-util">
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+  </div>
+</header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+
+<!-- ── 3-Column Record Layout ── -->
+<div class="record-layout">
+
+  <!-- ════════ LEFT RAIL — Related Objects ════════ -->
+  <div class="left-rail">
+    <div class="card">
+      <div class="card-hd"><h3>Partner</h3></div>
+      <div class="card-bd">
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0"/></svg></div>
+          <div class="rel-info"><div class="rel-title">TechVision Partners</div><div class="rel-sub">Gold</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><h3>Customer</h3></div>
+      <div class="card-bd">
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0"/></svg></div>
+          <div class="rel-info"><div class="rel-title">CloudTech Corp</div><div class="rel-sub">End customer</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><h3>Related Deals</h3></div>
+      <div class="card-bd">
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg></div>
+          <div class="rel-info"><div class="rel-title">DR-2026-0412</div><div class="rel-sub">$120K</div></div>
+        </div>
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg></div>
+          <div class="rel-info"><div class="rel-title">DR-2026-0398</div><div class="rel-sub">$85K</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ CENTER — Main Content ════════ -->
+  <div class="center-content">
+    <!-- Main Content -->
+    <div class="container">
+        <div class="breadcrumb" role="navigation" aria-label="Breadcrumbs">
+            Deals / Review Queue / TechVision Partners Deal
+        </div>
+
+        <h1 class="page-title">Deal Review - TechVision Partners</h1>
+
+        <!-- KPI Cards -->
+        <div class="kpi-grid" role="region" aria-label="Deal Metrics">
+            <div class="kpi-card">
+                <div class="kpi-label">Deal Value</div>
+                <div class="kpi-value">$185K</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Protection Period</div>
+                <div class="kpi-value">90 Days</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Days Since Submission</div>
+                <div class="kpi-value">3 Days</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Partner Tier</div>
+                <div class="kpi-value">Gold</div>
+                <div class="kpi-subtext">15% Commission Rate</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Conflict Score</div>
+                <div class="kpi-value">65</div>
+                <div class="kpi-subtext">Medium Risk</div>
+            </div>
+        </div>
+
+        <!-- Main Content Grid -->
+        <div class="content-grid">
+            <!-- Left Column -->
+            <div>
+                <!-- Deal Details Card -->
+                <div class="card">
+                    <h2 class="card-title">📋 Deal Submission Details</h2>
+
+                    <div class="detail-row">
+                        <span class="detail-label">Partner Name</span>
+                        <span class="detail-value">TechVision Partners Inc.</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Contact Name</span>
+                        <span class="detail-value">Sarah Johnson</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Contact Email</span>
+                        <span class="detail-value">sarah.johnson@techvision.com</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Customer Name</span>
+                        <span class="detail-value">GlobalTech Solutions LLC</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Deal Amount</span>
+                        <span class="detail-value" style="color: var(--wf-accent, var(--wf-accent, #3d6daa)); font-weight: 600;">$185,000</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Product Interest</span>
+                        <span class="detail-value">Equinix Cloud Exchange & Dedicated Servers</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Projected Close Date</span>
+                        <span class="detail-value">March 15, 2024</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Submission Date</span>
+                        <span class="detail-value">February 10, 2024</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Deal Status</span>
+                        <span class="detail-value"><span class="status-badge status-submitted">Under Review</span></span>
+                    </div>
+                </div>
+
+                <!-- Conflict Analysis Card -->
+                <div class="card" style="margin-top: 2rem;">
+                    <h2 class="card-title">⚠️ Conflict Analysis</h2>
+
+                    <div class="conflict-item">
+                        <div class="conflict-text"><strong>TechCore Solutions</strong> has prior engagement with GlobalTech Solutions in Northeast territory</div>
+                        <div style="font-size: 0.75rem; color: var(--wf-text, #3b4f68); margin-bottom: 0.5rem;">Confidence Level: 65%</div>
+                        <div class="confidence-meter">
+                            <div class="confidence-fill"></div>
+                        </div>
+                    </div>
+
+                    <p style="font-size: 0.875rem; color: var(--wf-text, #3b4f68); margin-bottom: 1rem;">
+                        <strong>Recommendation:</strong> Request additional documentation from TechVision Partners to clarify territory rights and prior engagement details.
+                    </p>
+                </div>
+
+                <!-- Territory Verification Card -->
+                <div class="card" style="margin-top: 2rem;">
+                    <h2 class="card-title">🗺️ Territory Verification</h2>
+
+                    <div class="territory-item">
+                        <div class="checkmark">✓</div>
+                        <div>
+                            <div style="font-weight: 600; color: var(--wf-ink, #1e2a3a); margin-bottom: 0.25rem;">Territory Clear</div>
+                            <div style="font-size: 0.875rem; color: var(--wf-text, #3b4f68);">TechVision Partners has verified rights in Midwest region for GlobalTech Solutions.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pricing Validation Card -->
+                <div class="card" style="margin-top: 2rem;">
+                    <h2 class="card-title">💰 Pricing Validation</h2>
+
+                    <div class="pricing-item">
+                        <div class="pricing-label">Proposed Discount</div>
+                        <div class="pricing-value">8.5% off standard rate</div>
+                    </div>
+
+                    <div class="pricing-item">
+                        <div class="pricing-label">Policy Threshold</div>
+                        <div class="pricing-value">Up to 15% allowed for Gold tier</div>
+                    </div>
+
+                    <div style="padding: 1rem; background-color: var(--wf-canvas, #f5f7fb); border-radius: 4px; display: flex; align-items: center; gap: 0.75rem;">
+                        <span style="font-size: 1.5rem;">✓</span>
+                        <div>
+                            <div style="font-weight: 600; color: var(--wf-ink, #1e2a3a); font-size: 0.875rem;">Within Policy</div>
+                            <div style="font-size: 0.75rem; color: var(--wf-text, #3b4f68);">Discount complies with partner tier pricing guidelines.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity Timeline -->
+                <div class="card" style="margin-top: 2rem;">
+                    <h2 class="card-title">📅 Activity Timeline</h2>
+
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-time">Feb 10, 2024<br>2:45 PM</div>
+                            <div class="timeline-content">
+                                <span class="timeline-event">Deal Submitted</span> by Sarah Johnson
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-time">Feb 10, 2024<br>3:20 PM</div>
+                            <div class="timeline-content">
+                                <span class="timeline-event">Conflict Check Initiated</span> by System
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-time">Feb 10, 2024<br>3:45 PM</div>
+                            <div class="timeline-content">
+                                <span class="timeline-event">Assigned to PSM</span> Michael Chen for review
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-time">Feb 11, 2024<br>9:15 AM</div>
+                            <div class="timeline-content">
+                                <span class="timeline-event">Territory Verified</span> - Clear status
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-time">Today<br>10:30 AM</div>
+                            <div class="timeline-content">
+                                <span class="timeline-event">Awaiting PSM Decision</span> on conflict resolution
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column -->
+            <div>
+                <!-- Approval Actions Card -->
+                <div class="card sidebar-card">
+                    <h2 class="card-title">✅ Approval Actions</h2>
+
+                    <div class="action-buttons">
+                        <button class="btn-primary" aria-label="Approve deal and set 90-day protection period">
+                            Approve
+                        </button>
+                        <button class="btn-secondary" aria-label="Request more information from partner">
+                            More Info
+                        </button>
+                        <button class="btn-danger" aria-label="Reject deal submission">
+                            Reject
+                        </button>
+                    </div>
+
+                    <p style="font-size: 0.75rem; color: var(--wf-text, #3b4f68); margin-top: 1rem; line-height: 1.5;">
+                        <strong>Approval:</strong> Sets 90-day protection period. Commission calculated at 15% of $185K = $27,750.
+                    </p>
+                </div>
+
+                <!-- PSM Notes Card -->
+                <div class="card sidebar-card">
+                    <h2 class="card-title">📝 PSM Notes</h2>
+
+                    <textarea style="width: 100%; height: 120px; padding: 0.75rem; border: 1px solid var(--wf-line, #b0bdd0); border-radius: 4px; font-family: inherit; font-size: 0.875rem; resize: none;" aria-label="PSM review notes" placeholder="Add internal notes..."></textarea>
+                </div>
+
+                <!-- Conflict Resolution Card -->
+                <div class="card sidebar-card">
+                    <h2 class="card-title">🔍 Conflict Resolution</h2>
+
+                    <div style="padding: 1rem; background-color: var(--wf-canvas, #f5f7fb); border-radius: 4px; margin-bottom: 1rem;">
+                        <div style="font-size: 0.875rem; color: var(--wf-text, #3b4f68); margin-bottom: 0.75rem;">
+                            <strong>Resolution Options:</strong>
+                        </div>
+                        <label style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; font-size: 0.875rem;">
+                            <input type="radio" name="conflict-resolution" aria-label="Clear conflict - accept deal">
+                            <span>Clear conflict - accept deal</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem; font-size: 0.875rem;">
+                            <input type="radio" name="conflict-resolution" aria-label="Request documentation from TechVision">
+                            <span>Request documentation</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 0.75rem; font-size: 0.875rem;">
+                            <input type="radio" name="conflict-resolution" aria-label="Reject deal due to conflict">
+                            <span>Reject due to conflict</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+
+
+  <!-- ════════ RIGHT RAIL — Activity & Insights ════════ -->
+  <div class="right-rail">
+    <div class="card">
+      <div class="rail-tabs">
+        <button class="rail-tab active" onclick="document.querySelectorAll('.rail-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active');document.querySelectorAll('.rail-tab-content').forEach(c=>c.classList.remove('active'));document.getElementById('tab-activity').classList.add('active');">Activity</button>
+        <button class="rail-tab" onclick="document.querySelectorAll('.rail-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active');document.querySelectorAll('.rail-tab-content').forEach(c=>c.classList.remove('active'));document.getElementById('tab-einstein').classList.add('active');">Einstein</button>
+      </div>
+      <div id="tab-activity" class="rail-tab-content active">
+        <div class="card-bd">
+          <div class="feed-sm"><div class="feed-sm-text">Deal submitted</div><div class="feed-sm-time">3 days ago</div></div>
+          <div class="feed-sm"><div class="feed-sm-text">Conflict check passed (65)</div><div class="feed-sm-time">3 days ago</div></div>
+          <div class="feed-sm"><div class="feed-sm-text">SLA approaching (24h)</div><div class="feed-sm-time">Today</div></div>
+        </div>
+      </div>
+      <div id="tab-einstein" class="rail-tab-content">
+        <div class="card-bd" style="font-size:12px;color:var(--wf-text);line-height:1.5;">
+          <div style="font-size:11px;font-weight:700;color:var(--wf-accent);text-transform:uppercase;letter-spacing:0.03em;margin-bottom:0.5rem;">AI Recommendation</div>
+          Value ($185K) above partner avg. Conflict score 65 — verify AE overlap in SV5. Recommend approval with 90-day protection.
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><h3>Actions</h3></div>
+      <div class="card-bd">
+        <button class="action-btn action-btn-primary">Approve Deal</button>
+        <button class="action-btn action-btn-secondary">Return to Partner</button>
+        <button class="action-btn action-btn-secondary">Escalate</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+    <footer class="wf-footer">
+      &copy; 2026 Equinix · Partner Sales Manager · Internal Use Only
+    </footer>
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Detail view for PSM to review an individual deal submission before approval, including conflict analysis, territory verification, and commission calculations with documented decision rationale.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Review individual deal submission with full context and conflict analysis</li>
+<li>Assess territory and pricing compliance before approval</li>
+<li>Document approval decision and rationale for audit trail</li>
+<li>Resolve deal conflicts with multiple resolution paths</li>
+<li>Route deal to commission processing upon approval</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Deal submission header with TechVision Partners, KPI cards</li>
+<li>Deal Submission Details grid</li>
+<li>Conflict Analysis card with confidence meter, Territory Verification checkmark</li>
+<li>Activity Timeline showing 5 events</li>
+<li>PSM Notes textarea for review comments and decision rationale</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Approve/More Info/Reject action buttons in sidebar</li>
+<li>Conflict resolution radio options</li>
+<li>Notes textarea for approval decision documentation</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Data Retrieval & Display</strong>
+<ul>
+<li>Query Deal_Registration__c record with related partner account, customer account, and product details</li>
+<li>Display partner tier (Gold, Silver, etc.) and associated commission rate from Partner_Account__c lookup</li>
+<li>Render deal submission metadata including submission date, customer contact info, and product interest</li>
+</ul></li>
+<li><strong>Conflict Detection & Analysis</strong>
+<ul>
+<li>Perform AE bridge conflict detection by querying Opportunity records for overlapping account assignments</li>
+<li>Calculate confidence score (0-100) based on territory history and prior engagement data</li>
+<li>Display conflict alert with recommendation for documentation request or rejection path</li>
+</ul></li>
+<li><strong>Commission Calculations</strong>
+<ul>
+<li>Calculate expected commission using formula: deal value × partner tier rate percentage</li>
+<li>Apply tiered discount thresholds (Gold partners up to 15%, Silver up to 10%, etc.)</li>
+<li>Validate proposed discount against policy limits and display compliance status</li>
+</ul></li>
+<li><strong>Approval Workflow & Status Management</strong>
+<ul>
+<li>Log approval action with timestamp, PSM user ID, and notes to Deal_Registration__c record</li>
+<li>Update Deal_Registration__c Status field to Approved/Rejected/Pending with rationale documentation</li>
+<li>Set 90-day protection period by calculating expiration date and storing in Protection_End_Date__c field</li>
+</ul></li>
+<li><strong>Notifications & Integration</strong>
+<ul>
+<li>Trigger approval email notification to partner contact on submit using EmailAlert workflow action</li>
+<li>Route approved deal to commission processing queue via Process Builder for invoicing system integration</li>
+</ul></li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Validation &amp; Business Logic</h4>
+<ul>
+<li>Deal header (customer name, partner rep, amount, product, submission date)</li>
+<li>Deal description and competitive information</li>
+<li>Customer account lookup results (existing Equinix relationship check)</li>
+<li>AE bridge conflict detection alert</li>
+<li>Commission calculation preview (MRR × tier rate)</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+</body>
+</html>

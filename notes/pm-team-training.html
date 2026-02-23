@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team Training & Enablement</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Salesforce Sans, sans-serif; background-color: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); }
+    .container { max-width: 1400px; margin: 0 auto; padding: 24px; }
+    .page-header { background: white; padding: 24px; border-radius: 8px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+    .header-title { font-size: 20px; font-weight: 700; margin-bottom: 24px; color: var(--wf-ink, #1e2a3a); }
+    .org-completion { display: flex; align-items: center; gap: 16px; }
+    .org-stat { flex: 1; }
+    .org-label { font-size: 12px; color: var(--wf-muted, #6b7f99); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+    .org-value { font-size: 28px; font-weight: 700; color: var(--wf-accent, #3d6daa); margin-bottom: 8px; }
+    .progress-bar { height: 8px; background-color: var(--wf-surface, #edf1f7); border-radius: 4px; overflow: hidden; width: 200px; }
+    .progress-fill { height: 100%; background-color: var(--wf-ink, #1e2a3a); width: 95%; border-radius: 4px; }
+    .tier-progress-card { background: var(--wf-ink, #1e2a3a); border-left: 4px solid var(--wf-accent, #3d6daa); padding: 20px; border-radius: 4px; margin-bottom: 24px; }
+    .tier-progress-content { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; align-items: center; }
+    .tier-item { text-align: center; }
+    .tier-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--wf-muted, #6b7f99); margin-bottom: 8px; }
+    .tier-badge { font-size: 24px; font-weight: 700; color: var(--wf-accent, #3d6daa); margin-bottom: 8px; }
+    .tier-detail { font-size: 12px; color: var(--wf-muted, #6b7f99); }
+    .tier-gap-summary { background-color: var(--wf-canvas, #f5f7fb); padding: 12px 16px; border-radius: 4px; font-size: 13px; color: var(--wf-ink, #1e2a3a); margin-bottom: 24px; }
+    .tab-container { margin-bottom: 24px; }
+    .tab-nav { display: flex; gap: 0; background: white; border-bottom: 2px solid var(--wf-surface, #edf1f7); border-radius: 8px 8px 0 0; overflow: hidden; }
+    .tab-button { flex: 1; padding: 16px; background: white; border: none; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--wf-muted, #6b7f99); border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
+    .tab-button.active { color: var(--wf-accent, #3d6daa); border-bottom-color: var(--wf-accent, #3d6daa); }
+    .tab-button:hover:not(.active) { color: var(--wf-ink, #1e2a3a); }
+    .card { background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.12); overflow: hidden; }
+    .table-header { display: grid; grid-template-columns: 1.5fr 1.2fr 1.2fr 1.2fr 1.2fr 1fr; gap: 16px; padding: 16px 24px; background-color: var(--wf-canvas, #f5f7fb); border-bottom: 1px solid var(--wf-surface, #edf1f7); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--wf-muted, #6b7f99); }
+    .table-row { display: grid; grid-template-columns: 1.5fr 1.2fr 1.2fr 1.2fr 1.2fr 1fr; gap: 16px; padding: 16px 24px; border-bottom: 1px solid var(--wf-surface, #edf1f7); align-items: center; font-size: 13px; transition: background 0.2s; cursor: pointer; }
+    .table-row:hover { background-color: var(--wf-canvas, #f5f7fb); }
+    .table-row:last-child { border-bottom: none; }
+    .row-name { font-weight: 600; color: var(--wf-ink, #1e2a3a); }
+    .row-courses { color: var(--wf-accent, #3d6daa); font-weight: 600; }
+    .status-badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    .status-on-track { background-color: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); }
+    .status-behind { background-color: var(--wf-canvas, #f5f7fb); color: var(--wf-red, #8b4553); }
+    .status-at-risk { background-color: var(--wf-canvas, #f5f7fb); color: var(--wf-amber, #8b7745); }
+    .status-complete { background-color: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); }
+    .expanded-content { padding: 20px 24px; background-color: var(--wf-canvas, #f5f7fb); border-top: 1px solid var(--wf-surface, #edf1f7); border-bottom: 1px solid var(--wf-surface, #edf1f7); }
+    .course-breakdown { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .course-item { background: white; padding: 12px; border-radius: 4px; border-left: 3px solid var(--wf-ink, #1e2a3a); font-size: 12px; }
+    .course-name { font-weight: 600; color: var(--wf-ink, #1e2a3a); margin-bottom: 4px; }
+    .course-status { color: var(--wf-muted, #6b7f99); font-size: 11px; }
+    .bulk-actions { display: flex; gap: 12px; padding: 16px 24px; background: white; border-bottom: 1px solid var(--wf-surface, #edf1f7); border-radius: 8px 8px 0 0; }
+    .btn { padding: 8px 16px; border-radius: 4px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; }
+    .btn-primary { background-color: var(--wf-accent, #3d6daa); color: white; }
+    .btn-primary:hover { background-color: var(--wf-accent, #3d6daa); }
+    .btn-secondary { background-color: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); border: 1px solid var(--wf-surface, #edf1f7); }
+    .btn-secondary:hover { background-color: var(--wf-tint, #dce4ef); }
+    .leaderboard { margin-top: 32px; background: white; padding: 24px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+    .leaderboard h2 { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px; color: var(--wf-ink, #1e2a3a); border-bottom: 1px solid var(--wf-surface, #edf1f7); padding-bottom: 12px; }
+    .leaderboard-item { display: flex; align-items: center; padding: 12px; border-bottom: 1px solid var(--wf-surface, #edf1f7); }
+    .leaderboard-item:last-child { border-bottom: none; }
+    .leaderboard-rank { width: 30px; text-align: center; font-weight: 700; font-size: 16px; color: var(--wf-accent, #3d6daa); margin-right: 12px; }
+    .leaderboard-info { flex: 1; }
+    .leaderboard-name { font-weight: 600; color: var(--wf-ink, #1e2a3a); margin-bottom: 2px; }
+    .leaderboard-progress { font-size: 12px; color: var(--wf-muted, #6b7f99); }
+    .leaderboard-badge { background-color: var(--wf-canvas, #f5f7fb); color: var(--wf-amber, #8b7745); padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: 700; }
+    .spec-title { font-size: 12px; font-weight: 700; color: var(--wf-ink, #1e2a3a); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; border-bottom: 1px solid var(--wf-surface, #edf1f7); padding-bottom: 8px; }
+    .spec-content { font-size: 12px; color: var(--wf-muted, #6b7f99); line-height: 1.6; }
+    .spec-list { list-style: none; padding-left: 0; }
+    .spec-list li { margin-bottom: 8px; padding-left: 20px; position: relative; }
+    .spec-list li:before { content: "•"; position: absolute; left: 0; color: var(--wf-accent, #3d6daa); }
+    @media (max-width: 768px) { .table-header, .table-row { grid-template-columns: 1fr; gap: 8px; } .course-breakdown { grid-template-columns: 1fr; } .tier-progress-content { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+  <header class="wf-header">
+    <div class="wf-header-logo">EQ</div>
+    <div class="wf-header-title">Equinix Partner Manager</div>
+    <nav class="wf-header-nav">
+      <a href="pm-home-dashboard.html">Dashboard</a>
+      <a href="pm-team-management.html">Team</a>
+      <a href="pm-deals-revenue.html">Deals</a>
+      <a href="pm-team-training.html">Training</a>
+      <a href="pm-resources.html">Resources</a>
+    </nav>
+    <div class="wf-header-util">
+      <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+      <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+    </div>
+  </header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+  <div class="container">
+    <div class="page-header">
+      <div class="header-title">Team Training — Stark Industries</div>
+      <div class="org-completion">
+        <div class="org-stat">
+          <div class="org-label">Org Completion Rate</div>
+          <div class="org-value">95%</div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width:95%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tier-progress-card">
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--wf-muted, #6b7f99);margin-bottom:16px">Tier Progress Tracking</div>
+      <div class="tier-progress-content">
+        <div class="tier-item">
+          <div class="tier-label">Current Tier</div>
+          <div class="tier-badge">Gold</div>
+          <div class="tier-detail">Your organization status</div>
+        </div>
+        <div class="tier-item">
+          <div class="tier-label">Progress</div>
+          <div style="font-size:20px;font-weight:700;color:var(--wf-ink, #1e2a3a);margin-bottom:8px">95%</div>
+          <div class="tier-detail">11 of 12 requirements met</div>
+        </div>
+        <div class="tier-item">
+          <div class="tier-label">Gap to Next Review</div>
+          <div style="font-size:14px;font-weight:600;color:var(--wf-ink, #1e2a3a);margin-bottom:8px">1 Course</div>
+          <div class="tier-detail">Advanced Security (Pepper Potts)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tier-gap-summary">
+      <strong>Gold Tier Requirements (Maintain):</strong> 100% of Business Track (✓), 100% of Technical Track (need 1 more course), all 12 team members active. Requirements must be met by Q2 2026.
+    </div>
+
+    <div class="tab-container">
+      <div class="tab-nav">
+        <button class="tab-button active" onclick="switchTab(event, 'by-member')">By Team Member</button>
+        <button class="tab-button" onclick="switchTab(event, 'by-course')">By Course</button>
+        <button class="tab-button" onclick="switchTab(event, 'by-track')">By Track</button>
+      </div>
+    </div>
+
+    <div class="bulk-actions">
+      <button class="btn btn-secondary">📧 Send Reminder to Selected</button>
+      <button class="btn btn-secondary">📧 Send to All Behind</button>
+      <button class="btn btn-secondary">📥 Export Team Report (CSV/PDF)</button>
+    </div>
+
+    <div id="by-member-tab">
+      <div class="card">
+        <div class="table-header">
+          <div>Name</div>
+          <div>Role</div>
+          <div>Business Track</div>
+          <div>Technical Track</div>
+          <div>Overall %</div>
+          <div>Status</div>
+        </div>
+
+        <!-- Row 1: Tony Stark -->
+        <div class="table-row" onclick="toggleExpand(this)">
+          <div class="row-name">Tony Stark</div>
+          <div>Sales Director</div>
+          <div style="color:var(--wf-ink, #1e2a3a);font-weight:600">100%</div>
+          <div style="color:var(--wf-ink, #1e2a3a);font-weight:600">100%</div>
+          <div style="font-weight:600">100%</div>
+          <div><span class="status-badge status-complete">Complete</span></div>
+        </div>
+
+        <!-- Row 2: Pepper Potts -->
+        <div class="table-row" onclick="toggleExpand(this)">
+          <div class="row-name">Pepper Potts</div>
+          <div>Partner Manager</div>
+          <div style="color:var(--wf-ink, #1e2a3a);font-weight:600">100%</div>
+          <div style="color:var(--wf-amber, #8b7745);font-weight:600">83%</div>
+          <div style="font-weight:600">83%</div>
+          <div><span class="status-badge status-on-track">On Track</span></div>
+        </div>
+
+        <!-- Row 3: James Rhodes -->
+        <div class="table-row" onclick="toggleExpand(this)">
+          <div class="row-name">James Rhodes</div>
+          <div>Solutions Engineer</div>
+          <div style="color:var(--wf-ink, #1e2a3a);font-weight:600">100%</div>
+          <div style="color:var(--wf-ink, #1e2a3a);font-weight:600">88%</div>
+          <div style="font-weight:600">88%</div>
+          <div><span class="status-badge status-on-track">On Track</span></div>
+        </div>
+
+        <!-- Row 4: Natasha Romanoff -->
+        <div class="table-row" onclick="toggleExpand(this)">
+          <div class="row-name">Natasha Romanoff</div>
+          <div>Account Executive</div>
+          <div style="color:var(--wf-ink, #1e2a3a);font-weight:600">100%</div>
+          <div style="color:var(--wf-ink, #1e2a3a);font-weight:600">100%</div>
+          <div style="font-weight:600">100%</div>
+          <div><span class="status-badge status-complete">Complete</span></div>
+        </div>
+
+        <!-- Row 5: Clint Barton -->
+        <div class="table-row" onclick="toggleExpand(this)">
+          <div class="row-name">Clint Barton</div>
+          <div>Sales Rep</div>
+          <div style="color:var(--wf-ink, #1e2a3a);font-weight:600">100%</div>
+          <div style="color:var(--wf-accent, #3d6daa);font-weight:600">75%</div>
+          <div style="font-weight:600">75%</div>
+          <div><span class="status-badge status-on-track">On Track</span></div>
+        </div>
+
+        <!-- Row 6: Bruce Banner -->
+        <div class="table-row" onclick="toggleExpand(this)">
+          <div class="row-name">Bruce Banner</div>
+          <div>Solutions Engineer</div>
+          <div style="color:var(--wf-ink, #1e2a3a);font-weight:600">100%</div>
+          <div style="color:var(--wf-ink, #1e2a3a);font-weight:600">83%</div>
+          <div style="font-weight:600">83%</div>
+          <div><span class="status-badge status-on-track">On Track</span></div>
+        </div>
+
+        <!-- Row 7: Scott Lang -->
+        <div class="table-row" onclick="toggleExpand(this)">
+          <div class="row-name">Scott Lang</div>
+          <div>Sales Rep</div>
+          <div style="color:var(--wf-ink, #1e2a3a);font-weight:600">100%</div>
+          <div style="color:var(--wf-accent, #3d6daa);font-weight:600">67%</div>
+          <div style="font-weight:600">67%</div>
+          <div><span class="status-badge status-at-risk">At Risk</span></div>
+        </div>
+
+        <!-- Row 8: Hope Van Dyne -->
+        <div class="table-row" onclick="toggleExpand(this)">
+          <div class="row-name">Hope Van Dyne</div>
+          <div>Solutions Engineer</div>
+          <div style="color:var(--wf-ink, #1e2a3a);font-weight:600">100%</div>
+          <div style="color:var(--wf-ink, #1e2a3a);font-weight:600">92%</div>
+          <div style="font-weight:600">92%</div>
+          <div><span class="status-badge status-on-track">On Track</span></div>
+        </div>
+
+        <!-- Row 9: Peter Parker -->
+        <div class="table-row" onclick="toggleExpand(this)">
+          <div class="row-name">Peter Parker</div>
+          <div>Junior Sales</div>
+          <div style="color:var(--wf-amber, #8b7745);font-weight:600">50%</div>
+          <div style="color:var(--wf-red, #8b4553);font-weight:600">50%</div>
+          <div style="font-weight:600">50%</div>
+          <div><span class="status-badge status-behind">Behind</span></div>
+        </div>
+
+        <!-- Row 10: Wanda Maximoff -->
+        <div class="table-row" onclick="toggleExpand(this)">
+          <div class="row-name">Wanda Maximoff</div>
+          <div>Account Executive</div>
+          <div style="color:var(--wf-ink, #1e2a3a);font-weight:600">100%</div>
+          <div style="color:var(--wf-accent, #3d6daa);font-weight:600">58%</div>
+          <div style="font-weight:600">58%</div>
+          <div><span class="status-badge status-at-risk">At Risk</span></div>
+        </div>
+
+        <!-- Row 11: Vision -->
+        <div class="table-row" onclick="toggleExpand(this)">
+          <div class="row-name">Vision</div>
+          <div>Solutions Engineer</div>
+          <div style="color:var(--wf-ink, #1e2a3a);font-weight:600">100%</div>
+          <div style="color:var(--wf-ink, #1e2a3a);font-weight:600">100%</div>
+          <div style="font-weight:600">100%</div>
+          <div><span class="status-badge status-complete">Complete</span></div>
+        </div>
+
+        <!-- Row 12: Sam Wilson -->
+        <div class="table-row" onclick="toggleExpand(this)">
+          <div class="row-name">Sam Wilson</div>
+          <div>Sales Rep</div>
+          <div style="color:var(--wf-ink, #1e2a3a);font-weight:600">100%</div>
+          <div style="color:var(--wf-accent, #3d6daa);font-weight:600">71%</div>
+          <div style="font-weight:600">71%</div>
+          <div><span class="status-badge status-on-track">On Track</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="by-course-tab" style="display:none">
+      <div class="card">
+        <div class="table-header">
+          <div>Course Name</div>
+          <div>Completion Rate</div>
+          <div>Completed</div>
+          <div>In Progress</div>
+          <div>Not Started</div>
+          <div>Overdue</div>
+        </div>
+
+        <div class="table-row">
+          <div class="row-name">Our Mission & Vision</div>
+          <div style="color:var(--wf-ink, #1e2a3a);font-weight:600">83%</div>
+          <div>10/12</div>
+          <div>2</div>
+          <div>0</div>
+          <div>0</div>
+        </div>
+
+        <div class="table-row">
+          <div class="row-name">Colocation Overview</div>
+          <div style="color:var(--wf-ink, #1e2a3a);font-weight:600">75%</div>
+          <div>9/12</div>
+          <div>1</div>
+          <div>2</div>
+          <div>0</div>
+        </div>
+
+        <div class="table-row">
+          <div class="row-name">Interconnection Basics</div>
+          <div style="color:var(--wf-accent, #3d6daa);font-weight:600">92%</div>
+          <div>11/12</div>
+          <div>0</div>
+          <div>1</div>
+          <div>0</div>
+        </div>
+
+        <div class="table-row">
+          <div class="row-name">Advanced Networking</div>
+          <div style="color:var(--wf-accent, #3d6daa);font-weight:600">83%</div>
+          <div>10/12</div>
+          <div>1</div>
+          <div>1</div>
+          <div>0</div>
+        </div>
+
+        <div class="table-row">
+          <div class="row-name">Security Fundamentals</div>
+          <div style="color:var(--wf-amber, #8b7745);font-weight:600">67%</div>
+          <div>8/12</div>
+          <div>2</div>
+          <div>2</div>
+          <div>0</div>
+        </div>
+
+        <div class="table-row">
+          <div class="row-name">Compliance & Governance</div>
+          <div style="color:var(--wf-amber, #8b7745);font-weight:600">58%</div>
+          <div>7/12</div>
+          <div>1</div>
+          <div>3</div>
+          <div>1</div>
+        </div>
+
+        <div class="table-row">
+          <div class="row-name">Advanced Security</div>
+          <div style="color:var(--wf-red, #8b4553);font-weight:600">42%</div>
+          <div>5/12</div>
+          <div>0</div>
+          <div>6</div>
+          <div>1</div>
+        </div>
+
+        <div class="table-row">
+          <div class="row-name">Sales Excellence</div>
+          <div style="color:var(--wf-amber, #8b7745);font-weight:600">75%</div>
+          <div>9/12</div>
+          <div>1</div>
+          <div>2</div>
+          <div>0</div>
+        </div>
+      </div>
+    </div>
+
+    <div id="by-track-tab" style="display:none">
+      <div class="card">
+        <div class="table-header">
+          <div>Track Name</div>
+          <div>Type</div>
+          <div>Courses</div>
+          <div>Completion Rate</div>
+          <div>Status</div>
+          <div></div>
+        </div>
+
+        <div class="table-row">
+          <div class="row-name">Business Fundamentals</div>
+          <div style="font-size:12px;color:var(--wf-muted, #6b7f99)">Business Track</div>
+          <div>4 courses</div>
+          <div style="color:var(--wf-ink, #1e2a3a);font-weight:600">100%</div>
+          <div><span class="status-badge status-complete">Complete</span></div>
+          <div></div>
+        </div>
+
+        <div class="table-row">
+          <div class="row-name">Technical Skills</div>
+          <div style="font-size:12px;color:var(--wf-muted, #6b7f99)">Technical Track</div>
+          <div>4 courses</div>
+          <div style="color:var(--wf-accent, #3d6daa);font-weight:600">83%</div>
+          <div><span class="status-badge status-on-track">On Track</span></div>
+          <div></div>
+        </div>
+
+        <div class="table-row">
+          <div class="row-name">Advanced Specialization</div>
+          <div style="font-size:12px;color:var(--wf-muted, #6b7f99)">Elective Track</div>
+          <div>4+ courses</div>
+          <div style="color:var(--wf-amber, #8b7745);font-weight:600">67%</div>
+          <div><span class="status-badge status-at-risk">At Risk</span></div>
+          <div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="leaderboard">
+      <h2>🏆 Team Leaderboard</h2>
+      <div class="leaderboard-item">
+        <div class="leaderboard-rank">1</div>
+        <div class="leaderboard-info">
+          <div class="leaderboard-name">Tony Stark (Sales Director)</div>
+          <div class="leaderboard-progress">All required courses completed + 2 electives</div>
+        </div>
+        <div class="leaderboard-badge">100% Complete</div>
+      </div>
+      <div class="leaderboard-item">
+        <div class="leaderboard-rank">2</div>
+        <div class="leaderboard-info">
+          <div class="leaderboard-name">Natasha Romanoff (Account Executive)</div>
+          <div class="leaderboard-progress">All required courses completed</div>
+        </div>
+        <div class="leaderboard-badge">100% Complete</div>
+      </div>
+      <div class="leaderboard-item">
+        <div class="leaderboard-rank">3</div>
+        <div class="leaderboard-info">
+          <div class="leaderboard-name">Vision (Solutions Engineer)</div>
+          <div class="leaderboard-progress">All required courses completed + 1 elective</div>
+        </div>
+        <div class="leaderboard-badge">100% Complete</div>
+      </div>
+      <div class="leaderboard-item">
+        <div class="leaderboard-rank">4</div>
+        <div class="leaderboard-info">
+          <div class="leaderboard-name">Hope Van Dyne (Solutions Engineer)</div>
+          <div class="leaderboard-progress">11 of 12 courses completed</div>
+        </div>
+        <div class="leaderboard-badge">92% Complete</div>
+      </div>
+      <div class="leaderboard-item">
+        <div class="leaderboard-rank">5</div>
+        <div class="leaderboard-info">
+          <div class="leaderboard-name">James Rhodes (Solutions Engineer)</div>
+          <div class="leaderboard-progress">10 of 12 courses completed</div>
+        </div>
+        <div class="leaderboard-badge">88% Complete</div>
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <div class="spec-title">Salesforce Objects & Fields</div>
+      <div class="spec-content">
+        <strong>Contact:</strong> Contact ID, Name, Email, Phone, AccountContactRelation (for PM visibility)<br>
+        <strong>Partner_Training__c:</strong> Training ID, Contact ID (lookup), Course__c (lookup), Status__c (Completed/In Progress/Not Started), Completion_Date__c, Enrollment_Date__c<br>
+        <strong>Course__c:</strong> Course ID, Name, Type (Business/Technical/Elective), Duration_Hours__c, Max_Attendees__c, Status__c<br>
+        <strong>Account (Partner Account):</strong> Account ID, Name, Partner_Tier__c, Team_Completion_Rate__c (rollup), Last_Training_Sync__c
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <div class="spec-title">Validation Rules & Edge Cases</div>
+      <div class="spec-content">
+        <ul class="spec-list">
+          <li>PM can only see contacts linked to their account via AccountContactRelation</li>
+          <li>Send Reminder respects 24-hour cooldown per recipient (track on Contact.Last_Reminder_Date__c)</li>
+          <li>Bulk remind max 20 recipients at once (prevent email throttling)</li>
+          <li>Course completion data read-only — sourced from SumTotal LMS sync (daily 2 AM UTC)</li>
+          <li>Team completion % = Sum(individual %)/Team Member Count</li>
+          <li>Tier requirements checked nightly via batch job Tier_Validation_Batch__c</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <div class="spec-title">Error States</div>
+      <div class="spec-content">
+        <ul class="spec-list">
+          <li>"No team members found — invite team to portal first"</li>
+          <li>"Training data sync delayed — showing data as of [last sync timestamp]"</li>
+          <li>"Unable to send reminders — contact email for [name] is invalid"</li>
+          <li>"Course enrollment failed — max capacity reached (contact admin)"</li>
+          <li>"LMS sync in progress — data will refresh in ~5 minutes"</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <div class="spec-title">Accessibility Notes</div>
+      <div class="spec-content">
+        <ul class="spec-list">
+          <li>Tables use proper th/td semantics for screen readers</li>
+          <li>Expandable rows have aria-expanded attribute</li>
+          <li>Status badges use color + text (never color alone)</li>
+          <li>Progress bars have aria-valuenow, aria-valuemin, aria-valuemax</li>
+          <li>Tab navigation uses role="tablist" and aria-selected</li>
+          <li>Buttons have title attributes for hover tooltips</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <div class="spec-title">User Flow (Numbered Steps)</div>
+      <div class="spec-content">
+        <ol style="margin-left:20px;line-height:1.8">
+          <li>PM navigates to Team Training page</li>
+          <li>PM sees org-level progress (95%) and tier status (Gold, 95% of requirements)</li>
+          <li>PM switches to "By Team Member" tab (default)</li>
+          <li>PM sorts by completion % (lowest first) to identify gaps</li>
+          <li>PM identifies 2 at-risk members (Peter Parker 50%, Wanda Maximoff 58%)</li>
+          <li>PM clicks row to expand and see individual course status</li>
+          <li>PM selects members and sends bulk reminder or clicks "Send to All Behind"</li>
+          <li>PM switches to "By Course" tab to find systemic gaps</li>
+          <li>PM exports team report (CSV/PDF) for internal team meeting</li>
+          <li>PM checks back in 1 week to verify completion</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <div class="spec-title">Related Automations</div>
+      <div class="spec-content">
+        <strong>Flows:</strong> Daily_LMS_Sync_Flow (pulls SumTotal data), Tier_Requirement_Check_Flow (nightly), Reminder_Email_Flow (PM triggered)<br>
+        <strong>Apex Triggers:</strong> Training_Aggregator_Trigger (on Partner_Training__c insert/update), Contact_Training_Sync_Trigger (sync flag)<br>
+        <strong>Batch Jobs:</strong> Tier_Validation_Batch__c (nightly 1 AM UTC), LMS_Sync_Batch__c (daily 2 AM UTC)
+      </div>
+    </div>
+  </div>
+
+  <footer class="wf-footer">
+    &copy; 2026 Equinix Partner Manager Portal · Wireframe specification
+  </footer>
+
+  <script>
+    function switchTab(event, tabName) {
+      document.querySelectorAll('[id$="-tab"]').forEach(tab => tab.style.display = 'none');
+      document.getElementById(tabName + '-tab').style.display = 'block';
+      document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+  </script>
+
+  <!-- WF-SPEC: pm-team-training — Team Training & Enablement -->
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Team-wide training management dashboard enabling Partner Managers to monitor compliance rates, track individual member progress, and take bulk actions to ensure certifications and course completion requirements are met.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Monitor team-wide training compliance rate</li>
+<li>Track individual member progress by business and technical tracks</li>
+<li>Identify members behind on requirements</li>
+<li>Send reminders individually or in bulk to members needing action</li>
+<li>View course-level completion metrics across entire team</li>
+<li>Export team training report for management or internal meetings</li>
+<li>Recognize top performers via leaderboard</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Page header with overall org completion rate and progress bar</li>
+<li>Tier Progress card showing Current Tier and progress toward next tier</li>
+<li>Tier Requirements summary banner highlighting compliance criteria</li>
+<li>Team member table with individual progress, completion %, and status</li>
+<li>Course view tab with enrollment counts and completion rates per course</li>
+<li>Track view tab showing Business/Technical/Elective track completion status</li>
+<li>Training Leaderboard section with top 10 performers</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Tab buttons to switch between By Team Member and By Course views</li>
+<li>Expandable table rows to drill into course-level breakdown per member</li>
+<li>Status badges indicating On Track, At Risk, or Behind</li>
+<li>Bulk action buttons: Send Reminder to Selected Members, Send to All Behind</li>
+<li>Sort and filter controls (name, progress %, status)</li>
+<li>Export to CSV button for report generation</li>
+<li>Leaderboard rank badges for top performers</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Team Member Querying & Filtering</strong>
+<ul>
+<li>Query CourseAssignment__c records for user's account team members via AccountContactRelation</li>
+<li>Retrieve course completion data from SumTotal LMS integration synced daily at 2 AM UTC</li>
+<li>Filter display by account, status, or responsibility area for targeted visibility</li>
+</ul></li>
+<li><strong>Progress Calculation & Risk Assessment</strong>
+<ul>
+<li>Calculate team completion % as (sum of individual completion %) / team member count</li>
+<li>Identify at-risk members where completion % &lt; tier requirement threshold with visual flagging</li>
+<li>Auto-update Tier Progress based on member enrollment in required learning paths</li>
+</ul></li>
+<li><strong>Leaderboard & Ranking</strong>
+<ul>
+<li>Rank leaderboard by completion % DESC and Recent_Course_Completion_Date__c for ranking</li>
+<li>Generate top 10 performers list with rank badges and completion status</li>
+<li>Update leaderboard daily from synced LMS data for current standings</li>
+</ul></li>
+<li><strong>Notifications & Bulk Operations</strong>
+<ul>
+<li>Enforce Send Reminder 24-hour cooldown via Contact.Last_Reminder_Date__c to prevent spam</li>
+<li>Limit bulk remind operations to 20 recipients max (email throttle protection)</li>
+<li>Enable Export to CSV for reporting and offline analysis of team training data</li>
+</ul></li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Validation &amp; Business Logic</h4>
+<ul>
+<li>PM can only see contacts linked to their account via AccountContactRelation</li>
+<li>Send Reminder respects 24-hour cooldown per recipient (track on Contact.Last_Reminder_Date__c)</li>
+<li>Bulk remind max 20 recipients at once (prevent email throttling)</li>
+<li>Course completion data read-only sourced from SumTotal LMS sync (daily 2 AM UTC)</li>
+<li>Team completion % = Sum(individual %)/Team Member Count</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+</body>
+</html>

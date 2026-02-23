@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register a Deal — AE · Equinix PCP Partner Portal</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: var(--wf-canvas, #f5f7fb); }
+    .container { max-width: 1400px; margin: 0 auto; padding: 24px; }
+
+    /* Header */
+    .header { background: var(--wf-ink, #1e2a3a); height: 56px; display: flex; align-items: center; padding: 0 24px; gap: 16px; }
+    .logo-box { display: flex; align-items: center; gap: 8px; }
+    .logo { width: 32px; height: 32px; border-radius: 6px; background: var(--wf-accent, #3d6daa); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 13px; }
+    .header-title { color: #fff; font-weight: 590; font-size: 14px; }
+    nav { display: flex; align-items: center; height: 56px; gap: 0; flex: 1; padding-left: 8px; }
+    nav a { padding: 0 16px; height: 56px; display: flex; align-items: center; font-size: 13px; color: rgba(255,255,255,.8); border-bottom: 3px solid transparent; text-decoration: none; transition: all 0.2s; }
+    nav a:hover { color: #fff; background: rgba(255,255,255,0.05); }
+    nav a.active { color: #fff; border-bottom-color: #fff; }
+    .header-icons { display: flex; align-items: center; gap: 8px; }
+    .icon-btn { width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,.15); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,.7); font-size: 14px; cursor: pointer; transition: background 0.2s; }
+    .icon-btn:hover { background: rgba(255,255,255,.25); }
+
+    /* Page Header */
+    .page-header { background: var(--wf-ink, #1e2a3a); color: white; padding: 24px; border-radius: 8px; margin-bottom: 24px; }
+    .page-header h1 { margin: 0 0 8px 0; font-size: 24px; font-weight: 700; }
+    .page-header p { margin: 0; font-size: 13px; opacity: 0.95; }
+
+    /* Search Panel */
+    .search-panel { background: white; padding: 24px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.12); margin-bottom: 24px; }
+    .search-panel h2 { margin: 0 0 16px 0; font-size: 16px; font-weight: 600; color: var(--wf-ink, #1e2a3a); }
+    .search-info { font-size: 13px; color: var(--wf-muted, #6b7f99); margin-bottom: 16px; }
+    .search-form { display: grid; grid-template-columns: 1fr auto; gap: 12px; }
+    input[type="text"] { padding: 8px 12px; border: 1px solid var(--wf-surface, #edf1f7); border-radius: 4px; font-size: 13px; font-family: inherit; }
+    input[type="text"]:focus { outline: none; border-color: var(--wf-accent, #3d6daa); box-shadow: 0 0 0 3px rgba(0,112,210,0.1); }
+    .btn { display: inline-block; padding: 8px 16px; background: var(--wf-accent, #3d6daa); color: white; text-decoration: none; border-radius: 4px; font-size: 12px; font-weight: 600; border: none; cursor: pointer; transition: background 0.2s; }
+    .btn:hover { background: var(--wf-accent, #3d6daa); }
+    .btn-secondary { background: var(--wf-tint, #dce4ef); color: var(--wf-ink, #1e2a3a); }
+    .btn-secondary:hover { background: var(--wf-line, #b0bdd0); }
+
+    /* Search Results */
+    .search-results { margin-top: 20px; display: none; }
+    .search-results.active { display: block; }
+    .result-header { font-size: 12px; font-weight: 600; color: var(--wf-muted, #6b7f99); margin-bottom: 12px; }
+    .match-card { background: var(--wf-canvas, #f5f7fb); padding: 16px; border-radius: 6px; border-left: 3px solid var(--wf-muted, #6b7f99); margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; }
+    .match-info h4 { margin: 0 0 6px 0; font-size: 13px; font-weight: 600; color: var(--wf-ink, #1e2a3a); }
+    .match-info p { margin: 0 0 4px 0; font-size: 12px; color: var(--wf-muted, #6b7f99); }
+    .match-badge { background: var(--wf-canvas, #f5f7fb); color: var(--wf-accent, #3d6daa); padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+    .badge-high { background: var(--wf-tint, #dce4ef); color: var(--wf-ink, #1e2a3a); }
+    .badge-medium { background: var(--wf-tint, #dce4ef); color: var(--wf-amber, #8b7745); }
+    .badge-low { background: var(--wf-canvas, #f5f7fb); color: var(--wf-muted, #6b7f99); }
+
+    /* Wizard Container */
+    .wizard { background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.12); overflow: hidden; }
+    .wizard-header { background: var(--wf-canvas, #f5f7fb); padding: 20px 24px; border-bottom: 1px solid var(--wf-tint, #dce4ef); }
+    .progress-indicator { display: flex; gap: 16px; justify-content: space-between; position: relative; }
+    .step { display: flex; align-items: center; gap: 8px; flex: 1; }
+    .step-number { width: 32px; height: 32px; border-radius: 50%; background: var(--wf-tint, #dce4ef); color: var(--wf-muted, #6b7f99); display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 13px; transition: all 0.2s; }
+    .step.active .step-number { background: var(--wf-accent, #3d6daa); color: white; }
+    .step.completed .step-number { background: var(--wf-muted, #6b7f99); color: white; }
+    .step-label { font-size: 12px; font-weight: 600; color: var(--wf-muted, #6b7f99); }
+    .step.active .step-label { color: var(--wf-accent, #3d6daa); }
+    .step.completed .step-label { color: var(--wf-muted, #6b7f99); }
+
+    /* Form Styles */
+    .wizard-body { padding: 32px; }
+    .form-section { margin-bottom: 32px; }
+    .form-section h3 { margin: 0 0 20px 0; font-size: 16px; font-weight: 600; color: var(--wf-ink, #1e2a3a); }
+    .form-group { margin-bottom: 20px; }
+    .form-group:last-child { margin-bottom: 0; }
+    label { display: block; font-size: 13px; font-weight: 600; color: var(--wf-ink, #1e2a3a); margin-bottom: 8px; }
+    .required { color: var(--wf-red, #8b4553); }
+    input[type="text"], input[type="email"], input[type="date"], select, textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--wf-surface, #edf1f7);
+      border-radius: 4px;
+      font-size: 13px;
+      font-family: inherit;
+      background: white;
+    }
+    textarea { resize: vertical; min-height: 80px; }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--wf-accent, #3d6daa);
+      box-shadow: 0 0 0 3px rgba(0,112,210,0.1);
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .form-row-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .help-text { font-size: 12px; color: var(--wf-muted, #6b7f99); margin-top: 6px; }
+    .autocomplete-list { position: absolute; background: white; border: 1px solid var(--wf-surface, #edf1f7); border-top: none; border-radius: 0 0 4px 4px; max-height: 200px; overflow-y: auto; width: 100%; display: none; z-index: 100; }
+    .autocomplete-list.active { display: block; }
+    .autocomplete-item { padding: 10px 12px; cursor: pointer; border-bottom: 1px solid var(--wf-tint, #dce4ef); font-size: 13px; color: var(--wf-ink, #1e2a3a); }
+    .autocomplete-item:hover { background: var(--wf-surface, #edf1f7); }
+
+    /* Review Step */
+    .review-section { background: var(--wf-canvas, #f5f7fb); padding: 16px; border-radius: 6px; margin-bottom: 16px; border-left: 3px solid var(--wf-accent, #3d6daa); }
+    .review-section h4 { margin: 0 0 12px 0; font-size: 13px; font-weight: 600; color: var(--wf-ink, #1e2a3a); }
+    .review-item { display: grid; grid-template-columns: 150px 1fr auto; gap: 16px; margin-bottom: 12px; font-size: 12px; }
+    .review-item:last-child { margin-bottom: 0; }
+    .review-label { font-weight: 600; color: var(--wf-muted, #6b7f99); }
+    .review-value { color: var(--wf-ink, #1e2a3a); }
+    .review-edit { color: var(--wf-accent, #3d6daa); text-decoration: none; cursor: pointer; font-weight: 500; }
+    .review-edit:hover { text-decoration: underline; }
+    .checkbox-group { margin-bottom: 16px; }
+    .checkbox-item { display: flex; gap: 8px; align-items: flex-start; margin-bottom: 12px; }
+    input[type="checkbox"] { margin-top: 4px; }
+    .checkbox-item label { margin: 0; font-weight: normal; }
+
+    /* Wizard Footer */
+    .wizard-footer { background: var(--wf-canvas, #f5f7fb); padding: 20px 24px; border-top: 1px solid var(--wf-tint, #dce4ef); display: flex; justify-content: space-between; gap: 12px; }
+    .footer-left { display: flex; gap: 12px; }
+    .btn-large { padding: 10px 20px; font-size: 13px; }
+
+    /* Info Callout */
+    .info-callout { background: var(--wf-canvas, #f5f7fb); border-left: 4px solid var(--wf-accent, #3d6daa); padding: 16px; border-radius: 4px; margin: 24px 0; font-size: 12px; color: var(--wf-ink, #1e2a3a); line-height: 1.6; }
+    .info-callout strong { color: var(--wf-ink, #1e2a3a); }
+
+    /* Draft Deals Section */
+    .draft-section { background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.12); padding: 24px; margin-bottom: 24px; }
+    .draft-section h2 { margin: 0 0 20px 0; font-size: 16px; font-weight: 600; color: var(--wf-ink, #1e2a3a); }
+    .draft-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .draft-card { background: var(--wf-canvas, #f5f7fb); padding: 16px; border-radius: 6px; border: 1px solid var(--wf-tint, #dce4ef); transition: all 0.2s; }
+    .draft-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .draft-card h4 { margin: 0 0 8px 0; font-size: 13px; font-weight: 600; color: var(--wf-ink, #1e2a3a); }
+    .draft-meta { font-size: 12px; color: var(--wf-muted, #6b7f99); margin-bottom: 12px; }
+    .draft-meta span { display: block; margin-bottom: 4px; }
+    .draft-progress { background: var(--wf-tint, #dce4ef); height: 6px; border-radius: 2px; margin: 12px 0; overflow: hidden; }
+    .draft-progress-fill { background: var(--wf-muted, #6b7f99); height: 100%; }
+    .draft-cta { margin-top: 12px; }
+    .draft-cta a { display: inline-block; padding: 6px 12px; background: var(--wf-accent, #3d6daa); color: white; text-decoration: none; border-radius: 4px; font-size: 12px; font-weight: 600; }
+    .draft-cta a:hover { background: var(--wf-accent, #3d6daa); }
+
+    /* How It Works */
+    .how-it-works { background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.12); padding: 24px; margin-bottom: 24px; }
+    .how-it-works h2 { margin: 0 0 20px 0; font-size: 16px; font-weight: 600; color: var(--wf-ink, #1e2a3a); }
+    .flow-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    .flow-step { text-align: center; }
+    .flow-step-num { width: 40px; height: 40px; border-radius: 50%; background: var(--wf-accent, #3d6daa); color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; margin: 0 auto 12px; }
+    .flow-step-title { font-size: 13px; font-weight: 600; color: var(--wf-ink, #1e2a3a); margin-bottom: 8px; }
+    .flow-step-desc { font-size: 12px; color: var(--wf-muted, #6b7f99); line-height: 1.6; }
+
+    /* Commission Info */
+    .commission-info { background: var(--wf-surface, #edf1f7); border: 1px solid var(--wf-surface, #edf1f7); border-radius: 6px; padding: 16px; margin: 24px 0; font-size: 12px; color: var(--wf-ink, #1e2a3a); }
+    .commission-info h4 { margin: 0 0 12px 0; font-size: 13px; font-weight: 600; }
+    .commission-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .commission-tier { text-align: center; padding: 12px; background: white; border-radius: 4px; }
+    .commission-tier strong { display: block; font-size: 18px; color: var(--wf-accent, #3d6daa); margin-bottom: 4px; }
+    .commission-tier-name { font-size: 11px; color: var(--wf-muted, #6b7f99); }
+
+    /* Design Brief */
+    /* Footer */
+    .footer { background: white; padding: 16px 24px; border-top: 1px solid var(--wf-tint, #dce4ef); margin-top: 40px; font-size: 12px; color: var(--wf-muted, #6b7f99); text-align: center; }
+    .footer a { color: var(--wf-accent, #3d6daa); text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+
+    /* Utility Classes */
+    .hidden { display: none; }
+    .step-content { display: none; }
+    .step-content.active { display: block; }
+    .no-matches { background: var(--wf-canvas, #f5f7fb); padding: 24px; text-align: center; border-radius: 6px; color: var(--wf-muted, #6b7f99); font-size: 13px; }
+    .btn-primary { background: var(--wf-accent, #3d6daa); }
+    .btn-primary:hover { background: var(--wf-accent, #3d6daa); }
+    .btn-success { background: var(--wf-muted, #6b7f99); }
+    .btn-success:hover { background: var(--wf-ink, #1e2a3a); }
+</style>
+</head>
+<body>
+<div class="page-context-bar">
+  <div style="max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <nav class="wf-breadcrumb" aria-label="Breadcrumb" style="margin-bottom:0;">
+      <a href="rep-home.html">Home</a>
+      <span class="wf-breadcrumb-sep">›</span>
+      <a href="rep-pipeline.html">My Pipeline</a>
+      <span class="wf-breadcrumb-sep">›</span>
+      <span class="wf-breadcrumb-current">Register a Deal</span>
+    </nav>
+    <span class="persona-badge persona-badge--ae">AE</span>
+  </div>
+</div>
+  <!-- Header Navigation -->
+  <header class="header">
+    <div class="logo-box">
+      <div class="logo">EQ</div>
+      <span class="header-title">Equinix Partner Portal</span>
+    </div>
+    <nav>
+      <a href="rep-deals-commission.html" class="active">Deals</a>
+      <a href="rep-my-training.html">Training</a>
+      <a href="rep-marketing.html">Marketing</a>
+      <a href="rep-support.html">Support</a>
+      <a href="rep-resources.html">Resources</a>
+    </nav>
+    <div class="header-icons">
+      <a href="rep-notifications.html" class="bell-wrapper" aria-label="Notifications" style="position:relative;color:white;text-decoration:none;">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+        <span style="position:absolute;top:-4px;right:-6px;background:var(--wf-red,#8b4555);color:white;font-size:10px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;">7</span>
+      </a>
+      <div class="icon-btn" title="Notifications">🔔</div>
+      <div class="icon-btn" title="Profile">SC</div>
+    </div>
+  </header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+  <div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1>Register a New Deal</h1>
+      <p>Protect your pipeline and earn commission through Equinix Partner Channel Program</p>
+    </div>
+
+    <!-- How It Works Section -->
+    <div class="how-it-works">
+      <h2>How Deal Registration Works</h2>
+      <div class="flow-steps">
+        <div class="flow-step">
+          <div class="flow-step-num">1</div>
+          <div class="flow-step-title">Submit Deal</div>
+          <div class="flow-step-desc">Complete the 4-step registration form with customer and deal details.</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">2</div>
+          <div class="flow-step-title">PSM Review</div>
+          <div class="flow-step-desc">Your Partner Success Manager reviews deal information and qualification.</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">3</div>
+          <div class="flow-step-title">Approval</div>
+          <div class="flow-step-desc">Deal approved and registered in Equinix system with protection period start.</div>
+        </div>
+        <div class="flow-step">
+          <div class="flow-step-num">4</div>
+          <div class="flow-step-title">90-Day Protection</div>
+          <div class="flow-step-desc">Protected from competing partners. Earn commission upon customer close.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Commission Info -->
+    <div class="commission-info">
+      <h4>Commission Rates by Partner Tier</h4>
+      <div class="commission-grid">
+        <div class="commission-tier">
+          <strong>8%</strong>
+          <div class="commission-tier-name">Bronze Tier</div>
+        </div>
+        <div class="commission-tier">
+          <strong>12%</strong>
+          <div class="commission-tier-name">Silver Tier</div>
+        </div>
+        <div class="commission-tier">
+          <strong>15%</strong>
+          <div class="commission-tier-name">Gold Tier</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search Panel -->
+    <div class="search-panel" role="search" aria-label="Search existing deals">
+      <h2>Search for Existing Deals</h2>
+      <p class="search-info">Before registering a new deal, search to see if it's already in our system. This prevents duplicate registrations and confusion.</p>
+
+      <form class="search-form" onsubmit="handleSearch(event)">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Search by customer name or deal name..."
+          aria-label="Deal search input"
+          autocomplete="off"
+        >
+        <button type="submit" class="btn">Search</button>
+      </form>
+
+      <div id="searchResults" class="search-results">
+        <div class="result-header">Potential Matches</div>
+        <div id="matchList"></div>
+        <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--wf-tint, #dce4ef);">
+          <button onclick="startNewRegistration()" class="btn btn-success">
+            No Match — Register New Deal
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Draft Deals Section -->
+    <div class="draft-section">
+      <h2>Your Draft Deals</h2>
+      <div class="draft-list">
+        <div class="draft-card">
+          <h4>Acme Corporation - Colocation Expansion</h4>
+          <div class="draft-meta">
+            <span><strong>Status:</strong> Step 2 of 4 (Deal Details)</span>
+            <span><strong>Started:</strong> Feb 8, 2026</span>
+            <span><strong>Est. Revenue:</strong> $125,000</span>
+          </div>
+          <div class="draft-progress">
+            <div class="draft-progress-fill" style="width: 50%"></div>
+          </div>
+          <div class="draft-cta">
+            <a href="#" aria-label="Continue draft deal for Acme Corporation">Continue Draft</a>
+          </div>
+        </div>
+
+        <div class="draft-card">
+          <h4>TechVision Inc. - Cloud Router Solution</h4>
+          <div class="draft-meta">
+            <span><strong>Status:</strong> Step 1 of 4 (Deal Basics)</span>
+            <span><strong>Started:</strong> Feb 10, 2026</span>
+            <span><strong>Est. Revenue:</strong> $250,000</span>
+          </div>
+          <div class="draft-progress">
+            <div class="draft-progress-fill" style="width: 25%"></div>
+          </div>
+          <div class="draft-cta">
+            <a href="#" aria-label="Continue draft deal for TechVision Inc.">Continue Draft</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Wizard -->
+    <div class="wizard" role="region" aria-label="Deal registration wizard">
+      <!-- Wizard Header with Progress Indicator -->
+      <div class="wizard-header">
+        <div class="progress-indicator">
+          <div class="step active" id="step1-indicator">
+            <div class="step-number">1</div>
+            <div class="step-label">Deal Basics</div>
+          </div>
+          <div class="step" id="step2-indicator">
+            <div class="step-number">2</div>
+            <div class="step-label">Deal Details</div>
+          </div>
+          <div class="step" id="step3-indicator">
+            <div class="step-number">3</div>
+            <div class="step-label">Competitive Info</div>
+          </div>
+          <div class="step" id="step4-indicator">
+            <div class="step-number">4</div>
+            <div class="step-label">Review & Submit</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wizard Body -->
+      <div class="wizard-body">
+        <!-- Step 1: Deal Basics -->
+        <div class="step-content active" id="step1">
+          <div class="form-section">
+            <h3>Step 1 of 4: Deal Basics</h3>
+            <p style="font-size: 13px; color: var(--wf-muted, #6b7f99); margin: 0 0 20px 0;">Start by providing basic information about the customer and deal opportunity.</p>
+
+            <div class="form-group">
+              <label for="customerName">
+                Customer Name <span class="required">*</span>
+              </label>
+              <input
+                type="text"
+                id="customerName"
+                placeholder="Start typing to search existing customers..."
+                aria-label="Customer name"
+                required
+              >
+              <div class="autocomplete-list" id="customerAutocomplete"></div>
+              <div class="help-text">Search our existing customer database or enter a new customer name</div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="contactPerson">
+                  Contact Person <span class="required">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="contactPerson"
+                  placeholder="e.g., John Smith"
+                  aria-label="Primary contact person name"
+                  required
+                >
+                <div class="help-text">Primary contact at the customer organization</div>
+              </div>
+
+              <div class="form-group">
+                <label for="contactEmail">
+                  Contact Email <span class="required">*</span>
+                </label>
+                <input
+                  type="email"
+                  id="contactEmail"
+                  placeholder="john.smith@customer.com"
+                  aria-label="Contact email address"
+                  required
+                >
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="dealDescription">
+                Deal Description <span class="required">*</span>
+              </label>
+              <textarea
+                id="dealDescription"
+                placeholder="Describe the customer's business need and opportunity. What solution are they interested in?"
+                aria-label="Deal description"
+                required
+              ></textarea>
+              <div class="help-text">Include customer pain points, business drivers, and your proposed Equinix solution</div>
+            </div>
+
+            <div class="info-callout">
+              <strong>💡 Tip:</strong> The more detailed your description, the faster your PSM can review and approve the deal.
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Deal Details -->
+        <div class="step-content" id="step2">
+          <div class="form-section">
+            <h3>Step 2 of 4: Deal Details</h3>
+            <p style="font-size: 13px; color: var(--wf-muted, #6b7f99); margin: 0 0 20px 0;">Provide deal specifics and timeline information.</p>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="estimatedRevenue">
+                  Estimated Annual Revenue <span class="required">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="estimatedRevenue"
+                  placeholder="e.g., $150,000"
+                  aria-label="Estimated annual revenue"
+                  required
+                >
+                <div class="help-text">Your estimated first-year revenue from this deal</div>
+              </div>
+
+              <div class="form-group">
+                <label for="expectedClose">
+                  Expected Close Date <span class="required">*</span>
+                </label>
+                <input
+                  type="date"
+                  id="expectedClose"
+                  aria-label="Expected deal close date"
+                  required
+                >
+                <div class="help-text">When do you expect this deal to close?</div>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="productInterest">
+                  Product Interest <span class="required">*</span>
+                </label>
+                <select id="productInterest" aria-label="Primary product of interest" required>
+                  <option value="">Select a product...</option>
+                  <option value="colocation">Colocation Services</option>
+                  <option value="fabric">Equinix Fabric</option>
+                  <option value="network-edge">Network Edge</option>
+                  <option value="cloudrouter">Cloud Router</option>
+                  <option value="interconnection">Interconnection Services</option>
+                  <option value="hybrid">Hybrid & Multicloud</option>
+                  <option value="other">Other/Multiple Products</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="dealSource">
+                  Deal Source <span class="required">*</span>
+                </label>
+                <select id="dealSource" aria-label="How did you identify this opportunity" required>
+                  <option value="">Select source...</option>
+                  <option value="inbound">Inbound (Customer inquiry)</option>
+                  <option value="existing">Existing Customer (Expansion)</option>
+                  <option value="partner">Partner/Reseller Referral</option>
+                  <option value="prospecting">Prospecting Activity</option>
+                  <option value="event">Trade Show/Event</option>
+                  <option value="marketing">Marketing Campaign</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="info-callout">
+              <strong>📋 Note:</strong> Deals with clear close dates and quantified revenue have faster approval timelines.
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 3: Competitive Info -->
+        <div class="step-content" id="step3">
+          <div class="form-section">
+            <h3>Step 3 of 4: Competitive Information</h3>
+            <p style="font-size: 13px; color: var(--wf-muted, #6b7f99); margin: 0 0 20px 0;">Help us understand the competitive landscape for this opportunity.</p>
+
+            <div class="form-group">
+              <label for="primaryCompetitor">
+                Primary Competitor <span class="required">*</span>
+              </label>
+              <select id="primaryCompetitor" aria-label="Primary competitor" required>
+                <option value="">Select competitor...</option>
+                <option value="aws">AWS</option>
+                <option value="azure">Microsoft Azure</option>
+                <option value="gcp">Google Cloud</option>
+                <option value="digital">DigitalOcean</option>
+                <option value="linode">Linode</option>
+                <option value="vultr">Vultr</option>
+                <option value="ibm">IBM Cloud</option>
+                <option value="internal">Internal/On-premises</option>
+                <option value="none">No competition (sole provider scenario)</option>
+                <option value="other">Other competitor</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="competitorSolution">
+                Competitor's Proposed Solution
+              </label>
+              <textarea
+                id="competitorSolution"
+                placeholder="Describe what solution the competitor is proposing. What is their value pitch?"
+                aria-label="Competitor solution details"
+              ></textarea>
+              <div class="help-text">Understanding their approach helps our PSM provide better positioning</div>
+            </div>
+
+            <div class="form-group">
+              <label for="equinixDifferentiator">
+                Why Equinix? Key Differentiators <span class="required">*</span>
+              </label>
+              <textarea
+                id="equinixDifferentiator"
+                placeholder="Explain why Equinix is the better choice. What's our compelling value prop for this customer?"
+                aria-label="Equinix differentiators and value proposition"
+                required
+              ></textarea>
+              <div class="help-text">Highlight Global Platform, 230+ data centers, Fabric interconnection capabilities, and unique advantages vs. competitor</div>
+            </div>
+
+            <div class="info-callout">
+              <strong>🎯 Strategy Tip:</strong> PSMs use this competitive information to help you win. Be specific about customer requirements and how Equinix uniquely addresses them.
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 4: Review & Submit -->
+        <div class="step-content" id="step4">
+          <div class="form-section">
+            <h3>Step 4 of 4: Review & Submit</h3>
+            <p style="font-size: 13px; color: var(--wf-muted, #6b7f99); margin: 0 0 20px 0;">Review your deal information before submitting for PSM approval.</p>
+
+            <!-- Deal Basics Summary -->
+            <div class="review-section">
+              <h4>Deal Basics</h4>
+              <div class="review-item">
+                <span class="review-label">Customer Name:</span>
+                <span class="review-value" id="review-customer">—</span>
+                <a href="javascript:goToStep(1)" class="review-edit">Edit</a>
+              </div>
+              <div class="review-item">
+                <span class="review-label">Contact Person:</span>
+                <span class="review-value" id="review-contact">—</span>
+                <a href="javascript:goToStep(1)" class="review-edit">Edit</a>
+              </div>
+              <div class="review-item">
+                <span class="review-label">Contact Email:</span>
+                <span class="review-value" id="review-email">—</span>
+                <a href="javascript:goToStep(1)" class="review-edit">Edit</a>
+              </div>
+              <div class="review-item">
+                <span class="review-label">Description:</span>
+                <span class="review-value" id="review-description" style="grid-column: 2;">—</span>
+              </div>
+            </div>
+
+            <!-- Deal Details Summary -->
+            <div class="review-section">
+              <h4>Deal Details</h4>
+              <div class="review-item">
+                <span class="review-label">Est. Revenue:</span>
+                <span class="review-value" id="review-revenue">—</span>
+                <a href="javascript:goToStep(2)" class="review-edit">Edit</a>
+              </div>
+              <div class="review-item">
+                <span class="review-label">Close Date:</span>
+                <span class="review-value" id="review-close">—</span>
+                <a href="javascript:goToStep(2)" class="review-edit">Edit</a>
+              </div>
+              <div class="review-item">
+                <span class="review-label">Product Interest:</span>
+                <span class="review-value" id="review-product">—</span>
+                <a href="javascript:goToStep(2)" class="review-edit">Edit</a>
+              </div>
+              <div class="review-item">
+                <span class="review-label">Deal Source:</span>
+                <span class="review-value" id="review-source">—</span>
+                <a href="javascript:goToStep(2)" class="review-edit">Edit</a>
+              </div>
+            </div>
+
+            <!-- Competitive Info Summary -->
+            <div class="review-section">
+              <h4>Competitive Information</h4>
+              <div class="review-item">
+                <span class="review-label">Primary Competitor:</span>
+                <span class="review-value" id="review-competitor">—</span>
+                <a href="javascript:goToStep(3)" class="review-edit">Edit</a>
+              </div>
+              <div class="review-item">
+                <span class="review-label">Equinix Differentiator:</span>
+                <span class="review-value" id="review-differientiator" style="grid-column: 2;">—</span>
+              </div>
+            </div>
+
+            <!-- Terms & Conditions -->
+            <div style="margin: 24px 0;">
+              <h4 style="margin: 0 0 16px 0; font-size: 13px; font-weight: 600; color: var(--wf-ink, #1e2a3a);">Agreement</h4>
+              <div class="checkbox-group">
+                <div class="checkbox-item">
+                  <input type="checkbox" id="termsChk" aria-label="Accept deal registration terms">
+                  <label for="termsChk">
+                    I confirm that all information provided is accurate. I understand this deal will be reviewed by my Partner Success Manager and I agree to the <strong>90-day protection period</strong> terms. I also confirm that I am the authorized sales representative for this customer opportunity.
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="info-callout">
+              <strong>✓ What happens next:</strong> After submission, your PSM will review the deal within 2 business days. You'll receive email notification when the deal is approved and protection period begins. Commission will be calculated upon customer invoice.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wizard Footer -->
+      <div class="wizard-footer">
+        <div class="footer-left">
+          <button onclick="previousStep()" class="btn btn-secondary btn-large" id="prevBtn" style="display: none;">
+            Previous
+          </button>
+        </div>
+        <div style="flex: 1; text-align: right;">
+          <button onclick="saveDraft()" class="btn btn-secondary btn-large">
+            Save as Draft
+          </button>
+          <button onclick="nextStep()" class="btn btn-primary btn-large" id="nextBtn">
+            Next
+          </button>
+          <button onclick="submitDeal()" class="btn btn-success btn-large" id="submitBtn" style="display: none;">
+            Submit for Approval
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+
+
+  <div class="footer">
+    <p>
+      Equinix Partner Portal • Logged in as: Sarah Connor (sc@stark.com) • PM: Pepper Potts | PSM: Marcus Chen •
+      <a href="#">Contact Support</a> • <a href="#">Terms & Conditions</a>
+    </p>
+  </div>
+
+  <script>
+    // Current step tracking
+    let currentStep = 1;
+
+    // Sample customer data for autocomplete
+    const customers = [
+      { name: 'Acme Corporation', id: 'ACC-001', recent: true },
+      { name: 'TechVision Inc.', id: 'TV-002', recent: true },
+      { name: 'Global Finance Corp', id: 'GFC-003', recent: true },
+      { name: 'CloudFirst Industries', id: 'CF-004', recent: false },
+      { name: 'DataSync Solutions', id: 'DS-005', recent: false },
+    ];
+
+    // Sample search results
+    const sampleDeals = [
+      {
+        name: 'Acme Corp - Colocation Setup',
+        customer: 'Acme Corporation',
+        amount: '$85,000',
+        status: 'In Review',
+        registeredBy: 'Michael Johnson',
+        confidence: 'High'
+      },
+      {
+        name: 'Acme Cloud Migration',
+        customer: 'Acme Corporation',
+        amount: '$125,000',
+        status: 'Approved',
+        registeredBy: 'Sarah Connor',
+        confidence: 'Medium'
+      }
+    ];
+
+    // Initialize autocomplete
+    document.getElementById('customerName').addEventListener('input', function(e) {
+      const query = e.target.value.toLowerCase();
+      const list = document.getElementById('customerAutocomplete');
+
+      if (query.length < 2) {
+        list.classList.remove('active');
+        return;
+      }
+
+      const matches = customers.filter(c => c.name.toLowerCase().includes(query));
+      list.innerHTML = matches.map(m =>
+        `<div class="autocomplete-item" onclick="selectCustomer('${m.name}')">${m.name}</div>`
+      ).join('');
+
+      if (matches.length > 0) {
+        list.classList.add('active');
+      }
+    });
+
+    function selectCustomer(name) {
+      document.getElementById('customerName').value = name;
+      document.getElementById('customerAutocomplete').classList.remove('active');
+    }
+
+    // Search handler
+    function handleSearch(e) {
+      e.preventDefault();
+      const query = document.getElementById('searchInput').value;
+
+      if (!query.trim()) {
+        alert('Please enter a search term');
+        return;
+      }
+
+      const resultsDiv = document.getElementById('searchResults');
+      const matchList = document.getElementById('matchList');
+
+      // Filter sample deals by search query
+      const matches = sampleDeals.filter(d =>
+        d.name.toLowerCase().includes(query.toLowerCase()) ||
+        d.customer.toLowerCase().includes(query.toLowerCase())
+      );
+
+      if (matches.length === 0) {
+        matchList.innerHTML = `
+          <div class="no-matches">
+            <p>No matching deals found in the system.</p>
+            <p style="font-size: 12px; margin-top: 8px;">This appears to be a new opportunity.</p>
+          </div>
+        `;
+      } else {
+        matchList.innerHTML = matches.map(deal => `
+          <div class="match-card">
+            <div class="match-info">
+              <h4>${deal.name}</h4>
+              <p><strong>Customer:</strong> ${deal.customer}</p>
+              <p><strong>Amount:</strong> ${deal.amount} • <strong>Status:</strong> ${deal.status}</p>
+              <p style="font-size: 11px; color: var(--wf-muted, #6b7f99); margin-top: 4px;">Registered by ${deal.registeredBy}</p>
+            </div>
+            <div class="match-badge ${deal.confidence === 'High' ? 'badge-high' : deal.confidence === 'Medium' ? 'badge-medium' : 'badge-low'}">
+              ${deal.confidence} Match
+            </div>
+          </div>
+        `).join('');
+      }
+
+      resultsDiv.classList.add('active');
+    }
+
+    function startNewRegistration() {
+      document.getElementById('searchPanel').style.display = 'none';
+      currentStep = 1;
+      showStep(1);
+    }
+
+    // Wizard navigation
+    function goToStep(step) {
+      currentStep = step;
+      showStep(step);
+    }
+
+    function nextStep() {
+      if (validateStep(currentStep)) {
+        if (currentStep < 4) {
+          currentStep++;
+          showStep(currentStep);
+        }
+      }
+    }
+
+    function previousStep() {
+      if (currentStep > 1) {
+        currentStep--;
+        showStep(currentStep);
+      }
+    }
+
+    function showStep(step) {
+      // Hide all steps
+      document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.step').forEach(el => {
+        el.classList.remove('active', 'completed');
+      });
+
+      // Show current step
+      document.getElementById('step' + step).classList.add('active');
+      document.getElementById('step' + step + '-indicator').classList.add('active');
+
+      // Mark completed steps
+      for (let i = 1; i < step; i++) {
+        document.getElementById('step' + i + '-indicator').classList.add('completed');
+      }
+
+      // Update buttons
+      document.getElementById('prevBtn').style.display = step === 1 ? 'none' : 'inline-block';
+      document.getElementById('nextBtn').style.display = step === 4 ? 'none' : 'inline-block';
+      document.getElementById('submitBtn').style.display = step === 4 ? 'inline-block' : 'none';
+
+      // Update review on step 4
+      if (step === 4) {
+        updateReview();
+      }
+
+      // Scroll to top
+      document.querySelector('.wizard').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function validateStep(step) {
+      if (step === 1) {
+        const customer = document.getElementById('customerName').value.trim();
+        const contact = document.getElementById('contactPerson').value.trim();
+        const email = document.getElementById('contactEmail').value.trim();
+        const desc = document.getElementById('dealDescription').value.trim();
+
+        if (!customer || !contact || !email || !desc) {
+          alert('Please fill in all required fields in Step 1');
+          return false;
+        }
+      } else if (step === 2) {
+        const revenue = document.getElementById('estimatedRevenue').value.trim();
+        const close = document.getElementById('expectedClose').value;
+        const product = document.getElementById('productInterest').value;
+        const source = document.getElementById('dealSource').value;
+
+        if (!revenue || !close || !product || !source) {
+          alert('Please fill in all required fields in Step 2');
+          return false;
+        }
+      } else if (step === 3) {
+        const competitor = document.getElementById('primaryCompetitor').value;
+        const diff = document.getElementById('equinixDifferentiator').value.trim();
+
+        if (!competitor || !diff) {
+          alert('Please complete all required fields in Step 3');
+          return false;
+        }
+      }
+      return true;
+    }
+
+    function updateReview() {
+      document.getElementById('review-customer').textContent = document.getElementById('customerName').value || '—';
+      document.getElementById('review-contact').textContent = document.getElementById('contactPerson').value || '—';
+      document.getElementById('review-email').textContent = document.getElementById('contactEmail').value || '—';
+      document.getElementById('review-description').textContent = document.getElementById('dealDescription').value || '—';
+      document.getElementById('review-revenue').textContent = document.getElementById('estimatedRevenue').value || '—';
+      document.getElementById('review-close').textContent = document.getElementById('expectedClose').value || '—';
+
+      const productSelect = document.getElementById('productInterest');
+      document.getElementById('review-product').textContent = productSelect.options[productSelect.selectedIndex].text || '—';
+
+      const sourceSelect = document.getElementById('dealSource');
+      document.getElementById('review-source').textContent = sourceSelect.options[sourceSelect.selectedIndex].text || '—';
+
+      const competitorSelect = document.getElementById('primaryCompetitor');
+      document.getElementById('review-competitor').textContent = competitorSelect.options[competitorSelect.selectedIndex].text || '—';
+
+      document.getElementById('review-differientiator').textContent = document.getElementById('equinixDifferentiator').value || '—';
+    }
+
+    function saveDraft() {
+      alert('Deal saved as draft! You can continue from "Your Draft Deals" section.');
+      // In production: POST form data to /api/deals with Status='Draft'
+    }
+
+    function submitDeal() {
+      if (!document.getElementById('termsChk').checked) {
+        alert('Please accept the terms and conditions to submit');
+        return;
+      }
+
+      alert('Deal submitted successfully! Your PSM will review within 2 business days.');
+      // In production: POST form data to /api/deals with Status='Pending PSM Review'
+      // Create Deal_Registration__c record in Salesforce
+    }
+
+    // Initialize
+    showStep(1);
+  </script>
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Multi-step deal registration wizard guiding partners through submitting new opportunities for protection and approval. Sarah Connor (Stark Industries) registering AIM Technologies Edge deal ($12K MRR, Submitted status, DR-2026-4455). Features inline duplicate detection, real-time commission estimation, draft saving, and comprehensive deal context capture to streamline the registration process.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Register deals with duplicate prevention checks</li>
+<li>Calculate commission earnings based on deal details</li>
+<li>Save work in progress as draft for later completion</li>
+<li>Submit deals for approval and protection period tracking</li>
+<li>Understand commission structure and rate tiers</li>
+<li>Track deal registration workflow and approval status</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Page header with deal registration title</li>
+<li>Four-step wizard with progress bar: Deal Basics → Deal Details → Commission & Competitive Intel → Review & Submit</li>
+<li>Deal search/lookup panel with account autocomplete</li>
+<li>Step 1: Customer name, product category, deal amount, expected close date fields</li>
+<li>Step 2: Detailed customer information, competitive landscape, solution description</li>
+<li>Step 3: Commission calculator showing estimated earnings by tier, deal structure info</li>
+<li>Step 4: Summary review page with all entered details and edit shortcuts</li>
+<li>Draft deals management section showing previously saved registrations</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Account search input with autocomplete against Salesforce accounts</li>
+<li>Next/Previous buttons for wizard navigation</li>
+<li>Save Draft button available on all steps</li>
+<li>Submit for Approval button on final review page</li>
+<li>Form field validation with real-time feedback on blur</li>
+<li>Commission calculation dynamically updates as deal amount changes</li>
+<li>Duplicate detection warning highlighting overlapping deals</li>
+<li>Edit links on review page jumping back to specific form sections</li>
+<li>Draft deals card showing restore and delete actions</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Form Validation &amp; Step Navigation</strong>
+<ul>
+<li>Wizard step validation prevents advancing without completing required fields using client-side checks</li>
+<li>Deal amount validation ensures value is positive number using numeric constraints</li>
+<li>Expected close date must be in future using date comparison logic</li>
+<li>Form preserves step data in session/localStorage during wizard flow for persistence</li>
+</ul></li>
+<li><strong>Account &amp; Duplicate Checking</strong>
+<ul>
+<li>Account lookup queries Salesforce accounts in real-time and filters results by search text using SOQL</li>
+<li>Duplicate detection compares against existing Deal_Registration__c records with overlapping date ranges within 30 days</li>
+</ul></li>
+<li><strong>Commission &amp; Protection Period Calculation</strong>
+<ul>
+<li>Commission calculation applies current user tier rate to deal amount retrieved from OrgTier__c field</li>
+<li>Protection period automatically calculated as 30 days from submission date and displayed to user</li>
+</ul></li>
+<li><strong>Record Persistence &amp; Workflow</strong>
+<ul>
+<li>Save Draft creates record with status "Draft" allowing later continuation and editing</li>
+<li>Submit for Approval creates record with status "Pending Approval" and triggers approval workflow notification</li>
+</ul></li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Validation &amp; Business Logic</h4>
+<ul>
+<li>Deal registration persisted as Deal_Registration__c custom object record</li>
+<li>Duplicate check queries existing registrations with overlapping date ranges</li>
+<li>Commission rate retrieved from user tier via OrgTier__c or similar field</li>
+<li>Protection period calculated as 30 days from submission date</li>
+<li>Required field validation enforced before step progression</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

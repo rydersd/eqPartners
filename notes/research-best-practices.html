@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Research Best Practices - Equinix Partner Channel Program</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--wf-ink, #1e2a3a);
+            background-color: var(--wf-canvas, #f5f7fb);
+        }
+
+        header {
+            background: var(--wf-ink, #1e2a3a);
+            color: var(--wf-surface, #edf1f7);
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .research-note {
+            background-color: var(--wf-surface, #edf1f7)3cd;
+            border-left: 5px solid var(--wf-amber, #8b7745);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+
+        .research-note strong {
+            color: var(--wf-amber, #8b7745);
+        }
+
+        section {
+            background: var(--wf-surface, #edf1f7);
+            margin-bottom: 2rem;
+            padding: 2rem;
+            border-radius: 6px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+        }
+
+        section h2 {
+            color: var(--wf-ink, #1e2a3a);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 3px solid var(--wf-amber, #8b7745);
+        }
+
+        section h3 {
+            color: var(--wf-ink, #1e2a3a);
+            font-size: 1.1rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        ul, ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        li {
+            margin-bottom: 0.75rem;
+            line-height: 1.7;
+        }
+
+        .best-practice {
+            background-color: var(--wf-canvas, #f5f7fb);
+            border-left: 4px solid var(--wf-accent, #3d6daa);
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .best-practice strong {
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        .recommendation-box {
+            background-color: var(--wf-canvas, #f5f7fb);
+            border-left: 4px solid var(--wf-ink, #1e2a3a);
+            padding: 1.25rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .recommendation-box strong {
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--wf-line, #b0bdd0);
+        }
+
+        th {
+            background-color: var(--wf-ink, #1e2a3a);
+            color: var(--wf-surface, #edf1f7);
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: var(--wf-canvas, #f5f7fb);
+        }
+
+        .key-insight {
+            background-color: var(--wf-surface, #edf1f7)8e1;
+            border-left: 4px solid var(--wf-amber, #8b7745);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+
+        .sources {
+            background-color: var(--wf-canvas, #f5f7fb);
+            padding: 1.5rem;
+            border-radius: 6px;
+            margin-top: 2rem;
+        }
+
+        .sources h3 {
+            color: var(--wf-ink, #1e2a3a);
+            margin-bottom: 1rem;
+        }
+
+        .sources ul {
+            margin-left: 1.5rem;
+        }
+
+        .sources li {
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+            color: var(--wf-text, #3b4f68);
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            color: var(--wf-accent, #3d6daa);
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .partner-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .partner-card {
+            background-color: var(--wf-canvas, #f5f7fb);
+            border: 1px solid var(--wf-line, #b0bdd0);
+            padding: 1.25rem;
+            border-radius: 6px;
+            border-left: 4px solid var(--wf-ink, #1e2a3a);
+        }
+
+        .partner-card h4 {
+            color: var(--wf-ink, #1e2a3a);
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .partner-card p {
+            font-size: 0.9rem;
+            color: var(--wf-text, #3b4f68);
+        }
+
+        .ux-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .ux-item {
+            background-color: var(--wf-canvas, #f5f7fb);
+            padding: 1rem;
+            border-radius: 4px;
+            border-left: 3px solid var(--wf-accent, #3d6daa);
+        }
+
+        .ux-item strong {
+            color: var(--wf-ink, #1e2a3a);
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .ux-item p {
+            font-size: 0.9rem;
+            color: var(--wf-text, #3b4f68);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--wf-text, #3b4f68);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--wf-accent, #3d6daa);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+</style>
+  <link rel="stylesheet" href="wireframe.css">
+</head>
+<body>
+    <header class="wf-header">
+        <div class="wf-header-logo">EQ</div>
+        <div class="wf-header-title">Equinix Partner Program</div>
+        <nav class="wf-header-nav">
+            <a href="#">Research</a>
+        </nav>
+        <div class="wf-header-util">
+            <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+        </div>
+    </header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+    <div class="container">
+        <a href="index.html" class="back-link">← Back to Index</a>
+
+        <div class="research-note">
+            <strong>Research Document:</strong> This page summarizes industry best practices gleaned from analyzing Snowflake's Partner Network (SPN) and other leading partner program portals. Findings inform the design and feature roadmap for the Equinix Partner Channel Program (PCP).
+        </div>
+
+        <section>
+            <h2>Snowflake Partner Network (SPN) — What They Do Well</h2>
+            <p>Snowflake's partner portal serves as a comprehensive model for best-in-class partner engagement. Key strengths include:</p>
+
+            <h3>Central Portal Experience</h3>
+            <p>SPN functions as a one-stop-shop for partners, consolidating:</p>
+            <ul>
+                <li>Deal registration and opportunity tracking</li>
+                <li>Training and enablement content</li>
+                <li>Sales and marketing tools and collateral</li>
+                <li>Commission and incentive information</li>
+                <li>Partner resources and documentation</li>
+            </ul>
+
+            <h3>Data-Driven Approach</h3>
+            <ul>
+                <li>Uses proprietary AI/ML algorithms to automatically assign quality scores to customer references and deal registrations</li>
+                <li>Leverages Snowflake's Secure Data Sharing for transparent partner engagement metrics</li>
+                <li>Partners see real-time data on deal performance and commission calculations</li>
+            </ul>
+
+            <h3>Clear Deal Registration Process</h3>
+            <ul>
+                <li>Streamlined deal registration that accelerates opportunity velocity</li>
+                <li>Automatic connection to field sales team for support</li>
+                <li>Partners gain clear visibility into deal status and progress</li>
+                <li>Duplicate detection prevents conflicts and confusion</li>
+            </ul>
+
+            <h3>Tiered Incentive Structure</h3>
+            <p>Partner tiers (Select, Premier, Elite) with escalating rewards:</p>
+            <ul>
+                <li><strong>Registered Partners:</strong> 5% GACV incentives</li>
+                <li><strong>Select/Elite/Premier Tiers:</strong> 10% GACV incentives plus co-sell rewards</li>
+                <li><strong>Services Funds Program (SFP):</strong> 3-5% variable funding for POCs, migrations, and implementations</li>
+            </ul>
+
+            <h3>Co-Sell Program</h3>
+            <p>Partners earn rewards for pre-sales engagements, not just closed deals:</p>
+            <ul>
+                <li>Credit for customer introductions</li>
+                <li>Rewards for discovery workshops and assessments</li>
+                <li>Incentives for POC participation and support</li>
+            </ul>
+
+            <h3>Self-Service Access</h3>
+            <ul>
+                <li>Once a partner company is registered, any employee can self-register for portal access</li>
+                <li>Portal admin manages company-wide user access and permissions</li>
+                <li>Reduces friction and increases adoption across partner organizations</li>
+            </ul>
+        </section>
+
+        <section>
+            <h2>Deal Registration Best Practices (Industry-Wide)</h2>
+            <p>Analysis of leading partner programs reveals consistent patterns in deal registration implementation:</p>
+
+            <div class="best-practice">
+                <strong>Search Before Create:</strong> Implement duplicate detection matching on account + deal name + timeframe. Surface potential matches in real-time as partners enter key fields. This prevents duplicate registrations and reduces manual conflict resolution.
+            </div>
+
+            <div class="best-practice">
+                <strong>Guided Forms with Validation:</strong> Build guided deal registration with "Needs Info" status and clear checklist for fix-and-resubmit without requiring email. Partners can independently correct incomplete submissions.
+            </div>
+
+            <div class="best-practice">
+                <strong>Reduce Friction:</strong> If partners can't register deals quickly, they sell something else or email everything. Best practice: keep deal registration to under 5 minutes from start to finish.
+            </div>
+
+            <div class="best-practice">
+                <strong>Status Visibility:</strong> Provide timelines, timestamps, and notifications throughout the deal lifecycle. When partners can see deal status and progress, they're less likely to create duplicates and more likely to follow up appropriately.
+            </div>
+
+            <div class="best-practice">
+                <strong>CRM Integration:</strong> Partner portal forms should auto-create opportunities in the internal CRM with complete details. This enables real-time duplicate checking and prevents data silos.
+            </div>
+
+            <div class="best-practice">
+                <strong>Conflict Resolution:</strong> When a duplicate is found, show the existing deal's status and owner rather than simply blocking the submission. Provide clear escalation path for disputes.
+            </div>
+        </section>
+
+        <section>
+            <h2>Partner Type-Specific Deal Flows</h2>
+            <p>Different partner business models require different deal registration approaches:</p>
+
+            <div class="partner-types">
+                <div class="partner-card">
+                    <h4>Resellers</h4>
+                    <p>Sell directly to end customers. Deal registration should capture complete customer details, deal size, timeline, and solution details. Standard flow applies.</p>
+                </div>
+
+                <div class="partner-card">
+                    <h4>Technology Solutions Distributors (TSDs)</h4>
+                    <p>Sell through downstream resellers. Must capture the reseller relationship, commission split, and co-sell responsibilities. Requires deal ownership clarity.</p>
+                </div>
+
+                <div class="partner-card">
+                    <h4>Distributors</h4>
+                    <p>Handle high-volume aggregate deals. Need bulk registration capabilities and volume-based incentives. May register multiple customer opportunities per submission.</p>
+                </div>
+            </div>
+
+            <div class="key-insight">
+                <strong>Best Practice:</strong> Auto-detect partner type from account record based on company classification, but allow manual override for edge cases. Include conditional form sections that appear/disappear based on partner type selection.
+            </div>
+        </section>
+
+        <section>
+            <h2>Recommendations for Equinix PCP</h2>
+            <p>Based on research findings, the following recommendations should guide PCP design and development:</p>
+
+            <div class="recommendation-box">
+                <strong>1. Implement Search-Before-Create as Screen Flow with Apex</strong>
+                <p>Build a Salesforce Screen Flow that performs real-time duplicate detection using Apex when partners enter account name, deal name, and timeframe. Surface matches immediately and allow partners to claim existing deals if appropriate.</p>
+            </div>
+
+            <div class="recommendation-box">
+                <strong>2. Add Partner Type Field with Conditional Sections</strong>
+                <p>Add partner_type__c field to Deal_Registration__c object with values: Reseller, TSD, Distributor. Use conditional visibility to show/hide form sections based on partner type selection.</p>
+            </div>
+
+            <div class="recommendation-box">
+                <strong>3. Expand Beyond Closed Deals (Co-Sell Model)</strong>
+                <p>Design incentive structure that rewards pre-sales engagement: customer introductions, discovery workshops, POCs, and migrations — not just closed deals. Model after Snowflake's approach.</p>
+            </div>
+
+            <div class="recommendation-box">
+                <strong>4. Plan AI/ML Deal Scoring (Phase 2)</strong>
+                <p>Implement Einstein Prediction Builder to automatically score deal quality based on historical conversion rates, customer profile, deal size, and timeline. Provide visibility to partners.</p>
+            </div>
+
+            <div class="recommendation-box">
+                <strong>5. Target &lt; 5 Minute Deal Registration</strong>
+                <p>Design deal registration forms to be completable in under 5 minutes. Test with partners and remove non-essential fields. Friction drives partners to alternative channels.</p>
+            </div>
+
+            <div class="recommendation-box">
+                <strong>6. Build "Needs Info" Status with Checklist</strong>
+                <p>When deals are rejected due to missing info, set status to "Needs Info" and provide clear checklist of required fields. Allow partners to resubmit without emailing support.</p>
+            </div>
+
+            <div class="recommendation-box">
+                <strong>7. Add Notification Preferences</strong>
+                <p>Allow partners to control alert frequency and notification channels (email, SMS, portal). Prevent notification fatigue which drives portal abandonment.</p>
+            </div>
+        </section>
+
+        <section>
+            <h2>UX Principles from Top Partner Portals</h2>
+            <p>Consumer-grade user experience is critical to partner program success. Poor UX is cited as the #1 reason partner programs fail to achieve adoption:</p>
+
+            <div class="ux-grid">
+                <div class="ux-item">
+                    <strong>Consumer-Grade Design</strong>
+                    <p>Clean, modern interfaces with generous whitespace. Avoid cluttered layouts and overwhelming navigation.</p>
+                </div>
+
+                <div class="ux-item">
+                    <strong>Multiple Navigation Paths</strong>
+                    <p>Place primary functions (deal registration) on homepage AND in main navigation. Don't bury critical workflows.</p>
+                </div>
+
+                <div class="ux-item">
+                    <strong>Mobile Responsive</strong>
+                    <p>Design for field partners accessing portals on mobile devices. Ensure forms and workflows work on tablets and phones.</p>
+                </div>
+
+                <div class="ux-item">
+                    <strong>Minimize Portal Logins</strong>
+                    <p>Implement SSO with company identity providers. Password resets and credential management drive churn.</p>
+                </div>
+
+                <div class="ux-item">
+                    <strong>Real-Time Commission Estimates</strong>
+                    <p>Show estimated commission and incentives during deal registration. Transparency drives engagement and accuracy.</p>
+                </div>
+
+                <div class="ux-item">
+                    <strong>Celebrate Wins</strong>
+                    <p>Highlight deal closures, tier promotions, and milestone achievements. Recognition drives repeat engagement and loyalty.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="sources">
+            <h3>Research Sources</h3>
+            <ul>
+                <li>Snowflake Partner Network (SPN) portal analysis and partner documentation</li>
+                <li>Industry interviews with leading partner program operators</li>
+                <li>Analysis of competitor partner portals and programs</li>
+                <li>Partner feedback on portal usability and deal registration friction</li>
+                <li>Salesforce partner program best practices and documentation</li>
+            </ul>
+        </section>
+    </div>
+
+    <footer>
+        <p>Equinix Partner Channel Program Design Research | <a href="index.html">Back to Index</a></p>
+    </footer>
+
+  
+<footer class="wf-footer">
+    &copy; 2026 Equinix · Wireframe specification
+  </footer>
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Research and analysis of industry partner portal best practices from Snowflake and competitors, with actionable recommendations for Equinix Partner Channel Program implementation and feature prioritization.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Compile and present industry research findings on partner portal design</li>
+<li>Provide actionable recommendations for Equinix PCP implementation</li>
+<li>Reference Snowflake SPN as industry-leading benchmark</li>
+<li>Guide feature prioritization decisions based on competitive analysis</li>
+<li>Document design rationale and user research foundations for design reviews</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Snowflake Partner Network best practices analysis covering central portal experience</li>
+<li>Deal registration best practices including search-before-create, guided forms</li>
+<li>Partner type-specific deal flows for resellers, technology distributors, and distributors</li>
+<li>Seven strategic recommendations for PCP implementation with phased approach</li>
+<li>UX principles from top partner portals: consumer-grade design, mobile responsive, real-time commission estimates</li>
+<li>Research sources compilation from industry interviews and competitor analysis</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Back-to-index navigation link</li>
+<li>Research note banner with amber accent</li>
+<li>Expandable section cards with colored left borders</li>
+<li>Best practice boxes with strong emphasis on key concepts</li>
+<li>Partner type cards in responsive grid with card borders and descriptions</li>
+<li>UX grid with 6 principle cards showing best practice concepts</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Content Structure & Presentation</strong>
+<ul>
+<li>Research findings presented as structured sections with clear h2 headers (amber bottom border), subheadings, and semantic HTML list elements</li>
+<li>Research Note banner uses amber (#8b7745) left border to highlight key research context at page top</li>
+</ul></li>
+<li><strong>Visual Hierarchy & Emphasis</strong>
+<ul>
+<li>Recommendation boxes use distinct visual styling with dark left border (#1e2a3a) and white background to distinguish strategic guidance from general content</li>
+<li>Best Practice boxes use blue left border (#3d6daa) for design best practice callouts within sections</li>
+<li>Key Insight boxes use amber left border (#8b7745) for important research findings or warnings</li>
+</ul></li>
+<li><strong>Responsive Grid Layouts</strong>
+<ul>
+<li>Partner type cards display in responsive CSS grid with auto-fit and 280px minimum column width, adaptively stacking on narrow viewports</li>
+<li>UX principle grid uses CSS Grid with 220px minimum column width, allowing 2-3 cards per row on desktop, stacking on mobile</li>
+</ul></li>
+<li><strong>Data Representation & Tables</strong>
+<ul>
+<li>Tables use semantic HTML with dark header row (#1e2a3a background), border-collapse for clean lines, and hover state (#f5f7fb background) for readability</li>
+</ul></li>
+<li><strong>Navigation & Accessibility</strong>
+<ul>
+<li>Back-to-index link enables quick navigation to research document index or parent page</li>
+<li>Page structure uses proper heading hierarchy (h1 → h2 → h3) and supports printing without orphaned sections or broken CSS Grid layouts</li>
+</ul></li>
+</ul>
+<hr class="spec-divider">
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+</body>
+</html>

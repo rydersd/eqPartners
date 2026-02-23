@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support Center — PM · Equinix PCP</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Salesforce Sans, sans-serif;
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    header {
+      background-color: var(--wf-ink, #1e2a3a);
+      color: white;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .eq-logo {
+      width: 40px;
+      height: 40px;
+      background-color: var(--wf-accent, #3d6daa);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 20px;
+      color: white;
+    }
+
+    .header-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    nav {
+      display: flex;
+      gap: 32px;
+      margin-left: 48px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-size: 14px;
+      transition: opacity 0.2s;
+    }
+
+    nav a:hover {
+      opacity: 0.8;
+    }
+
+    nav a.active {
+      border-bottom: 3px solid var(--wf-accent, #3d6daa);
+      padding-bottom: 6px;
+    }
+
+    .header-right {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .notification-bell {
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      background-color: var(--wf-accent, #3d6daa);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 24px;
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 24px;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .main-layout {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 32px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 8px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 16px;
+    }
+
+    .form-label {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .required {
+      color: var(--wf-red, #8b4553);
+    }
+
+    .form-select,
+    .form-input,
+    .form-textarea {
+      padding: 10px 12px;
+      border: 1px solid var(--wf-tint, #dce4ef);
+      border-radius: 4px;
+      font-size: 14px;
+      font-family: inherit;
+      background-color: white;
+    }
+
+    .form-select:focus,
+    .form-input:focus,
+    .form-textarea:focus {
+      outline: none;
+      border-color: var(--wf-accent, #3d6daa);
+      box-shadow: 0 0 0 3px rgba(0, 112, 210, 0.1);
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .form-hint {
+      font-size: 12px;
+      color: var(--wf-muted, #6b7f99);
+      margin-top: 6px;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background-color: var(--wf-accent, #3d6daa);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--wf-accent, #3d6daa);
+    }
+
+    .btn-secondary {
+      background-color: white;
+      color: var(--wf-accent, #3d6daa);
+      border: 1px solid var(--wf-accent, #3d6daa);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--wf-canvas, #f5f7fb);
+    }
+
+    .btn-chat {
+      background-color: var(--wf-muted, #6b7f99);
+      color: white;
+      width: 100%;
+    }
+
+    .btn-chat:hover {
+      background-color: var(--wf-ink, #1e2a3a);
+    }
+
+    .my-cases-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      margin-top: 16px;
+    }
+
+    .my-cases-table th {
+      background-color: var(--wf-canvas, #f5f7fb);
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+      border-bottom: 1px solid var(--wf-tint, #dce4ef);
+    }
+
+    .my-cases-table td {
+      padding: 12px;
+      border-bottom: 1px solid var(--wf-tint, #dce4ef);
+    }
+
+    .my-cases-table tr:hover {
+      background-color: var(--wf-canvas, #f5f7fb);
+    }
+
+    .case-number {
+      font-weight: 600;
+      color: var(--wf-accent, #3d6daa);
+      cursor: pointer;
+    }
+
+    .case-number:hover {
+      text-decoration: underline;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .status-open {
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .status-in-progress {
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-amber, #8b7745);
+    }
+
+    .status-resolved {
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-muted, #6b7f99);
+    }
+
+    .status-closed {
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-muted, #6b7f99);
+    }
+
+    .priority-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .priority-low {
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-muted, #6b7f99);
+    }
+
+    .priority-medium {
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-amber, #8b7745);
+    }
+
+    .priority-high {
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-red, #8b4553);
+    }
+
+    .priority-critical {
+      background-color: var(--wf-ink, #1e2a3a);
+      color: white;
+    }
+
+    .sla-timer {
+      font-size: 12px;
+      color: var(--wf-muted, #6b7f99);
+    }
+
+    .sla-timer.warning {
+      color: var(--wf-amber, #8b7745);
+      font-weight: 600;
+    }
+
+    .sla-timer.critical {
+      color: var(--wf-red, #8b4553);
+      font-weight: 600;
+    }
+
+    .kb-search {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .kb-search-input {
+      flex: 1;
+      padding: 10px 12px;
+      border: 1px solid var(--wf-tint, #dce4ef);
+      border-radius: 4px;
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    .kb-search-input:focus {
+      outline: none;
+      border-color: var(--wf-accent, #3d6daa);
+      box-shadow: 0 0 0 3px rgba(0, 112, 210, 0.1);
+    }
+
+    .kb-search-btn {
+      padding: 10px 20px;
+      background-color: var(--wf-accent, #3d6daa);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .kb-search-btn:hover {
+      background-color: var(--wf-accent, #3d6daa);
+    }
+
+    .kb-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .kb-article {
+      background: var(--wf-canvas, #f5f7fb);
+      border-left: 4px solid var(--wf-accent, #3d6daa);
+      padding: 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .kb-article:hover {
+      background: var(--wf-canvas, #f5f7fb);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    }
+
+    .kb-article-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--wf-accent, #3d6daa);
+      margin-bottom: 4px;
+    }
+
+    .kb-article-desc {
+      font-size: 12px;
+      color: var(--wf-muted, #6b7f99);
+    }
+
+    .kb-article-icon {
+      float: right;
+      color: var(--wf-accent, #3d6daa);
+    }
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .sidebar-card {
+      background: white;
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    }
+
+    .sidebar-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 12px;
+    }
+
+    .psm-info {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--wf-muted, #6b7f99);
+    }
+
+    .psm-name {
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .psm-detail {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .psm-detail-icon {
+      font-size: 14px;
+    }
+
+    .psm-link {
+      color: var(--wf-accent, #3d6daa);
+      text-decoration: none;
+    }
+
+    .psm-link:hover {
+      text-decoration: underline;
+    }
+
+    .chat-banner {
+      background: var(--wf-canvas, #f5f7fb);
+      border-left: 4px solid var(--wf-muted, #6b7f99);
+      padding: 12px;
+      border-radius: 4px;
+      margin-top: 12px;
+      font-size: 12px;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    @media (max-width: 768px) {
+      nav {
+        display: none;
+      }
+
+      .main-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .kb-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  
+/* ── 3-Column Record Layout ── */
+.record-layout { display:grid; grid-template-columns:280px 1fr 300px; gap:1rem; padding:1rem 2rem; max-width:1600px; }
+@media (max-width:1200px) { .record-layout { grid-template-columns:1fr; } }
+.left-rail .card, .right-rail .card { margin-bottom:1rem; }
+.center-content .card { margin-bottom:1rem; }
+.card { background:var(--wf-surface,#edf1f7); border:1px solid var(--wf-tint,#dce4ef); border-radius:6px; overflow:hidden; }
+.card-hd { padding:0.75rem 1rem; border-bottom:1px solid var(--wf-tint); display:flex; justify-content:space-between; align-items:center; }
+.card-hd h3 { font-size:13px; font-weight:700; color:var(--wf-ink); margin:0; }
+.card-hd-action { font-size:11px; color:var(--wf-accent); text-decoration:none; font-weight:600; cursor:pointer; }
+.card-bd { padding:1rem; }
+.hl-row { display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:12px; }
+.hl-row:last-child { border-bottom:none; }
+.hl-label { color:var(--wf-muted); }
+.hl-value { font-weight:700; color:var(--wf-ink); }
+.hl-value.warn { color:var(--wf-amber,#8b7745); }
+.rel-item { display:flex; align-items:center; gap:0.625rem; padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:12px; }
+.rel-item:last-child { border-bottom:none; }
+.rel-icon { width:28px; height:28px; border-radius:50%; background:var(--wf-tint); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.rel-icon svg { width:14px; height:14px; color:var(--wf-ink); }
+.rel-info { flex:1; }
+.rel-title { font-size:12px; font-weight:600; color:var(--wf-ink); }
+.rel-sub { font-size:11px; color:var(--wf-muted); }
+.rel-meta { font-size:11px; color:var(--wf-muted); text-align:right; white-space:nowrap; }
+/* Right-rail tabs */
+.rail-tabs { display:flex; border-bottom:1px solid var(--wf-tint); }
+.rail-tab { flex:1; padding:0.5rem; font-size:11px; font-weight:600; text-align:center; color:var(--wf-muted); cursor:pointer; border-bottom:2px solid transparent; background:none; border-top:none; border-left:none; border-right:none; }
+.rail-tab.active { color:var(--wf-accent); border-bottom-color:var(--wf-accent); }
+.rail-tab-content { display:none; }
+.rail-tab-content.active { display:block; }
+/* Activity feed in right rail */
+.feed-sm { padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:11px; }
+.feed-sm:last-child { border-bottom:none; }
+.feed-sm-text { color:var(--wf-text); line-height:1.4; }
+.feed-sm-text strong { color:var(--wf-ink); }
+.feed-sm-time { color:var(--wf-muted); font-size:10px; margin-top:2px; }
+/* Quick action buttons */
+.action-btn { width:100%; padding:0.5rem; border-radius:4px; font-size:12px; font-weight:600; cursor:pointer; margin-bottom:0.375rem; border:1px solid var(--wf-line); text-align:center; }
+.action-btn:last-child { margin-bottom:0; }
+.action-btn-primary { background:var(--wf-accent); color:white; border-color:var(--wf-accent); }
+.action-btn-secondary { background:var(--wf-surface); color:var(--wf-text); }
+</style>
+</head>
+<body>
+<div class="page-context-bar">
+  <div style="max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <nav class="wf-breadcrumb" aria-label="Breadcrumb" style="margin-bottom:0;">
+      <a href="pm-home-dashboard.html">Home</a>
+      <span class="wf-breadcrumb-sep">›</span>
+      <span class="wf-breadcrumb-current">Support Center</span>
+    </nav>
+    <span class="persona-badge persona-badge--pm">PM</span>
+  </div>
+</div>
+  <header class="wf-header">
+    <div class="wf-header-logo"><svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix"><path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/></svg></div>
+    <div class="wf-header-title">Partner Central</div>
+    <nav class="wf-header-nav">
+      <a href="pm-home-dashboard.html">Dashboard</a>
+      <a href="pm-team-management.html">Team</a>
+      <a href="pm-deals-revenue.html">Deals</a>
+      <a href="pm-team-training.html">Training</a>
+      <a href="pm-resources.html">Resources</a>
+    </nav>
+    <div class="wf-header-util">
+      <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+      <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+    </div>
+  </header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+
+<!-- ── 3-Column Record Layout ── -->
+<div class="record-layout">
+
+  <!-- ════════ LEFT RAIL — Related Objects ════════ -->
+  <div class="left-rail">
+    <div class="card">
+      <div class="card-hd"><h3>Channels</h3></div>
+      <div class="card-bd">
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m9.86-5.632a4.5 4.5 0 00-6.364 0l-4.5 4.5a4.5 4.5 0 001.242 7.244"/></svg></div>
+          <div class="rel-info"><div class="rel-title">Submit Ticket</div><div class="rel-sub">New case</div></div>
+        </div>
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m9.86-5.632a4.5 4.5 0 00-6.364 0l-4.5 4.5a4.5 4.5 0 001.242 7.244"/></svg></div>
+          <div class="rel-info"><div class="rel-title">Live Chat</div><div class="rel-sub">8am–8pm</div></div>
+        </div>
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m9.86-5.632a4.5 4.5 0 00-6.364 0l-4.5 4.5a4.5 4.5 0 001.242 7.244"/></svg></div>
+          <div class="rel-info"><div class="rel-title">Knowledge Base</div><div class="rel-sub">Self-service</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><h3>My Tickets</h3></div>
+      <div class="card-bd">
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg></div>
+          <div class="rel-info"><div class="rel-title">CS-2026-0891</div><div class="rel-sub">Open</div></div>
+        </div>
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg></div>
+          <div class="rel-info"><div class="rel-title">CS-2026-0876</div><div class="rel-sub">Resolved</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ CENTER — Main Content ════════ -->
+  <div class="center-content">
+  <div class="container">
+    <h1 class="page-title">Support Center</h1>
+
+    <div class="main-layout">
+      <div>
+        <div class="card">
+          <div class="card-title">Submit a Support Case</div>
+
+          <form>
+            <div class="form-group">
+              <label class="form-label">Category <span class="required">*</span></label>
+              <select class="form-select" aria-label="Support case category">
+                <option value="">Select a category</option>
+                <option value="technical">Technical Issue</option>
+                <option value="billing">Billing & Invoice</option>
+                <option value="access">Portal Access & Login</option>
+                <option value="training">Training & Onboarding</option>
+                <option value="deals">Deal Registration</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Priority <span class="required">*</span></label>
+              <select class="form-select" aria-label="Support case priority">
+                <option value="">Select priority</option>
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+                <option value="critical">Critical</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Subject <span class="required">*</span></label>
+              <input type="text" class="form-input" placeholder="Brief description of your issue" aria-label="Support case subject">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Description <span class="required">*</span></label>
+              <textarea class="form-textarea" placeholder="Provide detailed information about your issue, including steps you've taken to resolve it..." aria-label="Support case description"></textarea>
+              <div class="form-hint">The more details you provide, the faster we can help resolve your issue</div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Attachments</label>
+              <input type="file" class="form-input" aria-label="Attach files to support case">
+              <div class="form-hint">You can attach screenshots, logs, or other relevant files (max 25MB)</div>
+            </div>
+
+            <div class="button-group">
+              <button type="submit" class="btn btn-primary">Submit Case</button>
+              <button type="reset" class="btn btn-secondary">Clear</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="card">
+          <div class="card-title">My Cases</div>
+
+          <table class="my-cases-table" role="table" aria-label="My support cases">
+            <thead>
+              <tr>
+                <th>Case #</th>
+                <th>Subject</th>
+                <th>Status</th>
+                <th>Priority</th>
+                <th>Created</th>
+                <th>SLA</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="case-number">CASE-2025-0042</span></td>
+                <td>Portal login not working</td>
+                <td><span class="status-badge status-resolved">Resolved</span></td>
+                <td><span class="priority-badge priority-high">High</span></td>
+                <td>Jan 18, 2025</td>
+                <td class="sla-timer">Resolved ✓</td>
+              </tr>
+              <tr>
+                <td><span class="case-number">CASE-2025-0031</span></td>
+                <td>MDF request not appearing</td>
+                <td><span class="status-badge status-in-progress">In Progress</span></td>
+                <td><span class="priority-badge priority-medium">Medium</span></td>
+                <td>Jan 15, 2025</td>
+                <td class="sla-timer warning">8 hours remaining</td>
+              </tr>
+              <tr>
+                <td><span class="case-number">CASE-2025-0018</span></td>
+                <td>Missing certification renewal documents</td>
+                <td><span class="status-badge status-open">Open</span></td>
+                <td><span class="priority-badge priority-low">Low</span></td>
+                <td>Jan 10, 2025</td>
+                <td class="sla-timer">2 days remaining</td>
+              </tr>
+              <tr>
+                <td><span class="case-number">CASE-2024-2998</span></td>
+                <td>Commission calculation discrepancy</td>
+                <td><span class="status-badge status-closed">Closed</span></td>
+                <td><span class="priority-badge priority-high">High</span></td>
+                <td>Dec 28, 2024</td>
+                <td class="sla-timer">Closed ✓</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Knowledge Base - Popular Articles</div>
+
+          <div class="kb-search">
+            <input type="text" class="kb-search-input" placeholder="Search knowledge base..." aria-label="Search knowledge base">
+            <button class="kb-search-btn">Search</button>
+          </div>
+
+          <div class="kb-grid">
+            <div class="kb-article">
+              <div class="kb-article-icon">📌</div>
+              <div class="kb-article-title">How to Register a Deal</div>
+              <div class="kb-article-desc">Step-by-step guide for registering new customer opportunities to track co-sell and revenue attribution.</div>
+            </div>
+
+            <div class="kb-article">
+              <div class="kb-article-icon">📌</div>
+              <div class="kb-article-title">MDF Guidelines & Eligibility Requirements</div>
+              <div class="kb-article-desc">Complete overview of Marketing Development Fund program rules, eligible activities, and approval process.</div>
+            </div>
+
+            <div class="kb-article">
+              <div class="kb-article-icon">📌</div>
+              <div class="kb-article-title">Commission Calculation & Payout Timeline</div>
+              <div class="kb-article-desc">Detailed explanation of how partner commissions are calculated, tracked, and paid out through the portal.</div>
+            </div>
+
+            <div class="kb-article">
+              <div class="kb-article-icon">📌</div>
+              <div class="kb-article-title">Tier Requirements & Attainment</div>
+              <div class="kb-article-desc">Overview of Gold and Silver tier criteria, scoring methodology, and how to track progress toward advancement.</div>
+            </div>
+
+            <div class="kb-article">
+              <div class="kb-article-icon">📌</div>
+              <div class="kb-article-title">Training Requirements FAQ</div>
+              <div class="kb-article-desc">Frequently asked questions about training completion, certification renewal, and team enrollment in courses.</div>
+            </div>
+
+            <div class="kb-article">
+              <div class="kb-article-icon">📌</div>
+              <div class="kb-article-title">Portal Access & User Management</div>
+              <div class="kb-article-desc">How to add or remove team members, reset passwords, update profile information, and manage portal permissions.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar">
+        <div class="sidebar-card">
+          <div class="sidebar-title">Your PSM</div>
+          <div class="psm-info">
+            <div class="psm-name">Rebecca Chen</div>
+            <div class="psm-detail">
+              <span class="psm-detail-icon">✉️</span>
+              <a href="mailto:rebecca.chen@equinix.com" class="psm-link">rebecca.chen@equinix.com</a>
+            </div>
+            <div class="psm-detail">
+              <span class="psm-detail-icon">📞</span>
+              <span>(415) 555-0128</span>
+            </div>
+            <div class="psm-detail">
+              <span class="psm-detail-icon">🕐</span>
+              <span>PST Timezone</span>
+            </div>
+            <div class="chat-banner">
+              Schedule 1:1 sync or ask questions directly.
+            </div>
+          </div>
+        </div>
+
+        <div class="sidebar-card">
+          <button class="btn btn-chat">💬 Chat with Support</button>
+          <div style="margin-top: 12px; font-size: 12px; color: var(--wf-muted, #6b7f99); text-align: center;">
+            Available Mon-Fri, 9AM-6PM PST
+          </div>
+        </div>
+
+        <div class="sidebar-card">
+          <div class="sidebar-title">Support Hours</div>
+          <div style="font-size: 13px; color: var(--wf-muted, #6b7f99); line-height: 1.8;">
+            <strong style="color: var(--wf-ink, #1e2a3a);">Standard Support</strong><br>
+            Mon-Fri: 9AM-6PM PST<br>
+            <br>
+            <strong style="color: var(--wf-ink, #1e2a3a);">Critical Issues</strong><br>
+            24/7 hotline available<br>
+            (415) 555-0100
+          </div>
+        </div>
+      </div>
+    </div>  </div>
+
+  <!-- ════════ RIGHT RAIL — Activity & Insights ════════ -->
+  <div class="right-rail">
+    <div class="card">
+      <div class="rail-tabs">
+        <button class="rail-tab active" onclick="document.querySelectorAll('.rail-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active');document.querySelectorAll('.rail-tab-content').forEach(c=>c.classList.remove('active'));document.getElementById('tab-activity').classList.add('active');">Activity</button>
+        <button class="rail-tab" onclick="document.querySelectorAll('.rail-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active');document.querySelectorAll('.rail-tab-content').forEach(c=>c.classList.remove('active'));document.getElementById('tab-einstein').classList.add('active');">Einstein</button>
+      </div>
+      <div id="tab-activity" class="rail-tab-content active">
+        <div class="card-bd">
+          <div class="feed-sm"><div class="feed-sm-text">Ticket updated</div><div class="feed-sm-time">Today</div></div>
+          <div class="feed-sm"><div class="feed-sm-text">Support response</div><div class="feed-sm-time">Yesterday</div></div>
+          <div class="feed-sm"><div class="feed-sm-text">Ticket resolved</div><div class="feed-sm-time">1 week ago</div></div>
+        </div>
+      </div>
+      <div id="tab-einstein" class="rail-tab-content">
+        <div class="card-bd" style="font-size:12px;color:var(--wf-text);line-height:1.5;">
+          <div style="font-size:11px;font-weight:700;color:var(--wf-accent);text-transform:uppercase;letter-spacing:0.03em;margin-bottom:0.5rem;">AI Recommendation</div>
+          Avg resolution: 4 hours. Most common: pricing questions — 8 KB articles available.
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><h3>Actions</h3></div>
+      <div class="card-bd">
+        <button class="action-btn action-btn-primary">New Ticket</button>
+        <button class="action-btn action-btn-secondary">Check Status</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+  <footer class="wf-footer">
+    &copy; 2026 Equinix Partner Manager Portal · Wireframe specification
+  </footer>
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h2>Design Notes</h2>
+    <button class="spec-panel-close" onclick="toggleSpec()" aria-label="Close notes panel">&times;</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Integrated support center combining FAQ search, knowledge base discovery, support case submission/tracking, and direct PSM contact access. Enables partners to self-serve or escalate issues efficiently.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Find answers to common partner program questions</li>
+<li>Submit and track support requests</li>
+<li>Access program documentation and guidelines</li>
+<li>Connect with PSM for strategic support</li>
+<li>Self-serve resolution for common issues</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Support center with FAQ categories and keyword search</li>
+<li>Knowledge base article previews with relevance ranking</li>
+<li>Open support case list showing status, priority, and SLA timers</li>
+<li>New support ticket submission form (category, priority, subject, description, attachments)</li>
+<li>PSM contact card with name, role, email, and scheduling link</li>
+<li>Program documentation and guidelines quick-access links</li>
+<li>Sidebar with support hours and chat availability indicator</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Search knowledge base articles by keyword</li>
+<li>Browse and filter FAQ by category</li>
+<li>Submit new support ticket with file attachments</li>
+<li>View ticket status, priority, SLA remaining time, and update history</li>
+<li>Click PSM contact to email, call, or schedule meeting</li>
+<li>Initiate live chat support session</li>
+<li>Download program documentation and guidelines</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Knowledge Base Search & Retrieval</strong>
+<ul>
+<li>Query Knowledge__c articles and rank by popularity and LastModifiedDate for relevance</li>
+<li>Full-text search articles and FAQs indexed on title, body, and keywords for keyword matching</li>
+<li>Filter and display only published articles where Published__c = True</li>
+</ul></li>
+<li><strong>Case Submission & Routing</strong>
+<ul>
+<li>Create Case object from ticket submission form with category, priority, and subject validation</li>
+<li>Auto-assign to support queue based on Case Category__c picklist selection</li>
+<li>Attach uploaded files to Case record and validate file type and size limits</li>
+</ul></li>
+<li><strong>PSM & Contact Management</strong>
+<ul>
+<li>Retrieve related Account PSM via AccountTeamMember lookup for display in contact card</li>
+<li>Display PSM contact information and scheduling links for direct communication</li>
+<li>Update PSM assignment when Account team member changes</li>
+</ul></li>
+<li><strong>SLA Tracking & Support Workflow</strong>
+<ul>
+<li>Calculate and display SLA_Time_Remaining__c with visual indicators (on-track/at-risk/breached)</li>
+<li>Track case history and auto-email customer on status changes via workflow rules</li>
+<li>Escalate cases automatically when SLA thresholds are breached based on priority level</li>
+<li>Integrate ChatBot widget for instant support routing and intelligent triage</li>
+</ul></li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Validation &amp; Business Logic</h4>
+<ul>
+<li>Case submission requires category, priority, subject validation</li>
+<li>File attachments limited to PDF, DOC, DOCX, XLSX (max 25MB per file)</li>
+<li>Auto-assign to support queue based on Case Category__c picklist</li>
+<li>SLA tracking based on Priority; escalate if breached</li>
+<li>Only display articles with Published__c = True</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

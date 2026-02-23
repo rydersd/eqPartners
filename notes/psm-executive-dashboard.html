@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Executive Summary Dashboard - Equinix PCP PSM Portal</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Salesforce Sans", sans-serif;
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    /* Header */
+    header {
+      background-color: var(--wf-ink, #1e2a3a);
+      color: var(--wf-surface, #edf1f7);
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .lightning-icon {
+      font-size: 1.5rem;
+    }
+
+    nav {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    nav a {
+      color: var(--wf-surface, #edf1f7);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      transition: background-color 0.2s;
+    }
+
+    nav a:hover {
+      background-color: rgba(255,255,255,0.1);
+    }
+
+    nav a.active {
+      background-color: var(--wf-accent, var(--wf-accent, #3d6daa));
+    }
+
+    /* Main Content */
+    main {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+
+    .page-title {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 0.5rem;
+    }
+
+    .page-subtitle {
+      font-size: 0.95rem;
+      color: var(--wf-text, #3b4f68);
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background: var(--wf-surface, #edf1f7);
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--wf-canvas, #f5f7fb);
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .kpi-card {
+      background: var(--wf-ink, #1e2a3a);
+      padding: 1.25rem;
+      border-radius: 6px;
+      border-left: 4px solid var(--wf-accent, var(--wf-accent, #3d6daa));
+    }
+
+    .kpi-label {
+      font-size: 0.8rem;
+      color: var(--wf-text, #3b4f68);
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .kpi-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 0.25rem;
+    }
+
+    .kpi-subtitle {
+      font-size: 0.75rem;
+      color: var(--wf-text, #3b4f68);
+    }
+
+    .regional-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .regional-card {
+      background: var(--wf-canvas, #f5f7fb);
+      padding: 1.25rem;
+      border-radius: 6px;
+      border-top: 3px solid var(--wf-accent, var(--wf-accent, #3d6daa));
+    }
+
+    .regional-label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 1rem;
+    }
+
+    .regional-metric {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--wf-canvas, #f5f7fb);
+      font-size: 0.85rem;
+    }
+
+    .regional-metric:last-child {
+      border-bottom: none;
+    }
+
+    .metric-name {
+      color: var(--wf-text, #3b4f68);
+    }
+
+    .metric-value {
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .status-green {
+      background-color: var(--wf-surface, #edf1f7);
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .status-yellow {
+      background-color: var(--wf-surface, #edf1f7);
+      color: var(--wf-amber, #8b7745);
+    }
+
+    .status-red {
+      background-color: var(--wf-surface, #edf1f7);
+      color: var(--wf-red, #8b4553);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    thead {
+      background-color: var(--wf-canvas, #f5f7fb);
+      border-bottom: 2px solid var(--wf-canvas, #f5f7fb);
+    }
+
+    th {
+      padding: 0.75rem;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--wf-ink, #1e2a3a);
+      text-transform: uppercase;
+    }
+
+    td {
+      padding: 0.75rem;
+      border-bottom: 1px solid var(--wf-canvas, #f5f7fb);
+      font-size: 0.9rem;
+    }
+
+    tr:hover {
+      background-color: var(--wf-canvas, #f5f7fb);
+    }
+
+    .trend-indicator {
+      display: inline-block;
+      padding: 0.4rem 0.6rem;
+      background: var(--wf-canvas, #f5f7fb);
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+
+    .trend-up { color: var(--wf-ink, #1e2a3a); }
+    .trend-down { color: var(--wf-red, #8b4553); }
+    .trend-stable { color: var(--wf-amber, #8b7745); }
+
+    .timeline {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      font-size: 0.9rem;
+      padding: 1rem;
+      background: var(--wf-canvas, #f5f7fb);
+      border-radius: 6px;
+      margin: 1rem 0;
+    }
+
+    .timeline-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .timeline-value {
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .timeline-arrow {
+      color: var(--wf-text, #3b4f68);
+      font-size: 1rem;
+    }
+
+    .insight-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .insight-card {
+      background: var(--wf-ink, #1e2a3a);
+      padding: 1.25rem;
+      border-radius: 6px;
+      border-left: 3px solid var(--wf-accent, var(--wf-accent, #3d6daa));
+    }
+
+    .insight-title {
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 0.5rem;
+      font-size: 0.95rem;
+    }
+
+    .insight-text {
+      font-size: 0.85rem;
+      color: var(--wf-text, #3b4f68);
+      line-height: 1.5;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background-color: var(--wf-accent, var(--wf-accent, #3d6daa));
+      color: var(--wf-surface, #edf1f7);
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: background-color 0.2s;
+      margin-right: 0.5rem;
+    }
+
+    .button:hover {
+      background-color: var(--wf-accent, #3d6daa);
+    }
+
+    .button-secondary {
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-ink, #1e2a3a);
+      border: 1px solid var(--wf-line, #b0bdd0);
+    }
+
+    .button-secondary:hover {
+      background-color: var(--wf-tint, #dce4ef);
+    }
+
+    /* Design Brief */
+    @media (max-width: 1200px) {
+      .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .regional-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .insight-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .kpi-grid,
+      .regional-grid,
+      .insight-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .timeline {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      nav {
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+</style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="wf-header">
+  <div class="wf-header-logo">EQ</div>
+  <div class="wf-header-title">Partner Sales Manager</div>
+  <nav class="wf-header-nav">
+    <a href="#">Dashboard</a>
+    <a href="#" class="active">PSM Portal</a>
+    <a href="#">Partners</a>
+    <a href="#">Deals</a>
+    <a href="#">Programs</a>
+    <a href="#">Reports</a>
+  </nav>
+  <div class="wf-header-util">
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+  </div>
+</header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+  <!-- Main Content -->
+  <main role="main">
+    <h1 class="page-title">Executive Summary Dashboard</h1>
+    <p class="page-subtitle">Partner Channel Performance | Q1 2026</p>
+
+    <!-- Top KPI Cards -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Channel Revenue</div>
+        <div class="kpi-value">$12.4M</div>
+        <div class="kpi-subtitle">vs $15M target (83%)</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">% of Total Revenue</div>
+        <div class="kpi-value">28%</div>
+        <div class="kpi-subtitle">Up 2% from Q4 2025</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">New Partner Adds</div>
+        <div class="kpi-value">6</div>
+        <div class="kpi-subtitle">Quarterly additions</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Partner Churn Rate</div>
+        <div class="kpi-value">2.1%</div>
+        <div class="kpi-subtitle">1 partner lost</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Active Partners</div>
+        <div class="kpi-value">42</div>
+        <div class="kpi-subtitle">Across all tiers</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Avg Partner Score</div>
+        <div class="kpi-value">58</div>
+        <div class="kpi-subtitle">Out of 100</div>
+      </div>
+    </div>
+
+    <!-- Regional Performance -->
+    <div class="card">
+      <div class="card-title">Regional Performance Summary</div>
+      <div class="regional-grid">
+        <div class="regional-card">
+          <div class="regional-label">AMER</div>
+          <div class="regional-metric">
+            <span class="metric-name">Revenue</span>
+            <span class="metric-value">$5.2M</span>
+          </div>
+          <div class="regional-metric">
+            <span class="metric-name">Partners</span>
+            <span class="metric-value">18</span>
+          </div>
+          <div class="regional-metric">
+            <span class="metric-name">Growth</span>
+            <span class="metric-value trend-up">↑ 12%</span>
+          </div>
+        </div>
+
+        <div class="regional-card">
+          <div class="regional-label">EMEA</div>
+          <div class="regional-metric">
+            <span class="metric-name">Revenue</span>
+            <span class="metric-value">$4.1M</span>
+          </div>
+          <div class="regional-metric">
+            <span class="metric-name">Partners</span>
+            <span class="metric-value">14</span>
+          </div>
+          <div class="regional-metric">
+            <span class="metric-name">Growth</span>
+            <span class="metric-value trend-stable">→ 3%</span>
+          </div>
+        </div>
+
+        <div class="regional-card">
+          <div class="regional-label">APAC</div>
+          <div class="regional-metric">
+            <span class="metric-name">Revenue</span>
+            <span class="metric-value">$2.3M</span>
+          </div>
+          <div class="regional-metric">
+            <span class="metric-name">Partners</span>
+            <span class="metric-value">7</span>
+          </div>
+          <div class="regional-metric">
+            <span class="metric-name">Growth</span>
+            <span class="metric-value trend-up">↑ 18%</span>
+          </div>
+        </div>
+
+        <div class="regional-card">
+          <div class="regional-label">LATAM</div>
+          <div class="regional-metric">
+            <span class="metric-name">Revenue</span>
+            <span class="metric-value">$0.8M</span>
+          </div>
+          <div class="regional-metric">
+            <span class="metric-name">Partners</span>
+            <span class="metric-value">3</span>
+          </div>
+          <div class="regional-metric">
+            <span class="metric-name">Growth</span>
+            <span class="metric-value trend-down">↓ 5%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Revenue Trend -->
+    <div class="card">
+      <div class="card-title">Channel Revenue Trend (YoY)</div>
+      <div class="timeline">
+        <div class="timeline-item">
+          <span class="timeline-value">Q1: $2.8M</span>
+          <span class="timeline-arrow">→</span>
+        </div>
+        <div class="timeline-item">
+          <span class="timeline-value">Q2: $3.1M</span>
+          <span class="timeline-arrow">→</span>
+        </div>
+        <div class="timeline-item">
+          <span class="timeline-value">Q3: $3.2M</span>
+          <span class="timeline-arrow">→</span>
+        </div>
+        <div class="timeline-item">
+          <span class="timeline-value">Q4: $3.3M</span>
+          <span class="timeline-arrow">→</span>
+        </div>
+        <div class="timeline-item">
+          <span class="timeline-value">Q1 2026: $3.1M (projected)</span>
+        </div>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--wf-text, #3b4f68); margin-top: 1rem;">Note: Slight Q1 decline from Q4 seasonal pattern. Spring recovery expected in Q2 based on pipeline analysis.</p>
+    </div>
+
+    <!-- Top 10 Partners Table -->
+    <div class="card">
+      <div class="card-title">Top 10 Partner by Revenue YTD</div>
+      <table aria-label="Top 10 Partners by Revenue">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Partner Name</th>
+            <th>Revenue YTD</th>
+            <th>Growth %</th>
+            <th>Health Score</th>
+            <th>Tier</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>TechCorp Solutions</td>
+            <td>$1.28M</td>
+            <td><span class="trend-indicator trend-up">↑ 8%</span></td>
+            <td>72/100</td>
+            <td><span class="status-badge status-green">Gold</span></td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>CloudFirst Partners</td>
+            <td>$985K</td>
+            <td><span class="trend-indicator trend-up">↑ 15%</span></td>
+            <td>81/100</td>
+            <td><span class="status-badge status-green">Gold</span></td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>Enterprise Systems Inc</td>
+            <td>$847K</td>
+            <td><span class="trend-indicator trend-down">↓ 3%</span></td>
+            <td>65/100</td>
+            <td><span class="status-badge status-yellow">Silver</span></td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>Digital Transformation Group</td>
+            <td>$756K</td>
+            <td><span class="trend-indicator trend-up">↑ 22%</span></td>
+            <td>78/100</td>
+            <td><span class="status-badge status-green">Gold</span></td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>Security Solutions LLC</td>
+            <td>$698K</td>
+            <td><span class="trend-indicator trend-stable">→ 5%</span></td>
+            <td>55/100</td>
+            <td><span class="status-badge status-yellow">Silver</span></td>
+          </tr>
+          <tr>
+            <td>6</td>
+            <td>Infrastructure Innovations</td>
+            <td>$621K</td>
+            <td><span class="trend-indicator trend-up">↑ 18%</span></td>
+            <td>74/100</td>
+            <td><span class="status-badge status-green">Gold</span></td>
+          </tr>
+          <tr>
+            <td>7</td>
+            <td>Multi-Cloud Consulting</td>
+            <td>$542K</td>
+            <td><span class="trend-indicator trend-up">↑ 11%</span></td>
+            <td>68/100</td>
+            <td><span class="status-badge status-yellow">Silver</span></td>
+          </tr>
+          <tr>
+            <td>8</td>
+            <td>Managed Services Pro</td>
+            <td>$485K</td>
+            <td><span class="trend-indicator trend-down">↓ 7%</span></td>
+            <td>52/100</td>
+            <td><span class="status-badge status-yellow">Silver</span></td>
+          </tr>
+          <tr>
+            <td>9</td>
+            <td>Data Center Specialists</td>
+            <td>$412K</td>
+            <td><span class="trend-indicator trend-up">↑ 24%</span></td>
+            <td>76/100</td>
+            <td><span class="status-badge status-green">Gold</span></td>
+          </tr>
+          <tr>
+            <td>10</td>
+            <td>Compliance & Integration</td>
+            <td>$378K</td>
+            <td><span class="trend-indicator trend-stable">→ 2%</span></td>
+            <td>61/100</td>
+            <td><span class="status-badge status-yellow">Silver</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Key Insights -->
+    <div class="card">
+      <div class="card-title">Key Insights & Recommendations</div>
+      <div class="insight-grid">
+        <div class="insight-card">
+          <div class="insight-title">AMER Region Leading Growth</div>
+          <div class="insight-text">AMER shows strongest growth at 12% YoY with 18 active partners. Focus on scaling successful partner models from AMER to EMEA and LATAM regions to drive overall channel growth.</div>
+        </div>
+        <div class="insight-card">
+          <div class="insight-title">Partner Tier Quality Gap</div>
+          <div class="insight-text">Gold partners averaging 75+ health scores while Silver partners averaging 60. Recommend enhanced enablement and support for Silver tier to improve health metrics and revenue contribution.</div>
+        </div>
+        <div class="insight-card">
+          <div class="insight-title">Churn Risk in Mid-Tier</div>
+          <div class="insight-text">One partner churn event in Q1. Proactive health monitoring for partners scoring below 65 recommended. Quarterly business reviews for all partners in Silver tier will reduce churn risk.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div style="margin-bottom: 2rem;">
+      <button class="button" aria-label="Export Executive Summary Report">Export Summary Report</button>
+      <button class="button button-secondary" aria-label="View Detailed Analytics">View Analytics</button>
+      <button class="button button-secondary" aria-label="Schedule Partner Reviews">Schedule Reviews</button>
+    </div>
+
+    <!-- Design Brief -->
+</main>
+
+
+    <footer class="wf-footer">
+      &copy; 2026 Equinix · Partner Sales Manager · Internal Use Only
+    </footer>
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Executive-level dashboard providing channel program health metrics, regional performance comparisons, and revenue trend analysis for strategic decision-making.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Provide C-level view of channel program health and revenue drivers</li>
+<li>Compare regional performance and identify growth leaders</li>
+<li>Highlight top partners and potential churn risks</li>
+<li>Support strategic decision-making on channel investments</li>
+<li>Track progress toward annual channel revenue targets</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Six KPI cards: Channel Revenue, % of Total Revenue</li>
+<li>Regional Performance Summary grid</li>
+<li>Channel Revenue Trend timeline</li>
+<li>Top 10 Partners by Revenue table</li>
+<li>Key Insights cards: AMER Region Leading Growth, Partner Tier Quality Gap</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Export Summary Report button</li>
+<li>View Analytics button</li>
+<li>Schedule Reviews button</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Revenue Aggregation & KPI Calculation</strong>
+<ul>
+<li>Aggregate annual revenue from all approved Deal_Registration__c records using SOQL sum functions</li>
+<li>Calculate channel revenue as percentage of total company revenue by dividing Deal total by TCV from Opportunity pipeline</li>
+<li>Count new partner additions by filtering Account records created in current fiscal quarter</li>
+<li>Compute partner churn rate as (Partners lost / Total start-of-period partners) × 100</li>
+</ul></li>
+<li><strong>Regional Performance Analytics</strong>
+<ul>
+<li>Calculate regional revenue splits from Deal_Registration__c records aggregated by BillingCountry__c field</li>
+<li>Map countries to regions (AMER, EMEA, APAC, LATAM) using custom region mapping object</li>
+<li>Count active partners per region from Account records with region = geography</li>
+<li>Calculate YoY growth by comparing current period revenue against prior-year Deal__c total</li>
+</ul></li>
+<li><strong>Partner Ranking & Health Scoring</strong>
+<ul>
+<li>Identify top-10 partners by total revenue using sorted Deal_Registration__c rollup by Account</li>
+<li>Determine tier status from Account_Partner_Tier__c lookup relationship</li>
+<li>Display health score from calculated Partner_Health_Score__c metric based on engagement, revenue, compliance</li>
+<li>Rank by revenue contribution and tier classification (Gold, Silver, Bronze)</li>
+</ul></li>
+<li><strong>Risk Detection & Alerting</strong>
+<ul>
+<li>Trigger churn-risk alerts for partners with declining ACV (comparing current deal value vs prior period avg)</li>
+<li>Identify engagement warnings for partners with no activity in last 90 days (e.g., no deals, no pipeline)</li>
+<li>Flag Silver-tier partners scoring below 65 health for proactive QBR scheduling</li>
+</ul></li>
+<li><strong>Reporting & Export</strong>
+<ul>
+<li>Generate exportable summary report as PDF or Excel using Salesforce rendering engine and Deal + Account data</li>
+<li>Include charts for revenue trend, regional breakdown, and partner tier distribution</li>
+<li>Export timestamp-labeled file for audit trail and historical tracking</li>
+</ul></li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+</body>
+</html>

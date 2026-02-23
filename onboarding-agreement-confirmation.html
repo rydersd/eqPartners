@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agreement Submitted - Equinix Partner Program</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); }
+    .corp-header { background: var(--wf-ink, #1e2a3a); padding: 0 32px; height: 64px; display: flex; align-items: center; justify-content: space-between; }
+    .corp-logo { display: flex; align-items: center; gap: 12px; }
+    .corp-logo-mark { color: var(--wf-accent, var(--wf-muted, #6b7f99)); font-size: 24px; font-weight: 800; letter-spacing: -1px; }
+    .corp-logo-text { color: var(--wf-surface, #edf1f7); font-size: 14px; font-weight: 500; }
+    .corp-nav { display: flex; gap: 24px; }
+    .corp-nav a { color: rgba(255,255,255,.8); text-decoration: none; font-size: 13px; font-weight: 500; }
+
+    .steps { display: flex; align-items: center; gap: 0; max-width: 900px; margin: 0 auto; padding: 32px 32px 0; }
+    .step { display: flex; align-items: center; gap: 10px; flex: 1; position: relative; }
+    .step:not(:last-child)::after { content: ""; flex: 1; height: 2px; background: var(--wf-tint, #dce4ef); margin-left: 10px; }
+    .step.active:not(:last-child)::after, .step.completed:not(:last-child)::after { background: var(--wf-muted, #6b7f99); }
+    .step-number { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; border: 2px solid var(--wf-tint, #dce4ef); color: var(--wf-text, #3b4f68); background: var(--wf-surface, #edf1f7); }
+    .step.active .step-number { border-color: var(--wf-muted, #6b7f99); background: var(--wf-muted, #6b7f99); color: var(--wf-surface, #edf1f7); }
+    .step.completed .step-number { border-color: var(--wf-muted, #6b7f99); background: var(--wf-muted, #6b7f99); color: var(--wf-surface, #edf1f7); }
+    .step-label { font-size: 12px; font-weight: 600; color: var(--wf-text, #3b4f68); white-space: nowrap; }
+    .step.active .step-label { color: var(--wf-ink, #1e2a3a); }
+    .step.completed .step-label { color: var(--wf-muted, #6b7f99); }
+
+    .container { max-width: 900px; margin: 0 auto; padding: 32px; }
+
+    /* Success Card */
+    .success-card { background: var(--wf-surface, #edf1f7); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.08); padding: 48px; text-align: center; margin-bottom: 32px; }
+    .success-icon { width: 80px; height: 80px; border-radius: 50%; background: var(--wf-canvas, #f5f7fb); display: flex; align-items: center; justify-content: center; font-size: 40px; margin: 0 auto 24px; }
+    .success-card h1 { font-size: 28px; font-weight: 700; margin: 0 0 12px 0; }
+    .success-card .subtitle { font-size: 16px; color: var(--wf-muted, #6b7f99); margin: 0 0 32px 0; line-height: 1.6; max-width: 560px; margin-left: auto; margin-right: auto; }
+
+    .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; text-align: left; max-width: 560px; margin: 0 auto 32px; }
+    .summary-item { background: var(--wf-canvas, #f5f7fb); border-radius: 6px; padding: 14px 16px; }
+    .summary-label { font-size: 11px; font-weight: 600; color: var(--wf-muted, #6b7f99); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; }
+    .summary-value { font-size: 14px; font-weight: 600; color: var(--wf-ink, #1e2a3a); }
+    .summary-value.pending { color: var(--wf-amber, #8b7745); }
+
+    /* Countersign Status */
+    .countersign-card { background: var(--wf-surface, #edf1f7); border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.08); padding: 32px; margin-bottom: 24px; }
+    .countersign-card h2 { font-size: 16px; font-weight: 700; margin: 0 0 20px 0; }
+
+    .status-tracker { display: flex; gap: 0; }
+    .status-step { flex: 1; text-align: center; position: relative; }
+    .status-step:not(:last-child)::after { content: ""; position: absolute; top: 18px; left: calc(50% + 20px); right: calc(-50% + 20px); height: 2px; background: var(--wf-line, #b0bdd0); }
+    .status-step.done:not(:last-child)::after { background: var(--wf-muted, #6b7f99); }
+    .status-step.current:not(:last-child)::after { background: var(--wf-surface, #edf1f7)); }
+    .status-dot { width: 36px; height: 36px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; border: 2px solid var(--wf-line, #b0bdd0); background: var(--wf-surface, #edf1f7); color: var(--wf-text, #3b4f68); position: relative; z-index: 1; margin-bottom: 8px; }
+    .status-step.done .status-dot { border-color: var(--wf-muted, #6b7f99); background: var(--wf-muted, #6b7f99); color: var(--wf-surface, #edf1f7); }
+    .status-step.current .status-dot { border-color: var(--wf-amber, #8b7745); background: var(--wf-surface, #edf1f7); color: var(--wf-amber, #8b7745); animation: pulse-amber 2s infinite; }
+    @keyframes pulse-amber { 0%, 100% { box-shadow: 0 0 0 0 rgba(245,158,11,.3); } 50% { box-shadow: 0 0 0 6px rgba(245,158,11,0); } }
+    .status-label { font-size: 12px; font-weight: 600; color: var(--wf-text, #3b4f68); display: block; }
+    .status-step.done .status-label { color: var(--wf-muted, #6b7f99); }
+    .status-step.current .status-label { color: var(--wf-ink, #1e2a3a); }
+    .status-time { font-size: 11px; color: var(--wf-text, #3b4f68); display: block; margin-top: 2px; }
+
+    /* Pending Info */
+    .pending-info { background: var(--wf-surface, #edf1f7)beb; border: 1px solid var(--wf-line, #b0bdd0); border-radius: 8px; padding: 20px; margin-top: 24px; display: flex; align-items: flex-start; gap: 14px; }
+    .pending-info .icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+    .pending-info .text h3 { font-size: 14px; font-weight: 600; margin: 0 0 4px 0; color: var(--wf-amber, #8b7745); }
+    .pending-info .text p { font-size: 13px; color: var(--wf-amber, #8b7745); margin: 0; line-height: 1.5; }
+
+    /* Confirmation Email Mockup */
+    .email-mockup { background: var(--wf-surface, #edf1f7); border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,.08); margin-bottom: 32px; overflow: hidden; }
+    .email-toolbar { background: var(--wf-canvas, #f5f7fb); padding: 10px 16px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--wf-line, #b0bdd0); }
+    .email-toolbar-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .email-toolbar-dot.r { background: var(--wf-surface, #edf1f7); }
+    .email-toolbar-dot.y { background: var(--wf-amber, #8b7745); }
+    .email-toolbar-dot.g { background: var(--wf-ink, #1e2a3a); }
+    .email-toolbar-title { flex: 1; text-align: center; font-size: 12px; color: var(--wf-text, #3b4f68); font-weight: 500; }
+    .email-envelope { padding: 24px 32px; }
+    .email-row { display: flex; gap: 8px; font-size: 13px; margin-bottom: 6px; }
+    .email-row-label { color: var(--wf-text, #3b4f68); font-weight: 500; min-width: 60px; }
+    .email-row-value { color: var(--wf-ink, #1e2a3a); }
+    .email-divider { border: none; border-top: 1px solid var(--wf-line, #b0bdd0); margin: 16px 0; }
+    .email-body { padding: 0 32px 32px; font-size: 14px; line-height: 1.7; color: var(--wf-ink, #1e2a3a); }
+    .email-body p { margin: 0 0 14px 0; }
+    .email-body .greeting { font-weight: 600; color: var(--wf-ink, #1e2a3a); }
+    .email-system-badge { display: inline-flex; align-items: center; gap: 6px; background: var(--wf-canvas, #f5f7fb); border: 1px solid var(--wf-surface, #edf1f7); border-radius: 4px; padding: 4px 10px; font-size: 11px; color: var(--wf-accent, #3d6daa); font-weight: 600; margin-bottom: 16px; }
+    .email-checklist { list-style: none; padding: 0; margin: 16px 0; }
+    .email-checklist li { padding: 8px 0; display: flex; align-items: center; gap: 10px; font-size: 13px; }
+    .email-checklist li::before { content: ""; display: none; }
+    .email-checklist .check { color: var(--wf-muted, #6b7f99); font-weight: 700; }
+    .email-checklist .pending-icon { color: var(--wf-amber, #8b7745); font-weight: 700; }
+    .email-footer-text { font-size: 12px; color: var(--wf-text, #3b4f68); margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--wf-line, #b0bdd0); line-height: 1.6; }
+    .email-footer-text a { color: var(--wf-accent, #3d6daa); text-decoration: none; }
+
+    /* Document Card */
+    .doc-card { background: var(--wf-canvas, #f5f7fb); border: 1px solid var(--wf-surface, #edf1f7); border-radius: 8px; padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+    .doc-info { display: flex; align-items: center; gap: 12px; }
+    .doc-icon { font-size: 28px; }
+    .doc-name { font-size: 14px; font-weight: 600; color: var(--wf-ink, #1e2a3a); }
+    .doc-size { font-size: 12px; color: var(--wf-text, #3b4f68); }
+    .doc-action { font-size: 13px; color: var(--wf-accent, #3d6daa); text-decoration: none; font-weight: 600; padding: 8px 16px; border: 1px solid var(--wf-surface, #edf1f7); border-radius: 6px; background: var(--wf-surface, #edf1f7); }
+
+    /* What Happens Next */
+    .next-card { background: var(--wf-surface, #edf1f7); border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.08); padding: 24px 32px; margin-bottom: 24px; }
+    .next-card h2 { font-size: 16px; font-weight: 700; margin: 0 0 16px 0; }
+    .next-items { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .next-item { display: flex; gap: 12px; padding: 14px; background: var(--wf-canvas, #f5f7fb); border-radius: 6px; }
+    .next-item .num { width: 28px; height: 28px; border-radius: 50%; background: var(--wf-canvas, #f5f7fb); color: var(--wf-accent, #3d6daa); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+    .next-item .text { font-size: 13px; line-height: 1.5; }
+    .next-item .text strong { display: block; margin-bottom: 2px; color: var(--wf-ink, #1e2a3a); }
+    .next-item .text span { color: var(--wf-muted, #6b7f99); }
+
+    /* Contact */
+    .contact-card { background: var(--wf-surface, #edf1f7); border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.08); padding: 24px 32px; display: flex; align-items: center; gap: 20px; margin-bottom: 24px; }
+    .contact-avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--wf-accent, #3d6daa); display: flex; align-items: center; justify-content: center; color: var(--wf-surface, #edf1f7); font-size: 18px; font-weight: 700; flex-shrink: 0; }
+    .contact-info h3 { font-size: 14px; font-weight: 600; margin: 0 0 4px 0; }
+    .contact-info p { font-size: 13px; color: var(--wf-muted, #6b7f99); margin: 0; }
+    .contact-info a { color: var(--wf-accent, #3d6daa); text-decoration: none; }
+
+    .footer { background: var(--wf-ink, #1e2a3a); color: rgba(255,255,255,.7); padding: 32px; margin-top: 48px; font-size: 12px; text-align: center; line-height: 1.8; }
+    .footer a { color: rgba(255,255,255,.9); text-decoration: none; }
+
+    @media (max-width: 768px) {
+      .steps { flex-wrap: wrap; gap: 8px; }
+      .step:not(:last-child)::after { display: none; }
+      .summary-grid { grid-template-columns: 1fr; }
+      .next-items { grid-template-columns: 1fr; }
+      .status-tracker { flex-direction: column; gap: 12px; }
+      .status-step:not(:last-child)::after { display: none; }
+</style>
+  <link rel="stylesheet" href="wireframe.css">
+</head>
+<body>
+  <header class="wf-header">
+    <div class="wf-header-logo"><svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix"><path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/></svg></div>
+    <div class="wf-header-title">Partner Central</div>
+    <nav class="wf-header-nav">
+      <a href="#" class="active">Step</a>
+    </nav>
+    <div class="wf-header-util">
+      <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+    </div>
+  </header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+
+  <div class="steps" role="navigation" aria-label="Onboarding progress">
+    <div class="step completed"><div class="step-number">&#10003;</div><div class="step-label">Apply</div></div>
+    <div class="step completed"><div class="step-number">&#10003;</div><div class="step-label">Confirmation</div></div>
+    <div class="step completed"><div class="step-number">&#10003;</div><div class="step-label">Verification</div></div>
+    <div class="step active" aria-current="step"><div class="step-number">4</div><div class="step-label">Agreement</div></div>
+    <div class="step"><div class="step-number">5</div><div class="step-label">Welcome</div></div>
+  </div>
+
+  <div class="container">
+
+    <!-- Success Card -->
+    <div class="success-card">
+      <div class="success-icon" aria-hidden="true">&var(--wf-ink, #1e2a3a);</div>
+      <h1>Agreement Signed Successfully</h1>
+      <p class="subtitle">Your signed Partner Program Agreement has been received. Equinix will countersign the agreement within 1–2 business days.</p>
+
+      <div class="summary-grid">
+        <div class="summary-item">
+          <div class="summary-label">Agreement ID</div>
+          <div class="summary-value">PPA-2026-00847</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-label">Application ID</div>
+          <div class="summary-value">APP-2026-00847</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-label">Signed By</div>
+          <div class="summary-value">Jordan Reeves</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-label">Countersign Status</div>
+          <div class="summary-value pending">&#9203; Pending Equinix</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Countersign Status Tracker -->
+    <div class="countersign-card">
+      <h2>Agreement Processing Status</h2>
+      <div class="status-tracker" role="list" aria-label="Agreement countersign progress">
+        <div class="status-step done" role="listitem">
+          <div class="status-dot">&#10003;</div>
+          <span class="status-label">Partner Signed</span>
+          <span class="status-time">Feb 18, 3:42 PM</span>
+        </div>
+        <div class="status-step done" role="listitem">
+          <div class="status-dot">&#10003;</div>
+          <span class="status-label">Received</span>
+          <span class="status-time">Feb 18, 3:42 PM</span>
+        </div>
+        <div class="status-step current" role="listitem">
+          <div class="status-dot">&#9679;</div>
+          <span class="status-label">Equinix Review</span>
+          <span class="status-time">In progress</span>
+        </div>
+        <div class="status-step" role="listitem">
+          <div class="status-dot">4</div>
+          <span class="status-label">Countersigned</span>
+          <span class="status-time">Est. Feb 20</span>
+        </div>
+        <div class="status-step" role="listitem">
+          <div class="status-dot">5</div>
+          <span class="status-label">Fully Executed</span>
+          <span class="status-time">Est. Feb 20</span>
+        </div>
+      </div>
+
+      <div class="pending-info">
+        <span class="icon" aria-hidden="true">&#9203;</span>
+        <div class="text">
+          <h3>Pending Equinix Countersignature</h3>
+          <p>Your signed agreement has been routed to the Equinix legal team for countersignature. This typically takes 1–2 business days. You'll receive an email notification when the fully executed agreement is available.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Auto-Generated Confirmation Email -->
+    <div class="email-mockup" aria-label="Preview of agreement confirmation email sent by the system">
+      <div class="email-toolbar">
+        <div class="email-toolbar-dot r"></div>
+        <div class="email-toolbar-dot y"></div>
+        <div class="email-toolbar-dot g"></div>
+        <div class="email-toolbar-title">Email — Sent automatically by Equinix Partner Channel Program</div>
+      </div>
+      <div class="email-envelope">
+        <div class="email-row">
+          <span class="email-row-label">From</span>
+          <span class="email-row-value">Equinix Partner Program &lt;no-reply@partners.equinix.com&gt;</span>
+        </div>
+        <div class="email-row">
+          <span class="email-row-label">To</span>
+          <span class="email-row-value">jordan.reeves@cloudbridge.io</span>
+        </div>
+        <div class="email-row">
+          <span class="email-row-label">Subject</span>
+          <span class="email-row-value" style="font-weight:600;">&var(--wf-ink, #1e2a3a); Agreement Received — Pending Equinix Countersignature</span>
+        </div>
+        <div class="email-row">
+          <span class="email-row-label">Date</span>
+          <span class="email-row-value">February 18, 2026 at 3:43 PM EST</span>
+        </div>
+        <hr class="email-divider">
+      </div>
+
+      <div class="email-body">
+        <div class="email-system-badge">&#9881; Automated notification from Equinix PCP</div>
+        <p class="greeting">Dear Jordan Reeves,</p>
+        <p>We've received your signed Equinix Partner Program Agreement. Here's a summary of the current status:</p>
+
+        <ul class="email-checklist">
+          <li><span class="check">&#10003;</span> Application submitted and approved</li>
+          <li><span class="check">&#10003;</span> Due diligence and verification completed</li>
+          <li><span class="check">&#10003;</span> Partner Program Agreement signed by you</li>
+          <li><span class="pending-icon">&#9679;</span> Equinix countersignature in progress (1–2 business days)</li>
+          <li><span class="pending-icon">&#9675;</span> Partner Central account provisioning (upon countersign)</li>
+        </ul>
+
+        <p><strong>What happens next:</strong> Once the agreement is countersigned, our provisioning team will create your Partner Central account. You'll receive a welcome email with login credentials and onboarding instructions within 24 hours of full execution.</p>
+
+        <p>If you need to reach your Channel Manager, Marcus Chen is available at <a href="mailto:marcus.chen@equinix.com" style="color:var(--wf-accent, #3d6daa); text-decoration:none;">marcus.chen@equinix.com</a>.</p>
+
+        <div class="email-footer-text">
+          <p>This is an automated message from the Equinix Partner Channel Program. Please do not reply directly to this email.<br>
+          <a href="#">Partner Support</a> &nbsp;|&nbsp; <a href="#">FAQ</a> &nbsp;|&nbsp; <a href="#">Unsubscribe from notifications</a></p>
+          <p>&copy; 2026 Equinix, Inc. &nbsp; One Lagoon Drive, Redwood City, CA 94065<br>
+          Ref: PCP-AGRMNT-PPA-2026-00847 &nbsp;|&nbsp; Sent via Salesforce Marketing Cloud</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Signed Agreement Download -->
+    <div class="doc-card">
+      <div class="doc-info">
+        <span class="doc-icon">&var(--wf-ink, #1e2a3a);</span>
+        <div>
+          <div class="doc-name">Equinix_Partner_Agreement_PPA-2026-00847_Signed.pdf</div>
+          <div class="doc-size">Partner-signed copy &middot; 847 KB &middot; Signed Feb 18, 2026</div>
+        </div>
+      </div>
+      <a href="#" class="doc-action">&var(--wf-ink, #1e2a3a); Download</a>
+    </div>
+
+    <!-- What Happens Next -->
+    <div class="next-card">
+      <h2>While You Wait</h2>
+      <div class="next-items">
+        <div class="next-item">
+          <div class="num">1</div>
+          <div class="text">
+            <strong>Review the Partner Guide</strong>
+            <span>Familiarize yourself with program tiers, benefits, and commission structures.</span>
+          </div>
+        </div>
+        <div class="next-item">
+          <div class="num">2</div>
+          <div class="text">
+            <strong>Prepare Your Team</strong>
+            <span>Identify team members who will need Partner Central access and training.</span>
+          </div>
+        </div>
+        <div class="next-item">
+          <div class="num">3</div>
+          <div class="text">
+            <strong>Explore Training Catalog</strong>
+            <span>Preview available certifications and courses at equinix.com/partners/training.</span>
+          </div>
+        </div>
+        <div class="next-item">
+          <div class="num">4</div>
+          <div class="text">
+            <strong>Meet Your Channel Manager</strong>
+            <span>Schedule an introductory call with Marcus Chen to discuss your go-to-market plan.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Channel Manager Contact -->
+    <div class="contact-card">
+      <div class="contact-avatar">MC</div>
+      <div class="contact-info">
+        <h3>Marcus Chen — Your Channel Manager</h3>
+        <p><a href="mailto:marcus.chen@equinix.com">marcus.chen@equinix.com</a> &nbsp;|&nbsp; +1 (408) 555-0147 &nbsp;|&nbsp; <a href="#">Schedule a call</a></p>
+      </div>
+    </div>
+
+    
+<footer class="wf-footer">
+    &copy; 2026 Equinix · Wireframe specification
+  </footer>
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Post-signature confirmation page showing real-time countersign status while partners await Equinix execution and providing actionable next steps for team preparation.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Display real-time countersign status with automatic progress updates when agreement is countersigned</li>
+<li>Provide downloadable partner-signed agreement copy for record-keeping</li>
+<li>Show step indicator with 4 completed steps and 1 active pending step</li>
+<li>Poll countersign status and auto-redirect to onboarding-welcome.html when fully executed</li>
+<li>Provide clear escalation path and channel manager contact info</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Success card confirming agreement signature receipt with agreement ID</li>
+<li>Agreement processing status tracker showing 5-stage flow</li>
+<li>Pending info banner indicating countersignature is in progress with 1-2 business day estimate</li>
+<li>Auto-generated confirmation email mockup with system badge and greeting</li>
+<li>Downloadable partner-signed agreement PDF with file details and size</li>
+<li>While You Wait grid with 4 recommended activities during the countersign period</li>
+<li>Channel Manager contact card with name, email, and call scheduling option</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Status tracker with horizontal timeline and pulsing amber animation on current stage</li>
+<li>Document download card with download action link</li>
+<li>Email mockup with system toolbar and readable email layout with checklist items</li>
+<li>Channel Manager contact links with email and phone options</li>
+<li>Next steps grid with numbered items and descriptions</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Document Status Tracking & Auto-Routing</strong>
+<ul>
+<li>Polling mechanism checking Partner_Agreement__c.Countersign_Status__c field via client-side setInterval() function every 30 seconds making AJAX call to backend /api/agreement-status endpoint</li>
+<li>Status comparison logic on page evaluating Countersign_Status__c value against 'Pending', 'Countersigned', 'Fully Executed' states from picklist</li>
+<li>Auto-redirect to onboarding-welcome.html triggered by JavaScript window.location.href assignment when status transitions to 'Fully Executed'</li>
+</ul>
+</li>
+<li><strong>Email & Notification Management</strong>
+<ul>
+<li>Server-side email log generating confirmation message via Salesforce Messaging.sendEmail() call storing email record in EmailMessage object linked to Partner__c</li>
+<li>Email template using Salesforce template field merging with {!Partner_Agreement__c.Document_ID__c} and {!Partner__c.Name__c} dynamic values</li>
+<li>Channel Manager notification email triggered via Process Builder when Agreement.Status__c = 'Partner Signed' workflow action</li>
+</ul>
+</li>
+<li><strong>Document Generation & Download</strong>
+<ul>
+<li>PDF generation executing Salesforce Apex callout to DocuSign API fetching completed document package and returning signed envelope PDF bytes</li>
+<li>PDF file creation storing document binary in Attachment object linked to Partner_Agreement__c with File_Type__c = 'Signed Agreement PDF'</li>
+<li>Download link rendering dynamically from Attachment.Id referencing /servlet/servlet.FileDownload?file={!AttachmentId} URL pattern</li>
+</ul>
+</li>
+<li><strong>Engagement & Self-Service</strong>
+<ul>
+<li>Activity recommendation carousel displaying curated training videos and onboarding resources via Lightning Web Component data iteration loop over Partner_Resource__c records</li>
+<li>Internal linking in carousel items routing to partner-resource URLs stored in Partner_Resource__c.URL__c with UTM parameter tracking clicks to engagement metrics</li>
+</ul>
+</li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Key Objects</h4>
+<ul>
+<li>Partner_Agreement__c (Status__c = 'Partner Signed', Countersign_Status__c = 'Pending')</li>
+<li>EmailMessage — Auto-generated confirmation email from Equinix Legal</li>
+<li>Partner__c — Linked account with Channel Manager lookup</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

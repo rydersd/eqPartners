@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roles & Permissions - Equinix Partner Portal</title>
+    <link rel="stylesheet" href="wireframe.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Salesforce Sans, sans-serif;
+            background-color: var(--wf-canvas, #f5f7fb);
+            color: var(--wf-ink, #1e2a3a);
+            line-height: 1.6;
+        }
+
+        /* Header */
+        .header {
+            background-color: var(--wf-ink, #1e2a3a);
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .eq-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            background-color: var(--wf-accent, #3d6daa);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 14px;
+        }
+
+        .header-title {
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notification-icon {
+            color: white;
+            cursor: pointer;
+            font-size: 20px;
+            transition: opacity 0.2s;
+        }
+
+        .notification-icon:hover {
+            opacity: 0.8;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-color: var(--wf-accent, #3d6daa);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Navigation */
+        .nav {
+            background-color: white;
+            border-bottom: 1px solid var(--wf-tint, #dce4ef);
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            gap: 0;
+        }
+
+        .nav-link {
+            padding: 12px 16px;
+            text-decoration: none;
+            color: var(--wf-ink, #1e2a3a);
+            font-size: 14px;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+            display: block;
+        }
+
+        .nav-link:hover {
+            color: var(--wf-accent, #3d6daa);
+            background-color: var(--wf-canvas, #f5f7fb);
+        }
+
+        .nav-link.active {
+            color: var(--wf-accent, #3d6daa);
+            border-bottom-color: white;
+            border-bottom: 3px solid white;
+        }
+
+        /* Admin Sub-Navigation */
+        .admin-subnav {
+            background-color: var(--wf-canvas, #f5f7fb);
+            border-bottom: 1px solid var(--wf-tint, #dce4ef);
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            height: 48px;
+        }
+
+        .admin-subnav-link {
+            text-decoration: none;
+            color: var(--wf-ink, #1e2a3a);
+            font-size: 13px;
+            padding: 12px 0;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .admin-subnav-link:hover {
+            color: var(--wf-accent, #3d6daa);
+        }
+
+        .admin-subnav-link.active {
+            color: var(--wf-accent, #3d6daa);
+            border-bottom-color: var(--wf-accent, #3d6daa);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+
+        /* Page Header */
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .breadcrumb {
+            font-size: 12px;
+            color: var(--wf-muted, #6b7f99);
+            margin-bottom: 16px;
+        }
+
+        .breadcrumb span {
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        .breadcrumb span:not(:last-child)::after {
+            content: "→";
+            margin-left: 8px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            font-size: 14px;
+            color: var(--wf-muted, #6b7f99);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid var(--wf-tint, #dce4ef);
+            margin-bottom: 32px;
+            background-color: white;
+            border-radius: 8px 8px 0 0;
+            padding: 0 24px;
+        }
+
+        .tab-button {
+            background: none;
+            border: none;
+            padding: 16px 24px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--wf-muted, #6b7f99);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.2s;
+        }
+
+        .tab-button:hover {
+            color: var(--wf-accent, #3d6daa);
+        }
+
+        .tab-button.active {
+            color: var(--wf-accent, #3d6daa);
+            border-bottom-color: var(--wf-accent, #3d6daa);
+        }
+
+        .tab-button:focus {
+            outline: 2px solid var(--wf-accent, #3d6daa);
+            outline-offset: -2px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Role Cards Grid */
+        .roles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .role-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+            padding: 24px;
+            border-left: 4px solid;
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+
+        .role-card:hover {
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .role-card.admin {
+            border-left-color: var(--wf-accent, #3d6daa);
+        }
+
+        .role-card.sales-rep {
+            border-left-color: var(--wf-ink, #1e2a3a);
+        }
+
+        .role-card.solutions-engineer {
+            border-left-color: var(--wf-muted, #6b7f99);
+        }
+
+        .role-card.marketing {
+            border-left-color: var(--wf-amber, #8b7745);
+        }
+
+        .role-card.finance {
+            border-left-color: var(--wf-muted, #6b7f99);
+        }
+
+        .role-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+            margin-bottom: 8px;
+        }
+
+        .role-description {
+            font-size: 13px;
+            color: var(--wf-muted, #6b7f99);
+            margin-bottom: 16px;
+            line-height: 1.5;
+        }
+
+        .role-info {
+            font-size: 12px;
+            margin-bottom: 12px;
+        }
+
+        .role-info-label {
+            color: var(--wf-muted, #6b7f99);
+            font-weight: 500;
+        }
+
+        .role-info-value {
+            color: var(--wf-ink, #1e2a3a);
+            margin-top: 4px;
+        }
+
+        .user-badge {
+            display: inline-block;
+            background-color: var(--wf-canvas, #f5f7fb);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            color: var(--wf-muted, #6b7f99);
+            margin-right: 4px;
+            margin-bottom: 4px;
+        }
+
+        .user-badge.invited {
+            background-color: var(--wf-canvas, #f5f7fb);
+            color: var(--wf-amber, #8b7745);
+        }
+
+        .user-badge.deactivated {
+            background-color: var(--wf-canvas, #f5f7fb);
+            color: var(--wf-red, #8b4553);
+            text-decoration: line-through;
+        }
+
+        .permissions-list {
+            font-size: 12px;
+            margin: 16px 0;
+            padding-top: 16px;
+            border-top: 1px solid var(--wf-tint, #dce4ef);
+        }
+
+        .permissions-label {
+            color: var(--wf-muted, #6b7f99);
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+
+        .permission-item {
+            display: flex;
+            align-items: center;
+            padding: 4px 0;
+            color: var(--wf-ink, #1e2a3a);
+            font-size: 12px;
+        }
+
+        .permission-item::before {
+            content: "✓";
+            color: var(--wf-ink, #1e2a3a);
+            font-weight: bold;
+            margin-right: 8px;
+            font-size: 13px;
+        }
+
+        .role-card-footer {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid var(--wf-tint, #dce4ef);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--wf-accent, #3d6daa);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--wf-accent, #3d6daa);
+        }
+
+        .btn-primary:focus {
+            outline: 2px solid var(--wf-accent, #3d6daa);
+            outline-offset: 2px;
+        }
+
+        .btn-secondary {
+            background-color: var(--wf-canvas, #f5f7fb);
+            color: var(--wf-ink, #1e2a3a);
+            border: 1px solid var(--wf-tint, #dce4ef);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--wf-canvas, #f5f7fb);
+            border-color: var(--wf-muted, #6b7f99);
+        }
+
+        .btn-secondary:focus {
+            outline: 2px solid var(--wf-accent, #3d6daa);
+            outline-offset: 2px;
+        }
+
+        /* Permission Matrix */
+        .matrix-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+            padding: 24px;
+            overflow-x: auto;
+        }
+
+        .matrix-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .matrix-table thead {
+            background-color: var(--wf-canvas, #f5f7fb);
+        }
+
+        .matrix-table th {
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+            border-bottom: 2px solid var(--wf-tint, #dce4ef);
+        }
+
+        .matrix-table th:first-child {
+            min-width: 180px;
+        }
+
+        .matrix-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--wf-surface, #edf1f7);
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        .matrix-table tr:hover {
+            background-color: var(--wf-canvas, #f5f7fb);
+        }
+
+        .matrix-feature {
+            font-weight: 500;
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        .matrix-check {
+            text-align: center;
+            color: var(--wf-ink, #1e2a3a);
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .matrix-dash {
+            text-align: center;
+            color: var(--wf-line, #b0bdd0);
+        }
+
+        /* Audit Log */
+        .audit-log-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+            padding: 24px;
+        }
+
+        .audit-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .audit-table thead {
+            background-color: var(--wf-canvas, #f5f7fb);
+        }
+
+        .audit-table th {
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+            border-bottom: 2px solid var(--wf-tint, #dce4ef);
+        }
+
+        .audit-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--wf-surface, #edf1f7);
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        .audit-table tr:hover {
+            background-color: var(--wf-canvas, #f5f7fb);
+        }
+
+        .audit-timestamp {
+            color: var(--wf-muted, #6b7f99);
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .audit-actor {
+            color: var(--wf-ink, #1e2a3a);
+            font-weight: 500;
+        }
+
+        .audit-action {
+            color: var(--wf-muted, #6b7f99);
+        }
+
+        .audit-affected {
+            color: var(--wf-ink, #1e2a3a);
+            font-weight: 500;
+        }
+
+        /* Figma Spec Block */
+        .figma-spec {
+            background-color: var(--wf-ink, #1e2a3a);
+            border-left: 4px solid var(--wf-ink, #1e2a3a);
+            border-radius: 8px;
+            padding: 24px;
+            margin-top: 32px;
+            color: var(--wf-tint, #dce4ef);
+        }
+
+        .figma-spec-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+            margin-bottom: 16px;
+        }
+
+        .figma-spec-content {
+            font-size: 12px;
+            line-height: 1.6;
+            color: var(--wf-tint, #dce4ef);
+        }
+
+        .figma-spec-row {
+            display: flex;
+            margin-bottom: 12px;
+        }
+
+        .figma-spec-label {
+            font-weight: 500;
+            color: var(--wf-ink, #1e2a3a);
+            min-width: 140px;
+            margin-right: 20px;
+        }
+
+        .figma-spec-value {
+            flex: 1;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 8px;
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+            margin-bottom: 16px;
+        }
+
+        .modal-body {
+            font-size: 14px;
+            color: var(--wf-muted, #6b7f99);
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 24px 16px;
+            }
+
+            .roles-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .nav {
+                overflow-x: auto;
+            }
+
+            .matrix-table {
+                font-size: 12px;
+            }
+
+            .matrix-table th,
+            .matrix-table td {
+                padding: 8px 12px;
+            }
+        }
+
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        :focus-visible {
+            outline: 2px solid var(--wf-accent, #3d6daa);
+            outline-offset: 2px;
+</style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="wf-header">
+    <div class="wf-header-logo">EQ</div>
+    <div class="wf-header-title">Equinix Partner Manager</div>
+    <nav class="wf-header-nav">
+      <a href="pm-home-dashboard.html">Dashboard</a>
+      <a href="pm-team-management.html">Team</a>
+      <a href="pm-deals-revenue.html">Deals</a>
+      <a href="pm-team-training.html">Training</a>
+      <a href="pm-resources.html">Resources</a>
+    </nav>
+    <div class="wf-header-util">
+      <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+      <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+    </div>
+  </header>
+
+    <!-- Main Navigation -->
+    <nav class="nav" role="navigation" aria-label="Main navigation">
+        <a href="pm-home-dashboard.html" class="nav-link">Home</a>
+        <a href="pm-team-training.html" class="nav-link">Team</a>
+        <a href="pm-deals-revenue.html" class="nav-link">Deals</a>
+        <a href="pm-mdf-comarketing.html" class="nav-link">Marketing</a>
+        <a href="pm-resources.html" class="nav-link">Resources</a>
+        <a href="pm-team-management.html" class="nav-link active">Admin</a>
+    </nav>
+
+    <!-- Admin Sub-Navigation -->
+    <div class="admin-subnav" role="navigation" aria-label="Admin section navigation">
+        <a href="pm-team-management.html" class="admin-subnav-link">Team Management</a>
+        <a href="pm-role-permissions.html" class="admin-subnav-link active">Roles & Permissions</a>
+    </div>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div class="breadcrumb" aria-label="Breadcrumb">
+                <span>Admin</span>
+                <span>Roles & Permissions</span>
+            </div>
+            <h1 class="page-title">Roles & Permissions</h1>
+            <p class="page-subtitle">Configure portal access levels for your organization</p>
+        </div>
+
+        <!-- Tabs -->
+        <div role="tablist" aria-label="Content tabs" class="tabs">
+            <button role="tab" aria-selected="true" aria-controls="roles-panel" class="tab-button active" id="roles-tab">
+                Roles Overview
+            </button>
+            <button role="tab" aria-selected="false" aria-controls="matrix-panel" class="tab-button" id="matrix-tab">
+                Permission Matrix
+            </button>
+            <button role="tab" aria-selected="false" aria-controls="audit-panel" class="tab-button" id="audit-tab">
+                Audit Log
+            </button>
+        </div>
+
+        <!-- Roles Overview Tab -->
+        <section role="tabpanel" id="roles-panel" aria-labelledby="roles-tab" class="tab-content active">
+            <div class="roles-grid">
+                <!-- Admin Role Card -->
+                <article class="role-card admin">
+                    <h2 class="role-name">Admin</h2>
+                    <p class="role-description">Full portal access including user management, billing, and program settings</p>
+                    <div class="role-info">
+                        <div class="role-info-label">Users (1)</div>
+                        <div class="role-info-value">
+                            <span class="user-badge">Jordan Reeves</span>
+                        </div>
+                    </div>
+                    <div class="role-info">
+                        <div class="role-info-label">Salesforce Permission Set</div>
+                        <div class="role-info-value">PCP_PM_Admin</div>
+                    </div>
+                    <div class="permissions-list">
+                        <div class="permissions-label">Key Permissions</div>
+                        <div class="permission-item">User Management</div>
+                        <div class="permission-item">Role Assignment</div>
+                        <div class="permission-item">License Management</div>
+                        <div class="permission-item">All Deal Actions</div>
+                        <div class="permission-item">Training Management</div>
+                        <div class="permission-item">MDF Approval</div>
+                        <div class="permission-item">Commission Reports</div>
+                        <div class="permission-item">Billing Access</div>
+                    </div>
+                    <div class="role-card-footer">
+                        <button class="btn btn-secondary" aria-label="Edit permissions for Admin role">
+                            Edit Permissions
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Sales Rep Role Card -->
+                <article class="role-card sales-rep">
+                    <h2 class="role-name">Sales Rep</h2>
+                    <p class="role-description">Deal registration, pipeline management, training, and commission tracking</p>
+                    <div class="role-info">
+                        <div class="role-info-label">Users (3)</div>
+                        <div class="role-info-value">
+                            <span class="user-badge">Sarah Connor</span>
+                            <span class="user-badge">Tony Stark</span>
+                            <span class="user-badge">Natasha Romanoff</span>
+                        </div>
+                    </div>
+                    <div class="role-info">
+                        <div class="role-info-label">Salesforce Permission Set</div>
+                        <div class="role-info-value">PCP_Partner_Base</div>
+                    </div>
+                    <div class="permissions-list">
+                        <div class="permissions-label">Key Permissions</div>
+                        <div class="permission-item">Register Deals</div>
+                        <div class="permission-item">View Own Pipeline</div>
+                        <div class="permission-item">Complete Training</div>
+                        <div class="permission-item">View Own Commissions</div>
+                        <div class="permission-item">Access Sales Tools</div>
+                        <div class="permission-item">Submit Leads</div>
+                    </div>
+                    <div class="role-card-footer">
+                        <button class="btn btn-secondary" aria-label="Edit permissions for Sales Rep role">
+                            Edit Permissions
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Solutions Engineer Role Card -->
+                <article class="role-card solutions-engineer">
+                    <h2 class="role-name">Solutions Engineer</h2>
+                    <p class="role-description">Technical pre-sales support, solution design, and certification management</p>
+                    <div class="role-info">
+                        <div class="role-info-label">Users (2)</div>
+                        <div class="role-info-value">
+                            <span class="user-badge">Pepper Potts</span>
+                            <span class="user-badge">Bruce Banner</span>
+                        </div>
+                    </div>
+                    <div class="role-info">
+                        <div class="role-info-label">Salesforce Permission Set</div>
+                        <div class="role-info-value">PCP_Partner_SE</div>
+                    </div>
+                    <div class="permissions-list">
+                        <div class="permissions-label">Key Permissions</div>
+                        <div class="permission-item">View Deal Technical Details</div>
+                        <div class="permission-item">Access Configuration Tools</div>
+                        <div class="permission-item">Complete Technical Certs</div>
+                        <div class="permission-item">View Solution Library</div>
+                        <div class="permission-item">Submit Technical Assessments</div>
+                    </div>
+                    <div class="role-card-footer">
+                        <button class="btn btn-secondary" aria-label="Edit permissions for Solutions Engineer role">
+                            Edit Permissions
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Marketing Coordinator Role Card -->
+                <article class="role-card marketing">
+                    <h2 class="role-name">Marketing Coordinator</h2>
+                    <p class="role-description">MDF requests, co-marketing campaigns, and asset management</p>
+                    <div class="role-info">
+                        <div class="role-info-label">Users (1)</div>
+                        <div class="role-info-value">
+                            <span class="user-badge invited">Steve Rogers — Invited</span>
+                        </div>
+                    </div>
+                    <div class="role-info">
+                        <div class="role-info-label">Salesforce Permission Set</div>
+                        <div class="role-info-value">PCP_Partner_Marketing</div>
+                    </div>
+                    <div class="permissions-list">
+                        <div class="permissions-label">Key Permissions</div>
+                        <div class="permission-item">Submit MDF Requests</div>
+                        <div class="permission-item">Access Asset Library</div>
+                        <div class="permission-item">View Campaign Reports</div>
+                        <div class="permission-item">Download Co-brand Materials</div>
+                    </div>
+                    <div class="role-card-footer">
+                        <button class="btn btn-secondary" aria-label="Edit permissions for Marketing Coordinator role">
+                            Edit Permissions
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Finance / Billing Role Card -->
+                <article class="role-card finance">
+                    <h2 class="role-name">Finance / Billing</h2>
+                    <p class="role-description">Commission statements, billing inquiries, and financial reporting</p>
+                    <div class="role-info">
+                        <div class="role-info-label">Users (1)</div>
+                        <div class="role-info-value">
+                            <span class="user-badge deactivated">Maria Hill — Deactivated</span>
+                        </div>
+                    </div>
+                    <div class="role-info">
+                        <div class="role-info-label">Salesforce Permission Set</div>
+                        <div class="role-info-value">PCP_Partner_Finance</div>
+                    </div>
+                    <div class="permissions-list">
+                        <div class="permissions-label">Key Permissions</div>
+                        <div class="permission-item">View All Commissions</div>
+                        <div class="permission-item">Export Financial Reports</div>
+                        <div class="permission-item">Access Billing Portal</div>
+                        <div class="permission-item">View Contract Terms</div>
+                    </div>
+                    <div class="role-card-footer">
+                        <button class="btn btn-secondary" aria-label="Edit permissions for Finance / Billing role">
+                            Edit Permissions
+                        </button>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- Permission Matrix Tab -->
+        <section role="tabpanel" id="matrix-panel" aria-labelledby="matrix-tab" class="tab-content">
+            <div class="matrix-card">
+                <table class="matrix-table" role="table" aria-label="Permission matrix showing feature access by role">
+                    <thead>
+                        <tr>
+                            <th scope="col">Feature</th>
+                            <th scope="col">Admin</th>
+                            <th scope="col">Sales Rep</th>
+                            <th scope="col">Solutions Eng</th>
+                            <th scope="col">Marketing</th>
+                            <th scope="col">Finance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="matrix-feature">Deal Registration</td>
+                            <td class="matrix-check" aria-label="Admin has access">✓</td>
+                            <td class="matrix-check" aria-label="Sales Rep has access">✓</td>
+                            <td class="matrix-dash" aria-label="Solutions Engineer does not have access">—</td>
+                            <td class="matrix-dash" aria-label="Marketing does not have access">—</td>
+                            <td class="matrix-dash" aria-label="Finance does not have access">—</td>
+                        </tr>
+                        <tr>
+                            <td class="matrix-feature">View Pipeline (Own)</td>
+                            <td class="matrix-check" aria-label="Admin has access">✓</td>
+                            <td class="matrix-check" aria-label="Sales Rep has access">✓</td>
+                            <td class="matrix-check" aria-label="Solutions Engineer has access">✓</td>
+                            <td class="matrix-dash" aria-label="Marketing does not have access">—</td>
+                            <td class="matrix-dash" aria-label="Finance does not have access">—</td>
+                        </tr>
+                        <tr>
+                            <td class="matrix-feature">View Pipeline (Org)</td>
+                            <td class="matrix-check" aria-label="Admin has access">✓</td>
+                            <td class="matrix-dash" aria-label="Sales Rep does not have access">—</td>
+                            <td class="matrix-dash" aria-label="Solutions Engineer does not have access">—</td>
+                            <td class="matrix-dash" aria-label="Marketing does not have access">—</td>
+                            <td class="matrix-dash" aria-label="Finance does not have access">—</td>
+                        </tr>
+                        <tr>
+                            <td class="matrix-feature">Training Enrollment</td>
+                            <td class="matrix-check" aria-label="Admin has access">✓</td>
+                            <td class="matrix-check" aria-label="Sales Rep has access">✓</td>
+                            <td class="matrix-check" aria-label="Solutions Engineer has access">✓</td>
+                            <td class="matrix-check" aria-label="Marketing has access">✓</td>
+                            <td class="matrix-dash" aria-label="Finance does not have access">—</td>
+                        </tr>
+                        <tr>
+                            <td class="matrix-feature">Commission View (Own)</td>
+                            <td class="matrix-check" aria-label="Admin has access">✓</td>
+                            <td class="matrix-check" aria-label="Sales Rep has access">✓</td>
+                            <td class="matrix-check" aria-label="Solutions Engineer has access">✓</td>
+                            <td class="matrix-dash" aria-label="Marketing does not have access">—</td>
+                            <td class="matrix-check" aria-label="Finance has access">✓</td>
+                        </tr>
+                        <tr>
+                            <td class="matrix-feature">Commission View (Org)</td>
+                            <td class="matrix-check" aria-label="Admin has access">✓</td>
+                            <td class="matrix-dash" aria-label="Sales Rep does not have access">—</td>
+                            <td class="matrix-dash" aria-label="Solutions Engineer does not have access">—</td>
+                            <td class="matrix-dash" aria-label="Marketing does not have access">—</td>
+                            <td class="matrix-check" aria-label="Finance has access">✓</td>
+                        </tr>
+                        <tr>
+                            <td class="matrix-feature">MDF Requests</td>
+                            <td class="matrix-check" aria-label="Admin has access">✓</td>
+                            <td class="matrix-dash" aria-label="Sales Rep does not have access">—</td>
+                            <td class="matrix-dash" aria-label="Solutions Engineer does not have access">—</td>
+                            <td class="matrix-check" aria-label="Marketing has access">✓</td>
+                            <td class="matrix-dash" aria-label="Finance does not have access">—</td>
+                        </tr>
+                        <tr>
+                            <td class="matrix-feature">MDF Approval</td>
+                            <td class="matrix-check" aria-label="Admin has access">✓</td>
+                            <td class="matrix-dash" aria-label="Sales Rep does not have access">—</td>
+                            <td class="matrix-dash" aria-label="Solutions Engineer does not have access">—</td>
+                            <td class="matrix-dash" aria-label="Marketing does not have access">—</td>
+                            <td class="matrix-dash" aria-label="Finance does not have access">—</td>
+                        </tr>
+                        <tr>
+                            <td class="matrix-feature">Asset Library</td>
+                            <td class="matrix-check" aria-label="Admin has access">✓</td>
+                            <td class="matrix-check" aria-label="Sales Rep has access">✓</td>
+                            <td class="matrix-check" aria-label="Solutions Engineer has access">✓</td>
+                            <td class="matrix-check" aria-label="Marketing has access">✓</td>
+                            <td class="matrix-dash" aria-label="Finance does not have access">—</td>
+                        </tr>
+                        <tr>
+                            <td class="matrix-feature">User Management</td>
+                            <td class="matrix-check" aria-label="Admin has access">✓</td>
+                            <td class="matrix-dash" aria-label="Sales Rep does not have access">—</td>
+                            <td class="matrix-dash" aria-label="Solutions Engineer does not have access">—</td>
+                            <td class="matrix-dash" aria-label="Marketing does not have access">—</td>
+                            <td class="matrix-dash" aria-label="Finance does not have access">—</td>
+                        </tr>
+                        <tr>
+                            <td class="matrix-feature">Billing Access</td>
+                            <td class="matrix-check" aria-label="Admin has access">✓</td>
+                            <td class="matrix-dash" aria-label="Sales Rep does not have access">—</td>
+                            <td class="matrix-dash" aria-label="Solutions Engineer does not have access">—</td>
+                            <td class="matrix-dash" aria-label="Marketing does not have access">—</td>
+                            <td class="matrix-check" aria-label="Finance has access">✓</td>
+                        </tr>
+                        <tr>
+                            <td class="matrix-feature">API Access</td>
+                            <td class="matrix-check" aria-label="Admin has access">✓</td>
+                            <td class="matrix-dash" aria-label="Sales Rep does not have access">—</td>
+                            <td class="matrix-dash" aria-label="Solutions Engineer does not have access">—</td>
+                            <td class="matrix-dash" aria-label="Marketing does not have access">—</td>
+                            <td class="matrix-dash" aria-label="Finance does not have access">—</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Audit Log Tab -->
+        <section role="tabpanel" id="audit-panel" aria-labelledby="audit-tab" class="tab-content">
+            <div class="audit-log-card">
+                <table class="audit-table" role="table" aria-label="Audit log of recent role and permission changes">
+                    <thead>
+                        <tr>
+                            <th scope="col">Timestamp</th>
+                            <th scope="col">Actor</th>
+                            <th scope="col">Action</th>
+                            <th scope="col">Affected User / Role</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="audit-timestamp">Feb 14, 2026, 2:15 PM</td>
+                            <td class="audit-actor">Jordan Reeves</td>
+                            <td class="audit-action">Changed role assignment</td>
+                            <td class="audit-affected">Steve Rogers → Marketing Coordinator</td>
+                        </tr>
+                        <tr>
+                            <td class="audit-timestamp">Feb 12, 2026, 10:45 AM</td>
+                            <td class="audit-actor">Jordan Reeves</td>
+                            <td class="audit-action">Deactivated user</td>
+                            <td class="audit-affected">Maria Hill (Finance/Billing)</td>
+                        </tr>
+                        <tr>
+                            <td class="audit-timestamp">Feb 10, 2026, 4:20 PM</td>
+                            <td class="audit-actor">Jordan Reeves</td>
+                            <td class="audit-action">Added permission to role</td>
+                            <td class="audit-affected">Admin → API Access</td>
+                        </tr>
+                        <tr>
+                            <td class="audit-timestamp">Jan 28, 2026, 9:00 AM</td>
+                            <td class="audit-actor">Marcus Chen (CM)</td>
+                            <td class="audit-action">Upgraded license seats</td>
+                            <td class="audit-affected">Organization: 10 → 15 seats</td>
+                        </tr>
+                        <tr>
+                            <td class="audit-timestamp">Jan 15, 2026, 3:30 PM</td>
+                            <td class="audit-actor">Jordan Reeves</td>
+                            <td class="audit-action">Invited user to portal</td>
+                            <td class="audit-affected">Bruce Banner (Solutions Engineer)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Figma Spec Block -->
+        <div class="figma-spec">
+            <div class="figma-spec-title">Figma Spec Block</div>
+            <div class="figma-spec-content">
+                <div class="figma-spec-row">
+                    <div class="figma-spec-label">Page Name:</div>
+                    <div class="figma-spec-value">pm-role-permissions</div>
+                </div>
+                <div class="figma-spec-row">
+                    <div class="figma-spec-label">Portal:</div>
+                    <div class="figma-spec-value">Partner Manager Portal</div>
+                </div>
+                <div class="figma-spec-row">
+                    <div class="figma-spec-label">Primary Content:</div>
+                    <div class="figma-spec-value">Role configuration cards, permission matrix, audit log</div>
+                </div>
+                <div class="figma-spec-row">
+                    <div class="figma-spec-label">Interactive Elements:</div>
+                    <div class="figma-spec-value">Edit permissions modal, tab switching, audit log data table</div>
+                </div>
+                <div class="figma-spec-row">
+                    <div class="figma-spec-label">SF Object:</div>
+                    <div class="figma-spec-value">PermissionSet + PermissionSetAssignment on User</div>
+                </div>
+                <div class="figma-spec-row">
+                    <div class="figma-spec-label">Functionality:</div>
+                    <div class="figma-spec-value">Role = custom metadata mapping to Permission Set combinations. Partner Admin can only assign permissions within their org's licensed scope. Audit log sourced from SetupAuditTrail + custom Partner_Permission_Log__c. Changes require confirmation modal. Accessibility: permission matrix uses aria-label on checkmarks, audit log is proper data table, tab panel uses role="tabpanel"</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Confirmation Modal -->
+    <div class="modal" id="confirmation-modal" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
+        <div class="modal-content">
+            <h2 class="modal-title" id="modal-title">Confirm Permission Change</h2>
+            <div class="modal-body">
+                Are you sure you want to make this change? This action will update user access to portal features and cannot be easily reversed.
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="confirmChange()">Confirm Change</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab Switching
+        const tabButtons = document.querySelectorAll('[role="tab"]');
+        const tabPanels = document.querySelectorAll('[role="tabpanel"]');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const targetId = this.getAttribute('aria-controls');
+                
+                // Deactivate all tabs and panels
+                tabButtons.forEach(btn => {
+                    btn.setAttribute('aria-selected', 'false');
+                    btn.classList.remove('active');
+                });
+                tabPanels.forEach(panel => {
+                    panel.classList.remove('active');
+                });
+
+                // Activate selected tab and panel
+                this.setAttribute('aria-selected', 'true');
+                this.classList.add('active');
+                document.getElementById(targetId).classList.add('active');
+            });
+
+            // Keyboard navigation
+            button.addEventListener('keydown', function(e) {
+                let targetButton;
+                if (e.key === 'ArrowRight') {
+                    targetButton = this.nextElementSibling;
+                    if (!targetButton) targetButton = tabButtons[0];
+                } else if (e.key === 'ArrowLeft') {
+                    targetButton = this.previousElementSibling;
+                    if (!targetButton) targetButton = tabButtons[tabButtons.length - 1];
+                } else if (e.key === 'Home') {
+                    targetButton = tabButtons[0];
+                } else if (e.key === 'End') {
+                    targetButton = tabButtons[tabButtons.length - 1];
+                }
+                
+                if (targetButton && targetButton.getAttribute('role') === 'tab') {
+                    e.preventDefault();
+                    targetButton.click();
+                    targetButton.focus();
+                }
+            });
+        });
+
+        // Edit Permissions Button Handlers
+        const editButtons = document.querySelectorAll('.btn-secondary');
+        editButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                openModal();
+            });
+        });
+
+        // Modal Functions
+        function openModal() {
+            const modal = document.getElementById('confirmation-modal');
+            modal.classList.add('active');
+            modal.setAttribute('aria-hidden', 'false');
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('confirmation-modal');
+            modal.classList.remove('active');
+            modal.setAttribute('aria-hidden', 'true');
+        }
+
+        function confirmChange() {
+            // In a real application, this would make an API call
+            alert('Permission change confirmed and saved.');
+            closeModal();
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('click', function(event) {
+            const modal = document.getElementById('confirmation-modal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+  <footer class="wf-footer">
+    &copy; 2026 Equinix Partner Manager Portal · Wireframe specification
+  </footer>
+
+</body>
+</html>

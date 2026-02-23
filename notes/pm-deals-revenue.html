@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deals & Revenue</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Salesforce Sans, sans-serif; background-color: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); }
+    .container { max-width: 1400px; margin: 0 auto; padding: 24px; }
+    .page-title { font-size: 20px; font-weight: 700; margin-bottom: 24px; color: var(--wf-ink, #1e2a3a); }
+    .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 24px; }
+    .kpi-card { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+    .kpi-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--wf-muted, #6b7f99); margin-bottom: 8px; }
+    .kpi-value { font-size: 28px; font-weight: 700; color: var(--wf-accent, #3d6daa); margin-bottom: 4px; }
+    .kpi-detail { font-size: 12px; color: var(--wf-muted, #6b7f99); }
+    .pipeline-section { background: white; border-radius: 8px; padding: 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+    .section-title { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 20px; color: var(--wf-ink, #1e2a3a); border-bottom: 1px solid var(--wf-surface, #edf1f7); padding-bottom: 12px; }
+    .funnel-container { display: flex; gap: 8px; align-items: flex-end; justify-content: space-between; height: 200px; margin-bottom: 16px; }
+    .funnel-stage { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 8px; }
+    .funnel-bar { width: 100%; border-radius: 4px 4px 0 0; background: var(--wf-surface, #edf1f7); display: flex; align-items: flex-end; justify-content: center; color: white; font-weight: 700; font-size: 14px; }
+    .funnel-stage-name { font-size: 12px; font-weight: 600; text-align: center; color: var(--wf-ink, #1e2a3a); }
+    .funnel-stage-value { font-size: 13px; font-weight: 700; color: var(--wf-accent, #3d6daa); text-align: center; }
+    .commission-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px; }
+    .commission-stat { background-color: var(--wf-canvas, #f5f7fb); padding: 16px; border-radius: 4px; }
+    .commission-label { font-size: 12px; color: var(--wf-muted, #6b7f99); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+    .commission-value { font-size: 24px; font-weight: 700; color: var(--wf-ink, #1e2a3a); }
+    .table-header { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1.2fr 1fr 0.8fr 0.8fr 0.9fr; gap: 16px; padding: 16px 24px; background-color: var(--wf-canvas, #f5f7fb); border-bottom: 1px solid var(--wf-surface, #edf1f7); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--wf-muted, #6b7f99); }
+    .table-row { display: grid; grid-template-columns: 1.5fr 1fr 1fr 1.2fr 1fr 0.8fr 0.8fr 0.9fr; gap: 16px; padding: 16px 24px; border-bottom: 1px solid var(--wf-surface, #edf1f7); align-items: center; font-size: 13px; }
+    .table-row:hover { background-color: var(--wf-canvas, #f5f7fb); }
+    .table-row:last-child { border-bottom: none; }
+    .row-deal-name { font-weight: 600; color: var(--wf-accent, #3d6daa); cursor: pointer; }
+    .row-deal-name:hover { text-decoration: underline; }
+    .status-badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    .status-pending { background-color: var(--wf-canvas, #f5f7fb); color: var(--wf-amber, #8b7745); }
+    .status-approved { background-color: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); }
+    .status-in-progress { background-color: var(--wf-canvas, #f5f7fb); color: var(--wf-accent, #3d6daa); }
+    .status-closed { background-color: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); }
+    .card { background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.12); overflow: hidden; }
+    .btn { padding: 8px 16px; border-radius: 4px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; }
+    .btn-primary { background-color: var(--wf-accent, #3d6daa); color: white; }
+    .btn-primary:hover { background-color: var(--wf-accent, #3d6daa); }
+    .btn-secondary { background-color: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); border: 1px solid var(--wf-surface, #edf1f7); }
+    .btn-secondary:hover { background-color: var(--wf-tint, #dce4ef); }
+    .spec-title { font-size: 12px; font-weight: 700; color: var(--wf-ink, #1e2a3a); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; border-bottom: 1px solid var(--wf-surface, #edf1f7); padding-bottom: 8px; }
+    .spec-content { font-size: 12px; color: var(--wf-muted, #6b7f99); line-height: 1.6; }
+    .spec-list { list-style: none; padding-left: 0; }
+    .spec-list li { margin-bottom: 8px; padding-left: 20px; position: relative; }
+    .spec-list li:before { content: "•"; position: absolute; left: 0; color: var(--wf-accent, #3d6daa); }
+    .commission-rate-card { background: var(--wf-ink, #1e2a3a); border-left: 4px solid var(--wf-accent, #3d6daa); padding: 16px; border-radius: 4px; margin-bottom: 16px; }
+    .tier-comparison { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 12px; }
+    .tier-comp-item { background-color: white; padding: 12px; border: 1px solid var(--wf-surface, #edf1f7); border-radius: 4px; font-size: 12px; }
+    .tier-comp-label { font-weight: 600; color: var(--wf-ink, #1e2a3a); margin-bottom: 4px; }
+    .tier-comp-value { color: var(--wf-accent, #3d6daa); font-weight: 600; }
+    @media (max-width: 768px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } .table-header, .table-row { grid-template-columns: 1fr; gap: 8px; } .commission-grid { grid-template-columns: 1fr; } }
+  
+</style>
+</head>
+<body>
+  <header class="wf-header">
+    <div class="wf-header-logo">EQ</div>
+    <div class="wf-header-title">Equinix Partner Manager</div>
+    <nav class="wf-header-nav">
+      <a href="pm-home-dashboard.html">Dashboard</a>
+      <a href="pm-team-management.html">Team</a>
+      <a href="pm-deals-revenue.html" class="active">Deals</a>
+      <a href="pm-team-training.html">Training</a>
+      <a href="pm-resources.html">Resources</a>
+    </nav>
+    <div class="wf-header-util">
+      <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+      <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+    </div>
+  </header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+  <div class="container">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
+      <div class="page-title">Deals & Revenue</div>
+      <button class="btn btn-primary">+ Register New Deal</button>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Active Deals</div>
+        <div class="kpi-value">4</div>
+        <div class="kpi-detail">↑ 2 from last month</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Pipeline Value</div>
+        <div class="kpi-value">$1.87M</div>
+        <div class="kpi-detail">Q1 2026 forecast</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Closed Won YTD</div>
+        <div class="kpi-value">$3.2M</div>
+        <div class="kpi-detail">Jan 1 - Feb 14</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Commission Earned YTD</div>
+        <div class="kpi-value">$384K</div>
+        <div class="kpi-detail">15% gold rate</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Pending Commission</div>
+        <div class="kpi-value">$18.5K</div>
+        <div class="kpi-detail">Month-end processing</div>
+      </div>
+    </div>
+
+    <div class="pipeline-section">
+      <div class="section-title">Revenue Flow Visualization</div>
+      <div class="funnel-container">
+        <div class="funnel-stage" style="height:180px">
+          <div class="funnel-bar" style="height:150px">12</div>
+          <div class="funnel-stage-name">Deal Regs</div>
+          <div class="funnel-stage-value">$8.5M</div>
+        </div>
+        <div class="funnel-stage" style="height:150px">
+          <div class="funnel-bar" style="height:125px">10</div>
+          <div class="funnel-stage-name">Opportunities</div>
+          <div class="funnel-stage-value">$7.2M</div>
+        </div>
+        <div class="funnel-stage" style="height:120px">
+          <div class="funnel-bar" style="height:100px">8</div>
+          <div class="funnel-stage-name">Quotes</div>
+          <div class="funnel-stage-value">$5.8M</div>
+        </div>
+        <div class="funnel-stage" style="height:100px">
+          <div class="funnel-bar" style="height:80px">5</div>
+          <div class="funnel-stage-name">Orders</div>
+          <div class="funnel-stage-value">$3.2M</div>
+        </div>
+        <div class="funnel-stage" style="height:80px">
+          <div class="funnel-bar" style="height:60px">1</div>
+          <div class="funnel-stage-name">Commissions</div>
+          <div class="funnel-stage-value">$384K</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pipeline-section">
+      <div class="section-title">Commission Rate & Tier Comparison</div>
+      <div class="commission-rate-card">
+        <div style="font-weight:700;color:var(--wf-ink, #1e2a3a);margin-bottom:4px">Your Tier: Gold — 15% Base Rate</div>
+        <div style="font-size:12px;color:var(--wf-muted, #6b7f99);margin-bottom:12px">Platinum partners earn 18% | Silver partners earn 12% | Bronze partners earn 10%</div>
+        <div class="tier-comparison">
+          <div class="tier-comp-item">
+            <div class="tier-comp-label">Bronze</div>
+            <div class="tier-comp-value">10%</div>
+            <div style="font-size:11px;color:var(--wf-muted, #6b7f99)">Entry tier</div>
+          </div>
+          <div class="tier-comp-item">
+            <div class="tier-comp-label">Silver</div>
+            <div class="tier-comp-value">12%</div>
+            <div style="font-size:11px;color:var(--wf-muted, #6b7f99)">Growing partners</div>
+          </div>
+          <div class="tier-comp-item" style="background:var(--wf-canvas, #f5f7fb);border-color:var(--wf-accent, #3d6daa);">
+            <div class="tier-comp-label">Gold ✓</div>
+            <div class="tier-comp-value">15%</div>
+            <div style="font-size:11px;color:var(--wf-muted, #6b7f99)">You are here</div>
+          </div>
+        </div>
+      </div>
+      <div class="commission-grid">
+        <div class="commission-stat">
+          <div class="commission-label">Deal Registration Commission</div>
+          <div class="commission-value">15%</div>
+        </div>
+        <div class="commission-stat">
+          <div class="commission-label">Co-Sell Bonus</div>
+          <div class="commission-value">+2%</div>
+        </div>
+        <div class="commission-stat">
+          <div class="commission-label">Referral Bonus</div>
+          <div class="commission-value">+3%</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="padding:24px;border-bottom:1px solid var(--wf-surface, #edf1f7)">
+        <div class="section-title" style="margin:0">Active Deals</div>
+      </div>
+      <div class="table-header">
+        <div>Deal Name</div>
+        <div>Rep</div>
+        <div>Equinix AE</div>
+        <div>Customer</div>
+        <div>Product</div>
+        <div>Amount</div>
+        <div>Stage</div>
+        <div>Status</div>
+      </div>
+
+      <div class="table-row">
+        <div class="row-deal-name">Acme Corp - Colocation</div>
+        <div>Tony Stark</div>
+        <div>Sarah Mitchell</div>
+        <div>Acme Corporation</div>
+        <div>Colocation</div>
+        <div>$850K</div>
+        <div>Order</div>
+        <div><span class="status-badge status-closed">Closed Won</span></div>
+      </div>
+
+      <div class="table-row">
+        <div class="row-deal-name">TechVenture - Interconnection</div>
+        <div>Natasha Romanoff</div>
+        <div>David Park</div>
+        <div>TechVenture Inc</div>
+        <div>Interconnection</div>
+        <div>$620K</div>
+        <div>Quote</div>
+        <div><span class="status-badge status-in-progress">In Progress</span></div>
+      </div>
+
+      <div class="table-row">
+        <div class="row-deal-name">Global Supply Co - Edge</div>
+        <div>James Rhodes</div>
+        <div>Rachel Torres</div>
+        <div>Global Supply Co</div>
+        <div>Edge Services</div>
+        <div>$425K</div>
+        <div>Opportunity</div>
+        <div><span class="status-badge status-in-progress">In Progress</span></div>
+      </div>
+
+      <div class="table-row">
+        <div class="row-deal-name">Enterprise Solutions - Colocation</div>
+        <div>Clint Barton</div>
+        <div>Kevin O'Brien</div>
+        <div>Enterprise Solutions</div>
+        <div>Colocation</div>
+        <div>$325K</div>
+        <div>Opportunity</div>
+        <div><span class="status-badge status-pending">Pending Approval</span></div>
+      </div>
+
+      <div class="table-row">
+        <div class="row-deal-name">CloudNet - Colocation Expansion</div>
+        <div>Bruce Banner</div>
+        <div>Maria Vasquez</div>
+        <div>CloudNet</div>
+        <div>Colocation</div>
+        <div>$275K</div>
+        <div>Quote</div>
+        <div><span class="status-badge status-in-progress">In Progress</span></div>
+      </div>
+
+      <div class="table-row">
+        <div class="row-deal-name">DataFlow Systems - Interconnection</div>
+        <div>Hope Van Dyne</div>
+        <div>Jason Liu</div>
+        <div>DataFlow Systems</div>
+        <div>Interconnection</div>
+        <div>$192K</div>
+        <div>Proposal</div>
+        <div><span class="status-badge status-pending">Pending Approval</span></div>
+      </div>
+
+      <div class="table-row">
+        <div class="row-deal-name">InfinityTech - Digital Services</div>
+        <div>Sam Wilson</div>
+        <div>Sarah Mitchell</div>
+        <div>InfinityTech</div>
+        <div>Digital Services</div>
+        <div>$155K</div>
+        <div>Opportunity</div>
+        <div><span class="status-badge status-in-progress">In Progress</span></div>
+      </div>
+
+      <div class="table-row">
+        <div class="row-deal-name">VenturePlus - Colocation</div>
+        <div>Scott Lang</div>
+        <div>David Park</div>
+        <div>VenturePlus</div>
+        <div>Colocation</div>
+        <div>$130K</div>
+        <div>Proposal</div>
+        <div><span class="status-badge status-pending">Pending Approval</span></div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:24px">
+      <div style="padding:24px;border-bottom:1px solid var(--wf-surface, #edf1f7)">
+        <div class="section-title" style="margin:0">Commission Summary (Closed Deals)</div>
+      </div>
+      <div class="table-header">
+        <div>Deal Name</div>
+        <div>Amount</div>
+        <div>Rate</div>
+        <div>Commission</div>
+        <div>Close Date</div>
+        <div>Payment Status</div>
+        <div></div>
+      </div>
+
+      <div class="table-row">
+        <div class="row-deal-name">Acme Corp - Colocation</div>
+        <div>$850K</div>
+        <div>15%</div>
+        <div style="color:var(--wf-ink, #1e2a3a);font-weight:600">$127.5K</div>
+        <div>Jan 15, 2026</div>
+        <div><span class="status-badge" style="background:var(--wf-canvas, #f5f7fb);color:var(--wf-ink, #1e2a3a)">Paid</span></div>
+        <div></div>
+      </div>
+
+      <div class="table-row">
+        <div class="row-deal-name">Previous Deal 1</div>
+        <div>$620K</div>
+        <div>15%</div>
+        <div style="color:var(--wf-ink, #1e2a3a);font-weight:600">$93K</div>
+        <div>Dec 18, 2025</div>
+        <div><span class="status-badge" style="background:var(--wf-canvas, #f5f7fb);color:var(--wf-ink, #1e2a3a)">Paid</span></div>
+        <div></div>
+      </div>
+
+      <div class="table-row">
+        <div class="row-deal-name">Previous Deal 2</div>
+        <div>$425K</div>
+        <div>15%</div>
+        <div style="color:var(--wf-ink, #1e2a3a);font-weight:600">$63.75K</div>
+        <div>Nov 30, 2025</div>
+        <div><span class="status-badge" style="background:var(--wf-canvas, #f5f7fb);color:var(--wf-ink, #1e2a3a)">Paid</span></div>
+        <div></div>
+      </div>
+
+      <div class="table-row">
+        <div class="row-deal-name">Previous Deal 3</div>
+        <div>$325K</div>
+        <div>15%</div>
+        <div style="color:var(--wf-ink, #1e2a3a);font-weight:600">$48.75K</div>
+        <div>Nov 5, 2025</div>
+        <div><span class="status-badge" style="background:var(--wf-canvas, #f5f7fb);color:var(--wf-ink, #1e2a3a)">Paid</span></div>
+        <div></div>
+      </div>
+
+      <div class="table-row">
+        <div class="row-deal-name">Previous Deal 4</div>
+        <div>$275K</div>
+        <div>15%</div>
+        <div style="color:var(--wf-ink, #1e2a3a);font-weight:600">$41.25K</div>
+        <div>Oct 22, 2025</div>
+        <div><span class="status-badge" style="background:var(--wf-canvas, #f5f7fb);color:var(--wf-ink, #1e2a3a)">Paid</span></div>
+        <div></div>
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <div class="spec-title">Salesforce Objects & Fields</div>
+      <div class="spec-content">
+        <strong>Deal_Registration__c:</strong> Deal Reg ID, Account ID (lookup), Opportunity (lookup), Amount__c, Product__c, Stage__c (Opportunity stage), Commission_Rate__c, Equinix_AE__c (lookup to User)<br>
+        <strong>Opportunity:</strong> Opp ID, Account Name, Amount, StageName (Proposal/Quote/Order), CloseDate, Deal_Registration__c (lookup)<br>
+        <strong>Partner_Commission__c:</strong> Commission ID, Deal_Registration__c (lookup), Amount__c, Rate__c, Commission_Earned__c, Payment_Status__c (Pending/Paid/Disputed), Payment_Date__c
+      </div>
+    </div>
+
+    <div class="spec-section" style="border-left:3px solid var(--wf-muted, #6b7f99);">
+      <div class="spec-title" style="color:var(--wf-muted, #6b7f99);">Architectural Decision: MRR-Only Commission Model</div>
+      <div class="spec-content">
+        <p><strong>Decision:</strong> Partner commissions are calculated exclusively on <strong>MRR (Monthly Recurring Revenue)</strong> — the contracted monthly value of colocation, cross-connects, and managed services. Non-Recurring Revenue (NRR) such as installation charges, smart hands, custom buildouts, and migration fees are <strong>excluded</strong> from commission calculations.</p>
+        <p style="margin-top:8px;"><strong>Rationale:</strong> NRR is typically low-margin cost-recovery for Equinix (sending a tech to rack a server, one-time site prep). Including NRR in commission complicates reporting without meaningfully driving partner behavior. MRR is the metric that aligns partner incentives with Equinix's recurring revenue model and drives the right deal-making behavior — larger, longer-term service contracts.</p>
+        <p style="margin-top:8px;"><strong>Commission formula:</strong> Commission_Earned__c = Deal MRR × Commission_Rate__c (tier-based: Bronze 8%, Silver 12%, Gold 15%). Co-sell bonus (+2%) applies when Equinix AE is co-assigned.</p>
+        <p style="margin-top:8px;"><strong>All revenue KPIs on this page reference MRR:</strong> Total Revenue, Commission Earned YTD, Pending Commission, Pipeline Value, and per-deal Amount columns all reflect monthly recurring values. NRR line items (installation, setup fees) appear on invoices but are not surfaced in partner portal revenue reporting.</p>
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <div class="spec-title">Validation Rules & Edge Cases</div>
+      <div class="spec-content">
+        <ul class="spec-list">
+          <li>PM sees all deals from their org — not just their own submissions</li>
+          <li>Commission visible only after payment processing (month-end cycle)</li>
+          <li>Deal registration requires PM or Rep role permission</li>
+          <li>Commission_Rate__c defaults to Account.Partner_Tier__c's rate (15% for Gold)</li>
+          <li>Co-Sell bonus (+2%) applied if Partner_Relationship__c exists on Opportunity</li>
+          <li>Pipeline value excludes Closed Lost opportunities</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <div class="spec-title">Error States</div>
+      <div class="spec-content">
+        <ul class="spec-list">
+          <li>"No deals found — register your first deal"</li>
+          <li>"Commission calculation pending — check back after month-end processing (last Friday of month)"</li>
+          <li>"Deal registration failed — customer account not found"</li>
+          <li>"Commission dispute detected — contact your PSM"</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <div class="spec-title">Accessibility Notes</div>
+      <div class="spec-content">
+        <ul class="spec-list">
+          <li>Funnel chart uses aria-label to describe stage progression</li>
+          <li>Deal tables sortable with keyboard navigation (arrow keys)</li>
+          <li>Commission values use aria-label (e.g., "Commission: $127,500")</li>
+          <li>Status badges use color + text + aria-label</li>
+          <li>Tier comparison section uses proper heading hierarchy</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <div class="spec-title">User Flow (Numbered Steps)</div>
+      <div class="spec-content">
+        <ol style="margin-left:20px;line-height:1.8">
+          <li>PM reviews KPI cards (pipeline, closed won, pending commission)</li>
+          <li>PM checks funnel visualization to see deal stages</li>
+          <li>PM reviews active deals table, sorted by stage</li>
+          <li>PM identifies deals needing follow-up (pending approval, quote stage)</li>
+          <li>PM clicks deal name to view details or update status</li>
+          <li>PM checks commission summary table to see earnings from closed deals</li>
+          <li>PM identifies top-performing reps by deal volume</li>
+          <li>PM registers new deal or follows up on pending deals</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <div class="spec-title">Related Automations</div>
+      <div class="spec-content">
+        <strong>Flows:</strong> Commission_Calculation_Flow (monthly on 25th), Deal_Status_Sync_Flow (daily), Opportunity_Stage_Alert_Flow (on stage change)<br>
+        <strong>Apex Triggers:</strong> CommissionTrigger (on Order insert), DealRegistrationTrigger (on insert/update), OpportunityCommissionTrigger (on stage to "Closed Won")<br>
+        <strong>Batch Jobs:</strong> Monthly_Commission_Batch__c (25th of each month)
+      </div>
+    </div>
+  </div>
+
+  <footer class="wf-footer">
+    &copy; 2026 Equinix Partner Manager Portal · Wireframe specification
+  </footer>
+<!-- ── Spec Sidebar (fly-in) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h2>Design Notes</h2>
+    <button class="spec-panel-close" onclick="toggleSpec()" aria-label="Close notes panel">&times;</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>The Deals & Revenue dashboard provides Equinix leadership with visibility into partner-sourced revenue, pipeline contribution, and performance trends across regions, partners, and deal stages.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Monitor partner revenue contributions and pipeline velocity</li>
+<li>Track deal revenue against partner tier agreements and targets</li>
+<li>Identify top-performing partners and revenue drivers</li>
+<li>Forecast quarterly and annual revenue totals</li>
+<li>Analyze revenue trends and growth patterns</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>KPI cards: Total Closed Revenue, Pipeline Value, Forecast, vs. Target</li>
+<li>Top partners by revenue list with sparkline trends</li>
+<li>Deal-level revenue breakdown table with stage and close date</li>
+<li>Quarter-over-quarter revenue comparison chart</li>
+<li>Revenue pipeline forecast by stage and month</li>
+<li>Filter controls for date range, partner tier, region, deal stage</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Click partner name to drill down to detailed deal breakdown</li>
+<li>Hover over chart data points for exact values and details</li>
+<li>Toggle between deal view and partner aggregated view</li>
+<li>Export revenue data to CSV for external reporting</li>
+<li>Download as PDF for stakeholder presentations</li>
+<li>Drill down from quarter to individual deals with links</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Data Integration & Aggregation</strong>
+<ul>
+<li>Salesforce Opportunity/Deal query aggregating closed-won revenue by partner and period</li>
+<li>Revenue recognition on close date with automatic data refresh and hourly sync</li>
+</ul>
+</li>
+<li><strong>Calculation & Reporting</strong>
+<ul>
+<li>Calculate month/quarter/year revenue totals with automatic comparison to prior periods</li>
+<li>Revenue-vs-target variance calculation per partner agreement term to identify performance gaps</li>
+</ul>
+</li>
+<li><strong>Forecasting & Filtering</strong>
+<ul>
+<li>Pipeline forecast: Apply 80% probability weighting to open-stage deals for conservative projections</li>
+<li>Partner tier-based filtering with automatic exclusion of expired Partner_Agreement__c records</li>
+</ul>
+</li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Key Objects</h4>
+<ul>
+<li>Opportunity: Amount, CloseDate, StageName, Account_Partner__c, Revenue_Recognition_Date__c</li>
+<li>Partner_Agreement__c: Account, Revenue_Target__c, Term_Start_Date__c, Term_End_Date__c</li>
+</ul>
+<h4>Validation &amp; Business Logic</h4>
+<ul>
+<li>Revenue figures pull from closed-won (Order) stage deals only</li>
+<li>Revenue recognized on deal close date, not forecast close date</li>
+<li>Partner tier filters exclude expired agreements</li>
+<li>Forecast calculations use 80% probability for open pipeline deals</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+</body>
+</html>

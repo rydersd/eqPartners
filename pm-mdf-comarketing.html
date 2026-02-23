@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Co-Marketing — PM · Equinix PCP</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Salesforce Sans, sans-serif; background-color: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); }
+    .container { max-width: 1400px; margin: 0 auto; padding: 24px; }
+    .page-title { font-size: 20px; font-weight: 700; margin-bottom: 24px; color: var(--wf-ink, #1e2a3a); }
+    .mdf-hero { background: var(--wf-ink, #1e2a3a); color: white; padding: 32px; border-radius: 8px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+    .balance-stat { text-align: center; }
+    .balance-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: rgba(255,255,255,0.7); margin-bottom: 8px; }
+    .balance-value { font-size: 32px; font-weight: 700; color: #ffffff; margin-bottom: 4px; }
+    .balance-detail { font-size: 12px; color: rgba(255,255,255,0.8); }
+    .spending-breakdown { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 16px; }
+    .spend-item { background: rgba(255,255,255,0.1); padding: 12px; border-radius: 4px; }
+    .spend-label { font-size: 11px; color: rgba(255,255,255,0.7); }
+    .spend-amount { font-size: 16px; font-weight: 700; color: #fff; }
+    .grid-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+    .card { background: white; border-radius: 8px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+    .card-title { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 16px; color: var(--wf-ink, #1e2a3a); border-bottom: 1px solid var(--wf-surface, #edf1f7); padding-bottom: 12px; }
+    .btn { padding: 8px 16px; border-radius: 4px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; }
+    .btn-primary { background-color: var(--wf-accent, #3d6daa); color: white; }
+    .btn-primary:hover { background-color: var(--wf-accent, #3d6daa); }
+    .table-header { display: grid; grid-template-columns: 1.5fr 1.2fr 1fr 1fr 1fr 1fr; gap: 16px; padding: 16px; background-color: var(--wf-canvas, #f5f7fb); border-bottom: 1px solid var(--wf-surface, #edf1f7); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--wf-muted, #6b7f99); }
+    .table-row { display: grid; grid-template-columns: 1.5fr 1.2fr 1fr 1fr 1fr 1fr; gap: 16px; padding: 16px; border-bottom: 1px solid var(--wf-surface, #edf1f7); align-items: center; font-size: 13px; }
+    .table-row:last-child { border-bottom: none; }
+    .status-badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    .status-approved { background-color: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); }
+    .status-pending { background-color: var(--wf-canvas, #f5f7fb); color: var(--wf-amber, #8b7745); }
+    .status-paid { background-color: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); }
+    .activity-list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .activity-card { background-color: var(--wf-canvas, #f5f7fb); border-left: 3px solid var(--wf-accent, #3d6daa); padding: 12px; border-radius: 4px; font-size: 12px; }
+    .activity-date { font-size: 11px; color: var(--wf-muted, #6b7f99); margin-bottom: 4px; font-weight: 600; }
+    .activity-name { color: var(--wf-ink, #1e2a3a); font-weight: 600; margin-bottom: 4px; }
+    .activity-type { font-size: 11px; color: var(--wf-muted, #6b7f99); }
+    .resource-card { background-color: var(--wf-canvas, #f5f7fb); border: 1px solid var(--wf-surface, #edf1f7); border-radius: 4px; padding: 16px; font-size: 12px; margin-bottom: 12px; }
+    .resource-name { font-weight: 600; color: var(--wf-ink, #1e2a3a); margin-bottom: 4px; }
+    .resource-desc { color: var(--wf-muted, #6b7f99); margin-bottom: 8px; }
+    .spec-title { font-size: 12px; font-weight: 700; color: var(--wf-ink, #1e2a3a); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; border-bottom: 1px solid var(--wf-surface, #edf1f7); padding-bottom: 8px; }
+    .spec-content { font-size: 12px; color: var(--wf-muted, #6b7f99); line-height: 1.6; }
+    .spec-list { list-style: none; padding-left: 0; }
+    .spec-list li { margin-bottom: 8px; padding-left: 20px; position: relative; }
+    .spec-list li:before { content: "•"; position: absolute; left: 0; color: var(--wf-accent, #3d6daa); }
+    @media (max-width: 768px) { .grid-2col { grid-template-columns: 1fr; } .spending-breakdown { grid-template-columns: repeat(2, 1fr); } .activity-list { grid-template-columns: 1fr; } .table-header, .table-row { grid-template-columns: 1fr; gap: 8px; } }
+  
+</style>
+</head>
+<body>
+<div class="page-context-bar">
+  <div style="max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <nav class="wf-breadcrumb" aria-label="Breadcrumb" style="margin-bottom:0;">
+      <a href="pm-home-dashboard.html">Home</a>
+      <span class="wf-breadcrumb-sep">›</span>
+      <a href="#">MDF</a>
+      <span class="wf-breadcrumb-sep">›</span>
+      <span class="wf-breadcrumb-current">Co-Marketing</span>
+    </nav>
+    <span class="persona-badge persona-badge--pm">PM</span>
+  </div>
+</div>
+  <header class="wf-header">
+    <div class="wf-header-logo"><svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix"><path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/></svg></div>
+    <div class="wf-header-title">Partner Central</div>
+    <nav class="wf-header-nav">
+      <a href="pm-home-dashboard.html">Dashboard</a>
+      <a href="pm-team-management.html">Team</a>
+      <a href="pm-deals-revenue.html">Deals</a>
+      <a href="pm-mdf-comarketing.html" class="active">Marketing</a>
+      <a href="pm-resources.html">Resources</a>
+    </nav>
+    <div class="wf-header-util">
+      <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+      <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+    </div>
+  </header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+  <div class="container">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
+      <div class="page-title">Marketing & MDF</div>
+      <button class="btn btn-primary">+ Submit New Claim</button>
+    </div>
+
+    <div class="mdf-hero">
+      <div style="display:grid;grid-template-columns:repeat(4, 1fr);gap:24px;margin-bottom:0">
+        <div class="balance-stat">
+          <div class="balance-label">Annual Allocation</div>
+          <div class="balance-value">$75,000</div>
+          <div class="balance-detail">Gold Tier</div>
+        </div>
+        <div class="balance-stat">
+          <div class="balance-label">Amount Spent</div>
+          <div class="balance-value">$47,000</div>
+          <div class="balance-detail">63% utilization</div>
+        </div>
+        <div class="balance-stat">
+          <div class="balance-label">Remaining Balance</div>
+          <div class="balance-value">$28,000</div>
+          <div class="balance-detail">Expires March 31, 2026</div>
+        </div>
+        <div class="balance-stat">
+          <div class="balance-label">Pre-Approval Available</div>
+          <div class="balance-value">50%</div>
+          <div class="balance-detail">$14K can be pre-approved</div>
+        </div>
+      </div>
+      <div class="spending-breakdown">
+        <div class="spend-item">
+          <div class="spend-label">Events</div>
+          <div class="spend-amount">$18K</div>
+        </div>
+        <div class="spend-item">
+          <div class="spend-label">Digital</div>
+          <div class="spend-amount">$12K</div>
+        </div>
+        <div class="spend-item">
+          <div class="spend-label">Content</div>
+          <div class="spend-amount">$9K</div>
+        </div>
+        <div class="spend-item">
+          <div class="spend-label">Enablement</div>
+          <div class="spend-amount">$8K</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2col">
+      <div class="card">
+        <div class="card-title">Eligible Activities</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="border-left:3px solid var(--wf-accent, #3d6daa);padding:12px;background:var(--wf-canvas, #f5f7fb);border-radius:4px">
+            <div style="font-weight:600;margin-bottom:4px">Trade Shows & Events</div>
+            <div style="font-size:11px;color:var(--wf-muted, #6b7f99)">Max $10K per event | Requires proof of attendance</div>
+          </div>
+          <div style="border-left:3px solid var(--wf-accent, #3d6daa);padding:12px;background:var(--wf-canvas, #f5f7fb);border-radius:4px">
+            <div style="font-weight:600;margin-bottom:4px">Webinars & Virtual Events</div>
+            <div style="font-size:11px;color:var(--wf-muted, #6b7f99)">Max $5K per webinar | Attendance list required</div>
+          </div>
+          <div style="border-left:3px solid var(--wf-accent, #3d6daa);padding:12px;background:var(--wf-canvas, #f5f7fb);border-radius:4px">
+            <div style="font-weight:600;margin-bottom:4px">Digital Campaigns</div>
+            <div style="font-size:11px;color:var(--wf-muted, #6b7f99)">Max $8K per campaign | Performance metrics required</div>
+          </div>
+          <div style="border-left:3px solid var(--wf-accent, #3d6daa);padding:12px;background:var(--wf-canvas, #f5f7fb);border-radius:4px">
+            <div style="font-weight:600;margin-bottom:4px">Content Creation</div>
+            <div style="font-size:11px;color:var(--wf-muted, #6b7f99)">Max $6K per asset | Approval before creation</div>
+          </div>
+          <div style="border-left:3px solid var(--wf-accent, #3d6daa);padding:12px;background:var(--wf-canvas, #f5f7fb);border-radius:4px">
+            <div style="font-weight:600;margin-bottom:4px">Training & Enablement</div>
+            <div style="font-size:11px;color:var(--wf-muted, #6b7f99)">Max $4K per initiative | Pre-approval required</div>
+          </div>
+          <div style="border-left:3px solid var(--wf-accent, #3d6daa);padding:12px;background:var(--wf-canvas, #f5f7fb);border-radius:4px">
+            <div style="font-weight:600;margin-bottom:4px">Customer Events</div>
+            <div style="font-size:11px;color:var(--wf-muted, #6b7f99)">Max $7K per event | Customer list required</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Co-Marketing Assets</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div class="resource-card">
+            <div class="resource-name">Equinix Brand Logo Pack</div>
+            <div class="resource-desc">All sizes and formats for your marketing materials</div>
+            <div style="color:var(--wf-accent, #3d6daa);font-weight:600;font-size:12px;cursor:pointer">Download</div>
+          </div>
+          <div class="resource-card">
+            <div class="resource-name">Solution Briefs & Battlecards</div>
+            <div class="resource-desc">4 pre-designed templates ready to customize</div>
+            <div style="color:var(--wf-accent, #3d6daa);font-weight:600;font-size:12px;cursor:pointer">View All</div>
+          </div>
+          <div class="resource-card">
+            <div class="resource-name">Email Campaign Templates</div>
+            <div class="resource-desc">12 responsive templates for partner promotion</div>
+            <div style="color:var(--wf-accent, #3d6daa);font-weight:600;font-size:12px;cursor:pointer">Access</div>
+          </div>
+          <div class="resource-card">
+            <div class="resource-name">Social Media Content Kit</div>
+            <div class="resource-desc">30 pre-written posts + graphics for LinkedIn/Twitter</div>
+            <div style="color:var(--wf-accent, #3d6daa);font-weight:600;font-size:12px;cursor:pointer">View</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:24px">
+      <div class="card-title">MDF Claim History</div>
+      <div class="table-header">
+        <div>Claim ID</div>
+        <div>Activity</div>
+        <div>Amount</div>
+        <div>Submission Date</div>
+        <div>Status</div>
+        <div>Payment Date</div>
+      </div>
+
+      <div class="table-row">
+        <div style="color:var(--wf-accent, #3d6daa);font-weight:600">CLM-2026-001</div>
+        <div>Equinix Summit Attendance</div>
+        <div>$4,500</div>
+        <div>Jan 20, 2026</div>
+        <div><span class="status-badge status-approved">Approved</span></div>
+        <div>Feb 10, 2026</div>
+      </div>
+
+      <div class="table-row">
+        <div style="color:var(--wf-accent, #3d6daa);font-weight:600">CLM-2025-012</div>
+        <div>LinkedIn Campaign</div>
+        <div>$3,200</div>
+        <div>Dec 15, 2025</div>
+        <div><span class="status-badge status-paid">Paid</span></div>
+        <div>Jan 15, 2026</div>
+      </div>
+
+      <div class="table-row">
+        <div style="color:var(--wf-accent, #3d6daa);font-weight:600">CLM-2025-011</div>
+        <div>Sales Kickoff Event</div>
+        <div>$6,800</div>
+        <div>Nov 28, 2025</div>
+        <div><span class="status-badge status-paid">Paid</span></div>
+        <div>Dec 20, 2025</div>
+      </div>
+
+      <div class="table-row">
+        <div style="color:var(--wf-accent, #3d6daa);font-weight:600">CLM-2025-010</div>
+        <div>Webinar Series (3)</div>
+        <div>$5,100</div>
+        <div>Nov 10, 2025</div>
+        <div><span class="status-badge status-paid">Paid</span></div>
+        <div>Dec 5, 2025</div>
+      </div>
+
+      <div class="table-row">
+        <div style="color:var(--wf-accent, #3d6daa);font-weight:600">CLM-2025-009</div>
+        <div>Email Campaign</div>
+        <div>$2,400</div>
+        <div>Oct 30, 2025</div>
+        <div><span class="status-badge status-paid">Paid</span></div>
+        <div>Nov 20, 2025</div>
+      </div>
+
+      <div class="table-row">
+        <div style="color:var(--wf-accent, #3d6daa);font-weight:600">CLM-2025-008</div>
+        <div>Content Whitepaper</div>
+        <div>$4,700</div>
+        <div>Oct 15, 2025</div>
+        <div><span class="status-badge status-paid">Paid</span></div>
+        <div>Nov 10, 2025</div>
+      </div>
+
+      <div class="table-row">
+        <div style="color:var(--wf-accent, #3d6daa);font-weight:600">CLM-2025-007</div>
+        <div>Trade Show Booth</div>
+        <div>$8,400</div>
+        <div>Sep 25, 2025</div>
+        <div><span class="status-badge status-paid">Paid</span></div>
+        <div>Oct 25, 2025</div>
+      </div>
+
+      <div class="table-row">
+        <div style="color:var(--wf-accent, #3d6daa);font-weight:600">CLM-2025-006</div>
+        <div>Partner Training Materials</div>
+        <div>$3,900</div>
+        <div>Sep 10, 2025</div>
+        <div><span class="status-badge status-paid">Paid</span></div>
+        <div>Oct 5, 2025</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:24px">
+      <div class="card-title">Upcoming Co-Marketing Campaigns</div>
+      <div class="activity-list">
+        <div class="activity-card">
+          <div class="activity-date">March 15-17, 2026</div>
+          <div class="activity-name">Equinix Insights Conference</div>
+          <div class="activity-type">In-person event | 500+ attendees | Register by March 1</div>
+        </div>
+        <div class="activity-card">
+          <div class="activity-date">April 22, 2026</div>
+          <div class="activity-name">AI & Infrastructure Webinar Series</div>
+          <div class="activity-type">Virtual event | Register by April 15 | Co-promoted</div>
+        </div>
+        <div class="activity-card">
+          <div class="activity-date">May-June 2026</div>
+          <div class="activity-name">Joint Lead Generation Campaign</div>
+          <div class="activity-type">Email + Digital | 2-month campaign | Submit creative by April 30</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <div class="spec-title">Salesforce Objects & Fields</div>
+      <div class="spec-content">
+        <strong>MDF_Allocation__c:</strong> MDF ID, Account ID (lookup), Annual_Budget__c, Spent__c, Remaining__c, Fiscal_Year__c, Expiration_Date__c<br>
+        <strong>MDF_Claim__c:</strong> Claim ID, MDF_Allocation__c (lookup), Activity_Type__c, Amount_Requested__c, Amount_Approved__c, Status__c (Pending/Approved/Paid/Rejected), Proof_of_Execution__c (File), Submission_Date__c, Approval_Date__c, Payment_Date__c<br>
+        <strong>MDF_Activity_Type__mdt:</strong> Activity Type ID, Name, Max_Claim_Amount__c, Requires_Pre_Approval__c, Documentation_Required__c
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <div class="spec-title">Validation Rules & Edge Cases</div>
+      <div class="spec-content">
+        <ul class="spec-list">
+          <li>Claim amount cannot exceed remaining balance (Remaining__c > Amount_Requested__c)</li>
+          <li>Proof of execution required for all claims (file attachment mandatory)</li>
+          <li>Claims must be submitted within 90 days of activity completion</li>
+          <li>Gold: 50% pre-approval available; Silver: post-execution only; Bronze: 25% pre-approval</li>
+          <li>Annual allocation resets Jan 1 each year; unused funds do NOT carry over</li>
+          <li>Multiple claims for same activity not allowed (prevent double dipping)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <div class="spec-title">Error States</div>
+      <div class="spec-content">
+        <ul class="spec-list">
+          <li>"Allocation depleted — contact your PSM for additional MDF funds"</li>
+          <li>"File upload failed — max 10MB per attachment, PDF/Word/Excel only"</li>
+          <li>"Claim submitted outside 90-day window — contact support"</li>
+          <li>"Claim amount exceeds activity max ($X allowed for [Activity Type])"</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <div class="spec-title">Accessibility & User Flow</div>
+      <div class="spec-content">
+        <ol style="margin-left:20px;line-height:1.8;margin-bottom:12px">
+          <li>PM reviews MDF balance card (annual allocation, spent, remaining)</li>
+          <li>PM browses eligible activities list</li>
+          <li>PM executes marketing activity (event, campaign, etc.)</li>
+          <li>PM submits claim with proof of execution (PDF/receipt)</li>
+          <li>PM tracks claim status in history table</li>
+          <li>Claim approved; PM receives reimbursement</li>
+        </ol>
+        <strong>Accessibility:</strong> MDF balance displayed in large text; activity cards have descriptive labels; tables sortable by date/status; file upload has drag-drop + button options; all status badges use color + text
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <div class="spec-title">Related Automations</div>
+      <div class="spec-content">
+        <strong>Flows:</strong> MDF_Claim_Submission_Flow (sends confirmation email), MDF_Approval_Workflow (routes to PSM), MDF_Payment_Processing_Flow (monthly on 25th)<br>
+        <strong>Apex Triggers:</strong> MDF_Balance_UpdateTrigger (on Claim insert), MDF_Expiration_CheckTrigger (Jan 1 each year)<br>
+        <strong>Batch Jobs:</strong> Annual_MDF_Reset_Batch (Jan 1)
+      </div>
+    </div>
+  </div>
+
+  <footer class="wf-footer">
+    &copy; 2026 Equinix Partner Manager Portal · Wireframe specification
+  </footer>
+<!-- ── Spec Sidebar (fly-in) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h2>Design Notes</h2>
+    <button class="spec-panel-close" onclick="toggleSpec()" aria-label="Close notes panel">&times;</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>The MDF & Co-Marketing dashboard enables Equinix to manage fund allocations, approve partner marketing campaigns, track spend against budget, and measure ROI across the partner channel.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Allocate annual MDF and co-marketing funds to partners</li>
+<li>Review and approve partner marketing campaign requests</li>
+<li>Track fund expenditures and remaining budgets in real time</li>
+<li>Monitor ROI of marketing investments and campaign performance</li>
+<li>Ensure compliance with partner agreement terms and fund policies</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>MDF fund allocation dashboard by partner tier and region</li>
+<li>Budget utilization summary cards (allocated, spent, remaining, % utilization)</li>
+<li>Partner co-marketing request queue with approval status</li>
+<li>Active campaigns table with spend tracking and ROI metrics</li>
+<li>Fund lifecycle timeline showing allocations, resets, and expiry</li>
+<li>Approval workflow status view by request and date</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Click partner row to drill down to fund allocation details</li>
+<li>Approve/reject campaign requests with comment field and audit trail</li>
+<li>View campaign ROI metrics, lead attribution, and deal influence</li>
+<li>Adjust budget allocations with approval required and notification</li>
+<li>Download fund utilization reports by partner and period</li>
+<li>Export campaign performance data for external stakeholder review</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Fund Management & Calculation</strong>
+<ul>
+<li>Real-time fund balance calculation: Allocated_Amount__c - sum(campaign spends) with live balance display</li>
+<li>Quarterly fund reset and rollover automation per fiscal calendar and Partner_Agreement__c terms</li>
+</ul>
+</li>
+<li><strong>Validation & Spend Control</strong>
+<ul>
+<li>Spend validation rule: Campaign_Budget__c ≤ available_fund_balance before approval to prevent overspend</li>
+<li>Campaign approval workflow routing to PSM/approver with auto-expiration at 30 days for uncompleted reviews</li>
+</ul>
+</li>
+<li><strong>ROI Tracking & Audit</strong>
+<ul>
+<li>ROI calculation: (attributed_leads + influenced_deals) / campaign_spend with lead-to-deal conversion modeling</li>
+<li>Audit trail logging for all allocation changes, approvals, and spend transactions for compliance</li>
+</ul>
+</li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Key Objects</h4>
+<ul>
+<li>MDF_Fund__c: Partner_Account__c, Fiscal_Year__c, Allocated_Amount__c, Status__c, Approval_Date__c</li>
+<li>Marketing_Campaign__c: Fund__c, Campaign_Name__c, Budget_Amount__c, Status__c, ROI_Pct__c</li>
+</ul>
+<h4>Validation &amp; Business Logic</h4>
+<ul>
+<li>Fund allocations limited to annual partner agreement amounts</li>
+<li>Campaign spend cannot exceed allocated fund balance</li>
+<li>All campaigns require PSM or higher approval</li>
+<li>Requests auto-expire after 30 days without approval decision</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

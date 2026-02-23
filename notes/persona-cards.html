@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PCP Persona Cards — Portal User Types &amp; Access Model</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); }
+
+    .page-header { background: var(--wf-ink, #1e2a3a); color: var(--wf-surface, #edf1f7); padding: 48px 40px; }
+    .page-header h1 { font-size: 32px; font-weight: 700; margin: 0 0 8px 0; }
+    .page-header p { font-size: 15px; opacity: .9; margin: 0; max-width: 700px; line-height: 1.6; }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 40px 32px; }
+
+    /* Section Headers */
+    .section-header { margin-bottom: 24px; padding-bottom: 12px; border-bottom: 2px solid var(--wf-line, #b0bdd0); }
+    .section-header h2 { font-size: 20px; font-weight: 700; margin: 0 0 4px 0; }
+    .section-header p { font-size: 13px; color: var(--wf-muted, #6b7f99); margin: 0; }
+    .section-spacer { margin-top: 48px; }
+
+    /* Persona Card */
+    .persona-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .persona-card { background: var(--wf-surface, #edf1f7); border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,.06); overflow: hidden; display: flex; flex-direction: column; }
+    .persona-card.full-width { grid-column: 1 / -1; }
+
+    .persona-header { padding: 24px 28px 20px; display: flex; gap: 16px; align-items: flex-start; }
+    .persona-avatar { width: 56px; height: 56px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700; color: var(--wf-surface, #edf1f7); flex-shrink: 0; }
+    .persona-title { flex: 1; }
+    .persona-title h3 { font-size: 17px; font-weight: 700; margin: 0 0 2px 0; color: var(--wf-ink, #1e2a3a); }
+    .persona-title .role { font-size: 13px; color: var(--wf-muted, #6b7f99); margin: 0 0 6px 0; }
+    .persona-title .tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 3px; }
+    .tag-portal { background: var(--wf-canvas, #f5f7fb); color: var(--wf-accent, #3d6daa); }
+    .tag-tier { background: var(--wf-surface, #edf1f7); color: var(--wf-muted, #6b7f99); }
+    .tag-type { background: var(--wf-surface, #edf1f7); color: var(--wf-amber, #8b7745); }
+    .tag-internal { background: var(--wf-canvas, #f5f7fb); color: var(--wf-muted, #6b7f99); }
+
+    .persona-body { padding: 0 28px 24px; flex: 1; display: flex; flex-direction: column; gap: 16px; }
+
+    .persona-section { }
+    .persona-section h4 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; color: var(--wf-text, #3b4f68); margin: 0 0 8px 0; }
+
+    .persona-bio { font-size: 13px; color: var(--wf-text, #3b4f68); line-height: 1.6; margin: 0; }
+
+    .persona-goals { list-style: none; padding: 0; margin: 0; }
+    .persona-goals li { font-size: 13px; color: var(--wf-ink, #1e2a3a); padding: 4px 0; display: flex; align-items: flex-start; gap: 8px; line-height: 1.4; }
+    .persona-goals li::before { content: "→"; color: var(--wf-muted, #6b7f99); font-weight: 700; flex-shrink: 0; }
+
+    .persona-pain { list-style: none; padding: 0; margin: 0; }
+    .persona-pain li { font-size: 13px; color: var(--wf-ink, #1e2a3a); padding: 4px 0; display: flex; align-items: flex-start; gap: 8px; line-height: 1.4; }
+    .persona-pain li::before { content: "✕"; color: var(--wf-accent, var(--wf-muted, #6b7f99)); font-weight: 700; flex-shrink: 0; }
+
+    /* Access Matrix */
+    .access-row { display: flex; flex-wrap: wrap; gap: 6px; }
+    .access-badge { font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 4px; border: 1px solid; }
+    .access-full { background: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); border-color: var(--wf-line, #b0bdd0); }
+    .access-partial { background: var(--wf-surface, #edf1f7)3e0; color: var(--wf-amber, #8b7745); border-color: var(--wf-line, #b0bdd0); }
+    .access-none { background: var(--wf-canvas, #f5f7fb); color: var(--wf-text, #3b4f68); border-color: var(--wf-line, #b0bdd0); text-decoration: line-through; }
+
+    /* Data Row */
+    .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .data-item { display: flex; flex-direction: column; }
+    .data-label { font-size: 10px; font-weight: 600; color: var(--wf-text, #3b4f68); text-transform: uppercase; letter-spacing: .5px; }
+    .data-value { font-size: 13px; font-weight: 600; color: var(--wf-ink, #1e2a3a); }
+
+    /* Relationship Lines */
+    .relationship-card { background: var(--wf-canvas, #f5f7fb); border: 1px solid var(--wf-surface, #edf1f7); border-radius: 8px; padding: 20px; margin-top: 24px; }
+    .relationship-card h3 { font-size: 14px; font-weight: 700; margin: 0 0 12px 0; }
+    .rel-row { display: flex; align-items: center; gap: 12px; padding: 6px 0; font-size: 13px; }
+    .rel-arrow { color: var(--wf-muted, #6b7f99); font-weight: 700; }
+
+    .footer { background: var(--wf-ink, #1e2a3a); color: rgba(255,255,255,.7); padding: 32px; margin-top: 48px; font-size: 12px; text-align: center; line-height: 1.8; }
+    .footer a { color: rgba(255,255,255,.9); text-decoration: none; }
+
+    @media (max-width: 900px) {
+      .persona-grid { grid-template-columns: 1fr; }
+      .data-grid { grid-template-columns: 1fr; }
+</style>
+  <link rel="stylesheet" href="wireframe.css">
+</head>
+<body>
+
+  <header class="wf-header">
+    <div class="wf-header-logo">EQ</div>
+    <div class="wf-header-title">Equinix Partner Program</div>
+    <nav class="wf-header-nav">
+      <a href="#" class="active">Personas</a>
+    </nav>
+    <div class="wf-header-util">
+      <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+    </div>
+  </header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+  <div class="page-header">
+    <h1>PCP Persona Cards</h1>
+    <p>User types, goals, pain points, and portal access for the Equinix Partner Channel Program. Each persona maps to a Salesforce Profile + Permission Set combination that governs what they see and can do.</p>
+  </div>
+
+  <div class="container">
+
+    <!-- ═══ PARTNER-SIDE PERSONAS ═══ -->
+    <div class="section-header">
+      <h2>Partner-Side Personas</h2>
+      <p>Users from partner organizations who access the Experience Cloud portals (Partner Manager + Partner Rep)</p>
+    </div>
+
+    <div class="persona-grid">
+
+      <!-- 1. Reseller Partner Admin -->
+      <div class="persona-card">
+        <div class="persona-header">
+          <div class="persona-avatar" style="background: var(--wf-ink, #1e2a3a);">JR</div>
+          <div class="persona-title">
+            <h3>Jordan Reeves</h3>
+            <p class="role">VP of Partnerships — CloudBridge Solutions LLC</p>
+            <div class="tags">
+              <span class="tag tag-type">Reseller</span>
+              <span class="tag tag-tier">Bronze Tier</span>
+              <span class="tag tag-portal">PM Portal</span>
+            </div>
+          </div>
+        </div>
+        <div class="persona-body">
+          <div class="persona-section">
+            <h4>Role</h4>
+            <p class="persona-bio">Partner Admin — the person who registered the company in the Equinix Partner Program. Manages the org's Partner Central account, adds/removes team members, views team-wide performance, and is the primary point of contact for the assigned Channel Manager.</p>
+          </div>
+          <div class="persona-section">
+            <h4>Goals</h4>
+            <ul class="persona-goals">
+              <li>Onboard new reps quickly so they can start registering deals</li>
+              <li>Monitor team training compliance and certification deadlines</li>
+              <li>Track overall org revenue and commission against tier-up targets</li>
+              <li>Maintain accurate team roster — add new hires, deactivate departures</li>
+            </ul>
+          </div>
+          <div class="persona-section">
+            <h4>Pain Points</h4>
+            <ul class="persona-pain">
+              <li>No self-service user management — has to email Equinix to add users</li>
+              <li>Can't see which reps haven't completed required training</li>
+              <li>Unclear how close the org is to Silver tier thresholds</li>
+            </ul>
+          </div>
+          <div class="persona-section">
+            <h4>Portal Access</h4>
+            <div class="access-row">
+              <span class="access-badge access-full">PM Dashboard</span>
+              <span class="access-badge access-full">Team Management</span>
+              <span class="access-badge access-full">Team Training</span>
+              <span class="access-badge access-full">Deals &amp; Revenue</span>
+              <span class="access-badge access-full">Org Health</span>
+              <span class="access-badge access-partial">Commission (org-wide)</span>
+              <span class="access-badge access-none">PSM Portal</span>
+            </div>
+          </div>
+          <div class="persona-section">
+            <h4>Key Data</h4>
+            <div class="data-grid">
+              <div class="data-item"><span class="data-label">SF Profile</span><span class="data-value">PCP Partner Manager</span></div>
+              <div class="data-item"><span class="data-label">Permission Set</span><span class="data-value">PCP_PM_Admin</span></div>
+              <div class="data-item"><span class="data-label">Company Size</span><span class="data-value">51-200 employees</span></div>
+              <div class="data-item"><span class="data-label">Commission Rate</span><span class="data-value">8% MRR (Bronze)</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. Reseller Sales Rep -->
+      <div class="persona-card">
+        <div class="persona-header">
+          <div class="persona-avatar" style="background: var(--wf-accent, #3d6daa);">SC</div>
+          <div class="persona-title">
+            <h3>Sarah Connor</h3>
+            <p class="role">Senior Channel Sales Rep — Stark Industries</p>
+            <div class="tags">
+              <span class="tag tag-type">Reseller</span>
+              <span class="tag tag-tier">Gold Tier</span>
+              <span class="tag tag-portal">Rep Portal</span>
+            </div>
+          </div>
+        </div>
+        <div class="persona-body">
+          <div class="persona-section">
+            <h4>Role</h4>
+            <p class="persona-bio">Individual contributor who registers deals, completes training, earns certifications, and tracks commissions. Spends most time in the Rep portal. Doesn't manage other users or org settings — that's Pepper's job (PM Admin).</p>
+          </div>
+          <div class="persona-section">
+            <h4>Goals</h4>
+            <ul class="persona-goals">
+              <li>Register deals fast — before another partner claims the same opp</li>
+              <li>Track deal status through approval and see projected commission</li>
+              <li>Complete training without disrupting selling time</li>
+              <li>Find the right collateral for each customer conversation</li>
+            </ul>
+          </div>
+          <div class="persona-section">
+            <h4>Pain Points</h4>
+            <ul class="persona-pain">
+              <li>Deal registration form is too long and requires info she doesn't have yet</li>
+              <li>Can't tell if a customer is already claimed by another partner</li>
+              <li>Commission statements are confusing — doesn't match what she expected</li>
+              <li>Training is generic — wants role-specific paths for her selling motion</li>
+            </ul>
+          </div>
+          <div class="persona-section">
+            <h4>Portal Access</h4>
+            <div class="access-row">
+              <span class="access-badge access-full">Rep Home</span>
+              <span class="access-badge access-full">Deal Registration</span>
+              <span class="access-badge access-full">My Pipeline</span>
+              <span class="access-badge access-full">Training &amp; Certs</span>
+              <span class="access-badge access-full">Commission (own)</span>
+              <span class="access-badge access-full">Sales Tools</span>
+              <span class="access-badge access-full">Global Search</span>
+              <span class="access-badge access-none">Team Management</span>
+              <span class="access-badge access-none">PSM Portal</span>
+            </div>
+          </div>
+          <div class="persona-section">
+            <h4>Key Data</h4>
+            <div class="data-grid">
+              <div class="data-item"><span class="data-label">SF Profile</span><span class="data-value">PCP Partner Rep</span></div>
+              <div class="data-item"><span class="data-label">Permission Set</span><span class="data-value">PCP_Partner_Base</span></div>
+              <div class="data-item"><span class="data-label">Avg Deals/Qtr</span><span class="data-value">6-8 registrations</span></div>
+              <div class="data-item"><span class="data-label">Commission Rate</span><span class="data-value">15% MRR (Gold)</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Distributor Partner Admin -->
+      <div class="persona-card">
+        <div class="persona-header">
+          <div class="persona-avatar" style="background: var(--wf-ink, #1e2a3a);">PP</div>
+          <div class="persona-title">
+            <h3>Pepper Potts</h3>
+            <p class="role">Partner Manager — Stark Industries (Distributor)</p>
+            <div class="tags">
+              <span class="tag tag-type">Distributor</span>
+              <span class="tag tag-tier">Gold Tier</span>
+              <span class="tag tag-portal">PM Portal</span>
+            </div>
+          </div>
+        </div>
+        <div class="persona-body">
+          <div class="persona-section">
+            <h4>Role</h4>
+            <p class="persona-bio">Manages a large partner org that distributes Equinix services through a network of sub-resellers. Oversees 12+ team members, manages their training compliance, monitors deal flow across the team, and handles onboarding new reps. Also manages relationships with downstream resellers who buy through Stark Industries.</p>
+          </div>
+          <div class="persona-section">
+            <h4>Goals</h4>
+            <ul class="persona-goals">
+              <li>Keep all 12 reps certified and compliant with program requirements</li>
+              <li>See aggregated pipeline across the full team — not just her own deals</li>
+              <li>Onboard new hires quickly with role-appropriate training assignments</li>
+              <li>Track sub-reseller performance and ensure they meet Equinix standards</li>
+            </ul>
+          </div>
+          <div class="persona-section">
+            <h4>Pain Points</h4>
+            <ul class="persona-pain">
+              <li>Managing 12 people's training in a spreadsheet outside the portal</li>
+              <li>No visibility into sub-reseller deal registrations or pipeline</li>
+              <li>Can't bulk-assign training paths when new product launches</li>
+              <li>QBR prep takes days — manually compiling data from multiple places</li>
+            </ul>
+          </div>
+          <div class="persona-section">
+            <h4>Portal Access</h4>
+            <div class="access-row">
+              <span class="access-badge access-full">PM Dashboard</span>
+              <span class="access-badge access-full">Team Management</span>
+              <span class="access-badge access-full">Team Training</span>
+              <span class="access-badge access-full">Cert Tracker</span>
+              <span class="access-badge access-full">Deals &amp; Revenue</span>
+              <span class="access-badge access-full">Org Health</span>
+              <span class="access-badge access-full">MDF / Marketing</span>
+              <span class="access-badge access-partial">Sub-Reseller View</span>
+              <span class="access-badge access-none">PSM Portal</span>
+            </div>
+          </div>
+          <div class="persona-section">
+            <h4>Key Data</h4>
+            <div class="data-grid">
+              <div class="data-item"><span class="data-label">SF Profile</span><span class="data-value">PCP Partner Manager</span></div>
+              <div class="data-item"><span class="data-label">Permission Set</span><span class="data-value">PCP_PM_Admin + PCP_Distributor</span></div>
+              <div class="data-item"><span class="data-label">Team Size</span><span class="data-value">12 active reps</span></div>
+              <div class="data-item"><span class="data-label">Sub-Resellers</span><span class="data-value">8 downstream partners</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. TSD Agent Manager -->
+      <div class="persona-card">
+        <div class="persona-header">
+          <div class="persona-avatar" style="background: var(--wf-ink, #1e2a3a);">RT</div>
+          <div class="persona-title">
+            <h3>Rachel Torres</h3>
+            <p class="role">Agent Program Director — Global Retail Systems (TSD)</p>
+            <div class="tags">
+              <span class="tag tag-type">TSD</span>
+              <span class="tag tag-tier">Silver Tier</span>
+              <span class="tag tag-portal">PM Portal</span>
+            </div>
+          </div>
+        </div>
+        <div class="persona-body">
+          <div class="persona-section">
+            <h4>Role</h4>
+            <p class="persona-bio">Operates a technology solutions distributor (TSD) — a marketplace of independent agents who sell Equinix services. Manages agent onboarding, commission splits, back-office billing, and Equinix compliance for her agent network. Doesn't sell directly — her agents do. She needs visibility into their collective pipeline and training status.</p>
+          </div>
+          <div class="persona-section">
+            <h4>Goals</h4>
+            <ul class="persona-goals">
+              <li>Onboard new agents into the Equinix program quickly</li>
+              <li>Track which agents are active, certified, and generating pipeline</li>
+              <li>Manage commission splits between TSD and individual agents</li>
+              <li>Ensure agents represent Equinix services accurately to avoid compliance issues</li>
+            </ul>
+          </div>
+          <div class="persona-section">
+            <h4>Pain Points</h4>
+            <ul class="persona-pain">
+              <li>High agent turnover — constantly onboarding and offboarding</li>
+              <li>No portal view that shows agent-level performance within her TSD</li>
+              <li>Commission reconciliation between TSD split and agent split is manual</li>
+              <li>Agents don't complete training because there's no enforcement mechanism</li>
+            </ul>
+          </div>
+          <div class="persona-section">
+            <h4>Portal Access</h4>
+            <div class="access-row">
+              <span class="access-badge access-full">PM Dashboard</span>
+              <span class="access-badge access-full">Agent Management</span>
+              <span class="access-badge access-full">Agent Training</span>
+              <span class="access-badge access-full">Deals (agent network)</span>
+              <span class="access-badge access-full">Commission Splits</span>
+              <span class="access-badge access-partial">Org Health</span>
+              <span class="access-badge access-none">Direct Deal Reg</span>
+              <span class="access-badge access-none">PSM Portal</span>
+            </div>
+          </div>
+          <div class="persona-section">
+            <h4>Key Data</h4>
+            <div class="data-grid">
+              <div class="data-item"><span class="data-label">SF Profile</span><span class="data-value">PCP Partner Manager</span></div>
+              <div class="data-item"><span class="data-label">Permission Set</span><span class="data-value">PCP_PM_Admin + PCP_TSD</span></div>
+              <div class="data-item"><span class="data-label">Agent Network</span><span class="data-value">35 active agents</span></div>
+              <div class="data-item"><span class="data-label">Avg Monthly Deals</span><span class="data-value">15-20 across network</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. Agent (Individual) -->
+      <div class="persona-card">
+        <div class="persona-header">
+          <div class="persona-avatar" style="background: var(--wf-ink, #1e2a3a);">CB</div>
+          <div class="persona-title">
+            <h3>Clint Barton</h3>
+            <p class="role">Independent Agent — via Global Retail Systems TSD</p>
+            <div class="tags">
+              <span class="tag tag-type">Agent</span>
+              <span class="tag tag-portal">Rep Portal</span>
+            </div>
+          </div>
+        </div>
+        <div class="persona-body">
+          <div class="persona-section">
+            <h4>Role</h4>
+            <p class="persona-bio">Independent agent who sells Equinix services as part of a broader portfolio (AWS, Azure, colo competitors). Works through a TSD for back-office support. Refers customers to Equinix and earns commission on closed deals — doesn't contract with the customer directly. Equinix is one of several vendors he represents.</p>
+          </div>
+          <div class="persona-section">
+            <h4>Goals</h4>
+            <ul class="persona-goals">
+              <li>Submit leads quickly — doesn't want a 30-field form for a referral</li>
+              <li>See commission status without having to ask his TSD</li>
+              <li>Learn enough about Equinix to position it vs. Digital Realty and CoreSite</li>
+              <li>Get credit for referrals — worried about getting cut out of the deal</li>
+            </ul>
+          </div>
+          <div class="persona-section">
+            <h4>Pain Points</h4>
+            <ul class="persona-pain">
+              <li>Equinix portal is one of 8 vendor portals he logs into — low engagement</li>
+              <li>Training requirements feel onerous for someone who's "just referring"</li>
+              <li>No visibility into what happens to a lead after submission</li>
+              <li>Commission splits through TSD reduce his take — wants to go direct</li>
+            </ul>
+          </div>
+          <div class="persona-section">
+            <h4>Portal Access</h4>
+            <div class="access-row">
+              <span class="access-badge access-full">Rep Home (limited)</span>
+              <span class="access-badge access-full">Lead Referral Form</span>
+              <span class="access-badge access-full">My Commission</span>
+              <span class="access-badge access-partial">Training (required only)</span>
+              <span class="access-badge access-none">Deal Registration</span>
+              <span class="access-badge access-none">Sales Tools</span>
+              <span class="access-badge access-none">Team Management</span>
+            </div>
+          </div>
+          <div class="persona-section">
+            <h4>Key Data</h4>
+            <div class="data-grid">
+              <div class="data-item"><span class="data-label">SF Profile</span><span class="data-value">PCP Partner Rep</span></div>
+              <div class="data-item"><span class="data-label">Permission Set</span><span class="data-value">PCP_Agent_Base</span></div>
+              <div class="data-item"><span class="data-label">Vendor Portals</span><span class="data-value">8 (Equinix is one)</span></div>
+              <div class="data-item"><span class="data-label">Avg Referrals/Qtr</span><span class="data-value">2-3</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. Customer (ECP) -->
+      <div class="persona-card">
+        <div class="persona-header">
+          <div class="persona-avatar" style="background: var(--wf-ink, #1e2a3a);">JC</div>
+          <div class="persona-title">
+            <h3>John Chen</h3>
+            <p class="role">VP Infrastructure — Acme Corporation</p>
+            <div class="tags">
+              <span class="tag tag-portal">ECP (Customer)</span>
+            </div>
+          </div>
+        </div>
+        <div class="persona-body">
+          <div class="persona-section">
+            <h4>Role</h4>
+            <p class="persona-bio">End customer who buys Equinix services through a partner (Stark Industries). Uses the Equinix Customer Portal (ECP) for service orders, support cases, and infrastructure monitoring. Doesn't interact with the partner program directly — but the partner's deal registration and commission depend on his account.</p>
+          </div>
+          <div class="persona-section">
+            <h4>Goals</h4>
+            <ul class="persona-goals">
+              <li>Monitor service health and SLA compliance across deployments</li>
+              <li>Submit and track support cases with quick resolution</li>
+              <li>Order new services and track provisioning progress</li>
+              <li>Manage team access to the customer portal</li>
+            </ul>
+          </div>
+          <div class="persona-section">
+            <h4>Pain Points</h4>
+            <ul class="persona-pain">
+              <li>Unclear who to contact — Equinix direct vs. partner rep</li>
+              <li>Service order status updates are delayed or unclear</li>
+              <li>Multiple portals for different Equinix products</li>
+            </ul>
+          </div>
+          <div class="persona-section">
+            <h4>Portal Access</h4>
+            <div class="access-row">
+              <span class="access-badge access-full">ECP Dashboard</span>
+              <span class="access-badge access-full">Service Orders</span>
+              <span class="access-badge access-full">Support Cases</span>
+              <span class="access-badge access-none">Partner Portal</span>
+              <span class="access-badge access-none">PSM Portal</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ═══ EQUINIX-INTERNAL PERSONAS ═══ -->
+    <div class="section-header section-spacer">
+      <h2>Equinix-Internal Personas</h2>
+      <p>Equinix employees who manage the partner program through the PSM Lightning app and Salesforce backend</p>
+    </div>
+
+    <div class="persona-grid">
+
+      <!-- 7. PSM / Channel Manager -->
+      <div class="persona-card">
+        <div class="persona-header">
+          <div class="persona-avatar" style="background: var(--wf-ink, #1e2a3a);">MC</div>
+          <div class="persona-title">
+            <h3>Marcus Chen</h3>
+            <p class="role">Channel Manager (PSM) — Equinix</p>
+            <div class="tags">
+              <span class="tag tag-internal">Equinix Internal</span>
+              <span class="tag tag-portal">PSM Portal</span>
+            </div>
+          </div>
+        </div>
+        <div class="persona-body">
+          <div class="persona-section">
+            <h4>Role</h4>
+            <p class="persona-bio">Partner Success Manager assigned to a portfolio of 15-20 partner accounts. Primary Equinix contact for partner admins. Manages the full partner lifecycle: onboarding, enablement, deal support, QBRs, and tier progression. Operates in the PSM Lightning app — the internal command center for partner management.</p>
+          </div>
+          <div class="persona-section">
+            <h4>Goals</h4>
+            <ul class="persona-goals">
+              <li>Move partners up tiers — Bronze to Silver to Gold</li>
+              <li>Ensure partner training compliance across his portfolio</li>
+              <li>Review and approve deal registrations within SLA</li>
+              <li>Prepare QBRs with accurate data, not manual spreadsheets</li>
+              <li>Onboard new partners with minimal manual steps</li>
+            </ul>
+          </div>
+          <div class="persona-section">
+            <h4>Pain Points</h4>
+            <ul class="persona-pain">
+              <li>Manages 18 partners — can't give each one white-glove attention</li>
+              <li>Deal registration approvals require checking multiple systems</li>
+              <li>Partner health scores are lagging indicators — wants leading signals</li>
+              <li>Onboarding is 7+ steps with handoffs between teams</li>
+            </ul>
+          </div>
+          <div class="persona-section">
+            <h4>Portal Access</h4>
+            <div class="access-row">
+              <span class="access-badge access-full">PSM Dashboard</span>
+              <span class="access-badge access-full">Partner Onboarding</span>
+              <span class="access-badge access-full">Deal Review</span>
+              <span class="access-badge access-full">QBR Tools</span>
+              <span class="access-badge access-full">Training Admin</span>
+              <span class="access-badge access-full">Contracts</span>
+              <span class="access-badge access-full">Program Config</span>
+              <span class="access-badge access-partial">Partner Portal (read-only)</span>
+            </div>
+          </div>
+          <div class="persona-section">
+            <h4>Key Data</h4>
+            <div class="data-grid">
+              <div class="data-item"><span class="data-label">SF Profile</span><span class="data-value">Equinix PSM</span></div>
+              <div class="data-item"><span class="data-label">Permission Set</span><span class="data-value">PCP_PSM_Full</span></div>
+              <div class="data-item"><span class="data-label">Portfolio</span><span class="data-value">18 partner accounts</span></div>
+              <div class="data-item"><span class="data-label">Deals/Month</span><span class="data-value">~25 to review</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 8. PSM Director / Program Admin -->
+      <div class="persona-card">
+        <div class="persona-header">
+          <div class="persona-avatar" style="background: var(--wf-ink, #1e2a3a);">MR</div>
+          <div class="persona-title">
+            <h3>Michael Rodriguez</h3>
+            <p class="role">Director, Partner Programs — Equinix</p>
+            <div class="tags">
+              <span class="tag tag-internal">Equinix Internal</span>
+              <span class="tag tag-portal">PSM Portal (Admin)</span>
+            </div>
+          </div>
+        </div>
+        <div class="persona-body">
+          <div class="persona-section">
+            <h4>Role</h4>
+            <p class="persona-bio">Oversees the entire partner program — tier rules, commission structures, deal registration policies, training requirements, and PSM team performance. Configures program-level settings in the PSM admin console. Doesn't manage individual partners day-to-day, but sets the rules everyone operates under.</p>
+          </div>
+          <div class="persona-section">
+            <h4>Goals</h4>
+            <ul class="persona-goals">
+              <li>Grow partner-sourced revenue as a % of total Equinix revenue</li>
+              <li>Optimize tier thresholds and commission rates to drive behavior</li>
+              <li>Reduce partner onboarding time from weeks to days</li>
+              <li>Ensure deal registration rules prevent channel conflict</li>
+              <li>Provide leadership with accurate partner program ROI metrics</li>
+            </ul>
+          </div>
+          <div class="persona-section">
+            <h4>Pain Points</h4>
+            <ul class="persona-pain">
+              <li>Program changes require engineering tickets — no self-service config</li>
+              <li>No single dashboard showing program-wide health across all partners</li>
+              <li>Direct sales team and partner channel keep stepping on each other</li>
+              <li>Compliance reporting is manual and audit-unfriendly</li>
+            </ul>
+          </div>
+          <div class="persona-section">
+            <h4>Portal Access</h4>
+            <div class="access-row">
+              <span class="access-badge access-full">All PSM Pages</span>
+              <span class="access-badge access-full">Program Admin Config</span>
+              <span class="access-badge access-full">Deal Reg Rules</span>
+              <span class="access-badge access-full">Tier &amp; Commission Config</span>
+              <span class="access-badge access-full">Reporting &amp; Analytics</span>
+              <span class="access-badge access-partial">Partner Portal (login-as)</span>
+            </div>
+          </div>
+          <div class="persona-section">
+            <h4>Key Data</h4>
+            <div class="data-grid">
+              <div class="data-item"><span class="data-label">SF Profile</span><span class="data-value">Equinix System Admin</span></div>
+              <div class="data-item"><span class="data-label">Permission Set</span><span class="data-value">PCP_Program_Admin</span></div>
+              <div class="data-item"><span class="data-label">Reports To</span><span class="data-value">VP Global Channels</span></div>
+              <div class="data-item"><span class="data-label">Program Size</span><span class="data-value">200+ active partners</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ═══ RELATIONSHIP MAP ═══ -->
+    <div class="relationship-card" style="margin-top: 48px;">
+      <h3>Persona Relationships &amp; Portal Mapping</h3>
+      <div class="rel-row"><strong>Michael Rodriguez</strong> (Program Admin) <span class="rel-arrow">→ configures rules for →</span> <strong>Marcus Chen</strong> (PSM/CM)</div>
+      <div class="rel-row"><strong>Marcus Chen</strong> (PSM/CM) <span class="rel-arrow">→ manages onboarding for →</span> <strong>Jordan Reeves</strong> (Partner Admin)</div>
+      <div class="rel-row"><strong>Jordan Reeves</strong> (Partner Admin) <span class="rel-arrow">→ adds/manages →</span> <strong>Sarah Connor</strong> (Sales Rep) via PM Team Management</div>
+      <div class="rel-row"><strong>Pepper Potts</strong> (Distributor PM) <span class="rel-arrow">→ oversees sub-resellers + →</span> <strong>12 team members</strong> including Reps &amp; SEs</div>
+      <div class="rel-row"><strong>Rachel Torres</strong> (TSD) <span class="rel-arrow">→ manages agent network including →</span> <strong>Clint Barton</strong> (Agent)</div>
+      <div class="rel-row"><strong>Sarah Connor</strong> (Rep) <span class="rel-arrow">→ registers deals for →</span> <strong>John Chen</strong> (Customer / Acme Corp)</div>
+      <div class="rel-row"><strong>John Chen</strong> (Customer) <span class="rel-arrow">→ uses ECP, served by →</span> <strong>Sarah Mitchell</strong> (Equinix AE, co-sell bridge)</div>
+    </div>
+
+    
+<footer class="wf-footer">
+    &copy; 2026 Equinix · Wireframe specification
+  </footer>
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>User persona reference documenting 8 key roles (partner admins, reps, agents, and Equinix staff) with mapped access permissions, portal visibility, and team management responsibilities to guide product design and access control configuration.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Map each persona to Salesforce Profile + Permission Set combinations for access control</li>
+<li>Show portal access differences between partner types (Reseller, Distributor, TSD, Agent)</li>
+<li>Document partner admin vs. rep vs. internal role capabilities and responsibilities</li>
+<li>Illustrate team management flows (PM adds reps, TSD manages agents, Distributor manages sub-resellers)</li>
+<li>Identify missing screens based on persona access needs and workflows</li>
+<li>Enable access control configuration and permission set assignment in Salesforce backend</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>8 detailed persona cards covering partner-side users and Equinix-internal roles</li>
+<li>Each persona includes: avatar, name, role, partner type, goals, pain points</li>
+<li>Partner Admin personas with team management responsibilities and organization-wide visibility</li>
+<li>Sales rep personas focused on deal registration, training completion, and commission tracking</li>
+<li>Persona relationship map showing organizational hierarchy and inter-portal interactions</li>
+<li>Access control mapping matrix: Profile + Permission Set combinations governing portal visibility and feature access</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Two-column persona grid with card layout and visual hierarchy</li>
+<li>Persona headers with avatars, names, and role titles</li>
+<li>Access badges showing portal features with semantic coloring (green=allowed, gray=restricted)</li>
+<li>Goal and pain point lists with semantic icons for visual scanning</li>
+<li>Access matrix data grid showing Profile/Permission Set combinations</li>
+<li>Relationship diagram with arrows showing persona hierarchies and portal interaction flows</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Reference Documentation & Design Specification</strong>
+<ul>
+<li>Non-interactive reference page providing documentation-only specification input describing 8 key user personas with role definitions, responsibilities, and portal access requirements</li>
+<li>Persona profiles including Avatar, Name, Title, and Tier eligibility (Gold/Silver/Bronze) for access control mapping guidance</li>
+<li>Cross-functional alignment enabler documenting user types and permission model relationships across Partner roles and Equinix internal teams</li>
+</ul>
+</li>
+<li><strong>Access Control Rule Development</strong>
+<ul>
+<li>Permission mapping guidance serving as specification input for Profile and PermissionSet creation in Salesforce org: PCP_Partner_Rep, PCP_PM_Admin, PCP_Distributor, PCP_TSD, PCP_PSM_Full, PCP_Program_Admin</li>
+<li>Access matrix documentation showing Feature vs. Persona permissions grid guiding OrgWideDefault and Sharing Rule configuration for Account-based visibility</li>
+<li>Role hierarchy reference showing reporting lines and portal access delegation ensuring proper cascading permissions from PCP_Program_Admin down to PCP_Partner_Rep</li>
+</ul>
+</li>
+<li><strong>Wireframe Design Alignment</strong>
+<ul>
+<li>Persona access path representation ensuring all portal pages show correct conditional content based on user Profile and PermissionSet membership verified against persona definitions</li>
+<li>Design guidance documentation for layout variations per persona (Partner Dashboard shows order summary, PSM Dashboard shows all account orders, Agent view shows only assigned cases)</li>
+<li>Feature visibility matrix documenting which pages and components render for each persona preventing development of inaccessible features</li>
+</ul>
+</li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Key Objects &amp; Access Model</h4>
+<ul>
+<li>User (Profile = PCP_Partner_Rep, PCP_PM_Admin, PCP_Agent_Base, PCP_PSM_Full, PCP_Program_Admin)</li>
+<li>PermissionSet (PCP_Partner_Base, PCP_PM_Admin, PCP_Distributor, PCP_TSD, PCP_PSM_Full, PCP_Program_Admin)</li>
+<li>Partner__c — Linked to User for org-scope access control via Account Hierarchy</li>
+<li>Personas: Jordan Reeves (Reseller PM), Sarah Connor (Reseller Rep), Pepper Potts (Distributor PM), Rachel Torres (TSD Manager), Clint Barton (Agent), John Chen (Customer), Marcus Chen (PSM), Michael Rodriguez (Program Admin)</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+</body>
+</html>

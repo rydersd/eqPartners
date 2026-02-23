@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Home — Day 0 · Equinix PCP Partner Portal</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Salesforce Sans, sans-serif;
+      background: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-ink, #1e2a3a);
+    }
+    .container { max-width: 1400px; margin: 0 auto; padding: 24px; }
+
+    /* ── Welcome banner ───────────────────────────────────── */
+    .welcome-banner {
+      background: var(--wf-ink, #1e2a3a);
+      color: white;
+      padding: 28px 24px;
+      border-radius: 8px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+    .welcome-banner h1 { font-size: 26px; font-weight: 300; margin-bottom: 6px; }
+    .welcome-banner .company-info { font-size: 14px; color: rgba(255,255,255,0.8); margin-bottom: 4px; }
+    .welcome-banner .company-meta { font-size: 12px; color: rgba(255,255,255,0.6); }
+    .setup-cta-block {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 6px;
+      padding: 14px 20px;
+      text-align: center;
+      min-width: 190px;
+    }
+    .setup-cta-label { font-size: 11px; color: rgba(255,255,255,0.6); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 7px; }
+    .setup-cta-bar   { height: 4px; background: rgba(255,255,255,0.2); border-radius: 2px; margin-bottom: 8px; }
+    .setup-cta-fill  { height: 100%; background: #4caf82; border-radius: 2px; width: 25%; }
+    .setup-cta-link  {
+      display: inline-block; font-size: 12px; font-weight: 600;
+      color: white; text-decoration: none;
+      background: #1a6b40; border-radius: 4px; padding: 5px 14px;
+    }
+    .setup-cta-link:hover { background: #155c36; }
+
+    /* ── Grid ─────────────────────────────────────────────── */
+    .dashboard-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
+    .left-col  { display: flex; flex-direction: column; gap: 24px; }
+    .right-col { display: flex; flex-direction: column; gap: 24px; }
+
+    /* ── Cards ────────────────────────────────────────────── */
+    .card { background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden; }
+    .card-head {
+      padding: 14px 20px 12px;
+      border-bottom: 1px solid var(--wf-tint, #e0e7f0);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .card-head h2 {
+      font-size: 13px; font-weight: 700; color: var(--wf-ink, #1e2a3a);
+      text-transform: uppercase; letter-spacing: 0.5px; margin: 0;
+    }
+    .card-link { font-size: 11px; color: var(--wf-accent, #3d6daa); text-decoration: none; font-weight: 500; }
+    .card-body { padding: 20px; }
+
+    /* ── Setup steps ──────────────────────────────────────── */
+    .setup-steps { display: flex; flex-direction: column; gap: 2px; }
+    .setup-step {
+      display: flex; align-items: center; gap: 14px;
+      padding: 11px 14px; border-radius: 5px;
+      background: var(--wf-canvas, #f5f7fb);
+      border: 1px solid transparent;
+    }
+    .setup-step.current { background: #edf7f3; border-color: #4caf82; }
+    .step-dot {
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; flex-shrink: 0;
+    }
+    .step-dot.done    { background: #1a7a3c; color: white; }
+    .step-dot.active  { background: var(--wf-ink, #1e2a3a); color: white; }
+    .step-dot.pending { background: var(--wf-surface, #edf1f7); color: var(--wf-muted, #6b7f99); }
+    .step-label  { font-size: 13px; color: var(--wf-ink, #1e2a3a); font-weight: 500; flex: 1; }
+    .step-sub    { font-size: 11px; color: var(--wf-muted, #6b7f99); margin-top: 2px; }
+    .step-action { font-size: 11px; font-weight: 600; }
+    .step-action.done    { color: #1a7a3c; }
+    .step-action.pending { color: var(--wf-muted, #6b7f99); }
+    .btn-step {
+      font-size: 11px; font-weight: 600; padding: 4px 12px;
+      background: var(--wf-accent, #3d6daa); color: white;
+      border-radius: 4px; text-decoration: none; white-space: nowrap;
+    }
+    .setup-footer {
+      margin-top: 16px; padding-top: 14px;
+      border-top: 1px solid var(--wf-tint, #e0e7f0);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .setup-pct { font-size: 12px; color: var(--wf-muted, #6b7f99); }
+    .btn-primary {
+      display: inline-block; background: var(--wf-accent, #3d6daa); color: white;
+      font-size: 12px; font-weight: 600; padding: 7px 16px;
+      border-radius: 4px; text-decoration: none; border: none; cursor: pointer;
+    }
+
+    /* ── Programs ─────────────────────────────────────────── */
+    .programs-intro { font-size: 13px; color: var(--wf-muted, #6b7f99); margin-bottom: 18px; line-height: 1.5; }
+    .program-card { border: 1px solid var(--wf-tint, #e0e7f0); border-radius: 6px; overflow: hidden; margin-bottom: 14px; }
+    .program-card:last-of-type { margin-bottom: 0; }
+    .program-head { padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .program-head-left { display: flex; align-items: center; gap: 10px; }
+    .program-icon { width: 36px; height: 36px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .program-title    { font-size: 13px; font-weight: 700; color: var(--wf-ink, #1e2a3a); }
+    .program-subtitle { font-size: 11px; color: var(--wf-muted, #6b7f99); margin-top: 2px; }
+    .program-badge { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 10px; white-space: nowrap; flex-shrink: 0; }
+    .badge-new     { background: #dbeafe; color: #1d4ed8; }
+    .badge-q1      { background: #fef3c7; color: #92400e; }
+    .badge-mdf     { background: #d1fae5; color: #065f46; }
+    .badge-limited { background: #fee2e2; color: #991b1b; }
+    .program-body { padding: 10px 16px 14px; border-top: 1px solid var(--wf-tint, #e0e7f0); background: var(--wf-canvas, #f5f7fb); }
+    .program-desc  { font-size: 12px; color: var(--wf-ink, #1e2a3a); line-height: 1.5; margin-bottom: 10px; }
+    .program-stats { display: flex; gap: 16px; margin-bottom: 12px; flex-wrap: wrap; }
+    .program-stat  { font-size: 11px; color: var(--wf-muted, #6b7f99); }
+    .program-stat span { font-weight: 700; color: var(--wf-accent, #3d6daa); }
+    .program-actions { display: flex; gap: 8px; }
+    .btn-sm { font-size: 11px; font-weight: 600; padding: 5px 12px; border-radius: 4px; text-decoration: none; border: 1px solid transparent; cursor: pointer; }
+    .btn-sm-primary { background: var(--wf-accent, #3d6daa); color: white; }
+    .btn-sm-ghost   { background: white; color: var(--wf-ink, #1e2a3a); border-color: var(--wf-tint, #e0e7f0); }
+    .design-note {
+      margin-top: 16px; padding: 10px 14px;
+      background: #f0f4ff; border-left: 3px solid #6366f1;
+      border-radius: 0 4px 4px 0;
+      font-size: 11px; color: #3730a3; line-height: 1.5;
+    }
+
+    /* ── Portal sections wayfinding ───────────────────────── */
+    .portal-sections { display: flex; flex-direction: column; }
+    .portal-section-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 11px 6px; border-bottom: 1px solid var(--wf-tint, #e0e7f0);
+      text-decoration: none; color: inherit; border-radius: 4px;
+      transition: background 0.1s;
+    }
+    .portal-section-item:last-child { border-bottom: none; }
+    .portal-section-item:hover { background: var(--wf-canvas, #f5f7fb); }
+    .psi-icon  { font-size: 20px; width: 30px; text-align: center; flex-shrink: 0; }
+    .psi-label { font-size: 13px; font-weight: 600; color: var(--wf-ink, #1e2a3a); }
+    .psi-desc  { font-size: 11px; color: var(--wf-muted, #6b7f99); margin-top: 2px; line-height: 1.4; }
+    .psi-arrow { margin-left: auto; font-size: 14px; color: var(--wf-muted, #6b7f99); flex-shrink: 0; padding-right: 2px; }
+
+    /* ── Contacts empty state ─────────────────────────────── */
+    .contacts-empty { padding: 28px 16px; text-align: center; }
+    .contacts-empty-icon  { font-size: 28px; opacity: 0.35; margin-bottom: 10px; }
+    .contacts-empty-title { font-size: 13px; font-weight: 600; color: var(--wf-ink, #1e2a3a); margin-bottom: 6px; }
+    .contacts-empty-desc  { font-size: 12px; color: var(--wf-muted, #6b7f99); line-height: 1.6; }
+
+    /* ── Contacts ─────────────────────────────────────────── */
+    .contact-list { display: flex; flex-direction: column; }
+    .contact-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 12px 0; border-bottom: 1px solid var(--wf-tint, #e0e7f0);
+    }
+    .contact-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .contact-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700; color: white; flex-shrink: 0;
+    }
+    .contact-name  { font-size: 13px; font-weight: 600; color: var(--wf-ink, #1e2a3a); }
+    .contact-role  { font-size: 11px; color: var(--wf-muted, #6b7f99); margin-top: 2px; }
+    .contact-links { display: flex; gap: 6px; margin-top: 5px; }
+    .contact-link  {
+      font-size: 10px; font-weight: 600; color: var(--wf-accent, #3d6daa);
+      text-decoration: none; background: var(--wf-surface, #edf1f7); padding: 2px 7px; border-radius: 3px;
+    }
+
+    /* ── LinkedIn feed ────────────────────────────────────── */
+    .li-feed-header { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+    .li-logo {
+      width: 20px; height: 20px; background: #0a66c2; border-radius: 3px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 900; color: white; flex-shrink: 0;
+    }
+    .li-handle { font-size: 12px; color: var(--wf-muted, #6b7f99); }
+    .li-post {
+      border: 1px solid var(--wf-tint, #e0e7f0); border-radius: 6px;
+      padding: 12px; margin-bottom: 10px;
+    }
+    .li-post:last-child { margin-bottom: 0; }
+    .li-post-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .li-eq-logo {
+      width: 28px; height: 28px; border-radius: 4px; background: var(--wf-ink, #1e2a3a);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .li-eq-logo svg { width: 16px; height: 16px; }
+    .li-post-who   { font-size: 12px; font-weight: 600; color: var(--wf-ink, #1e2a3a); }
+    .li-post-when  { font-size: 10px; color: var(--wf-muted, #6b7f99); }
+    .li-post-body  { font-size: 12px; color: var(--wf-ink, #1e2a3a); line-height: 1.5; }
+    .li-post-tag   { display: inline-block; margin-top: 6px; font-size: 10px; font-weight: 600; color: #0a66c2; }
+    .li-post-img   {
+      margin: 8px 0; height: 55px; background: var(--wf-surface, #edf1f7);
+      border-radius: 4px; display: flex; align-items: center; justify-content: center;
+      font-size: 11px; color: var(--wf-muted, #6b7f99);
+    }
+
+    /* ── EC / IAG annotations ─────────────────────────────── */
+    .ec-note {
+      background: #fffbeb; border: 1px solid #f5d060; border-left: 3px solid #f5a623;
+      border-radius: 0 4px 4px 0; padding: 7px 10px; font-size: 11px; color: #7a5c00;
+      line-height: 1.4; margin-top: 12px;
+    }
+    .iag-badge {
+      display: inline-block; background: #f97316; color: white;
+      font-size: 9px; font-weight: 800; padding: 1px 5px; border-radius: 2px;
+      letter-spacing: 0.5px; margin-right: 4px;
+    }
+    .iag-tip { text-decoration: underline dotted; cursor: help; }
+
+    /* ── Spec panel ───────────────────────────────────────── */
+    .spec-tab-anchor { position: fixed; right: 0; top: 50%; transform: translateY(-50%); z-index: 200; }
+    .spec-tab-btn {
+      background: var(--wf-ink, #1e2a3a); color: white; border: none; cursor: pointer;
+      writing-mode: vertical-rl; text-orientation: mixed;
+      padding: 12px 8px; border-radius: 6px 0 0 6px;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
+    }
+    .spec-panel {
+      position: fixed; right: -440px; top: 0; bottom: 0; width: 440px;
+      background: white; box-shadow: -4px 0 20px rgba(0,0,0,0.15);
+      z-index: 300; overflow-y: auto; transition: right 0.3s ease; padding: 28px 24px;
+    }
+    .spec-panel.open { right: 0; }
+    .spec-panel h3   { font-size: 13px; font-weight: 700; margin: 0 0 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .spec-panel p, .spec-panel li { font-size: 12px; line-height: 1.6; color: #3d4a5c; }
+    .spec-panel ul   { padding-left: 18px; margin: 0; }
+    .spec-section    { margin-bottom: 22px; padding-bottom: 20px; border-bottom: 1px solid var(--wf-tint, #e0e7f0); }
+    .spec-section:last-child { border-bottom: none; }
+    .spec-close { position: absolute; top: 12px; right: 16px; background: none; border: none; font-size: 20px; cursor: pointer; color: var(--wf-muted, #6b7f99); }
+  </style>
+</head>
+<body>
+
+<!-- Context / flow bar -->
+<div class="page-context-bar">
+  <div style="max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <nav class="wf-breadcrumb" aria-label="Breadcrumb" style="margin-bottom:0;">
+      <a class="wf-breadcrumb-link" href="partner-user-request.html">User Request</a>
+      <span class="wf-breadcrumb-sep">›</span>
+      <a class="wf-breadcrumb-link" href="pm-user-request-review.html">PM Review</a>
+      <span class="wf-breadcrumb-sep">›</span>
+      <a class="wf-breadcrumb-link" href="onboarding-rep-approval-email.html">Welcome Email</a>
+      <span class="wf-breadcrumb-sep">›</span>
+      <span class="wf-breadcrumb-current">Admin Home — Day 0</span>
+      <span class="wf-breadcrumb-sep">›</span>
+      <a class="wf-breadcrumb-link" href="pm-admin-setup.html">Admin Setup Workflow</a>
+    </nav>
+    <span class="persona-badge persona-badge--pm">PM · Jordan Reeves</span>
+  </div>
+</div>
+
+<!-- App header -->
+<header class="wf-header">
+  <div class="wf-header-logo">
+    <svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix">
+      <path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/>
+    </svg>
+  </div>
+  <div class="wf-header-title">Partner Central</div>
+  <nav class="wf-header-nav">
+    <a href="pm-home-day0.html" class="active">Dashboard</a>
+    <a href="pm-team-management.html">Team</a>
+    <a href="pm-deals-revenue.html">Deals</a>
+    <a href="pm-team-training.html">Training</a>
+    <a href="pm-resources.html">Resources</a>
+  </nav>
+  <div class="wf-header-util">
+    <a href="#" aria-label="Notifications" style="position:relative;color:inherit;text-decoration:none;display:flex;align-items:center;">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+      <span style="position:absolute;top:-4px;right:-6px;background:var(--wf-red,#8b4555);color:white;font-size:10px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;">2</span>
+    </a>
+    <button class="wf-header-avatar" aria-label="My Profile"
+      style="width:32px;height:32px;border-radius:50%;background:#1a6b40;border:2px solid rgba(255,255,255,0.35);color:white;font-size:13px;font-weight:700;cursor:pointer;border:none;">JR</button>
+  </div>
+</header>
+
+<!-- Spec tab -->
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">📋 Notes</button>
+</div>
+
+<div class="container">
+
+  <!-- Welcome banner -->
+  <div class="welcome-banner" role="banner">
+    <div>
+      <h1>Welcome to Partner Central, Jordan</h1>
+      <div class="company-info">CloudBridge Technologies Inc. · Portal Admin</div>
+      <div class="company-meta">First login · 2 user requests pending approval</div>
+    </div>
+    <div class="setup-cta-block" role="status" aria-label="Setup progress: 1 of 4 steps complete">
+      <div class="setup-cta-label">Setup progress — 1 of 4 steps</div>
+      <div class="setup-cta-bar"><div class="setup-cta-fill"></div></div>
+      <a href="psm-contracts.html" class="setup-cta-link">Continue setup →</a>
+    </div>
+  </div>
+
+  <div class="dashboard-grid">
+
+    <!-- ─── LEFT COLUMN ──────────────────────────────────── -->
+    <div class="left-col">
+
+      <!-- Admin Setup summary card -->
+      <div class="card">
+        <div class="card-head">
+          <h2>Cloudbridge Setup</h2>
+        </div>
+        <div class="card-body">
+          <div class="setup-steps" role="list" aria-label="Setup steps">
+
+            <div class="setup-step done" role="listitem">
+              <div class="step-dot done" aria-label="Complete">✓</div>
+              <div>
+                <div class="step-label">Complete org profile</div>
+                <div class="step-sub">Company details, logo, address, DUNS</div>
+              </div>
+              <span class="step-action done">Done</span>
+            </div>
+
+            <div class="setup-step current" role="listitem" aria-current="step">
+              <div class="step-dot active" aria-label="Current step">2</div>
+              <div>
+                <div class="step-label">Review user requests</div>
+                <div class="step-sub">2 reps awaiting approval — Alex Kim, Sam Chen</div>
+              </div>
+              <a href="pm-user-request-review.html" class="btn-step">Review →</a>
+            </div>
+
+            <div class="setup-step" role="listitem">
+              <div class="step-dot pending" aria-label="Pending">3</div>
+              <div>
+                <div class="step-label">Set required training</div>
+                <div class="step-sub">Mark courses required for your reps in SumTotal</div>
+              </div>
+              <span class="step-action pending">Pending</span>
+            </div>
+
+            <div class="setup-step" role="listitem">
+              <div class="step-dot pending" aria-label="Pending">4</div>
+              <div>
+                <div class="step-label">Designate backup admin</div>
+                <div class="step-sub">Assign a fallback so your team stays unblocked</div>
+              </div>
+              <span class="step-action pending">Pending</span>
+            </div>
+
+          </div>
+
+          <div class="setup-footer">
+            <span class="setup-pct">1 of 4 complete (25%)</span>
+            <a href="psm-contracts.html" style="font-size:12px;font-weight:600;color:var(--wf-accent,#3d6daa);text-decoration:none;">Next step →</a>
+          </div>
+
+          <div class="ec-note" role="note">
+            <span class="iag-badge" title="In-App Guidance — fires on first dashboard load">IAG</span>
+            First-visit prompt fires on <code>Admin_GS_Complete__c = false</code>:
+            <em class="iag-tip" title='"Welcome, Jordan. A few quick steps will get your team up and running."'>"Welcome, Jordan. A few quick steps will get your team up and running."</em>
+            Dismissed on click; does not fire again. Links to pm-admin-setup.html.
+          </div>
+        </div>
+      </div>
+
+      <!-- Your Portal — site navigation quick-access -->
+      <div class="card">
+        <div class="card-head">
+          <h2>Your Portal</h2>
+        </div>
+        <div class="card-body" style="padding-top:8px;padding-bottom:8px;">
+          <nav class="portal-sections" aria-label="Portal sections">
+
+            <a class="portal-section-item" href="pm-team-management.html">
+              <span class="psi-icon" aria-hidden="true">👥</span>
+              <div>
+                <div class="psi-label">Team Management</div>
+                <div class="psi-desc">Invite reps, approve join requests, manage user access</div>
+              </div>
+              <span class="psi-arrow" aria-hidden="true">→</span>
+            </a>
+
+            <a class="portal-section-item" href="pm-deals-revenue.html">
+              <span class="psi-icon" aria-hidden="true">📊</span>
+              <div>
+                <div class="psi-label">Deals &amp; Revenue</div>
+                <div class="psi-desc">Pipeline overview, deal status, commission tracking</div>
+              </div>
+              <span class="psi-arrow" aria-hidden="true">→</span>
+            </a>
+
+            <a class="portal-section-item" href="pm-team-training.html">
+              <span class="psi-icon" aria-hidden="true">🎓</span>
+              <div>
+                <div class="psi-label">Training</div>
+                <div class="psi-desc">Set required courses, track certification progress</div>
+              </div>
+              <span class="psi-arrow" aria-hidden="true">→</span>
+            </a>
+
+            <a class="portal-section-item" href="pm-mdf-request.html">
+              <span class="psi-icon" aria-hidden="true">📣</span>
+              <div>
+                <div class="psi-label">Marketing &amp; MDF</div>
+                <div class="psi-desc">Co-marketing funds, campaign assets, MDF requests</div>
+              </div>
+              <span class="psi-arrow" aria-hidden="true">→</span>
+            </a>
+
+            <a class="portal-section-item" href="pm-resources.html">
+              <span class="psi-icon" aria-hidden="true">📁</span>
+              <div>
+                <div class="psi-label">Resources</div>
+                <div class="psi-desc">Sales tools, playbooks, product documentation</div>
+              </div>
+              <span class="psi-arrow" aria-hidden="true">→</span>
+            </a>
+
+            <a class="portal-section-item" href="pm-org-health.html">
+              <span class="psi-icon" aria-hidden="true">📈</span>
+              <div>
+                <div class="psi-label">Org Health</div>
+                <div class="psi-desc">Program performance, tier progress, partner scorecard</div>
+              </div>
+              <span class="psi-arrow" aria-hidden="true">→</span>
+            </a>
+
+          </nav>
+        </div>
+      </div>
+
+      <!-- Partner Programs & Marketing Opportunities -->
+      <div class="card">
+        <div class="card-head">
+          <h2>Partner Programs &amp; Marketing</h2>
+          <a href="pm-org-health.html" class="card-link">All programs →</a>
+        </div>
+        <div class="card-body">
+          <p class="programs-intro">
+            Equinix provides co-marketing tools, market development funds, and deal incentives to help your team close faster.
+            The programs below are available to CloudBridge based on your Colocation Reseller Gold enrollment.
+          </p>
+
+          <!-- Q1 Spiff -->
+          <div class="program-card">
+            <div class="program-head">
+              <div class="program-head-left">
+                <div class="program-icon" style="background:#e8f5e9;">🏆</div>
+                <div>
+                  <div class="program-title">Colocation Sales Accelerator</div>
+                  <div class="program-subtitle">Deal spiff · Active through Q1 2026</div>
+                </div>
+              </div>
+              <span class="program-badge badge-q1">Q1 SPIFF</span>
+            </div>
+            <div class="program-body">
+              <p class="program-desc">Earn a $2,500 bonus for each net-new Colocation customer your reps register this quarter. Stacks with standard deal registration protection. Designed for partners targeting mid-market accounts new to Equinix.</p>
+              <div class="program-stats">
+                <div class="program-stat">Incentive: <span>$2,500 / deal</span></div>
+                <div class="program-stat">Eligible: <span>Net-new logos</span></div>
+                <div class="program-stat">Expires: <span>Mar 31, 2026</span></div>
+              </div>
+              <div class="program-actions">
+                <a href="#" class="btn-sm btn-sm-primary">Enroll team</a>
+                <a href="#" class="btn-sm btn-sm-ghost">Terms &amp; details</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- MDF -->
+          <div class="program-card">
+            <div class="program-head">
+              <div class="program-head-left">
+                <div class="program-icon" style="background:#e8eaf6;">💼</div>
+                <div>
+                  <div class="program-title">Partner Co-Marketing Fund</div>
+                  <div class="program-subtitle">Market Development Funds · 50/50 match</div>
+                </div>
+              </div>
+              <span class="program-badge badge-mdf">MDF</span>
+            </div>
+            <div class="program-body">
+              <p class="program-desc">Gold-tier partners receive up to $25K/year in co-marketing funds on a 50/50 match basis. Use for demand-gen campaigns, events, digital ads, or co-branded content. Request through the MDF portal — campaigns require PSM pre-approval.</p>
+              <div class="program-stats">
+                <div class="program-stat">Annual pool: <span>$25K</span></div>
+                <div class="program-stat">Match: <span>50 / 50</span></div>
+                <div class="program-stat">Used: <span>$0 of $25K</span></div>
+              </div>
+              <div class="program-actions">
+                <a href="pm-mdf-request.html" class="btn-sm btn-sm-primary">Request MDF</a>
+                <a href="pm-mdf-comarketing.html" class="btn-sm btn-sm-ghost">Campaign library</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Fabric Fast Start -->
+          <div class="program-card">
+            <div class="program-head">
+              <div class="program-head-left">
+                <div class="program-icon" style="background:#fff3e0;">⚡</div>
+                <div>
+                  <div class="program-title">Fabric Fast Start</div>
+                  <div class="program-subtitle">Co-sell motion · Fabric field team overlay</div>
+                </div>
+              </div>
+              <span class="program-badge badge-new">NEW</span>
+            </div>
+            <div class="program-body">
+              <p class="program-desc">Co-sell Equinix Fabric alongside Colocation with joint support from the Equinix Fabric team. Includes a $1,500 deal registration bonus on your first qualified Fabric deal and access to co-brandable pitch decks.</p>
+              <div class="program-stats">
+                <div class="program-stat">First-deal bonus: <span>$1,500</span></div>
+                <div class="program-stat">Support: <span>Joint field overlay</span></div>
+              </div>
+              <div class="program-actions">
+                <a href="#" class="btn-sm btn-sm-primary">Get co-sell assets</a>
+                <a href="#" class="btn-sm btn-sm-ghost">Learn more</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Digital Edge -->
+          <div class="program-card">
+            <div class="program-head">
+              <div class="program-head-left">
+                <div class="program-icon" style="background:#fce4ec;">🌐</div>
+                <div>
+                  <div class="program-title">Digital Edge Incentive</div>
+                  <div class="program-subtitle">Tier 2 market expansion · Enhanced margin</div>
+                </div>
+              </div>
+              <span class="program-badge badge-limited">LIMITED</span>
+            </div>
+            <div class="program-body">
+              <p class="program-desc">Selling into Austin, Denver, or Dallas? Eligible deals carry +3% enhanced partner margin on Colo ARR and priority technical staffing. Limited to 20 partners this cohort — apply by Feb 28.</p>
+              <div class="program-stats">
+                <div class="program-stat">Bonus margin: <span>+3% ARR</span></div>
+                <div class="program-stat">Markets: <span>AUS · DEN · DAL</span></div>
+                <div class="program-stat">Deadline: <span>Feb 28</span></div>
+              </div>
+              <div class="program-actions">
+                <a href="#" class="btn-sm btn-sm-primary">Apply now</a>
+                <a href="#" class="btn-sm btn-sm-ghost">Eligibility criteria</a>
+              </div>
+            </div>
+          </div>
+
+          <div class="design-note" role="note">
+            <strong>Snowflake pattern reference:</strong> Snowflake's Partner Marketing Center surfaces co-brandable assets, 50/50 MDF, competitive displacement spiffs, joint demand-gen plays, and field marketing tools proactively — not buried in a resources menu. This module applies the same principle: Day 0 is the highest-intent moment to show what's available. Admins can act immediately without hunting. SF objects: <code>Partner_Program__c</code>, <code>MDF_Request__c</code>, <code>Partner_Program_Member__c</code>.
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /left-col -->
+
+    <!-- ─── RIGHT COLUMN ─────────────────────────────────── -->
+    <div class="right-col">
+
+      <!-- Key Equinix Contacts -->
+      <div class="card">
+        <div class="card-head">
+          <h2>Key Equinix Contacts</h2>
+        </div>
+        <div class="card-body">
+          <div class="contacts-empty" role="status" aria-label="Contacts not yet available">
+            <div class="contacts-empty-icon" aria-hidden="true">👤</div>
+            <div class="contacts-empty-title">Contacts not yet assigned</div>
+            <div class="contacts-empty-desc">
+              Your Equinix contacts — Partner Success Manager, Channel Manager, and
+              support team — will appear here once your account setup is finalized.
+            </div>
+          </div>
+
+          <div class="ec-note" role="note">
+            Contacts display when <code>Admin_GS_Complete__c = true</code>.
+            On Day N, pulled from <code>Equinix_Contact__c</code> junction on <code>Account__c</code>.
+            PSM from <code>Partner_Success_Manager__c</code> lookup; Channel Mgr from <code>Channel_Manager__c</code>.
+            Support and Marketing Enablement are static CMS rows.
+          </div>
+        </div>
+      </div>
+
+      <!-- Equinix LinkedIn Feed -->
+      <div class="card">
+        <div class="card-head">
+          <h2>Equinix on LinkedIn</h2>
+          <a href="https://linkedin.com/company/equinix" class="card-link" target="_blank" rel="noopener">Follow →</a>
+        </div>
+        <div class="card-body">
+          <div class="li-feed-header">
+            <div class="li-logo" aria-hidden="true">in</div>
+            <span class="li-handle">linkedin.com/company/equinix</span>
+          </div>
+
+          <div class="li-post">
+            <div class="li-post-meta">
+              <div class="li-eq-logo" aria-hidden="true">
+                <svg viewBox="0 0 92 60" fill="none"><path d="M45.88 0L36.72 3.22V51.38L30.57 49.26V5.34L12.24 11.77V42.83L6.15 40.71V13.89L0 16.01V45.02L18.33 51.45V16.08L24.48 13.96V53.57L42.81 60V7.53L45.88 6.5L48.96 7.53V60L67.29 53.57V13.96L73.44 16.08V51.45L91.77 45.02V16.01L85.68 13.89V40.71L79.53 42.83V11.77L61.2 5.34V49.26L55.05 51.38V3.22L45.88 0Z" fill="white"/></svg>
+              </div>
+              <div>
+                <div class="li-post-who">Equinix</div>
+                <div class="li-post-when">2 days ago</div>
+              </div>
+            </div>
+            <div class="li-post-img" role="img" aria-label="Equinix × NVIDIA partnership announcement image">📸 Equinix × NVIDIA announcement</div>
+            <div class="li-post-body">Equinix and NVIDIA expand their collaboration to bring AI-ready infrastructure to 45+ markets. Partners can now co-sell Equinix AI Infrastructure PoDs alongside NVIDIA DGX Cloud.</div>
+            <a class="li-post-tag" href="#" target="_blank" rel="noopener">#EquinixAI #PartnerNetwork</a>
+          </div>
+
+          <div class="li-post">
+            <div class="li-post-meta">
+              <div class="li-eq-logo" aria-hidden="true">
+                <svg viewBox="0 0 92 60" fill="none"><path d="M45.88 0L36.72 3.22V51.38L30.57 49.26V5.34L12.24 11.77V42.83L6.15 40.71V13.89L0 16.01V45.02L18.33 51.45V16.08L24.48 13.96V53.57L42.81 60V7.53L45.88 6.5L48.96 7.53V60L67.29 53.57V13.96L73.44 16.08V51.45L91.77 45.02V16.01L85.68 13.89V40.71L79.53 42.83V11.77L61.2 5.34V49.26L55.05 51.38V3.22L45.88 0Z" fill="white"/></svg>
+              </div>
+              <div>
+                <div class="li-post-who">Equinix</div>
+                <div class="li-post-when">5 days ago</div>
+              </div>
+            </div>
+            <div class="li-post-body">The Global Interconnection Index, Vol. 7 is live — 10,000 Tbps of private interconnection capacity. What does that mean for your customers' hybrid cloud strategy?</div>
+            <a class="li-post-tag" href="#" target="_blank" rel="noopener">#GXI2026 #HybridCloud</a>
+          </div>
+
+          <div class="li-post">
+            <div class="li-post-meta">
+              <div class="li-eq-logo" aria-hidden="true">
+                <svg viewBox="0 0 92 60" fill="none"><path d="M45.88 0L36.72 3.22V51.38L30.57 49.26V5.34L12.24 11.77V42.83L6.15 40.71V13.89L0 16.01V45.02L18.33 51.45V16.08L24.48 13.96V53.57L42.81 60V7.53L45.88 6.5L48.96 7.53V60L67.29 53.57V13.96L73.44 16.08V51.45L91.77 45.02V16.01L85.68 13.89V40.71L79.53 42.83V11.77L61.2 5.34V49.26L55.05 51.38V3.22L45.88 0Z" fill="white"/></svg>
+              </div>
+              <div>
+                <div class="li-post-who">Equinix</div>
+                <div class="li-post-when">1 week ago</div>
+              </div>
+            </div>
+            <div class="li-post-body">Metal 4th-gen instances now live across 8 markets including Chicago and London. Bare-metal performance, provisioned in minutes — great for compute-intensive partner workloads.</div>
+            <a class="li-post-tag" href="#" target="_blank" rel="noopener">#EquinixMetal #BareMetal</a>
+          </div>
+
+          <div class="ec-note" role="note" style="margin-top:14px;">
+            Feed embedded via Equinix CMS (RSS-to-JSON or iframe). Not a native EC component — maintained by Equinix Marketing. Partners click through to LinkedIn to like/share/comment. Cache daily to avoid slowing portal load.
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /right-col -->
+
+  </div><!-- /dashboard-grid -->
+</div><!-- /container -->
+
+<!-- Spec panel -->
+<div class="spec-panel" id="spec-panel" role="dialog" aria-modal="false" aria-label="Design notes">
+  <button class="spec-close" onclick="toggleSpec()" aria-label="Close notes">×</button>
+  <h2 style="font-size:16px;font-weight:700;margin-bottom:20px;padding-right:28px;">Admin Home — Day 0 · Design Notes</h2>
+
+  <div class="spec-section">
+    <h3>When this page shows</h3>
+    <p>Audience rule: <code>Contact.Admin_First_Login__c = true AND Admin_GS_Complete__c = false</code>.
+    Day 0 and Day N are two Audience-targeted variants of the same EC Page — same URL, different component visibility.
+    When all 4 admin setup steps complete, <code>Admin_GS_Complete__c</code> flips to <code>true</code>
+    and the Day N variant becomes visible on next navigation.</p>
+  </div>
+
+  <div class="spec-section">
+    <h3>Day 0 vs. Day N differences</h3>
+    <ul>
+      <li><strong>Welcome copy:</strong> "Welcome to" vs. "Welcome back"</li>
+      <li><strong>Setup CTA:</strong> Banner visible on Day 0; hidden when <code>Admin_GS_Complete__c = true</code></li>
+      <li><strong>Left top:</strong> Cloudbridge Setup card (Day 0) vs. Tier Progress (Day N)</li>
+      <li><strong>Left middle:</strong> Your Portal wayfinding (Day 0 only) → replaces with Team Activity on Day N</li>
+      <li><strong>Left bottom:</strong> Programs &amp; Marketing (both, refreshed on Day N)</li>
+      <li><strong>Right top:</strong> Contacts empty state (Day 0) vs. full Key Contacts (Day N)</li>
+      <li><strong>Right bottom:</strong> LinkedIn feed (both)</li>
+      <li><strong>IAG sets:</strong> Admin Day 0 set (first-login prompts) vs. Day N set (data-gap prompts)</li>
+    </ul>
+  </div>
+
+  <div class="spec-section">
+    <h3>Cloudbridge Setup card</h3>
+    <p>Branded as "Cloudbridge Setup" (not "Admin Setup") — the company's name is more motivating than a generic role label. This card is informational: it shows step status so the admin knows where they are. There is only one active CTA for setup — in the welcome banner. The footer "Next step →" is a lightweight secondary link, not a primary button, to avoid redundant CTAs. The full guided wizard lives at <a href="pm-admin-setup.html">pm-admin-setup.html</a>.</p>
+    <p style="margin-top:8px;">SF Contact booleans: <code>Admin_GS_Profile__c</code>, <code>Admin_GS_Requests__c</code>, <code>Admin_GS_Training__c</code>, <code>Admin_GS_Backup__c</code> → all true = <code>Admin_GS_Complete__c = true</code>.</p>
+  </div>
+
+  <div class="spec-section">
+    <h3>Programs module — Snowflake pattern</h3>
+    <p>Snowflake's Partner Marketing Center surfaces co-brandable assets, 50/50 MDF, competitive spiffs, joint demand-gen, and field marketing tools proactively. This module applies the same principle: Day 0 is the highest-intent moment for program adoption. Partners see what's available without hunting through resource libraries. Each card shows the incentive value and a direct CTA.</p>
+    <p style="margin-top:8px;">SF objects: <code>Partner_Program__c</code>, <code>Partner_Program_Member__c</code>, <code>MDF_Request__c</code>.</p>
+  </div>
+
+  <div class="spec-section">
+    <h3>Accessibility</h3>
+    <ul>
+      <li>Setup steps: <code>role="list"</code> / <code>role="listitem"</code>; current step uses <code>aria-current="step"</code></li>
+      <li>Welcome setup block uses <code>role="status"</code> for live region announcing progress</li>
+      <li>Contact links open <code>mailto:</code> or Salesforce Scheduler — keyboard navigable</li>
+      <li>LinkedIn post images carry descriptive <code>role="img"</code> + <code>aria-label</code></li>
+      <li>Color is never the sole indicator of step state — icon + text label both present</li>
+    </ul>
+  </div>
+
+  <div class="spec-section">
+    <h3>Companion pages</h3>
+    <ul>
+      <li><a href="pm-admin-setup.html">pm-admin-setup.html</a> — Admin Setup Workflow (4-step wizard)</li>
+      <li><a href="pm-home-dashboard.html">pm-home-dashboard.html</a> — Admin Home Day N</li>
+      <li><a href="pm-user-request-review.html">pm-user-request-review.html</a> — Pending join request review</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  function toggleSpec() {
+    const panel  = document.getElementById('spec-panel');
+    const toggle = document.getElementById('spec-toggle');
+    const open   = panel.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', open);
+  }
+</script>
+</body>
+</html>

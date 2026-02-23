@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deal Registration</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Salesforce Sans, sans-serif; background-color: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); }
+    .container { max-width: 1400px; margin: 0 auto; padding: 24px; }
+    .page-title { font-size: 20px; font-weight: 700; margin-bottom: 24px; color: var(--wf-ink, #1e2a3a); }
+    .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 24px; }
+    .kpi-card { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+    .kpi-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--wf-muted, #6b7f99); margin-bottom: 8px; }
+    .kpi-value { font-size: 28px; font-weight: 700; color: var(--wf-accent, #3d6daa); margin-bottom: 4px; }
+    .kpi-detail { font-size: 12px; color: var(--wf-muted, #6b7f99); }
+    .card { background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.12); overflow: hidden; margin-bottom: 24px; }
+    .card-header { padding: 24px; border-bottom: 1px solid var(--wf-surface, #edf1f7); }
+    .section-title { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--wf-ink, #1e2a3a); margin: 0; }
+    .card-body { padding: 24px; }
+    .btn { padding: 8px 16px; border-radius: 4px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s; }
+    .btn-primary { background-color: var(--wf-accent, #3d6daa); color: white; }
+    .btn-primary:hover { background-color: var(--wf-accent, #3d6daa); }
+    .btn-primary:disabled { background-color: var(--wf-line, #b0bdd0); cursor: not-allowed; }
+    .btn-secondary { background-color: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); border: 1px solid var(--wf-surface, #edf1f7); }
+    .btn-secondary:hover { background-color: var(--wf-tint, #dce4ef); }
+    .btn-outline { background: transparent; border: 1px solid var(--wf-accent, #3d6daa); color: var(--wf-accent, #3d6daa); }
+    .btn-outline:hover { background-color: var(--wf-canvas, #f5f7fb); }
+    .status-badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    .status-pending { background-color: var(--wf-canvas, #f5f7fb); color: var(--wf-amber, #8b7745); }
+    .status-approved { background-color: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); }
+    .status-draft { background-color: var(--wf-canvas, #f5f7fb); color: var(--wf-accent, #3d6daa); }
+
+    .search-section { margin-bottom: 24px; }
+    .search-box { display: flex; gap: 12px; align-items: flex-start; }
+    .search-input-wrapper { flex: 1; }
+    .search-input { width: 100%; padding: 10px 12px; border: 1px solid var(--wf-surface, #edf1f7); border-radius: 4px; font-size: 13px; font-family: inherit; }
+    .search-input:focus { outline: none; border-color: var(--wf-accent, #3d6daa); box-shadow: 0 0 0 3px rgba(0,112,210,0.1); }
+    .search-results { margin-top: 12px; background: white; border-radius: 4px; border: 1px solid var(--wf-surface, #edf1f7); max-height: 300px; overflow-y: auto; }
+    .search-result-item { padding: 12px 16px; border-bottom: 1px solid var(--wf-canvas, #f5f7fb); cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+    .search-result-item:hover { background-color: var(--wf-canvas, #f5f7fb); }
+    .search-result-confidence { font-size: 11px; color: var(--wf-muted, #6b7f99); }
+
+    .filter-tabs { display: flex; gap: 0; border-bottom: 2px solid var(--wf-surface, #edf1f7); margin-bottom: 16px; }
+    .filter-tab { padding: 12px 20px; border: none; background: transparent; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--wf-muted, #6b7f99); border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
+    .filter-tab.active { color: var(--wf-accent, #3d6daa); border-bottom-color: var(--wf-accent, #3d6daa); }
+    .filter-tab:hover { color: var(--wf-ink, #1e2a3a); }
+
+    .deals-table { width: 100%; }
+    .deals-header { display: grid; grid-template-columns: 1.5fr 1.2fr 1fr 1fr 1fr; gap: 16px; padding: 16px 24px; background-color: var(--wf-canvas, #f5f7fb); border-bottom: 1px solid var(--wf-surface, #edf1f7); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--wf-muted, #6b7f99); }
+    .deals-row { display: grid; grid-template-columns: 1.5fr 1.2fr 1fr 1fr 1fr; gap: 16px; padding: 16px 24px; border-bottom: 1px solid var(--wf-surface, #edf1f7); align-items: center; font-size: 13px; }
+    .deals-row:hover { background-color: var(--wf-canvas, #f5f7fb); }
+    .deals-row:last-child { border-bottom: none; }
+    .deal-name { font-weight: 600; color: var(--wf-accent, #3d6daa); cursor: pointer; }
+    .deal-name:hover { text-decoration: underline; }
+
+    .wizard-container { background: white; border-radius: 8px; padding: 0; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+    .wizard-stepper { display: flex; gap: 0; border-bottom: 1px solid var(--wf-surface, #edf1f7); }
+    .wizard-step { flex: 1; padding: 20px; text-align: center; border-right: 1px solid var(--wf-surface, #edf1f7); cursor: pointer; transition: all 0.2s; }
+    .wizard-step:last-child { border-right: none; }
+    .wizard-step:hover { background-color: var(--wf-canvas, #f5f7fb); }
+    .wizard-step.active { background-color: var(--wf-canvas, #f5f7fb); border-bottom: 3px solid var(--wf-accent, #3d6daa); }
+    .wizard-step.completed { background-color: var(--wf-canvas, #f5f7fb); }
+    .wizard-step-number { display: inline-block; width: 32px; height: 32px; border-radius: 50%; background: var(--wf-surface, #edf1f7); color: var(--wf-muted, #6b7f99); font-weight: 700; line-height: 32px; margin-bottom: 8px; }
+    .wizard-step.active .wizard-step-number { background: var(--wf-accent, #3d6daa); color: white; }
+    .wizard-step.completed .wizard-step-number { background: var(--wf-ink, #1e2a3a); color: white; }
+    .wizard-step-label { font-size: 12px; font-weight: 600; color: var(--wf-muted, #6b7f99); }
+    .wizard-step.active .wizard-step-label { color: var(--wf-accent, #3d6daa); }
+
+    .form-group { margin-bottom: 20px; }
+    .form-label { display: block; font-size: 13px; font-weight: 600; color: var(--wf-ink, #1e2a3a); margin-bottom: 6px; }
+    .form-input { width: 100%; padding: 10px 12px; border: 1px solid var(--wf-surface, #edf1f7); border-radius: 4px; font-size: 13px; font-family: inherit; }
+    .form-input:focus { outline: none; border-color: var(--wf-accent, #3d6daa); box-shadow: 0 0 0 3px rgba(0,112,210,0.1); }
+    .form-input:disabled { background-color: var(--wf-canvas, #f5f7fb); cursor: not-allowed; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-row.full { grid-template-columns: 1fr; }
+    .form-textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--wf-surface, #edf1f7); border-radius: 4px; font-size: 13px; font-family: inherit; min-height: 100px; resize: vertical; }
+    .form-textarea:focus { outline: none; border-color: var(--wf-accent, #3d6daa); box-shadow: 0 0 0 3px rgba(0,112,210,0.1); }
+
+    .checkbox-group { display: flex; flex-direction: column; gap: 12px; }
+    .checkbox-item { display: flex; align-items: flex-start; gap: 8px; }
+    .checkbox-item input { margin-top: 4px; cursor: pointer; }
+    .checkbox-item label { cursor: pointer; font-size: 13px; color: var(--wf-ink, #1e2a3a); }
+
+    .multi-select { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .multi-select-tag { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background-color: var(--wf-canvas, #f5f7fb); border: 1px solid var(--wf-accent, #3d6daa); border-radius: 4px; font-size: 12px; color: var(--wf-accent, #3d6daa); }
+    .multi-select-tag button { background: none; border: none; color: var(--wf-accent, #3d6daa); cursor: pointer; font-weight: 700; }
+
+    .wizard-content { padding: 32px; min-height: 500px; }
+    .wizard-footer { padding: 24px 32px; border-top: 1px solid var(--wf-surface, #edf1f7); display: flex; gap: 12px; justify-content: space-between; }
+
+    .protection-banner { background-color: var(--wf-canvas, #f5f7fb); border-left: 4px solid var(--wf-ink, #1e2a3a); padding: 16px; border-radius: 4px; margin-bottom: 24px; }
+    .protection-banner-title { font-weight: 600; color: var(--wf-ink, #1e2a3a); margin-bottom: 4px; }
+    .protection-banner-text { font-size: 13px; color: var(--wf-ink, #1e2a3a); }
+
+    .drafts-section { margin-bottom: 24px; }
+    .draft-card { background: white; border: 1px solid var(--wf-surface, #edf1f7); border-radius: 8px; padding: 16px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .draft-info { flex: 1; }
+    .draft-name { font-weight: 600; color: var(--wf-ink, #1e2a3a); margin-bottom: 4px; }
+    .draft-meta { font-size: 12px; color: var(--wf-muted, #6b7f99); }
+
+    .review-item { padding: 12px 0; border-bottom: 1px solid var(--wf-surface, #edf1f7); display: flex; justify-content: space-between; align-items: center; }
+    .review-item:last-child { border-bottom: none; }
+    .review-label { font-weight: 600; color: var(--wf-muted, #6b7f99); font-size: 12px; }
+    .review-value { color: var(--wf-ink, #1e2a3a); }
+    .review-edit { margin-left: 12px; }
+    .review-edit a { color: var(--wf-accent, #3d6daa); text-decoration: none; font-size: 12px; }
+    .review-edit a:hover { text-decoration: underline; }
+
+    .spec-title { font-size: 12px; font-weight: 700; color: var(--wf-ink, #1e2a3a); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; border-bottom: 1px solid var(--wf-surface, #edf1f7); padding-bottom: 8px; }
+    .spec-content { font-size: 12px; color: var(--wf-muted, #6b7f99); line-height: 1.6; }
+    .spec-list { list-style: none; padding-left: 0; }
+    .spec-list li { margin-bottom: 8px; padding-left: 20px; position: relative; }
+    .spec-list li:before { content: "•"; position: absolute; left: 0; color: var(--wf-accent, #3d6daa); }
+
+    @media (max-width: 768px) {
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .form-row { grid-template-columns: 1fr; }
+      .deals-header, .deals-row { grid-template-columns: 1fr; gap: 8px; }
+      .wizard-step { padding: 16px 8px; }
+      .wizard-step-label { font-size: 11px; }
+</style>
+</head>
+<body>
+  <header class="wf-header">
+    <div class="wf-header-logo">EQ</div>
+    <div class="wf-header-title">Equinix Partner Manager</div>
+    <nav class="wf-header-nav">
+      <a href="pm-home-dashboard.html">Dashboard</a>
+      <a href="pm-team-management.html">Team</a>
+      <a href="pm-deals-revenue.html" class="active">Deals</a>
+      <a href="pm-team-training.html">Training</a>
+      <a href="pm-resources.html">Resources</a>
+    </nav>
+    <div class="wf-header-util">
+      <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+      <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+    </div>
+  </header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+  <div class="container">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px">
+      <div class="page-title">Deal Registration</div>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Active Deals</div>
+        <div class="kpi-value">12</div>
+        <div class="kpi-detail">Q1 2026</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Pending Approval</div>
+        <div class="kpi-value">3</div>
+        <div class="kpi-detail">Awaiting review</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Approved This Quarter</div>
+        <div class="kpi-value">8</div>
+        <div class="kpi-detail">Jan 1 - Feb 14</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Win Rate</div>
+        <div class="kpi-value">67%</div>
+        <div class="kpi-detail">Closed/Total</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Avg Deal Size</div>
+        <div class="kpi-value">$145K</div>
+        <div class="kpi-detail">Average value</div>
+      </div>
+    </div>
+
+    <div class="protection-banner">
+      <div class="protection-banner-title">Deal Protection Period</div>
+      <div class="protection-banner-text">Approved deals receive 90-day protection period from submission date. During this period, competitor registrations are blocked and your deal has priority access to Equinix resources.</div>
+    </div>
+
+    <div class="drafts-section">
+      <div class="section-title" style="margin-bottom:16px">Draft Deals (2 saved)</div>
+      <div class="draft-card">
+        <div class="draft-info">
+          <div class="draft-name">CloudNet Enterprise Colocation</div>
+          <div class="draft-meta">Last edited Feb 12, 2026 at 2:45 PM | Step 2 of 4 complete</div>
+        </div>
+        <button class="btn btn-primary">Continue</button>
+      </div>
+      <div class="draft-card">
+        <div class="draft-info">
+          <div class="draft-name">TechVenture Interconnection Expansion</div>
+          <div class="draft-meta">Last edited Feb 10, 2026 at 11:20 AM | Step 1 of 4 complete</div>
+        </div>
+        <button class="btn btn-primary">Continue</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="section-title">Search Before You Register</div>
+        <div style="font-size:12px;color:var(--wf-muted, #6b7f99);margin-top:4px">Check for existing deals and opportunities to avoid duplicates and protect your registration</div>
+      </div>
+      <div class="card-body">
+        <div class="search-box">
+          <div class="search-input-wrapper">
+            <input type="text" class="search-input" placeholder="Search existing deals before registering..." aria-label="Search deals">
+          </div>
+          <button class="btn btn-secondary" aria-label="Search">Search</button>
+        </div>
+        <div id="searchResults" class="search-results" style="display:none">
+          <div class="search-result-item">
+            <div>
+              <div style="font-weight:600;color:var(--wf-accent, #3d6daa)">Acme Corp - Colocation Expansion</div>
+              <div style="font-size:12px;color:var(--wf-muted, #6b7f99);margin-top:4px">Customer: Acme Corporation | Amount: $850K | Registered Jan 15, 2026</div>
+            </div>
+            <div class="search-result-confidence">95% match</div>
+          </div>
+          <div class="search-result-item">
+            <div>
+              <div style="font-weight:600;color:var(--wf-accent, #3d6daa)">Acme - Production Environment</div>
+              <div style="font-size:12px;color:var(--wf-muted, #6b7f99);margin-top:4px">Customer: Acme Corporation | Amount: $425K | Registered Nov 20, 2025</div>
+            </div>
+            <div class="search-result-confidence">78% match</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <div class="section-title">Registered Deals</div>
+      </div>
+      <div class="card-body">
+        <div class="filter-tabs" role="tablist">
+          <button class="filter-tab active" role="tab" aria-selected="true" aria-controls="deals-all">All (12)</button>
+          <button class="filter-tab" role="tab" aria-selected="false" aria-controls="deals-pending">Pending (3)</button>
+          <button class="filter-tab" role="tab" aria-selected="false" aria-controls="deals-approved">Approved (8)</button>
+          <button class="filter-tab" role="tab" aria-selected="false" aria-controls="deals-won">Won (5)</button>
+        </div>
+
+        <div id="deals-all">
+          <div class="deals-header">
+            <div>Deal Name</div>
+            <div>Customer</div>
+            <div>Amount</div>
+            <div>Stage</div>
+            <div>Status</div>
+          </div>
+          <div class="deals-row">
+            <div class="deal-name">Acme Corp - Colocation</div>
+            <div>Acme Corporation</div>
+            <div>$850K</div>
+            <div>Order</div>
+            <div><span class="status-badge status-approved">Won</span></div>
+          </div>
+          <div class="deals-row">
+            <div class="deal-name">TechVenture - Interconnection</div>
+            <div>TechVenture Inc</div>
+            <div>$620K</div>
+            <div>Quote</div>
+            <div><span class="status-badge status-approved">Approved</span> <a href="#" style="color:var(--wf-accent, #3d6daa);font-size:11px;margin-left:8px;text-decoration:none">View Opp</a></div>
+          </div>
+          <div class="deals-row">
+            <div class="deal-name">Global Supply Co - Edge</div>
+            <div>Global Supply Co</div>
+            <div>$425K</div>
+            <div>Opportunity</div>
+            <div><span class="status-badge status-pending">Pending</span></div>
+          </div>
+          <div class="deals-row">
+            <div class="deal-name">Enterprise Solutions - Colocation</div>
+            <div>Enterprise Solutions</div>
+            <div>$325K</div>
+            <div>Opportunity</div>
+            <div><span class="status-badge status-approved">Won</span></div>
+          </div>
+          <div class="deals-row">
+            <div class="deal-name">CloudNet - Colocation Expansion</div>
+            <div>CloudNet</div>
+            <div>$275K</div>
+            <div>Quote</div>
+            <div><span class="status-badge status-approved">Approved</span> <a href="#" style="color:var(--wf-accent, #3d6daa);font-size:11px;margin-left:8px;text-decoration:none">View Opp</a></div>
+          </div>
+          <div class="deals-row">
+            <div class="deal-name">DataFlow Systems - Interconnection</div>
+            <div>DataFlow Systems</div>
+            <div>$192K</div>
+            <div>Proposal</div>
+            <div><span class="status-badge status-pending">Pending</span></div>
+          </div>
+          <div class="deals-row">
+            <div class="deal-name">InfinityTech - Network Integration</div>
+            <div>InfinityTech</div>
+            <div>$165K</div>
+            <div>Opportunity</div>
+            <div><span class="status-badge status-approved">Approved</span> <a href="#" style="color:var(--wf-accent, #3d6daa);font-size:11px;margin-left:8px;text-decoration:none">View Opp</a></div>
+          </div>
+          <div class="deals-row">
+            <div class="deal-name">VenturePlus - Colocation</div>
+            <div>VenturePlus</div>
+            <div>$130K</div>
+            <div>Proposal</div>
+            <div><span class="status-badge status-pending">Pending</span></div>
+          </div>
+          <div class="deals-row">
+            <div class="deal-name">Digital Dynamics - Network Edge Services</div>
+            <div>Digital Dynamics</div>
+            <div>$215K</div>
+            <div>Order</div>
+            <div><span class="status-badge status-approved">Won</span></div>
+          </div>
+          <div class="deals-row">
+            <div class="deal-name">SecureNet - Fabric Deployment</div>
+            <div>SecureNet Solutions</div>
+            <div>$350K</div>
+            <div>Quote</div>
+            <div><span class="status-badge status-approved">Approved</span> <a href="#" style="color:var(--wf-accent, #3d6daa);font-size:11px;margin-left:8px;text-decoration:none">View Opp</a></div>
+          </div>
+          <div class="deals-row">
+            <div class="deal-name">NextGen Corp - Edge Computing</div>
+            <div>NextGen Corp</div>
+            <div>$280K</div>
+            <div>Opportunity</div>
+            <div><span class="status-badge status-approved">Won</span></div>
+          </div>
+          <div class="deals-row">
+            <div class="deal-name">FinServ Partners - Colocation Cluster</div>
+            <div>FinServ Partners</div>
+            <div>$475K</div>
+            <div>Quote</div>
+            <div><span class="status-badge status-approved">Approved</span> <a href="#" style="color:var(--wf-accent, #3d6daa);font-size:11px;margin-left:8px;text-decoration:none">View Opp</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wizard-container">
+      <div class="wizard-stepper" role="tablist" aria-label="Deal registration steps">
+        <div class="wizard-step active" role="tab" aria-selected="true" aria-controls="step-1">
+          <div class="wizard-step-number">1</div>
+          <div class="wizard-step-label">Customer Info</div>
+        </div>
+        <div class="wizard-step" role="tab" aria-selected="false" aria-controls="step-2">
+          <div class="wizard-step-number">2</div>
+          <div class="wizard-step-label">Deal Details</div>
+        </div>
+        <div class="wizard-step" role="tab" aria-selected="false" aria-controls="step-3">
+          <div class="wizard-step-number">3</div>
+          <div class="wizard-step-label">Competitive Info</div>
+        </div>
+        <div class="wizard-step" role="tab" aria-selected="false" aria-controls="step-4">
+          <div class="wizard-step-number">4</div>
+          <div class="wizard-step-label">Review & Submit</div>
+        </div>
+      </div>
+
+      <div class="wizard-content" id="step-1" role="tabpanel">
+        <h2 style="font-size:16px;font-weight:700;color:var(--wf-ink, #1e2a3a);margin-bottom:24px">Step 1 of 4: Customer Information</h2>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="customerName">Customer Name *</label>
+            <input type="text" id="customerName" class="form-input" placeholder="Enter customer name" aria-required="true" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="industry">Customer Industry *</label>
+            <select id="industry" class="form-input" aria-required="true">
+              <option value="">Select industry</option>
+              <option>Financial Services</option>
+              <option>Technology</option>
+              <option>Healthcare</option>
+              <option>Retail</option>
+              <option>Manufacturing</option>
+              <option>Telecommunications</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="custSize">Customer Size *</label>
+            <select id="custSize" class="form-input" aria-required="true">
+              <option value="">Select company size</option>
+              <option>Startup (1-50)</option>
+              <option>Small (51-500)</option>
+              <option>Mid-Market (501-5000)</option>
+              <option>Enterprise (5000+)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="contactName">Contact Name *</label>
+            <input type="text" id="contactName" class="form-input" placeholder="Primary contact name" aria-required="true" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="contactEmail">Contact Email *</label>
+            <input type="email" id="contactEmail" class="form-input" placeholder="contact@customer.com" aria-required="true" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="contactPhone">Contact Phone *</label>
+            <input type="tel" id="contactPhone" class="form-input" placeholder="+1 (555) 123-4567" aria-required="true" />
+          </div>
+        </div>
+      </div>
+
+      <div class="wizard-content" id="step-2" role="tabpanel" style="display:none">
+        <h2 style="font-size:16px;font-weight:700;color:var(--wf-ink, #1e2a3a);margin-bottom:24px">Step 2 of 4: Deal Details</h2>
+        <div class="form-row full">
+          <div class="form-group">
+            <label class="form-label" for="dealName">Deal Name *</label>
+            <input type="text" id="dealName" class="form-input" placeholder="e.g., Acme Corp - Colocation Expansion" aria-required="true" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="dealAmount">Estimated Revenue ($) *</label>
+            <input type="number" id="dealAmount" class="form-input" placeholder="250000" aria-required="true" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="closeDate">Expected Close Date *</label>
+            <input type="date" id="closeDate" class="form-input" aria-required="true" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Product Interest (Select all that apply) *</label>
+          <div class="checkbox-group">
+            <div class="checkbox-item">
+              <input type="checkbox" id="colocation" value="Colocation" />
+              <label for="colocation">Colocation</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="interconnection" value="Interconnection" />
+              <label for="interconnection">Interconnection</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="network-edge" value="Network Edge" />
+              <label for="network-edge">Network Edge</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="fabric" value="Fabric" />
+              <label for="fabric">Fabric (Equinix Fabric)</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="edge" value="Network Edge" />
+              <label for="edge">Network Edge</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="dealSource">Deal Source *</label>
+            <select id="dealSource" class="form-input" aria-required="true">
+              <option value="">Select source</option>
+              <option>Inbound Inquiry</option>
+              <option>Partner Outreach</option>
+              <option>Trade Show</option>
+              <option>Referral</option>
+              <option>Migration from Competitor</option>
+              <option>Expansion of Existing Customer</option>
+            </select>
+          </div>
+          <div class="form-group"></div>
+        </div>
+
+        <div class="form-row full">
+          <div class="form-group">
+            <label class="form-label" for="notes">Internal Notes</label>
+            <textarea id="notes" class="form-textarea" placeholder="Add any additional context about this deal..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="wizard-content" id="step-3" role="tabpanel" style="display:none">
+        <h2 style="font-size:16px;font-weight:700;color:var(--wf-ink, #1e2a3a);margin-bottom:24px">Step 3 of 4: Competitive Information</h2>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="competitor">Primary Competitor *</label>
+            <select id="competitor" class="form-input" aria-required="true">
+              <option value="">Select competitor</option>
+              <option>AWS (Data Centers)</option>
+              <option>Google Cloud (Data Centers)</option>
+              <option>Microsoft Azure (Data Centers)</option>
+              <option>Digital Realty</option>
+              <option>CoreWeave</option>
+              <option>Cyxtera</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="competitorSolution">Competitor Solution</label>
+            <input type="text" id="competitorSolution" class="form-input" placeholder="e.g., AWS Direct Connect, Azure ExpressRoute" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Equinix Differentiators (Select all that apply)</label>
+          <div class="checkbox-group">
+            <div class="checkbox-item">
+              <input type="checkbox" id="diff-global" value="Global Reach" />
+              <label for="diff-global">Global Reach (300+ data centers)</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="diff-interconnection" value="Interconnection Hub" />
+              <label for="diff-interconnection">Interconnection Hub (1000s of companies)</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="diff-ecosystem" value="Ecosystem Strength" />
+              <label for="diff-ecosystem">Ecosystem Strength (partners + vendors)</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="diff-performance" value="Performance SLAs" />
+              <label for="diff-performance">Performance SLAs & Uptime Guarantees</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="diff-cost" value="Cost Efficiency" />
+              <label for="diff-cost">Cost Efficiency & TCO</label>
+            </div>
+            <div class="checkbox-item">
+              <input type="checkbox" id="diff-support" value="Expert Support" />
+              <label for="diff-support">Expert Support & Professional Services</label>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-row full">
+          <div class="form-group">
+            <label class="form-label" for="compNotes">Competitive Notes</label>
+            <textarea id="compNotes" class="form-textarea" placeholder="Explain why Equinix will win this deal..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="wizard-content" id="step-4" role="tabpanel" style="display:none">
+        <h2 style="font-size:16px;font-weight:700;color:var(--wf-ink, #1e2a3a);margin-bottom:24px">Step 4 of 4: Review & Submit</h2>
+        <div style="background:var(--wf-canvas, #f5f7fb);border-radius:4px;padding:20px;margin-bottom:24px">
+          <h3 style="font-size:13px;font-weight:700;color:var(--wf-ink, #1e2a3a);margin-bottom:16px">Deal Summary</h3>
+
+          <div style="margin-bottom:24px">
+            <h4 style="font-size:12px;font-weight:600;color:var(--wf-muted, #6b7f99);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px">Customer Information</h4>
+            <div class="review-item">
+              <span class="review-label">Customer Name</span>
+              <span class="review-value" id="review-customer">-</span>
+            </div>
+            <div class="review-item">
+              <span class="review-label">Industry</span>
+              <span class="review-value" id="review-industry">-</span>
+            </div>
+            <div class="review-item">
+              <span class="review-label">Company Size</span>
+              <span class="review-value" id="review-size">-</span>
+            </div>
+            <div class="review-item">
+              <span class="review-label">Contact Name</span>
+              <span class="review-value" id="review-contact">-</span>
+            </div>
+            <div class="review-item">
+              <span class="review-label">Contact Email</span>
+              <span class="review-value" id="review-email">-</span>
+            </div>
+            <div class="review-item">
+              <span class="review-label">Contact Phone</span>
+              <span class="review-value" id="review-phone">-</span>
+            </div>
+          </div>
+
+          <div style="margin-bottom:24px">
+            <h4 style="font-size:12px;font-weight:600;color:var(--wf-muted, #6b7f99);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px">Deal Details</h4>
+            <div class="review-item">
+              <span class="review-label">Deal Name</span>
+              <span class="review-value" id="review-dealname">-</span>
+            </div>
+            <div class="review-item">
+              <span class="review-label">Revenue</span>
+              <span class="review-value" id="review-revenue">-</span>
+            </div>
+            <div class="review-item">
+              <span class="review-label">Close Date</span>
+              <span class="review-value" id="review-closedate">-</span>
+            </div>
+            <div class="review-item">
+              <span class="review-label">Products</span>
+              <span class="review-value" id="review-products">-</span>
+            </div>
+            <div class="review-item">
+              <span class="review-label">Deal Source</span>
+              <span class="review-value" id="review-source">-</span>
+            </div>
+          </div>
+
+          <div style="margin-bottom:24px">
+            <h4 style="font-size:12px;font-weight:600;color:var(--wf-muted, #6b7f99);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:12px">Competitive Information</h4>
+            <div class="review-item">
+              <span class="review-label">Primary Competitor</span>
+              <span class="review-value" id="review-competitor">-</span>
+            </div>
+            <div class="review-item">
+              <span class="review-label">Differentiators</span>
+              <span class="review-value" id="review-diffs">-</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="checkbox-item" style="background:var(--wf-canvas, #f5f7fb);padding:12px;border-radius:4px;border-left:4px solid var(--wf-accent, #3d6daa);margin-bottom:24px">
+          <input type="checkbox" id="terms-agree" />
+          <label for="terms-agree" style="color:var(--wf-amber, #8b7745)">
+            <strong>I confirm</strong> that the information provided is accurate and I understand that false information may result in deal rejection or account suspension. I also acknowledge the 90-day protection period.
+          </label>
+        </div>
+      </div>
+
+      <div class="wizard-footer">
+        <button class="btn btn-secondary" id="prevBtn" style="display:none">Back</button>
+        <div style="display:flex;gap:12px">
+          <button class="btn btn-secondary" id="saveDraftBtn">Save as Draft</button>
+          <button class="btn btn-primary" id="nextBtn">Next Step</button>
+          <button class="btn btn-primary" id="submitBtn" style="display:none;background-color:var(--wf-ink, #1e2a3a)">Submit for Approval</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <div class="spec-title">Salesforce Objects & Fields</div>
+      <div class="spec-content">
+        <strong>Deal_Registration__c:</strong> Deal Reg ID, Account ID (lookup), Contact ID (lookup), Amount__c, Product__c (multi-select), Stage__c, Competitor__c, Differentiators__c (multi-select), Source__c, Notes__c, Status__c (Draft/Pending/Approved/Won), CreatedDate, ApprovedDate__c, ProtectionExpiry__c<br><br>
+        <strong>Opportunity:</strong> Opp ID, Account Name, Amount, StageName (Opportunity/Proposal/Quote/Order), CloseDate, Deal_Registration__c (lookup), Competitor__c, Product__c<br><br>
+        <strong>Account:</strong> Account ID, Account Name, Industry, BillingCity, NumberOfEmployees (size mapping), Partner_Relationship__c<br><br>
+        <strong>Contact:</strong> Contact ID, FirstName, LastName, Email, Phone, AccountId (lookup)
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <div class="spec-title">Validation Rules & Edge Cases</div>
+      <div class="spec-content">
+        <ul class="spec-list">
+          <li>All required fields (marked *) must be completed before submission</li>
+          <li>Deal name must be unique per customer per quarter to avoid duplicates</li>
+          <li>Revenue amount must be between $50K and $5M</li>
+          <li>Close date must be within 180 days of submission</li>
+          <li>Status automatically changes to "Pending" on submission, then "Approved" by PSM within 48 hours</li>
+          <li>Draft deals auto-delete after 30 days of inactivity</li>
+          <li>Protection period starts on approval date, lasts 90 days</li>
+          <li>During protection period, duplicate registrations are blocked with warning message</li>
+          <li>Won deals (Order stage) freeze all edits, but can be viewed and linked to commission</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <div class="spec-title">Error States & Messages</div>
+      <div class="spec-content">
+        <ul class="spec-list">
+          <li>"Customer not found" — Trigger account lookup; offer quick add for new customers</li>
+          <li>"Deal under protection period" — Show existing deal details and protection end date</li>
+          <li>"Incomplete required fields" — Highlight missing fields, show inline validation errors</li>
+          <li>"Revenue outside allowed range" — Must be $50K to $5M; show error</li>
+          <li>"Close date in past" — Cannot register closed deals; show error</li>
+          <li>"Deal registration rejected" — PSM comment provided; allow re-submit after edits</li>
+          <li>"Draft not found" — Draft may have been deleted due to inactivity</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <div class="spec-title">Accessibility Notes</div>
+      <div class="spec-content">
+        <ul class="spec-list">
+          <li>Wizard stepper uses ARIA roles (tablist, tab, tabpanel) for screen readers</li>
+          <li>All form inputs have associated labels and aria-required attributes</li>
+          <li>Status badges include color + text + aria-label (not color alone)</li>
+          <li>Search results announce with aria-live regions when populated</li>
+          <li>Keyboard navigation: Tab moves through form fields, Enter submits forms</li>
+          <li>Wizard buttons disable prev/next appropriately based on current step</li>
+          <li>Form validation errors announced to screen readers inline</li>
+          <li>Review step displays read-only values with clear field labels</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <div class="spec-title">User Flow (Numbered Steps)</div>
+      <div class="spec-content">
+        <ol style="margin-left:20px;line-height:1.8">
+          <li>PM views deal registration page, sees KPI cards (active deals, pending approval, etc.)</li>
+          <li>PM reviews draft deals and continues or creates new deal</li>
+          <li>PM searches for existing deals to check for duplicates and protection periods</li>
+          <li>PM reviews registered deals table, filters by status (all/pending/approved/won)</li>
+          <li>PM clicks "Search Before You Register" to check for existing opportunities</li>
+          <li>PM proceeds to wizard: Step 1 enters customer information (name, contact, industry, size)</li>
+          <li>PM proceeds to Step 2: enters deal details (name, revenue, close date, products, source)</li>
+          <li>PM proceeds to Step 3: identifies competitor and Equinix differentiators</li>
+          <li>PM proceeds to Step 4: reviews all information, confirms terms, submits for approval</li>
+          <li>PM sees success message and deal transitions to "Pending Approval" status</li>
+          <li>PM can view linked Salesforce Opportunity after PSM approval</li>
+          <li>Deal gets 90-day protection period during which PM can track progress</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <div class="spec-title">Related Automations & Flows</div>
+      <div class="spec-content">
+        <strong>Salesforce Flows:</strong><br>
+        • Deal_Registration_Submission_Flow — triggered on Deal_Registration__c create, validates customer, checks for duplicates, sends PSM notification, creates Opportunity<br>
+        • Duplicate_Deal_Detection_Flow — daily check for overlapping registrations within 90-day protection periods<br>
+        • Deal_Status_Sync_Flow — syncs Deal_Registration__c status with Opportunity stage<br><br>
+        <strong>Apex Triggers:</strong><br>
+        • DealRegistrationTrigger — on insert/update, enforce validation rules, update protection dates<br>
+        • OpportunitySyncTrigger — on stage change, update Deal_Registration__c status<br><br>
+        <strong>Batch & Scheduled Jobs:</strong><br>
+        • Draft_Deal_Cleanup_Batch — runs daily, deletes drafts older than 30 days<br>
+        • Protection_Period_Expiry_Batch — runs daily, marks expired deals as "Closed", notifies PMs
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <div class="spec-title">Design Brief & Rationale</div>
+      <div class="spec-content">
+        <strong>Why This Layout?</strong><br>
+        The Deal Registration page combines three critical workflows: (1) viewing and managing existing deals, (2) searching to avoid duplicates, and (3) registering new deals via a guided wizard. The KPI cards at the top give PMs immediate insight into their performance and deal pipeline. The draft deals section enables PMs to pause and resume work without losing progress. The search functionality prevents duplicate registrations and helps PMs understand market saturation.<br><br>
+        <strong>Wizard vs. Single Form:</strong><br>
+        A 4-step wizard reduces cognitive load by breaking deal registration into logical sections (customer → deal details → competitive → review). This mirrors the sales process and ensures all critical information is captured without overwhelming PMs with a 20+ field form.<br><br>
+        <strong>Status Badges & Visual Hierarchy:</strong><br>
+        Status badges use color + uppercase text + subtle backgrounds. The protection period banner uses green to signal positive deal conditions. Pending approval deals use orange to signal action needed.<br><br>
+        <strong>Accessibility:</strong><br>
+        All form fields have labels, required indicators, and keyboard navigation. The wizard stepper uses ARIA roles so screen readers announce step progress. Validation errors appear inline and are announced to assistive technologies.
+      </div>
+    </div>
+  </div>
+
+  <footer class="wf-footer">
+    &copy; 2026 Equinix Partner Manager Portal · Wireframe specification
+  </footer>
+
+  <script>
+    let currentStep = 1;
+    const totalSteps = 4;
+    const wizardSteps = document.querySelectorAll('.wizard-step');
+    const wizardContents = document.querySelectorAll('[id^="step-"]');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const saveDraftBtn = document.getElementById('saveDraftBtn');
+    const submitBtn = document.getElementById('submitBtn');
+
+    function showStep(step) {
+      wizardContents.forEach(content => content.style.display = 'none');
+      document.getElementById('step-' + step).style.display = 'block';
+
+      wizardSteps.forEach((s, idx) => {
+        s.classList.remove('active', 'completed');
+        if (idx + 1 < step) s.classList.add('completed');
+        if (idx + 1 === step) s.classList.add('active');
+        s.setAttribute('aria-selected', idx + 1 === step);
+      });
+
+      prevBtn.style.display = step > 1 ? 'inline-flex' : 'none';
+      submitBtn.style.display = step === totalSteps ? 'inline-block' : 'none';
+      nextBtn.style.display = step < totalSteps ? 'inline-block' : 'none';
+
+      if (step === 4) populateReview();
+    }
+
+    function populateReview() {
+      const getValue = id => document.getElementById(id)?.value || '-';
+      const getChecked = name => Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(el => el.value).join(', ') || '-';
+
+      const products = Array.from(document.querySelectorAll('input[id*="colocation"], input[id*="interconnection"], input[id*="network-edge"], input[id*="fabric"], input[id*="edge"]:checked')).map(el => el.value).join(', ') || '-';
+      const diffs = Array.from(document.querySelectorAll('input[id^="diff-"]:checked')).map(el => el.value).join(', ') || '-';
+
+      document.getElementById('review-customer').textContent = getValue('customerName');
+      document.getElementById('review-industry').textContent = getValue('industry');
+      document.getElementById('review-size').textContent = getValue('custSize');
+      document.getElementById('review-contact').textContent = getValue('contactName');
+      document.getElementById('review-email').textContent = getValue('contactEmail');
+      document.getElementById('review-phone').textContent = getValue('contactPhone');
+      document.getElementById('review-dealname').textContent = getValue('dealName');
+      document.getElementById('review-revenue').textContent = '$' + (getValue('dealAmount') || '0');
+      document.getElementById('review-closedate').textContent = getValue('closeDate');
+      document.getElementById('review-products').textContent = products;
+      document.getElementById('review-source').textContent = getValue('dealSource');
+      document.getElementById('review-competitor').textContent = getValue('competitor');
+      document.getElementById('review-diffs').textContent = diffs;
+    }
+
+    wizardSteps.forEach((step, idx) => {
+      step.addEventListener('click', () => {
+        showStep(idx + 1);
+      });
+    });
+
+    nextBtn.addEventListener('click', () => {
+      if (currentStep < totalSteps) {
+        currentStep++;
+        showStep(currentStep);
+      }
+    });
+
+    prevBtn.addEventListener('click', () => {
+      if (currentStep > 1) {
+        currentStep--;
+        showStep(currentStep);
+      }
+    });
+
+    saveDraftBtn.addEventListener('click', () => {
+      alert('Draft saved! You can continue this registration later.');
+    });
+
+    submitBtn.addEventListener('click', () => {
+      if (document.getElementById('terms-agree').checked) {
+        alert('Deal registration submitted for approval! Your PSM will review within 48 hours.');
+      } else {
+        alert('Please confirm the terms before submitting.');
+      }
+    });
+
+    showStep(1);
+  </script>
+<!-- ── Spec Sidebar (fly-in) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h2>Design Notes</h2>
+    <button class="spec-panel-close" onclick="toggleSpec()" aria-label="Close notes panel">&times;</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Deal Registration enables partners to register deals for protection and quote authority, with multi-step validation, duplicate detection, approval routing, and protection period management.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Register deals for quote authority and price protection</li>
+<li>Verify no duplicate registration exists before submission</li>
+<li>Get quick approval from PSM for qualified deals</li>
+<li>Track deal through registration lifecycle (draft → pending → approved → won)</li>
+<li>Understand protection period and loss-of-deal consequences</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>KPI cards: Active Deals, Pending Approval, Deals Protected, Won</li>
+<li>Multi-step wizard form (Customer Info, Deal Details, Competitive, Review)</li>
+<li>Search Before You Register tool to check duplicates and active protection periods</li>
+<li>Deal registration table with sortable columns and status filters</li>
+<li>Registered deals summary by status (Draft, Pending, Approved, Won)</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Wizard stepper showing current step and validation state</li>
+<li>Filter registered deals by status, rep, date range</li>
+<li>Click deal to view full registration detail and protection status</li>
+<li>Sort by any column header (Deal Name, Rep, Amount, Status, Close Date)</li>
+<li>Export registration data and templates</li>
+<li>Save draft and continue later</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Validation & Duplicate Prevention</strong>
+<ul>
+<li>Enforce revenue range validation ($50K–$5M) and close-date constraints (within 180 days)</li>
+<li>Enforce duplicate-check and protection-period validation before approval to prevent conflicts</li>
+<li>Unique deal name per customer per quarter validation to avoid duplicate registrations</li>
+</ul>
+</li>
+<li><strong>Routing & Automation</strong>
+<ul>
+<li>Route registrations to appropriate approver based on deal size and region</li>
+<li>Auto-transition status: Draft → Pending on submit, Pending → Approved by PSM within 48hr SLA</li>
+<li>Auto-delete inactive drafts after 30 days to maintain system hygiene</li>
+</ul>
+</li>
+<li><strong>Protection & Lifecycle Management</strong>
+<ul>
+<li>Auto-expire deal protection at 90-day mark with notification to registered rep</li>
+<li>Lock won deals (Order stage) to read-only and block all edits to prevent unauthorized changes</li>
+</ul>
+</li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Key Objects</h4>
+<ul>
+<li>Deal_Registration__c: Partner_Account__c, Deal_Name__c, Amount__c, Close_Date__c, Status__c, Owner__c</li>
+<li>Deal_Protection__c: Deal__c, Protection_Period_End__c, Protected_Rep__c</li>
+</ul>
+<h4>Validation &amp; Business Logic</h4>
+<ul>
+<li>All required fields (marked *) must be completed before submission</li>
+<li>Deal name must be unique per customer per quarter to avoid duplicates</li>
+<li>Revenue amount must be between $50K and $5M</li>
+<li>Close date must be within 180 days of submission</li>
+<li>Status automatically changes to 'Pending' on submission, then 'Approved' by PSM within 48 hours</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Course Catalog | Equinix Partner Portal</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Salesforce Sans, sans-serif;
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    header {
+      background-color: var(--wf-ink, #1e2a3a);
+      color: white;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .eq-logo {
+      width: 40px;
+      height: 40px;
+      background-color: var(--wf-accent, #3d6daa);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 20px;
+      color: white;
+    }
+
+    .header-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    nav {
+      display: flex;
+      gap: 32px;
+      margin-left: 48px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-size: 14px;
+      transition: opacity 0.2s;
+    }
+
+    nav a:hover {
+      opacity: 0.8;
+    }
+
+    nav a.active {
+      border-bottom: 3px solid var(--wf-accent, #3d6daa);
+      padding-bottom: 6px;
+    }
+
+    .header-right {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .notification-bell {
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      background-color: var(--wf-accent, #3d6daa);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 32px 24px;
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 24px;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .search-bar {
+      background: white;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--wf-tint, #dce4ef);
+      border-radius: 4px;
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--wf-accent, #3d6daa);
+      box-shadow: 0 0 0 3px rgba(0, 112, 210, 0.1);
+    }
+
+    .filter-section {
+      background: white;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    }
+
+    .filter-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .filter-group {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .filter-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .filter-label {
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .filter-select {
+      padding: 8px 12px;
+      border: 1px solid var(--wf-tint, #dce4ef);
+      border-radius: 4px;
+      font-size: 13px;
+      font-family: inherit;
+      background-color: white;
+    }
+
+    .filter-select:focus {
+      outline: none;
+      border-color: var(--wf-accent, #3d6daa);
+      box-shadow: 0 0 0 3px rgba(0, 112, 210, 0.1);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 24px;
+      border-bottom: 2px solid var(--wf-tint, #dce4ef);
+    }
+
+    .tab {
+      padding: 16px 24px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--wf-muted, #6b7f99);
+      cursor: pointer;
+      background: white;
+      border: none;
+      border-radius: 0;
+      transition: all 0.2s;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+    }
+
+    .tab:hover {
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .tab.active {
+      color: var(--wf-accent, #3d6daa);
+      border-bottom-color: var(--wf-accent, #3d6daa);
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .course-card {
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .course-card:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .course-thumbnail {
+      width: 100%;
+      height: 160px;
+      background: var(--wf-accent, #3d6daa);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      color: white;
+    }
+
+    .course-content {
+      padding: 16px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .course-badges {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .badge-track {
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-accent, #3d6daa);
+    }
+
+    .badge-level-beginner {
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-muted, #6b7f99);
+    }
+
+    .badge-level-intermediate {
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-amber, #8b7745);
+    }
+
+    .badge-level-advanced {
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .course-title {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .course-meta {
+      font-size: 13px;
+      color: var(--wf-muted, #6b7f99);
+      margin-bottom: 12px;
+    }
+
+    .course-category {
+      display: inline-block;
+      background-color: var(--wf-canvas, #f5f7fb);
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 12px;
+    }
+
+    .course-footer {
+      border-top: 1px solid var(--wf-tint, #dce4ef);
+      padding-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: auto;
+    }
+
+    .enrollment-badge {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+
+    .enrollment-enrolled {
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-muted, #6b7f99);
+    }
+
+    .enrollment-not-enrolled {
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-muted, #6b7f99);
+    }
+
+    .course-btn {
+      padding: 8px 16px;
+      background-color: var(--wf-accent, #3d6daa);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .course-btn:hover {
+      background-color: var(--wf-accent, #3d6daa);
+    }
+
+    .course-btn-secondary {
+      background-color: white;
+      color: var(--wf-accent, #3d6daa);
+      border: 1px solid var(--wf-accent, #3d6daa);
+    }
+
+    .course-btn-secondary:hover {
+      background-color: var(--wf-canvas, #f5f7fb);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @media (max-width: 1024px) {
+      .card-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .filter-group {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .card-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .filter-group {
+        grid-template-columns: 1fr;
+      }
+
+      nav {
+        display: none;
+      }
+    }
+  
+/* ── 3-Column Record Layout ── */
+.record-layout { display:grid; grid-template-columns:280px 1fr 300px; gap:1rem; padding:1rem 2rem; max-width:1600px; }
+@media (max-width:1200px) { .record-layout { grid-template-columns:1fr; } }
+.left-rail .card, .right-rail .card { margin-bottom:1rem; }
+.center-content .card { margin-bottom:1rem; }
+.card { background:var(--wf-surface,#edf1f7); border:1px solid var(--wf-tint,#dce4ef); border-radius:6px; overflow:hidden; }
+.card-hd { padding:0.75rem 1rem; border-bottom:1px solid var(--wf-tint); display:flex; justify-content:space-between; align-items:center; }
+.card-hd h3 { font-size:13px; font-weight:700; color:var(--wf-ink); margin:0; }
+.card-hd-action { font-size:11px; color:var(--wf-accent); text-decoration:none; font-weight:600; cursor:pointer; }
+.card-bd { padding:1rem; }
+.hl-row { display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:12px; }
+.hl-row:last-child { border-bottom:none; }
+.hl-label { color:var(--wf-muted); }
+.hl-value { font-weight:700; color:var(--wf-ink); }
+.hl-value.warn { color:var(--wf-amber,#8b7745); }
+.rel-item { display:flex; align-items:center; gap:0.625rem; padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:12px; }
+.rel-item:last-child { border-bottom:none; }
+.rel-icon { width:28px; height:28px; border-radius:50%; background:var(--wf-tint); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.rel-icon svg { width:14px; height:14px; color:var(--wf-ink); }
+.rel-info { flex:1; }
+.rel-title { font-size:12px; font-weight:600; color:var(--wf-ink); }
+.rel-sub { font-size:11px; color:var(--wf-muted); }
+.rel-meta { font-size:11px; color:var(--wf-muted); text-align:right; white-space:nowrap; }
+/* Right-rail tabs */
+.rail-tabs { display:flex; border-bottom:1px solid var(--wf-tint); }
+.rail-tab { flex:1; padding:0.5rem; font-size:11px; font-weight:600; text-align:center; color:var(--wf-muted); cursor:pointer; border-bottom:2px solid transparent; background:none; border-top:none; border-left:none; border-right:none; }
+.rail-tab.active { color:var(--wf-accent); border-bottom-color:var(--wf-accent); }
+.rail-tab-content { display:none; }
+.rail-tab-content.active { display:block; }
+/* Activity feed in right rail */
+.feed-sm { padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:11px; }
+.feed-sm:last-child { border-bottom:none; }
+.feed-sm-text { color:var(--wf-text); line-height:1.4; }
+.feed-sm-text strong { color:var(--wf-ink); }
+.feed-sm-time { color:var(--wf-muted); font-size:10px; margin-top:2px; }
+/* Quick action buttons */
+.action-btn { width:100%; padding:0.5rem; border-radius:4px; font-size:12px; font-weight:600; cursor:pointer; margin-bottom:0.375rem; border:1px solid var(--wf-line); text-align:center; }
+.action-btn:last-child { margin-bottom:0; }
+.action-btn-primary { background:var(--wf-accent); color:white; border-color:var(--wf-accent); }
+.action-btn-secondary { background:var(--wf-surface); color:var(--wf-text); }
+</style>
+</head>
+<body>
+  <header class="wf-header">
+    <div class="wf-header-logo">EQ</div>
+    <div class="wf-header-title">Equinix Partner Manager</div>
+    <nav class="wf-header-nav">
+      <a href="pm-home-dashboard.html">Dashboard</a>
+      <a href="pm-team-management.html" class="active">Team</a>
+      <a href="pm-deals-revenue.html">Deals</a>
+      <a href="pm-team-training.html">Training</a>
+      <a href="pm-resources.html">Resources</a>
+    </nav>
+    <div class="wf-header-util">
+      <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+      <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+    </div>
+  </header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+
+<!-- ── 3-Column Record Layout ── -->
+<div class="record-layout">
+
+  <!-- ════════ LEFT RAIL — Related Objects ════════ -->
+  <div class="left-rail">
+    <div class="card">
+      <div class="card-hd"><h3>Filters</h3></div>
+      <div class="card-bd">
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m9.86-5.632a4.5 4.5 0 00-6.364 0l-4.5 4.5a4.5 4.5 0 001.242 7.244"/></svg></div>
+          <div class="rel-info"><div class="rel-title">Business Track</div><div class="rel-sub">12 courses</div></div>
+        </div>
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m9.86-5.632a4.5 4.5 0 00-6.364 0l-4.5 4.5a4.5 4.5 0 001.242 7.244"/></svg></div>
+          <div class="rel-info"><div class="rel-title">Technical Track</div><div class="rel-sub">11 courses</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><h3>My Progress</h3></div>
+      <div class="card-bd">
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0"/></svg></div>
+          <div class="rel-info"><div class="rel-title">Completed</div><div class="rel-sub">6 of 12</div></div>
+        </div>
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0"/></svg></div>
+          <div class="rel-info"><div class="rel-title">Current</div><div class="rel-sub">Interconnection 201</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ CENTER — Main Content ════════ -->
+  <div class="center-content">
+  <div class="container">
+    <h1 class="page-title">Course Catalog</h1>
+
+    <div class="search-bar">
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Search courses by title, topic, or instructor..."
+        aria-label="Search courses"
+      >
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-title">Filter Courses</div>
+      <div class="filter-group">
+        <div class="filter-item">
+          <label class="filter-label">Track</label>
+          <select class="filter-select" aria-label="Filter by track">
+            <option value="">All Tracks</option>
+            <option value="business">Business Track</option>
+            <option value="technical">Technical Track</option>
+          </select>
+        </div>
+        <div class="filter-item">
+          <label class="filter-label">Category</label>
+          <select class="filter-select" aria-label="Filter by category">
+            <option value="">All Categories</option>
+            <option value="product">Product Knowledge</option>
+            <option value="sales">Sales Methodology</option>
+            <option value="technical">Technical Certification</option>
+            <option value="operations">Partner Operations</option>
+          </select>
+        </div>
+        <div class="filter-item">
+          <label class="filter-label">Level</label>
+          <select class="filter-select" aria-label="Filter by level">
+            <option value="">All Levels</option>
+            <option value="beginner">Beginner</option>
+            <option value="intermediate">Intermediate</option>
+            <option value="advanced">Advanced</option>
+          </select>
+        </div>
+        <div class="filter-item">
+          <label class="filter-label">Format</label>
+          <select class="filter-select" aria-label="Filter by format">
+            <option value="">All Formats</option>
+            <option value="elearning">E-Learning</option>
+            <option value="instructor">Instructor-Led</option>
+            <option value="video">Video</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab(event, 'business-tab')" aria-selected="true">Business Track (17 courses)</button>
+      <button class="tab" onclick="switchTab(event, 'technical-tab')" aria-selected="false">Technical Track (16 courses)</button>
+    </div>
+
+    <div id="business-tab" class="tab-content active">
+      <div class="card-grid">
+        <div class="course-card">
+          <div class="course-thumbnail">📊</div>
+          <div class="course-content">
+            <div class="course-badges">
+              <span class="badge badge-track">Business</span>
+              <span class="badge badge-level-beginner">Beginner</span>
+            </div>
+            <h3 class="course-title">Equinix Solutions Overview</h3>
+            <div class="course-category">Product Knowledge</div>
+            <div class="course-meta">4 hours | Video</div>
+            <div class="course-footer">
+              <span class="enrollment-badge enrollment-enrolled">Enrolled</span>
+              <button class="course-btn">Continue</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="course-card">
+          <div class="course-thumbnail">💼</div>
+          <div class="course-content">
+            <div class="course-badges">
+              <span class="badge badge-track">Business</span>
+              <span class="badge badge-level-beginner">Beginner</span>
+            </div>
+            <h3 class="course-title">Sales Methodology Fundamentals</h3>
+            <div class="course-category">Sales Methodology</div>
+            <div class="course-meta">6 hours | E-Learning</div>
+            <div class="course-footer">
+              <span class="enrollment-badge enrollment-not-enrolled">Not Enrolled</span>
+              <button class="course-btn">Enroll</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="course-card">
+          <div class="course-thumbnail">🎯</div>
+          <div class="course-content">
+            <div class="course-badges">
+              <span class="badge badge-track">Business</span>
+              <span class="badge badge-level-intermediate">Intermediate</span>
+            </div>
+            <h3 class="course-title">Advanced Negotiations</h3>
+            <div class="course-category">Sales Methodology</div>
+            <div class="course-meta">5 hours | Instructor-Led</div>
+            <div class="course-footer">
+              <span class="enrollment-badge enrollment-enrolled">Enrolled</span>
+              <button class="course-btn">Continue</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="course-card">
+          <div class="course-thumbnail">🏢</div>
+          <div class="course-content">
+            <div class="course-badges">
+              <span class="badge badge-track">Business</span>
+              <span class="badge badge-level-intermediate">Intermediate</span>
+            </div>
+            <h3 class="course-title">Partner Operations Excellence</h3>
+            <div class="course-category">Partner Operations</div>
+            <div class="course-meta">3 hours | E-Learning</div>
+            <div class="course-footer">
+              <span class="enrollment-badge enrollment-not-enrolled">Not Enrolled</span>
+              <button class="course-btn">Enroll</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="course-card">
+          <div class="course-thumbnail">💡</div>
+          <div class="course-content">
+            <div class="course-badges">
+              <span class="badge badge-track">Business</span>
+              <span class="badge badge-level-advanced">Advanced</span>
+            </div>
+            <h3 class="course-title">Enterprise Account Management</h3>
+            <div class="course-category">Sales Methodology</div>
+            <div class="course-meta">7 hours | Instructor-Led</div>
+            <div class="course-footer">
+              <span class="enrollment-badge enrollment-not-enrolled">Not Enrolled</span>
+              <button class="course-btn">Enroll</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="course-card">
+          <div class="course-thumbnail">📈</div>
+          <div class="course-content">
+            <div class="course-badges">
+              <span class="badge badge-track">Business</span>
+              <span class="badge badge-level-intermediate">Intermediate</span>
+            </div>
+            <h3 class="course-title">Hybrid Cloud Solutions Selling</h3>
+            <div class="course-category">Product Knowledge</div>
+            <div class="course-meta">4.5 hours | Video</div>
+            <div class="course-footer">
+              <span class="enrollment-badge enrollment-enrolled">Enrolled</span>
+              <button class="course-btn">Continue</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="technical-tab" class="tab-content">
+      <div class="card-grid">
+        <div class="course-card">
+          <div class="course-thumbnail">⚙️</div>
+          <div class="course-content">
+            <div class="course-badges">
+              <span class="badge badge-track">Technical</span>
+              <span class="badge badge-level-intermediate">Intermediate</span>
+            </div>
+            <h3 class="course-title">Infrastructure & Networking Basics</h3>
+            <div class="course-category">Technical Certification</div>
+            <div class="course-meta">6 hours | E-Learning</div>
+            <div class="course-footer">
+              <span class="enrollment-badge enrollment-enrolled">Enrolled</span>
+              <button class="course-btn">Continue</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="course-card">
+          <div class="course-thumbnail">☁️</div>
+          <div class="course-content">
+            <div class="course-badges">
+              <span class="badge badge-track">Technical</span>
+              <span class="badge badge-level-advanced">Advanced</span>
+            </div>
+            <h3 class="course-title">Cloud Architecture Design</h3>
+            <div class="course-category">Technical Certification</div>
+            <div class="course-meta">8 hours | Instructor-Led</div>
+            <div class="course-footer">
+              <span class="enrollment-badge enrollment-not-enrolled">Not Enrolled</span>
+              <button class="course-btn">Enroll</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="course-card">
+          <div class="course-thumbnail">🔒</div>
+          <div class="course-content">
+            <div class="course-badges">
+              <span class="badge badge-track">Technical</span>
+              <span class="badge badge-level-intermediate">Intermediate</span>
+            </div>
+            <h3 class="course-title">Security & Compliance Frameworks</h3>
+            <div class="course-category">Technical Certification</div>
+            <div class="course-meta">5 hours | Video</div>
+            <div class="course-footer">
+              <span class="enrollment-badge enrollment-not-enrolled">Not Enrolled</span>
+              <button class="course-btn">Enroll</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="course-card">
+          <div class="course-thumbnail">🌐</div>
+          <div class="course-content">
+            <div class="course-badges">
+              <span class="badge badge-track">Technical</span>
+              <span class="badge badge-level-beginner">Beginner</span>
+            </div>
+            <h3 class="course-title">Edge Computing Fundamentals</h3>
+            <div class="course-category">Product Knowledge</div>
+            <div class="course-meta">4 hours | Video</div>
+            <div class="course-footer">
+              <span class="enrollment-badge enrollment-enrolled">Enrolled</span>
+              <button class="course-btn">Continue</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="course-card">
+          <div class="course-thumbnail">🔗</div>
+          <div class="course-content">
+            <div class="course-badges">
+              <span class="badge badge-track">Technical</span>
+              <span class="badge badge-level-advanced">Advanced</span>
+            </div>
+            <h3 class="course-title">Advanced Networking Configuration</h3>
+            <div class="course-category">Technical Certification</div>
+            <div class="course-meta">7 hours | Instructor-Led</div>
+            <div class="course-footer">
+              <span class="enrollment-badge enrollment-not-enrolled">Not Enrolled</span>
+              <button class="course-btn">Enroll</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="course-card">
+          <div class="course-thumbnail">📡</div>
+          <div class="course-content">
+            <div class="course-badges">
+              <span class="badge badge-track">Technical</span>
+              <span class="badge badge-level-intermediate">Intermediate</span>
+            </div>
+            <h3 class="course-title">API Integration & Automation</h3>
+            <div class="course-category">Technical Certification</div>
+            <div class="course-meta">5.5 hours | E-Learning</div>
+            <div class="course-footer">
+              <span class="enrollment-badge enrollment-enrolled">Enrolled</span>
+              <button class="course-btn">Continue</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>  </div>
+
+  <!-- ════════ RIGHT RAIL — Activity & Insights ════════ -->
+  <div class="right-rail">
+    <div class="card">
+      <div class="rail-tabs">
+        <button class="rail-tab active" onclick="document.querySelectorAll('.rail-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active');document.querySelectorAll('.rail-tab-content').forEach(c=>c.classList.remove('active'));document.getElementById('tab-activity').classList.add('active');">Activity</button>
+        <button class="rail-tab" onclick="document.querySelectorAll('.rail-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active');document.querySelectorAll('.rail-tab-content').forEach(c=>c.classList.remove('active'));document.getElementById('tab-einstein').classList.add('active');">Einstein</button>
+      </div>
+      <div id="tab-activity" class="rail-tab-content active">
+        <div class="card-bd">
+          <div class="feed-sm"><div class="feed-sm-text">New course: TEC-305</div><div class="feed-sm-time">This week</div></div>
+          <div class="feed-sm"><div class="feed-sm-text">BUS-201 updated</div><div class="feed-sm-time">1 week ago</div></div>
+          <div class="feed-sm"><div class="feed-sm-text">3 team members enrolled</div><div class="feed-sm-time">3 weeks ago</div></div>
+        </div>
+      </div>
+      <div id="tab-einstein" class="rail-tab-content">
+        <div class="card-bd" style="font-size:12px;color:var(--wf-text);line-height:1.5;">
+          <div style="font-size:11px;font-weight:700;color:var(--wf-accent);text-transform:uppercase;letter-spacing:0.03em;margin-bottom:0.5rem;">AI Recommendation</div>
+          Recommend BUS-201 and TEC-302 for unassigned members — highest completion-to-deal correlation.
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><h3>Actions</h3></div>
+      <div class="card-bd">
+        <button class="action-btn action-btn-primary">Enroll Team</button>
+        <button class="action-btn action-btn-secondary">View Schedule</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+  <script>
+    function switchTab(e, tabId) {
+      const tabs = document.querySelectorAll('.tab');
+      const contents = document.querySelectorAll('.tab-content');
+
+      tabs.forEach(tab => {
+        tab.classList.remove('active');
+        tab.setAttribute('aria-selected', 'false');
+      });
+
+      contents.forEach(content => {
+        content.classList.remove('active');
+      });
+
+      e.target.classList.add('active');
+      e.target.setAttribute('aria-selected', 'true');
+      document.getElementById(tabId).classList.add('active');
+    }
+  </script>
+  <footer class="wf-footer">
+    &copy; 2026 Equinix Partner Manager Portal · Wireframe specification
+  </footer>
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h2>Design Notes</h2>
+    <button class="spec-panel-close" onclick="toggleSpec()" aria-label="Close notes panel">&times;</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>The Course Catalog enables Partner Managers to discover, review, and assign training courses to their teams based on track (Business/Technical), level, and compliance requirements.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Browse available training courses for team assignment</li>
+<li>Identify courses needed for tier advancement</li>
+<li>Assign courses to individual reps or entire team</li>
+<li>Track course popularity and adoption</li>
+<li>Support training planning and resource allocation</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Course catalog browse organized by Business and Technical tracks</li>
+<li>Course cards with title, track/level badges, category, duration, format</li>
+<li>Enrollment status (Enrolled vs. Not Enrolled) indicators</li>
+<li>Search bar with keyword matching</li>
+<li>Filters: Track, Category, Level, Format</li>
+<li>Course completion stats across organization</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Search courses by keyword and full-text matching</li>
+<li>Filter by category, difficulty level, track, format</li>
+<li>Click course card to view detail and enrollment status</li>
+<li>Enroll/Continue buttons contextual to enrollment status</li>
+<li>Sort by popularity, newest, relevance</li>
+<li>View organization completion rate per course</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Data Integration</strong>
+<ul>
+<li>LMS/SumTotal API integration for real-time course enrollment status and course catalog sync</li>
+<li>Tier-requirement rule engine to flag recommended courses per role and certification level</li>
+</ul>
+</li>
+<li><strong>Search & Discovery</strong>
+<ul>
+<li>Full-text search with faceted filtering by track, category, level, and format</li>
+<li>Keyword matching across course titles, descriptions, and instructor names</li>
+</ul>
+</li>
+<li><strong>Automation & Assignment</strong>
+<ul>
+<li>Bulk assignment API to enroll multiple team members in selected courses</li>
+<li>Automatic enrollment status tracking (Enrolled vs. Not Enrolled indicators)</li>
+</ul>
+</li>
+<li><strong>Analytics & Reporting</strong>
+<ul>
+<li>Analytics aggregation for org-wide completion tracking and progress monitoring</li>
+<li>Course popularity and adoption metrics with team-level insights</li>
+</ul>
+</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+</body>
+</html>

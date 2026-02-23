@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search — AE · Equinix PCP Partner Portal</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); }
+    header { background: var(--wf-ink, #1e2a3a); height: 56px; display: flex; align-items: center; padding: 0 24px; gap: 16px; }
+    .logo-box { display: flex; align-items: center; gap: 8px; }
+    .logo { width: 32px; height: 32px; border-radius: 6px; background: var(--wf-accent, #3d6daa); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 13px; }
+    .header-title { color: #fff; font-weight: 590; font-size: 14px; }
+    nav { display: flex; align-items: center; height: 56px; gap: 0; flex: 1; padding-left: 8px; }
+    nav a { padding: 0 16px; height: 56px; display: flex; align-items: center; font-size: 13px; color: rgba(255,255,255,.8); border-bottom: 3px solid transparent; text-decoration: none; }
+    nav a:hover { color: #fff; }
+    .search-header { background: #fff; border-bottom: 1px solid var(--wf-tint, #dce4ef); padding: 16px 24px; }
+    .search-container { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; gap: 12px; }
+    .search-input-wrap { flex: 1; position: relative; }
+    .search-input { width: 100%; padding: 10px 16px 10px 40px; border: 2px solid var(--wf-accent, #3d6daa); border-radius: 6px; font-size: 15px; font-family: inherit; outline: none; }
+    .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--wf-muted, #6b7f99); font-size: 16px; }
+    .search-clear { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--wf-muted, #6b7f99); font-size: 18px; cursor: pointer; background: none; border: none; }
+    .search-btn { padding: 10px 20px; background: var(--wf-accent, #3d6daa); color: #fff; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; }
+    .search-btn:hover { background: var(--wf-accent, #3d6daa); }
+    .container { max-width: 1400px; margin: 0 auto; padding: 24px; }
+    .results-summary { font-size: 14px; color: var(--wf-muted, #6b7f99); margin-bottom: 20px; }
+    .results-summary strong { color: var(--wf-ink, #1e2a3a); }
+    .results-summary .query { color: var(--wf-accent, #3d6daa); font-weight: 600; }
+    .tabs { display: flex; gap: 0; border-bottom: 2px solid var(--wf-tint, #dce4ef); margin-bottom: 24px; }
+    .tab { padding: 12px 20px; font-size: 13px; font-weight: 600; color: var(--wf-muted, #6b7f99); cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
+    .tab:hover { color: var(--wf-ink, #1e2a3a); }
+    .tab.active { color: var(--wf-accent, #3d6daa); border-bottom-color: var(--wf-accent, #3d6daa); }
+    .tab .count { background: var(--wf-tint, #dce4ef); color: var(--wf-muted, #6b7f99); padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-left: 6px; }
+    .tab.active .count { background: var(--wf-canvas, #f5f7fb); color: var(--wf-accent, #3d6daa); }
+    .result-section { margin-bottom: 28px; }
+    .section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--wf-muted, #6b7f99); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--wf-tint, #dce4ef); display: flex; align-items: center; gap: 8px; }
+    .section-icon { width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #fff; }
+    .result-card { background: #fff; padding: 16px 20px; border-radius: 6px; margin-bottom: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); display: flex; gap: 16px; align-items: flex-start; transition: all 0.15s; cursor: pointer; border-left: 3px solid transparent; }
+    .result-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.12); border-left-color: var(--wf-accent, #3d6daa); }
+    .result-card.featured { border-left: 3px solid var(--wf-ink, #1e2a3a); background: var(--wf-canvas, #f5f7fb); }
+    .result-icon { width: 36px; height: 36px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+    .result-body { flex: 1; min-width: 0; }
+    .result-title { font-size: 14px; font-weight: 600; color: var(--wf-accent, #3d6daa); margin: 0 0 4px 0; text-decoration: none; }
+    .result-title:hover { text-decoration: underline; }
+    .result-meta { font-size: 12px; color: var(--wf-muted, #6b7f99); margin: 0 0 6px 0; }
+    .result-snippet { font-size: 13px; color: var(--wf-text, #3b4f68); line-height: 1.5; margin: 0; }
+    .result-snippet mark { background: var(--wf-surface, #edf1f7); padding: 1px 2px; border-radius: 2px; }
+    .result-badge { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+    .badge-course { background: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); }
+    .badge-cert { background: var(--wf-canvas, #f5f7fb); color: var(--wf-accent, #3d6daa); }
+    .badge-resource { background: var(--wf-canvas, #f5f7fb); color: var(--wf-amber, #8b7745); }
+    .badge-path { background: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); }
+    .result-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+    .result-date { font-size: 11px; color: var(--wf-muted, #6b7f99); white-space: nowrap; }
+    .result-status { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 4px; }
+    .status-approved { background: var(--wf-surface, #edf1f7); color: var(--wf-ink, #1e2a3a); }
+    .status-active { background: var(--wf-canvas, #f5f7fb); color: var(--wf-accent, #3d6daa); }
+    .status-progress { background: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); }
+    .status-required { background: var(--wf-canvas, #f5f7fb); color: var(--wf-red, #8b4553); }
+    .status-locked { background: var(--wf-canvas, #f5f7fb); color: var(--wf-muted, #6b7f99); }
+
+    /* Best Match Banner */
+    .best-match { background: var(--wf-canvas, #f5f7fb); border: 1px solid var(--wf-tint, #dce4ef); border-radius: 8px; padding: 16px 20px; margin-bottom: 20px; display: flex; gap: 16px; align-items: center; }
+    .best-match-icon { width: 48px; height: 48px; border-radius: 8px; background: var(--wf-ink, #1e2a3a); display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; }
+    .best-match-body { flex: 1; }
+    .best-match-label { font-size: 11px; font-weight: 700; color: var(--wf-ink, #1e2a3a); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+    .best-match-title { font-size: 16px; font-weight: 700; color: var(--wf-ink, #1e2a3a); margin: 0 0 4px 0; }
+    .best-match-meta { font-size: 13px; color: var(--wf-muted, #6b7f99); margin: 0; }
+    .best-match-actions { display: flex; gap: 8px; flex-shrink: 0; }
+    .btn-primary { padding: 8px 16px; background: var(--wf-ink, #1e2a3a); color: #fff; border: none; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; }
+    .btn-primary:hover { background: var(--wf-muted, #6b7f99); }
+    .btn-outline { padding: 8px 16px; background: transparent; color: var(--wf-ink, #1e2a3a); border: 1px solid var(--wf-ink, #1e2a3a); border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; }
+
+    .layout { display: grid; grid-template-columns: 240px 1fr; gap: 24px; }
+    .sidebar { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); height: fit-content; position: sticky; top: 24px; }
+    .sidebar h3 { margin: 0 0 16px 0; font-size: 13px; font-weight: 700; color: var(--wf-ink, #1e2a3a); }
+    .filter-group { margin-bottom: 20px; }
+    .filter-group:last-child { margin-bottom: 0; }
+    .filter-label { font-size: 11px; font-weight: 600; color: var(--wf-muted, #6b7f99); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+    .filter-option { display: flex; align-items: center; gap: 8px; padding: 6px 0; font-size: 13px; color: var(--wf-ink, #1e2a3a); cursor: pointer; }
+    .filter-option input { margin: 0; }
+    .filter-option .fcount { color: var(--wf-muted, #6b7f99); font-size: 11px; margin-left: auto; }
+    .recent-searches { background: #fff; padding: 16px 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom: 20px; }
+    .recent-searches h4 { margin: 0 0 12px 0; font-size: 12px; font-weight: 600; color: var(--wf-muted, #6b7f99); text-transform: uppercase; letter-spacing: 0.5px; }
+    .recent-item { font-size: 13px; color: var(--wf-accent, #3d6daa); padding: 4px 0; cursor: pointer; text-decoration: none; display: block; }
+    .recent-item:hover { text-decoration: underline; }
+    .recent-item::before { content: "🕐 "; font-size: 11px; }
+
+    /* Progress bar */
+    .progress-bar { width: 120px; height: 6px; background: var(--wf-tint, #dce4ef); border-radius: 3px; overflow: hidden; margin-top: 4px; }
+    .progress-fill { height: 100%; border-radius: 3px; }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .best-match { flex-direction: column; text-align: center; }
+      .best-match-actions { justify-content: center; }
+</style>
+</head>
+<body>
+<div class="page-context-bar">
+  <div style="max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <nav class="wf-breadcrumb" aria-label="Breadcrumb" style="margin-bottom:0;">
+      <a href="rep-home.html">Home</a>
+      <span class="wf-breadcrumb-sep">›</span>
+      <a href="rep-my-training.html">Training</a>
+      <span class="wf-breadcrumb-sep">›</span>
+      <span class="wf-breadcrumb-current">Search</span>
+    </nav>
+    <span class="persona-badge persona-badge--ae">AE</span>
+  </div>
+</div>
+  <header>
+    <div class="logo-box">
+      <div class="logo">EQ</div>
+      <span class="header-title">Equinix Partner Portal</span>
+    </div>
+    <nav>
+      <a href="rep-deals-commission.html">Deals</a>
+      <a href="rep-my-training.html" class="active">Training</a>
+      <a href="rep-marketing.html">Marketing</a>
+      <a href="rep-support.html">Support</a>
+      <a href="rep-resources.html">Resources</a>
+    </nav>
+  
+    <a href="rep-notifications.html" class="bell-wrapper" aria-label="Notifications" style="position:relative;color:white;text-decoration:none;margin-left:auto;">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+      <span style="position:absolute;top:-4px;right:-6px;background:var(--wf-red,#8b4555);color:white;font-size:10px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;">7</span>
+    </a>
+</header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+  <div class="search-header">
+    <div class="search-container">
+      <div class="search-input-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" value="Security Fundamentals" aria-label="Global search" placeholder="Search deals, courses, resources, customers...">
+        <button class="search-clear" aria-label="Clear search">×</button>
+      </div>
+      <button class="search-btn">Search</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Best Match Banner -->
+    <div class="best-match" role="region" aria-label="Best match result">
+      <div class="best-match-icon">🔒</div>
+      <div class="best-match-body">
+        <div class="best-match-label">Best Match — Course</div>
+        <h2 class="best-match-title">Security Fundamentals for Equinix Partners</h2>
+        <p class="best-match-meta">Product Training · 2.5 hours · Required for Silver+ · You're 40% complete (last accessed Feb 6)</p>
+      </div>
+      <div class="best-match-actions">
+        <button class="btn-primary">Resume Course</button>
+        <button class="btn-outline">View Details</button>
+      </div>
+    </div>
+
+    <div class="results-summary">
+      <strong>9 results</strong> for <span class="query">"Security Fundamentals"</span> across courses, resources, and certifications · 0.2s
+    </div>
+
+    <div class="tabs" role="tablist">
+      <div class="tab active" role="tab" aria-selected="true">All Results <span class="count">9</span></div>
+      <div class="tab" role="tab">Courses <span class="count">4</span></div>
+      <div class="tab" role="tab">Resources <span class="count">3</span></div>
+      <div class="tab" role="tab">Certifications <span class="count">2</span></div>
+    </div>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="recent-searches">
+          <h4>Recent Searches</h4>
+          <a class="recent-item" href="rep-search-fabric.html">Fabric Cloud Router</a>
+          <a class="recent-item" href="rep-search-results.html">Acme</a>
+          <a class="recent-item" href="#">commission Q1</a>
+          <a class="recent-item" href="#">colocation pricing</a>
+        </div>
+
+        <h3>Refine Results</h3>
+        <div class="filter-group">
+          <div class="filter-label">Content Type</div>
+          <label class="filter-option"><input type="checkbox" checked> Courses <span class="fcount">4</span></label>
+          <label class="filter-option"><input type="checkbox" checked> Resources <span class="fcount">3</span></label>
+          <label class="filter-option"><input type="checkbox" checked> Certifications <span class="fcount">2</span></label>
+        </div>
+        <div class="filter-group">
+          <div class="filter-label">Category</div>
+          <label class="filter-option"><input type="checkbox" checked> Security <span class="fcount">6</span></label>
+          <label class="filter-option"><input type="checkbox"> Compliance <span class="fcount">3</span></label>
+          <label class="filter-option"><input type="checkbox"> Infrastructure <span class="fcount">2</span></label>
+        </div>
+        <div class="filter-group">
+          <div class="filter-label">Difficulty</div>
+          <label class="filter-option"><input type="radio" name="level" checked> All Levels</label>
+          <label class="filter-option"><input type="radio" name="level"> Beginner</label>
+          <label class="filter-option"><input type="radio" name="level"> Intermediate</label>
+          <label class="filter-option"><input type="radio" name="level"> Advanced</label>
+        </div>
+        <div class="filter-group">
+          <div class="filter-label">My Status</div>
+          <label class="filter-option"><input type="checkbox"> In Progress <span class="fcount">1</span></label>
+          <label class="filter-option"><input type="checkbox"> Not Started <span class="fcount">3</span></label>
+          <label class="filter-option"><input type="checkbox"> Completed <span class="fcount">1</span></label>
+        </div>
+      </aside>
+
+      <main>
+        <!-- Courses -->
+        <div class="result-section">
+          <div class="section-label">
+            <div class="section-icon" style="background:var(--wf-ink, #1e2a3a);">📚</div>
+            Courses (4)
+          </div>
+
+          <div class="result-card featured">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">🔒</div>
+            <div class="result-body">
+              <a href="rep-course-detail.html" class="result-title">Security Fundamentals for Equinix Partners</a>
+              <p class="result-meta"><span class="result-badge badge-course">Course</span> · Product · 2.5 hours · Required for Silver+</p>
+              <p class="result-snippet">Core <mark>security</mark> training covering Equinix physical <mark>security</mark>, network security architecture, compliance frameworks (SOC 2, ISO 27001, PCI DSS), and customer-facing <mark>security</mark> positioning. Required for tier advancement.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-status status-progress">40% Complete</span>
+              <div class="progress-bar"><div class="progress-fill" style="width:40%;background:var(--wf-ink, #1e2a3a);"></div></div>
+              <span class="result-date">Last: Feb 6</span>
+            </div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">🔒</div>
+            <div class="result-body">
+              <a href="rep-course-detail.html" class="result-title">Advanced Security & Compliance</a>
+              <p class="result-meta"><span class="result-badge badge-course">Course</span> · Technical · 3 hours · Required for Gold</p>
+              <p class="result-snippet">Advanced <mark>security</mark> topics: HITRUST for healthcare, FedRAMP for government, GDPR for EMEA. Builds on <mark>Security Fundamentals</mark>. Includes audit preparation walkthroughs and customer compliance conversation frameworks.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-status status-locked">Locked</span>
+              <span class="result-date">Prereq: Security Fundamentals</span>
+            </div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">📚</div>
+            <div class="result-body">
+              <a href="rep-course-detail.html" class="result-title">Colocation Physical Security Tour (Virtual)</a>
+              <p class="result-meta"><span class="result-badge badge-course">Course</span> · Product · 45 min · Optional</p>
+              <p class="result-snippet">Virtual walkthrough of Equinix IBX <mark>security</mark> features: multi-factor biometric access, 24/7 surveillance, mantrap entries, cabinet-level electronic locks. Great prep for customer site visit conversations.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-status status-active">Not Started</span>
+            </div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">📚</div>
+            <div class="result-body">
+              <a href="rep-course-detail.html" class="result-title">Zero Trust Architecture with Equinix</a>
+              <p class="result-meta"><span class="result-badge badge-course">Course</span> · Technical · 2 hours · Recommended</p>
+              <p class="result-snippet">How Equinix infrastructure supports Zero Trust <mark>security</mark> models. Covers microsegmentation via Fabric, private connectivity vs. public internet, and Network Edge <mark>security</mark> appliance deployment patterns.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-status status-approved">Completed</span>
+              <span class="result-date">Jan 18, 2026</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resources -->
+        <div class="result-section">
+          <div class="section-label">
+            <div class="section-icon" style="background:var(--wf-amber, #8b7745);">📄</div>
+            Resources (3)
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">📄</div>
+            <div class="result-body">
+              <a href="rep-sales-tools.html" class="result-title">Security & Compliance One-Pager</a>
+              <p class="result-meta"><span class="result-badge badge-resource">Sales Aid</span> · PDF · 2 pages · Updated Feb 2026</p>
+              <p class="result-snippet">Customer-facing <mark>security</mark> overview: physical <mark>security</mark> features, compliance certifications matrix (SOC 2 Type II, ISO 27001, PCI DSS 4.0, HIPAA), and data sovereignty capabilities by region.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-date">Feb 4, 2026</span>
+            </div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">📄</div>
+            <div class="result-body">
+              <a href="rep-sales-tools.html" class="result-title">Compliance Battle Card: Equinix vs. Competitors</a>
+              <p class="result-meta"><span class="result-badge badge-resource">Battle Card</span> · PDF · Updated Jan 2026</p>
+              <p class="result-snippet">Competitive <mark>security</mark> and compliance comparison vs. Digital Realty, CyrusOne, and QTS. Equinix differentiators: broadest compliance coverage, SmartKey HSM, and <mark>security</mark> operations center integration.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-date">Jan 22, 2026</span>
+            </div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">📄</div>
+            <div class="result-body">
+              <a href="rep-resources.html" class="result-title">Equinix Trust Center — Customer Reference</a>
+              <p class="result-meta"><span class="result-badge badge-resource">External Link</span> · Web · Always Current</p>
+              <p class="result-snippet">Direct link to Equinix Trust Center for customer due diligence. Real-time compliance status, audit reports, <mark>security</mark> white papers, and penetration test summaries. Shareable with customer <mark>security</mark> teams.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-date">Always Current</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Certifications -->
+        <div class="result-section">
+          <div class="section-label">
+            <div class="section-icon" style="background:var(--wf-accent, #3d6daa);">🏅</div>
+            Certifications (2)
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">🏅</div>
+            <div class="result-body">
+              <a href="rep-certifications.html" class="result-title">Equinix Security Specialist</a>
+              <p class="result-meta"><span class="result-badge badge-cert">Certification</span> · 2 courses required · Exam: 45 min</p>
+              <p class="result-snippet">Earn the <mark>Security</mark> Specialist badge by completing <mark>Security Fundamentals</mark> + Advanced <mark>Security</mark> & Compliance courses, then passing the assessment exam. Qualifies you for <mark>security</mark>-focused deal registration incentives.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-status status-progress">1 of 2 prereqs</span>
+              <div class="progress-bar"><div class="progress-fill" style="width:25%;background:var(--wf-accent, #3d6daa);"></div></div>
+            </div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">🏅</div>
+            <div class="result-body">
+              <a href="rep-certifications.html" class="result-title">Interconnection Specialist</a>
+              <p class="result-meta"><span class="result-badge badge-cert">Certification</span> · 3 courses required · Exam: 60 min</p>
+              <p class="result-snippet">Advanced certification covering Fabric, Network Edge, and <mark>security</mark> appliance deployment. Includes <mark>security</mark>-related modules on encrypted interconnection and compliance-aware network design.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-status status-progress">1 of 3 prereqs</span>
+              <div class="progress-bar"><div class="progress-fill" style="width:33%;background:var(--wf-accent, #3d6daa);"></div></div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div style="background: white; padding: 16px 24px; border-top: 1px solid var(--wf-tint, #dce4ef); margin-top: 40px; font-size: 12px; color: var(--wf-muted, #6b7f99); text-align: center;">
+    <p style="margin: 0;">Equinix Partner Portal · Logged in as: Sarah Connor (sc@stark.com) · PM: Pepper Potts | PSM: Marcus Chen · <a href="#" style="color: var(--wf-accent, #3d6daa); text-decoration: none;">Contact Support</a></p>
+  </div>
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Training content search results with best match promotion and certification path awareness, helping partners quickly resume courses and understand learning prerequisites for tier advancement.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Resume in-progress course with minimal clicks</li>
+<li>Find related courses in the learning path</li>
+<li>Understand certification prerequisites and paths</li>
+<li>See course prerequisites and corequisites</li>
+<li>Access battle cards and supplemental materials</li>
+<li>Track progress toward certifications</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Best match banner with course recommendation</li>
+<li>Featured course card with resume or start option</li>
+<li>Courses section with progress indicators</li>
+<li>Certification path information and prerequisites</li>
+<li>Related resources and battle cards</li>
+<li>Locked state indicators for restricted courses</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Resume or Start CTA button on featured course</li>
+<li>View course details and syllabus</li>
+<li>Filter by content type, difficulty</li>
+<li>Apply "my courses" status filter</li>
+<li>Click course cards to enroll or continue</li>
+<li>View certification requirements and paths</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Best Match Detection & Promotion</strong>
+<ul>
+<li>Best Match banner displays when search query exactly matches Course__c.Title field and user has not completed the course, floating above main results</li>
+<li>Featured course card (left border + tinted background) shows in results section while appearing in banner for context switching between discovery and learning</li>
+</ul></li>
+<li><strong>Course Progress Tracking & Persistence</strong>
+<ul>
+<li>Progress bars dynamically calculate from Course_Enrollment__c.Completion_Percent__c field and update in real-time as user progresses through SCORM modules</li>
+<li>Resume Course button redirects to SCORM course module with completion state persisted via Course_Enrollment__c.LastAccessed__c timestamp, enabling seamless resume functionality</li>
+</ul></li>
+<li><strong>Prerequisite & Enrollment Validation</strong>
+<ul>
+<li>Locked state courses detected when prerequisite courses not yet completed, blocking enrollment and showing lock icon + "Locked" status indicator</li>
+<li>Certification cards show prerequisite count (e.g., "1 of 2 prereqs") and completion progress bar, linked to Certification_Path__c object via Course__c junction table</li>
+</ul></li>
+<li><strong>Advanced Filtering & Faceted Search</strong>
+<ul>
+<li>Sidebar filters (Content Type, Category, Difficulty, My Status) AND-combined to refine results, with counts updating via AJAX without page reload</li>
+<li>My Status filter reflects user's enrollment status: In Progress, Not Started, Completed — enabling personalized learning path filtering</li>
+</ul></li>
+</ul>
+<hr class="spec-divider">
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

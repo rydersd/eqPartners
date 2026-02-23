@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile — Sales Rep · Equinix PCP Partner Portal</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: var(--wf-canvas, #f5f7fb); }
+    .container { max-width: 960px; margin: 0 auto; padding: 24px; }
+
+    /* ── Page header ─────────────────────────────────────── */
+    .page-header { display: flex; align-items: center; gap: 8px; margin-bottom: 24px; }
+    .page-header h1 { margin: 0; font-size: 22px; font-weight: 700; color: var(--wf-ink); }
+    .page-header .breadcrumb-sep { color: var(--wf-muted); font-size: 14px; }
+
+    /* ── Profile hero ────────────────────────────────────── */
+    .profile-hero {
+      background: var(--wf-ink);
+      border-radius: 8px;
+      padding: 32px;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+    .avatar-large {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: #7b5cb8;
+      border: 3px solid rgba(255,255,255,0.4);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 30px; font-weight: 700; color: white;
+      flex-shrink: 0;
+    }
+    .profile-hero-info h2 { margin: 0 0 4px; font-size: 22px; font-weight: 700; }
+    .profile-hero-info .role-tag {
+      display: inline-block; font-size: 11px; font-weight: 600;
+      background: rgba(123,92,184,0.6); border-radius: 3px;
+      padding: 2px 8px; margin-bottom: 6px;
+    }
+    .profile-hero-info .company { font-size: 13px; color: rgba(255,255,255,0.8); margin: 0; }
+    .profile-hero-info .email   { font-size: 12px; color: rgba(255,255,255,0.65); margin: 2px 0 0; }
+    .profile-hero-actions { margin-left: auto; display: flex; gap: 8px; }
+
+    /* ── Two-column layout ───────────────────────────────── */
+    .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+    /* ── Cards ───────────────────────────────────────────── */
+    .card { background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow: hidden; margin-bottom: 0; }
+    .card-full { grid-column: 1 / -1; }
+    .card-header {
+      padding: 14px 20px 12px;
+      border-bottom: 1px solid var(--wf-tint);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .card-header h3 { margin: 0; font-size: 13px; font-weight: 700; color: var(--wf-ink); }
+    .card-body { padding: 20px; }
+
+    /* ── Form-like field rows ────────────────────────────── */
+    .field-row { margin-bottom: 16px; }
+    .field-row:last-child { margin-bottom: 0; }
+    .field-label { font-size: 11px; font-weight: 600; color: var(--wf-muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }
+    .field-value { font-size: 13px; color: var(--wf-ink); }
+    .field-value.placeholder { color: var(--wf-muted); font-style: italic; }
+    .field-input {
+      width: 100%; padding: 8px 10px;
+      border: 1px solid var(--wf-line); border-radius: 4px;
+      font-size: 13px; color: var(--wf-ink);
+      background: var(--wf-canvas);
+    }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    /* ── Buttons ─────────────────────────────────────────── */
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid transparent; }
+    .btn-primary { background: var(--wf-accent); color: white; }
+    .btn-secondary { background: white; color: var(--wf-ink); border-color: var(--wf-line); }
+    .btn-ghost { background: rgba(255,255,255,0.15); color: white; border-color: rgba(255,255,255,0.3); }
+
+    /* ── Toggle row ──────────────────────────────────────── */
+    .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--wf-tint); }
+    .toggle-row:last-child { border-bottom: none; }
+    .toggle-label { font-size: 13px; color: var(--wf-ink); }
+    .toggle-sub { font-size: 11px; color: var(--wf-muted); margin-top: 2px; }
+    .toggle-pill {
+      width: 36px; height: 20px; border-radius: 10px;
+      background: var(--wf-accent); flex-shrink: 0;
+      position: relative; cursor: pointer;
+    }
+    .toggle-pill::after {
+      content: ''; position: absolute; top: 2px; right: 2px;
+      width: 16px; height: 16px; background: white; border-radius: 50%;
+    }
+    .toggle-pill.off { background: var(--wf-line); }
+    .toggle-pill.off::after { left: 2px; right: auto; }
+
+    /* ── Activity list ───────────────────────────────────── */
+    .activity-row { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--wf-tint); font-size: 12px; }
+    .activity-row:last-child { border-bottom: none; }
+    .activity-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+    .activity-desc { flex: 1; color: var(--wf-text); line-height: 1.4; }
+    .activity-time { color: var(--wf-muted); font-size: 11px; white-space: nowrap; }
+
+    /* ── Certifications ──────────────────────────────────── */
+    .cert-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--wf-tint); font-size: 12px; }
+    .cert-row:last-child { border-bottom: none; }
+    .cert-name { font-weight: 600; color: var(--wf-ink); font-size: 13px; }
+    .cert-date { color: var(--wf-muted); font-size: 11px; margin-top: 2px; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 10px; font-weight: 700; text-transform: uppercase; }
+    .badge-green { background: #e8f5e9; color: #2e7d32; }
+    .badge-amber { background: #fff8e1; color: #795600; }
+    .badge-gray  { background: var(--wf-tint); color: var(--wf-muted); }
+  </style>
+</head>
+<body>
+
+<header class="wf-header" data-page="rep-profile">
+  <div class="wf-header-logo">
+    <svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix">
+      <path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/>
+    </svg>
+  </div>
+  <div class="wf-header-title">Partner Central</div>
+  <nav class="wf-header-nav">
+    <a href="rep-home.html">Home</a>
+    <a href="rep-deals-commission.html">Deals</a>
+    <a href="rep-my-training.html">Training</a>
+    <a href="rep-marketing.html">Marketing</a>
+    <a href="rep-resources.html">Resources</a>
+  </nav>
+  <div class="wf-header-util">
+    <a href="rep-notifications.html" aria-label="Notifications" style="position:relative;color:inherit;text-decoration:none;display:flex;align-items:center;">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+      <span style="position:absolute;top:-4px;right:-6px;background:var(--wf-red,#8b4555);color:white;font-size:10px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;">3</span>
+    </a>
+    <button class="wf-header-icon-btn" aria-label="Messages">💬</button>
+    <!-- Avatar — aria-current signals this is the active destination -->
+    <button class="wf-header-avatar wf-header-avatar--rep" aria-label="My Profile" aria-current="page"
+      style="width:32px;height:32px;border-radius:50%;background:#7b5cb8;border:2px solid rgba(255,255,255,0.35);color:white;font-size:13px;font-weight:700;cursor:pointer;">SR</button>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="page-header">
+    <h1>My Profile</h1>
+  </div>
+
+  <!-- Hero card -->
+  <div class="profile-hero">
+    <div class="avatar-large">SR</div>
+    <div class="profile-hero-info">
+      <div class="role-tag">Sales Rep</div>
+      <h2>Steve Rogers</h2>
+      <p class="company">CloudBridge Inc.</p>
+      <p class="email">srogers@cloudbridge.com</p>
+    </div>
+    <div class="profile-hero-actions">
+      <button class="btn btn-ghost">Edit Photo</button>
+    </div>
+  </div>
+
+  <div class="profile-grid">
+
+    <!-- Personal Information -->
+    <div class="card">
+      <div class="card-header">
+        <h3>Personal Information</h3>
+        <button class="btn btn-secondary" style="font-size:11px;padding:5px 10px;">Edit</button>
+      </div>
+      <div class="card-body">
+        <div class="two-col">
+          <div class="field-row">
+            <div class="field-label">First Name</div>
+            <div class="field-value">Steve</div>
+          </div>
+          <div class="field-row">
+            <div class="field-label">Last Name</div>
+            <div class="field-value">Rogers</div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Job Title</div>
+          <div class="field-value">Channel Sales Representative</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Email</div>
+          <div class="field-value">srogers@cloudbridge.com</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Phone</div>
+          <div class="field-value placeholder">Not provided</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Time Zone</div>
+          <div class="field-value">America/Los_Angeles (UTC−8)</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Language</div>
+          <div class="field-value">English (US)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Company & Role -->
+    <div class="card">
+      <div class="card-header">
+        <h3>Company &amp; Role</h3>
+      </div>
+      <div class="card-body">
+        <div class="field-row">
+          <div class="field-label">Partner Organization</div>
+          <div class="field-value">CloudBridge Inc.</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Partner Tier</div>
+          <div class="field-value">Gold</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Portal Role</div>
+          <div class="field-value">Sales Representative</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Assigned PSM</div>
+          <div class="field-value">Marcus Chen</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Region</div>
+          <div class="field-value">North America — West</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Member Since</div>
+          <div class="field-value">March 2023</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Certifications -->
+    <div class="card">
+      <div class="card-header">
+        <h3>Certifications</h3>
+        <a href="rep-certifications.html" style="font-size:11px;color:var(--wf-accent);text-decoration:none;font-weight:600;">View all →</a>
+      </div>
+      <div class="card-body" style="padding-top:8px;padding-bottom:8px;">
+        <div class="cert-row">
+          <div>
+            <div class="cert-name">Equinix Foundations</div>
+            <div class="cert-date">Earned Jan 2024 · Expires Jan 2026</div>
+          </div>
+          <span class="badge badge-green">Active</span>
+        </div>
+        <div class="cert-row">
+          <div>
+            <div class="cert-name">Digital Infrastructure Sales</div>
+            <div class="cert-date">Expires in 45 days</div>
+          </div>
+          <span class="badge badge-amber">Expiring</span>
+        </div>
+        <div class="cert-row">
+          <div>
+            <div class="cert-name">Interconnection Specialist</div>
+            <div class="cert-date">Not started</div>
+          </div>
+          <span class="badge badge-gray">Required</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notification Preferences -->
+    <div class="card">
+      <div class="card-header">
+        <h3>Notification Preferences</h3>
+      </div>
+      <div class="card-body" style="padding-top:8px;padding-bottom:8px;">
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">Deal Status Updates</div>
+            <div class="toggle-sub">When a deal changes stage or is approved</div>
+          </div>
+          <div class="toggle-pill"></div>
+        </div>
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">Training Deadlines</div>
+            <div class="toggle-sub">Reminders 30 and 7 days before due</div>
+          </div>
+          <div class="toggle-pill"></div>
+        </div>
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">Commission Statements</div>
+            <div class="toggle-sub">When monthly statements are available</div>
+          </div>
+          <div class="toggle-pill"></div>
+        </div>
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">Program Announcements</div>
+            <div class="toggle-sub">News and updates from Equinix</div>
+          </div>
+          <div class="toggle-pill off"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Security -->
+    <div class="card">
+      <div class="card-header">
+        <h3>Security</h3>
+      </div>
+      <div class="card-body">
+        <div class="field-row">
+          <div class="field-label">Password</div>
+          <div class="field-value" style="display:flex;align-items:center;justify-content:space-between;">
+            <span>••••••••••••</span>
+            <button class="btn btn-secondary" style="font-size:11px;padding:4px 10px;">Change</button>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Two-Factor Authentication</div>
+          <div class="field-value" style="display:flex;align-items:center;justify-content:space-between;">
+            <span style="color:#2e7d32;font-weight:600;">Enabled (Authenticator App)</span>
+            <button class="btn btn-secondary" style="font-size:11px;padding:4px 10px;">Manage</button>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Last Login</div>
+          <div class="field-value">Today, 9:14 AM — Chrome / macOS</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="card">
+      <div class="card-header">
+        <h3>Recent Activity</h3>
+      </div>
+      <div class="card-body" style="padding-top:8px;padding-bottom:8px;">
+        <div class="activity-row">
+          <div class="activity-icon">📝</div>
+          <div class="activity-desc">Submitted deal registration for <strong>Meridian Capital — Fabric NLI</strong></div>
+          <div class="activity-time">2h ago</div>
+        </div>
+        <div class="activity-row">
+          <div class="activity-icon">🎓</div>
+          <div class="activity-desc">Completed module: <strong>Interconnection Fundamentals</strong></div>
+          <div class="activity-time">Yesterday</div>
+        </div>
+        <div class="activity-row">
+          <div class="activity-icon">💬</div>
+          <div class="activity-desc">Sent message to PSM Marcus Chen</div>
+          <div class="activity-time">2 days ago</div>
+        </div>
+        <div class="activity-row">
+          <div class="activity-icon">🔔</div>
+          <div class="activity-desc">Deal <strong>NetPulse Systems — IBX Colocation</strong> moved to Approved</div>
+          <div class="activity-time">3 days ago</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /profile-grid -->
+</div><!-- /container -->
+
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Wireframe notes">
+  <div id="spec-toggle" class="spec-toggle-btn" aria-expanded="false">Notes</div>
+  <div class="spec-content">
+    <h2>My Profile — Sales Rep</h2>
+    <h3>Trigger</h3>
+    <p>This page is reached by clicking the user avatar in the top-right of the Partner Portal navigation bar. The avatar shows the user's initials and carries the partner-employee color (violet). An <code>aria-current="page"</code> attribute marks it as active when on this page.</p>
+    <h3>Design Notes</h3>
+    <ul>
+      <li>Avatar initials are derived from First Name + Last Name (first character each)</li>
+      <li>Certification status is read-only; the "View all" link navigates to rep-certifications.html</li>
+      <li>Notification toggles should persist via user preference API calls</li>
+      <li>Security section should never display the actual password; "Change" launches a modal flow</li>
+      <li>Recent Activity pulls from audit/activity log; limit to 4 most recent on this summary view</li>
+    </ul>
+    <h3>Fields</h3>
+    <p>Personal info fields are editable inline or via Edit modal. Company &amp; Role section is read-only (managed by Portal Admin). PSM is assigned by Equinix and is not user-editable.</p>
+  </div>
+</aside>
+
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

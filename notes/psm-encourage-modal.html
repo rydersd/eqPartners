@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encourage Partner Manager - Equinix PCP Portal</title>
+    <link rel="stylesheet" href="wireframe.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Salesforce Sans", sans-serif;
+            background-color: var(--wf-canvas, #f5f7fb);
+            color: var(--wf-text, #3b4f68);
+        }
+
+        /* Header */
+        header {
+            background-color: var(--wf-ink, #1e2a3a);
+            color: var(--wf-surface, #edf1f7);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .logo-icon {
+            font-size: 1.75rem;
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--wf-surface, #edf1f7);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: opacity 0.2s;
+        }
+
+        nav a:hover {
+            opacity: 0.8;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        .breadcrumb {
+            font-size: 0.875rem;
+            color: var(--wf-text, #3b4f68);
+            margin-bottom: 2rem;
+        }
+
+        /* Card */
+        .card {
+            background: var(--wf-surface, #edf1f7);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+            margin-bottom: 2rem;
+        }
+
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-title-icon {
+            font-size: 1.25rem;
+        }
+
+        /* Partner Info */
+        .partner-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background-color: var(--wf-canvas, #f5f7fb);
+            border-radius: 4px;
+        }
+
+        .partner-field {
+            font-size: 0.875rem;
+        }
+
+        .partner-label {
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+            margin-bottom: 0.25rem;
+        }
+
+        .partner-value {
+            color: var(--wf-text, #3b4f68);
+        }
+
+        /* Tier Progress Card */
+        .progress-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-item {
+            padding: 1.25rem;
+            border: 1px solid var(--wf-line, #b0bdd0);
+            border-radius: 4px;
+            background-color: var(--wf-canvas, #f5f7fb);
+        }
+
+        .progress-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--wf-text, #3b4f68);
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-tier {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-score {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--wf-accent, var(--wf-accent, #3d6daa));
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-bar-container {
+            background-color: var(--wf-tint, #dce4ef);
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 0.75rem 0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background-color: var(--wf-accent, var(--wf-accent, #3d6daa));
+            transition: width 0.3s;
+        }
+
+        .progress-target {
+            font-size: 0.75rem;
+            color: var(--wf-text, #3b4f68);
+            margin-top: 0.5rem;
+        }
+
+        .progress-gap {
+            font-size: 0.875rem;
+            color: var(--wf-red, #8b4553);
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        /* Benefits Card */
+        .benefits-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .benefit-item {
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--wf-canvas, #f5f7fb);
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .benefit-item:last-child {
+            border-bottom: none;
+        }
+
+        .benefit-icon {
+            color: var(--wf-accent, var(--wf-accent, #3d6daa));
+            font-size: 1.25rem;
+            margin-top: 0.125rem;
+        }
+
+        .benefit-text {
+            flex: 1;
+        }
+
+        .benefit-title {
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .benefit-desc {
+            font-size: 0.75rem;
+            color: var(--wf-text, #3b4f68);
+        }
+
+        /* Tone Selector */
+        .tone-selector {
+            margin-bottom: 1.5rem;
+        }
+
+        .tone-label {
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .tone-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .tone-option {
+            position: relative;
+            display: none;
+        }
+
+        .tone-option input {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .tone-option-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+            border: 2px solid var(--wf-line, #b0bdd0);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+            text-align: center;
+            transition: all 0.2s;
+            background: var(--wf-surface, #edf1f7);
+        }
+
+        .tone-option input:checked + .tone-option-label {
+            border-color: var(--wf-accent, var(--wf-accent, #3d6daa));
+            background-color: var(--wf-canvas, #f5f7fb);
+            color: var(--wf-accent, var(--wf-accent, #3d6daa));
+        }
+
+        .tone-option input:not(:checked) + .tone-option-label {
+            display: flex;
+        }
+
+        .tone-option input:checked + .tone-option-label {
+            display: flex;
+        }
+
+        .tone-option-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .tone-option input[type="radio"] {
+            position: static;
+            opacity: 1;
+            margin-right: 0.5rem;
+            cursor: pointer;
+        }
+
+        .tone-option-text {
+            flex: 1;
+            text-align: left;
+        }
+
+        /* Text Area */
+        .form-field {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+            font-size: 0.875rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--wf-line, #b0bdd0);
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 0.875rem;
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* Email Preview */
+        .email-preview {
+            background-color: var(--wf-canvas, #f5f7fb);
+            padding: 1.5rem;
+            border-radius: 4px;
+            border: 1px solid var(--wf-line, #b0bdd0);
+            margin-bottom: 1.5rem;
+        }
+
+        .email-preview-title {
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .email-content {
+            background: var(--wf-surface, #edf1f7);
+            padding: 1rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            color: var(--wf-text, #3b4f68);
+        }
+
+        .email-greeting {
+            margin-bottom: 1rem;
+        }
+
+        .email-body {
+            margin-bottom: 1rem;
+        }
+
+        .email-closing {
+            margin-bottom: 1rem;
+        }
+
+        .email-signature {
+            color: var(--wf-text, #3b4f68);
+            font-size: 0.75rem;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+
+        button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background-color: var(--wf-accent, var(--wf-accent, #3d6daa));
+            color: var(--wf-surface, #edf1f7);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--wf-accent, #3d6daa);
+        }
+
+        .btn-secondary {
+            background-color: var(--wf-canvas, #f5f7fb);
+            color: var(--wf-ink, #1e2a3a);
+            border: 1px solid var(--wf-line, #b0bdd0);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--wf-tint, #dce4ef);
+        }
+
+        /* History Timeline */
+        .history-item {
+            padding: 1rem;
+            border-bottom: 1px solid var(--wf-canvas, #f5f7fb);
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 1rem;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-date {
+            font-size: 0.75rem;
+            color: var(--wf-text, #3b4f68);
+            font-weight: 600;
+        }
+
+        .history-content {
+            font-size: 0.875rem;
+            color: var(--wf-text, #3b4f68);
+        }
+
+        .history-tone {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            background-color: var(--wf-canvas, #f5f7fb);
+            color: var(--wf-accent, var(--wf-accent, #3d6daa));
+            border-radius: 3px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 0.25rem;
+        }
+
+        /* Design Brief */
+        /* Responsive */
+        @media (max-width: 768px) {
+            .partner-info,
+            .progress-grid,
+            .tone-options {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column-reverse;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            nav {
+                gap: 1rem;
+                font-size: 0.75rem;
+            }
+        }
+    
+/* ── 3-Column Record Layout ── */
+.record-layout { display:grid; grid-template-columns:280px 1fr 300px; gap:1rem; padding:1rem 2rem; max-width:1600px; }
+@media (max-width:1200px) { .record-layout { grid-template-columns:1fr; } }
+.left-rail .card, .right-rail .card { margin-bottom:1rem; }
+.center-content .card { margin-bottom:1rem; }
+.card { background:var(--wf-surface,#edf1f7); border:1px solid var(--wf-tint,#dce4ef); border-radius:6px; overflow:hidden; }
+.card-hd { padding:0.75rem 1rem; border-bottom:1px solid var(--wf-tint); display:flex; justify-content:space-between; align-items:center; }
+.card-hd h3 { font-size:13px; font-weight:700; color:var(--wf-ink); margin:0; }
+.card-hd-action { font-size:11px; color:var(--wf-accent); text-decoration:none; font-weight:600; cursor:pointer; }
+.card-bd { padding:1rem; }
+.hl-row { display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:12px; }
+.hl-row:last-child { border-bottom:none; }
+.hl-label { color:var(--wf-muted); }
+.hl-value { font-weight:700; color:var(--wf-ink); }
+.hl-value.warn { color:var(--wf-amber,#8b7745); }
+.rel-item { display:flex; align-items:center; gap:0.625rem; padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:12px; }
+.rel-item:last-child { border-bottom:none; }
+.rel-icon { width:28px; height:28px; border-radius:50%; background:var(--wf-tint); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.rel-icon svg { width:14px; height:14px; color:var(--wf-ink); }
+.rel-info { flex:1; }
+.rel-title { font-size:12px; font-weight:600; color:var(--wf-ink); }
+.rel-sub { font-size:11px; color:var(--wf-muted); }
+.rel-meta { font-size:11px; color:var(--wf-muted); text-align:right; white-space:nowrap; }
+/* Right-rail tabs */
+.rail-tabs { display:flex; border-bottom:1px solid var(--wf-tint); }
+.rail-tab { flex:1; padding:0.5rem; font-size:11px; font-weight:600; text-align:center; color:var(--wf-muted); cursor:pointer; border-bottom:2px solid transparent; background:none; border-top:none; border-left:none; border-right:none; }
+.rail-tab.active { color:var(--wf-accent); border-bottom-color:var(--wf-accent); }
+.rail-tab-content { display:none; }
+.rail-tab-content.active { display:block; }
+/* Activity feed in right rail */
+.feed-sm { padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:11px; }
+.feed-sm:last-child { border-bottom:none; }
+.feed-sm-text { color:var(--wf-text); line-height:1.4; }
+.feed-sm-text strong { color:var(--wf-ink); }
+.feed-sm-time { color:var(--wf-muted); font-size:10px; margin-top:2px; }
+/* Quick action buttons */
+.action-btn { width:100%; padding:0.5rem; border-radius:4px; font-size:12px; font-weight:600; cursor:pointer; margin-bottom:0.375rem; border:1px solid var(--wf-line); text-align:center; }
+.action-btn:last-child { margin-bottom:0; }
+.action-btn-primary { background:var(--wf-accent); color:white; border-color:var(--wf-accent); }
+.action-btn-secondary { background:var(--wf-surface); color:var(--wf-text); }
+</style>
+</head>
+<body>
+    <!-- Header --><header class="wf-header">
+  <div class="wf-header-logo">EQ</div>
+  <div class="wf-header-title">Partner Sales Manager</div>
+  <nav class="wf-header-nav">
+    <a href="#">Dashboard</a>
+    <a href="#" class="active">PSM Portal</a>
+    <a href="#">Partners</a>
+    <a href="#">Deals</a>
+    <a href="#">Programs</a>
+    <a href="#">Reports</a>
+  </nav>
+  <div class="wf-header-util">
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+  </div>
+</header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+
+<!-- ── 3-Column Record Layout ── -->
+<div class="record-layout">
+
+  <!-- ════════ LEFT RAIL — Related Objects ════════ -->
+  <div class="left-rail">
+    <div class="card">
+      <div class="card-hd"><h3>Target</h3></div>
+      <div class="card-bd">
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0"/></svg></div>
+          <div class="rel-info"><div class="rel-title">Partner org</div><div class="rel-sub">Recipient</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><h3>History</h3></div>
+      <div class="card-bd">
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg></div>
+          <div class="rel-info"><div class="rel-title">Last encouragement</div><div class="rel-sub">2 weeks ago</div></div>
+        </div>
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg></div>
+          <div class="rel-info"><div class="rel-title">Partner response</div><div class="rel-sub">Acknowledged</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ CENTER — Main Content ════════ -->
+  <div class="center-content">
+    <!-- Main Content -->
+    <div class="container">
+        <div class="breadcrumb" role="navigation" aria-label="Breadcrumbs">
+            Partners / TechVision Partners / Encourage Manager
+        </div>
+
+        <h1 class="page-title">Encourage Partner Manager</h1>
+
+        <!-- Partner Contact Card -->
+        <div class="card">
+            <h2 class="card-title">👤 Account Contact Manager</h2>
+
+            <div class="partner-info">
+                <div class="partner-field">
+                    <div class="partner-label">Manager Name</div>
+                    <div class="partner-value">Sarah Johnson</div>
+                </div>
+                <div class="partner-field">
+                    <div class="partner-label">Email Address</div>
+                    <div class="partner-value">sarah.johnson@techvision.com</div>
+                </div>
+                <div class="partner-field">
+                    <div class="partner-label">Current Company</div>
+                    <div class="partner-value">TechVision Partners Inc.</div>
+                </div>
+                <div class="partner-field">
+                    <div class="partner-label">Role</div>
+                    <div class="partner-value">VP Sales & Partnerships</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tier Progress Card -->
+        <div class="card">
+            <h2 class="card-title">📈 Tier Progress Snapshot</h2>
+
+            <div class="progress-grid">
+                <div class="progress-item">
+                    <div class="progress-label">Current Tier Status</div>
+                    <div class="progress-tier">Silver</div>
+                    <div class="progress-score">58</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: 58%;"></div>
+                    </div>
+                    <div class="progress-target">58 / 70 points to Gold</div>
+                </div>
+
+                <div class="progress-item">
+                    <div class="progress-label">Next Tier Milestone</div>
+                    <div class="progress-tier">Gold</div>
+                    <div class="progress-score">70</div>
+                    <div class="progress-gap">⬆️ 12 points needed</div>
+                    <div style="font-size: 0.75rem; color: var(--wf-text, #3b4f68); margin-top: 1rem;">
+                        Unlock with 1-2 qualified deals or strategic partnership expansion
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gold Tier Benefits Card -->
+        <div class="card">
+            <h2 class="card-title">🎁 Gold Tier Benefits Unlock</h2>
+
+            <ul class="benefits-list">
+                <li class="benefit-item">
+                    <div class="benefit-icon">✨</div>
+                    <div class="benefit-text">
+                        <div class="benefit-title">Commission Rate Increase</div>
+                        <div class="benefit-desc">From 10% Silver to 15% Gold on all eligible deals</div>
+                    </div>
+                </li>
+                <li class="benefit-item">
+                    <div class="benefit-icon">👔</div>
+                    <div class="benefit-text">
+                        <div class="benefit-title">Dedicated PSM Support</div>
+                        <div class="benefit-desc">Assigned primary PSM for strategy & deal guidance</div>
+                    </div>
+                </li>
+                <li class="benefit-item">
+                    <div class="benefit-icon">💰</div>
+                    <div class="benefit-text">
+                        <div class="benefit-title">Premium MDF Allocation</div>
+                        <div class="benefit-desc">Increased marketing development funds quarterly budget</div>
+                    </div>
+                </li>
+                <li class="benefit-item">
+                    <div class="benefit-icon">📊</div>
+                    <div class="benefit-text">
+                        <div class="benefit-title">Priority Deal Reviews</div>
+                        <div class="benefit-desc">Faster conflict analysis and protection period setup</div>
+                    </div>
+                </li>
+                <li class="benefit-item">
+                    <div class="benefit-icon">🎓</div>
+                    <div class="benefit-text">
+                        <div class="benefit-title">Executive Training Programs</div>
+                        <div class="benefit-desc">Exclusive Equinix certification & product training</div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Tone Selector Card -->
+        <div class="card">
+            <h2 class="card-title">💬 Message Tone</h2>
+
+            <label class="tone-label">Select the tone for your encouragement message:</label>
+
+            <div class="tone-options">
+                <label class="tone-option-label" style="cursor: pointer; border: 2px solid var(--wf-line, #b0bdd0); padding: 1rem; border-radius: 4px;">
+                    <input type="radio" name="tone" value="almost" style="position: static; opacity: 1; margin-right: 0.5rem; cursor: pointer;">
+                    <span>🚀 Almost there!</span>
+                </label>
+                <label class="tone-option-label" style="cursor: pointer; border: 2px solid var(--wf-line, #b0bdd0); padding: 1rem; border-radius: 4px;">
+                    <input type="radio" name="tone" value="update" style="position: static; opacity: 1; margin-right: 0.5rem; cursor: pointer;" checked>
+                    <span>📋 Quick update</span>
+                </label>
+                <label class="tone-option-label" style="cursor: pointer; border: 2px solid var(--wf-line, #b0bdd0); padding: 1rem; border-radius: 4px;">
+                    <input type="radio" name="tone" value="chat" style="position: static; opacity: 1; margin-right: 0.5rem; cursor: pointer;">
+                    <span>☕ Let's chat</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Personal Note Card -->
+        <div class="card">
+            <div class="form-field">
+                <label class="form-label">📝 Personal Note (Optional)</label>
+                <textarea aria-label="Personal note to include in encouragement message" placeholder="Add any personalized context or specific achievements to highlight..."></textarea>
+            </div>
+        </div>
+
+        <!-- Email Preview Card -->
+        <div class="card">
+            <div class="email-preview">
+                <div class="email-preview-title">✉️ Email Preview</div>
+
+                <div class="email-content">
+                    <div class="email-greeting">Hi Sarah,</div>
+
+                    <div class="email-body">
+                        Great news on your progress at TechVision Partners! Your partnership is thriving, and we've noticed some impressive momentum with your recent deal activities.
+                        <br><br>
+                        You're currently at 58 points with Silver tier status. With just 12 more points, you'll unlock Gold tier benefits—which includes a commission rate boost from 10% to 15%, dedicated PSM support, and premium MDF allocation.
+                        <br><br>
+                        We think you're perfectly positioned to reach this milestone. One or two additional qualified deals would put you right there. Our team is ready to help you get across the finish line.
+                        <br><br>
+                        Would love to chat about your partnership expansion plans and how we can best support your growth this quarter.
+                    </div>
+
+                    <div class="email-closing">
+                        Best regards,<br>
+                        <span class="email-signature">Equinix Partner Success Management Team</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Encouragement History -->
+        <div class="card">
+            <h2 class="card-title">📅 Recent Encouragement History</h2>
+
+            <div class="history-item">
+                <div class="history-date">Jan 15, 2024</div>
+                <div class="history-content">
+                    Encouragement sent to Sarah Johnson
+                    <div class="history-tone">Quick update</div>
+                </div>
+            </div>
+
+            <div class="history-item">
+                <div class="history-date">Dec 20, 2023</div>
+                <div class="history-content">
+                    Encouragement sent to Sarah Johnson
+                    <div class="history-tone">Almost there!</div>
+                </div>
+            </div>
+
+            <div class="history-item">
+                <div class="history-date">Nov 28, 2023</div>
+                <div class="history-content">
+                    Encouragement sent to Sarah Johnson
+                    <div class="history-tone">Let's chat</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-bottom: 2rem;">
+            <button class="btn-secondary" aria-label="Cancel encouragement workflow">
+                Cancel
+            </button>
+            <button class="btn-primary" aria-label="Send encouragement message and log activity on account">
+                Send & Log Activity
+            </button>
+        </div>
+    </div>
+
+    
+
+
+    <script>
+        // Tone selector styling on change
+        const toneRadios = document.querySelectorAll('input[name="tone"]');
+        const toneLabels = document.querySelectorAll('.tone-option-label');
+
+        toneRadios.forEach((radio, index) => {
+            radio.addEventListener('change', () => {
+                toneLabels.forEach(label => {
+                    label.style.borderColor = 'var(--wf-line, #b0bdd0)';
+                    label.style.backgroundColor = 'var(--wf-surface, #edf1f7)';
+                    label.style.color = 'var(--wf-ink, #1e2a3a)';
+                });
+
+                if (radio.checked) {
+                    toneLabels[index].style.borderColor = 'var(--wf-accent, var(--wf-accent, #3d6daa))';
+                    toneLabels[index].style.backgroundColor = 'var(--wf-canvas, #f5f7fb)';
+                    toneLabels[index].style.color = 'var(--wf-accent, var(--wf-accent, #3d6daa))';
+                }
+            });
+        });
+
+        // Set initial state
+        toneLabels[1].style.borderColor = 'var(--wf-accent, var(--wf-accent, #3d6daa))';
+        toneLabels[1].style.backgroundColor = 'var(--wf-canvas, #f5f7fb)';
+        toneLabels[1].style.color = 'var(--wf-accent, var(--wf-accent, #3d6daa))';
+    </script>  </div>
+
+  <!-- ════════ RIGHT RAIL — Activity & Insights ════════ -->
+  <div class="right-rail">
+    <div class="card">
+      <div class="rail-tabs">
+        <button class="rail-tab active" onclick="document.querySelectorAll('.rail-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active');document.querySelectorAll('.rail-tab-content').forEach(c=>c.classList.remove('active'));document.getElementById('tab-activity').classList.add('active');">Activity</button>
+        <button class="rail-tab" onclick="document.querySelectorAll('.rail-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active');document.querySelectorAll('.rail-tab-content').forEach(c=>c.classList.remove('active'));document.getElementById('tab-einstein').classList.add('active');">Einstein</button>
+      </div>
+      <div id="tab-activity" class="rail-tab-content active">
+        <div class="card-bd">
+          <div class="feed-sm"><div class="feed-sm-text">Draft created</div><div class="feed-sm-time">Just now</div></div>
+          <div class="feed-sm"><div class="feed-sm-text">Template selected</div><div class="feed-sm-time">Just now</div></div>
+          <div class="feed-sm"><div class="feed-sm-text">Last message opened</div><div class="feed-sm-time">2 weeks ago</div></div>
+        </div>
+      </div>
+      <div id="tab-einstein" class="rail-tab-content">
+        <div class="card-bd" style="font-size:12px;color:var(--wf-text);line-height:1.5;">
+          <div style="font-size:11px;font-weight:700;color:var(--wf-accent);text-transform:uppercase;letter-spacing:0.03em;margin-bottom:0.5rem;">AI Recommendation</div>
+          Partner 2 courses from Gold. Last nudge drove 2 enrollments. Emphasize Gold benefits.
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><h3>Actions</h3></div>
+      <div class="card-bd">
+        <button class="action-btn action-btn-primary">Send Now</button>
+        <button class="action-btn action-btn-secondary">Save Draft</button>
+        <button class="action-btn action-btn-secondary">Preview</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+    <footer class="wf-footer">
+      &copy; 2026 Equinix · Partner Sales Manager · Internal Use Only
+    </footer>
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Guided workflow for PSM to compose and send personalized encouragement messages to partners approaching tier advancement, with template options, tone selection, and activity logging.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Send targeted encouragement messages to partners approaching tier advancement</li>
+<li>Highlight specific benefits unlocking at next tier to motivate progression</li>
+<li>Allow personalization of message tone and custom notes for relationship building</li>
+<li>Track communication history for relationship management and compliance</li>
+<li>Schedule deferred sending for optimal timing with partner</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Account Contact Manager card displaying Manager Name, Email</li>
+<li>Tier Progress Snapshot showing current tier, next tier goal</li>
+<li>Gold Tier Benefits Unlock card listing 5 benefits: Commission Rate Increase</li>
+<li>Message Tone selector with 3 radio options: "Almost there!", "Quick update"</li>
+<li>Personal Note field as optional textarea for customization</li>
+<li>Email Preview card showing how the message will appear to the partner</li>
+<li>Recent Encouragement History section with 3 previous messages sent</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Select tone radio buttons</li>
+<li>Text input field for Personal Note</li>
+<li>"Preview" button to display how email will render</li>
+<li>"Send & Log Activity" button to send communication immediately</li>
+<li>"Schedule Send" option to defer delivery to specific date/time</li>
+<li>Expandable previous message history for reference</li>
+<li>"Cancel" to close modal without sending</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Data Retrieval & Partner Profile</strong>
+<ul>
+<li>Query Account and Account_Partner_Tier__c records to fetch contact name, email, and tier information</li>
+<li>Display current tier status (Silver, Gold, Platinum) with progress score and milestone target points</li>
+<li>Render previous tier progression history from Partner_Communication_History__c records</li>
+</ul></li>
+<li><strong>Tier Progress Calculation</strong>
+<ul>
+<li>Calculate tier progress points from Partner_Tier_Score__c using weighted formula (deal volume, revenue, engagement metrics)</li>
+<li>Determine next milestone requirements and points gap to advancement</li>
+<li>Fetch tier benefit details from Tier_Benefit__c object for display in message context</li>
+</ul></li>
+<li><strong>Message Template & Tone Selection</strong>
+<ul>
+<li>Generate template message body based on selected tone option (Almost there!, Quick update, Let's chat) using message template records</li>
+<li>Merge contact name, current/next tier, benefits list, and personal notes into email template</li>
+<li>Render live email preview showing how message will appear to recipient with formatting</li>
+</ul></li>
+<li><strong>Activity Logging & Communication History</strong>
+<ul>
+<li>Log outbound email to AccountContactRelationship as activity record with tone metadata</li>
+<li>Query Partner_Communication_History__c to display previous encouragement messages sent to contact</li>
+<li>Track message open/click events via EmailOpen object for engagement analytics</li>
+</ul></li>
+<li><strong>Send & Scheduling</strong>
+<ul>
+<li>Trigger async send via MailMerge action on account record or schedule delivery with datetime field</li>
+<li>Update last_encouragement_sent__c timestamp and increment communication_count__c on Account record</li>
+</ul></li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+</body>
+</html>

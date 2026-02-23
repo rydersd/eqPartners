@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Opportunities & Orders | Equinix Partner Portal</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Salesforce Sans, sans-serif; background-color: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); }
+    .container { max-width: 1400px; margin: 0 auto; padding: 24px; }
+    .page-title { font-size: 20px; font-weight: 700; margin-bottom: 24px; color: var(--wf-ink, #1e2a3a); }
+    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+    .kpi-card { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+    .kpi-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--wf-muted, #6b7f99); margin-bottom: 8px; }
+    .kpi-value { font-size: 28px; font-weight: 700; color: var(--wf-accent, #3d6daa); margin-bottom: 4px; }
+    .kpi-detail { font-size: 12px; color: var(--wf-muted, #6b7f99); }
+    .pipeline-section { background: white; border-radius: 8px; padding: 24px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+    .section-title { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 20px; color: var(--wf-ink, #1e2a3a); border-bottom: 1px solid var(--wf-surface, #edf1f7); padding-bottom: 12px; }
+    .stage-flow-container { display: flex; gap: 12px; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .stage-step { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .stage-step-circle { width: 60px; height: 60px; border-radius: 50%; background: var(--wf-accent, #3d6daa); display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; font-weight: 700; text-align: center; }
+    .stage-step-circle.complete { background: var(--wf-muted, #6b7f99); }
+    .stage-step-count { font-size: 12px; font-weight: 600; color: var(--wf-ink, #1e2a3a); }
+    .stage-step-label { font-size: 12px; text-align: center; color: var(--wf-muted, #6b7f99); }
+    .stage-arrow { flex-shrink: 0; color: var(--wf-surface, #edf1f7); font-size: 20px; margin-top: 20px; }
+    .filter-section { background: white; border-radius: 8px; padding: 16px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.12); display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .filter-item { display: flex; flex-direction: column; }
+    .filter-label { font-size: 12px; font-weight: 600; margin-bottom: 6px; color: var(--wf-ink, #1e2a3a); }
+    .filter-select { padding: 8px 12px; border: 1px solid var(--wf-tint, #dce4ef); border-radius: 4px; font-size: 13px; font-family: inherit; background-color: white; }
+    .filter-select:focus { outline: none; border-color: var(--wf-accent, #3d6daa); box-shadow: 0 0 0 3px rgba(0, 112, 210, 0.1); }
+    .card { background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.12); overflow: hidden; margin-bottom: 24px; }
+    .card-header { padding: 24px; border-bottom: 1px solid var(--wf-surface, #edf1f7); }
+    .table-header { display: grid; grid-template-columns: 1.5fr 1.2fr 1.2fr 1.2fr 1fr 1.2fr 1.2fr 1fr; gap: 16px; padding: 16px 24px; background-color: var(--wf-canvas, #f5f7fb); border-bottom: 1px solid var(--wf-surface, #edf1f7); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--wf-muted, #6b7f99); }
+    .table-row { display: grid; grid-template-columns: 1.5fr 1.2fr 1.2fr 1.2fr 1fr 1.2fr 1.2fr 1fr; gap: 16px; padding: 16px 24px; border-bottom: 1px solid var(--wf-surface, #edf1f7); align-items: center; font-size: 13px; }
+    .table-row:hover { background-color: var(--wf-canvas, #f5f7fb); }
+    .table-row:last-child { border-bottom: none; }
+    .opp-name { font-weight: 600; color: var(--wf-accent, #3d6daa); cursor: pointer; }
+    .opp-name:hover { text-decoration: underline; }
+    .status-badge { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+    .stage-prospecting { background-color: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); }
+    .stage-qualification { background-color: var(--wf-canvas, #f5f7fb); color: var(--wf-accent, #3d6daa); }
+    .stage-proposal { background-color: var(--wf-canvas, #f5f7fb); color: var(--wf-amber, #8b7745); }
+    .stage-negotiation { background-color: var(--wf-canvas, #f5f7fb); color: var(--wf-muted, #6b7f99); }
+    .stage-closed { background-color: var(--wf-tint, #dce4ef); color: var(--wf-ink, #1e2a3a); }
+    .status-pending { background-color: var(--wf-canvas, #f5f7fb); color: var(--wf-amber, #8b7745); }
+    .status-approved { background-color: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); }
+    .status-paid { background-color: var(--wf-tint, #dce4ef); color: var(--wf-ink, #1e2a3a); }
+    .protection-warning { color: var(--wf-amber, #8b7745); font-weight: 600; }
+    .orders-table-header { display: grid; grid-template-columns: 1.2fr 1.5fr 1.2fr 1.2fr 1.2fr 1.2fr 1.2fr; gap: 16px; padding: 16px 24px; background-color: var(--wf-canvas, #f5f7fb); border-bottom: 1px solid var(--wf-surface, #edf1f7); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--wf-muted, #6b7f99); }
+    .orders-table-row { display: grid; grid-template-columns: 1.2fr 1.5fr 1.2fr 1.2fr 1.2fr 1.2fr 1.2fr; gap: 16px; padding: 16px 24px; border-bottom: 1px solid var(--wf-surface, #edf1f7); align-items: center; font-size: 13px; }
+    .orders-table-row:hover { background-color: var(--wf-canvas, #f5f7fb); }
+    .orders-table-row:last-child { border-bottom: none; }
+    .order-number { font-weight: 600; color: var(--wf-accent, #3d6daa); cursor: pointer; }
+    .order-number:hover { text-decoration: underline; }
+    .milestone-section { background: var(--wf-canvas, #f5f7fb); border-radius: 6px; padding: 16px; margin-top: 16px; }
+    .milestone-title { font-size: 14px; font-weight: 600; color: var(--wf-ink, #1e2a3a); margin-bottom: 12px; }
+    .milestone-item { display: flex; align-items: center; gap: 12px; padding: 8px 0; font-size: 13px; color: var(--wf-muted, #6b7f99); }
+    .milestone-item.completed { color: var(--wf-muted, #6b7f99); }
+    .milestone-indicator { width: 16px; height: 16px; border-radius: 50%; background-color: var(--wf-tint, #dce4ef); flex-shrink: 0; }
+    .milestone-item.completed .milestone-indicator { background-color: var(--wf-muted, #6b7f99); color: white; display: flex; align-items: center; justify-content: center; font-size: 10px; }
+    .spec-title { font-size: 12px; font-weight: 700; color: var(--wf-ink, #1e2a3a); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; border-bottom: 1px solid var(--wf-surface, #edf1f7); padding-bottom: 8px; }
+    .spec-content { font-size: 12px; color: var(--wf-muted, #6b7f99); line-height: 1.6; }
+    .spec-list { list-style: none; padding-left: 0; }
+    .spec-list li { margin-bottom: 8px; padding-left: 20px; position: relative; }
+    .spec-list li:before { content: "•"; position: absolute; left: 0; color: var(--wf-accent, #3d6daa); }
+    @media (max-width: 768px) { .kpi-grid { grid-template-columns: repeat(2, 1fr); } .filter-section { grid-template-columns: 1fr; } .table-header, .table-row, .orders-table-header, .orders-table-row { grid-template-columns: 1fr; gap: 8px; } .stage-flow-container { flex-wrap: wrap; } .stage-arrow { display: none; } }
+</style>
+</head>
+<body>
+  <header class="wf-header">
+    <div class="wf-header-logo">EQ</div>
+    <div class="wf-header-title">Equinix Partner Manager</div>
+    <nav class="wf-header-nav">
+      <a href="pm-home-dashboard.html">Dashboard</a>
+      <a href="pm-team-management.html">Team</a>
+      <a href="pm-deals-revenue.html">Deals</a>
+      <a href="pm-team-training.html">Training</a>
+      <a href="pm-resources.html">Resources</a>
+    </nav>
+    <div class="wf-header-util">
+      <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+      <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+    </div>
+  </header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+  <div class="container">
+    <div class="page-title">Opportunities & Orders</div>
+
+    <!-- Pipeline KPIs -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Total Pipeline</div>
+        <div class="kpi-value">$4.2M</div>
+        <div class="kpi-detail">8 active opportunities</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Avg Deal Size</div>
+        <div class="kpi-value">$525K</div>
+        <div class="kpi-detail">YTD average</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Win Rate (YTD)</div>
+        <div class="kpi-value">62%</div>
+        <div class="kpi-detail">↑ 8% vs last year</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Closing This Quarter</div>
+        <div class="kpi-value">3</div>
+        <div class="kpi-detail">$1.75M projected</div>
+      </div>
+    </div>
+
+    <!-- Stage Progression Flow -->
+    <div class="pipeline-section">
+      <div class="section-title">Deal Flow & Stage Progression</div>
+      <div class="stage-flow-container" aria-label="Deal flow from registration to order">
+        <div class="stage-step">
+          <div class="stage-step-circle complete">12</div>
+          <div class="stage-step-count">Deal Regs</div>
+          <div class="stage-step-label">Initial entry</div>
+        </div>
+        <div class="stage-arrow">→</div>
+        <div class="stage-step">
+          <div class="stage-step-circle complete">10</div>
+          <div class="stage-step-count">Opportunities</div>
+          <div class="stage-step-label">Qualified leads</div>
+        </div>
+        <div class="stage-arrow">→</div>
+        <div class="stage-step">
+          <div class="stage-step-circle complete">8</div>
+          <div class="stage-step-count">Proposals</div>
+          <div class="stage-step-label">Value presented</div>
+        </div>
+        <div class="stage-arrow">→</div>
+        <div class="stage-step">
+          <div class="stage-step-circle complete">5</div>
+          <div class="stage-step-count">Quotes</div>
+          <div class="stage-step-label">Customer review</div>
+        </div>
+        <div class="stage-arrow">→</div>
+        <div class="stage-step">
+          <div class="stage-step-circle">3</div>
+          <div class="stage-step-count">Orders</div>
+          <div class="stage-step-label">Won deals</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filter-section" aria-label="Filter opportunities">
+      <div class="filter-item">
+        <label class="filter-label">Stage</label>
+        <select class="filter-select">
+          <option value="">All Stages</option>
+          <option value="prospecting">Prospecting</option>
+          <option value="qualification">Qualification</option>
+          <option value="proposal">Proposal</option>
+          <option value="negotiation">Negotiation</option>
+          <option value="closed-won">Closed Won</option>
+        </select>
+      </div>
+      <div class="filter-item">
+        <label class="filter-label">Your Rep</label>
+        <select class="filter-select">
+          <option value="">All Reps</option>
+          <option value="tony-stark">Tony Stark</option>
+          <option value="natasha-romanoff">Natasha Romanoff</option>
+          <option value="james-rhodes">James Rhodes</option>
+          <option value="clint-barton">Clint Barton</option>
+          <option value="bruce-banner">Bruce Banner</option>
+          <option value="hope-van-dyne">Hope Van Dyne</option>
+        </select>
+      </div>
+      <div class="filter-item">
+        <label class="filter-label">Equinix AE</label>
+        <select class="filter-select">
+          <option value="">All AEs</option>
+          <option value="sarah-mitchell">Sarah Mitchell</option>
+          <option value="david-park">David Park</option>
+          <option value="rachel-torres">Rachel Torres</option>
+          <option value="kevin-obrien">Kevin O'Brien</option>
+          <option value="maria-vasquez">Maria Vasquez</option>
+          <option value="jason-liu">Jason Liu</option>
+        </select>
+      </div>
+      <div class="filter-item">
+        <label class="filter-label">Date Range</label>
+        <select class="filter-select">
+          <option value="">All Dates</option>
+          <option value="this-month">This Month</option>
+          <option value="this-quarter">This Quarter</option>
+          <option value="this-year">This Year</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Active Opportunities Table -->
+    <div class="card">
+      <div class="card-header">
+        <div class="section-title" style="margin:0">Active Opportunities</div>
+      </div>
+      <div class="table-header">
+        <div>Opportunity Name</div>
+        <div>Customer</div>
+        <div>Your Rep</div>
+        <div>Equinix AE</div>
+        <div>Amount</div>
+        <div>Stage</div>
+        <div>Next Action</div>
+        <div>Protection Exp.</div>
+      </div>
+
+      <div class="table-row">
+        <div class="opp-name">Acme Corp - Data Center Migration</div>
+        <div>Acme Corporation</div>
+        <div>Tony Stark</div>
+        <div>Sarah Mitchell</div>
+        <div style="font-weight:600">$1.2M</div>
+        <div><span class="status-badge stage-negotiation">Negotiation</span></div>
+        <div>Await contract review</div>
+        <div>45 days</div>
+      </div>
+
+      <div class="table-row">
+        <div class="opp-name">TechStart Inc - Cloud Expansion</div>
+        <div>TechStart Inc</div>
+        <div>Natasha Romanoff</div>
+        <div>David Park</div>
+        <div style="font-weight:600">$875K</div>
+        <div><span class="status-badge stage-proposal">Proposal</span></div>
+        <div>Send proposal by Feb 20</div>
+        <div>30 days</div>
+      </div>
+
+      <div class="table-row">
+        <div class="opp-name">Global Retail - Edge Computing</div>
+        <div>Global Retail Systems</div>
+        <div>James Rhodes</div>
+        <div>Rachel Torres</div>
+        <div style="font-weight:600">$950K</div>
+        <div><span class="status-badge stage-qualification">Qualification</span></div>
+        <div>Schedule technical review</div>
+        <div>60 days</div>
+      </div>
+
+      <div class="table-row">
+        <div class="opp-name">Finance Plus - Disaster Recovery</div>
+        <div>Finance Plus Group</div>
+        <div>Clint Barton</div>
+        <div>Kevin O'Brien</div>
+        <div style="font-weight:600">$680K</div>
+        <div><span class="status-badge stage-proposal">Proposal</span></div>
+        <div>Follow up on RFP</div>
+        <div><span class="protection-warning">7 days</span></div>
+      </div>
+
+      <div class="table-row">
+        <div class="opp-name">Medical Systems LLC - Hybrid Cloud</div>
+        <div>Medical Systems LLC</div>
+        <div>Bruce Banner</div>
+        <div>Maria Vasquez</div>
+        <div style="font-weight:600">$745K</div>
+        <div><span class="status-badge stage-prospecting">Prospecting</span></div>
+        <div>Conduct discovery call</div>
+        <div>75 days</div>
+      </div>
+
+      <div class="table-row">
+        <div class="opp-name">Energy Co - Infrastructure</div>
+        <div>Energy Company</div>
+        <div>Hope Van Dyne</div>
+        <div>Jason Liu</div>
+        <div style="font-weight:600">$520K</div>
+        <div><span class="status-badge stage-qualification">Qualification</span></div>
+        <div>Confirm technical requirements</div>
+        <div>50 days</div>
+      </div>
+
+      <div class="table-row">
+        <div class="opp-name">RetailChain Inc - Multi-Site</div>
+        <div>RetailChain Inc</div>
+        <div>Tony Stark</div>
+        <div>Sarah Mitchell</div>
+        <div style="font-weight:600">$620K</div>
+        <div><span class="status-badge stage-proposal">Proposal</span></div>
+        <div>Review pricing feedback</div>
+        <div>35 days</div>
+      </div>
+
+      <div class="table-row">
+        <div class="opp-name">InnovateTech - Connectivity Services</div>
+        <div>InnovateTech Group</div>
+        <div>Natasha Romanoff</div>
+        <div>David Park</div>
+        <div style="font-weight:600">$130K</div>
+        <div><span class="status-badge stage-negotiation">Negotiation</span></div>
+        <div>Awaiting customer sign-off</div>
+        <div>28 days</div>
+      </div>
+    </div>
+
+    <!-- Won Orders Table -->
+    <div class="card">
+      <div class="card-header">
+        <div class="section-title" style="margin:0">Won Orders</div>
+      </div>
+      <div class="orders-table-header">
+        <div>Order #</div>
+        <div>Customer</div>
+        <div>Amount</div>
+        <div>Your Rep</div>
+        <div>Equinix AE</div>
+        <div>Close Date</div>
+        <div>Commission Status</div>
+      </div>
+
+      <div class="orders-table-row">
+        <div class="order-number">ORD-2025-0801</div>
+        <div>Enterprise Solutions Co</div>
+        <div style="font-weight:600">$850K</div>
+        <div>Tony Stark</div>
+        <div>Sarah Mitchell</div>
+        <div>Jan 15, 2025</div>
+        <div><span class="status-badge status-paid">Paid</span></div>
+      </div>
+
+      <div class="orders-table-row">
+        <div class="order-number">ORD-2025-0702</div>
+        <div>CloudBase Partners</div>
+        <div style="font-weight:600">$620K</div>
+        <div>Natasha Romanoff</div>
+        <div>David Park</div>
+        <div>Dec 28, 2024</div>
+        <div><span class="status-badge status-paid">Paid</span></div>
+      </div>
+
+      <div class="orders-table-row">
+        <div class="order-number">ORD-2025-0603</div>
+        <div>Digital Innovations</div>
+        <div style="font-weight:600">$520K</div>
+        <div>James Rhodes</div>
+        <div>Rachel Torres</div>
+        <div>Jan 10, 2025</div>
+        <div><span class="status-badge status-approved">Approved</span></div>
+      </div>
+
+      <div class="orders-table-row">
+        <div class="order-number">ORD-2025-0504</div>
+        <div>NextGen Systems</div>
+        <div style="font-weight:600">$445K</div>
+        <div>Clint Barton</div>
+        <div>Kevin O'Brien</div>
+        <div>Jan 5, 2025</div>
+        <div><span class="status-badge status-approved">Approved</span></div>
+      </div>
+
+      <div class="orders-table-row">
+        <div class="order-number">ORD-2024-0405</div>
+        <div>Summit Infrastructure</div>
+        <div style="font-weight:600">$385K</div>
+        <div>Bruce Banner</div>
+        <div>Maria Vasquez</div>
+        <div>Dec 15, 2024</div>
+        <div><span class="status-badge status-pending">Pending</span></div>
+      </div>
+
+      <!-- Delivery Milestones for selected order -->
+      <div class="milestone-section">
+        <div class="milestone-title">Order ORD-2025-0603 - Delivery Milestones (Digital Innovations)</div>
+
+        <div class="milestone-item completed">
+          <div class="milestone-indicator">✓</div>
+          <span>Contract Signed - Jan 8, 2025</span>
+        </div>
+
+        <div class="milestone-item completed">
+          <div class="milestone-indicator">✓</div>
+          <span>Provisioning Started - Jan 15, 2025</span>
+        </div>
+
+        <div class="milestone-item">
+          <div class="milestone-indicator"></div>
+          <span>Configuration in Progress - Expected Feb 15, 2025</span>
+        </div>
+
+        <div class="milestone-item">
+          <div class="milestone-indicator"></div>
+          <span>Testing & Validation - Expected Feb 25, 2025</span>
+        </div>
+
+        <div class="milestone-item">
+          <div class="milestone-indicator"></div>
+          <span>Final Delivery - Expected Mar 5, 2025</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Specification Sections -->
+    <div class="spec-section">
+      <div class="spec-title">Salesforce Objects & Fields</div>
+      <div class="spec-content">
+        <strong>Opportunity:</strong> Opp ID, Account Name, Amount, StageName (Prospecting/Qualification/Proposal/Negotiation/Closed Won), CloseDate, Your_Rep__c (lookup to Partner User), Equinix_AE__c (lookup to Equinix User), Next_Action__c, Protection_Period_Days__c<br><br>
+        <strong>Order:</strong> Order ID, Opportunity (lookup), Account, Amount, Close_Date__c, Your_Rep__c (lookup), Equinix_AE__c (lookup)<br><br>
+        <strong>Order_Delivery__c:</strong> Delivery ID, Order (lookup), Milestone_Name__c, Expected_Date__c, Actual_Date__c, Status__c (Not Started/In Progress/Completed)
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <div class="spec-title">Validation Rules & Business Logic</div>
+      <div class="spec-content">
+        <ul class="spec-list">
+          <li>Partners see only their own opportunities and orders (row-level security via Org)</li>
+          <li>Equinix AE field is required for all opportunities in Qualification stage or higher</li>
+          <li>Next Action field is mandatory and must be updated within 7 days of last activity</li>
+          <li>Protection Period countdown triggered when Opportunity reaches Proposal stage</li>
+          <li>Commission status defaults to Pending until Equinix Finance approves Order</li>
+          <li>Deal must reach Closed Won stage before Order creation is allowed</li>
+          <li>Delivery milestones auto-created from Order template when status = "Closed Won"</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <div class="spec-title">Error States</div>
+      <div class="spec-content">
+        <ul class="spec-list">
+          <li>"Equinix AE required — cannot move to Qualification without AE assignment"</li>
+          <li>"Protection period expiring in 7 days — escalate or update Next Action"</li>
+          <li>"No active opportunities — register your first deal from the Deals page"</li>
+          <li>"Commission on hold — Order pending Equinix finance approval"</li>
+          <li>"Delivery milestone overdue — update status or extend expected date"</li>
+          <li>"Next Action stale — last activity >7 days ago, update to re-engage"</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <div class="spec-title">Accessibility Notes</div>
+      <div class="spec-content">
+        <ul class="spec-list">
+          <li>Stage flow diagram uses aria-label to describe progression: "Deal flow from registration through 12 opportunities, 10 qualified, 8 proposals, 5 quotes, 3 closing orders"</li>
+          <li>All stage badges include both color and text label (e.g., "Negotiation" in teal, not color-only)</li>
+          <li>Protection period warning uses color (var(--wf-amber, #8b7745)) + bold text, not color-alone; screen readers announce "7 days warning"</li>
+          <li>Commission status badges use aria-label: "Commission status: Paid" or "Pending review"</li>
+          <li>Opportunity and Order tables marked with role="table" and aria-label; keyboard navigation via Tab + arrow keys supported</li>
+          <li>Next Action text is conversational and readable (e.g., "Send proposal by Feb 20" vs. "PROP_SEND_2_20")</li>
+          <li>Your Rep and Equinix AE columns show human names with context (Partner vs. Equinix)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <div class="spec-title">User Flow (Numbered Steps)</div>
+      <div class="spec-content">
+        <ol style="margin-left:20px;line-height:1.8;color:var(--wf-muted, #6b7f99);font-size:12px">
+          <li>PM logs in and lands on Opportunities & Orders page</li>
+          <li>PM reviews KPI cards: Total Pipeline ($4.2M), Avg Deal Size ($525K), Win Rate (62%), Deals Closing (3)</li>
+          <li>PM checks Stage Flow diagram to understand deal progression (12 registered → 10 qualified → 8 proposals → 5 quotes → 3 orders)</li>
+          <li>PM applies filters (by Stage, Your Rep, Equinix AE, Date Range) to segment pipeline</li>
+          <li>PM scans Active Opportunities table for high-risk deals (protection period <14 days highlighted in orange)</li>
+          <li>PM identifies next actions needed by stage: Prospecting→discovery call, Qualification→technical review, Proposal→send/review, Negotiation→await sign-off</li>
+          <li>PM reviews Equinix AE column to see which Equinix rep is co-selling (cross-functional visibility)</li>
+          <li>PM clicks on opportunity name to view details or update stage</li>
+          <li>PM scrolls to Won Orders section to track closed deals and commission status</li>
+          <li>PM reviews delivery milestones for key orders to track post-sale progress</li>
+          <li>PM uses commission status badges to identify which orders have received payment</li>
+          <li>PM returns to Deals page to register new opportunities or updates Active Opportunities in real-time</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <div class="spec-title">Related Automations & Alerts</div>
+      <div class="spec-content">
+        <strong>Flows:</strong> Opportunity_Stage_Change_Flow (on stage change, notify Equinix AE), Protection_Period_Alert_Flow (7 days before expiration, notify Your Rep), Order_Delivery_Milestone_Flow (auto-create milestones on Order close), Commission_Status_Sync_Flow (sync with Finance approval)<br><br>
+        <strong>Apex Triggers:</strong> OpportunityTrigger (on stage change, validate Equinix AE), OrderTrigger (on close, create delivery milestones), NextActionTrigger (on insert/update, set activity timestamp)<br><br>
+        <strong>Scheduled Actions:</strong> Daily alert for stale Next Actions (>7 days old), weekly protection period escalation report, monthly commission reconciliation
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <div class="spec-title">Design Brief — Partner-Centric Opportunities & Orders</div>
+      <div class="spec-content" style="line-height:1.8">
+        This page shifts focus from partner-to-Equinix deal tracking (Deals page) to <strong>partner-to-customer opportunity management with Equinix co-sell visibility</strong>. Partners need three critical views:<br><br>
+        <strong>1. Pipeline at a Glance:</strong> Four KPI cards show total pipeline value, average deal size, win rate, and near-term closing forecasts. A horizontal stage flow diagram visualizes the funnel (12 regs → 10 opps → 8 proposals → 5 quotes → 3 closing), helping partners understand velocity and conversion rates.<br><br>
+        <strong>2. Active Opportunities Table:</strong> Eight deals span all stages. Key columns include Your Rep (the partner-side rep driving the deal), Equinix AE (the Equinix Account Executive co-selling), and Next Action (conversational, time-bound tasks like "Send proposal by Feb 20" or "Schedule technical review"). This structure ensures partners know who at Equinix is engaged and what must happen next. Protection Period countdown (with <14 day warning in orange) flags deals at risk of losing special discount window. Amount and Stage badges (with color + text) show deal size and progression status at a glance.<br><br>
+        <strong>3. Won Orders & Delivery Tracking:</strong> Five closed orders show post-sale progress. Commission Status badges (Paid/Approved/Pending) indicate which deals have earned partner revenue. Delivery milestones for a selected order show infrastructure provisioning progress, helping partners understand service delivery timelines and customer onboarding status.<br><br>
+        <strong>Filtering & Segmentation:</strong> Partners can filter by Stage, Your Rep, Equinix AE, and Date Range to isolate deals needing attention (e.g., "all Negotiation-stage deals co-sold by Sarah Mitchell").<br><br>
+        <strong>Cross-Functional Transparency:</strong> By showing Equinix AE names and co-sell status, the page reinforces partner-Equinix alignment and encourages collaborative deal execution. Partners can quickly identify stalled deals or escalation needs.
+      </div>
+    </div>
+
+    <div class="spec-section" style="border-left:3px solid var(--wf-muted, #6b7f99);">
+      <div class="spec-title" style="color:var(--wf-muted, #6b7f99);">Architectural Decision: MRR-Only Revenue Model</div>
+      <div class="spec-content">
+        <p>All Amount values on this page represent <strong>Monthly Recurring Revenue (MRR)</strong> — the contracted monthly value of colocation, cross-connects, and managed services. Non-Recurring Revenue (NRR) such as installation fees, smart hands, and custom buildouts is excluded from opportunity pipeline values and commission calculations.</p>
+        <p style="margin-top:8px;">This aligns partner incentives with Equinix's recurring revenue model. Partners are motivated to close larger, longer-term service contracts rather than one-time setup work. Commission rates (Bronze 8%, Silver 12%, Gold 15%) apply to MRR only.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer class="wf-footer">
+    &copy; 2026 Equinix Partner Manager Portal · Wireframe specification
+  </footer>
+
+  <!-- WF-SPEC: pm-opportunities — Opportunities & Orders -->
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>The Opportunities page enables partners to view their sales pipeline, track deal progression through stages, monitor protection periods, and access order and commission status for closed deals.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Understand pipeline size and deal progression across all stages</li>
+<li>Identify deals at risk (protection period expiring, stalled, overdue action)</li>
+<li>Filter opportunities by stage, rep, and Equinix AE to isolate priorities</li>
+<li>Track won orders and commission approval status for closed deals</li>
+<li>Monitor post-sale delivery progress and infrastructure provisioning milestones</li>
+<li>Ensure next actions are defined and updated regularly for each opportunity</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>KPI cards: Total Pipeline Value, Average Deal Size, Deals in Proposal, Orders Pending Commission</li>
+<li>Deal Flow & Stage Progression diagram with visual stage bands</li>
+<li>Active Opportunities table with stage, customer, amount, close date, protection status</li>
+<li>Won Orders table with order number, deal link, commission status, approval date</li>
+<li>Delivery Milestones section showing critical post-sale events and timelines</li>
+<li>Filter controls for Stage, Your Rep, Equinix AE, date range</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Stage flow diagram with colored circles showing deal progression and counts</li>
+<li>Filter dropdowns for Stage, Your Rep, Equinix AE, and date range</li>
+<li>Opportunity names in table are clickable links to detail views and next actions</li>
+<li>Order numbers in Won Orders table are clickable to view order records and commission detail</li>
+<li>Protection period warning badges with expiration countdown</li>
+<li>Commission status badges (Pending, Approved, Paid) with color coding</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Access Control & Validation</strong>
+<ul>
+<li>Row-level security filter ensures partners see only opportunities where they are Owner or Equinix AE</li>
+<li>Opportunity stage validation requires Equinix AE assignment once opportunity reaches Qualification stage or higher</li>
+</ul>
+</li>
+<li><strong>Action Tracking & Monitoring</strong>
+<ul>
+<li>Next Action mandatory field with 7-day staleness detection and alert to keep deals moving forward</li>
+<li>Stale opportunity detection flags deals with no activity for 30+ days with visual warning indicators</li>
+</ul>
+</li>
+<li><strong>Protection & Commission Lifecycle</strong>
+<ul>
+<li>Protection Period countdown triggered upon Proposal stage entry; automatically expires at 90-day mark with notification</li>
+<li>Commission status workflow: Pending (on Order creation) → Approved (Finance approval) → Paid (GL posting) with status tracking</li>
+</ul>
+</li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Validation &amp; Business Logic</h4>
+<ul>
+<li>Partners see only their own opportunities and orders (row-level security via Org)</li>
+<li>Equinix AE field is required for all opportunities in Qualification stage or higher</li>
+<li>Next Action field is mandatory and must be updated within 7 days of last activity</li>
+<li>Protection Period countdown triggered when Opportunity reaches Proposal stage</li>
+<li>Commission status defaults to Pending until Equinix Finance approves Order</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+</body>
+</html>

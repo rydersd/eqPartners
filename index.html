@@ -1,0 +1,1257 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Equinix PCP — Page Mockups</title>
+<link rel="stylesheet" href="wireframe.css">
+<style>
+:root {
+  --navy: var(--wf-ink);
+  --blue: var(--wf-accent);
+  --teal: var(--wf-accent);
+  --purple: var(--wf-muted);
+  --orange: var(--wf-amber);
+  --red: var(--wf-red);
+  --green: var(--wf-ink);
+  --gray-bg: var(--wf-canvas);
+  --gray-light: var(--wf-surface);
+  --gray-border: var(--wf-line);
+  --gray-dark: var(--wf-text);
+}
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Salesforce Sans', sans-serif; background:var(--wf-canvas); color:var(--wf-text); line-height:1.5; }
+
+/* ── Header ── */
+.page-header {
+  background: var(--wf-ink, #1e2a3a);
+  padding: 2.5rem 2.5rem 2rem;
+  border-bottom: 3px solid var(--wf-accent, #3d6daa);
+}
+.page-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 0.375rem;
+  letter-spacing: -0.01em;
+}
+.page-header .page-header__sub {
+  font-size: 0.9375rem;
+  color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 0.25rem;
+}
+.page-header .page-header__meta {
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
+/* ── Container ── */
+.container { max-width:1400px; margin:0 auto; padding:2rem; }
+
+/* ── Hub Layout ── */
+.hub-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(420px, 1fr)); gap:1.5rem; margin-bottom:2rem; }
+
+/* ── Hub Card ── */
+.hub-card { background:#fff; border:1px solid var(--wf-line); border-radius:8px; overflow:hidden; transition:all 0.2s; }
+.hub-card:hover { border-color:var(--wf-accent); box-shadow:0 2px 12px rgba(0,0,0,0.08); }
+
+.hub-card-header { display:flex; align-items:center; gap:0.75rem; padding:1rem 1.25rem; border-bottom:1px solid var(--wf-surface); }
+
+.hub-card-type {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:32px;
+  height:32px;
+  border-radius:4px;
+  font-size:0.75rem;
+  font-weight:700;
+  color:#fff;
+  flex-shrink:0;
+}
+.hub-card-type.dashboard { background:var(--wf-ink); color:#fff; }
+.hub-card-type.list { background:var(--wf-ink); color:#fff; }
+.hub-card-type.record { background:var(--wf-ink); color:#fff; }
+.hub-card-type.form { background:var(--wf-ink); color:#fff; }
+.hub-card-type.report { background:var(--wf-ink); color:#fff; }
+.hub-card-type.settings { background:var(--wf-ink); color:#fff; }
+.hub-card-type.workflow { background:var(--wf-ink); color:#fff; }
+
+.hub-card-title { flex:1; font-size:1rem; font-weight:600; color:var(--wf-ink); }
+.hub-card-title a { color:var(--wf-ink); text-decoration:none; transition:color 0.2s; }
+.hub-card-title a:hover { color:var(--wf-accent); text-decoration:underline; }
+
+.hub-card-body { padding:1.25rem; }
+.hub-card-desc { font-size:0.875rem; color:var(--wf-muted); line-height:1.4; }
+
+/* ── Section Title ── */
+.section-header { display:flex; align-items:center; gap:0.75rem; margin:2.5rem 0 1.5rem 0; padding-bottom:1rem; border-bottom:2px solid var(--wf-line); }
+.section-header h2 { font-size:1.5rem; font-weight:700; color:var(--wf-ink); }
+.section-header .count { font-size:0.875rem; color:var(--wf-muted); font-weight:400; margin-left:0.5rem; }
+.section-header .platform {
+  margin-left:auto;
+  font-size:0.75rem;
+  font-weight:600;
+  padding:0.375rem 0.75rem;
+  border-radius:4px;
+  display:inline-flex;
+  align-items:center;
+  gap:0.375rem;
+  background:var(--wf-surface);
+  color:var(--wf-muted);
+  border:1px solid var(--wf-line);
+}
+.section-header .platform.sf { background:var(--wf-surface); color:var(--wf-muted); border:1px solid var(--wf-line); }
+.section-header .platform.ec { background:var(--wf-surface); color:var(--wf-muted); border:1px solid var(--wf-line); }
+.section-header .platform-dot { width:6px; height:6px; border-radius:50%; background:var(--wf-muted); }
+
+/* ── Stats Bar ── */
+.stats-bar { display:flex; gap:2rem; flex-wrap:wrap; margin:1.5rem 0; padding:1.5rem; background:#fff; border-radius:8px; border:1px solid var(--wf-line); }
+.stat { }
+.stat .num { font-size:1.75rem; font-weight:700; color:var(--wf-ink); }
+.stat .lbl { font-size:0.75rem; color:var(--wf-muted); font-weight:600; text-transform:uppercase; letter-spacing:0.05em; }
+
+/* ── Footer ── */
+.page-footer { background:var(--wf-surface); border-top:1px solid var(--wf-line); padding:1.5rem 2.5rem; text-align:center; font-size:0.8125rem; color:var(--wf-muted); margin-top:3rem; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>Equinix Partner Channel Program</h1>
+  <p class="page-header__sub">Wireframe Suite &mdash; 88 pages across 4 portals · PSM Internal · Partner Manager · Partner Rep · ECP</p>
+  <p class="page-header__meta">Scenario thread: Stark Industries (Gold tier, US West) &mdash; Feb 2026</p>
+</div>
+
+<div class="container">
+
+<div class="stats-bar">
+  <div class="stat"><div class="num">88</div><div class="lbl">Total Pages</div></div>
+  <div class="stat"><div class="num">4</div><div class="lbl">Portals</div></div>
+  <div class="stat"><div class="num">7</div><div class="lbl">Screen Types</div></div>
+  <div class="stat"><div class="num">Feb 2026</div><div class="lbl">Version</div></div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 1: INTERNAL PSM (Salesforce Lightning) — 24 pages
+     ═══════════════════════════════════════════════════ -->
+<div class="section-header">
+  <h2>Internal PSM <span class="count">(25 pages)</span></h2>
+  <div class="platform sf">
+    <div class="platform-dot"></div> Salesforce Lightning
+  </div>
+</div>
+
+<div class="hub-grid">
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type dashboard">D</div>
+      <div class="hub-card-title"><a href="psm-program-dashboard.html">PSM Program Dashboard</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Central dashboard with KPIs, partner portfolio, and training trends</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type dashboard">D</div>
+      <div class="hub-card-title"><a href="psm-executive-dashboard.html">Executive Dashboard</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">C-level channel overview with revenue, partner growth, and program health</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type list">L</div>
+      <div class="hub-card-title"><a href="psm-partner-account-list.html">Partner Account Portfolio</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">List view of all partner accounts with tier, completion, and status</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type record">R</div>
+      <div class="hub-card-title"><a href="psm-partner-account-record.html">Partner Account Record</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Account detail page with team training tree, tier progress, and actions</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type record">R</div>
+      <div class="hub-card-title"><a href="psm-health-scorecard.html">Partner Health Scorecard</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Multi-dimension health scoring: training, revenue, engagement, deal velocity</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type record">R</div>
+      <div class="hub-card-title"><a href="psm-partner-qualification.html">Partner Qualification</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Due diligence checklist, compliance verification, and qualification scoring</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type list">L</div>
+      <div class="hub-card-title"><a href="psm-deal-registration.html">Deal Registration Queue</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Queue for approving deal registrations with conflict detection</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type record">R</div>
+      <div class="hub-card-title"><a href="psm-deal-review-detail.html">Deal Review Detail</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Individual deal review with conflict analysis, approval workflow, and notes</div>
+    </div>
+  </div>
+
+  <div class="hub-card" style="border-left:3px solid var(--wf-line);">
+    <div class="hub-card-header">
+      <div class="hub-card-type record">R</div>
+      <div class="hub-card-title"><a href="psm-opportunity-record.html">Opportunity Record (Partner View)</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">3-column Lightning record with Partner Involvement at top of left rail, Slack deal channel, and Agentforce context</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type settings">S</div>
+      <div class="hub-card-title"><a href="psm-deal-reg-rules.html">Deal Registration Rules</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Rule engine configuration for auto-approve thresholds, territory conflicts, expiry</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type workflow">W</div>
+      <div class="hub-card-title"><a href="psm-partner-onboarding.html">Partner Onboarding Pipeline</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">7-stage onboarding pipeline: Recruitment → Active/Completed</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type record">R</div>
+      <div class="hub-card-title"><a href="psm-onboarding-plan.html">Onboarding Plan Detail</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">30-60-90 day onboarding plan with milestone tracking and task assignments</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type dashboard">D</div>
+      <div class="hub-card-title"><a href="psm-mdf-management.html">Market Development Funds</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">MDF approval dashboard with spending tracking and ROI analysis</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type report">A</div>
+      <div class="hub-card-title"><a href="psm-mdf-analytics.html">MDF Analytics</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">MDF spend analysis, ROI tracking, partner marketing effectiveness reports</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type record">R</div>
+      <div class="hub-card-title"><a href="psm-pop-review.html">Proof of Performance Review</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Review partner-submitted MDF proof of performance with approval workflow</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type record">R</div>
+      <div class="hub-card-title"><a href="psm-reimbursement.html">MDF Reimbursement</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Reimbursement processing for approved MDF claims with payment tracking</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type record">R</div>
+      <div class="hub-card-title"><a href="psm-joint-business-plan.html">Joint Business Plans</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">JBP record with annual plan, QBR minutes, and partnership scorecard</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type record">R</div>
+      <div class="hub-card-title"><a href="psm-qbr-minutes.html">QBR Minutes</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Quarterly business review notes, action items, and next-steps tracking</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type record">R</div>
+      <div class="hub-card-title"><a href="psm-contracts.html">Partner Contracts</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Contract lifecycle management with renewal tracking and amendment history</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type dashboard">D</div>
+      <div class="hub-card-title"><a href="psm-commission-processing.html">Commission Processing</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">MRR commission calculations, payment runs, and partner payout management</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type record">R</div>
+      <div class="hub-card-title"><a href="psm-contact-training.html">Contact Training Record</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Contact diagnostic with training history and progress analysis</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type dashboard">D</div>
+      <div class="hub-card-title"><a href="psm-sumtotal-monitor.html">SumTotal LMS Monitor</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">LMS integration health, sync status, and training data reconciliation</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type record">R</div>
+      <div class="hub-card-title"><a href="psm-encourage-modal.html">Encourage / Nudge Modal</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">PSM quick-action modal to send encouragement or training reminders to partners</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type report">A</div>
+      <div class="hub-card-title"><a href="psm-reports-analytics.html">Reports & Analytics</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Channel performance reports with training, revenue, and MDF analytics</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type settings">S</div>
+      <div class="hub-card-title"><a href="psm-program-admin.html">Program Administration</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Settings for tier scoring, deal rules, and system configuration</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 2: PARTNER MANAGER PORTAL (Experience Cloud) — 18 pages
+     ═══════════════════════════════════════════════════ -->
+<div class="section-header">
+  <h2>Partner Manager Portal <span class="count">(18 pages)</span></h2>
+  <div class="platform ec">
+    <div class="platform-dot"></div> Experience Cloud
+  </div>
+</div>
+
+<div class="hub-grid">
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type dashboard">D</div>
+      <div class="hub-card-title"><a href="pm-home-dashboard.html">PM Home Dashboard</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Partner manager home with team completion, deals, and quick actions</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type list">L</div>
+      <div class="hub-card-title"><a href="pm-team-training.html">Team Training & Enablement</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Manage team training assignments and track progress by member</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type record">R</div>
+      <div class="hub-card-title"><a href="pm-cert-tracker.html">Certification Tracker</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Organization certification status, expiry alerts, and renewal management</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type record">R</div>
+      <div class="hub-card-title"><a href="pm-course-catalog.html">Course Catalog (PM View)</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Browse courses and assign to team members with bulk enrollment</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type dashboard">D</div>
+      <div class="hub-card-title"><a href="pm-deals-revenue.html">Deals & Revenue</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Organization revenue dashboard with deal pipeline and commission tracking</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type form">F</div>
+      <div class="hub-card-title"><a href="pm-deal-registration.html">Deal Registration (PM)</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Manager-level deal registration with team assignment and priority flagging</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type list">L</div>
+      <div class="hub-card-title"><a href="pm-opportunities.html">Opportunity Pipeline</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Organization-wide opportunity list with stage tracking and forecasting</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type dashboard">D</div>
+      <div class="hub-card-title"><a href="pm-customer-health.html">Customer Health</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">End-customer health scores, churn risk, and expansion opportunity tracking</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type dashboard">D</div>
+      <div class="hub-card-title"><a href="pm-org-health.html">Organization Health</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Partner org health dashboard with tier progress, KPIs, and compliance status</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type dashboard">D</div>
+      <div class="hub-card-title"><a href="pm-mdf-comarketing.html">Marketing & MDF</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">MDF program overview with request forms and co-marketing assets</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type form">F</div>
+      <div class="hub-card-title"><a href="pm-mdf-request.html">MDF Request Form</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Submit market development fund requests with budget, timeline, and goals</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type form">F</div>
+      <div class="hub-card-title"><a href="pm-pop-submission.html">Proof of Performance</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Submit MDF proof of performance with receipts, metrics, and documentation</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type record">R</div>
+      <div class="hub-card-title"><a href="pm-asset-library.html">Asset Library</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Co-branded marketing assets, templates, and campaign materials</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type record">R</div>
+      <div class="hub-card-title"><a href="pm-playbooks.html">Sales Playbooks</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Solution-specific sales playbooks with battle cards and objection handling</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type record">R</div>
+      <div class="hub-card-title"><a href="pm-resources.html">Resources & Support</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Sales playbooks, support center, and program documentation</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type record">R</div>
+      <div class="hub-card-title"><a href="pm-support-center.html">Support Center</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Submit and track support cases, knowledge base, and contact information</div>
+    </div>
+  </div>
+
+  <div class="hub-card" style="border-left:3px solid var(--wf-line);">
+    <div class="hub-card-header">
+      <div class="hub-card-type settings">S</div>
+      <div class="hub-card-title"><a href="pm-team-management.html">Team Management</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Invite/remove portal users, view active roster, manage licenses. Partner Admin only.</div>
+    </div>
+  </div>
+
+  <div class="hub-card" style="border-left:3px solid var(--wf-line);">
+    <div class="hub-card-header">
+      <div class="hub-card-type settings">S</div>
+      <div class="hub-card-title"><a href="pm-role-permissions.html">Roles & Permissions</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Configure portal access levels, permission matrix, and audit log. Partner Admin only.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 3: PARTNER REP PORTAL (Experience Cloud) — 11 pages
+     ═══════════════════════════════════════════════════ -->
+<div class="section-header">
+  <h2>Partner Rep Portal <span class="count">(16 pages)</span></h2>
+  <div class="platform ec">
+    <div class="platform-dot"></div> Experience Cloud
+  </div>
+</div>
+
+<div class="hub-grid">
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type dashboard">D</div>
+      <div class="hub-card-title"><a href="rep-home.html">Rep Home</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Individual rep home with training status, deals, and commissions</div>
+    </div>
+  </div>
+
+  <div class="hub-card" style="border-left:3px solid var(--wf-line);">
+    <div class="hub-card-header">
+      <div class="hub-card-type workflow">W</div>
+      <div class="hub-card-title"><a href="rep-first-login.html">First-Login Onboarding Wizard</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">5-step guided setup for new reps: welcome, MFA, profile, training assignment, ready to go</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type list">L</div>
+      <div class="hub-card-title"><a href="rep-my-training.html">My Training</a> · <a href="rep-my-training-table.html" style="font-size:11px;color:var(--wf-accent)">T</a> <a href="rep-my-training-kanban.html" style="font-size:11px;color:var(--wf-muted)">K</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Personal training list with progress, courses, and launch to LMS. 3 views: Card, Table, Kanban</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type record">R</div>
+      <div class="hub-card-title"><a href="rep-course-catalog.html">Course Catalog</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Browse and enroll in available training courses by track</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type record">R</div>
+      <div class="hub-card-title"><a href="rep-course-detail.html">Course Detail</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Individual course view with modules, progress tracking, and completion</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type record">R</div>
+      <div class="hub-card-title"><a href="rep-certifications.html">My Certifications</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Active certifications with expiry tracking and renewal actions</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type form">F</div>
+      <div class="hub-card-title"><a href="rep-register-deal.html">Register a Deal</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Multi-step deal registration wizard with customer lookup and product selection</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type dashboard">D</div>
+      <div class="hub-card-title"><a href="rep-pipeline.html">My Pipeline</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Deal pipeline with Kanban view, stages, and deal protection tracking</div>
+    </div>
+  </div>
+
+  <div class="hub-card" style="border-left:3px solid var(--wf-line);">
+    <div class="hub-card-header">
+      <div class="hub-card-type record">R</div>
+      <div class="hub-card-title"><a href="rep-deal-expiring.html">Deal Expiration Detail</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">At-risk deal view with countdown timer, guided next steps, risk factors, and extension request</div>
+    </div>
+  </div>
+
+  <div class="hub-card" style="border-left:3px solid var(--wf-line);">
+    <div class="hub-card-header">
+      <div class="hub-card-type dashboard">D</div>
+      <div class="hub-card-title"><a href="rep-notifications.html">Notification Center</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Bell dropdown and expanded notification view with category filters and detail panel</div>
+    </div>
+  </div>
+
+  <div class="hub-card" style="border-left:3px solid var(--wf-line);">
+    <div class="hub-card-header">
+      <div class="hub-card-type settings">S</div>
+      <div class="hub-card-title"><a href="rep-notification-preferences.html">Notification Preferences</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Per-category in-app/email toggles, quiet hours, and daily digest configuration</div>
+    </div>
+  </div>
+
+  <div class="hub-card" style="border-left:3px solid var(--wf-line);">
+    <div class="hub-card-header">
+      <div class="hub-card-type list">L</div>
+      <div class="hub-card-title"><a href="rep-notification-history.html">Notification History</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Full searchable log of all notifications with filters, delivery channel indicators, and CSV export</div>
+    </div>
+  </div>
+
+  <div class="hub-card" style="border-left:3px solid var(--wf-line);">
+    <div class="hub-card-header">
+      <div class="hub-card-type dashboard">D</div>
+      <div class="hub-card-title"><a href="rep-messages.html">Messages & Communication</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Slack-integrated messaging hub with deal channels, direct messages, and Agentforce AI assistant</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type dashboard">D</div>
+      <div class="hub-card-title"><a href="rep-deals-commission.html">My Deals & Commission</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Personal deal pipeline and commission earnings with history</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type record">R</div>
+      <div class="hub-card-title"><a href="rep-sales-tools.html">Sales Tools</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Battle cards, proposal templates, ROI calculators, and pricing guides</div>
+    </div>
+  </div>
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type record">R</div>
+      <div class="hub-card-title"><a href="rep-resources.html">Resources & Support</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Sales tools, product information, and support center</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 4: GLOBAL SEARCH SUITE — 4 pages
+     ═══════════════════════════════════════════════════ -->
+<div class="section-header" style="border-bottom-color:var(--wf-line);">
+  <h2>Global Search Suite <span class="count">(4 pages)</span></h2>
+  <div class="platform" style="background:var(--wf-surface);color:var(--wf-muted);border:1px solid var(--wf-line);">
+    <div class="platform-dot" style="background:var(--wf-ink);"></div> Experience Cloud &middot; Federated Search
+  </div>
+</div>
+
+<div class="hub-grid">
+
+  <div class="hub-card" style="border-left:3px solid var(--wf-line);">
+    <div class="hub-card-header">
+      <div class="hub-card-type" style="background:var(--wf-ink);">S</div>
+      <div class="hub-card-title"><a href="rep-search-results.html">Search: "Acme"</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Customer/deal name query (35% of searches). Federated results across all objects.</div>
+    </div>
+  </div>
+
+  <div class="hub-card" style="border-left:3px solid var(--wf-line);">
+    <div class="hub-card-header">
+      <div class="hub-card-type" style="background:var(--wf-ink);">S</div>
+      <div class="hub-card-title"><a href="rep-search-fabric.html">Search: "Fabric"</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Product keyword query (20%). Synonym expansion, courses promoted.</div>
+    </div>
+  </div>
+
+  <div class="hub-card" style="border-left:3px solid var(--wf-line);">
+    <div class="hub-card-header">
+      <div class="hub-card-type" style="background:var(--wf-ink);">S</div>
+      <div class="hub-card-title"><a href="rep-search-training.html">Search: "Security Fundamentals"</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Course title query (15%). Best Match banner with 1-click resume.</div>
+    </div>
+  </div>
+
+  <div class="hub-card" style="border-left:3px solid var(--wf-line);">
+    <div class="hub-card-header">
+      <div class="hub-card-type" style="background:var(--wf-ink);">S</div>
+      <div class="hub-card-title"><a href="rep-search-commission.html">Search: "commission Q1"</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Commission/financial query (10%). Quarterly summary card, pipeline projections.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 5: EQUINIX CUSTOMER PORTAL (ECP) — 10 pages
+     Two distinct user types within the same platform:
+       EUC (End User Customer / partner customer) — 8 pages
+       Partner / Account Manager view — 2 pages
+     ═══════════════════════════════════════════════════ -->
+<div class="section-header" style="border-bottom-color:var(--wf-line);">
+  <h2>Equinix Customer Portal (ECP) <span class="count">(10 pages)</span></h2>
+  <div class="platform" style="background:var(--wf-surface);color:var(--wf-muted);border:1px solid var(--wf-line);">
+    <div class="platform-dot" style="background:var(--wf-ink);"></div> Experience Cloud &middot; Partner Customer Portal &middot; 2 distinct user types within the same platform
+  </div>
+</div>
+
+<!-- ── EUC sub-section ── -->
+<div style="background:var(--wf-canvas);border:2px solid #5a7a45;border-radius:6px;padding:16px 20px;margin:0 0 20px 0;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span style="background:#5a7a45;color:#fff;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:3px 9px;border-radius:3px;">EUC</span>
+      <strong style="font-size:15px;color:var(--wf-ink);">End User Customer</strong>
+      <span style="color:var(--wf-muted);font-size:12px;">&middot; 8 pages</span>
+    </div>
+    <span style="font-size:12px;color:var(--wf-muted);font-style:italic;">Maria Hill &middot; S.H.I.E.L.D. &middot; partner customer</span>
+  </div>
+  <p style="font-size:12px;color:var(--wf-muted);margin:0 0 14px 0;line-height:1.6;">A partner customer accessing their own provisioned Equinix services through the ECP portal. All Equinix services are managed on S.H.I.E.L.D.'s behalf by Stark Industries (reseller). The EUC sees their own spend, service health, active orders, support cases, asset inventory, and can browse Stark's packaged solution catalog.</p>
+  <div class="hub-grid">
+
+    <div class="hub-card" style="border-left:3px solid #5a7a45;">
+      <div class="hub-card-header">
+        <div class="hub-card-type dashboard">D</div>
+        <div class="hub-card-title"><a href="ecp-dashboard.html">ECP Dashboard</a></div>
+      </div>
+      <div class="hub-card-body">
+        <div class="hub-card-desc">End-customer home — service health, active orders, SLA status, spend summary. Customer sees their own Equinix services provisioned via Stark Industries.</div>
+      </div>
+    </div>
+
+    <div class="hub-card" style="border-left:3px solid #5a7a45;">
+      <div class="hub-card-header">
+        <div class="hub-card-type list">L</div>
+        <div class="hub-card-title"><a href="ecp-notifications.html">Notifications</a></div>
+      </div>
+      <div class="hub-card-body">
+        <div class="hub-card-desc">Full notification center — maintenance alerts, order status changes, case updates, SLA breach notices, billing, contract renewals. Filterable by type. (9 notifications, 2 unread)</div>
+      </div>
+    </div>
+
+    <div class="hub-card" style="border-left:3px solid #5a7a45;">
+      <div class="hub-card-header">
+        <div class="hub-card-type list">L</div>
+        <div class="hub-card-title"><a href="ecp-services-orders.html">Services &amp; Orders</a></div>
+      </div>
+      <div class="hub-card-body">
+        <div class="hub-card-desc">Order list with status, delay warnings, and provisioning timeline. ORD-2025-0156 cabinet deployment (delayed) and ORD-2025-0189 power upgrade (SLA breach) are featured.</div>
+      </div>
+    </div>
+
+    <div class="hub-card" style="border-left:3px solid #5a7a45;">
+      <div class="hub-card-header">
+        <div class="hub-card-type record">R</div>
+        <div class="hub-card-title"><a href="ecp-order-detail.html">Order Detail — ORD-2025-0156</a></div>
+      </div>
+      <div class="hub-card-body">
+        <div class="hub-card-desc">Cabinet deployment drill-in — 8-step installation timeline, activity log, contacts (Marcus Chen/PSM, James Rhodes/Stark), documents, related items. Delayed state (amber) featured.</div>
+      </div>
+    </div>
+
+    <div class="hub-card" style="border-left:3px solid #5a7a45;">
+      <div class="hub-card-header">
+        <div class="hub-card-type list">L</div>
+        <div class="hub-card-title"><a href="ecp-inventory.html">Infrastructure Inventory</a></div>
+      </div>
+      <div class="hub-card-body">
+        <div class="hub-card-desc">All S.H.I.E.L.D. provisioned assets — 2 cabinets (SV5, NY4), 4 cross connects, 2 Fabric ports (AWS Direct Connect + Azure ExpressRoute), Palo Alto NE device, Smart Hands plan. $10,060/mo total.</div>
+      </div>
+    </div>
+
+    <div class="hub-card" style="border-left:3px solid #5a7a45;">
+      <div class="hub-card-header">
+        <div class="hub-card-type list">L</div>
+        <div class="hub-card-title"><a href="ecp-cases.html">Support Cases</a></div>
+      </div>
+      <div class="hub-card-body">
+        <div class="hub-card-desc">Active and resolved support cases. INC-2026-0012 connectivity query (open), INC-2024-0089 and INC-2024-0073 resolved. Case history and SLA tracking.</div>
+      </div>
+    </div>
+
+    <div class="hub-card" style="border-left:3px solid #5a7a45;">
+      <div class="hub-card-header">
+        <div class="hub-card-type form">F</div>
+        <div class="hub-card-title"><a href="ecp-support-new.html">New Support Request</a></div>
+      </div>
+      <div class="hub-card-body">
+        <div class="hub-card-desc">Ticket creation form — request type (Technical / Billing / Order), affected service dropdown, priority (Critical→Low with SLA), subject, description, attachments, contact preference.</div>
+      </div>
+    </div>
+
+    <div class="hub-card" style="border-left:3px solid #5a7a45;">
+      <div class="hub-card-header">
+        <div class="hub-card-type list">L</div>
+        <div class="hub-card-title"><a href="ecp-product-catalog.html">Solutions Catalog</a></div>
+      </div>
+      <div class="hub-card-body">
+        <div class="hub-card-desc">Stark Industries' packaged multi-vendor solutions available to S.H.I.E.L.D. — Hybrid Cloud Connect (active), Secure Edge Colo (active), Compliance-Ready Infra, SD-WAN Branch Connect, Internet Peering Bundle. Each suite shows Equinix components alongside partner-added vendor stack.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── Partner / Account Manager sub-section ── -->
+<div style="background:var(--wf-canvas);border:2px solid var(--wf-accent);border-radius:6px;padding:16px 20px;margin:0 0 8px 0;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span style="background:var(--wf-accent);color:#fff;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:3px 9px;border-radius:3px;">Partner</span>
+      <strong style="font-size:15px;color:var(--wf-ink);">Partner / Account Manager View</strong>
+      <span style="color:var(--wf-muted);font-size:12px;">&middot; 2 pages</span>
+    </div>
+    <span style="font-size:12px;color:var(--wf-muted);font-style:italic;">Sarah Connor &middot; Stark Industries AE &middot; manages EUC accounts</span>
+  </div>
+  <p style="font-size:12px;color:var(--wf-muted);margin:0 0 14px 0;line-height:1.6;">The reseller/partner account manager logging into ECP to manage their portfolio of EUC customers. A different login context within the same ECP platform — the partner sees all customer accounts they manage, customer spend per account, and their own commission per account. EUC customers' detailed service data remains private; only aggregate health and deal status are visible to the partner.</p>
+  <div class="hub-grid">
+
+    <div class="hub-card" style="border-left:3px solid var(--wf-accent);">
+      <div class="hub-card-header">
+        <div class="hub-card-type dashboard">D</div>
+        <div class="hub-card-title"><a href="ecp-partner-dashboard.html">Partner Account Overview</a></div>
+      </div>
+      <div class="hub-card-body">
+        <div class="hub-card-desc">All managed EUC accounts — customer MRR and partner commission per row, totals at top. S.H.I.E.L.D. ($45K/mo, $6.75K commission), Oscorp, Pym Tech, Global Finance, Roxxon, Hammer. Gold tier (15%).</div>
+      </div>
+    </div>
+
+    <div class="hub-card" style="border-left:3px solid var(--wf-accent);">
+      <div class="hub-card-header">
+        <div class="hub-card-type record">R</div>
+        <div class="hub-card-title"><a href="ecp-partner-account-detail.html">Account Detail — S.H.I.E.L.D.</a></div>
+      </div>
+      <div class="hub-card-body">
+        <div class="hub-card-desc">Drill-in: S.H.I.E.L.D. spend breakdown ($45K/mo), partner commission ($6.75K/mo), deal DR-2026-4401, open case (connectivity query), pending orders ORD-2025-0156 and ORD-2025-0189.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 6: PARTNER ONBOARDING (Pre-Auth, Public) — 5 pages
+     ═══════════════════════════════════════════════════ -->
+<div class="section-header" style="border-bottom-color:var(--wf-line);">
+  <h2>Partner Onboarding Flow <span class="count">(5 pages)</span></h2>
+  <div class="platform" style="background:var(--wf-surface);color:var(--wf-muted);border:1px solid var(--wf-line);">
+    <div class="platform-dot" style="background:var(--wf-ink);"></div> Pre-Auth &middot; Equinix Corporate Brand &middot; 5-Step Process
+  </div>
+</div>
+
+<div class="hub-grid">
+
+  <div class="hub-card" style="border-left:3px solid var(--wf-line);">
+    <div class="hub-card-header">
+      <div class="hub-card-type" style="background:var(--wf-ink);color:#fff;">1</div>
+      <div class="hub-card-title"><a href="onboarding-apply.html">Step 1: Become a Partner — Application Form</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Dynamic form (Reseller vs Lead Referral), company info, revenue, specializations, reCAPTCHA. Matches production layout.</div>
+    </div>
+  </div>
+
+  <div class="hub-card" style="border-left:3px solid var(--wf-line);">
+    <div class="hub-card-header">
+      <div class="hub-card-type" style="background:var(--wf-ink);color:#fff;">2</div>
+      <div class="hub-card-title"><a href="onboarding-confirmation.html">Step 2: Application Submitted — Confirmation</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Success card with Application ID, email preview of confirmation, "What Happens Next" timeline.</div>
+    </div>
+  </div>
+
+  <div class="hub-card" style="border-left:3px solid var(--wf-line);">
+    <div class="hub-card-header">
+      <div class="hub-card-type" style="background:var(--wf-ink);color:#fff;">3</div>
+      <div class="hub-card-title"><a href="onboarding-agreement.html">Step 3: Approval + Agreement Signing</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Approval banner, auto-generated email, scrollable agreement document, DocuSign e-signature.</div>
+    </div>
+  </div>
+
+  <div class="hub-card" style="border-left:3px solid var(--wf-line);">
+    <div class="hub-card-header">
+      <div class="hub-card-type" style="background:var(--wf-ink);color:#fff;">4</div>
+      <div class="hub-card-title"><a href="onboarding-agreement-confirmation.html">Step 4: Agreement Confirmation — Pending Countersign</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Signed confirmation, 5-stage countersign tracker, receipt email, document download.</div>
+    </div>
+  </div>
+
+  <div class="hub-card" style="border-left:3px solid var(--wf-line);">
+    <div class="hub-card-header">
+      <div class="hub-card-type" style="background:var(--wf-ink);color:#fff;">5</div>
+      <div class="hub-card-title"><a href="onboarding-welcome.html">Step 5: Welcome — Partner Central Access</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Welcome hero, credentials email, account details, 90-day checklist, quick links to portal.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 6b: PARTNER ORG ONBOARDING — 8 pages
+     Detailed flow: company legal/tax/banking/agreement/team setup
+     Scenario: Pym Technologies applying Jan 28, 2026
+     ═══════════════════════════════════════════════════ -->
+<div class="section-header" style="border-bottom-color:var(--wf-line);">
+  <h2>Partner Organization Onboarding — Detailed Flow <span class="count">(8 pages)</span></h2>
+  <div class="platform" style="background:var(--wf-surface);color:var(--wf-muted);border:1px solid var(--wf-line);">
+    <div class="platform-dot" style="background:var(--wf-ink);"></div>
+    Wizard pages 1–6: Pre-Auth &middot; Public-facing &middot; Pym Technologies scenario (Hope van Dyne PM, Hank Pym signatory) &nbsp;·&nbsp;
+    PSM pages 7–8: Salesforce Lightning internal &middot; Application review + post-approval configuration
+  </div>
+</div>
+
+<p style="font-size:12px;color:var(--wf-muted);margin:0 0 12px 0;font-style:italic;">Partner wizard — what Pym Technologies completes to apply (legal entity, tax, W-9, ACH banking, MPA e-sign, team setup)</p>
+<div class="hub-grid">
+
+  <div class="hub-card" style="border-left:3px solid var(--wf-line);">
+    <div class="hub-card-header">
+      <div class="hub-card-type" style="background:var(--wf-ink);color:#fff;">W</div>
+      <div class="hub-card-title"><a href="pm-org-onboarding-start.html">Welcome — What You'll Need</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">5-step overview, document checklist (EIN, W-9, bank details, authorized signatory), typical timeline. Pre-auth landing page before application begins.</div>
+    </div>
+  </div>
+
+  <div class="hub-card" style="border-left:3px solid var(--wf-line);">
+    <div class="hub-card-header">
+      <div class="hub-card-type" style="background:var(--wf-ink);color:#fff;">1</div>
+      <div class="hub-card-title"><a href="pm-org-onboarding-company.html">Step 1: Company Profile</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Legal entity name, address, entity type, year founded, EIN, authorized signatory (Hank Pym, CEO), business profile. All pre-filled with Pym Technologies scenario data.</div>
+    </div>
+  </div>
+
+  <div class="hub-card" style="border-left:3px solid var(--wf-line);">
+    <div class="hub-card-header">
+      <div class="hub-card-type" style="background:var(--wf-ink);color:#fff;">2</div>
+      <div class="hub-card-title"><a href="pm-org-onboarding-tax.html">Step 2: Tax &amp; Banking</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Tax classification (C-Corp), W-9 upload widget, VAT/GSTIN fields for international entities, ACH commission payment setup (Wells Fargo, masked account), micro-deposit verification note.</div>
+    </div>
+  </div>
+
+  <div class="hub-card" style="border-left:3px solid var(--wf-line);">
+    <div class="hub-card-header">
+      <div class="hub-card-type" style="background:var(--wf-ink);color:#fff;">3</div>
+      <div class="hub-card-title"><a href="pm-org-onboarding-agreement.html">Step 3: Partnership Agreement</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">MPA-2025-v3.1 + PCP-T&amp;C-2025-v2.4 key provisions displayed. E-signature authorization checkbox. DocuSign envelope trigger sent to hank.pym@pymtech.com.</div>
+    </div>
+  </div>
+
+  <div class="hub-card" style="border-left:3px solid var(--wf-line);">
+    <div class="hub-card-header">
+      <div class="hub-card-type" style="background:var(--wf-ink);color:#fff;">4</div>
+      <div class="hub-card-title"><a href="pm-org-onboarding-team.html">Step 4: Team Setup</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">PM (Hope van Dyne), Technical Contact (Scott Lang), optional additional members table. Product track selection: Fabric + Colocation checked, Metal/Edge/NE unchecked. Signature-pending amber banner.</div>
+    </div>
+  </div>
+
+  <div class="hub-card" style="border-left:3px solid var(--wf-line);">
+    <div class="hub-card-header">
+      <div class="hub-card-type dashboard">D</div>
+      <div class="hub-card-title"><a href="pm-org-onboarding-complete.html">Step 5: Application Submitted</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Confirmation with ref# PCP-APP-2026-0089. 6-stage vertical timeline: email confirmation → signature pending → review → compliance → approval → kickoff call. Application summary card.</div>
+    </div>
+  </div>
+
+</div>
+
+<p style="font-size:12px;color:var(--wf-muted);margin:16px 0 12px 0;font-style:italic;">PSM internal — Marcus Chen reviews and configures the Pym Technologies application in Salesforce Lightning</p>
+<div class="hub-grid">
+
+  <div class="hub-card" style="border-left:3px solid var(--wf-accent);">
+    <div class="hub-card-header">
+      <div class="hub-card-type record">R</div>
+      <div class="hub-card-title"><a href="psm-partner-application.html">PSM: Application Review <small style="color:var(--wf-accent);font-weight:400;">[PSM]</small></a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">PSM reviews submitted application: company details, key contacts table, document checklist (W-9, MPA, T&C, OFAC, ACH, registry), activity log, approve/decline actions. Approve gated until docs complete.</div>
+    </div>
+  </div>
+
+  <div class="hub-card" style="border-left:3px solid var(--wf-accent);">
+    <div class="hub-card-header">
+      <div class="hub-card-type" style="background:var(--wf-ink);color:#fff;">⚙</div>
+      <div class="hub-card-title"><a href="psm-partner-setup.html">PSM: New Partner Configuration <small style="color:var(--wf-accent);font-weight:400;">[PSM]</small></a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Post-approval setup: Registered tier (always), commission 10%, US West territory, Fabric + Colo product tracks, auto-calculated cert timelines, 7-item provisioning checklist, "Complete Setup & Provision Access" CTA.</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     SECTION 7: REFERENCE & PERSONAS — 2 pages
+     ═══════════════════════════════════════════════════ -->
+<div class="section-header" style="border-bottom-color:var(--wf-line);">
+  <h2>Reference & Personas <span class="count">(2 pages)</span></h2>
+  <div class="platform" style="background:var(--wf-surface);color:var(--wf-muted);border:1px solid var(--wf-line);">
+    <div class="platform-dot" style="background:var(--wf-ink);"></div> Design Research &middot; Project Documentation
+  </div>
+</div>
+
+<div class="hub-grid">
+
+  <div class="hub-card">
+    <div class="hub-card-header">
+      <div class="hub-card-type report">B</div>
+      <div class="hub-card-title"><a href="research-best-practices.html">Industry Best Practices Research</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Snowflake SPN analysis, deal registration patterns, partner type flows, and UX recommendations</div>
+    </div>
+  </div>
+
+  <div class="hub-card" style="border-left:3px solid var(--wf-line);">
+    <div class="hub-card-header">
+      <div class="hub-card-type" style="background:var(--wf-ink);">P</div>
+      <div class="hub-card-title"><a href="persona-cards.html">Persona Cards (8 Personas)</a></div>
+    </div>
+    <div class="hub-card-body">
+      <div class="hub-card-desc">Reseller Admin, Sales Rep, Distributor PM, TSD Agent Manager, Independent Agent, End Customer, PSM, Program Admin — with relationship map</div>
+    </div>
+  </div>
+
+</div>
+
+</div>
+
+<div class="page-footer">
+  Equinix Partner Channel Program — Page Mockups v1.8 &bull; SLDS v2 &bull; February 2026 &bull; 88 pages
+</div>
+<div style="font-size:16px;font-weight:700;color:#fff;margin-bottom:4px;">index</div>
+    <div style="font-size:12px;color:var(--wf-muted);margin-bottom:20px;">Navigation Hub — 88 pages across 8 sections</div>
+
+    <div style="margin-bottom:20px;">
+      <div style="font-size:12px;font-weight:700;color:var(--wf-accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:6px;">Section Breakdown</div>
+      <ul style="margin:0;padding-left:20px;font-size:13px;line-height:1.8;color:var(--wf-tint);">
+      <li>Section 1: Internal PSM — 25 pages (Salesforce Lightning)</li>
+      <li>Section 2: Partner Manager Portal — 18 pages (Experience Cloud)</li>
+      <li>Section 3: Partner Rep Portal — 16 pages (Experience Cloud)</li>
+      <li>Section 4: Global Search Suite — 4 pages (Federated Search)</li>
+      <li>Section 5: Equinix Customer Portal — 3 pages (ECP)</li>
+      <li>Section 6: Partner Onboarding Flow — 5 pages (Pre-Auth)</li>
+      <li>Section 7: Reference & Personas — 2 pages</li>
+      </ul>
+    </div>
+
+    <div>
+      <div style="font-size:12px;font-weight:700;color:var(--wf-accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:6px;">New in v1.4</div>
+      <ul style="margin:0;padding-left:20px;font-size:13px;line-height:1.8;color:var(--wf-tint);">
+      <li>pm-team-management.html — Partner Admin user roster, invite/deactivate</li>
+      <li>pm-role-permissions.html — Role cards, permission matrix, audit log</li>
+      <li>rep-first-login.html — 5-step new user onboarding wizard</li>
+      <li>persona-cards.html — 8 personas with relationship map</li>
+      <li>Search pages promoted to own section for visibility</li>
+      <li>ECP section added (was missing from sitemap)</li>
+      <li>All 24 PSM and 18 PM pages now listed (previously only subset shown)</li>
+      </ul>
+    </div>
+
+    <div>
+      <div style="font-size:12px;font-weight:700;color:var(--wf-accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:6px;">New in v1.5</div>
+      <ul style="margin:0;padding-left:20px;font-size:13px;line-height:1.8;color:var(--wf-tint);">
+        <li>Stark Industries scenario threaded across all 60+ pages — characters, deal IDs, financials, story tensions</li>
+        <li>PSM dashboard: MRR-first layout, drawn SVG/CSS charts, Salesforce filter chip pattern</li>
+        <li>Breadcrumbs + persona badges added to all 71 portal pages (PSM / PM / AE / EUC / Partner)</li>
+        <li>ECP split into two distinct views: EUC (Maria Hill, S.H.I.E.L.D.) and Partner (Sarah Connor, Stark)</li>
+        <li>ecp-partner-dashboard.html — Partner sees customer MRR + their own commission per account</li>
+        <li>ecp-partner-account-detail.html — Drill into S.H.I.E.L.D. account spend and partner commission</li>
+        <li>stark-industries-story-brief.md — full scenario canon doc in outputs folder</li>
+      </ul>
+    </div>
+
+    <div>
+      <div style="font-size:12px;font-weight:700;color:var(--wf-accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:6px;">New in v1.6</div>
+      <ul style="margin:0;padding-left:20px;font-size:13px;line-height:1.8;color:var(--wf-tint);">
+        <li>Partner org onboarding wizard — 6 pre-auth pages: welcome, company profile, tax &amp; banking (W-9/ACH), MPA agreement (DocuSign), team setup, confirmation</li>
+        <li>psm-partner-application.html — PSM Lightning review queue: document checklist, compliance gating, approval disabled until all items clear</li>
+        <li>psm-partner-setup.html — Post-approval configuration: tier assignment, product tracks, training schedule, provisioning checklist</li>
+        <li>Pym Technologies scenario: Hope van Dyne (PM), Hank Pym (signatory), Scott Lang (technical), ref PCP-APP-2026-0089</li>
+        <li>Sitemap Section 6b added for complete partner onboarding flow (8 new pages, total 83)</li>
+      </ul>
+    </div>
+
+    <div>
+      <div style="font-size:12px;font-weight:700;color:var(--wf-accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:6px;">New in v1.7</div>
+      <ul style="margin:0;padding-left:20px;font-size:13px;line-height:1.8;color:var(--wf-tint);">
+        <li>ECP expanded from 5 to 10 pages — full EUC portal coverage added</li>
+        <li>ecp-notifications.html — notification center (9 items: maintenance alerts, SLA breach, case updates, billing, contract renewal)</li>
+        <li>ecp-order-detail.html — ORD-2025-0156 cabinet deployment drill-in with 8-step installation timeline and activity log</li>
+        <li>ecp-inventory.html — full asset inventory (2 cabinets, 4 cross connects, 2 Fabric ports, 1 Network Edge device, Smart Hands plan; $10,060/mo)</li>
+        <li>ecp-support-new.html — ticket creation form (request type, affected service, priority, attachments, contact preference)</li>
+        <li>ecp-product-catalog.html — Stark Industries multi-vendor solution suites (5 packages; 2 active for S.H.I.E.L.D.); clearly shows Equinix as one infrastructure layer within partner-assembled solution</li>
+        <li>Sitemap ECP section rebuilt: EUC and Partner user types now have dedicated labeled sub-sections with descriptions (not just italic labels)</li>
+        <li>Nav on all 3 existing EUC pages updated to include Notifications and Catalog links (total 88 pages)</li>
+      </ul>
+    </div>
+    <div style="margin-top:16px;border-top:1px solid rgba(255,255,255,0.1);padding-top:16px;">
+      <div style="font-size:12px;font-weight:700;color:var(--wf-accent);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:6px;">New in v1.8</div>
+      <ul style="margin:0;padding-left:20px;font-size:13px;line-height:1.8;color:var(--wf-tint);">
+        <li>ECP Dashboard: "Monthly Recurring Revenue" corrected to "Monthly Burn Rate" — EUC customers see spend, not revenue</li>
+        <li>All 10 ECP pages: persona identity chips added to headers — EUC pages show "Maria Hill · S.H.I.E.L.D." (green); Partner pages show "James Rhodes · Stark Industries" (blue) + "Partner Access" title label</li>
+        <li>Partner ECP header title updated to "Equinix Customer Portal · Partner Access" to visually distinguish the two login contexts within the same portal</li>
+        <li>Page-context-bar (breadcrumb + [EUC] badge) added to ecp-order-detail, ecp-inventory, and ecp-product-catalog (were missing)</li>
+        <li>Nav links fixed on ecp-inventory (was all #), ecp-order-detail (ecp-catalog.html → ecp-product-catalog.html), and ecp-product-catalog (ecp-services.html → ecp-services-orders.html)</li>
+      </ul>
+    </div>
+  </div>
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+<script src="wf-nav.js"></script>
+</body>
+</html>

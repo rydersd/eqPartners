@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Story Reference — Equinix PCP Wireframes</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    /* ── Page layout ─────────────────────────────────────── */
+    body { background: var(--wf-canvas, #f5f7fb); }
+    .page-wrap { max-width: 960px; margin: 0 auto; padding: 32px 24px 64px; }
+
+    /* ── Page header ────────────────────────────────────── */
+    .page-hd { margin-bottom: 36px; }
+    .page-hd h1 { font-size: 22px; font-weight: 700; color: var(--wf-ink, #1e2a3a); margin: 0 0 6px; }
+    .page-hd p  { font-size: 14px; color: var(--wf-muted, #6b7a99); margin: 0; line-height: 1.5; }
+
+    /* ── Section headings ───────────────────────────────── */
+    .section-hd {
+      font-size: 11px; font-weight: 700; letter-spacing: .08em;
+      text-transform: uppercase; color: var(--wf-muted, #6b7a99);
+      border-bottom: 1px solid var(--wf-line, #b0bdd0);
+      padding-bottom: 6px; margin: 40px 0 20px;
+    }
+
+    /* ── Card grid ──────────────────────────────────────── */
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+
+    /* ── Character card ─────────────────────────────────── */
+    .char-card {
+      background: var(--wf-white, #fff);
+      border: 1px solid var(--wf-line, #b0bdd0);
+      border-radius: 8px; padding: 20px 20px 18px;
+    }
+    .char-head { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+    .char-avatar {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--wf-tint, #eef2f8);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700; color: var(--wf-accent, #3d6daa);
+      flex-shrink: 0;
+    }
+    .char-avatar.equinix { background: #fff3e0; color: #c65e00; }
+    .char-avatar.euc     { background: #ede8f5; color: #5c3d8f; }
+    .char-name { font-size: 15px; font-weight: 700; color: var(--wf-ink, #1e2a3a); margin: 0 0 2px; }
+    .char-title { font-size: 12px; color: var(--wf-muted, #6b7a99); margin: 0; }
+    .char-org-tag {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 11px; font-weight: 600;
+      background: var(--wf-tint, #eef2f8); color: var(--wf-accent, #3d6daa);
+      border-radius: 4px; padding: 3px 8px; margin-bottom: 12px;
+    }
+    .char-org-tag.equinix { background: #fff3e0; color: #c65e00; }
+    .char-org-tag.euc     { background: #ede8f5; color: #5c3d8f; }
+    .char-desc { font-size: 13px; color: var(--wf-ink, #1e2a3a); line-height: 1.55; margin: 0 0 14px; }
+    .char-meta { display: flex; flex-direction: column; gap: 5px; }
+    .char-meta-row { display: flex; gap: 8px; font-size: 12px; }
+    .char-meta-label { color: var(--wf-muted, #6b7a99); width: 64px; flex-shrink: 0; font-weight: 500; }
+    .char-meta-val { color: var(--wf-ink, #1e2a3a); }
+    .char-divider { border: none; border-top: 1px solid var(--wf-line, #b0bdd0); margin: 12px 0; }
+    .char-goals { font-size: 12px; color: var(--wf-muted, #6b7a99); margin: 0 0 4px; font-weight: 600; }
+    .char-goal-list { margin: 0; padding-left: 16px; font-size: 12px; color: var(--wf-ink, #1e2a3a); line-height: 1.7; }
+
+    /* ── Relationship diagram ───────────────────────────── */
+    .rel-box {
+      background: var(--wf-white, #fff);
+      border: 1px solid var(--wf-line, #b0bdd0);
+      border-radius: 8px; padding: 24px 28px;
+    }
+    .rel-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .rel-node {
+      background: var(--wf-tint, #eef2f8); border: 1px solid var(--wf-line, #b0bdd0);
+      border-radius: 6px; padding: 10px 14px; min-width: 120px; text-align: center;
+    }
+    .rel-node.equinix { background: #fff3e0; border-color: #f5c98a; }
+    .rel-node.euc     { background: #ede8f5; border-color: #c4b3e8; }
+    .rel-node-name { font-size: 13px; font-weight: 700; color: var(--wf-ink, #1e2a3a); }
+    .rel-node-role { font-size: 11px; color: var(--wf-muted, #6b7a99); margin-top: 2px; }
+    .rel-arrow {
+      font-size: 11px; color: var(--wf-muted, #6b7a99);
+      display: flex; flex-direction: column; align-items: center; gap: 2px;
+    }
+    .rel-arrow-line { font-size: 18px; line-height: 1; color: var(--wf-line, #b0bdd0); }
+    .rel-arrow-label { white-space: nowrap; font-size: 10px; }
+
+    /* ── Org cards ──────────────────────────────────────── */
+    .org-card {
+      background: var(--wf-white, #fff);
+      border: 1px solid var(--wf-line, #b0bdd0);
+      border-radius: 8px; padding: 20px 20px 18px;
+    }
+    .org-head { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 12px; }
+    .org-logo {
+      width: 40px; height: 40px; border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 800; flex-shrink: 0;
+      background: var(--wf-tint, #eef2f8); color: var(--wf-accent, #3d6daa);
+      border: 1px solid var(--wf-line, #b0bdd0);
+    }
+    .org-logo.equinix { background: #fff3e0; color: #c65e00; border-color: #f5c98a; }
+    .org-logo.euc     { background: #ede8f5; color: #5c3d8f; border-color: #c4b3e8; }
+    .org-name { font-size: 15px; font-weight: 700; color: var(--wf-ink, #1e2a3a); margin: 0 0 2px; }
+    .org-type { font-size: 12px; color: var(--wf-muted, #6b7a99); margin: 0; }
+    .org-desc { font-size: 13px; color: var(--wf-ink, #1e2a3a); line-height: 1.55; margin: 0 0 12px; }
+    .org-attr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; }
+    .org-attr { font-size: 12px; }
+    .org-attr-label { color: var(--wf-muted, #6b7a99); font-weight: 500; }
+    .org-attr-val { color: var(--wf-ink, #1e2a3a); }
+
+    /* ── Entities list ──────────────────────────────────── */
+    .entity-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 4px; }
+    .entity-table th { text-align: left; font-size: 11px; font-weight: 700; color: var(--wf-muted, #6b7a99); padding: 6px 10px; border-bottom: 2px solid var(--wf-line, #b0bdd0); }
+    .entity-table td { padding: 8px 10px; border-bottom: 1px solid var(--wf-line, #b0bdd0); color: var(--wf-ink, #1e2a3a); vertical-align: top; }
+    .entity-table tr:last-child td { border-bottom: none; }
+    .entity-flag { font-size: 15px; }
+
+    /* ── Key wire ───────────────────────────────────────── */
+    .wire-key {
+      background: var(--wf-white, #fff);
+      border: 1px solid var(--wf-line, #b0bdd0);
+      border-radius: 8px; padding: 20px 20px 18px;
+    }
+    .wire-key-title { font-size: 13px; font-weight: 700; color: var(--wf-ink, #1e2a3a); margin: 0 0 10px; }
+    .wire-key-row { display: flex; gap: 8px; font-size: 13px; padding: 5px 0; border-bottom: 1px solid var(--wf-line, #b0bdd0); }
+    .wire-key-row:last-child { border-bottom: none; }
+    .wire-key-page { color: var(--wf-accent, #3d6daa); font-weight: 600; width: 180px; flex-shrink: 0; }
+    .wire-key-persona { color: var(--wf-muted, #6b7a99); }
+    .wire-key-persona strong { color: var(--wf-ink, #1e2a3a); font-weight: 600; }
+
+    /* ── Notice callout ─────────────────────────────────── */
+    .notice {
+      background: #fffbe6; border: 1px solid #f0d060; border-radius: 6px;
+      padding: 12px 16px; font-size: 13px; color: #6b5a00; line-height: 1.5;
+      margin-top: 32px;
+    }
+    .notice strong { color: #4d4000; }
+
+    @media (max-width: 600px) {
+      .card-grid { grid-template-columns: 1fr; }
+      .org-attr-grid { grid-template-columns: 1fr; }
+      .rel-row { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="wf-header" data-page="story-reference">
+  <div class="wf-header-logo">
+    <svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix">
+      <path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/>
+    </svg>
+  </div>
+  <div class="wf-header-title">Partner Central</div>
+  <nav class="wf-header-nav" aria-label="Reference pages">
+    <a href="sitemap-pcp-v2.html">Sitemap</a>
+    <a href="personas.html">Personas</a>
+    <a href="story-reference.html" aria-current="page">Story Reference</a>
+  </nav>
+</header>
+
+<main id="main-content">
+<div class="page-wrap">
+
+  <!-- Page header -->
+  <div class="page-hd">
+    <h1>Story Reference</h1>
+    <p>The shared fiction that anchors all wireframes in this project. Use this page to align on who the characters are, what companies they work for, and what motivates them — so every screen tells a consistent story.</p>
+  </div>
+
+  <!-- Proto-persona notice -->
+  <div class="notice" style="margin-bottom:32px;margin-top:0;">
+    <strong>⚠ Proto-personas — validation required.</strong> Steve, Jordan, and Marcus are design-fiction anchors used to keep wireframe flows consistent. They draw on public job posting data, BLS stats, and industry surveys, but none have been validated through user interviews, field research, or a formal recruitment and moderated study. <strong>Do not treat them as research-backed personas until that work is done.</strong> They should be revisited before any feature prioritization decisions are made against them.
+  </div>
+
+  <!-- ═══ CAST OF CHARACTERS ══════════════════════════════ -->
+  <p class="section-hd">Cast of Characters</p>
+
+  <div class="card-grid">
+
+    <!-- Steve Rogers -->
+    <div class="char-card">
+      <div class="char-head">
+        <div class="char-avatar">SR</div>
+        <div>
+          <p class="char-name">Steve Rogers</p>
+          <p class="char-title">Account Executive</p>
+        </div>
+      </div>
+      <span class="char-org-tag">CloudBridge Technologies Inc.</span>
+      <p class="char-desc">Quota-carrying AE who sells Equinix interconnection and colocation to CloudBridge's end customers. Needs fast deal registration and self-service access to collateral during live customer conversations.</p>
+      <hr class="char-divider">
+      <div class="char-meta">
+        <div class="char-meta-row"><span class="char-meta-label">Email</span><span class="char-meta-val">steve.rogers@cloudbridge.com</span></div>
+        <div class="char-meta-row"><span class="char-meta-label">Location</span><span class="char-meta-val">Austin, TX, USA</span></div>
+        <div class="char-meta-row"><span class="char-meta-label">Role type</span><span class="char-meta-val">Deal Registration User</span></div>
+      </div>
+      <hr class="char-divider">
+      <p class="char-goals">Core goals</p>
+      <ul class="char-goal-list">
+        <li>Register deals before competitors claim them</li>
+        <li>Get deal status without emailing the PSM</li>
+        <li>Find co-sell collateral fast, during calls</li>
+      </ul>
+    </div>
+
+    <!-- Jordan Reeves -->
+    <div class="char-card">
+      <div class="char-head">
+        <div class="char-avatar">JR</div>
+        <div>
+          <p class="char-name">Jordan Reeves</p>
+          <p class="char-title">Portal Admin / Sales Operations</p>
+        </div>
+      </div>
+      <span class="char-org-tag">CloudBridge Technologies Inc.</span>
+      <p class="char-desc">Manages CloudBridge's presence in the Equinix partner program — invites reps, handles deal approvals, tracks training completion, and coordinates with the PSM on program health. The role is real; a dedicated "Portal Administrator" title is not.</p>
+      <hr class="char-divider">
+      <div class="char-meta">
+        <div class="char-meta-row"><span class="char-meta-label">Email</span><span class="char-meta-val">jordan.reeves@cloudbridge.com</span></div>
+        <div class="char-meta-row"><span class="char-meta-label">Location</span><span class="char-meta-val">Austin, TX, USA</span></div>
+        <div class="char-meta-row"><span class="char-meta-label">Role type</span><span class="char-meta-val">Portal Admin</span></div>
+      </div>
+      <hr class="char-divider">
+      <p class="char-goals">Core goals</p>
+      <ul class="char-goal-list">
+        <li>Keep team access current without PSM back-and-forth</li>
+        <li>Spot deal problems before they escalate</li>
+        <li>Report program ROI to CloudBridge leadership</li>
+      </ul>
+    </div>
+
+    <!-- Marcus Chen -->
+    <div class="char-card">
+      <div class="char-head">
+        <div class="char-avatar equinix">MC</div>
+        <div>
+          <p class="char-name">Marcus Chen</p>
+          <p class="char-title">Partner Success Manager</p>
+        </div>
+      </div>
+      <span class="char-org-tag equinix">Equinix</span>
+      <p class="char-desc">Manages Equinix's relationship with CloudBridge (and 4–14 other partners). Runs QBRs, drives enablement, tracks training completion, and is the primary escalation point for deal disputes. Carries his own bookings targets.</p>
+      <hr class="char-divider">
+      <div class="char-meta">
+        <div class="char-meta-row"><span class="char-meta-label">Email</span><span class="char-meta-val">marcus.chen@equinix.com</span></div>
+        <div class="char-meta-row"><span class="char-meta-label">Span</span><span class="char-meta-val">5–15 partner companies</span></div>
+        <div class="char-meta-row"><span class="char-meta-label">Role type</span><span class="char-meta-val">Vendor-side PSM</span></div>
+      </div>
+      <hr class="char-divider">
+      <p class="char-goals">Core goals</p>
+      <ul class="char-goal-list">
+        <li>Keep partner pipeline healthy and progressing</li>
+        <li>Run quarterly QBRs without 2 days of prep</li>
+        <li>Resolve deal attribution disputes before they go sideways</li>
+      </ul>
+    </div>
+
+    <!-- Maria Hill -->
+    <div class="char-card">
+      <div class="char-head">
+        <div class="char-avatar euc">MH</div>
+        <div>
+          <p class="char-name">Maria Hill</p>
+          <p class="char-title">Director, Network Infrastructure</p>
+        </div>
+      </div>
+      <span class="char-org-tag euc">Meridian Capital Group</span>
+      <p class="char-desc">Owns infrastructure decisions for a mid-large financial services firm — colocation, cloud connectivity, and interconnection. Bought into Equinix through CloudBridge. Uses the EUC portal to monitor assets, track support tickets, and pull SLA reports for internal stakeholders.</p>
+      <hr class="char-divider">
+      <div class="char-meta">
+        <div class="char-meta-row"><span class="char-meta-label">Email</span><span class="char-meta-val">m.hill@meridiancapital.com</span></div>
+        <div class="char-meta-row"><span class="char-meta-label">Location</span><span class="char-meta-val">New York, NY, USA</span></div>
+        <div class="char-meta-row"><span class="char-meta-label">Role type</span><span class="char-meta-val">End User Customer (EUC)</span></div>
+        <div class="char-meta-row"><span class="char-meta-label">Partner rep</span><span class="char-meta-val">Steve Rogers (CloudBridge)</span></div>
+      </div>
+      <hr class="char-divider">
+      <p class="char-goals">Core goals</p>
+      <ul class="char-goal-list">
+        <li>Single dashboard: assets, SLA status, open tickets, billing</li>
+        <li>Provisioning ETAs she can commit to internal stakeholders</li>
+        <li>Cost allocation report she can share with Finance</li>
+      </ul>
+    </div>
+
+  </div><!-- /card-grid -->
+
+  <!-- Relationship map -->
+  <p class="section-hd" style="margin-top:36px;">How They Relate</p>
+  <div class="rel-box">
+    <div class="rel-row">
+
+      <div class="rel-node euc">
+        <div class="rel-node-name">Maria Hill</div>
+        <div class="rel-node-role">EUC — Meridian Capital</div>
+      </div>
+
+      <div class="rel-arrow">
+        <span class="rel-arrow-line">→</span>
+        <span class="rel-arrow-label">buys through</span>
+      </div>
+
+      <div class="rel-node">
+        <div class="rel-node-name">Steve Rogers</div>
+        <div class="rel-node-role">AE — CloudBridge</div>
+      </div>
+
+      <div class="rel-arrow">
+        <span class="rel-arrow-line">→</span>
+        <span class="rel-arrow-label">deal registered by</span>
+      </div>
+
+      <div class="rel-node">
+        <div class="rel-node-name">Jordan Reeves</div>
+        <div class="rel-node-role">Portal Admin — CloudBridge</div>
+      </div>
+
+      <div class="rel-arrow">
+        <span class="rel-arrow-line">→</span>
+        <span class="rel-arrow-label">program managed by</span>
+      </div>
+
+      <div class="rel-node equinix">
+        <div class="rel-node-name">Marcus Chen</div>
+        <div class="rel-node-role">PSM — Equinix</div>
+      </div>
+
+    </div>
+
+    <p style="font-size:12px; color:var(--wf-muted,#6b7a99); margin:16px 0 0;">
+      Maria is the end customer — she buys Equinix services through CloudBridge and accesses the EUC portal to manage her assets. Steve registers her deals in Partner Central. Jordan manages CloudBridge's org account and is Steve's internal escalation path. Marcus is CloudBridge's vendor-side contact for program questions, deal disputes, and QBRs.
+    </p>
+  </div>
+
+  <!-- ═══ ORGANIZATIONS ════════════════════════════════════ -->
+  <p class="section-hd">Organizations</p>
+
+  <div class="card-grid">
+
+    <!-- CloudBridge Technologies -->
+    <div class="org-card">
+      <div class="org-head">
+        <div class="org-logo">CB</div>
+        <div>
+          <p class="org-name">CloudBridge Technologies Inc.</p>
+          <p class="org-type">Mid-market Systems Integrator (SI)</p>
+        </div>
+      </div>
+      <p class="org-desc">A mid-market SI that resells and integrates Equinix products into customer infrastructure. Primarily serves financial services, cloud/IT, and enterprise clients across North America.</p>
+      <div class="org-attr-grid">
+        <div class="org-attr"><span class="org-attr-label">HQ: </span><span class="org-attr-val">Austin, TX, USA</span></div>
+        <div class="org-attr"><span class="org-attr-label">Website: </span><span class="org-attr-val">cloudbridge.com</span></div>
+        <div class="org-attr"><span class="org-attr-label">Region: </span><span class="org-attr-val">Americas — US</span></div>
+        <div class="org-attr"><span class="org-attr-label">Partner type: </span><span class="org-attr-val">Reseller + Referral</span></div>
+        <div class="org-attr"><span class="org-attr-label">DUNS: </span><span class="org-attr-val">12-345-6789</span></div>
+        <div class="org-attr"><span class="org-attr-label">Tax ID: </span><span class="org-attr-val">US12-3456789</span></div>
+      </div>
+    </div>
+
+    <!-- CloudBridge EMEA -->
+    <div class="org-card">
+      <div class="org-head">
+        <div class="org-logo">CB</div>
+        <div>
+          <p class="org-name">CloudBridge EMEA Ltd.</p>
+          <p class="org-type">EMEA Legal Entity of CloudBridge</p>
+        </div>
+      </div>
+      <p class="org-desc">The European registered entity for CloudBridge, used when registering deals or partner accounts in the EMEA region. A distinct legal entity from the US parent — illustrates why region selection matters at registration.</p>
+      <div class="org-attr-grid">
+        <div class="org-attr"><span class="org-attr-label">HQ: </span><span class="org-attr-val">London, UK</span></div>
+        <div class="org-attr"><span class="org-attr-label">Region: </span><span class="org-attr-val">EMEA</span></div>
+        <div class="org-attr"><span class="org-attr-label">Relationship: </span><span class="org-attr-val">Subsidiary of CloudBridge Inc.</span></div>
+        <div class="org-attr"><span class="org-attr-label">Purpose: </span><span class="org-attr-val">Region-scoped search demo</span></div>
+      </div>
+    </div>
+
+    <!-- Meridian Capital Group -->
+    <div class="org-card">
+      <div class="org-head">
+        <div class="org-logo euc">MC</div>
+        <div>
+          <p class="org-name">Meridian Capital Group</p>
+          <p class="org-type">Financial Services Firm (End User Customer)</p>
+        </div>
+      </div>
+      <p class="org-desc">A mid-to-large financial services company and an active Equinix customer — running colocation at SV5 and NY4 with Equinix Fabric connections to AWS. Buys and renews through CloudBridge. Maria Hill is the internal owner of the Equinix relationship.</p>
+      <div class="org-attr-grid">
+        <div class="org-attr"><span class="org-attr-label">HQ: </span><span class="org-attr-val">New York, NY, USA</span></div>
+        <div class="org-attr"><span class="org-attr-label">Assets: </span><span class="org-attr-val">SV5 + NY4 colo; Fabric → AWS</span></div>
+        <div class="org-attr"><span class="org-attr-label">Monthly spend: </span><span class="org-attr-val">~$10,060/mo</span></div>
+        <div class="org-attr"><span class="org-attr-label">Partner rep: </span><span class="org-attr-val">Steve Rogers (CloudBridge)</span></div>
+        <div class="org-attr"><span class="org-attr-label">Vertical: </span><span class="org-attr-val">Financial Services</span></div>
+        <div class="org-attr"><span class="org-attr-label">EUC portal: </span><span class="org-attr-val">Salesforce ECP (separate login)</span></div>
+      </div>
+    </div>
+
+    <!-- Equinix -->
+    <div class="org-card">
+      <div class="org-head">
+        <div class="org-logo equinix">EQ</div>
+        <div>
+          <p class="org-name">Equinix</p>
+          <p class="org-type">Digital Infrastructure Company (Vendor)</p>
+        </div>
+      </div>
+      <p class="org-desc">The partner program owner and operator of the Partner Central portal. Equinix is the vendor — CloudBridge sells and integrates Equinix's colocation, interconnection, and digital infrastructure products.</p>
+      <div class="org-attr-grid">
+        <div class="org-attr"><span class="org-attr-label">Portal: </span><span class="org-attr-val">Partner Central (PCP)</span></div>
+        <div class="org-attr"><span class="org-attr-label">Platform: </span><span class="org-attr-val">Salesforce Experience Cloud</span></div>
+        <div class="org-attr"><span class="org-attr-label">Key contact: </span><span class="org-attr-val">Marcus Chen (PSM)</span></div>
+        <div class="org-attr"><span class="org-attr-label">Review SLA: </span><span class="org-attr-val">3–5 business days</span></div>
+      </div>
+    </div>
+
+  </div><!-- /card-grid -->
+
+  <!-- ═══ LEGAL ENTITIES ════════════════════════════════════ -->
+  <p class="section-hd">Legal Entities & Regions Used in Wireframes</p>
+  <div class="rel-box">
+    <table class="entity-table" aria-label="Legal entities by region">
+      <thead>
+        <tr>
+          <th>Entity Name</th>
+          <th>Region</th>
+          <th>Used In</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>CloudBridge Technologies Inc.</strong></td>
+          <td>Americas — US</td>
+          <td>Onboarding wizard, apply wizard, deal registration flows</td>
+        </tr>
+        <tr>
+          <td><strong>CloudBridge EMEA Ltd.</strong></td>
+          <td>EMEA</td>
+          <td>Apply wizard company search — "different region" result to illustrate region mismatch</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ═══ WIREFRAME KEY ══════════════════════════════════════ -->
+  <p class="section-hd">Wireframe Key: Which Persona Appears Where</p>
+  <div class="wire-key">
+    <div class="wire-key-row">
+      <span class="wire-key-page">Partner Registration</span>
+      <span class="wire-key-persona"><strong>Steve Rogers</strong> — applying on behalf of CloudBridge Technologies Inc.</span>
+    </div>
+    <div class="wire-key-row">
+      <span class="wire-key-page">Onboarding Wizard</span>
+      <span class="wire-key-persona"><strong>Steve Rogers</strong> (and <strong>Jordan Reeves</strong> added as team member)</span>
+    </div>
+    <div class="wire-key-row">
+      <span class="wire-key-page">Partner User Request</span>
+      <span class="wire-key-persona">New user at CloudBridge searches for the org, sends join request; <strong>Jordan Reeves</strong> approves</span>
+    </div>
+    <div class="wire-key-row">
+      <span class="wire-key-page">PSM Portal views</span>
+      <span class="wire-key-persona"><strong>Marcus Chen</strong> — reviewing CloudBridge's program status from the Equinix side</span>
+    </div>
+    <div class="wire-key-row">
+      <span class="wire-key-page">Portal Admin views</span>
+      <span class="wire-key-persona"><strong>Jordan Reeves</strong> — managing team access, deal approvals, training</span>
+    </div>
+    <div class="wire-key-row">
+      <span class="wire-key-page">EUC portal views</span>
+      <span class="wire-key-persona"><strong>Maria Hill</strong> — managing Meridian Capital's active Equinix assets, SLA reports, support tickets</span>
+    </div>
+  </div>
+
+  <!-- Notice: corp user -->
+  <div class="notice">
+    <strong>Story chain is now complete.</strong> Maria Hill (EUC) → Steve Rogers (AE) → Jordan Reeves (Portal Admin) → Marcus Chen (PSM) covers the full journey from customer through partner org to vendor program management. Maria is a proto-persona — see the validation note above. The EUC portal wireframes (asset view, SLA reports, support tickets) are in scope but not yet built; the relationship chain is in place to support them when ready.
+  </div>
+
+</div><!-- /page-wrap -->
+</main>
+
+<!-- ── SPEC PANEL ──────────────────────────────────────────── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design specifications">
+  <button class="spec-toggle" onclick="toggleSpec()" aria-expanded="true" aria-controls="spec-panel" id="spec-toggle-btn">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 18l6-6-6-6"/></svg>
+    <span>Spec</span>
+  </button>
+
+  <div class="spec-content">
+    <p class="spec-section-title">About This Page</p>
+    <p class="spec-item">Design reference — not a deliverable. This page is internal to the wireframe project and should appear at the very bottom of the sitemap, outside the normal portal navigation tree.</p>
+
+    <p class="spec-section-title" style="margin-top:16px;">Intended audience</p>
+    <p class="spec-item">Wireframe designers, stakeholders reviewing the prototype, anyone who needs to check "what's Steve's email?" without hunting through each wireframe file.</p>
+
+    <p class="spec-section-title" style="margin-top:16px;">What to do with this in production</p>
+    <p class="spec-item">This page has no equivalent in the real portal. It exists only to anchor the design fiction. Remove from any deliverable that goes to development.</p>
+
+    <p class="spec-section-title" style="margin-top:16px;">On the "Portal Admin" title</p>
+    <p class="spec-item">Jordan Reeves's actual title should be "Sales Operations Manager" or "Partner Operations Manager" in any realistic company of CloudBridge's size. "Portal Admin" is used as a role label within the portal, not a job title.</p>
+
+    <p class="spec-section-title" style="margin-top:16px;">Why two CloudBridge entities?</p>
+    <p class="spec-item">Region-scoped company search in the registration wizard needs a second entity to demonstrate what a "region mismatch" looks like. CloudBridge EMEA Ltd. serves that purpose without inventing an unrelated company.</p>
+  </div>
+</aside>
+
+<script>
+  function toggleSpec() {
+    const panel = document.getElementById('spec-panel');
+    const btn   = document.getElementById('spec-toggle-btn');
+    const open  = panel.classList.toggle('collapsed');
+    btn.setAttribute('aria-expanded', String(!open));
+  }
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

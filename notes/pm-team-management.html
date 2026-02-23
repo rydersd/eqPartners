@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team Management - Equinix Partner Portal</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Salesforce Sans, sans-serif;
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    /* Header */
+    .header {
+      background-color: var(--wf-ink, #1e2a3a);
+      height: 56px;
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+    }
+
+    .header-logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .logo-badge {
+      width: 32px;
+      height: 32px;
+      background-color: var(--wf-accent, #3d6daa);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: white;
+    }
+
+    .header-title {
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    /* Navigation */
+    .nav {
+      display: flex;
+      gap: 0;
+      flex: 1;
+      margin-left: 40px;
+    }
+
+    .nav a {
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      padding: 16px 16px;
+      font-size: 13px;
+      font-weight: 500;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s ease;
+    }
+
+    .nav a:hover {
+      color: white;
+    }
+
+    .nav a.active {
+      color: white;
+      border-bottom-color: white;
+    }
+
+    /* User Avatar Area */
+    .header-user {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-left: auto;
+    }
+
+    .bell-icon {
+      width: 24px;
+      height: 24px;
+      color: rgba(255,255,255,0.7);
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      background-color: var(--wf-accent, #3d6daa);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    /* Page Header Card */
+    .page-header-card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .page-header-card h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 8px;
+    }
+
+    .page-header-card p {
+      font-size: 14px;
+      color: var(--wf-muted, #6b7f99);
+      margin-bottom: 16px;
+    }
+
+    .org-info-bar {
+      background-color: var(--wf-canvas, #f5f7fb);
+      padding: 12px 16px;
+      border-radius: 4px;
+      font-size: 13px;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 20px;
+      border-left: 4px solid var(--wf-accent, #3d6daa);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-primary {
+      background-color: var(--wf-accent, #3d6daa);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--wf-accent, #3d6daa);
+    }
+
+    .btn-secondary {
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-ink, #1e2a3a);
+      border: 1px solid var(--wf-tint, #dce4ef);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--wf-tint, #dce4ef);
+    }
+
+    /* Two Column Layout */
+    .main-content {
+      display: flex;
+      gap: 24px;
+    }
+
+    .main-column {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .sidebar {
+      width: 320px;
+    }
+
+    /* Invite User Card */
+    .invite-card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+      padding: 24px;
+      margin-bottom: 24px;
+      border: 1px solid var(--wf-tint, #dce4ef);
+    }
+
+    .invite-card h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 16px;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .form-row.full {
+      flex-basis: 100%;
+    }
+
+    .form-group {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .form-group input,
+    .form-group select {
+      padding: 8px 12px;
+      border: 1px solid var(--wf-tint, #dce4ef);
+      border-radius: 4px;
+      font-size: 13px;
+      font-family: inherit;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--wf-accent, #3d6daa);
+      box-shadow: 0 0 0 2px rgba(0,112,210,0.1);
+    }
+
+    .checkbox-group {
+      margin: 20px 0;
+    }
+
+    .checkbox-group label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .checkbox-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .checkbox-item input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+      accent-color: var(--wf-accent, #3d6daa);
+    }
+
+    .checkbox-item label {
+      margin: 0;
+      text-transform: none;
+      font-weight: normal;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .form-note {
+      font-size: 12px;
+      color: var(--wf-muted, #6b7f99);
+      margin-top: 12px;
+      padding: 12px;
+      background-color: var(--wf-canvas, #f5f7fb);
+      border-left: 3px solid var(--wf-ink, #1e2a3a);
+      border-radius: 2px;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      padding-top: 20px;
+      border-top: 1px solid var(--wf-tint, #dce4ef);
+    }
+
+    .form-actions .btn {
+      padding: 10px 20px;
+    }
+
+    .cancel-link {
+      color: var(--wf-accent, #3d6daa);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 10px 20px;
+    }
+
+    .cancel-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Users Table Card */
+    .users-table-card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+      padding: 24px;
+      margin-bottom: 24px;
+      overflow-x: auto;
+    }
+
+    .users-table-card h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 16px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    table th {
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-ink, #1e2a3a);
+      font-weight: 600;
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 2px solid var(--wf-tint, #dce4ef);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    table td {
+      padding: 16px;
+      border-bottom: 1px solid var(--wf-tint, #dce4ef);
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    table tbody tr:hover {
+      background-color: var(--wf-canvas, #f5f7fb);
+    }
+
+    table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    /* Status Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .badge-active {
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .badge-invited {
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-amber, #8b7745);
+    }
+
+    .badge-deactivated {
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-red, #8b4553);
+    }
+
+    /* Actions Icon */
+    .action-icon {
+      cursor: pointer;
+      font-size: 14px;
+      color: var(--wf-accent, #3d6daa);
+      position: relative;
+    }
+
+    .action-icon:hover {
+      color: var(--wf-accent, #3d6daa);
+    }
+
+    /* Pending Invitations Card */
+    .pending-card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .pending-card h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 16px;
+    }
+
+    .pending-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px;
+      background-color: var(--wf-canvas, #f5f7fb);
+      border-radius: 4px;
+      border-left: 4px solid var(--wf-surface, #edf1f7);
+      margin-bottom: 12px;
+    }
+
+    .pending-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .pending-info {
+      flex: 1;
+    }
+
+    .pending-name {
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 4px;
+    }
+
+    .pending-meta {
+      font-size: 12px;
+      color: var(--wf-muted, #6b7f99);
+    }
+
+    .pending-actions {
+      display: flex;
+      gap: 16px;
+    }
+
+    .pending-actions a {
+      color: var(--wf-accent, #3d6daa);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .pending-actions a:hover {
+      text-decoration: underline;
+    }
+
+    /* License Usage Card */
+    .license-card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+      padding: 24px;
+    }
+
+    .license-card h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 20px;
+    }
+
+    .license-bar {
+      margin-bottom: 20px;
+    }
+
+    .license-label {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .license-progress {
+      width: 100%;
+      height: 8px;
+      background-color: var(--wf-tint, #dce4ef);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .license-progress-fill {
+      height: 100%;
+      background-color: var(--wf-accent, #3d6daa);
+      width: 53.3%;
+    }
+
+    .license-breakdown {
+      margin: 20px 0;
+    }
+
+    .breakdown-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      font-size: 13px;
+      border-bottom: 1px solid var(--wf-tint, #dce4ef);
+    }
+
+    .breakdown-item:last-child {
+      border-bottom: none;
+    }
+
+    .breakdown-label {
+      color: var(--wf-muted, #6b7f99);
+    }
+
+    .breakdown-count {
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .license-link {
+      display: inline-block;
+      margin-top: 16px;
+      color: var(--wf-accent, #3d6daa);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .license-link:hover {
+      text-decoration: underline;
+    }
+
+    .license-note {
+      font-size: 12px;
+      color: var(--wf-muted, #6b7f99);
+      margin-top: 16px;
+      padding: 12px;
+      background-color: var(--wf-canvas, #f5f7fb);
+      border-radius: 4px;
+    }
+
+    /* Figma Spec Block */
+    .spec-block {
+      background-color: var(--wf-ink, #1e2a3a);
+      border: 2px solid var(--wf-ink, #1e2a3a);
+      border-radius: 8px;
+      padding: 24px;
+      margin-top: 40px;
+      color: var(--wf-tint, #dce4ef);
+    }
+
+    .spec-block h3 {
+      color: var(--wf-ink, #1e2a3a);
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .spec-content {
+      font-size: 12px;
+      line-height: 1.6;
+      color: var(--wf-tint, #dce4ef);
+      margin-left: 12px;
+    }
+
+    .spec-content ul {
+      margin-top: 6px;
+      padding-left: 16px;
+    }
+
+    .spec-content li {
+      margin-bottom: 6px;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .main-content {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+      }
+
+      .form-row {
+        flex-direction: column;
+      }
+
+      table {
+        font-size: 12px;
+      }
+
+      table th,
+      table td {
+        padding: 12px 8px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        flex-wrap: wrap;
+        padding: 0 16px;
+      }
+
+      .nav {
+        margin-left: 20px;
+      }
+
+      .nav a {
+        padding: 12px 8px;
+        font-size: 12px;
+      }
+
+      .container {
+        padding: 16px;
+      }
+
+      .page-header-card h1 {
+        font-size: 22px;
+      }
+
+      .header-actions {
+        width: 100%;
+        flex-basis: 100%;
+      }
+
+      .users-table-card {
+        overflow-x: auto;
+      }
+
+      table {
+        font-size: 11px;
+</style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="wf-header">
+    <div class="wf-header-logo">EQ</div>
+    <div class="wf-header-title">Equinix Partner Manager</div>
+    <nav class="wf-header-nav">
+      <a href="pm-home-dashboard.html">Dashboard</a>
+      <a href="pm-team-management.html" class="active">Team</a>
+      <a href="pm-deals-revenue.html">Deals</a>
+      <a href="pm-team-training.html">Training</a>
+      <a href="pm-resources.html">Resources</a>
+    </nav>
+    <div class="wf-header-util">
+      <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+      <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="container">
+    <!-- Page Header Card -->
+    <div class="page-header-card">
+      <h1>Team Management</h1>
+      <p>Manage your organization's Partner Central users</p>
+      <div class="org-info-bar">
+        CloudBridge Solutions • Bronze Tier • 8 Active Users / 15 Licensed
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-primary">+ Invite User</button>
+        <button class="btn btn-secondary">Export Roster</button>
+        <button class="btn btn-secondary">Bulk Actions ▾</button>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <!-- Main Column -->
+      <div class="main-column">
+        <!-- Invite User Card -->
+        <div class="invite-card">
+          <h3>Invite New User</h3>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="firstName">First Name</label>
+              <input type="text" id="firstName" placeholder="Enter first name">
+            </div>
+            <div class="form-group">
+              <label for="lastName">Last Name</label>
+              <input type="text" id="lastName" placeholder="Enter last name">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input type="email" id="email" placeholder="user@cloudbridge.io">
+            </div>
+            <div class="form-group">
+              <label for="jobTitle">Job Title</label>
+              <input type="text" id="jobTitle" placeholder="e.g., Sales Manager">
+            </div>
+          </div>
+
+          <div class="form-row full">
+            <div class="form-group">
+              <label for="role">Role</label>
+              <select id="role">
+                <option value="">Select a role</option>
+                <option value="sales">Sales Rep</option>
+                <option value="solutions">Solutions Engineer</option>
+                <option value="marketing">Marketing Coordinator</option>
+                <option value="finance">Finance/Billing</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="checkbox-group">
+            <label>Portal Access</label>
+            <div class="checkbox-list">
+              <div class="checkbox-item">
+                <input type="checkbox" id="dealReg" checked>
+                <label for="dealReg">Deal Registration</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="training" checked>
+                <label for="training">Training & Certifications</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="commissions" checked>
+                <label for="commissions">Commissions View</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="mdf">
+                <label for="mdf">MDF Requests</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="admin">
+                <label for="admin">Admin Console</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-note">
+            User will receive an email invitation to set up MFA and access Partner Central
+          </div>
+
+          <div class="form-actions">
+            <button class="btn btn-primary">Send Invitation</button>
+            <button class="cancel-link">Cancel</button>
+          </div>
+        </div>
+
+        <!-- Active Users Table Card -->
+        <div class="users-table-card">
+          <h3>Active Users</h3>
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Role</th>
+                <th scope="col">Email</th>
+                <th scope="col">Status</th>
+                <th scope="col">Last Login</th>
+                <th scope="col">Courses</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Jordan Reeves</td>
+                <td>Admin</td>
+                <td>jordan.reeves@cloudbridge.io</td>
+                <td><span class="badge badge-active">Active</span></td>
+                <td>Today 2:14 PM</td>
+                <td>6/6 (100%)</td>
+                <td><span class="action-icon" title="Edit Role, Reset MFA, Deactivate, Remove">⚙️</span></td>
+              </tr>
+              <tr>
+                <td>Sarah Connor</td>
+                <td>Sales Rep</td>
+                <td>s.connor@cloudbridge.io</td>
+                <td><span class="badge badge-active">Active</span></td>
+                <td>Today 10:32 AM</td>
+                <td>4/6 (67%)</td>
+                <td><span class="action-icon" title="Edit Role, Reset MFA, Deactivate, Remove">⚙️</span></td>
+              </tr>
+              <tr>
+                <td>Tony Stark</td>
+                <td>Sales Rep</td>
+                <td>t.stark@cloudbridge.io</td>
+                <td><span class="badge badge-active">Active</span></td>
+                <td>Yesterday</td>
+                <td>5/6 (83%)</td>
+                <td><span class="action-icon" title="Edit Role, Reset MFA, Deactivate, Remove">⚙️</span></td>
+              </tr>
+              <tr>
+                <td>Pepper Potts</td>
+                <td>Solutions Eng</td>
+                <td>p.potts@cloudbridge.io</td>
+                <td><span class="badge badge-active">Active</span></td>
+                <td>Feb 14</td>
+                <td>6/6 (100%)</td>
+                <td><span class="action-icon" title="Edit Role, Reset MFA, Deactivate, Remove">⚙️</span></td>
+              </tr>
+              <tr>
+                <td>Natasha Romanoff</td>
+                <td>Sales Rep</td>
+                <td>n.romanoff@cloudbridge.io</td>
+                <td><span class="badge badge-active">Active</span></td>
+                <td>Feb 13</td>
+                <td>3/6 (50%)</td>
+                <td><span class="action-icon" title="Edit Role, Reset MFA, Deactivate, Remove">⚙️</span></td>
+              </tr>
+              <tr>
+                <td>Bruce Banner</td>
+                <td>Solutions Eng</td>
+                <td>b.banner@cloudbridge.io</td>
+                <td><span class="badge badge-active">Active</span></td>
+                <td>Feb 12</td>
+                <td>5/6 (83%)</td>
+                <td><span class="action-icon" title="Edit Role, Reset MFA, Deactivate, Remove">⚙️</span></td>
+              </tr>
+              <tr>
+                <td>Steve Rogers</td>
+                <td>Marketing</td>
+                <td>s.rogers@cloudbridge.io</td>
+                <td><span class="badge badge-invited">Invited</span></td>
+                <td>—</td>
+                <td>0/6 (0%)</td>
+                <td><span class="action-icon" title="Edit Role, Reset MFA, Deactivate, Remove">⚙️</span></td>
+              </tr>
+              <tr>
+                <td>Maria Hill</td>
+                <td>Finance</td>
+                <td>m.hill@cloudbridge.io</td>
+                <td><span class="badge badge-deactivated">Deactivated</span></td>
+                <td>Jan 15</td>
+                <td>2/6 (33%)</td>
+                <td><span class="action-icon" title="Edit Role, Reset MFA, Deactivate, Remove">⚙️</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pending Invitations Card -->
+        <div class="pending-card">
+          <h3>Pending Invitations</h3>
+          <div class="pending-item">
+            <div class="pending-info">
+              <div class="pending-name">Steve Rogers</div>
+              <div class="pending-meta">s.rogers@cloudbridge.io • Invited Feb 14, expires Feb 21</div>
+            </div>
+            <div class="pending-actions">
+              <a href="#">Resend</a>
+              <a href="#">Revoke</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <!-- License Usage Card -->
+        <div class="license-card">
+          <h3>License Usage</h3>
+
+          <div class="license-bar">
+            <div class="license-label">
+              <span>8 of 15 Seats Used</span>
+              <span>53%</span>
+            </div>
+            <div class="license-progress">
+              <div class="license-progress-fill"></div>
+            </div>
+          </div>
+
+          <div class="license-breakdown">
+            <div class="breakdown-item">
+              <span class="breakdown-label">Sales Reps</span>
+              <span class="breakdown-count">5</span>
+            </div>
+            <div class="breakdown-item">
+              <span class="breakdown-label">Solutions Engineers</span>
+              <span class="breakdown-count">2</span>
+            </div>
+            <div class="breakdown-item">
+              <span class="breakdown-label">Marketing</span>
+              <span class="breakdown-count">1</span>
+            </div>
+            <div class="breakdown-item">
+              <span class="breakdown-label">Finance</span>
+              <span class="breakdown-count">1</span>
+            </div>
+            <div class="breakdown-item">
+              <span class="breakdown-label">Admin</span>
+              <span class="breakdown-count">1</span>
+            </div>
+          </div>
+
+          <a href="#" class="license-link">Request Additional Licenses</a>
+
+          <div class="license-note">
+            Contact your Channel Manager Marcus Chen for license adjustments
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Figma Spec Block -->
+    <div class="spec-block">
+      <h3>Figma Spec Block</h3>
+
+      <div class="spec-section">
+        <strong>Page Name</strong>
+        <div class="spec-content">pm-team-management</div>
+      </div>
+
+      <div class="spec-section">
+        <strong>Portal</strong>
+        <div class="spec-content">Partner Manager Portal</div>
+      </div>
+
+      <div class="spec-section">
+        <strong>Primary Content</strong>
+        <div class="spec-content">
+          <ul>
+            <li>Page header with organization info and action buttons</li>
+            <li>Invite new user form with role selection and access permissions</li>
+            <li>Active users table with status, login history, and course completion</li>
+            <li>Pending invitations list with resend/revoke actions</li>
+            <li>License usage sidebar with seat allocation and breakdown</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="spec-section">
+        <strong>Interactive Elements</strong>
+        <div class="spec-content">
+          <ul>
+            <li>Invite user form submission</li>
+            <li>User deactivation (preserves history)</li>
+            <li>Role editing and permissions management</li>
+            <li>Bulk actions: assign training, deactivate, change role</li>
+            <li>Resend and revoke invitation actions</li>
+            <li>MFA reset capability</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="spec-section">
+        <strong>Functionality</strong>
+        <div class="spec-content">
+          <ul>
+            <li>SF Object: Partner_Contact__c → User (Experience Cloud) via PermissionSetAssignment</li>
+            <li>Invite flow creates Contact + triggers Experience Cloud User provisioning</li>
+            <li>Email invitation via Marketing Cloud with MFA enrollment trigger</li>
+            <li>Deactivate = IsActive=false on User record (preserves history)</li>
+            <li>License count from UserLicense query (Experience Cloud login-based)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="spec-section">
+        <strong>Design Brief</strong>
+        <div class="spec-content">
+          <ul>
+            <li>Accessibility: table has proper th scope, status badges use both color + text</li>
+            <li>Focus management for invite form validation</li>
+            <li>Form labels use uppercase with letter-spacing</li>
+            <li>Status badges: Active (green var(--wf-ink, #1e2a3a)), Invited (amber var(--wf-amber, #8b7745)), Deactivated (red var(--wf-red, #8b4553))</li>
+            <li>Responsive layout: main column + sidebar, collapses on tablet/mobile</li>
+            <li>Consistent typography and spacing throughout</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer class="wf-footer">
+    &copy; 2026 Equinix Partner Manager Portal · Wireframe specification
+  </footer>
+
+</body>
+</html>

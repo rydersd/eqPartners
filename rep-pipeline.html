@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Pipeline — AE · Equinix PCP Partner Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/salesforce-lightning-design-system/2.20.2/styles/salesforce-lightning-design-system.min.css">
+    <link rel="stylesheet" href="wireframe.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Salesforce Sans, sans-serif;
+            background-color: var(--wf-canvas, #f5f7fb);
+            color: var(--wf-text, #3b4f68);
+            line-height: 1.5;
+        }
+
+        /* Header Styling */
+        header {
+            background: var(--wf-ink, #1e2a3a);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--wf-ink, #1e2a3a);
+            font-size: 18px;
+        }
+
+        .header-title {
+            border-left: 3px solid var(--wf-muted, #6b7f99);
+            padding-left: 1rem;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+            flex: 1;
+            margin-left: 2rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid transparent;
+        }
+
+        nav a:hover {
+            color: var(--wf-muted, #6b7f99);
+        }
+
+        nav a.active {
+            border-bottom-color: var(--wf-muted, #6b7f99);
+            color: var(--wf-muted, #6b7f99);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .notification-icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--wf-red, #8b4553);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--wf-muted, #6b7f99);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        .pipeline-value {
+            font-size: 18px;
+            color: var(--wf-muted, #6b7f99);
+            font-weight: 600;
+        }
+
+        /* Alert Section */
+        .alert {
+            background: var(--wf-canvas, #f5f7fb);
+            border-left: 4px solid var(--wf-amber, #8b7745);
+            border-radius: 4px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .alert-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-title {
+            font-weight: 600;
+            color: var(--wf-text, #3b4f68);
+            margin-bottom: 0.25rem;
+        }
+
+        .alert-text {
+            font-size: 13px;
+            color: var(--wf-text, #3b4f68);
+        }
+
+        .alert-link {
+            color: var(--wf-accent, #3d6daa);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .alert-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Kanban Section */
+        .kanban-section {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--wf-ink, #1e2a3a);
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--wf-muted, #6b7f99);
+            padding-bottom: 0.75rem;
+        }
+
+        .kanban-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+        }
+
+        .kanban-column {
+            border: 1px solid var(--wf-tint, #dce4ef);
+            border-radius: 6px;
+            overflow: hidden;
+            background: var(--wf-canvas, #f5f7fb);
+        }
+
+        .kanban-header {
+            background: var(--wf-canvas, #f5f7fb);
+            padding: 1rem;
+            border-bottom: 2px solid var(--wf-accent, #3d6daa);
+        }
+
+        .kanban-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--wf-accent, #3d6daa);
+            margin-bottom: 0.25rem;
+        }
+
+        .kanban-count {
+            font-size: 12px;
+            color: var(--wf-muted, #6b7f99);
+        }
+
+        .kanban-cards {
+            padding: 1rem;
+            min-height: 200px;
+        }
+
+        .kanban-card {
+            background: white;
+            border: 1px solid var(--wf-tint, #dce4ef);
+            border-radius: 4px;
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .kanban-card:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-color: var(--wf-accent, #3d6daa);
+        }
+
+        .kanban-card-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+            margin-bottom: 0.25rem;
+        }
+
+        .kanban-card-customer {
+            font-size: 12px;
+            color: var(--wf-muted, #6b7f99);
+            margin-bottom: 0.5rem;
+        }
+
+        .kanban-card-amount {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--wf-muted, #6b7f99);
+        }
+
+        /* Filters */
+        .filters-section {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--wf-text, #3b4f68);
+        }
+
+        .filter-input,
+        .filter-select {
+            padding: 0.5rem;
+            border: 1px solid var(--wf-tint, #dce4ef);
+            border-radius: 4px;
+            font-size: 13px;
+            font-family: inherit;
+            background: white;
+        }
+
+        .filter-select {
+            cursor: pointer;
+        }
+
+        .filter-input:focus,
+        .filter-select:focus {
+            outline: 2px solid var(--wf-accent, #3d6daa);
+            outline-offset: 2px;
+        }
+
+        /* Table Section */
+        .table-section {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+            overflow-x: auto;
+        }
+
+        .subsection-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--wf-ink, #1e2a3a);
+            margin-bottom: 1.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        th {
+            background: var(--wf-canvas, #f5f7fb);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 700;
+            color: var(--wf-text, #3b4f68);
+            border-bottom: 2px solid var(--wf-tint, #dce4ef);
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--wf-tint, #dce4ef);
+        }
+
+        tr:hover {
+            background: var(--wf-canvas, #f5f7fb);
+        }
+
+        .deal-name {
+            color: var(--wf-accent, #3d6daa);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .deal-name:hover {
+            text-decoration: underline;
+        }
+
+        .amount {
+            color: var(--wf-muted, #6b7f99);
+            font-weight: 600;
+        }
+
+        .stage-badge {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .stage-submitted {
+            background: var(--wf-canvas, #f5f7fb);
+            color: var(--wf-accent, #3d6daa);
+        }
+
+        .stage-review {
+            background: var(--wf-surface, #edf1f7);
+            color: var(--wf-amber, #8b7745);
+        }
+
+        .stage-approved {
+            background: var(--wf-surface, #edf1f7);
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        .stage-won {
+            background: var(--wf-surface, #edf1f7);
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        /* Protection Period Badge */
+        .protection-badge {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            background: var(--wf-surface, #edf1f7);
+            color: var(--wf-red, #8b4553);
+        }
+
+        .protection-safe {
+            background: var(--wf-surface, #edf1f7);
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        /* Orders Section */
+        .orders-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .order-card {
+            border: 1px solid var(--wf-tint, #dce4ef);
+            border-radius: 6px;
+            padding: 1rem;
+            background: var(--wf-canvas, #f5f7fb);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 0.75rem;
+        }
+
+        .order-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        .order-amount {
+            color: var(--wf-muted, #6b7f99);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .order-meta {
+            font-size: 12px;
+            color: var(--wf-muted, #6b7f99);
+            margin-bottom: 0.75rem;
+        }
+
+        .order-status {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-processing {
+            background: var(--wf-surface, #edf1f7);
+            color: var(--wf-amber, #8b7745);
+        }
+
+        .status-shipped {
+            background: var(--wf-canvas, #f5f7fb);
+            color: var(--wf-accent, #3d6daa);
+        }
+
+        .status-delivered {
+            background: var(--wf-surface, #edf1f7);
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        /* Design Brief Section */
+        .brief-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--wf-muted, #6b7f99);
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .brief-content {
+            font-size: 13px;
+            color: var(--wf-text, #3b4f68);
+            line-height: 1.6;
+        }
+
+        .brief-content p {
+            margin-bottom: 0.75rem;
+        }
+
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        @media (max-width: 1024px) {
+            nav {
+                display: none;
+            }
+
+            .kanban-container {
+                grid-template-columns: 1fr;
+            }
+
+            .filters-section {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .filter-group {
+                width: 100%;
+            }
+
+            .filter-select {
+                width: 100%;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            td,
+            th {
+                padding: 0.75rem;
+            }
+</style>
+</head>
+<body>
+<div class="page-context-bar">
+  <div style="max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <nav class="wf-breadcrumb" aria-label="Breadcrumb" style="margin-bottom:0;">
+      <a href="rep-home.html">Home</a>
+      <span class="wf-breadcrumb-sep">›</span>
+      <span class="wf-breadcrumb-current">My Pipeline</span>
+    </nav>
+    <span class="persona-badge persona-badge--ae">AE</span>
+  </div>
+</div>
+    <!-- Header -->
+    <header role="banner">
+        <div class="header-left">
+            <div class="logo" aria-label="Equinix Logo">EQ</div>
+            <div class="header-title">Equinix Partner Portal</div>
+        </div>
+        <nav role="navigation" aria-label="Main Navigation">
+            <a href="rep-deals-commission.html" class="active">Deals</a>
+            <a href="rep-my-training.html">Training</a>
+            <a href="rep-marketing.html">Marketing</a>
+            <a href="rep-support.html">Support</a>
+            <a href="rep-resources.html">Resources</a>
+        </nav>
+        <div class="header-right">
+            <div class="notification-icon" aria-label="Notifications" role="button" tabindex="0">
+                🔔
+                <span class="notification-badge" aria-hidden="true">3</span>
+            </div>
+    <a href="rep-notifications.html" class="bell-wrapper" aria-label="Notifications" style="position:relative;color:white;text-decoration:none;">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+      <span style="position:absolute;top:-4px;right:-6px;background:var(--wf-red,#8b4555);color:white;font-size:10px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;">7</span>
+    </a>
+            <div class="user-avatar" aria-label="User Profile" role="button" tabindex="0">JD</div>
+        </div>
+    </header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">My Pipeline</h1>
+            <div class="pipeline-value">Total Value: $133K (3 Active Deals)</div>
+        </div>
+
+        <!-- Alert -->
+        <div class="alert" role="alert" aria-live="assertive">
+            <div class="alert-icon">⚠️</div>
+            <div class="alert-content">
+                <div class="alert-title">Protection Period Expiring Soon</div>
+                <div class="alert-text">
+                    Deal "CloudCorp Multi-Region" has 12 days remaining before protection period expires.
+                    <a href="rep-deal-expiring.html" class="alert-link">View Deal →</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kanban View -->
+        <section class="kanban-section" aria-labelledby="kanban-title">
+            <h2 class="section-title" id="kanban-title">Pipeline by Stage</h2>
+            <div class="kanban-container">
+                <!-- Submitted -->
+                <div class="kanban-column">
+                    <div class="kanban-header">
+                        <div>
+                            <div class="kanban-title">Submitted</div>
+                            <div class="kanban-count">1 deal</div>
+                        </div>
+                    </div>
+                    <div class="kanban-cards">
+                        <div class="kanban-card">
+                            <div class="kanban-card-name">Shield Networks</div>
+                            <div class="kanban-card-customer">Network Security</div>
+                            <div class="kanban-card-amount">$38,000</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Under Review -->
+                <div class="kanban-column">
+                    <div class="kanban-header">
+                        <div>
+                            <div class="kanban-title">Under Review</div>
+                            <div class="kanban-count">1 deal</div>
+                        </div>
+                    </div>
+                    <div class="kanban-cards">
+                        <div class="kanban-card">
+                            <div class="kanban-card-name">Roxxon Energy Phase 2</div>
+                            <div class="kanban-card-customer">Energy Corp (Supporting)</div>
+                            <div class="kanban-card-amount">$18K MRR</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Proposal -->
+                <div class="kanban-column">
+                    <div class="kanban-header">
+                        <div>
+                            <div class="kanban-title">Proposal</div>
+                            <div class="kanban-count">1 deal</div>
+                        </div>
+                    </div>
+                    <div class="kanban-cards">
+                        <div class="kanban-card">
+                            <div class="kanban-card-name">Global Finance Corp DR</div>
+                            <div class="kanban-card-customer">Financial Services</div>
+                            <div class="kanban-card-amount">$95,000</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Delivered -->
+                <div class="kanban-column">
+                    <div class="kanban-header">
+                        <div>
+                            <div class="kanban-title">Delivered</div>
+                            <div class="kanban-count">1 deal</div>
+                        </div>
+                    </div>
+                    <div class="kanban-cards">
+                        <div class="kanban-card">
+                            <div class="kanban-card-name">DataVault Systems Colo</div>
+                            <div class="kanban-card-customer">Data Management</div>
+                            <div class="kanban-card-amount">$62,000</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Filters -->
+        <section class="filters-section" aria-labelledby="filters-label">
+            <span class="filter-label" id="filters-label">Filters:</span>
+            <div class="filter-group">
+                <label for="stage-filter" class="filter-label">Stage</label>
+                <select id="stage-filter" class="filter-select">
+                    <option>All Stages</option>
+                    <option>Submitted</option>
+                    <option>Under Review</option>
+                    <option>Approved</option>
+                    <option>Won</option>
+                    <option>Lost</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="period-filter" class="filter-label">Time Period</label>
+                <select id="period-filter" class="filter-select">
+                    <option>All Time</option>
+                    <option>Last 30 Days</option>
+                    <option>Last 90 Days</option>
+                    <option>This Year</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="amount-filter" class="filter-label">Amount Range</label>
+                <select id="amount-filter" class="filter-select">
+                    <option>All Amounts</option>
+                    <option>$0 - $50K</option>
+                    <option>$50K - $150K</option>
+                    <option>$150K - $300K</option>
+                    <option>$300K+</option>
+                </select>
+            </div>
+        </section>
+
+        <!-- Active Opportunities Table -->
+        <section class="table-section" aria-labelledby="opportunities-title">
+            <h2 class="subsection-title" id="opportunities-title">Active Opportunities</h2>
+            <table role="grid" aria-label="Active Deals and Opportunities">
+                <thead>
+                    <tr>
+                        <th>Deal Name</th>
+                        <th>Customer</th>
+                        <th>Amount</th>
+                        <th>Stage</th>
+                        <th>Protection Period</th>
+                        <th>Last Activity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a href="#" class="deal-name">Global Finance Corp DR</a></td>
+                        <td>Financial Services</td>
+                        <td class="amount">$95,000</td>
+                        <td><span class="stage-badge stage-approved">Proposal</span></td>
+                        <td><span class="protection-badge protection-safe">60 days</span></td>
+                        <td>Feb 10, 2026</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" class="deal-name">Shield Networks</a></td>
+                        <td>Network Security</td>
+                        <td class="amount">$38,000</td>
+                        <td><span class="stage-badge stage-submitted">Submitted</span></td>
+                        <td><span class="protection-badge protection-safe">30 days</span></td>
+                        <td>Feb 15, 2026</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" class="deal-name">Roxxon Energy Phase 2</a></td>
+                        <td>Energy Corp</td>
+                        <td class="amount">$18K MRR</td>
+                        <td><span class="stage-badge stage-review">Under Review</span></td>
+                        <td><span class="protection-badge">40 days</span></td>
+                        <td>Jan 28, 2026</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Won Deals / Orders -->
+        <section class="table-section" aria-labelledby="orders-title">
+            <h2 class="subsection-title" id="orders-title">Won Deals → Orders</h2>
+            <div class="orders-grid">
+                <div class="order-card">
+                    <div class="order-header">
+                        <div class="order-title">DataVault Systems Colo</div>
+                        <div class="order-amount">$62,000</div>
+                    </div>
+                    <div class="order-meta">Customer: Data Management | Order ID: ORD-2026-DV</div>
+                    <span class="order-status status-delivered">Delivered</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Design Brief -->
+        
+
+    </div>
+
+    <script>
+        // Handle keyboard navigation for interactive elements
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                const target = e.target;
+                if (target.classList.contains('notification-icon') || target.classList.contains('user-avatar')) {
+                    target.click();
+                }
+            }
+        });
+    </script>
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Sarah Connor's deal pipeline showing 3 active deals with $133K TCV across proposal, submitted, and under review stages, plus 1 delivered deal (DataVault Systems). Kanban view provides visibility into deal progression and protection periods. Includes support visibility for Roxxon Energy Phase 2 co-sell deal.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Track deal progression through approval workflow stages</li>
+<li>Monitor total pipeline value and revenue forecast across time periods</li>
+<li>Understand deal protection periods and approval requirements</li>
+<li>Manage multiple deals across different stages simultaneously</li>
+<li>View recently won deals and celebrate wins</li>
+<li>Forecast quarterly and annual revenue based on deal pipeline</li>
+<li>Alert on deals nearing expiration of protection periods</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Page title with total pipeline value and unregistered opportunities alert</li>
+<li>Kanban board displaying deal pipeline stages (Prospect, Registered, Under Review, Won)</li>
+<li>Deal cards within each column showing: deal name, customer, deal value</li>
+<li>Filter bar with stage, status, and product category filters</li>
+<li>Active opportunities table with columns: Deal Name, Customer, Amount, Stage, Days in Stage, Next Action</li>
+<li>Won deals summary section with recent closures and total closed amount</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Deal cards are clickable to open detail view or edit page</li>
+<li>Hover on cards shows additional options (edit, move, delete)</li>
+<li>Stage filter dropdown to show only deals in selected stage</li>
+<li>Status filter options (Active, Stalled, At Risk)</li>
+<li>Product category filter to focus on specific product lines</li>
+<li>Sort controls in table for revenue, date, or stage</li>
+<li>Won deals section shows recent closures with dates and amounts</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Pipeline Visualization &amp; Stage Management</strong>
+<ul>
+<li>Kanban card positions reflect Opportunity stage field (Prospect, Qualified, Proposal, Negotiation, Closed/Won)</li>
+<li>Deal stage updates via drag-and-drop or form submission sync immediately to Opportunity record in Salesforce</li>
+<li>Deal values aggregate by stage to calculate stage totals displayed in column headers</li>
+</ul></li>
+<li><strong>Filtering &amp; Display Updates</strong>
+<ul>
+<li>Filtering updates kanban display and table rows without page reload using client-side visibility toggles or SOQL queries</li>
+<li>Sort controls in table reorder deals by revenue, date, or stage using dynamic sorting logic</li>
+</ul></li>
+<li><strong>Alert &amp; Notification Logic</strong>
+<ul>
+<li>Expiration alert triggered when deal protection period is within 30 days of end date via scheduled Flow or Apex job</li>
+<li>Alert banner displays conditionally based on deal count with expiring protection periods</li>
+</ul></li>
+<li><strong>Revenue &amp; Reporting</strong>
+<ul>
+<li>Revenue forecast calculated from pipeline deals using Amount field with win probability factor</li>
+<li>Won deals section queries closed deals from current fiscal period using SOQL</li>
+<li>Total value in page header sums all active opportunity amounts</li>
+</ul></li>
+<li><strong>Navigation &amp; Details</strong>
+<ul>
+<li>Click deal to navigate to deal detail page with full opportunity context and related records</li>
+</ul></li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Validation &amp; Business Logic</h4>
+<ul>
+<li>Opportunity records queried and grouped by StageName field</li>
+<li>Deal protection expiration calculated from Protection_End_Date__c field</li>
+<li>Revenue totals aggregated using Amount field, filtered by RecordTypeId</li>
+<li>Stage filtering validates user has access to view deals in selected stage</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

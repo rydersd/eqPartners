@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Pipeline - Equinix Partner Portal</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/salesforce-lightning-design-system/2.20.2/styles/salesforce-lightning-design-system.min.css">
+    <link rel="stylesheet" href="wireframe.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Salesforce Sans, sans-serif;
+            background-color: var(--wf-canvas, #f5f7fb);
+            color: var(--wf-text, #3b4f68);
+            line-height: 1.5;
+        }
+
+        /* Header Styling */
+        header {
+            background: var(--wf-ink, #1e2a3a);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--wf-ink, #1e2a3a);
+            font-size: 18px;
+        }
+
+        .header-title {
+            border-left: 3px solid var(--wf-muted, #6b7f99);
+            padding-left: 1rem;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+            flex: 1;
+            margin-left: 2rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid transparent;
+        }
+
+        nav a:hover {
+            color: var(--wf-muted, #6b7f99);
+        }
+
+        nav a.active {
+            border-bottom-color: var(--wf-muted, #6b7f99);
+            color: var(--wf-muted, #6b7f99);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .notification-icon {
+            position: relative;
+            cursor: pointer;
+            font-size: 20px;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--wf-red, #8b4553);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--wf-muted, #6b7f99);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        .pipeline-value {
+            font-size: 18px;
+            color: var(--wf-muted, #6b7f99);
+            font-weight: 600;
+        }
+
+        /* Alert Section */
+        .alert {
+            background: var(--wf-canvas, #f5f7fb);
+            border-left: 4px solid var(--wf-amber, #8b7745);
+            border-radius: 4px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+        }
+
+        .alert-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-title {
+            font-weight: 600;
+            color: var(--wf-text, #3b4f68);
+            margin-bottom: 0.25rem;
+        }
+
+        .alert-text {
+            font-size: 13px;
+            color: var(--wf-text, #3b4f68);
+        }
+
+        .alert-link {
+            color: var(--wf-accent, #3d6daa);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .alert-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Kanban Section */
+        .kanban-section {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--wf-ink, #1e2a3a);
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--wf-muted, #6b7f99);
+            padding-bottom: 0.75rem;
+        }
+
+        .kanban-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+        }
+
+        .kanban-column {
+            border: 1px solid var(--wf-tint, #dce4ef);
+            border-radius: 6px;
+            overflow: hidden;
+            background: var(--wf-canvas, #f5f7fb);
+        }
+
+        .kanban-header {
+            background: var(--wf-canvas, #f5f7fb);
+            padding: 1rem;
+            border-bottom: 2px solid var(--wf-accent, #3d6daa);
+        }
+
+        .kanban-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--wf-accent, #3d6daa);
+            margin-bottom: 0.25rem;
+        }
+
+        .kanban-count {
+            font-size: 12px;
+            color: var(--wf-muted, #6b7f99);
+        }
+
+        .kanban-cards {
+            padding: 1rem;
+            min-height: 200px;
+        }
+
+        .kanban-card {
+            background: white;
+            border: 1px solid var(--wf-tint, #dce4ef);
+            border-radius: 4px;
+            padding: 0.75rem;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .kanban-card:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-color: var(--wf-accent, #3d6daa);
+        }
+
+        .kanban-card-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+            margin-bottom: 0.25rem;
+        }
+
+        .kanban-card-customer {
+            font-size: 12px;
+            color: var(--wf-muted, #6b7f99);
+            margin-bottom: 0.5rem;
+        }
+
+        .kanban-card-amount {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--wf-muted, #6b7f99);
+        }
+
+        /* Filters */
+        .filters-section {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+            display: flex;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--wf-text, #3b4f68);
+        }
+
+        .filter-input,
+        .filter-select {
+            padding: 0.5rem;
+            border: 1px solid var(--wf-tint, #dce4ef);
+            border-radius: 4px;
+            font-size: 13px;
+            font-family: inherit;
+            background: white;
+        }
+
+        .filter-select {
+            cursor: pointer;
+        }
+
+        .filter-input:focus,
+        .filter-select:focus {
+            outline: 2px solid var(--wf-accent, #3d6daa);
+            outline-offset: 2px;
+        }
+
+        /* Table Section */
+        .table-section {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+            overflow-x: auto;
+        }
+
+        .subsection-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--wf-ink, #1e2a3a);
+            margin-bottom: 1.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        th {
+            background: var(--wf-canvas, #f5f7fb);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 700;
+            color: var(--wf-text, #3b4f68);
+            border-bottom: 2px solid var(--wf-tint, #dce4ef);
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--wf-tint, #dce4ef);
+        }
+
+        tr:hover {
+            background: var(--wf-canvas, #f5f7fb);
+        }
+
+        .deal-name {
+            color: var(--wf-accent, #3d6daa);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .deal-name:hover {
+            text-decoration: underline;
+        }
+
+        .amount {
+            color: var(--wf-muted, #6b7f99);
+            font-weight: 600;
+        }
+
+        .stage-badge {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .stage-submitted {
+            background: var(--wf-canvas, #f5f7fb);
+            color: var(--wf-accent, #3d6daa);
+        }
+
+        .stage-review {
+            background: var(--wf-surface, #edf1f7);
+            color: var(--wf-amber, #8b7745);
+        }
+
+        .stage-approved {
+            background: var(--wf-surface, #edf1f7);
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        .stage-won {
+            background: var(--wf-surface, #edf1f7);
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        /* Protection Period Badge */
+        .protection-badge {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            background: var(--wf-surface, #edf1f7);
+            color: var(--wf-red, #8b4553);
+        }
+
+        .protection-safe {
+            background: var(--wf-surface, #edf1f7);
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        /* Orders Section */
+        .orders-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .order-card {
+            border: 1px solid var(--wf-tint, #dce4ef);
+            border-radius: 6px;
+            padding: 1rem;
+            background: var(--wf-canvas, #f5f7fb);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 0.75rem;
+        }
+
+        .order-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        .order-amount {
+            color: var(--wf-muted, #6b7f99);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .order-meta {
+            font-size: 12px;
+            color: var(--wf-muted, #6b7f99);
+            margin-bottom: 0.75rem;
+        }
+
+        .order-status {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-processing {
+            background: var(--wf-surface, #edf1f7);
+            color: var(--wf-amber, #8b7745);
+        }
+
+        .status-shipped {
+            background: var(--wf-canvas, #f5f7fb);
+            color: var(--wf-accent, #3d6daa);
+        }
+
+        .status-delivered {
+            background: var(--wf-surface, #edf1f7);
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        /* Design Brief Section */
+        .brief-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--wf-muted, #6b7f99);
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .brief-content {
+            font-size: 13px;
+            color: var(--wf-text, #3b4f68);
+            line-height: 1.6;
+        }
+
+        .brief-content p {
+            margin-bottom: 0.75rem;
+        }
+
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        @media (max-width: 1024px) {
+            nav {
+                display: none;
+            }
+
+            .kanban-container {
+                grid-template-columns: 1fr;
+            }
+
+            .filters-section {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .filter-group {
+                width: 100%;
+            }
+
+            .filter-select {
+                width: 100%;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            td,
+            th {
+                padding: 0.75rem;
+            }
+</style>
+</head>
+<body>
+    <!-- Header -->
+    <header role="banner">
+        <div class="header-left">
+            <div class="logo" aria-label="Equinix Logo">EQ</div>
+            <div class="header-title">Equinix Partner Portal</div>
+        </div>
+        <nav role="navigation" aria-label="Main Navigation">
+            <a href="rep-home.html">Home</a>
+            <a href="rep-my-training.html">Training</a>
+            <a href="rep-certifications.html">Certifications</a>
+            <a href="rep-deals-commission.html" class="active">Deals</a>
+            <a href="rep-resources.html">Resources</a>
+        </nav>
+        <div class="header-right">
+            <div class="notification-icon" aria-label="Notifications" role="button" tabindex="0">
+                🔔
+                <span class="notification-badge" aria-hidden="true">3</span>
+            </div>
+    <a href="rep-notifications.html" class="bell-wrapper" aria-label="Notifications" style="position:relative;color:white;text-decoration:none;">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+      <span style="position:absolute;top:-4px;right:-6px;background:var(--wf-red,#8b4555);color:white;font-size:10px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;">7</span>
+    </a>
+            <div class="user-avatar" aria-label="User Profile" role="button" tabindex="0">JD</div>
+        </div>
+    </header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">My Pipeline</h1>
+            <div class="pipeline-value">Total Value: $892,000 (9 Active Deals)</div>
+        </div>
+
+        <!-- Alert -->
+        <div class="alert" role="alert" aria-live="assertive">
+            <div class="alert-icon">⚠️</div>
+            <div class="alert-content">
+                <div class="alert-title">Protection Period Expiring Soon</div>
+                <div class="alert-text">
+                    Deal "CloudCorp Multi-Region" has 12 days remaining before protection period expires.
+                    <a href="rep-deal-expiring.html" class="alert-link">View Deal →</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kanban View -->
+        <section class="kanban-section" aria-labelledby="kanban-title">
+            <h2 class="section-title" id="kanban-title">Pipeline by Stage</h2>
+            <div class="kanban-container">
+                <!-- Submitted -->
+                <div class="kanban-column">
+                    <div class="kanban-header">
+                        <div>
+                            <div class="kanban-title">Submitted</div>
+                            <div class="kanban-count">3 deals</div>
+                        </div>
+                    </div>
+                    <div class="kanban-cards">
+                        <div class="kanban-card">
+                            <div class="kanban-card-name">TechGov Solutions</div>
+                            <div class="kanban-card-customer">Education Department</div>
+                            <div class="kanban-card-amount">$145,000</div>
+                        </div>
+                        <div class="kanban-card">
+                            <div class="kanban-card-name">SecureBank Expansion</div>
+                            <div class="kanban-card-customer">Regional Bank</div>
+                            <div class="kanban-card-amount">$89,500</div>
+                        </div>
+                        <div class="kanban-card">
+                            <div class="kanban-card-name">MediaStream Platform</div>
+                            <div class="kanban-card-customer">Content Provider</div>
+                            <div class="kanban-card-amount">$72,000</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Under Review -->
+                <div class="kanban-column">
+                    <div class="kanban-header">
+                        <div>
+                            <div class="kanban-title">Under Review</div>
+                            <div class="kanban-count">2 deals</div>
+                        </div>
+                    </div>
+                    <div class="kanban-cards">
+                        <div class="kanban-card">
+                            <div class="kanban-card-name">GlobalMfg AI Initiative</div>
+                            <div class="kanban-card-customer">Manufacturing Corp</div>
+                            <div class="kanban-card-amount">$245,000</div>
+                        </div>
+                        <a href="rep-deal-expiring.html" class="kanban-card" style="text-decoration:none; display:block;">
+                            <div class="kanban-card-name">CloudCorp Multi-Region</div>
+                            <div class="kanban-card-customer">Cloud Architect</div>
+                            <div class="kanban-card-amount">$198,500</div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Approved -->
+                <div class="kanban-column">
+                    <div class="kanban-header">
+                        <div>
+                            <div class="kanban-title">Approved</div>
+                            <div class="kanban-count">4 deals</div>
+                        </div>
+                    </div>
+                    <div class="kanban-cards">
+                        <div class="kanban-card">
+                            <div class="kanban-card-name">HealthNet Fabric</div>
+                            <div class="kanban-card-customer">Healthcare Provider</div>
+                            <div class="kanban-card-amount">$156,000</div>
+                        </div>
+                        <div class="kanban-card">
+                            <div class="kanban-card-name">RetailChain Interconnect</div>
+                            <div class="kanban-card-customer">Retail Corp</div>
+                            <div class="kanban-card-amount">$112,500</div>
+                        </div>
+                        <div class="kanban-card">
+                            <div class="kanban-card-name">FinServe Trading</div>
+                            <div class="kanban-card-customer">Financial Services</div>
+                            <div class="kanban-card-amount">$95,000</div>
+                        </div>
+                        <div class="kanban-card">
+                            <div class="kanban-card-name">DataCenter Upgrade</div>
+                            <div class="kanban-card-customer">Enterprise Tech</div>
+                            <div class="kanban-card-amount">$78,000</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Won -->
+                <div class="kanban-column">
+                    <div class="kanban-header">
+                        <div>
+                            <div class="kanban-title">Won</div>
+                            <div class="kanban-count">8 deals</div>
+                        </div>
+                    </div>
+                    <div class="kanban-cards">
+                        <div class="kanban-card">
+                            <div class="kanban-card-name">TelecomGlobal Network Edge</div>
+                            <div class="kanban-card-customer">Telecom Provider</div>
+                            <div class="kanban-card-amount">$325,000</div>
+                        </div>
+                        <div class="kanban-card">
+                            <div class="kanban-card-name">CloudFirst Partnership</div>
+                            <div class="kanban-card-customer">SaaS Company</div>
+                            <div class="kanban-card-amount">$287,500</div>
+                        </div>
+                        <div class="kanban-card">
+                            <div class="kanban-card-name">EdgeCompute Deploy</div>
+                            <div class="kanban-card-customer">Tech Startup</div>
+                            <div class="kanban-card-amount">$156,000</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lost -->
+                <div class="kanban-column">
+                    <div class="kanban-header">
+                        <div>
+                            <div class="kanban-title">Lost</div>
+                            <div class="kanban-count">1 deal</div>
+                        </div>
+                    </div>
+                    <div class="kanban-cards">
+                        <div class="kanban-card">
+                            <div class="kanban-card-name">CompeteAWS Proposal</div>
+                            <div class="kanban-card-customer">Retail Startup</div>
+                            <div class="kanban-card-amount">$67,000</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filters -->
+        <section class="filters-section" aria-labelledby="filters-label">
+            <span class="filter-label" id="filters-label">Filters:</span>
+            <div class="filter-group">
+                <label for="stage-filter" class="filter-label">Stage</label>
+                <select id="stage-filter" class="filter-select">
+                    <option>All Stages</option>
+                    <option>Submitted</option>
+                    <option>Under Review</option>
+                    <option>Approved</option>
+                    <option>Won</option>
+                    <option>Lost</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="period-filter" class="filter-label">Time Period</label>
+                <select id="period-filter" class="filter-select">
+                    <option>All Time</option>
+                    <option>Last 30 Days</option>
+                    <option>Last 90 Days</option>
+                    <option>This Year</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="amount-filter" class="filter-label">Amount Range</label>
+                <select id="amount-filter" class="filter-select">
+                    <option>All Amounts</option>
+                    <option>$0 - $50K</option>
+                    <option>$50K - $150K</option>
+                    <option>$150K - $300K</option>
+                    <option>$300K+</option>
+                </select>
+            </div>
+        </section>
+
+        <!-- Active Opportunities Table -->
+        <section class="table-section" aria-labelledby="opportunities-title">
+            <h2 class="subsection-title" id="opportunities-title">Active Opportunities</h2>
+            <table role="grid" aria-label="Active Deals and Opportunities">
+                <thead>
+                    <tr>
+                        <th>Deal Name</th>
+                        <th>Customer</th>
+                        <th>Amount</th>
+                        <th>Stage</th>
+                        <th>Protection Period</th>
+                        <th>Last Activity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><a href="#" class="deal-name">GlobalMfg AI Initiative</a></td>
+                        <td>Manufacturing Corp</td>
+                        <td class="amount">$245,000</td>
+                        <td><span class="stage-badge stage-review">Under Review</span></td>
+                        <td><span class="protection-badge">28 days</span></td>
+                        <td>Feb 10, 2024</td>
+                    </tr>
+                    <tr>
+                        <td><a href="rep-deal-expiring.html" class="deal-name">CloudCorp Multi-Region</a></td>
+                        <td>Cloud Architect</td>
+                        <td class="amount">$198,500</td>
+                        <td><span class="stage-badge stage-review">Under Review</span></td>
+                        <td><span class="protection-badge">12 days</span></td>
+                        <td>Feb 8, 2024</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" class="deal-name">HealthNet Fabric</a></td>
+                        <td>Healthcare Provider</td>
+                        <td class="amount">$156,000</td>
+                        <td><span class="stage-badge stage-approved">Approved</span></td>
+                        <td><span class="protection-badge protection-safe">45 days</span></td>
+                        <td>Feb 11, 2024</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" class="deal-name">TechGov Solutions</a></td>
+                        <td>Education Department</td>
+                        <td class="amount">$145,000</td>
+                        <td><span class="stage-badge stage-submitted">Submitted</span></td>
+                        <td><span class="protection-badge protection-safe">35 days</span></td>
+                        <td>Feb 9, 2024</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" class="deal-name">RetailChain Interconnect</a></td>
+                        <td>Retail Corp</td>
+                        <td class="amount">$112,500</td>
+                        <td><span class="stage-badge stage-approved">Approved</span></td>
+                        <td><span class="protection-badge protection-safe">52 days</span></td>
+                        <td>Feb 10, 2024</td>
+                    </tr>
+                    <tr>
+                        <td><a href="#" class="deal-name">SecureBank Expansion</a></td>
+                        <td>Regional Bank</td>
+                        <td class="amount">$89,500</td>
+                        <td><span class="stage-badge stage-submitted">Submitted</span></td>
+                        <td><span class="protection-badge protection-safe">30 days</span></td>
+                        <td>Feb 7, 2024</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- Won Deals / Orders -->
+        <section class="table-section" aria-labelledby="orders-title">
+            <h2 class="subsection-title" id="orders-title">Won Deals → Orders</h2>
+            <div class="orders-grid">
+                <div class="order-card">
+                    <div class="order-header">
+                        <div class="order-title">TelecomGlobal Network Edge</div>
+                        <div class="order-amount">$325,000</div>
+                    </div>
+                    <div class="order-meta">Customer: Telecom Provider | Order ID: ORD-2024-001</div>
+                    <span class="order-status status-shipped">Shipped</span>
+                </div>
+                <div class="order-card">
+                    <div class="order-header">
+                        <div class="order-title">CloudFirst Partnership</div>
+                        <div class="order-amount">$287,500</div>
+                    </div>
+                    <div class="order-meta">Customer: SaaS Company | Order ID: ORD-2024-002</div>
+                    <span class="order-status status-delivered">Delivered</span>
+                </div>
+                <div class="order-card">
+                    <div class="order-header">
+                        <div class="order-title">EdgeCompute Deploy</div>
+                        <div class="order-amount">$156,000</div>
+                    </div>
+                    <div class="order-meta">Customer: Tech Startup | Order ID: ORD-2024-003</div>
+                    <span class="order-status status-processing">Processing</span>
+                </div>
+                <div class="order-card">
+                    <div class="order-header">
+                        <div class="order-title">DataCenter Migration</div>
+                        <div class="order-amount">$142,000</div>
+                    </div>
+                    <div class="order-meta">Customer: Enterprise Corp | Order ID: ORD-2024-004</div>
+                    <span class="order-status status-delivered">Delivered</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Design Brief -->
+        
+
+    </div>
+
+    <script>
+        // Handle keyboard navigation for interactive elements
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                const target = e.target;
+                if (target.classList.contains('notification-icon') || target.classList.contains('user-avatar')) {
+                    target.click();
+                }
+            }
+        });
+    </script>
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Pipeline dashboard providing kanban-style deal visualization with progress tracking, filtering, and comprehensive deal management. Partners monitor deal status across approval workflow stages, forecast revenue, and manage multiple opportunities from a single interface.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Track deal progression through approval workflow stages</li>
+<li>Monitor total pipeline value and revenue forecast across time periods</li>
+<li>Understand deal protection periods and approval requirements</li>
+<li>Manage multiple deals across different stages simultaneously</li>
+<li>View recently won deals and celebrate wins</li>
+<li>Forecast quarterly and annual revenue based on deal pipeline</li>
+<li>Alert on deals nearing expiration of protection periods</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Page title with total pipeline value and unregistered opportunities alert</li>
+<li>Kanban board displaying deal pipeline stages (Prospect, Registered, Under Review, Won)</li>
+<li>Deal cards within each column showing: deal name, customer, deal value</li>
+<li>Filter bar with stage, status, and product category filters</li>
+<li>Active opportunities table with columns: Deal Name, Customer, Amount, Stage, Days in Stage, Next Action</li>
+<li>Won deals summary section with recent closures and total closed amount</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Deal cards are clickable to open detail view or edit page</li>
+<li>Hover on cards shows additional options (edit, move, delete)</li>
+<li>Stage filter dropdown to show only deals in selected stage</li>
+<li>Status filter options (Active, Stalled, At Risk)</li>
+<li>Product category filter to focus on specific product lines</li>
+<li>Sort controls in table for revenue, date, or stage</li>
+<li>Won deals section shows recent closures with dates and amounts</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Pipeline Visualization &amp; Stage Management</strong>
+<ul>
+<li>Kanban card positions reflect Opportunity stage field (Prospect, Qualified, Proposal, Negotiation, Closed/Won)</li>
+<li>Deal stage updates via drag-and-drop or form submission sync immediately to Opportunity record in Salesforce</li>
+<li>Deal values aggregate by stage to calculate stage totals displayed in column headers</li>
+</ul></li>
+<li><strong>Filtering &amp; Display Updates</strong>
+<ul>
+<li>Filtering updates kanban display and table rows without page reload using client-side visibility toggles or SOQL queries</li>
+<li>Sort controls in table reorder deals by revenue, date, or stage using dynamic sorting logic</li>
+</ul></li>
+<li><strong>Alert &amp; Notification Logic</strong>
+<ul>
+<li>Expiration alert triggered when deal protection period is within 30 days of end date via scheduled Flow or Apex job</li>
+<li>Alert banner displays conditionally based on deal count with expiring protection periods</li>
+</ul></li>
+<li><strong>Revenue &amp; Reporting</strong>
+<ul>
+<li>Revenue forecast calculated from pipeline deals using Amount field with win probability factor</li>
+<li>Won deals section queries closed deals from current fiscal period using SOQL</li>
+<li>Total value in page header sums all active opportunity amounts</li>
+</ul></li>
+<li><strong>Navigation &amp; Details</strong>
+<ul>
+<li>Click deal to navigate to deal detail page with full opportunity context and related records</li>
+</ul></li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Validation &amp; Business Logic</h4>
+<ul>
+<li>Opportunity records queried and grouped by StageName field</li>
+<li>Deal protection expiration calculated from Protection_End_Date__c field</li>
+<li>Revenue totals aggregated using Amount field, filtered by RecordTypeId</li>
+<li>Stage filtering validates user has access to view deals in selected stage</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+</body>
+</html>

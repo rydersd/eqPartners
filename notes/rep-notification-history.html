@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notification History — Equinix Partner Portal</title>
+<link rel="stylesheet" href="wireframe.css">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Salesforce Sans, sans-serif; background:var(--wf-canvas, #f5f7fb); color:var(--wf-text, #3b4f68); line-height:1.5; }
+
+/* Header */
+header { background:var(--wf-ink, #1e2a3a); color:white; padding:1rem 2rem; display:flex; justify-content:space-between; align-items:center; }
+.header-left { display:flex; align-items:center; gap:1.5rem; }
+.logo { width:40px; height:40px; background:white; border-radius:4px; display:flex; align-items:center; justify-content:center; font-weight:bold; color:var(--wf-ink); font-size:18px; }
+.header-title { border-left:3px solid var(--wf-muted, #6b7f99); padding-left:1rem; font-size:18px; font-weight:600; }
+nav { display:flex; gap:2rem; flex:1; margin-left:2rem; }
+nav a { color:white; text-decoration:none; font-size:14px; font-weight:500; padding-bottom:0.5rem; border-bottom:2px solid transparent; }
+nav a:hover { color:var(--wf-muted); }
+nav a.active { border-bottom-color:var(--wf-muted); color:var(--wf-muted); }
+.header-right { display:flex; align-items:center; gap:1.5rem; }
+.user-avatar { width:36px; height:36px; border-radius:50%; background:var(--wf-muted); display:flex; align-items:center; justify-content:center; color:white; font-weight:600; }
+
+/* Container */
+.container { max-width:1100px; margin:0 auto; padding:2rem; }
+
+/* Breadcrumb */
+.breadcrumb { font-size:13px; color:var(--wf-muted); margin-bottom:1.5rem; }
+.breadcrumb a { color:var(--wf-accent, #3d6daa); text-decoration:none; }
+.breadcrumb a:hover { text-decoration:underline; }
+
+/* Page header */
+.page-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; }
+.page-header h1 { font-size:24px; font-weight:700; color:var(--wf-ink, #1e2a3a); }
+.page-header-actions { display:flex; gap:0.75rem; }
+.btn { padding:0.5rem 1.25rem; border-radius:4px; font-size:13px; font-weight:600; border:none; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:0.5rem; }
+.btn-primary { background:var(--wf-accent, #3d6daa); color:white; }
+.btn-secondary { background:var(--wf-surface, #edf1f7); color:var(--wf-text); border:1px solid var(--wf-line, #b0bdd0); }
+.btn-sm { padding:0.375rem 0.75rem; font-size:12px; }
+.btn:hover { opacity:0.9; }
+
+/* Stats bar */
+.stats-bar { display:flex; gap:1.5rem; margin-bottom:1.5rem; }
+.stat-card { background:white; border:1px solid var(--wf-tint, #dce4ef); border-radius:8px; padding:1rem 1.25rem; flex:1; text-align:center; }
+.stat-value { font-size:28px; font-weight:800; color:var(--wf-ink); line-height:1.2; }
+.stat-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.04em; color:var(--wf-muted); margin-top:0.25rem; }
+
+/* Filters */
+.filter-bar { display:flex; gap:0.75rem; margin-bottom:1.5rem; flex-wrap:wrap; align-items:center; }
+.filter-group { display:flex; gap:0.5rem; align-items:center; }
+.filter-label { font-size:12px; font-weight:600; color:var(--wf-muted); }
+.filter-select { padding:0.375rem 0.75rem; border:1px solid var(--wf-line); border-radius:4px; font-size:12px; color:var(--wf-text); background:white; }
+.filter-chip { padding:0.375rem 0.875rem; border-radius:16px; font-size:12px; font-weight:600; border:1px solid var(--wf-line); background:white; color:var(--wf-text); cursor:pointer; }
+.filter-chip.active { background:var(--wf-ink); color:white; border-color:var(--wf-ink); }
+.search-input { padding:0.375rem 0.75rem; border:1px solid var(--wf-line); border-radius:4px; font-size:12px; width:220px; color:var(--wf-text); }
+
+/* Table */
+.notif-table { width:100%; background:white; border:1px solid var(--wf-tint); border-radius:8px; overflow:hidden; border-collapse:collapse; }
+.notif-table thead th { padding:0.75rem 1rem; text-align:left; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:var(--wf-muted); background:var(--wf-canvas); border-bottom:1px solid var(--wf-tint); }
+.notif-table tbody td { padding:0.75rem 1rem; font-size:13px; border-bottom:1px solid var(--wf-tint); vertical-align:top; }
+.notif-table tbody tr:hover { background:var(--wf-surface); cursor:pointer; }
+.notif-table tbody tr.unread td { font-weight:600; }
+.notif-table tbody tr.unread td:first-child { position:relative; }
+.notif-table tbody tr.unread td:first-child::before { content:""; position:absolute; left:0; top:50%; transform:translateY(-50%); width:4px; height:24px; background:var(--wf-accent); border-radius:0 2px 2px 0; }
+
+/* Category badge */
+.cat-badge { display:inline-block; padding:0.125rem 0.5rem; border-radius:3px; font-size:11px; font-weight:600; }
+.cat-badge.deal { background:var(--wf-tint); color:var(--wf-ink); }
+.cat-badge.commission { background:var(--wf-tint); color:var(--wf-ink); }
+.cat-badge.training { background:var(--wf-tint); color:var(--wf-ink); }
+.cat-badge.psm { background:var(--wf-tint); color:var(--wf-accent); }
+.cat-badge.system { background:var(--wf-surface); color:var(--wf-muted); }
+.cat-badge.alert { background:var(--wf-surface); color:var(--wf-red, #8b4555); }
+
+/* Delivery icons */
+.delivery-icons { display:flex; gap:0.5rem; }
+.delivery-icon { width:22px; height:22px; border-radius:4px; display:flex; align-items:center; justify-content:center; }
+.delivery-icon.active { background:var(--wf-tint); color:var(--wf-ink); }
+.delivery-icon.inactive { background:var(--wf-canvas); color:var(--wf-line); }
+.delivery-icon svg { width:14px; height:14px; }
+
+/* Pagination */
+.pagination { display:flex; justify-content:space-between; align-items:center; margin-top:1.25rem; }
+.pagination-info { font-size:12px; color:var(--wf-muted); }
+.pagination-controls { display:flex; gap:0.375rem; }
+.page-btn { width:32px; height:32px; border:1px solid var(--wf-line); border-radius:4px; background:white; color:var(--wf-text); font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.page-btn.active { background:var(--wf-ink); color:white; border-color:var(--wf-ink); }
+.page-btn:hover:not(.active) { background:var(--wf-surface); }
+
+/* Spec block */
+</style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<header>
+  <div class="header-left">
+    <div class="logo">EQ</div>
+    <div class="header-title">Partner Portal</div>
+    <nav>
+      <a href="rep-dashboard.html">Dashboard</a>
+      <a href="rep-pipeline.html">Pipeline</a>
+      <a href="rep-deals-commission.html">Commissions</a>
+      <a href="rep-training.html">Training</a>
+      <a href="rep-resources.html">Resources</a>
+    </nav>
+  </div>
+  <div class="header-right">
+    <div class="user-avatar">JD</div>
+  
+    <a href="rep-notifications.html" class="bell-wrapper" aria-label="Notifications" style="position:relative;color:white;text-decoration:none;margin-left:auto;">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+      <span style="position:absolute;top:-4px;right:-6px;background:var(--wf-red,#8b4555);color:white;font-size:10px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;">7</span>
+    </a>
+</div>
+</header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+<div class="container">
+
+  <div class="breadcrumb" aria-label="Breadcrumb">
+    <a href="rep-notifications.html">Notifications</a> &rsaquo; History
+  </div>
+
+  <div class="page-header">
+    <h1>Notification History</h1>
+    <div class="page-header-actions">
+      <a href="rep-notification-preferences.html" class="btn btn-secondary">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87a6.975 6.975 0 011.084.626c.296.214.663.293 1.022.2l1.24-.357c.527-.152 1.088.067 1.363.545l1.296 2.247c.275.477.163 1.08-.262 1.428l-1.028.924a1.12 1.12 0 00-.378.867 6.842 6.842 0 010 .724 1.12 1.12 0 00.378.867l1.028.924c.425.348.537.951.262 1.428l-1.296 2.247c-.275.478-.836.697-1.363.545l-1.24-.357a1.154 1.154 0 00-1.022.2 6.975 6.975 0 01-1.084.626 1.12 1.12 0 00-.645.87l-.213 1.281c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.019-.398-1.11-.94l-.212-1.282a1.12 1.12 0 00-.646-.87 6.975 6.975 0 01-1.084-.625 1.154 1.154 0 00-1.022-.2l-1.24.356c-.527.152-1.088-.067-1.363-.545L2.38 15.233c-.275-.478-.163-1.08.262-1.428l1.028-.924a1.12 1.12 0 00.378-.867 6.842 6.842 0 010-.724 1.12 1.12 0 00-.378-.867L2.642 9.5c-.425-.348-.537-.951-.262-1.428L3.676 5.825c.275-.478.836-.697 1.363-.545l1.24.357c.36.093.726.014 1.022-.2a6.975 6.975 0 011.084-.626 1.12 1.12 0 00.646-.87L9.594 3.94z"/><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        Preferences
+      </a>
+      <button class="btn btn-secondary">Export CSV</button>
+    </div>
+  </div>
+
+  <!-- ── Stats ── -->
+  <div class="stats-bar">
+    <div class="stat-card">
+      <div class="stat-value">147</div>
+      <div class="stat-label">Total (90 days)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">7</div>
+      <div class="stat-label">Unread</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">52</div>
+      <div class="stat-label">Deal Alerts</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">28</div>
+      <div class="stat-label">Commission</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">34</div>
+      <div class="stat-label">Training</div>
+    </div>
+  </div>
+
+  <!-- ── Filters ── -->
+  <div class="filter-bar" role="toolbar" aria-label="Filter notification history">
+    <div class="filter-group">
+      <span class="filter-label">Status:</span>
+      <button class="filter-chip active">All</button>
+      <button class="filter-chip">Unread</button>
+      <button class="filter-chip">Read</button>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">Category:</span>
+      <select class="filter-select" aria-label="Filter by category">
+        <option>All Categories</option>
+        <option>Deal Registration</option>
+        <option>Commissions</option>
+        <option>Training &amp; Certs</option>
+        <option>Partner Success</option>
+        <option>System</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">Period:</span>
+      <select class="filter-select" aria-label="Filter by time period">
+        <option>Last 7 days</option>
+        <option selected>Last 30 days</option>
+        <option>Last 90 days</option>
+        <option>All Time</option>
+      </select>
+    </div>
+    <div class="filter-group" style="margin-left:auto;">
+      <input type="search" class="search-input" placeholder="Search notifications..." aria-label="Search notifications">
+    </div>
+  </div>
+
+  <!-- ── Notification Table ── -->
+  <table class="notif-table" role="grid">
+    <thead>
+      <tr>
+        <th style="width:45%;">Notification</th>
+        <th>Category</th>
+        <th>Delivered Via</th>
+        <th>Date</th>
+        <th style="width:60px;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="unread">
+        <td><strong>Deal Expiring:</strong> CloudCorp Multi-Region — 12 days left in protection period</td>
+        <td><span class="cat-badge alert">Expiration</span></td>
+        <td>
+          <div class="delivery-icons">
+            <span class="delivery-icon active" title="In-App"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg></span>
+            <span class="delivery-icon active" title="Email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg></span>
+          </div>
+        </td>
+        <td style="white-space:nowrap;">Feb 16, 2026<br><span style="font-size:11px; color:var(--wf-muted);">2:14 PM</span></td>
+        <td><button class="btn btn-sm btn-secondary" aria-label="Mark as read">Read</button></td>
+      </tr>
+
+      <tr class="unread">
+        <td><strong>Deal Approved:</strong> TechVault Edge Deployment — $340K approved by Equinix</td>
+        <td><span class="cat-badge deal">Deal Reg</span></td>
+        <td>
+          <div class="delivery-icons">
+            <span class="delivery-icon active" title="In-App"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg></span>
+            <span class="delivery-icon active" title="Email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg></span>
+          </div>
+        </td>
+        <td style="white-space:nowrap;">Feb 16, 2026<br><span style="font-size:11px; color:var(--wf-muted);">10:30 AM</span></td>
+        <td><button class="btn btn-sm btn-secondary">Read</button></td>
+      </tr>
+
+      <tr class="unread">
+        <td><strong>Commission Paid:</strong> $4,680 deposited for Q4 earnings</td>
+        <td><span class="cat-badge commission">Commission</span></td>
+        <td>
+          <div class="delivery-icons">
+            <span class="delivery-icon active" title="In-App"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg></span>
+            <span class="delivery-icon active" title="Email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg></span>
+          </div>
+        </td>
+        <td style="white-space:nowrap;">Feb 15, 2026<br><span style="font-size:11px; color:var(--wf-muted);">9:00 AM</span></td>
+        <td><button class="btn btn-sm btn-secondary">Read</button></td>
+      </tr>
+
+      <tr class="unread">
+        <td><strong>PSM Update:</strong> Sarah Chen shared competitive intel on CloudCorp deal</td>
+        <td><span class="cat-badge psm">PSM</span></td>
+        <td>
+          <div class="delivery-icons">
+            <span class="delivery-icon active" title="In-App"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg></span>
+            <span class="delivery-icon inactive" title="Email disabled"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg></span>
+          </div>
+        </td>
+        <td style="white-space:nowrap;">Feb 15, 2026<br><span style="font-size:11px; color:var(--wf-muted);">3:45 PM</span></td>
+        <td><button class="btn btn-sm btn-secondary">Read</button></td>
+      </tr>
+
+      <tr class="unread">
+        <td><strong>Training Due:</strong> Network Edge Certification renewal — expires in 14 days</td>
+        <td><span class="cat-badge training">Training</span></td>
+        <td>
+          <div class="delivery-icons">
+            <span class="delivery-icon active" title="In-App"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg></span>
+            <span class="delivery-icon active" title="Email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg></span>
+          </div>
+        </td>
+        <td style="white-space:nowrap;">Feb 14, 2026<br><span style="font-size:11px; color:var(--wf-muted);">8:00 AM</span></td>
+        <td><button class="btn btn-sm btn-secondary">Read</button></td>
+      </tr>
+
+      <tr>
+        <td>Deal Extension Granted: NovaTech — 30 additional days approved</td>
+        <td><span class="cat-badge deal">Deal Reg</span></td>
+        <td>
+          <div class="delivery-icons">
+            <span class="delivery-icon active" title="In-App"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg></span>
+            <span class="delivery-icon active" title="Email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg></span>
+          </div>
+        </td>
+        <td style="white-space:nowrap;">Feb 13, 2026<br><span style="font-size:11px; color:var(--wf-muted);">2:00 PM</span></td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>Scheduled Maintenance: Partner Portal downtime Feb 22, 2:00–4:00 AM EST</td>
+        <td><span class="cat-badge system">System</span></td>
+        <td>
+          <div class="delivery-icons">
+            <span class="delivery-icon active" title="In-App"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg></span>
+            <span class="delivery-icon inactive" title="Email disabled"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg></span>
+          </div>
+        </td>
+        <td style="white-space:nowrap;">Feb 11, 2026<br><span style="font-size:11px; color:var(--wf-muted);">10:00 AM</span></td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td><strong>Deal Submitted:</strong> DataStream Analytics — $185K submitted for Equinix review</td>
+        <td><span class="cat-badge deal">Deal Reg</span></td>
+        <td>
+          <div class="delivery-icons">
+            <span class="delivery-icon active" title="In-App"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg></span>
+            <span class="delivery-icon active" title="Email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg></span>
+          </div>
+        </td>
+        <td style="white-space:nowrap;">Feb 10, 2026<br><span style="font-size:11px; color:var(--wf-muted);">4:15 PM</span></td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>Badge Earned: Equinix Fabric Specialist — certification complete</td>
+        <td><span class="cat-badge training">Training</span></td>
+        <td>
+          <div class="delivery-icons">
+            <span class="delivery-icon active" title="In-App"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg></span>
+            <span class="delivery-icon inactive" title="Email disabled"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg></span>
+          </div>
+        </td>
+        <td style="white-space:nowrap;">Feb 8, 2026<br><span style="font-size:11px; color:var(--wf-muted);">11:30 AM</span></td>
+        <td></td>
+      </tr>
+
+      <tr>
+        <td>New Product Announcement: Network Edge Gen 4 — now available in 12 metros</td>
+        <td><span class="cat-badge system">System</span></td>
+        <td>
+          <div class="delivery-icons">
+            <span class="delivery-icon active" title="In-App"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg></span>
+            <span class="delivery-icon inactive" title="Email disabled"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg></span>
+          </div>
+        </td>
+        <td style="white-space:nowrap;">Feb 6, 2026<br><span style="font-size:11px; color:var(--wf-muted);">9:00 AM</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ── Pagination ── -->
+  <div class="pagination">
+    <div class="pagination-info">Showing 1–10 of 147 notifications</div>
+    <div class="pagination-controls">
+      <button class="page-btn" aria-label="Previous page">&lsaquo;</button>
+      <button class="page-btn active">1</button>
+      <button class="page-btn">2</button>
+      <button class="page-btn">3</button>
+      <button class="page-btn">...</button>
+      <button class="page-btn">15</button>
+      <button class="page-btn" aria-label="Next page">&rsaquo;</button>
+    </div>
+  </div>
+
+  <!-- ── Spec Block ── -->
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h2>Design Notes</h2>
+    <button class="spec-panel-close" onclick="toggleSpec()" aria-label="Close notes panel">&times;</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Displays a searchable, filterable history of all partner notifications with read/unread status, delivery channel indicators, and quick actions. Partners can track important alerts, regulatory updates, and business communications across 90 days of history with export capability.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Review all past notifications and alerts across time periods</li>
+<li>Distinguish between read and unread messages at a glance</li>
+<li>Filter by category: deals, commissions, training, partner updates</li>
+<li>Search for specific notifications by keyword</li>
+<li>Understand which delivery channels carried each notification</li>
+<li>Mark notifications as read and manage notification volume</li>
+<li>Export notification history for record-keeping or compliance</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Summary statistics: total notifications (90 days), unread count, and breakdowns by category (Deal, Commission, Training, PSM)</li>
+<li>Full notification history table with columns: Notification text, Category badge, Delivery channels, Date/time, Actions</li>
+<li>Visual indicators for unread status: left accent bar, bold text styling</li>
+<li>Delivery channel icons showing which channels (in-app, email) delivered each notification</li>
+<li>Breadcrumb navigation and link to Preferences page</li>
+<li>Paginated results with page count and navigation controls</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Status filter chips: All, Unread, Read — toggle to filter notifications</li>
+<li>Category dropdown: All Categories, Deal Registration, Commissions, Training, Partner Success, System</li>
+<li>Time period selector: Last 7 days, Last 30 days, Last 90 days, All Time</li>
+<li>Search input for free-text filtering across notification text</li>
+<li>Mark as Read button for unread notification rows</li>
+<li>Export CSV button to download full notification history</li>
+<li>Pagination controls with page numbers and previous/next navigation</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Filtering &amp; Query Operations</strong>
+<ul>
+<li>Server-side filtering executes via indexed queries on category, read status, and created date fields</li>
+<li>Status chip filtering applies across current time period without page reload using SOQL</li>
+<li>Search operates across notification text and metadata fields using full-text search indexes</li>
+</ul></li>
+<li><strong>Status &amp; Read State Management</strong>
+<ul>
+<li>Unread badge counter auto-updates when notifications marked as read via API call</li>
+<li>Delivery channel icons reflect user preferences stored at time of notification creation</li>
+<li>Row styling toggles between bold (unread) and normal weight when status changes</li>
+</ul></li>
+<li><strong>Data Export &amp; Retention</strong>
+<ul>
+<li>CSV export includes all visible columns plus full notification body text from Salesforce records</li>
+<li>90-day default retention with archive capability for older notifications in separate table</li>
+</ul></li>
+<li><strong>Navigation &amp; Link Management</strong>
+<ul>
+<li>Row clicking or deep links navigate to source record pages while preserving back-navigation history</li>
+<li>Pagination controls manage result set across filtered data using limit/offset</li>
+</ul></li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Validation &amp; Business Logic</h4>
+<ul>
+<li>Notification records stored as Custom Object linked to User record</li>
+<li>Category and read status fields indexed for fast query performance</li>
+<li>Delivery preferences checked at notification creation time, not retrieval</li>
+<li>Archive records preserved with separate audit trail for compliance</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Messages &amp; Communication — Equinix Partner Portal</title>
+<link rel="stylesheet" href="wireframe.css">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Salesforce Sans, sans-serif; background:var(--wf-canvas, #f5f7fb); color:var(--wf-text, #3b4f68); line-height:1.5; }
+
+/* Header */
+header { background:var(--wf-ink, #1e2a3a); color:white; padding:1rem 2rem; display:flex; justify-content:space-between; align-items:center; }
+.header-left { display:flex; align-items:center; gap:1.5rem; }
+.logo { width:40px; height:40px; background:white; border-radius:4px; display:flex; align-items:center; justify-content:center; font-weight:bold; color:var(--wf-ink); font-size:18px; }
+.header-title { border-left:3px solid var(--wf-muted, #6b7f99); padding-left:1rem; font-size:18px; font-weight:600; }
+nav { display:flex; gap:2rem; flex:1; margin-left:2rem; }
+nav a { color:white; text-decoration:none; font-size:14px; font-weight:500; padding-bottom:0.5rem; border-bottom:2px solid transparent; }
+nav a:hover { color:var(--wf-muted); }
+nav a.active { border-bottom-color:var(--wf-muted); color:var(--wf-muted); }
+.header-right { display:flex; align-items:center; gap:1.5rem; }
+.user-avatar { width:36px; height:36px; border-radius:50%; background:var(--wf-muted); display:flex; align-items:center; justify-content:center; color:white; font-weight:600; }
+
+/* 3-panel messaging layout */
+.msg-layout { display:grid; grid-template-columns:300px 1fr 320px; height:calc(100vh - 64px); }
+@media (max-width:1100px) { .msg-layout { grid-template-columns:260px 1fr; } }
+
+/* Left panel — conversation list */
+.msg-sidebar { background:white; border-right:1px solid var(--wf-tint, #dce4ef); display:flex; flex-direction:column; overflow:hidden; }
+.msg-sidebar-header { padding:1rem; border-bottom:1px solid var(--wf-tint); }
+.msg-sidebar-header h2 { font-size:16px; font-weight:700; color:var(--wf-ink, #1e2a3a); margin-bottom:0.75rem; }
+.msg-search { width:100%; padding:0.5rem 0.75rem; border:1px solid var(--wf-line, #b0bdd0); border-radius:6px; font-size:13px; background:var(--wf-surface, #edf1f7); }
+.msg-tabs { display:flex; border-bottom:1px solid var(--wf-tint); }
+.msg-tab { flex:1; text-align:center; padding:0.625rem; font-size:12px; font-weight:600; color:var(--wf-muted); border-bottom:2px solid transparent; cursor:pointer; background:none; border-top:none; border-left:none; border-right:none; }
+.msg-tab.active { color:var(--wf-accent, #3d6daa); border-bottom-color:var(--wf-accent); }
+.msg-tab .badge { background:var(--wf-red, #8b4555); color:white; font-size:10px; border-radius:8px; padding:0 5px; margin-left:4px; }
+
+.msg-list { flex:1; overflow-y:auto; }
+.msg-item { display:flex; gap:0.625rem; padding:0.75rem 1rem; border-bottom:1px solid var(--wf-tint); cursor:pointer; transition:background 0.15s; }
+.msg-item:hover { background:var(--wf-surface); }
+.msg-item.active { background:var(--wf-surface); border-left:3px solid var(--wf-accent); }
+.msg-item.unread { background:var(--wf-surface); }
+.msg-item.unread .msg-item-name { font-weight:700; }
+.msg-item-avatar { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600; color:white; flex-shrink:0; }
+.msg-item-avatar.person { background:var(--wf-muted); }
+.msg-item-avatar.channel { background:var(--wf-ink); border-radius:6px; font-size:16px; }
+.msg-item-avatar.agent { background:var(--wf-accent); border-radius:8px; }
+.msg-item-body { flex:1; min-width:0; }
+.msg-item-name { font-size:13px; font-weight:600; color:var(--wf-ink); }
+.msg-item-preview { font-size:12px; color:var(--wf-muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.msg-item-meta { text-align:right; flex-shrink:0; }
+.msg-item-time { font-size:11px; color:var(--wf-muted); white-space:nowrap; }
+.msg-item-unread { width:8px; height:8px; border-radius:50%; background:var(--wf-accent); margin-top:4px; margin-left:auto; }
+
+/* Center — conversation thread -->
+.msg-thread { display:flex; flex-direction:column; background:white; overflow:hidden; }
+.msg-thread-header { padding:1rem 1.25rem; border-bottom:1px solid var(--wf-tint); display:flex; justify-content:space-between; align-items:center; }
+.msg-thread-title { display:flex; align-items:center; gap:0.625rem; }
+.msg-thread-title h3 { font-size:15px; font-weight:700; color:var(--wf-ink); }
+.msg-thread-title .channel-tag { font-size:11px; background:var(--wf-surface); color:var(--wf-muted); padding:0.125rem 0.5rem; border-radius:3px; font-weight:600; }
+.msg-thread-actions { display:flex; gap:0.5rem; }
+.btn { padding:0.375rem 0.875rem; border-radius:4px; font-size:12px; font-weight:600; border:none; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:0.375rem; }
+.btn-primary { background:var(--wf-accent); color:white; }
+.btn-secondary { background:var(--wf-surface); color:var(--wf-text); border:1px solid var(--wf-line); }
+.btn-slack { background:var(--wf-ink); color:white; }
+.btn:hover { opacity:0.9; }
+
+.msg-thread-body { flex:1; overflow-y:auto; padding:1.25rem; }
+.thread-msg { display:flex; gap:0.625rem; margin-bottom:1.25rem; }
+.thread-msg-avatar { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600; color:white; flex-shrink:0; }
+.thread-msg-avatar.person { background:var(--wf-muted); }
+.thread-msg-avatar.eq { background:var(--wf-accent); }
+.thread-msg-avatar.agent { background:var(--wf-accent); border-radius:8px; }
+.thread-msg-content { flex:1; }
+.thread-msg-header { display:flex; align-items:baseline; gap:0.5rem; margin-bottom:0.25rem; }
+.thread-msg-name { font-size:13px; font-weight:700; color:var(--wf-ink); }
+.thread-msg-role { font-size:11px; color:var(--wf-muted); }
+.thread-msg-time { font-size:11px; color:var(--wf-muted); margin-left:auto; }
+.thread-msg-text { font-size:13px; color:var(--wf-text); line-height:1.6; }
+.thread-msg-text a { color:var(--wf-accent); }
+
+/* Deal context card in thread */
+.deal-context { background:var(--wf-surface); border:1px solid var(--wf-line); border-radius:6px; padding:0.75rem 1rem; margin-top:0.5rem; font-size:12px; display:grid; grid-template-columns:1fr 1fr; gap:0.375rem 1.5rem; }
+.deal-context dt { color:var(--wf-muted); }
+.deal-context dd { color:var(--wf-ink); font-weight:600; }
+
+/* Agent response styling */
+.agent-response { background:var(--wf-surface); border-left:3px solid var(--wf-accent); border-radius:0 6px 6px 0; padding:0.75rem 1rem; margin-top:0.5rem; }
+.agent-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--wf-accent); margin-bottom:0.375rem; display:flex; align-items:center; gap:0.375rem; }
+.agent-label svg { width:14px; height:14px; }
+
+/* Compose bar */
+.msg-compose { padding:1rem 1.25rem; border-top:1px solid var(--wf-tint); background:var(--wf-canvas); }
+.compose-bar { display:flex; gap:0.5rem; align-items:flex-end; }
+.compose-input { flex:1; min-height:40px; max-height:120px; padding:0.5rem 0.75rem; border:1px solid var(--wf-line); border-radius:6px; font-size:13px; resize:vertical; font-family:inherit; background:white; }
+.compose-actions { display:flex; gap:0.375rem; }
+.compose-btn { width:36px; height:36px; border-radius:6px; border:1px solid var(--wf-line); background:white; display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--wf-muted); }
+.compose-btn:hover { background:var(--wf-surface); color:var(--wf-ink); }
+.compose-btn.send { background:var(--wf-accent); border-color:var(--wf-accent); color:white; }
+.compose-hint { font-size:11px; color:var(--wf-muted); margin-top:0.375rem; }
+
+/* Right panel — Agentforce assistant -->
+.agent-panel { background:var(--wf-canvas); border-left:1px solid var(--wf-tint); display:flex; flex-direction:column; overflow:hidden; }
+.agent-panel-header { padding:1rem; border-bottom:1px solid var(--wf-tint); background:white; }
+.agent-brand { display:flex; align-items:center; gap:0.625rem; margin-bottom:0.5rem; }
+.agent-logo { width:32px; height:32px; border-radius:8px; background:var(--wf-accent); display:flex; align-items:center; justify-content:center; color:white; }
+.agent-logo svg { width:18px; height:18px; }
+.agent-name { font-size:14px; font-weight:700; color:var(--wf-ink); }
+.agent-status { font-size:11px; color:var(--wf-accent); display:flex; align-items:center; gap:0.25rem; }
+.agent-status .dot { width:6px; height:6px; border-radius:50%; background:var(--wf-accent); }
+.agent-desc { font-size:12px; color:var(--wf-muted); margin-top:0.25rem; }
+
+.agent-body { flex:1; overflow-y:auto; padding:1rem; }
+.agent-msg { margin-bottom:1rem; }
+.agent-msg.user { text-align:right; }
+.agent-msg.user .agent-bubble { background:var(--wf-ink); color:white; text-align:left; }
+.agent-bubble { background:white; border:1px solid var(--wf-tint); border-radius:8px; padding:0.75rem 1rem; font-size:13px; color:var(--wf-text); line-height:1.6; display:inline-block; max-width:100%; text-align:left; }
+.agent-bubble strong { color:var(--wf-ink); }
+.agent-bubble .data-point { background:var(--wf-surface); border-radius:4px; padding:0.375rem 0.625rem; margin-top:0.5rem; font-size:12px; display:grid; grid-template-columns:auto 1fr; gap:0.25rem 0.75rem; }
+.agent-bubble .data-point dt { color:var(--wf-muted); font-weight:500; }
+.agent-bubble .data-point dd { color:var(--wf-ink); font-weight:600; }
+.agent-bubble .sources { margin-top:0.5rem; font-size:11px; color:var(--wf-muted); }
+.agent-bubble .sources a { color:var(--wf-accent); text-decoration:none; }
+
+.agent-suggestions { padding:0 1rem 0.5rem; }
+.agent-suggestion { display:block; width:100%; text-align:left; padding:0.5rem 0.75rem; margin-bottom:0.375rem; border:1px solid var(--wf-line); border-radius:6px; background:white; font-size:12px; color:var(--wf-text); cursor:pointer; font-family:inherit; }
+.agent-suggestion:hover { background:var(--wf-surface); border-color:var(--wf-accent); }
+
+.agent-compose { padding:0.75rem 1rem; border-top:1px solid var(--wf-tint); background:white; }
+.agent-input { width:100%; padding:0.5rem 0.75rem; border:1px solid var(--wf-line); border-radius:6px; font-size:12px; font-family:inherit; background:var(--wf-surface); }
+
+/* Spec block */
+</style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<header>
+  <div class="header-left">
+    <div class="logo">EQ</div>
+    <div class="header-title">Partner Portal</div>
+    <nav>
+      <a href="rep-dashboard.html">Dashboard</a>
+      <a href="rep-pipeline.html">Pipeline</a>
+      <a href="rep-deals-commission.html">Commissions</a>
+      <a href="rep-training.html">Training</a>
+      <a href="#" class="active">Messages</a>
+      <a href="rep-resources.html">Resources</a>
+    </nav>
+  </div>
+  <div class="header-right">
+    <a href="rep-notifications.html" class="bell-wrapper" aria-label="Notifications" style="position:relative;color:white;text-decoration:none;">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+      <span style="position:absolute;top:-4px;right:-6px;background:var(--wf-red,#8b4555);color:white;font-size:10px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;">7</span>
+    </a>
+    <div class="user-avatar">JD</div>
+  </div>
+</header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+<!-- ── 3-Panel Messaging Layout ── -->
+<div class="msg-layout">
+
+  <!-- ════════ LEFT — Conversation List ════════ -->
+  <div class="msg-sidebar">
+    <div class="msg-sidebar-header">
+      <h2>Messages</h2>
+      <input type="search" class="msg-search" placeholder="Search conversations..." aria-label="Search conversations">
+    </div>
+    <div class="msg-tabs" role="tablist">
+      <button class="msg-tab active" role="tab">Deal Channels <span class="badge">3</span></button>
+      <button class="msg-tab" role="tab">Direct <span class="badge">1</span></button>
+      <button class="msg-tab" role="tab">AI Assistant</button>
+    </div>
+    <div class="msg-list" role="list">
+
+      <!-- Active deal channel -->
+      <div class="msg-item active unread" role="listitem">
+        <div class="msg-item-avatar channel">#</div>
+        <div class="msg-item-body">
+          <div class="msg-item-name">CloudCorp Multi-Region</div>
+          <div class="msg-item-preview">Michael: Checking now. We might be able to do 15%...</div>
+        </div>
+        <div class="msg-item-meta">
+          <div class="msg-item-time">3:10 PM</div>
+          <div class="msg-item-unread"></div>
+        </div>
+      </div>
+
+      <div class="msg-item unread" role="listitem">
+        <div class="msg-item-avatar channel">#</div>
+        <div class="msg-item-body">
+          <div class="msg-item-name">TechVault Edge Deploy</div>
+          <div class="msg-item-preview">Sarah: Contract is ready for your review...</div>
+        </div>
+        <div class="msg-item-meta">
+          <div class="msg-item-time">1:30 PM</div>
+          <div class="msg-item-unread"></div>
+        </div>
+      </div>
+
+      <div class="msg-item" role="listitem">
+        <div class="msg-item-avatar channel">#</div>
+        <div class="msg-item-body">
+          <div class="msg-item-name">NovaTech Fabric Setup</div>
+          <div class="msg-item-preview">You: Thanks, I'll send the updated config...</div>
+        </div>
+        <div class="msg-item-meta">
+          <div class="msg-item-time">Yesterday</div>
+        </div>
+      </div>
+
+      <!-- Direct messages -->
+      <div class="msg-item unread" role="listitem">
+        <div class="msg-item-avatar person">SC</div>
+        <div class="msg-item-body">
+          <div class="msg-item-name">Sarah Chen</div>
+          <div class="msg-item-preview">Hey James — quick heads up on the QBR next week...</div>
+        </div>
+        <div class="msg-item-meta">
+          <div class="msg-item-time">11:45 AM</div>
+          <div class="msg-item-unread"></div>
+        </div>
+      </div>
+
+      <div class="msg-item" role="listitem">
+        <div class="msg-item-avatar person">MT</div>
+        <div class="msg-item-body">
+          <div class="msg-item-name">Michael Torres</div>
+          <div class="msg-item-preview">Updated pricing sheet attached. Let me know if...</div>
+        </div>
+        <div class="msg-item-meta">
+          <div class="msg-item-time">Feb 14</div>
+        </div>
+      </div>
+
+      <div class="msg-item" role="listitem">
+        <div class="msg-item-avatar person">RK</div>
+        <div class="msg-item-body">
+          <div class="msg-item-name">Raj Kumar</div>
+          <div class="msg-item-preview">Architecture diagram looks good. One note on the...</div>
+        </div>
+        <div class="msg-item-meta">
+          <div class="msg-item-time">Feb 12</div>
+        </div>
+      </div>
+
+      <!-- Agentforce -->
+      <div class="msg-item" role="listitem">
+        <div class="msg-item-avatar agent">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z"/></svg>
+        </div>
+        <div class="msg-item-body">
+          <div class="msg-item-name">PCP Assistant</div>
+          <div class="msg-item-preview">I can help with deal info, commission rates, training...</div>
+        </div>
+        <div class="msg-item-meta">
+          <div class="msg-item-time">Always on</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ════════ CENTER — Conversation Thread ════════ -->
+  <div class="msg-thread">
+    <div class="msg-thread-header">
+      <div class="msg-thread-title">
+        <h3># CloudCorp Multi-Region</h3>
+        <span class="channel-tag">Slack Channel</span>
+        <span class="channel-tag" style="background:var(--wf-tint); color:var(--wf-amber, #8b7745);">12 days left</span>
+      </div>
+      <div class="msg-thread-actions">
+        <a href="rep-deal-expiring.html" class="btn btn-secondary">View Deal</a>
+        <button class="btn btn-slack">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M5.042 15.165a2.528 2.528 0 01-2.52 2.523A2.528 2.528 0 010 15.165a2.527 2.527 0 012.522-2.52h2.52v2.52zm1.271 0a2.527 2.527 0 012.521-2.52 2.527 2.527 0 012.521 2.52v6.313A2.528 2.528 0 018.834 24a2.528 2.528 0 01-2.521-2.522v-6.313z"/></svg>
+          Open in Slack
+        </button>
+      </div>
+    </div>
+
+    <div class="msg-thread-body">
+
+      <!-- Deal context pinned at top -->
+      <div style="background:var(--wf-surface); border:1px solid var(--wf-line); border-radius:6px; padding:0.75rem 1rem; margin-bottom:1.5rem; font-size:12px;">
+        <div style="font-size:11px; font-weight:700; color:var(--wf-muted); text-transform:uppercase; margin-bottom:0.5rem;">Pinned: Deal Context</div>
+        <dl class="deal-context">
+          <dt>Customer</dt><dd>CloudCorp International</dd>
+          <dt>Value</dt><dd>$1,200,000</dd>
+          <dt>Stage</dt><dd>Negotiation</dd>
+          <dt>Protection</dt><dd style="color:var(--wf-amber);">Expires Mar 1</dd>
+          <dt>AE</dt><dd>Michael Torres</dd>
+          <dt>Products</dt><dd>Fabric, Network Edge, Colo</dd>
+        </dl>
+      </div>
+
+      <!-- Thread messages -->
+      <div class="thread-msg">
+        <div class="thread-msg-avatar eq">SC</div>
+        <div class="thread-msg-content">
+          <div class="thread-msg-header">
+            <span class="thread-msg-name">Sarah Chen</span>
+            <span class="thread-msg-role">PSM, Equinix</span>
+            <span class="thread-msg-time">Feb 16, 1:30 PM</span>
+          </div>
+          <div class="thread-msg-text">Hey team — just a heads up that CloudCorp's protection period is down to 12 days. We need to move on the pricing update before this window closes. @Michael can you get the multi-metro bundle numbers finalized?</div>
+        </div>
+      </div>
+
+      <div class="thread-msg">
+        <div class="thread-msg-avatar person">JD</div>
+        <div class="thread-msg-content">
+          <div class="thread-msg-header">
+            <span class="thread-msg-name">James Davis</span>
+            <span class="thread-msg-role">You</span>
+            <span class="thread-msg-time">Feb 16, 2:45 PM</span>
+          </div>
+          <div class="thread-msg-text">Just got off a call with David — they're comparing our 3-year pricing against Digital Realty's offer. He said DR is quoting about 15% lower on the network edge piece. Can we sharpen the multi-metro bundle to close the gap?</div>
+        </div>
+      </div>
+
+      <div class="thread-msg">
+        <div class="thread-msg-avatar eq">SC</div>
+        <div class="thread-msg-content">
+          <div class="thread-msg-header">
+            <span class="thread-msg-name">Sarah Chen</span>
+            <span class="thread-msg-role">PSM, Equinix</span>
+            <span class="thread-msg-time">Feb 16, 2:52 PM</span>
+          </div>
+          <div class="thread-msg-text">Let me pull the latest competitive pricing sheet. @Michael can you check if we have room on the Fabric ports? If they commit to all 3 metros we might have more flexibility.</div>
+        </div>
+      </div>
+
+      <div class="thread-msg">
+        <div class="thread-msg-avatar eq">MT</div>
+        <div class="thread-msg-content">
+          <div class="thread-msg-header">
+            <span class="thread-msg-name">Michael Torres</span>
+            <span class="thread-msg-role">AE, Equinix</span>
+            <span class="thread-msg-time">Feb 16, 3:10 PM</span>
+          </div>
+          <div class="thread-msg-text">Checking now. We might be able to do 15% on the Fabric if they commit to all 3 metros with a 36-month term. I'll have final numbers by EOD. <br><br>Also — I spoke with our pricing team and they confirmed we can offer the multi-metro loyalty discount on Network Edge as well. That should bring us within 5% of DR.</div>
+
+          <!-- Agentforce inline assist -->
+          <div class="agent-response">
+            <div class="agent-label">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
+              Agentforce Context
+            </div>
+            <div style="font-size:12px; color:var(--wf-text);">
+              Based on the deal terms discussed: 36-month Fabric + Network Edge bundle across 3 metros with 15% Fabric discount + multi-metro loyalty would bring the total to <strong>~$1,050,000</strong> (12.5% reduction). Partner commission at Silver tier (12%) would be <strong>~$126,000</strong>.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Compose -->
+    <div class="msg-compose">
+      <div class="compose-bar">
+        <textarea class="compose-input" placeholder="Message #CloudCorp Multi-Region..." rows="1" aria-label="Type a message"></textarea>
+        <div class="compose-actions">
+          <button class="compose-btn" aria-label="Attach file">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M18.375 12.739l-7.693 7.693a4.5 4.5 0 01-6.364-6.364l10.94-10.94A3 3 0 1119.5 7.372L8.552 18.32m.009-.01l-.01.01m5.699-9.941l-7.81 7.81a1.5 1.5 0 002.112 2.13"/></svg>
+          </button>
+          <button class="compose-btn" aria-label="Ask AI assistant">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
+          </button>
+          <button class="compose-btn send" aria-label="Send message">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/></svg>
+          </button>
+        </div>
+      </div>
+      <div class="compose-hint">Messages sync with Slack in real-time. Press the sparkle icon to ask the AI assistant about this deal.</div>
+    </div>
+  </div>
+
+  <!-- ════════ RIGHT — Agentforce Panel ════════ -->
+  <div class="agent-panel">
+    <div class="agent-panel-header">
+      <div class="agent-brand">
+        <div class="agent-logo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z"/></svg>
+        </div>
+        <div>
+          <div class="agent-name">PCP Assistant</div>
+          <div class="agent-status"><span class="dot"></span> Powered by Agentforce</div>
+        </div>
+      </div>
+      <div class="agent-desc">Ask me about deals, commissions, training, products, or competitive intel. I have full context on your active pipeline.</div>
+    </div>
+
+    <div class="agent-body">
+
+      <div class="agent-msg">
+        <div class="agent-bubble">
+          Welcome back, James. I see you're looking at the CloudCorp deal. Here's what I know:
+
+          <dl class="data-point">
+            <dt>Status</dt><dd>Negotiation — 12 days protection left</dd>
+            <dt>Risk Level</dt><dd style="color:var(--wf-amber);">Medium-High (competitive pressure)</dd>
+            <dt>Your Commission</dt><dd>~$144K at current value</dd>
+            <dt>Next Step</dt><dd>Pricing update expected from AE today</dd>
+          </dl>
+
+          <div class="sources">Data from: <a href="#">DR-2026-04281</a> &middot; <a href="#">Opportunity Record</a></div>
+        </div>
+      </div>
+
+      <div class="agent-msg user">
+        <div class="agent-bubble">What's the commission difference if the deal drops to $1.05M with the discount?</div>
+      </div>
+
+      <div class="agent-msg">
+        <div class="agent-bubble">
+          At <strong>$1,050,000</strong> with your Silver tier rate of <strong>12%</strong>:
+
+          <dl class="data-point">
+            <dt>Original Commission</dt><dd>$144,000 (on $1.2M)</dd>
+            <dt>Revised Commission</dt><dd>$126,000 (on $1.05M)</dd>
+            <dt>Difference</dt><dd>-$18,000 (12.5% reduction)</dd>
+          </dl>
+
+          <div style="margin-top:0.5rem;">However, if the 3-metro commitment gets your org to <strong>Gold tier</strong> this quarter, your rate would increase to <strong>15%</strong>, making the commission <strong>$157,500</strong> — actually <strong>$13,500 more</strong> than the original calculation.</div>
+
+          <div class="sources">Rates from: <a href="#">Partner Commission Schedule Q1 2026</a></div>
+        </div>
+      </div>
+
+      <div class="agent-msg user">
+        <div class="agent-bubble">What would push us to Gold this quarter?</div>
+      </div>
+
+      <div class="agent-msg">
+        <div class="agent-bubble">
+          Your org (TechPartners Global) is currently at <strong>Silver tier</strong>. Gold requires:
+
+          <dl class="data-point">
+            <dt>Revenue Target</dt><dd>$5M trailing 12mo (you're at $4.2M)</dd>
+            <dt>Gap to Gold</dt><dd>$800K remaining</dd>
+            <dt>CloudCorp Impact</dt><dd>$1.05M would put you at $5.25M — Gold</dd>
+            <dt>Certifications</dt><dd>4 of 5 required certs (need Network Edge Advanced)</dd>
+          </dl>
+
+          <div style="margin-top:0.5rem;">Closing CloudCorp would push you over the revenue threshold. You'd just need to complete the <strong>Network Edge Advanced certification</strong> to meet all Gold requirements. That cert renewal is already flagged in your <a href="rep-my-training.html">training dashboard</a>.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick suggestions -->
+    <div class="agent-suggestions">
+      <button class="agent-suggestion">What's Digital Realty's pricing for similar configs?</button>
+      <button class="agent-suggestion">Draft an email to David Chen with updated pricing</button>
+      <button class="agent-suggestion">Show my commission forecast for Q1</button>
+    </div>
+
+    <div class="agent-compose">
+      <input type="text" class="agent-input" placeholder="Ask the PCP Assistant..." aria-label="Ask the AI assistant">
+    </div>
+  </div>
+
+</div>
+
+<!-- ── Spec Block ── -->
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h2>Design Notes</h2>
+    <button class="spec-panel-close" onclick="toggleSpec()" aria-label="Close notes panel">&times;</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Three-panel messaging interface integrating Salesforce Experience Cloud messaging with Slack channel sync. Features conversation list, deal-specific team channels with auto-managed membership, message thread display, and contextual Agentforce AI assistance with commerce and deal intelligence.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Communicate with PSM and sales team about active deals in dedicated channels</li>
+<li>Access deal-specific context without leaving the messaging interface</li>
+<li>Receive AI-powered guidance on commission calculations and competitive positioning</li>
+<li>Sync messages with native Slack for team members using Slack as primary tool</li>
+<li>Search conversations and quickly jump to relevant discussions by deal or contact</li>
+<li>Track engagement history and team activity on opportunities</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>3-panel layout: Left sidebar (conversation list), Center (message thread), Right sidebar (Agentforce AI)</li>
+<li>Conversation list with tabs (All, Direct Messages, Channels, unread badge counts)</li>
+<li>Message items showing avatar, name, preview text, timestamp, unread indicator</li>
+<li>Message types: personal contacts (circular avatar + name), deal channels (#deal-name with channel icon), Agentforce (special badge)</li>
+<li>Search bar to filter conversations by name, deal, or contact</li>
+<li>Thread header showing conversation title, channel tag, action buttons (View Deal, Open in Slack)</li>
+<li>Message history with timestamps, user names, roles, and message content</li>
+<li>Deal context card embedded in thread showing key metadata (Deal Name, Amount, Stage, Close Date, Commission Estimate)</li>
+<li>Agentforce responses in thread with special styling (left blue border), label ("AI RECOMMENDATION"), source links</li>
+<li>Compose bar at bottom with text input, attachment button, AI assist button, send button</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Conversation list items clickable to open thread</li>
+<li>Search input filters conversation list real-time</li>
+<li>Tab filters (All, Direct, Channels)</li>
+<li>View Deal button navigates to Opportunity detail page</li>
+<li>Open in Slack button deep-links to Slack channel (if synced)</li>
+<li>Message links (e.g., opportunity links) clickable within thread text</li>
+<li>Compose bar send button to post new message</li>
+<li>Attachment button to upload files</li>
+<li>AI Assist button to trigger Agentforce suggestions</li>
+<li>Agentforce suggestion chips (one-tap prompts for "Calculate Commission", "Competitive Intel", etc.)</li>
+<li>Source links in agent responses navigate to referenced records</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Conversation Initialization & Channel Management</strong>
+<ul>
+<li>Conversation list populated from ConversationEntry__c (direct messages, MessageType__c='Direct') and Deal_Channel__c (deal channels, MessageType__c='Channel'); sorted by most recent message (CreatedDate DESC)</li>
+<li>Deal channels auto-created via Flow trigger on Opportunity creation; channel name = Opportunity.Name; SlackChannelId__c auto-populated if Slack integration enabled</li>
+<li>Channel membership automatically populated via Channel_Member__c junction: partner rep (role='Rep'), assigned PSM (role='PSM'), Account Executive from OpportunityTeam (role='AE'), Solutions Architect if applicable (role='SA')</li>
+</ul></li>
+<li><strong>Message Sync & Bi-Directional Integration</strong>
+<ul>
+<li>Message sync with Slack via Slack Integration API using OAuth tokens stored in Named Credentials; webhooks trigger synchronization on ConversationEntry create/update</li>
+<li>Messages created in Salesforce ConversationEntry appear in linked Slack channel within seconds; Slack messages synced back via webhook with IsFromSlack__c=true flag</li>
+<li>Slack direct message conversations mapped to ConversationEntry records with ParticipantUser__c relationships; encrypted at rest in Salesforce database</li>
+</ul></li>
+<li><strong>AI-Powered Agent Assistance</strong>
+<ul>
+<li>Agentforce agent deployed with read-only access to: Opportunity, Deal_Registration__c, Partner_Commission__c, Product2, PricebookEntry, Training_Assignment__c, Partner_Tier_Rates__mdt</li>
+<li>Agent function definitions enable: getCommissionEstimate(opportunity_id) = SUM(Amount * Partner_Tier_Rate lookup), getCompetitivePricing(product_name, competitor), checkTierStatus(contact_id) = required certs vs. earned certs, getTierRequiredCourses(tier) list</li>
+<li>Agentforce suggestion chips trigger pre-built prompts (e.g., "Calculate Commission", "Competitive Intel", "Tier Requirements"); agent responds with sourced information and relevant record links</li>
+</ul></li>
+<li><strong>Context & Search</strong>
+<ul>
+<li>Deal context card auto-populated from Opportunity via relationship: displays Name, Amount, StageName, CloseDate, EstimatedCommission__c; updates when Opportunity record changes</li>
+<li>Message search powered by Salesforce Platform Search with indexed fields: ConversationEntry.Text__c, CreatedBy.Name, Deal_Channel__c.ChannelName__c; search results link to related conversations</li>
+</ul></li>
+<li><strong>Compose & Collaboration</strong>
+<ul>
+<li>Compose bar triggers ConversationEntry record creation with Text__c, MessageType__c, Thread__c (for threaded replies), CreatedBy (auto-set to current user)</li>
+<li>Attachment button uploads files to Salesforce Files (ContentDocument); linked to ConversationEntry via ContentDocumentLink</li>
+<li>Send button validates message text (non-empty) and submits; triggers Flow to sync message to Slack if IsFromSlack__c=false and Slack integration enabled</li>
+</ul></li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Salesforce & Integration Objects</h4>
+<ul>
+<li>ConversationEntry__c: Text__c, CreatedBy (lookup), Thread__c (self-lookup), MessageType__c (Direct|Channel), IsFromSlack__c (checkbox)</li>
+<li>Deal_Channel__c: Opportunity__c (lookup), ChannelName__c, SlackChannelId__c (external ID), CreatedDate__c</li>
+<li>Channel_Member__c: Deal_Channel__c, Contact__c or User__c (polymorphic), Role__c (Rep|PSM|AE|SA)</li>
+<li>Slack Integration via Slack Kit SDK: OAuth token stored securely in Named Credential; webhooks trigger sync on message create/update in both directions</li>
+<li>Agentforce agent deployed with function definitions for: getCommissionEstimate(), getCompetitivePricing(), checkTierStatus(), getTierRequiredCourses()</li>
+<li>Message search powered by Salesforce Platform Search with indexed fields: ConversationEntry.Text__c, ConversationEntry.CreatedBy.Name, Deal_Channel__c.ChannelName__c</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+</body>
+</html>

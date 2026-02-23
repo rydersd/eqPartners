@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Training Record - Equinix PSM</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: var(--wf-canvas, #f5f7fb);
+    }
+    .slds-global-header {
+      display: flex;
+      align-items: center;
+      background-color: var(--wf-ink, #1e2a3a);
+      color: var(--wf-surface, #edf1f7);
+      padding: 0 12px;
+      height: 52px;
+      gap: 12px;
+    }
+    .slds-global-header__waffle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+    }
+    .slds-global-header__waffle svg {
+      width: 20px;
+      height: 20px;
+    }
+    .slds-global-header__app {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .slds-global-header__app-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      background-color: var(--wf-accent, var(--wf-accent, #3d6daa));
+      color: var(--wf-surface, #edf1f7);
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 12px;
+    }
+    .slds-global-nav {
+      display: flex;
+      gap: 24px;
+      margin-left: 24px;
+      flex: 1;
+    }
+    .slds-global-nav__item {
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      font-size: 13px;
+      padding: 8px 0;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .slds-global-nav__item:hover {
+      color: var(--wf-surface, #edf1f7);
+    }
+    .slds-global-nav__item.active {
+      color: var(--wf-surface, #edf1f7);
+      border-bottom-color: var(--wf-amber, #8b7745);
+    }
+    .slds-global-header__search {
+      margin-left: auto;
+      margin-right: 16px;
+    }
+    .slds-global-header__search input {
+      padding: 6px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 4px;
+      background-color: rgba(255, 255, 255, 0.1);
+      color: var(--wf-surface, #edf1f7);
+      width: 200px;
+      font-size: 13px;
+    }
+    .slds-global-header__search input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+    .slds-global-header__actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .slds-global-header__action {
+      cursor: pointer;
+      font-size: 18px;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    .slds-global-header__action:hover {
+      opacity: 1;
+    }
+
+    .page-container {
+      padding: 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .breadcrumb {
+      font-size: 12px;
+      color: var(--wf-muted, #6b7f99);
+      margin-bottom: 16px;
+    }
+
+    .breadcrumb a {
+      color: var(--wf-accent, var(--wf-accent, #3d6daa));
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+
+    .slds-design-notes__title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--wf-text, #3b4f68);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .slds-badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .slds-badge--brand {
+      background-color: var(--wf-accent, var(--wf-accent, #3d6daa));
+      color: var(--wf-surface, #edf1f7);
+    }
+    .slds-badge--neutral {
+      background-color: var(--wf-surface, #edf1f7);
+      color: var(--wf-text, #3b4f68);
+    }
+
+    .diagnostic-banner {
+      background-color: var(--wf-amber, #8b7745);
+      border-left: 4px solid var(--wf-amber, #8b7745);
+      padding: 12px 16px;
+      border-radius: 4px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .diagnostic-banner-icon {
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .diagnostic-banner-text {
+      font-size: 13px;
+      color: var(--wf-text, #3b4f68);
+      line-height: 1.4;
+    }
+
+    .three-column-layout {
+      display: grid;
+      grid-template-columns: 250px 1fr 280px;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .column {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--wf-surface, #edf1f7);
+      padding: 16px;
+      border-radius: 4px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--wf-text, #3b4f68);
+      margin-bottom: 12px;
+    }
+
+    .contact-header-card {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .contact-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--wf-text, #3b4f68);
+    }
+
+    .contact-role {
+      font-size: 13px;
+      color: var(--wf-muted, #6b7f99);
+      font-weight: 500;
+    }
+
+    .contact-meta {
+      font-size: 12px;
+      color: var(--wf-muted, #6b7f99);
+      line-height: 1.5;
+    }
+
+    .contact-meta-label {
+      color: var(--wf-muted, #6b7f99);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .progress-widget {
+      background: var(--wf-ink, #1e2a3a);
+      padding: 16px;
+      border-radius: 4px;
+      border-left: 4px solid var(--wf-ink, #1e2a3a);
+    }
+
+    .progress-stat {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      font-size: 12px;
+    }
+
+    .progress-label {
+      color: var(--wf-muted, #6b7f99);
+    }
+
+    .progress-value {
+      font-weight: 700;
+      color: var(--wf-accent, var(--wf-accent, #3d6daa));
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background-color: var(--wf-surface, #edf1f7);
+      border-radius: 3px;
+      margin: 8px 0;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background-color: var(--wf-ink, #1e2a3a);
+      border-radius: 3px;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 3px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+
+    .status-behind {
+      background-color: var(--wf-surface, #edf1f7);
+      color: var(--wf-red, #8b4553);
+    }
+
+    .sync-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px;
+      background-color: var(--wf-canvas, #f5f7fb);
+      border-radius: 3px;
+      font-size: 11px;
+    }
+
+    .health-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--wf-ink, #1e2a3a);
+    }
+
+    .table-wrapper {
+      background: var(--wf-surface, #edf1f7);
+      border-radius: 4px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    thead {
+      background-color: var(--wf-canvas, #f5f7fb);
+      border-bottom: 2px solid var(--wf-line, #b0bdd0);
+    }
+
+    th {
+      padding: 12px;
+      text-align: left;
+      font-weight: 700;
+      color: var(--wf-text, #3b4f68);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    td {
+      padding: 12px;
+      border-bottom: 1px solid var(--wf-surface, #edf1f7);
+      color: var(--wf-text, #3b4f68);
+    }
+
+    tbody tr:hover {
+      background-color: var(--wf-canvas, #f5f7fb);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 3px;
+      font-size: 10px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .badge-completed {
+      background-color: var(--wf-surface, #edf1f7);
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .badge-inprogress {
+      background-color: var(--wf-surface, #edf1f7);
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .badge-notstarted {
+      background-color: var(--wf-surface, #edf1f7);
+      color: var(--wf-muted, #6b7f99);
+    }
+
+    .badge-expired {
+      background-color: var(--wf-surface, #edf1f7);
+      color: var(--wf-red, #8b4553);
+    }
+
+    .badge-expiring {
+      background-color: var(--wf-surface, #edf1f7);
+      color: var(--wf-amber, #8b7745);
+    }
+
+    .btn {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary {
+      background-color: var(--wf-surface, #edf1f7);
+      color: var(--wf-text, #3b4f68);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--wf-line, #b0bdd0);
+    }
+
+    .btn-small {
+      padding: 4px 8px;
+      font-size: 11px;
+    }
+
+    .sort-controls {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      align-items: center;
+    }
+
+    .sort-button {
+      padding: 4px 8px;
+      border: 1px solid var(--wf-line, #b0bdd0);
+      background: var(--wf-surface, #edf1f7);
+      border-radius: 3px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .sort-button.active {
+      background-color: var(--wf-accent, var(--wf-accent, #3d6daa));
+      color: var(--wf-surface, #edf1f7);
+      border-color: var(--wf-accent, var(--wf-accent, #3d6daa));
+    }
+
+    .filter-select {
+      padding: 6px 8px;
+      border: 1px solid var(--wf-line, #b0bdd0);
+      border-radius: 3px;
+      font-size: 11px;
+      background: var(--wf-surface, #edf1f7);
+      cursor: pointer;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 16px;
+      font-size: 12px;
+    }
+
+    .pagination button {
+      padding: 4px 8px;
+      border: 1px solid var(--wf-line, #b0bdd0);
+      background: var(--wf-surface, #edf1f7);
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .pagination button.active {
+      background-color: var(--wf-accent, var(--wf-accent, #3d6daa));
+      color: var(--wf-surface, #edf1f7);
+      border-color: var(--wf-accent, var(--wf-accent, #3d6daa));
+    }
+
+    .warning-indicator {
+      display: inline-block;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background-color: var(--wf-muted, #6b7f99);
+      margin-right: 4px;
+</style>
+</head>
+<body>
+
+<header class="wf-header">
+  <div class="wf-header-logo">EQ</div>
+  <div class="wf-header-title">Partner Sales Manager</div>
+  <nav class="wf-header-nav">
+    <a href="#">Dashboard</a>
+    <a href="#" class="active">Contact Training</a>
+    <a href="#">Partners</a>
+    <a href="#">Deals</a>
+    <a href="#">Programs</a>
+    <a href="#">Reports</a>
+  </nav>
+  <div class="wf-header-util">
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+  </div>
+</header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+<div class="page-container">
+
+  <div class="breadcrumb">
+    <a href="#accounts">Accounts</a> > <a href="#stark">Stark Industries</a> > <strong>Sarah Connor</strong> > Training
+  </div>
+
+  
+
+
+  <div class="diagnostic-banner">
+    <div class="diagnostic-banner-icon">⚠️</div>
+    <div class="diagnostic-banner-text">
+      <strong>Diagnostic View</strong> — This contact record is read-only for training actions. To send encouragement or take action, return to the Account Record and use account-level tools to contact the Partner Manager.
+    </div>
+  </div>
+
+  <div class="three-column-layout">
+
+    <!-- LEFT COLUMN: Breadcrumb & Related -->
+    <div class="column">
+      <div class="card">
+        <div class="card-title">Related</div>
+        <div style="font-size: 12px; color: var(--wf-accent, var(--wf-accent, #3d6daa)); margin-bottom: 8px; cursor: pointer;">
+          ← Back to Stark Industries
+        </div>
+        <div style="font-size: 11px; color: var(--wf-muted, #6b7f99); line-height: 1.6;">
+          <div style="margin-bottom: 8px;">
+            <strong style="color: var(--wf-text, #3b4f68);">Account</strong><br>
+            Stark Industries
+          </div>
+          <div>
+            <strong style="color: var(--wf-text, #3b4f68);">Account Contact Role</strong><br>
+            VP of Operations
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">About</div>
+        <div style="font-size: 11px; color: var(--wf-muted, #6b7f99); line-height: 1.8;">
+          <div style="margin-bottom: 8px;">
+            <strong style="color: var(--wf-text, #3b4f68);">Email</strong><br>
+            sarah.connor@starkindustries.com
+          </div>
+          <div style="margin-bottom: 8px;">
+            <strong style="color: var(--wf-text, #3b4f68);">Phone</strong><br>
+            (415) 555-0147
+          </div>
+          <div>
+            <strong style="color: var(--wf-text, #3b4f68);">Department</strong><br>
+            Operations
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CENTER COLUMN: Main Training Content -->
+    <div class="column">
+
+      <div class="card">
+        <div class="contact-name">Sarah Connor</div>
+        <div class="contact-role">VP of Operations</div>
+        <div class="contact-meta" style="margin-top: 8px; border-top: 1px solid var(--wf-surface, #edf1f7); padding-top: 8px;">
+          <div class="contact-meta-label">Last Portal Activity</div>
+          <div>2026-01-23 (21 days ago)</div>
+        </div>
+      </div>
+
+      <div class="progress-widget">
+        <div style="font-size: 12px; font-weight: 700; color: var(--wf-text, #3b4f68); margin-bottom: 8px;">Training Progress</div>
+        <div class="progress-stat">
+          <span class="progress-label">Completed</span>
+          <span class="progress-value">4 of 8 courses</span>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 50%;"></div>
+        </div>
+        <div class="progress-stat">
+          <span class="progress-label">Completion Rate</span>
+          <span class="progress-value">50%</span>
+        </div>
+        <div class="progress-stat">
+          <span class="progress-label">Status</span>
+          <span class="status-badge status-behind">BEHIND SCHEDULE</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Course Training History</div>
+
+        <div class="sort-controls">
+          <select class="filter-select">
+            <option>All Status</option>
+            <option>Completed</option>
+            <option>In Progress</option>
+            <option>Not Started</option>
+            <option>Expired</option>
+            <option>Expiring</option>
+          </select>
+          <select class="filter-select">
+            <option>All Tracks</option>
+            <option>Business</option>
+            <option>Technical</option>
+          </select>
+          <button class="btn btn-secondary btn-small">Export CSV</button>
+          <a href="#" style="font-size: 11px; color: var(--wf-accent, var(--wf-accent, #3d6daa)); text-decoration: none;">View Full History</a>
+        </div>
+
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Course Name</th>
+                <th>Track</th>
+                <th>Status</th>
+                <th>Start Date</th>
+                <th>Completion Date</th>
+                <th>Expires</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Equinix Foundation</strong></td>
+                <td>Business</td>
+                <td><span class="badge badge-completed">✓ Completed</span></td>
+                <td>2025-09-10</td>
+                <td>2025-10-05</td>
+                <td>2026-10-05</td>
+              </tr>
+              <tr>
+                <td><strong>Equinix Core Services</strong></td>
+                <td>Business</td>
+                <td><span class="badge badge-completed">✓ Completed</span></td>
+                <td>2025-10-08</td>
+                <td>2025-11-12</td>
+                <td>2026-11-12</td>
+              </tr>
+              <tr>
+                <td><strong>Equinix Technical Fundamentals</strong></td>
+                <td>Technical</td>
+                <td><span class="badge badge-inprogress">In Progress</span></td>
+                <td>2025-11-15</td>
+                <td>—</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td><strong>Colocation Architecture & Design</strong></td>
+                <td>Technical</td>
+                <td><span class="badge badge-inprogress">In Progress</span></td>
+                <td>2026-01-20</td>
+                <td>—</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td><strong>Advanced Cloud Integration</strong></td>
+                <td>Technical</td>
+                <td><span class="badge badge-notstarted">Not Started</span></td>
+                <td>—</td>
+                <td>—</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td><strong>Partner Sales Enablement</strong></td>
+                <td>Business</td>
+                <td><span class="badge badge-completed">✓ Completed</span></td>
+                <td>2025-12-01</td>
+                <td>2025-12-20</td>
+                <td>2026-12-20</td>
+              </tr>
+              <tr>
+                <td><strong>Advanced Account Management</strong></td>
+                <td>Business</td>
+                <td><span class="badge badge-notstarted">Not Started</span></td>
+                <td>—</td>
+                <td>—</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td><strong>Executive Business Review Skills</strong></td>
+                <td>Business</td>
+                <td><span class="badge badge-completed">✓ Completed</span></td>
+                <td>2025-11-05</td>
+                <td>2025-12-10</td>
+                <td>2026-12-10</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="pagination">
+          <button class="active">1</button>
+          <span>of 1</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT COLUMN: Certifications & Sync Status -->
+    <div class="column">
+
+      <div class="card">
+        <div class="card-title">Active Certifications</div>
+        <div style="font-size: 12px; color: var(--wf-text, #3b4f68); line-height: 1.8;">
+          <div style="padding: 8px 0; border-bottom: 1px solid var(--wf-surface, #edf1f7);">
+            <div style="font-weight: 600;">Equinix Foundation</div>
+            <div style="font-size: 11px; color: var(--wf-muted, #6b7f99);">Expires: 2026-10-05</div>
+          </div>
+          <div style="padding: 8px 0; border-bottom: 1px solid var(--wf-surface, #edf1f7);">
+            <div style="font-weight: 600;">Equinix Core Services</div>
+            <div style="font-size: 11px; color: var(--wf-muted, #6b7f99);">Expires: 2026-11-12</div>
+          </div>
+          <div style="padding: 8px 0; border-bottom: 1px solid var(--wf-surface, #edf1f7);">
+            <div style="font-weight: 600;">Partner Sales Enablement</div>
+            <div style="font-size: 11px; color: var(--wf-muted, #6b7f99);">Expires: 2026-12-20</div>
+          </div>
+          <div style="padding: 8px 0;">
+            <div style="font-weight: 600;">Executive Business Review Skills</div>
+            <div style="font-size: 11px; color: var(--wf-muted, #6b7f99);">Expires: 2026-12-10</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Expirations (Next 90 Days)</div>
+        <div style="font-size: 12px; color: var(--wf-text, #3b4f68); line-height: 1.8;">
+          <div style="padding: 8px; background-color: var(--wf-canvas, #f5f7fb); border-radius: 3px; margin-bottom: 8px;">
+            <div style="font-size: 11px; color: var(--wf-muted, #6b7f99);">No certifications expiring in the next 30 days.</div>
+          </div>
+          <div style="padding: 8px; background-color: var(--wf-surface, #edf1f7); border-radius: 3px; border-left: 3px solid var(--wf-amber, #8b7745);">
+            <div style="font-weight: 600; color: var(--wf-amber, #8b7745); margin-bottom: 4px;">Expiring 30-90 days:</div>
+            <div style="font-size: 11px; color: var(--wf-muted, #6b7f99);">
+              • Equinix Foundation (90 days)<br>
+              • Equinix Core Services (83 days)
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">SumTotal Sync Status</div>
+        <div class="sync-indicator">
+          <div class="health-dot"></div>
+          <span>Synced</span>
+        </div>
+        <div style="font-size: 11px; color: var(--wf-muted, #6b7f99); margin-top: 8px; line-height: 1.6;">
+          <div><strong style="color: var(--wf-text, #3b4f68);">Last Sync</strong></div>
+          <div>2026-02-13 03:45 UTC</div>
+          <div style="margin-top: 8px;"><strong style="color: var(--wf-text, #3b4f68);">SumTotal User ID</strong></div>
+          <div style="font-family: monospace; font-size: 10px;">ST-USER-8847651</div>
+        </div>
+      </div>
+
+      <div class="card" style="background-color: var(--wf-surface, #edf1f7); border-left: 4px solid var(--wf-amber, #8b7745);">
+        <div class="card-title" style="color: var(--wf-amber, #8b7745);">Diagnostic Insight</div>
+        <div style="font-size: 11px; color: var(--wf-text, #3b4f68); line-height: 1.6;">
+          <span class="warning-indicator"></span><strong>No activity for 21 days.</strong> Sarah started two technical courses in January but has not completed either. Last login was 2026-01-23.
+          <br><br>
+          <span class="warning-indicator"></span><strong>Pattern:</strong> Started but stalled. Sarah completed all 4 business track courses on schedule, but technical track progress has stalled since late January.
+          <br><br>
+          This suggests a gap specific to Sarah, not the account overall. Recommend Partner Manager contact Sarah to understand blockers.
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+    <footer class="wf-footer">
+      &copy; 2026 Equinix · Partner Sales Manager · Internal Use Only
+    </footer>
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>PSM diagnostic view into individual contact training history, certification expiration tracking, and completion patterns. Read-only view enabling PSMs to assess training status during account reviews without direct contact action capability.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>PSM drills into a contact from Account Record when something seems stuck</li>
+<li>Answers the question: Is this one person behind, or a systemic gap?</li>
+<li>Shows complete training history including elective courses</li>
+<li>Identifies patterns: started but never completed, no activity in 45+ days</li>
+<li>Expiration tracking: certs expiring within 30 days highlighted amber</li>
+<li>SumTotal sync status helps diagnose data freshness issues</li>
+<li>PSM uses this data for account-level conversations with Partner Manager</li>
+<li>No action buttons - PSM never contacts individuals directly</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Diagnostic view banner highlighting read-only PSM access purpose</li>
+<li>Contact header with name, role, email, and company</li>
+<li>Training progress widget with overall completion %, status, and last activity date</li>
+<li>Complete course table with course name, status, completion %, score, due date</li>
+<li>Certification summary section with issue date, expiry date, and days-to-expire</li>
+<li>SumTotal sync status indicator (last sync time, next sync scheduled)</li>
+<li>Breadcrumb navigation back to Account Record</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Sortable columns on course table (course name, status, completion date)</li>
+<li>Filter controls by Status (Not Started, In Progress, Completed), Track (Business, Technical, Elective)</li>
+<li>View Full History link to expand all courses including archived/removed courses</li>
+<li>Export to CSV button for data analysis in accounting/reporting systems</li>
+<li>Breadcrumb navigation back to parent Account Record</li>
+<li>NO action buttons (no Send Reminder, Encourage, or direct contact functionality)</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Course Data Retrieval & Syncing</strong>
+<ul>
+<li>Query CourseAssignment__c records for contact and calculate overall completion %</li>
+<li>Retrieve course history from SumTotal_Sync__c log (read from daily data sync at scheduled time)</li>
+<li>Display SumTotal_LastSync__c timestamp and scheduled next sync time for transparency</li>
+</ul></li>
+<li><strong>Status Flagging & Alerts</strong>
+<ul>
+<li>Flag courses with no activity &gt; 45 days in gray text to indicate stagnation</li>
+<li>Highlight certifications expiring within 30 days in amber color for visibility</li>
+<li>Calculate Days_to_Expiration__c = Certification_Expiry__c - TODAY() for countdown display</li>
+</ul></li>
+<li><strong>Filtering & Sorting</strong>
+<ul>
+<li>Filter course list by Status and Track based on filter selections and user preferences</li>
+<li>Sort courses by name, status, or completion date via sortable column headers</li>
+<li>Maintain filter state during pagination and view transitions</li>
+</ul></li>
+<li><strong>Reporting & Export</strong>
+<ul>
+<li>Export to CSV button for data analysis in accounting and reporting systems</li>
+<li>View Full History link to expand all courses including archived or removed courses</li>
+<li>Generate compliance audit trail showing all course completions and certification dates</li>
+</ul></li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Design Notes</h4>
+<ul>
+<li>Implementation: Custom Lightning Record Page with training LWC components</li>
+<li>LWC Components: c-partner-training-progress, c-partner-training-detail</li>
+<li>Diagnostic Banner: Custom component only shows on partner contacts</li>
+<li>Role: Supporting diagnostic — PSM arrives here FROM Account Record</li>
+<li>Key Principle: No "Send Reminder", "Encourage" — read-only diagnostic only</li>
+</ul>
+<h4>Validation &amp; Business Logic</h4>
+<ul>
+<li>PSM access controlled via Contact.Account.Owner and PSM AccountTeamMember</li>
+<li>SumTotal data refreshed daily at 2 AM UTC via scheduled sync</li>
+<li>Course history includes archived courses from SumTotal_Archive__c table</li>
+<li>Expiration highlight only applies if Certification_Expiry__c is populated</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+</body>
+</html>

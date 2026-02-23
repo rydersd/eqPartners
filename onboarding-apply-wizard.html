@@ -1,0 +1,1387 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apply to Become an Equinix Partner — Partner Central</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); }
+
+    /* ── Wizard shell ─────────────────────────────────────── */
+    .wizard-shell { max-width: 780px; margin: 0 auto; padding: 40px 24px 80px; }
+    .wizard-intro { margin-bottom: 28px; }
+    .wizard-intro h1 { font-size: 22px; font-weight: 700; margin: 0 0 6px; }
+    .wizard-intro p  { font-size: 14px; color: var(--wf-muted, #6b7f99); margin: 0; }
+    .wizard-variant-link { font-size: 12px; color: var(--wf-accent, #3d6daa); float: right; margin-top: 4px; }
+
+    /* ── Stepper ──────────────────────────────────────────── */
+    .stepper { display: flex; align-items: flex-start; margin-bottom: 32px; }
+    .stepper-step { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; }
+    .stepper-step:not(:last-child)::after {
+      content: ""; position: absolute; top: 16px; left: 50%;
+      width: 100%; height: 2px; background: var(--wf-line, #b0bdd0); z-index: 0;
+    }
+    .stepper-step.completed::after { background: var(--wf-accent, #3d6daa); }
+    .step-circle {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: var(--wf-tint, #dce4ef); border: 2px solid var(--wf-line, #b0bdd0);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; color: var(--wf-muted, #6b7f99);
+      z-index: 1; position: relative; transition: all 0.2s;
+    }
+    .stepper-step.active    .step-circle { background: var(--wf-accent, #3d6daa); border-color: var(--wf-accent, #3d6daa); color: white; }
+    .stepper-step.completed .step-circle { background: var(--wf-accent, #3d6daa); border-color: var(--wf-accent, #3d6daa); color: white; }
+    .step-label { font-size: 11px; font-weight: 600; color: var(--wf-muted, #6b7f99); margin-top: 6px; text-align: center; line-height: 1.3; }
+    .stepper-step.active    .step-label { color: var(--wf-accent, #3d6daa); }
+    .stepper-step.completed .step-label { color: var(--wf-ink, #1e2a3a); }
+    .completed-check::before { content: "✓"; }
+
+    /* ── Cards ────────────────────────────────────────────── */
+    .step-section { display: none; }
+    .step-section.active { display: block; }
+    .card { background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.10); padding: 28px 32px; margin-bottom: 16px; }
+    .card-title { font-size: 15px; font-weight: 700; color: var(--wf-ink, #1e2a3a); margin: 0 0 4px; }
+    .card-desc  { font-size: 13px; color: var(--wf-muted, #6b7f99); margin: 0 0 20px; line-height: 1.5; }
+
+    /* ── Partner type cards ───────────────────────────────── */
+    .type-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .type-card {
+      border: 2px solid var(--wf-line, #b0bdd0); border-radius: 8px;
+      padding: 16px 18px; cursor: pointer; transition: all 0.15s; background: white;
+    }
+    .type-card:hover    { border-color: var(--wf-accent, #3d6daa); }
+    .type-card.selected { border-color: var(--wf-accent, #3d6daa); background: var(--wf-tint, #dce4ef); }
+    .type-card h4 { font-size: 13px; font-weight: 700; margin: 0 0 4px; color: var(--wf-ink, #1e2a3a); }
+    .type-card p  { font-size: 12px; color: var(--wf-muted, #6b7f99); margin: 0; line-height: 1.5; }
+    .type-radio { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+    .type-radio-dot {
+      width: 16px; height: 16px; border-radius: 50%;
+      border: 2px solid var(--wf-line, #b0bdd0); flex-shrink: 0;
+      background: white; transition: all 0.15s;
+    }
+    .type-card.selected .type-radio-dot { border-color: var(--wf-accent, #3d6daa); background: var(--wf-accent, #3d6daa); box-shadow: inset 0 0 0 3px white; }
+    .type-radio-label { font-size: 12px; font-weight: 600; color: var(--wf-muted, #6b7f99); }
+    .type-card.selected .type-radio-label { color: var(--wf-accent, #3d6daa); }
+
+    /* ── Company search area ──────────────────────────────── */
+    .search-row { display: flex; gap: 8px; }
+    .search-input { flex: 1; padding: 10px 12px; border: 1px solid var(--wf-line, #b0bdd0); border-radius: 6px; font-size: 13px; font-family: inherit; }
+    .search-input:focus { outline: none; border-color: var(--wf-accent, #3d6daa); box-shadow: 0 0 0 3px rgba(61,109,170,0.12); }
+    .search-hint { font-size: 12px; color: var(--wf-muted, #6b7f99); margin-top: 8px; }
+
+    /* ── Pre-filled company banner ────────────────────────── */
+    .selected-company-banner {
+      display: none; align-items: center; gap: 12px;
+      background: var(--wf-tint, #dce4ef); border: 1px solid var(--wf-accent, #3d6daa);
+      border-radius: 6px; padding: 12px 16px; margin-bottom: 16px;
+    }
+    .selected-company-banner.visible { display: flex; }
+    .scb-icon { width: 36px; height: 36px; border-radius: 6px; background: var(--wf-accent, #3d6daa); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 12px; flex-shrink: 0; }
+    .scb-info h5 { font-size: 13px; font-weight: 700; margin: 0 0 2px; color: var(--wf-ink, #1e2a3a); }
+    .scb-info p  { font-size: 12px; color: var(--wf-muted, #6b7f99); margin: 0; }
+    .scb-change { margin-left: auto; font-size: 12px; color: var(--wf-accent, #3d6daa); cursor: pointer; font-weight: 600; background: none; border: none; font-family: inherit; }
+    .scb-change:hover { text-decoration: underline; }
+
+    /* ── Buttons ──────────────────────────────────────────── */
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: 6px; font-size: 13px; font-weight: 600; border: none; cursor: pointer; transition: background 0.15s; font-family: inherit; }
+    .btn-primary   { background: var(--wf-accent, #3d6daa); color: white; }
+    .btn-primary:hover  { background: var(--wf-ink, #1e2a3a); }
+    .btn-secondary { background: var(--wf-tint, #dce4ef); color: var(--wf-ink, #1e2a3a); }
+    .btn-secondary:hover { background: var(--wf-line, #b0bdd0); }
+    .btn-ghost { background: transparent; color: var(--wf-accent, #3d6daa); padding: 6px 0; font-size: 13px; font-weight: 600; }
+    .btn-ghost:hover { text-decoration: underline; }
+    .btn-link  { background: none; border: none; color: var(--wf-accent, #3d6daa); font-size: 13px; font-weight: 600; cursor: pointer; padding: 0; font-family: inherit; }
+    .btn-link:hover { text-decoration: underline; }
+
+    /* ── Form fields ──────────────────────────────────────── */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .form-grid.full  { grid-template-columns: 1fr; }
+    .form-grid.three { grid-template-columns: 1fr 1fr 1fr; }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-group label { font-size: 12px; font-weight: 600; color: var(--wf-ink, #1e2a3a); }
+    .req { color: var(--wf-red, #8b4553); }
+    .form-group input, .form-group select, .form-group textarea {
+      padding: 9px 12px; border: 1px solid var(--wf-line, #b0bdd0); border-radius: 6px;
+      font-size: 13px; font-family: inherit; color: var(--wf-ink, #1e2a3a); background: white;
+      transition: border-color 0.15s;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+      outline: none; border-color: var(--wf-accent, #3d6daa); box-shadow: 0 0 0 3px rgba(61,109,170,0.12);
+    }
+    .form-group input.prefilled { background: var(--wf-tint, #dce4ef); border-color: var(--wf-accent, #3d6daa); }
+    .form-group textarea { resize: vertical; min-height: 80px; }
+    .field-hint { font-size: 11px; color: var(--wf-muted, #6b7f99); }
+    .divider { border: none; border-top: 1px solid var(--wf-line, #b0bdd0); margin: 24px 0; }
+    .section-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--wf-muted, #6b7f99); margin: 0 0 16px; }
+
+    /* ── Checkbox / radio grids ───────────────────────────── */
+    .field-label-group { margin-bottom: 16px; }
+    .fgl-label { font-size: 12px; font-weight: 700; color: var(--wf-ink, #1e2a3a); margin-bottom: 6px; display: block; }
+    .fgl-hint  { font-size: 11px; color: var(--wf-muted, #6b7f99); margin-bottom: 10px; display: block; }
+
+    .checkbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 4px 8px; }
+    .checkbox-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+    .checkbox-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .cg-item {
+      display: flex; align-items: flex-start; gap: 9px;
+      padding: 9px 12px;
+      border-radius: 6px; cursor: pointer; transition: background 0.15s;
+      font-size: 13px; color: var(--wf-ink, #1e2a3a); background: white; user-select: none;
+    }
+    .cg-item:hover { background: var(--wf-tint, #dce4ef); }
+    .cg-item input[type="checkbox"] { width: 15px; height: 15px; flex-shrink: 0; accent-color: var(--wf-accent, #3d6daa); cursor: pointer; margin-top: 1px; }
+    .cg-item:has(input:checked) { background: var(--wf-tint, #dce4ef); }
+    .cg-item small { display: block; font-size: 11px; color: var(--wf-muted, #6b7f99); margin-top: 2px; }
+
+    .radio-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 8px; }
+    .rg-item {
+      display: flex; align-items: center; gap: 9px;
+      padding: 12px 14px;
+      border-radius: 6px; cursor: pointer; transition: background 0.15s;
+      font-size: 13px; color: var(--wf-ink, #1e2a3a); background: white; user-select: none;
+    }
+    .rg-item:hover { background: var(--wf-tint, #dce4ef); }
+    .rg-item input[type="radio"] { width: 15px; height: 15px; flex-shrink: 0; accent-color: var(--wf-accent, #3d6daa); cursor: pointer; }
+    .rg-item:has(input:checked) { background: var(--wf-tint, #dce4ef); }
+
+    /* ── Business mix ─────────────────────────────────────── */
+    .mix-table { width: 100%; border-collapse: collapse; }
+    .mix-table td { padding: 6px 0; font-size: 13px; }
+    .mix-table td:first-child { color: var(--wf-ink, #1e2a3a); width: 65%; }
+    .mix-pct-input { width: 72px; padding: 6px 10px; border: 1px solid var(--wf-line, #b0bdd0); border-radius: 4px; font-size: 13px; text-align: right; font-family: inherit; }
+    .mix-pct-input:focus { outline: none; border-color: var(--wf-accent, #3d6daa); }
+    .mix-total-row td { border-top: 1px solid var(--wf-line, #b0bdd0); padding-top: 10px; font-weight: 700; font-size: 13px; }
+    #mix-total { color: var(--wf-muted, #6b7f99); }
+    #mix-total.invalid { color: var(--wf-red, #8b4553); }
+    #mix-total.valid   { color: var(--wf-accent, #3d6daa); }
+
+    /* ── Conditional step 3 ───────────────────────────────── */
+    .reseller-only, .referral-only { display: none; }
+    .reseller-only.visible, .referral-only.visible { display: block; }
+
+    /* ── Legal / submit ───────────────────────────────────── */
+    .legal-text { font-size: 13px; color: var(--wf-ink, #1e2a3a); line-height: 1.6; margin-bottom: 16px; }
+    .legal-text a { color: var(--wf-accent, #3d6daa); }
+    .check-item { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; margin-bottom: 10px; cursor: pointer; }
+    .check-item input[type="checkbox"] { margin-top: 2px; flex-shrink: 0; accent-color: var(--wf-accent, #3d6daa); width: 15px; height: 15px; }
+    .recaptcha-box { border: 1px solid var(--wf-line, #b0bdd0); border-radius: 4px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; margin: 20px 0; background: var(--wf-canvas, #f5f7fb); max-width: 304px; }
+    .recap-check { width: 24px; height: 24px; border: 2px solid var(--wf-line, #b0bdd0); border-radius: 3px; flex-shrink: 0; background: white; }
+    .recap-logo  { margin-left: auto; font-size: 9px; color: var(--wf-muted, #6b7f99); text-align: center; }
+
+    /* ── Step nav ─────────────────────────────────────────── */
+    .step-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; }
+    .step-nav-right { display: flex; align-items: center; gap: 12px; }
+    .step-of { font-size: 12px; color: var(--wf-muted, #6b7f99); }
+
+    /* ── Context bar ──────────────────────────────────────── */
+    .page-context-bar { background: var(--wf-tint, #dce4ef); border-bottom: 1px solid var(--wf-line, #b0bdd0); padding: 6px 24px; display: flex; justify-content: space-between; align-items: center; }
+    .persona-badge { font-size: 11px; font-weight: 600; color: var(--wf-muted, #6b7f99); background: white; border: 1px solid var(--wf-line, #b0bdd0); padding: 3px 10px; border-radius: 12px; }
+
+    /* ════════════════════════════════════════════════════════
+       MODAL — search results
+    ════════════════════════════════════════════════════════ */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(14, 22, 34, 0.55); z-index: 500;
+      align-items: center; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: white; border-radius: 10px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.22);
+      width: 100%; max-width: 560px; max-height: 90vh;
+      overflow-y: auto; padding: 28px 32px;
+      position: relative;
+    }
+    .modal-hd { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+    .modal-title { font-size: 16px; font-weight: 700; color: var(--wf-ink, #1e2a3a); margin: 0; }
+    .modal-close { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--wf-muted, #6b7f99); padding: 0; line-height: 1; }
+    .modal-close:hover { color: var(--wf-ink, #1e2a3a); }
+    .modal-subhead { font-size: 13px; color: var(--wf-muted, #6b7f99); margin: 0 0 20px; }
+    .modal-results-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--wf-muted, #6b7f99); margin-bottom: 10px; }
+
+    .company-result {
+      display: flex; align-items: center; gap: 14px;
+      border: 1px solid var(--wf-line, #b0bdd0); border-radius: 8px;
+      padding: 14px 16px; margin-bottom: 8px; cursor: pointer;
+      transition: all 0.15s; background: white;
+    }
+    .company-result:hover { border-color: var(--wf-accent, #3d6daa); background: var(--wf-tint, #dce4ef); }
+    .co-avatar { width: 40px; height: 40px; border-radius: 8px; background: var(--wf-ink, #1e2a3a); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 13px; flex-shrink: 0; }
+    .co-info h5   { font-size: 13px; font-weight: 700; margin: 0 0 3px; color: var(--wf-ink, #1e2a3a); }
+    .co-info p    { font-size: 12px; color: var(--wf-muted, #6b7f99); margin: 0; }
+    .co-badge     { margin-left: auto; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 12px; background: var(--wf-canvas, #f5f7fb); color: var(--wf-muted, #6b7f99); flex-shrink: 0; }
+
+    .modal-divider { text-align: center; font-size: 12px; color: var(--wf-muted, #6b7f99); margin: 16px 0; position: relative; }
+    .modal-divider::before, .modal-divider::after { content: ""; position: absolute; top: 50%; width: 42%; height: 1px; background: var(--wf-line, #b0bdd0); }
+    .modal-divider::before { left: 0; }
+    .modal-divider::after  { right: 0; }
+
+    /* ── Review step ─────────────────────────────────────────── */
+    .review-section { margin-bottom: 20px; }
+    .review-section-hd {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-bottom: 8px; margin-bottom: 10px;
+      border-bottom: 1px solid var(--wf-line, #b0bdd0);
+    }
+    .review-section-hd h4 { font-size: 13px; font-weight: 700; color: var(--wf-ink, #1e2a3a); margin: 0; }
+    .review-edit { font-size: 12px; color: var(--wf-accent, #3d6daa); font-weight: 600; background: none; border: none; cursor: pointer; font-family: inherit; padding: 0; }
+    .review-edit:hover { text-decoration: underline; }
+    .review-row { display: flex; gap: 16px; padding: 4px 0; font-size: 13px; line-height: 1.5; }
+    .review-label { color: var(--wf-muted, #6b7f99); width: 150px; flex-shrink: 0; font-weight: 500; }
+    .review-value { color: var(--wf-ink, #1e2a3a); font-weight: 500; flex: 1; }
+    .review-value.empty { color: var(--wf-muted, #6b7f99); font-style: italic; font-weight: 400; }
+    .ptype-badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 700; background: var(--wf-tint, #dce4ef); color: var(--wf-accent, #3d6daa); }
+
+    /* ── Region + autocomplete search row ────────────────────── */
+    .region-select {
+      width: 182px; flex-shrink: 0;
+      padding: 10px 12px; border: 1px solid var(--wf-line, #b0bdd0); border-radius: 6px;
+      font-size: 13px; font-family: inherit; color: var(--wf-ink, #1e2a3a); background: white;
+      cursor: pointer; height: 40px;
+    }
+    .region-select:focus { outline: none; border-color: var(--wf-accent, #3d6daa); box-shadow: 0 0 0 3px rgba(61,109,170,0.12); }
+    .search-input-wrap { position: relative; flex: 1; }
+    .autocomplete-list {
+      display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0;
+      background: white; border: 1px solid var(--wf-line, #b0bdd0); border-radius: 6px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.12); z-index: 100; overflow: hidden;
+    }
+    .autocomplete-list.open { display: block; }
+    .ac-item {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 11px 14px; cursor: pointer; transition: background 0.1s;
+    }
+    .ac-item:hover, .ac-item:focus { background: var(--wf-tint, #dce4ef); outline: none; }
+    .ac-name { font-size: 13px; font-weight: 600; color: var(--wf-ink, #1e2a3a); }
+    .ac-hint { font-size: 11px; color: var(--wf-muted, #6b7f99); }
+    .btn-primary:disabled, .btn-primary[aria-disabled="true"] {
+      opacity: 0.38; cursor: not-allowed; pointer-events: none;
+    }
+
+    /* ── Modal badge variants ─────────────────────────────────── */
+    .co-badge-match    { background: #e6f4ec; color: #1a7a3c; border: 1px solid #9dd5b1; }
+    .co-badge-mismatch { background: var(--wf-canvas, #f5f7fb); color: var(--wf-muted, #6b7f99); border: 1px solid var(--wf-line, #b0bdd0); }
+    .company-result.region-mismatch { opacity: 0.42; pointer-events: none; cursor: default; }
+    .company-result.region-mismatch:hover { border-color: var(--wf-line, #b0bdd0); background: white; }
+
+    @media (max-width: 640px) {
+      .type-cards  { grid-template-columns: 1fr; }
+      .form-grid   { grid-template-columns: 1fr; }
+      .checkbox-grid.cols-3 { grid-template-columns: 1fr 1fr; }
+      .search-row { flex-wrap: wrap; }
+      .region-select { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Header ─────────────────────────────────────────────── -->
+<header class="wf-header">
+  <div class="wf-header-logo"><svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix"><path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/></svg></div>
+  <div class="wf-header-title">Partner Central</div>
+  <nav class="wf-header-nav">
+    <a href="#" class="active">Partner Application</a>
+  </nav>
+  <div class="wf-header-util" style="font-size:11px; color:rgba(255,255,255,.5);">
+    Variant: Search-before-create &nbsp;|&nbsp; <a href="onboarding-apply-form.html" style="color:rgba(255,255,255,.7); text-decoration:none; font-weight:600;">→ No-search variant</a>
+  </div>
+</header>
+
+<!-- ── Context bar ────────────────────────────────────────── -->
+<div class="page-context-bar">
+  <span class="persona-badge">Persona: New Partner Applicant (pre-auth)</span>
+  <span style="font-size:11px; color:var(--wf-muted,#6b7f99);">Variant A — Search-before-create</span>
+</div>
+
+<!-- ── Spec tab ───────────────────────────────────────────── -->
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+<!-- ── Search results modal ───────────────────────────────── -->
+<div class="modal-overlay" id="search-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" onclick="handleModalBackdropClick(event)">
+  <div class="modal">
+    <div class="modal-hd">
+      <h2 class="modal-title" id="modal-title">We found these organizations</h2>
+      <button class="modal-close" onclick="closeModal()" aria-label="Close">×</button>
+    </div>
+    <p class="modal-subhead" id="modal-subhead">Searching for "<strong id="modal-query-display"></strong>" in <strong id="modal-region-display">your region</strong> — select your organization below.</p>
+
+    <p class="modal-results-label">2 matches</p>
+
+    <!-- Result 1: CloudBridge Technologies Inc. (Americas – US) -->
+    <div class="company-result" id="result-cloudbridge-us" onclick="selectCompanyResult('cloudbridge-us')" tabindex="0" role="button" aria-label="Select CloudBridge Technologies Inc.">
+      <div class="co-avatar">CB</div>
+      <div class="co-info">
+        <h5>CloudBridge Technologies Inc.</h5>
+        <p>cloudbridge.com &nbsp;·&nbsp; Austin, TX, USA &nbsp;·&nbsp; 350 employees</p>
+      </div>
+      <span class="co-badge co-badge-match" id="badge-cloudbridge-us">Matches region</span>
+    </div>
+
+    <!-- Result 2: CloudBridge EMEA Ltd. (EMEA) -->
+    <div class="company-result region-mismatch" id="result-cloudbridge-emea" onclick="selectCompanyResult('cloudbridge-emea')" tabindex="0" role="button" aria-label="Select CloudBridge EMEA Ltd.">
+      <div class="co-avatar">CB</div>
+      <div class="co-info">
+        <h5>CloudBridge EMEA Ltd.</h5>
+        <p>cloudbridge.com/emea &nbsp;·&nbsp; London, UK &nbsp;·&nbsp; 75 employees</p>
+      </div>
+      <span class="co-badge co-badge-mismatch" id="badge-cloudbridge-emea">Different region</span>
+    </div>
+
+    <div class="modal-divider">or</div>
+
+    <button class="btn btn-secondary" onclick="selectCompanyResult('new'); closeModal();" style="width:100%;" type="button">
+      My company isn't listed — enter details manually
+    </button>
+  </div>
+</div>
+
+<!-- ── Main ───────────────────────────────────────────────── -->
+<main>
+<div class="wizard-shell">
+
+  <div class="wizard-intro">
+    <h1>Apply to Become an Equinix Partner</h1>
+    <p>About 10 minutes. You'll receive a confirmation email once your application is reviewed.</p>
+  </div>
+
+  <!-- Stepper (3 steps) -->
+  <nav class="stepper" aria-label="Application steps">
+    <div class="stepper-step active" id="sn-1">
+      <div class="step-circle">1</div>
+      <div class="step-label">Company &amp; You</div>
+    </div>
+    <div class="stepper-step" id="sn-2">
+      <div class="step-circle">2</div>
+      <div class="step-label">Industry</div>
+    </div>
+    <div class="stepper-step" id="sn-3">
+      <div class="step-circle">3</div>
+      <div class="step-label">Business</div>
+    </div>
+    <div class="stepper-step" id="sn-4">
+      <div class="step-circle">4</div>
+      <div class="step-label">Review</div>
+    </div>
+  </nav>
+
+  <!-- ══ STEP 1: Company & Contact ══════════════════════════ -->
+  <section class="step-section active" id="step-1" aria-label="Step 1: Company and your information">
+
+    <!-- Partner type -->
+    <div class="card">
+      <p class="card-title">How will you work with Equinix? <span class="req">*</span></p>
+      <p class="card-desc">This determines your portal features and which deal flows you're set up for. See the <a href="pc-dr-deal-type.html" style="color:var(--wf-accent,#3d6daa);">Partner Type Guide</a> if you're not sure.</p>
+      <div class="type-cards" role="radiogroup" aria-label="Partner type selection">
+        <div class="type-card selected" role="radio" aria-checked="true" tabindex="0" id="type-referral" onclick="selectType('referral')" onkeydown="if(event.key==='Enter'||event.key===' ')selectType('referral')">
+          <div class="type-radio"><div class="type-radio-dot"></div><span class="type-radio-label">Lead Referral Partner</span></div>
+          <h4>You refer. Equinix sells.</h4>
+          <p>You introduce qualified opportunities. Equinix owns the contract, billing, and delivery. Best when you influence deals but don't transact.</p>
+        </div>
+        <div class="type-card" role="radio" aria-checked="false" tabindex="0" id="type-reseller" onclick="selectType('reseller')" onkeydown="if(event.key==='Enter'||event.key===' ')selectType('reseller')">
+          <div class="type-radio"><div class="type-radio-dot"></div><span class="type-radio-label">Reseller</span></div>
+          <h4>You sell Equinix services.</h4>
+          <p>You own the commercial relationship, handle quoting, and may bundle Equinix into your offerings. Best when you transact directly with customers.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Company search + fields -->
+    <div class="card">
+      <p class="card-title">Find your company <span class="req">*</span></p>
+      <p class="card-desc">Search to see if your organization is already registered. Linking to an existing record speeds up approval.</p>
+
+      <div class="search-row" id="search-row">
+        <select id="region-select" class="region-select" aria-label="Your region (required)" onchange="onSearchInput()">
+          <option value="">Region…</option>
+          <option value="amer-us">Americas — US</option>
+          <option value="amer-ca">Americas — Canada</option>
+          <option value="amer-latam">Americas — LatAm</option>
+          <option value="emea">EMEA</option>
+          <option value="apac-sea">APAC — SE Asia</option>
+          <option value="apac-anz">APAC — ANZ</option>
+          <option value="apac-jp">APAC — Japan</option>
+        </select>
+        <div class="search-input-wrap">
+          <input type="text" class="search-input" id="company-search" placeholder="Company name…" aria-label="Company name" autocomplete="off" oninput="onSearchInput()" onkeydown="handleSearchKey(event)" aria-autocomplete="list" aria-controls="ac-list">
+          <div class="autocomplete-list" id="ac-list" role="listbox" aria-label="Company suggestions">
+            <div class="ac-item" id="ac-cloudbridge" role="option" onclick="fillSuggest('CloudBridge Technologies')" tabindex="-1">
+              <span class="ac-name">CloudBridge Technologies</span>
+              <span class="ac-hint">↵ to select</span>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-primary" id="search-btn" onclick="openSearchModal()" type="button" disabled aria-disabled="true">Search</button>
+      </div>
+      <p class="search-hint" id="search-hint">Select a region, then enter your company name. Can't find it? <button class="btn-link" onclick="showManualEntry()" type="button">Enter manually</button></p>
+
+      <!-- Selected company banner (shown after picking from modal) -->
+      <div class="selected-company-banner" id="selected-banner">
+        <div class="co-avatar" id="banner-avatar">CB</div>
+        <div class="co-info">
+          <h5 id="banner-name">—</h5>
+          <p id="banner-meta">—</p>
+        </div>
+        <button class="scb-change" onclick="clearCompanySelection()" type="button">Change</button>
+      </div>
+
+      <!-- Company detail fields (hidden until search picks one OR manual entry) -->
+      <div id="company-fields" style="display:none;">
+        <div class="form-grid" style="margin-bottom:14px;">
+          <div class="form-group">
+            <label for="co-name">Company name <span class="req">*</span></label>
+            <input type="text" id="co-name" autocomplete="organization">
+          </div>
+          <div class="form-group">
+            <label for="co-website">Company website <span class="req">*</span></label>
+            <input type="text" id="co-website" placeholder="https://">
+          </div>
+        </div>
+        <div class="form-grid" style="margin-bottom:14px;">
+          <div class="form-group">
+            <label for="co-country">Country <span class="req">*</span></label>
+            <select id="co-country">
+              <option value="">Select country…</option>
+              <option>United States</option>
+              <option>United Kingdom</option>
+              <option>Germany</option>
+              <option>France</option>
+              <option>Japan</option>
+              <option>Australia</option>
+              <option>Singapore</option>
+              <option>Canada</option>
+              <option>Netherlands</option>
+              <option>Brazil</option>
+              <option>India</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="co-city">City</label>
+            <input type="text" id="co-city" autocomplete="address-level2">
+          </div>
+        </div>
+        <div class="form-grid full" style="margin-bottom:0;">
+          <div class="form-group">
+            <label for="co-street">Street address</label>
+            <input type="text" id="co-street" autocomplete="street-address">
+          </div>
+        </div>
+        <div id="prefill-note" style="display:none; margin-top:12px;">
+          <span style="font-size:12px; color:var(--wf-accent,#3d6daa);">&#10003; Fields pre-filled from existing record — review and correct if needed.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Your information (merged into step 1) -->
+    <div class="card">
+      <p class="card-title">Your information</p>
+      <p class="card-desc">You'll be the primary contact for your organization's partner account.</p>
+
+      <div class="form-grid" style="margin-bottom:14px;">
+        <div class="form-group">
+          <label for="lang">Preferred language</label>
+          <select id="lang" style="max-width:260px;">
+            <option>English</option>
+            <option>French</option>
+            <option>German</option>
+            <option>Spanish</option>
+            <option>Japanese</option>
+            <option>Portuguese (Brazil)</option>
+            <option>Simplified Chinese</option>
+            <option>Korean</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-grid" style="margin-bottom:14px;">
+        <div class="form-group">
+          <label for="first-name">First name <span class="req">*</span></label>
+          <input type="text" id="first-name" autocomplete="given-name">
+        </div>
+        <div class="form-group">
+          <label for="last-name">Last name <span class="req">*</span></label>
+          <input type="text" id="last-name" autocomplete="family-name">
+        </div>
+      </div>
+      <div class="form-grid full" style="margin-bottom:14px;">
+        <div class="form-group">
+          <label for="job-title">Job title <span class="req">*</span></label>
+          <input type="text" id="job-title" autocomplete="organization-title">
+        </div>
+      </div>
+      <div class="form-grid" style="margin-bottom:14px;">
+        <div class="form-group">
+          <label for="email">Business email <span class="req">*</span></label>
+          <input type="email" id="email" autocomplete="email">
+          <span class="field-hint">Use your work email address.</span>
+        </div>
+        <div class="form-group">
+          <label for="phone">Phone <span class="req">*</span></label>
+          <input type="tel" id="phone" placeholder="+1 512 000 0000" autocomplete="tel">
+        </div>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="mobile">Mobile <span style="font-weight:400;color:var(--wf-muted,#6b7f99)">(optional)</span></label>
+          <input type="tel" id="mobile" autocomplete="tel">
+        </div>
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <span class="step-of">Step 1 of 4</span>
+      <div class="step-nav-right">
+        <button class="btn btn-primary" onclick="goToStep(2)" type="button">Next: Industry →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ STEP 2: Industry & Markets ═════════════════════════ -->
+  <section class="step-section" id="step-2" aria-label="Step 2: Industry and markets">
+
+    <div class="card">
+      <p class="card-title">Your markets</p>
+      <p class="card-desc">Helps us configure the right program track and connect you with the right PSM. Select all that apply.</p>
+
+      <!-- Verticals — 8 options → checkbox grid -->
+      <div class="field-label-group">
+        <label class="fgl-label" id="verticals-label">Target vertical markets <span class="req">*</span></label>
+        <span class="fgl-hint">Industries your customers are primarily in.</span>
+        <div class="checkbox-grid" role="group" aria-labelledby="verticals-label">
+          <label class="cg-item"><input type="checkbox" name="vertical" value="cloud-it"> Cloud &amp; IT Services</label>
+          <label class="cg-item"><input type="checkbox" name="vertical" value="content-media"> Content &amp; Digital Media</label>
+          <label class="cg-item"><input type="checkbox" name="vertical" value="enterprise"> Enterprise</label>
+          <label class="cg-item"><input type="checkbox" name="vertical" value="financial"> Financial Services</label>
+          <label class="cg-item"><input type="checkbox" name="vertical" value="network"> Network</label>
+          <label class="cg-item"><input type="checkbox" name="vertical" value="govt"> Government &amp; Public Sector</label>
+          <label class="cg-item"><input type="checkbox" name="vertical" value="healthcare"> Healthcare &amp; Life Sciences</label>
+          <label class="cg-item"><input type="checkbox" name="vertical" value="other-v"> Other</label>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <!-- Regions — 6 options → checkbox grid -->
+      <div class="field-label-group">
+        <label class="fgl-label" id="regions-label">Regions you serve <span class="req">*</span></label>
+        <span class="fgl-hint">Where are your active or target customers located?</span>
+        <div class="checkbox-grid cols-3" role="group" aria-labelledby="regions-label">
+          <label class="cg-item"><input type="checkbox" name="region" value="amer-n"> Americas — North</label>
+          <label class="cg-item"><input type="checkbox" name="region" value="amer-s"> Americas — South</label>
+          <label class="cg-item"><input type="checkbox" name="region" value="emea"> Europe, Middle East &amp; Africa</label>
+          <label class="cg-item"><input type="checkbox" name="region" value="apac-asean"> Asia Pacific — ASEAN</label>
+          <label class="cg-item"><input type="checkbox" name="region" value="apac-jp"> Asia Pacific — Japan</label>
+          <label class="cg-item"><input type="checkbox" name="region" value="apac-anz"> Asia Pacific — ANZ</label>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <!-- Customer size — 3 options → checkbox grid -->
+      <div class="field-label-group">
+        <label class="fgl-label" id="custsize-label">Target customer size</label>
+        <div class="checkbox-grid cols-3" role="group" aria-labelledby="custsize-label">
+          <label class="cg-item">
+            <input type="checkbox" name="custsize" value="smb">
+            <span>SMB<small>Under 500 employees</small></span>
+          </label>
+          <label class="cg-item">
+            <input type="checkbox" name="custsize" value="mid">
+            <span>Mid-market<small>500–5,000 employees</small></span>
+          </label>
+          <label class="cg-item">
+            <input type="checkbox" name="custsize" value="ent">
+            <span>Enterprise<small>5,000+ employees</small></span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn btn-secondary" onclick="goToStep(1)" type="button">← Back</button>
+      <div class="step-nav-right">
+        <span class="step-of">Step 2 of 4</span>
+        <button class="btn btn-primary" onclick="goToStep(3)" type="button">Next: Your business →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ STEP 3: Business details ═══════════════════════════ -->
+  <section class="step-section" id="step-3" aria-label="Step 3: Business details">
+
+    <!-- Reseller track -->
+    <div class="reseller-only" id="reseller-track">
+      <div class="card">
+        <p class="card-title">Your business — Reseller</p>
+        <p class="card-desc">Helps us configure the right commercial model and quoting setup for your account.</p>
+
+        <!-- Employee count — 5 options → radio grid -->
+        <div class="field-label-group">
+          <label class="fgl-label" id="emp-label">Employee count <span class="req">*</span></label>
+          <div class="radio-grid" role="radiogroup" aria-labelledby="emp-label">
+            <label class="rg-item"><input type="radio" name="emp" value="1-50"> 1–50</label>
+            <label class="rg-item"><input type="radio" name="emp" value="51-200"> 51–200</label>
+            <label class="rg-item"><input type="radio" name="emp" value="201-1000"> 201–1,000</label>
+            <label class="rg-item"><input type="radio" name="emp" value="1001-5000"> 1,001–5,000</label>
+            <label class="rg-item"><input type="radio" name="emp" value="5000+"> 5,000+</label>
+          </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Annual revenue — 5 options → radio grid -->
+        <div class="field-label-group">
+          <label class="fgl-label" id="rev-label">Annual revenue <span class="req">*</span></label>
+          <div class="radio-grid" role="radiogroup" aria-labelledby="rev-label">
+            <label class="rg-item"><input type="radio" name="revenue" value="sub-1m"> Under $1M</label>
+            <label class="rg-item"><input type="radio" name="revenue" value="1m-10m"> $1M–$10M</label>
+            <label class="rg-item"><input type="radio" name="revenue" value="10m-50m"> $10M–$50M</label>
+            <label class="rg-item"><input type="radio" name="revenue" value="50m-250m"> $50M–$250M</label>
+            <label class="rg-item"><input type="radio" name="revenue" value="250m+"> $250M+</label>
+          </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Business mix % -->
+        <div class="field-label-group">
+          <label class="fgl-label">Revenue mix by category <span style="font-weight:400;color:var(--wf-muted,#6b7f99)">(should total 100%)</span></label>
+          <span class="fgl-hint">Approximate breakdown of your current or target revenue mix.</span>
+          <table class="mix-table">
+            <tr><td>Cloud &amp; managed services</td><td><input type="number" class="mix-pct-input" name="mix" min="0" max="100" placeholder="0" oninput="updateMixTotal()"> %</td></tr>
+            <tr><td>Colocation / data centre</td><td><input type="number" class="mix-pct-input" name="mix" min="0" max="100" placeholder="0" oninput="updateMixTotal()"> %</td></tr>
+            <tr><td>Network &amp; connectivity</td><td><input type="number" class="mix-pct-input" name="mix" min="0" max="100" placeholder="0" oninput="updateMixTotal()"> %</td></tr>
+            <tr><td>Professional / integration services</td><td><input type="number" class="mix-pct-input" name="mix" min="0" max="100" placeholder="0" oninput="updateMixTotal()"> %</td></tr>
+            <tr class="mix-total-row"><td>Total</td><td><span id="mix-total">0%</span></td></tr>
+          </table>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Cloud solutions — 7 → checkbox grid -->
+        <div class="field-label-group">
+          <label class="fgl-label" id="csol-label">Technology solutions you offer</label>
+          <div class="checkbox-grid" role="group" aria-labelledby="csol-label">
+            <label class="cg-item"><input type="checkbox" name="csol" value="iaas"> Infrastructure (IaaS)</label>
+            <label class="cg-item"><input type="checkbox" name="csol" value="paas"> Platform (PaaS)</label>
+            <label class="cg-item"><input type="checkbox" name="csol" value="saas"> Software (SaaS)</label>
+            <label class="cg-item"><input type="checkbox" name="csol" value="netsvc"> Network services</label>
+            <label class="cg-item"><input type="checkbox" name="csol" value="security"> Security</label>
+            <label class="cg-item"><input type="checkbox" name="csol" value="managed"> Managed services</label>
+            <label class="cg-item"><input type="checkbox" name="csol" value="si"> Systems integration</label>
+          </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Cloud providers — 8 → checkbox grid -->
+        <div class="field-label-group">
+          <label class="fgl-label" id="cprov-label">Cloud providers you work with</label>
+          <div class="checkbox-grid cols-2" role="group" aria-labelledby="cprov-label">
+            <label class="cg-item"><input type="checkbox" name="cprov" value="aws"> AWS</label>
+            <label class="cg-item"><input type="checkbox" name="cprov" value="azure"> Microsoft Azure</label>
+            <label class="cg-item"><input type="checkbox" name="cprov" value="gcp"> Google Cloud</label>
+            <label class="cg-item"><input type="checkbox" name="cprov" value="oracle"> Oracle Cloud</label>
+            <label class="cg-item"><input type="checkbox" name="cprov" value="ibm"> IBM Cloud</label>
+            <label class="cg-item"><input type="checkbox" name="cprov" value="alibaba"> Alibaba Cloud</label>
+            <label class="cg-item"><input type="checkbox" name="cprov" value="salesforce"> Salesforce</label>
+            <label class="cg-item"><input type="checkbox" name="cprov" value="other-cloud"> Other</label>
+          </div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="form-grid full">
+          <div class="form-group">
+            <label for="other-partners">Other channel, alliance, or ISV partners</label>
+            <textarea id="other-partners" placeholder="e.g. Cisco, VMware, Palo Alto Networks…"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lead Referral track -->
+    <div class="referral-only" id="referral-track">
+      <div class="card">
+        <p class="card-title">Your business — Lead Referral Partner</p>
+        <p class="card-desc">Helps us align your account setup to the right program track and assign the right PSM.</p>
+
+        <div class="form-grid" style="margin-bottom:20px;">
+          <div class="form-group">
+            <label for="biz-type">Business type <span class="req">*</span></label>
+            <select id="biz-type">
+              <option value="">Select type…</option>
+              <option>IT Reseller / VAR</option>
+              <option>Independent Consultant</option>
+              <option>Independent Software Vendor (ISV)</option>
+              <option>Managed Service Provider (MSP)</option>
+              <option>Systems Integrator</option>
+              <option>Telecom Agent / Broker</option>
+              <option>Technology Alliance Partner</option>
+              <option>Other</option>
+            </select>
+          </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Lead gen method — 5 → checkbox grid -->
+        <div class="field-label-group">
+          <label class="fgl-label" id="leadgen-label">How do you typically generate leads?</label>
+          <div class="checkbox-grid" role="group" aria-labelledby="leadgen-label">
+            <label class="cg-item"><input type="checkbox" name="leadgen" value="existing"> Existing customer relationships</label>
+            <label class="cg-item"><input type="checkbox" name="leadgen" value="events"> Events &amp; conferences</label>
+            <label class="cg-item"><input type="checkbox" name="leadgen" value="digital"> Digital &amp; content marketing</label>
+            <label class="cg-item"><input type="checkbox" name="leadgen" value="field"> Field sales &amp; account management</label>
+            <label class="cg-item"><input type="checkbox" name="leadgen" value="ecosystem"> Vendor / ecosystem partnerships</label>
+          </div>
+        </div>
+
+        <hr class="divider">
+
+        <!-- Deal value — 4 → radio grid -->
+        <div class="field-label-group">
+          <label class="fgl-label" id="dealval-label">Typical deal value you refer</label>
+          <div class="radio-grid" role="radiogroup" aria-labelledby="dealval-label">
+            <label class="rg-item"><input type="radio" name="dealval" value="sub-25k"> Under $25K/yr</label>
+            <label class="rg-item"><input type="radio" name="dealval" value="25k-100k"> $25K–$100K/yr</label>
+            <label class="rg-item"><input type="radio" name="dealval" value="100k-500k"> $100K–$500K/yr</label>
+            <label class="rg-item"><input type="radio" name="dealval" value="500k+"> $500K+/yr</label>
+          </div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="form-grid full">
+          <div class="form-group">
+            <label for="ref-notes">Anything else we should know?</label>
+            <textarea id="ref-notes" placeholder="Optional context that helps us configure the right program track."></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn btn-secondary" onclick="goToStep(2)" type="button">← Back</button>
+      <div class="step-nav-right">
+        <span class="step-of">Step 3 of 4</span>
+        <button class="btn btn-primary" onclick="goToStep(4)" type="button">Next: Review →</button>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ══ STEP 4: Review & Submit ══════════════════════════════ -->
+  <section class="step-section" id="step-4" aria-label="Step 4: Review your application">
+
+    <div class="card">
+      <p class="card-title">Review your application</p>
+      <p class="card-desc">Check everything below before you submit. Use the Edit links to go back and change anything.</p>
+
+      <!-- Partner type -->
+      <div class="review-section">
+        <div class="review-section-hd">
+          <h4>Partner type</h4>
+          <button class="review-edit" onclick="goToStep(1)" type="button">Edit</button>
+        </div>
+        <div class="review-row">
+          <span class="review-label">Type</span>
+          <span class="review-value" id="rv-ptype">—</span>
+        </div>
+      </div>
+
+      <!-- Company -->
+      <div class="review-section">
+        <div class="review-section-hd">
+          <h4>Company</h4>
+          <button class="review-edit" onclick="goToStep(1)" type="button">Edit</button>
+        </div>
+        <div class="review-row">
+          <span class="review-label">Organization</span>
+          <span class="review-value" id="rv-co-name">—</span>
+        </div>
+        <div class="review-row">
+          <span class="review-label">Website</span>
+          <span class="review-value" id="rv-co-website">—</span>
+        </div>
+        <div class="review-row">
+          <span class="review-label">Location</span>
+          <span class="review-value" id="rv-co-location">—</span>
+        </div>
+      </div>
+
+      <!-- Contact -->
+      <div class="review-section">
+        <div class="review-section-hd">
+          <h4>Your contact info</h4>
+          <button class="review-edit" onclick="goToStep(1)" type="button">Edit</button>
+        </div>
+        <div class="review-row">
+          <span class="review-label">Name</span>
+          <span class="review-value" id="rv-name">—</span>
+        </div>
+        <div class="review-row">
+          <span class="review-label">Title</span>
+          <span class="review-value" id="rv-title">—</span>
+        </div>
+        <div class="review-row">
+          <span class="review-label">Email</span>
+          <span class="review-value" id="rv-email">—</span>
+        </div>
+        <div class="review-row">
+          <span class="review-label">Phone</span>
+          <span class="review-value" id="rv-phone">—</span>
+        </div>
+      </div>
+
+      <!-- Industry & markets -->
+      <div class="review-section">
+        <div class="review-section-hd">
+          <h4>Industry &amp; markets</h4>
+          <button class="review-edit" onclick="goToStep(2)" type="button">Edit</button>
+        </div>
+        <div class="review-row">
+          <span class="review-label">Verticals</span>
+          <span class="review-value" id="rv-verticals"><em style="color:var(--wf-muted)">None selected</em></span>
+        </div>
+        <div class="review-row">
+          <span class="review-label">Regions</span>
+          <span class="review-value" id="rv-regions"><em style="color:var(--wf-muted)">None selected</em></span>
+        </div>
+        <div class="review-row">
+          <span class="review-label">Customer size</span>
+          <span class="review-value" id="rv-custsize"><em style="color:var(--wf-muted)">None selected</em></span>
+        </div>
+      </div>
+
+      <!-- Business details -->
+      <div class="review-section" id="rv-biz-section">
+        <div class="review-section-hd">
+          <h4>Business details</h4>
+          <button class="review-edit" onclick="goToStep(3)" type="button">Edit</button>
+        </div>
+        <div id="rv-biz-rows"><!-- populated by JS --></div>
+      </div>
+    </div>
+
+    <!-- Legal + submit -->
+    <div class="card">
+      <p class="card-title">Agreement &amp; submission</p>
+      <p class="legal-text">Applications are typically reviewed within 3–5 business days. Please confirm all three statements before submitting.</p>
+      <label class="check-item"><input type="checkbox" id="auth-check"> I am duly authorized to submit this application and enter into agreements on behalf of my organization.</label>
+      <label class="check-item"><input type="checkbox" id="cert-check"> I certify that the information provided is accurate and complete to the best of my knowledge.</label>
+      <label class="check-item"><input type="checkbox" id="terms-check"> I have read and agree to the <a href="#">Equinix Partner Program Terms &amp; Conditions</a>.</label>
+      <div class="recaptcha-box">
+        <div class="recap-check"></div>
+        <span style="font-size:13px; color:var(--wf-ink,#1e2a3a);">I'm not a robot</span>
+        <span class="recap-logo">reCAPTCHA<br>Privacy · Terms</span>
+      </div>
+      <div class="step-nav" style="margin-top:0;">
+        <button class="btn btn-secondary" onclick="goToStep(3)" type="button">← Back</button>
+        <div class="step-nav-right">
+          <span class="step-of">Step 4 of 4</span>
+          <button class="btn btn-primary" onclick="submitApplication()" type="button">Submit application</button>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+</div><!-- /wizard-shell -->
+</main>
+
+<!-- ── SPEC PANEL ──────────────────────────────────────────── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Notes</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+
+    <h3>Summary</h3>
+    <p>Partner Organization Registration wizard — Variant A (search-before-create). 4-step wizard: Company &amp; You → Industry → Business → Review. Company search triggers a modal showing matching Salesforce Account records; selecting one pre-fills the company fields. Step 3 content renders conditionally based on partner type chosen in Step 1. Step 4 summarizes all inputs before submission. See <code>onboarding-apply-form.html</code> for Variant B (no search, manual entry throughout).</p>
+
+    <hr class="spec-divider">
+
+    <h3>Figma Source</h3>
+    <ul>
+      <li><strong>File:</strong> Partner-Central</li>
+      <li><strong>Node:</strong> 2311-32822</li>
+      <li><strong>Variants covered:</strong> Reseller form + Lead Referral form (both handled via conditional Step 3)</li>
+    </ul>
+
+    <hr class="spec-divider">
+
+    <h3>Flow Position</h3>
+    <ul>
+      <li><strong>Flow:</strong> Partner Organization Registration &amp; Onboarding — Step 1 (Apply)</li>
+      <li><strong>Entry points:</strong> Equinix.com partner landing → "Apply"; PSM invite link; Partner Central signup CTA</li>
+      <li><strong>Pre-auth:</strong> Yes — public page, no login required</li>
+      <li><strong>On submit:</strong> → onboarding-agreement-confirmation.html (email confirmation + MSA sent)</li>
+    </ul>
+
+    <hr class="spec-divider">
+
+    <h3>Jobs to Be Done</h3>
+    <ul>
+      <li>Reduce abandonment by splitting a long form into 3 logical chunks with clear progress</li>
+      <li>Prevent duplicate Salesforce Account records via search-before-create in Step 1</li>
+      <li>Show users exactly what they're selecting with the partner type cards before asking for details</li>
+      <li>Collect enough data for the PSM to qualify and configure the account without a follow-up call</li>
+    </ul>
+
+    <hr class="spec-divider">
+
+    <h3>Design Specification</h3>
+
+    <h4>Primary Content</h4>
+    <ul>
+      <li>3-step stepper: Company &amp; You · Industry · Business</li>
+      <li>Step 1: partner type radio cards + company search → modal → pre-fill + contact info (merged)</li>
+      <li>Step 2: vertical markets (8 → checkbox grid), regions (6 → checkbox grid), customer size (3 → checkbox grid)</li>
+      <li>Step 3 Reseller: employee count (5, radio grid), revenue (5, radio grid), business mix %, cloud solutions (7, checkbox grid), cloud providers (8, checkbox grid)</li>
+      <li>Step 3 Referral: business type (dropdown, 8 options → select), lead gen method (5, checkbox grid), deal value (4, radio grid)</li>
+    </ul>
+
+    <h4>Interactive Elements</h4>
+    <ul>
+      <li>Partner type cards — radio group; drives Step 3 conditional render</li>
+      <li>Company search → openSearchModal() shows overlay modal with 2 matching records</li>
+      <li>Modal result click → selectCompanyResult(id) pre-fills form fields, closes modal, shows selected company banner</li>
+      <li>"My company isn't listed" → clears search, shows manual entry form</li>
+      <li>Selected company banner — "Change" button resets back to search state</li>
+      <li>Checkbox grids + radio grids — whole tile clickable, highlights on check</li>
+      <li>Business mix: live running total with colour feedback (blue = 100%, red ≠ 100%)</li>
+    </ul>
+
+    <h4>Functionality</h4>
+    <ul>
+      <li><strong>openSearchModal()</strong> — reads input, sets modal subhead with query text, opens overlay</li>
+      <li><strong>selectCompanyResult(id)</strong> — 'cloudbridge-us': fills name=CloudBridge Technologies Inc., website=cloudbridge.com, country=United States, city=Austin, street=500 West 2nd Street Suite 1900; 'cloudbridge-emea': fills London variant; 'new': shows blank manual form</li>
+      <li><strong>Pre-fill pattern</strong> — filled inputs get <code>.prefilled</code> class (tinted background) so user sees what was populated vs. blank</li>
+      <li><strong>goToStep(n)</strong> — hides all steps, activates target, updates stepper; triggers renderStep3() if n=3</li>
+      <li><strong>UX rule applied:</strong> options &lt; 10 → checkbox/radio grid; options ≥ 10 → &lt;select&gt; (Language, Country, Business Type)</li>
+    </ul>
+
+    <hr class="spec-divider">
+
+    <h3>Design Notes</h3>
+    <ul>
+      <li>Modal "click outside to close" is implemented — escape key should also close (production)</li>
+      <li>Pre-filled fields remain editable — user may need to correct stale Salesforce data</li>
+      <li>Salesforce duplicate detection should run on company name + domain before showing results in production</li>
+      <li>Partner type can't be changed after Step 1 without going back — consider a visible type indicator in steps 2 and 3 so user remembers what they selected</li>
+      <li>Companion file <code>onboarding-apply-form.html</code> = Variant B (no search), same 3-step structure</li>
+    </ul>
+
+  </div>
+</aside>
+
+<!-- ── Script ──────────────────────────────────────────────── -->
+<script>
+  let currentStep  = 1;
+  let currentType  = 'referral';
+  let companyChosen = false; // true once search result selected or manual entry shown
+
+  /* ── Step navigation ─────────────────────────────────────── */
+  function goToStep(n) {
+    document.querySelectorAll('.step-section').forEach(el => el.classList.remove('active'));
+    document.getElementById('step-' + n).classList.add('active');
+    for (let i = 1; i <= 4; i++) {
+      const sn = document.getElementById('sn-' + i);
+      sn.classList.remove('active', 'completed');
+      if (i < n)  sn.classList.add('completed');
+      if (i === n) sn.classList.add('active');
+    }
+    if (n === 3) renderStep3();
+    if (n === 4) populateReview();
+    currentStep = n;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  /* ── Review step: populate summary ───────────────────────── */
+  function populateReview() {
+    // Partner type
+    const ptLabel = currentType === 'reseller' ? 'Reseller' : 'Lead Referral Partner';
+    document.getElementById('rv-ptype').innerHTML = '<span class="ptype-badge">' + ptLabel + '</span>';
+
+    // Company
+    rv('rv-co-name',     document.getElementById('co-name')?.value);
+    rv('rv-co-website',  document.getElementById('co-website')?.value);
+    const country = document.getElementById('co-country');
+    const countryVal = country?.options[country.selectedIndex]?.text;
+    const city = document.getElementById('co-city')?.value;
+    rv('rv-co-location', [city, countryVal].filter(Boolean).join(', '));
+
+    // Contact
+    const fn = document.getElementById('first-name')?.value || '';
+    const ln = document.getElementById('last-name')?.value  || '';
+    rv('rv-name',  [fn, ln].filter(Boolean).join(' '));
+    rv('rv-title', document.getElementById('job-title')?.value);
+    rv('rv-email', document.getElementById('email')?.value);
+    rv('rv-phone', document.getElementById('phone')?.value);
+
+    // Verticals
+    const vChecked = [...document.querySelectorAll('input[name="vertical"]:checked')].map(el => el.closest('label').textContent.trim());
+    rvList('rv-verticals', vChecked);
+
+    // Regions
+    const rChecked = [...document.querySelectorAll('input[name="region"]:checked')].map(el => el.closest('label').textContent.trim());
+    rvList('rv-regions', rChecked);
+
+    // Customer size
+    const csChecked = [...document.querySelectorAll('input[name="custsize"]:checked')].map(el => {
+      const span = el.closest('label').querySelector('span');
+      return span ? span.firstChild.textContent.trim() : el.closest('label').textContent.trim();
+    });
+    rvList('rv-custsize', csChecked);
+
+    // Business details (conditional)
+    const bizRows = document.getElementById('rv-biz-rows');
+    bizRows.innerHTML = '';
+    if (currentType === 'reseller') {
+      const emp = document.querySelector('input[name="emp"]:checked');
+      const rev = document.querySelector('input[name="revenue"]:checked');
+      bizRow(bizRows, 'Employees',       emp ? emp.closest('label').textContent.trim() : null);
+      bizRow(bizRows, 'Annual revenue',  rev ? rev.closest('label').textContent.trim() : null);
+    } else {
+      const btype = document.getElementById('biz-type');
+      const btVal = btype?.options[btype.selectedIndex]?.text;
+      const dealval = document.querySelector('input[name="dealval"]:checked');
+      bizRow(bizRows, 'Business type',   btVal && btVal !== 'Select type…' ? btVal : null);
+      bizRow(bizRows, 'Typical deal',    dealval ? dealval.closest('label').textContent.trim() : null);
+    }
+  }
+
+  function rv(id, val) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (val) { el.textContent = val; el.className = 'review-value'; }
+    else     { el.innerHTML = '<em style="color:var(--wf-muted)">Not provided</em>'; el.className = 'review-value'; }
+  }
+
+  function rvList(id, arr) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    if (arr && arr.length) { el.textContent = arr.join(', '); el.className = 'review-value'; }
+    else                   { el.innerHTML = '<em style="color:var(--wf-muted)">None selected</em>'; el.className = 'review-value'; }
+  }
+
+  function bizRow(container, label, val) {
+    const row = document.createElement('div');
+    row.className = 'review-row';
+    const lbl = document.createElement('span'); lbl.className = 'review-label'; lbl.textContent = label;
+    const v = document.createElement('span');
+    if (val) { v.className = 'review-value'; v.textContent = val; }
+    else     { v.className = 'review-value'; v.innerHTML = '<em style="color:var(--wf-muted)">Not provided</em>'; }
+    row.appendChild(lbl); row.appendChild(v);
+    container.appendChild(row);
+  }
+
+  /* ── Partner type ────────────────────────────────────────── */
+  function selectType(type) {
+    currentType = type;
+    ['referral', 'reseller'].forEach(t => {
+      const card = document.getElementById('type-' + t);
+      card.classList.toggle('selected', t === type);
+      card.setAttribute('aria-checked', t === type ? 'true' : 'false');
+    });
+  }
+
+  /* ── Step 3 conditional track ────────────────────────────── */
+  function renderStep3() {
+    document.getElementById('reseller-track').classList.toggle('visible', currentType === 'reseller');
+    document.getElementById('referral-track').classList.toggle('visible', currentType === 'referral');
+  }
+
+  /* ── Autocomplete / search-ready logic ──────────────────────── */
+
+  /* Maps region select values to human-readable labels */
+  const regionLabels = {
+    'amer-us':   'Americas — US',
+    'amer-ca':   'Americas — Canada',
+    'amer-latam':'Americas — LatAm',
+    'emea':      'EMEA',
+    'apac-sea':  'APAC — SE Asia',
+    'apac-anz':  'APAC — ANZ',
+    'apac-jp':   'APAC — Japan'
+  };
+
+  /* Which entity is appropriate for each region? */
+  const regionToEntity = {
+    'amer-us': 'cloudbridge-us', 'amer-ca': 'cloudbridge-us',
+    'amer-latam': 'cloudbridge-us', 'emea': 'cloudbridge-emea',
+    'apac-sea': null, 'apac-anz': null, 'apac-jp': null
+  };
+
+  function searchReady() {
+    const name = document.getElementById('company-search').value.trim();
+    const region = document.getElementById('region-select').value;
+    return name.length >= 2 && region !== '';
+  }
+
+  function onSearchInput() {
+    const val = document.getElementById('company-search').value.trim();
+    const acList = document.getElementById('ac-list');
+    const btn = document.getElementById('search-btn');
+
+    // Show autocomplete if 2+ chars and input roughly matches 'cloudbridge'
+    if (val.length >= 2 && 'cloudbridge technologies'.indexOf(val.toLowerCase()) >= 0) {
+      acList.classList.add('open');
+    } else {
+      acList.classList.remove('open');
+    }
+
+    // Enable / disable Search button
+    const ready = searchReady();
+    btn.disabled = !ready;
+    btn.setAttribute('aria-disabled', String(!ready));
+  }
+
+  function fillSuggest(suggestion) {
+    document.getElementById('company-search').value = suggestion;
+    document.getElementById('ac-list').classList.remove('open');
+    const btn = document.getElementById('search-btn');
+    const ready = searchReady();
+    btn.disabled = !ready;
+    btn.setAttribute('aria-disabled', String(!ready));
+    document.getElementById('company-search').focus();
+  }
+
+  function handleSearchKey(e) {
+    const acList = document.getElementById('ac-list');
+    if (e.key === 'Enter') {
+      if (acList.classList.contains('open')) {
+        fillSuggest('CloudBridge Technologies');
+        return;
+      }
+      if (searchReady()) openSearchModal();
+    }
+    if (e.key === 'ArrowDown' && acList.classList.contains('open')) {
+      document.getElementById('ac-cloudbridge').focus();
+      e.preventDefault();
+    }
+    if (e.key === 'Escape') {
+      acList.classList.remove('open');
+    }
+  }
+
+  /* ── Modal ───────────────────────────────────────────────── */
+  function openSearchModal() {
+    if (!searchReady()) { document.getElementById('company-search').focus(); return; }
+
+    const q = document.getElementById('company-search').value.trim();
+    const region = document.getElementById('region-select').value;
+    const regionLabel = regionLabels[region] || region;
+    const matchEntity = regionToEntity[region];
+
+    document.getElementById('modal-query-display').textContent = q;
+    document.getElementById('modal-region-display').textContent = regionLabel;
+    document.getElementById('ac-list').classList.remove('open');
+
+    // Apply region-mismatch to the non-matching entity
+    const usResult   = document.getElementById('result-cloudbridge-us');
+    const emeaResult = document.getElementById('result-cloudbridge-emea');
+    const usBadge    = document.getElementById('badge-cloudbridge-us');
+    const emeaBadge  = document.getElementById('badge-cloudbridge-emea');
+
+    if (matchEntity === 'cloudbridge-us') {
+      usResult.classList.remove('region-mismatch');
+      emeaResult.classList.add('region-mismatch');
+      usBadge.className   = 'co-badge co-badge-match';
+      usBadge.textContent = 'Matches region';
+      emeaBadge.className   = 'co-badge co-badge-mismatch';
+      emeaBadge.textContent = 'Different region';
+    } else if (matchEntity === 'cloudbridge-emea') {
+      emeaResult.classList.remove('region-mismatch');
+      usResult.classList.add('region-mismatch');
+      emeaBadge.className   = 'co-badge co-badge-match';
+      emeaBadge.textContent = 'Matches region';
+      usBadge.className   = 'co-badge co-badge-mismatch';
+      usBadge.textContent = 'Different region';
+    } else {
+      // No entity pre-matched for this region — both selectable, neutral badges
+      usResult.classList.remove('region-mismatch');
+      emeaResult.classList.remove('region-mismatch');
+      [usBadge, emeaBadge].forEach(b => {
+        b.className = 'co-badge'; b.textContent = 'Existing record';
+      });
+    }
+
+    document.getElementById('search-modal').classList.add('open');
+    document.querySelector('.modal').focus();
+  }
+
+  function closeModal() {
+    document.getElementById('search-modal').classList.remove('open');
+  }
+
+  function handleModalBackdropClick(e) {
+    if (e.target === document.getElementById('search-modal')) closeModal();
+  }
+
+  /* Company record data (dummy / plausible for CloudBridge story) */
+  const companyData = {
+    'cloudbridge-us': {
+      avatar: 'CB',
+      name: 'CloudBridge Technologies Inc.',
+      meta: 'cloudbridge.com · Austin, TX, USA · ~350 employees',
+      fields: { name: 'CloudBridge Technologies Inc.', website: 'https://cloudbridge.com', country: 'United States', city: 'Austin', street: '500 West 2nd Street, Suite 1900' }
+    },
+    'cloudbridge-emea': {
+      avatar: 'CB',
+      name: 'CloudBridge EMEA Ltd.',
+      meta: 'cloudbridge.com/emea · London, UK · ~75 employees',
+      fields: { name: 'CloudBridge EMEA Ltd.', website: 'https://cloudbridge.com/emea', country: 'United Kingdom', city: 'London', street: '1 Canada Square, Canary Wharf' }
+    }
+  };
+
+  function selectCompanyResult(id) {
+    closeModal();
+    if (id === 'new') { showManualEntry(); return; }
+    const data = companyData[id];
+    if (!data) return;
+
+    // Show banner immediately
+    document.getElementById('banner-avatar').textContent = data.avatar;
+    document.getElementById('banner-name').textContent = data.name;
+    document.getElementById('banner-meta').textContent = data.meta;
+    document.getElementById('selected-banner').classList.add('visible');
+
+    // Hide search row + hint
+    document.getElementById('search-row').style.display  = 'none';
+    document.getElementById('search-hint').style.display = 'none';
+
+    // Show company fields area (blank while loading)
+    document.getElementById('company-fields').style.display = 'block';
+
+    // Progressive / staggered fill — simulates Salesforce record retrieval
+    const f = data.fields;
+    setTimeout(() => setFieldAnimated('co-name',    f.name),    300);
+    setTimeout(() => setFieldAnimated('co-website', f.website), 550);
+    setTimeout(() => setSelectAnimated('co-country', f.country), 800);
+    setTimeout(() => setFieldAnimated('co-city',    f.city),    1050);
+    setTimeout(() => setFieldAnimated('co-street',  f.street),  1300);
+    setTimeout(() => {
+      document.getElementById('prefill-note').style.display = 'block';
+    }, 1550);
+
+    companyChosen = true;
+  }
+
+  /* Animated fill: briefly show a "Retrieving…" placeholder, then set value */
+  function setFieldAnimated(id, val) {
+    const el = document.getElementById(id);
+    el.placeholder = 'Retrieving…';
+    el.value = '';
+    el.classList.remove('prefilled');
+    setTimeout(() => {
+      el.value = val;
+      el.placeholder = '';
+      el.classList.add('prefilled');
+    }, 140);
+  }
+
+  function setSelectAnimated(id, val) {
+    const el = document.getElementById(id);
+    el.classList.remove('prefilled');
+    setTimeout(() => {
+      for (let opt of el.options) {
+        if (opt.text === val || opt.value === val) { opt.selected = true; break; }
+      }
+      el.classList.add('prefilled');
+    }, 140);
+  }
+
+  function setField(id, val) {
+    const el = document.getElementById(id);
+    el.value = val; el.classList.add('prefilled');
+  }
+
+  function setSelect(id, val) {
+    const el = document.getElementById(id);
+    for (let opt of el.options) {
+      if (opt.text === val || opt.value === val) { opt.selected = true; break; }
+    }
+    el.classList.add('prefilled');
+  }
+
+  function clearCompanySelection() {
+    document.getElementById('selected-banner').classList.remove('visible');
+    document.getElementById('search-row').style.display  = '';
+    document.getElementById('search-hint').style.display = '';
+    document.getElementById('company-search').value = '';
+    document.getElementById('region-select').value = '';
+    document.getElementById('ac-list').classList.remove('open');
+    document.getElementById('company-fields').style.display = 'none';
+    document.getElementById('prefill-note').style.display   = 'none';
+    ['co-name','co-website','co-city','co-street'].forEach(id => {
+      const el = document.getElementById(id);
+      el.value = ''; el.placeholder = ''; el.classList.remove('prefilled');
+    });
+    document.getElementById('co-country').selectedIndex = 0;
+    document.getElementById('co-country').classList.remove('prefilled');
+    // Reset search button to disabled
+    const btn = document.getElementById('search-btn');
+    btn.disabled = true; btn.setAttribute('aria-disabled', 'true');
+    companyChosen = false;
+  }
+
+  function showManualEntry() {
+    document.getElementById('search-row').style.display  = 'none';
+    document.getElementById('search-hint').style.display = 'none';
+    document.getElementById('selected-banner').classList.remove('visible');
+    document.getElementById('company-fields').style.display = 'block';
+    document.getElementById('prefill-note').style.display   = 'none';
+    // Add "search instead" link
+    const link = document.createElement('p');
+    link.style.cssText = 'font-size:12px; margin-top:12px;';
+    link.innerHTML = '<button class="btn-link" onclick="clearCompanySelection()" type="button">← Search for existing company instead</button>';
+    const cf = document.getElementById('company-fields');
+    if (!document.getElementById('back-to-search')) {
+      link.id = 'back-to-search';
+      cf.appendChild(link);
+    }
+    companyChosen = true;
+  }
+
+  /* ── Business mix ────────────────────────────────────────── */
+  function updateMixTotal() {
+    const inputs = document.querySelectorAll('input[name="mix"]');
+    let total = 0;
+    inputs.forEach(i => { total += parseInt(i.value || 0, 10); });
+    const el = document.getElementById('mix-total');
+    el.textContent = total + '%';
+    el.className = total === 100 ? 'valid' : total > 0 ? 'invalid' : '';
+  }
+
+  /* ── Submit ──────────────────────────────────────────────── */
+  function submitApplication() {
+    const cert  = document.getElementById('cert-check').checked;
+    const terms = document.getElementById('terms-check').checked;
+    if (!cert || !terms) { alert('Please check both agreement boxes before submitting.'); return; }
+    window.location.href = 'onboarding-agreement-confirmation.html';
+  }
+
+  /* ── Spec panel ──────────────────────────────────────────── */
+  function toggleSpec() {
+    const panel  = document.getElementById('spec-panel');
+    const toggle = document.getElementById('spec-toggle');
+    toggle.setAttribute('aria-expanded', panel.classList.toggle('open'));
+  }
+
+  /* ── Escape to close modal ───────────────────────────────── */
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModal();
+  });
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

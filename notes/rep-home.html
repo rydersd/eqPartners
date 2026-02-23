@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Partner Rep Home - Equinix Partner Portal</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: var(--wf-canvas, #f5f7fb); }
+    .container { max-width: 1400px; margin: 0 auto; padding: 24px; }
+
+    .welcome-banner { background: var(--wf-ink, #1e2a3a); color: white; padding: 32px 24px; border-radius: 8px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; }
+    .welcome-text h1 { margin: 0 0 8px 0; font-size: 28px; font-weight: 700; }
+    .welcome-text p { margin: 0 0 4px 0; font-size: 14px; color: rgba(255,255,255,0.95); }
+    .welcome-company { margin: 4px 0 0 0; font-size: 12px; color: rgba(255,255,255,0.85); }
+    .completion-badge { background: rgba(255,255,255,0.15); border: 3px solid rgba(255,255,255,0.4); border-radius: 50%; width: 100px; height: 100px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; }
+    .completion-badge-large { font-size: 36px; }
+    .completion-badge-sub { font-size: 11px; margin-top: 6px; font-weight: 600; opacity: 0.95; }
+
+    .grid-2 { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 24px; }
+    .grid-1 { display: grid; grid-template-columns: 1fr; gap: 24px; }
+
+    .progress-hero { background: white; padding: 32px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .progress-hero h2 { margin: 0 0 20px 0; font-size: 18px; font-weight: 600; color: var(--wf-ink, #1e2a3a); }
+    .progress-number { font-size: 44px; font-weight: 700; color: var(--wf-accent, #3d6daa); margin-bottom: 8px; }
+    .progress-bar { background: var(--wf-tint, #dce4ef); height: 28px; border-radius: 4px; overflow: hidden; margin: 20px 0; }
+    .progress-fill { background: var(--wf-accent, #3d6daa); height: 100%; width: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: 600; }
+    .progress-text { font-size: 13px; color: var(--wf-muted, #6b7f99); margin-bottom: 12px; }
+    .progress-note { font-size: 12px; color: var(--wf-muted, #6b7f99); margin-top: 12px; font-style: italic; }
+
+    .deadline-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+    .deadline-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-left: 4px solid var(--wf-tint, #dce4ef); }
+    .deadline-card.overdue { border-left-color: var(--wf-red, #8b4553); background: var(--wf-surface, #edf1f7); }
+    .deadline-card.expiring { border-left-color: var(--wf-amber, #8b7745); background: var(--wf-surface, #edf1f7); }
+    .deadline-card.upcoming { border-left-color: var(--wf-accent, #3d6daa); background: var(--wf-surface, #edf1f7); }
+    .deadline-card h3 { margin: 0 0 12px 0; font-size: 14px; font-weight: 600; color: var(--wf-ink, #1e2a3a); }
+    .deadline-card p { margin: 0 8px 0 0; font-size: 12px; color: var(--wf-muted, #6b7f99); }
+    .deadline-time { font-size: 11px; color: var(--wf-muted, #6b7f99); margin: 8px 0; font-weight: 500; }
+    .deadline-time.overdue { color: var(--wf-red, #8b4553); }
+    .deadline-time.expiring { color: var(--wf-amber, #8b7745); }
+    .deadline-progress { background: var(--wf-tint, #dce4ef); height: 6px; border-radius: 2px; margin: 8px 0; overflow: hidden; }
+    .deadline-progress-fill { background: var(--wf-amber, #8b7745); height: 100%; }
+    .deadline-cta { margin-top: 12px; }
+    .btn { display: inline-block; padding: 8px 16px; background: var(--wf-accent, #3d6daa); color: white; text-decoration: none; border-radius: 4px; font-size: 12px; font-weight: 600; border: none; cursor: pointer; transition: background 0.2s; }
+    .btn:hover { background: var(--wf-accent, #3d6daa); }
+    .btn-secondary { background: var(--wf-tint, #dce4ef); color: var(--wf-ink, #1e2a3a); }
+    .btn-secondary:hover { background: var(--wf-line, #b0bdd0); }
+    .btn-warn { background: var(--wf-red, #8b4553); }
+    .btn-warn:hover { background: var(--wf-red, #8b4553); }
+
+    .recent-activity { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .recent-activity h3 { margin: 0 0 16px 0; font-size: 14px; font-weight: 600; color: var(--wf-ink, #1e2a3a); }
+    .activity-item { padding: 12px 0; border-bottom: 1px solid var(--wf-tint, #dce4ef); font-size: 13px; color: var(--wf-muted, #6b7f99); display: flex; justify-content: space-between; align-items: center; }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-date { font-size: 11px; color: var(--wf-muted, #6b7f99); white-space: nowrap; margin-left: 12px; }
+    .activity-icon { margin-right: 8px; }
+
+    .quick-actions { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 24px; }
+    .quick-action { background: white; padding: 24px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); text-align: center; transition: box-shadow 0.2s; cursor: pointer; }
+    .quick-action:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+    .quick-action-icon { font-size: 32px; margin-bottom: 12px; }
+    .quick-action-title { font-size: 14px; font-weight: 600; color: var(--wf-ink, #1e2a3a); margin: 0; }
+    .quick-action-link { display: block; text-decoration: none; color: inherit; }
+
+    .announcements { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 24px; }
+    .announcements h3 { margin: 0 0 16px 0; font-size: 14px; font-weight: 600; color: var(--wf-ink, #1e2a3a); }
+    .announcement-item { padding: 12px; background: var(--wf-surface, #edf1f7); border-left: 3px solid var(--wf-accent, #3d6daa); border-radius: 3px; margin-bottom: 12px; font-size: 12px; line-height: 1.6; }
+    .announcement-item:last-child { margin-bottom: 0; }
+    .announcement-item strong { color: var(--wf-ink, #1e2a3a); }
+    .announcement-link { color: var(--wf-accent, #3d6daa); text-decoration: none; font-weight: 500; }
+    .announcement-link:hover { text-decoration: underline; }
+
+    .stats-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .stat-item { border-bottom: 1px solid var(--wf-tint, #dce4ef); padding-bottom: 16px; }
+    .stat-item:nth-child(3), .stat-item:nth-child(4) { border-bottom: none; }
+    .stat-label { font-size: 11px; color: var(--wf-muted, #6b7f99); margin-bottom: 4px; font-weight: 600; }
+    .stat-value { font-size: 24px; font-weight: 700; color: var(--wf-accent, #3d6daa); }
+
+    .psm-card { background: var(--wf-ink, #1e2a3a); padding: 20px; border-radius: 8px; border-left: 4px solid var(--wf-accent, #3d6daa); margin-top: 24px; }
+    .psm-card h3 { margin: 0 0 8px 0; font-size: 13px; font-weight: 600; color: var(--wf-ink, #1e2a3a); }
+    .psm-card p { margin: 0; font-size: 13px; color: var(--wf-muted, #6b7f99); line-height: 1.6; }
+
+    .spec-item { margin-bottom: 12px; }
+    .spec-item:last-child { margin-bottom: 0; }
+    .spec-label { font-size: 11px; color: var(--wf-muted, #6b7f99); margin-bottom: 4px; font-weight: 600; }
+    .spec-value { font-size: 12px; color: var(--wf-ink, #1e2a3a); }
+
+    .user-flow { background: var(--wf-canvas, #f5f7fb); padding: 20px; border-radius: 8px; margin-top: 24px; }
+    .user-flow h4 { margin: 0 0 16px 0; font-size: 12px; font-weight: 600; color: var(--wf-ink, #1e2a3a); text-transform: uppercase; }
+    .flow-step { display: flex; margin-bottom: 12px; align-items: flex-start; }
+    .flow-number { background: var(--wf-accent, #3d6daa); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; margin-right: 12px; flex-shrink: 0; }
+    .flow-text { font-size: 12px; color: var(--wf-muted, #6b7f99); }
+</style>
+</head>
+<body>
+  <header class="wf-header">
+    <div class="wf-header-logo">EQ</div>
+    <div class="wf-header-title">Equinix Partner Portal</div>
+    <nav class="wf-header-nav">
+      <a href="rep-home.html" class="active">Home</a>
+      <a href="rep-my-training.html">My Training</a>
+      <a href="rep-course-catalog.html">Courses</a>
+      <a href="rep-certifications.html">Certifications</a>
+      <a href="rep-deals-commission.html">Deals</a>
+      <a href="rep-resources.html">Resources</a>
+    </nav>
+    <div class="wf-header-util">
+      <a href="rep-notifications.html" class="bell-wrapper" aria-label="Notifications" style="position:relative;color:white;text-decoration:none;">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+        <span style="position:absolute;top:-4px;right:-6px;background:var(--wf-red,#8b4555);color:white;font-size:10px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;">7</span>
+      </a>
+      <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+      <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+    </div>
+  </header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+  <div class="container">
+    <div class="welcome-banner">
+      <div class="welcome-text">
+        <h1>Welcome back, Sarah</h1>
+        <p>You're making excellent progress toward Gold tier certification!</p>
+        <div class="welcome-company">Stark Industries • Gold Partner</div>
+      </div>
+      <div class="completion-badge">
+        <span class="completion-badge-large">4/8</span>
+        <span class="completion-badge-sub">REQUIRED</span>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div>
+        <div class="progress-hero">
+          <h2>Certification Progress</h2>
+          <div class="progress-number">4 of 8</div>
+          <div class="progress-text">Required Courses Complete (50%)</div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 50%">50%</div>
+          </div>
+          <p style="font-size: 13px; color: var(--wf-muted, #6b7f99); margin: 12px 0 0 0;">You need 4 more courses for full certification. Your completion helps Stark Industries maintain Gold tier status.</p>
+          <div class="progress-note">Est. completion: Early April 2026</div>
+        </div>
+
+        <div style="margin-top: 24px;">
+          <h3 style="margin: 0 0 16px 0; font-size: 14px; font-weight: 600; color: var(--wf-ink, #1e2a3a);">Upcoming Deadlines</h3>
+          <div class="deadline-cards">
+            <div class="deadline-card overdue">
+              <h3>Security Fundamentals</h3>
+              <p>Expired on Jan 15, 2026</p>
+              <div class="deadline-time overdue">🔴 EXPIRED — Action Required</div>
+              <div class="deadline-cta"><a href="rep-my-training.html" class="btn btn-warn">Re-enroll Now</a></div>
+            </div>
+            <div class="deadline-card expiring">
+              <h3>Compliance & Data Privacy</h3>
+              <p>In Progress: 45% Complete</p>
+              <div class="deadline-progress">
+                <div class="deadline-progress-fill" style="width: 45%"></div>
+              </div>
+              <div class="deadline-time expiring">⚠️ 45% done — Resume to complete</div>
+              <div class="deadline-cta"><a href="rep-my-training.html" class="btn">Resume Course</a></div>
+            </div>
+            <div class="deadline-card upcoming">
+              <h3>Interconnection Overview</h3>
+              <p>Due Apr 30, 2026</p>
+              <div class="deadline-time">📅 87 days remaining</div>
+              <div class="deadline-cta"><a href="rep-my-training.html" class="btn">Start Course</a></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="recent-activity">
+          <h3>Recent Activity (Last 30 Days)</h3>
+          <div class="activity-item">
+            <span><span class="activity-icon">✓</span> Completed: Colocation Overview (100%)</span>
+            <span class="activity-date">Feb 3, 2026</span>
+          </div>
+          <div class="activity-item">
+            <span><span class="activity-icon">▶</span> Started: Compliance & Data Privacy</span>
+            <span class="activity-date">Nov 12, 2025</span>
+          </div>
+          <div class="activity-item">
+            <span><span class="activity-icon">✓</span> Completed: Mission/Vision/Value Story (92%)</span>
+            <span class="activity-date">Jan 8, 2026</span>
+          </div>
+          <div class="activity-item">
+            <span><span class="activity-icon">✓</span> Completed: Eco-System Partnership (95%)</span>
+            <span class="activity-date">Dec 20, 2025</span>
+          </div>
+          <div class="activity-item">
+            <span><span class="activity-icon">✓</span> Completed: Hybrid Multicloud Networking (90%)</span>
+            <span class="activity-date">Nov 28, 2025</span>
+          </div>
+          <div class="activity-item">
+            <span><span class="activity-icon">📝</span> Registered: Global Finance Corp Deal ($95K)</span>
+            <span class="activity-date">Feb 10, 2026</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="quick-actions">
+          <a href="rep-my-training.html" class="quick-action quick-action-link">
+            <div class="quick-action-icon">▶️</div>
+            <h4 class="quick-action-title">Continue Training</h4>
+            <p style="font-size: 12px; color: var(--wf-muted, #6b7f99); margin: 4px 0 0 0;">Resume Compliance course</p>
+          </a>
+          <a href="rep-course-catalog.html" class="quick-action quick-action-link">
+            <div class="quick-action-icon">📚</div>
+            <h4 class="quick-action-title">Browse Courses</h4>
+            <p style="font-size: 12px; color: var(--wf-muted, #6b7f99); margin: 4px 0 0 0;">32 courses available</p>
+          </a>
+          <a href="rep-certifications.html" class="quick-action quick-action-link">
+            <div class="quick-action-icon">🏆</div>
+            <h4 class="quick-action-title">View Certificates</h4>
+            <p style="font-size: 12px; color: var(--wf-muted, #6b7f99); margin: 4px 0 0 0;">4 active certifications</p>
+          </a>
+          <a href="rep-deals-commission.html" class="quick-action quick-action-link">
+            <div class="quick-action-icon">💼</div>
+            <h4 class="quick-action-title">My Deals</h4>
+            <p style="font-size: 12px; color: var(--wf-muted, #6b7f99); margin: 4px 0 0 0;">$220K pipeline value</p>
+          </a>
+        </div>
+
+        <div class="announcements">
+          <h3>Program Updates</h3>
+          <div class="announcement-item">
+            <strong>✨ New:</strong> <a href="rep-course-catalog.html" class="announcement-link">Equinix Fabric Cloud Router</a> course now available — advanced technical training.
+          </div>
+          <div class="announcement-item">
+            <strong>📅 Deadline:</strong> Q1 certification deadline is <strong>March 15, 2026</strong>. Sarah, you're on track!
+          </div>
+          <div class="announcement-item">
+            <strong>🎉 Event:</strong> Gold Partner Summit registration opens Feb 15. <a href="#" class="announcement-link">Register by Feb 28</a> for early-bird pricing.
+          </div>
+        </div>
+
+        <div class="stats-card" style="margin-top: 24px;">
+          <h3 style="margin: 0 0 16px 0; font-size: 14px; font-weight: 600; color: var(--wf-ink, #1e2a3a);">Your Statistics</h3>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <div class="stat-label">Courses Completed</div>
+              <div class="stat-value">4</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Active Certifications</div>
+              <div class="stat-value">4</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Deals Registered</div>
+              <div class="stat-value">2</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-label">Commission YTD</div>
+              <div class="stat-value">$10.2K</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="psm-card">
+          <h3>💬 Message from Your Partner Success Manager</h3>
+          <p>"Your organization is close to maintaining Gold tier status. Every course you complete strengthens Stark Industries' position in the ecosystem. Keep up the excellent progress, Sarah!" — Marcus Chen</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <h4>Salesforce Objects & Fields (Contact Sync)</h4>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; font-size: 11px;">
+        <div class="spec-item">
+          <div class="spec-label">Contact (from Account: Stark Industries)</div>
+          <div class="spec-value">FirstName: Sarah, LastName: Connor, Email: sarah.connor@stark.com</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Partner_Training__c Records</div>
+          <div class="spec-value">Contact__c, Course__c, Status__c, Completion_Date__c, Score__c, Certificate_PDF__c</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Deal_Registration__c Records</div>
+          <div class="spec-value">Partner_Rep__c, Customer_Name__c, Amount__c, Status__c, Commission_Eligible__c</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Partner_Commission__c</div>
+          <div class="spec-value">Deal__c, Gross_Amount__c, Commission_Rate__c, Commission_Amount__c, Payment_Status__c</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Account (Stark Industries)</div>
+          <div class="spec-value">Type: Partner, Partner_Tier__c: Gold, Partner_Manager__c: Pepper Potts</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Announcement__c (CMS-Backed)</div>
+          <div class="spec-value">Title__c, Content__c, Target_Tier__c, Display_Date__c, Expiration__c</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <h4>Validation Rules & Edge Cases</h4>
+      <div style="font-size: 12px; color: var(--wf-muted, #6b7f99); line-height: 1.8;">
+        <p style="margin: 0 0 8px 0;"><strong>Individual rep sees ONLY their own training/deals</strong> — No team visibility via SOQL filtering on Contact.Id AND Contact.AccountId. Query returns Contact where Id = LoggedInUserId AND ParentAccount.Type = 'Partner'.</p>
+        <p style="margin: 0 0 8px 0;"><strong>Announcements filtered by tier + region</strong> — Display logic: Announcement.Target_Tier__c IN (Account.Partner_Tier__c, 'All Partners') AND Announcement.Display_Date__c <= TODAY() AND Announcement.Expiration__c >= TODAY().</p>
+        <p style="margin: 0 0 8px 0;"><strong>Stats card caches on login, refreshes every 4 hours</strong> — Cache key: 'HOME_STATS_' + UserContactId. Automated process every 4 hours recalculates: COUNT(completed courses), COUNT(active certs), SUM(commission_amount) WHERE payment_status='Paid'.</p>
+        <p style="margin: 0 0 8px 0;"><strong>Expired cert banner shows if any cert expired in last 30 days</strong> — Rule: Partner_Training__c WHERE Status='Completed' AND Has_Certification__c=true AND Expiration_Date__c < TODAY() AND Expiration_Date__c >= TODAY()-30.</p>
+        <p style="margin: 0;"><strong>Deal count shows deals in pipeline (Status NOT IN Closed Lost, Expired, Rejected)</strong> — Pipeline value = SUM(Amount) WHERE Status IN (Pending, Approved, Proposal, Negotiation, Closed Won).</p>
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <h4>Error States & Accessibility</h4>
+      <div style="font-size: 12px; color: var(--wf-muted, #6b7f99); line-height: 1.8;">
+        <p style="margin: 0 0 8px 0;"><strong>Error:</strong> "Training data sync in progress — showing data as of [timestamp]" (displayed if Partner_Training__c last_modified_date > 30 mins ago).</p>
+        <p style="margin: 0 0 8px 0;"><strong>Error:</strong> "No deals found" (empty state when Deal_Registration__c count = 0 for contact).</p>
+        <p style="margin: 0 0 8px 0;"><strong>Accessibility:</strong> Completion badge has aria-label="4 of 8 courses completed, 50% progress". Deadline cards use role='region' with aria-live='polite'. Progress bars have aria-valuenow, aria-valuemin, aria-valuemax. Status conveyed by icon + color + text (never color alone).</p>
+        <p style="margin: 0;"><strong>Accessibility:</strong> Links to courses/certs have descriptive aria-labels. Activity list items are li elements within ul. Buttons have :focus states with 2px outline.</p>
+      </div>
+    </div>
+
+    <div class="user-flow" style="border-left: 4px solid var(--wf-muted, #6b7f99);">
+      <h4>Primary User Flow: Deal Registration</h4>
+      <p style="font-size: 12px; color: var(--wf-muted, #6b7f99); margin: 0 0 16px 0;">The primary job-to-be-done for a partner rep is registering new deals and tracking their progress through the pipeline. Training is secondary.</p>
+      <div class="flow-step">
+        <div class="flow-number" style="background:var(--wf-muted, #6b7f99);">1</div>
+        <div class="flow-text"><strong>Rep identifies an opportunity</strong> — A partner sales rep (Sarah) has a customer conversation that reveals a fit for Equinix services (colocation, Fabric, interconnection, etc.). She navigates to the Partner Portal and clicks "My Deals" or the quick-action card on Home.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-number" style="background:var(--wf-muted, #6b7f99);">2</div>
+        <div class="flow-text"><strong>Searches for existing deals</strong> — On the Register a Deal page, Sarah first uses the search panel to check if this customer or deal already exists in the system. The search queries Deal_Registration__c and Account records via fuzzy match. Results show confidence score (High/Medium/Low) and the registering rep.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-number" style="background:var(--wf-muted, #6b7f99);">3</div>
+        <div class="flow-text"><strong>Starts the 4-step wizard</strong> — If no match, Sarah clicks "No Match — Register New Deal." Step 1: Deal Basics (customer name with autocomplete against Salesforce Accounts, contact person, email, description). Step 2: Deal Details (estimated annual revenue, expected close date, product interest, deal source). Step 3: Competitive Info (primary competitor, their solution, Equinix differentiators). Step 4: Review & Submit with edit shortcuts back to each step.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-number" style="background:var(--wf-muted, #6b7f99);">4</div>
+        <div class="flow-text"><strong>Submits or saves as draft</strong> — Sarah can save at any point (Deal_Registration__c with Status='Draft'). On submission, she checks the terms agreement box and clicks "Submit for Approval." A Deal_Registration__c record is created with Status='Pending PSM Review'. Sarah receives an email confirmation.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-number" style="background:var(--wf-muted, #6b7f99);">5</div>
+        <div class="flow-text"><strong>PSM reviews within 2 business days</strong> — The assigned PSM (Marcus Chen) sees the deal in his queue (psm-deal-review-detail.html). He validates customer info, checks for conflicts with existing Equinix direct opportunities (AE bridge), and either approves, requests more info, or rejects. Approval triggers a Protection_Period__c record (90-day reservation).</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-number" style="background:var(--wf-muted, #6b7f99);">6</div>
+        <div class="flow-text"><strong>Deal appears in rep's pipeline</strong> — Sarah navigates to "My Pipeline" (rep-pipeline.html) and sees the deal in the Kanban view under "Approved." She can track the protection period countdown (90 days), filter by stage/amount/time, and view her full deal table with last activity dates.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-number" style="background:var(--wf-muted, #6b7f99);">7</div>
+        <div class="flow-text"><strong>Deal progresses to close</strong> — As the customer moves through their buying process, the deal stage updates (Submitted → Under Review → Approved → Won/Lost). Sarah monitors from My Deals & Commission (rep-deals-commission.html) where she sees commission calculations: MRR × tier rate (Gold 15%, Silver 12%, Bronze 8%) + co-sell bonus (+2%).</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-number" style="background:var(--wf-muted, #6b7f99);">8</div>
+        <div class="flow-text"><strong>Commission paid on customer invoice</strong> — When the deal closes (Status='Closed Won'), commission is calculated on MRR only (NRR excluded). Payment appears in rep's commission tracker with status (Pending → Approved → Paid). Quarterly payout via partner org's finance.</div>
+      </div>
+    </div>
+
+    <div class="user-flow" style="border-left: 4px solid var(--wf-amber, #8b7745);">
+      <h4>Primary User Flow: Deal Tracking &amp; Pipeline Management</h4>
+      <p style="font-size: 12px; color: var(--wf-muted, #6b7f99); margin: 0 0 16px 0;">Once deals are registered, reps spend most of their portal time monitoring pipeline health and protection periods.</p>
+      <div class="flow-step">
+        <div class="flow-number" style="background:var(--wf-amber, #8b7745);">1</div>
+        <div class="flow-text"><strong>Rep logs in to check pipeline</strong> — Home dashboard shows deal stats at a glance (2 deals registered, $220K pipeline value, $10.2K commission YTD). Quick-action "My Deals" card provides one-click access.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-number" style="background:var(--wf-amber, #8b7745);">2</div>
+        <div class="flow-text"><strong>Reviews Kanban pipeline view</strong> — rep-pipeline.html shows deals organized by stage (Submitted, Under Review, Approved, Won, Lost). Visual count per column lets Sarah assess pipeline health at a glance. Total pipeline value ($892K) displayed in header.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-number" style="background:var(--wf-amber, #8b7745);">3</div>
+        <div class="flow-text"><strong>Checks protection period alerts</strong> — Yellow alert banner warns about deals with expiring protection (e.g., "CloudCorp Multi-Region has 12 days remaining"). Protection badges on each deal show green (safe, 30+ days), yellow (warning, 15-30 days), or red (critical, &lt;15 days).</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-number" style="background:var(--wf-amber, #8b7745);">4</div>
+        <div class="flow-text"><strong>Filters and drills into details</strong> — Uses filter controls (stage, time period, amount range) to narrow view. Clicks a deal name to see full details, customer history, PSM notes, and next steps. Can request protection extension if deal is progressing but needs more time.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-number" style="background:var(--wf-amber, #8b7745);">5</div>
+        <div class="flow-text"><strong>Monitors commission on won deals</strong> — Won deals transition to the "Won Deals → Orders" section showing order fulfillment status (Processing → Shipped → Delivered). Commission tab (rep-deals-commission.html) shows detailed breakdown per deal: MRR amount, tier rate, commission earned, and payment status.</div>
+      </div>
+    </div>
+
+    <div class="user-flow">
+      <h4>Secondary User Flow: Training &amp; Certification (Typical Session)</h4>
+      <div class="flow-step">
+        <div class="flow-number">1</div>
+        <div class="flow-text"><strong>Sarah logs in</strong> — Portal home page loads with her dashboard, Welcome banner displays "Sarah Connor", Stark Industries, Gold tier status.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-number">2</div>
+        <div class="flow-text"><strong>Sees deadline priority</strong> — Expired Security Fundamentals cert jumps out (red card, "EXPIRED" badge). In-progress Compliance shows 45% with progress bar. She notices she has 87 days for Interconnection Overview.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-number">3</div>
+        <div class="flow-text"><strong>Clicks "Re-enroll Now"</strong> on Security Fundamentals → Navigates to My Training tab, finds expired course card, clicks "Re-enroll" which creates new Partner_Training__c record with Status='Not Started'.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-number">4</div>
+        <div class="flow-text"><strong>Starts course</strong> — Click "Start Course" launches SumTotal LMS via SSO (contact_id + course_id in session token). Completes modules in LMS (not shown in portal, handled by SumTotal).</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-number">5</div>
+        <div class="flow-text"><strong>Data syncs overnight</strong> — Nightly Salesforce integration flow updates Partner_Training__c: Status='Completed', Completion_Date__c=TODAY(), Score__c=87%, Has_Certification__c=true. Certification__c record auto-created.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-number">6</div>
+        <div class="flow-text"><strong>Next day, returns to Home</strong> — Dashboard refreshed: 5 of 8 courses now showing as complete (62.5% progress). Expired Fundamentals card gone. New announcement appears about next deadline. Stats card shows updated course count and expiring certs.</div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="wf-footer">
+    &copy; 2026 Equinix Partner Portal · Wireframe specification
+  </footer>
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Personalized dashboard for partner reps displaying certification progress toward tier goals, urgent deadlines and expiring items, quick-access action cards, activity log, and tier/PSM support information.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Display dashboard summary on portal login</li>
+<li>Show urgent deadlines and overdue items prominently</li>
+<li>Quick access to most common tasks</li>
+<li>Monitor recent account activity and changes</li>
+<li>See at-a-glance status of key metrics</li>
+<li>Navigate to detailed pages from summary cards</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Welcome banner with greeting, tier status (e.g., "Gold Partner"), and certification progress badge (4/8 required)</li>
+<li>Certification Progress hero card showing: count (4 of 8), percentage (50%), progress bar, estimated completion date</li>
+<li>Three deadline cards with status-colored borders (Overdue: red, Expiring: amber, Upcoming: blue)</li>
+<li>Deadline card details: title, remaining time countdown, progress bar, action button (e.g., "Take Now", "View Deal")</li>
+<li>Quick Actions grid (2x2) with icon + title cards: Register Deal, Start Training, View Certifications, Messages</li>
+<li>Recent Activity log with timeline dots, dates, actor names, action descriptions (8-10 items)</li>
+<li>Announcements section with 2-3 alert boxes with left-border styling</li>
+<li>Stats sidebar: Active Deals (3), Courses in Progress (2), Days Until Certification (45), YTD Commission ($12,500)</li>
+<li>PSM Support card with assigned PSM name, title, contact info</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Deadline cards clickable (navigate to detail page)</li>
+<li>Quick action cards clickable (navigate to respective pages)</li>
+<li>Activity item links (navigate to related records)</li>
+<li>Recent Activity "View All" link</li>
+<li>Stats sidebar stat items may link to detail pages</li>
+<li>Announcement links for external resources or form submissions</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Welcome & Personalization</strong>
+<ul>
+<li>Welcome banner displays "Welcome, [Contact.FirstName]!" with Account.Partner_Tier__c badge (Bronze|Silver|Gold)</li>
+<li>Certification Progress displayed in banner as percentage: (COUNT(Certification__c WHERE Contact=User.ContactId AND Status='Active') / Tier_Cert_Requirement__mdt[Account.Partner_Tier__c].Required_Count) × 100</li>
+<li>Personalized content zones loaded based on User role, Account.Partner_Tier__c, and previous page visits (stored in session)</li>
+</ul></li>
+<li><strong>Deadline & Urgency Cards</strong>
+<ul>
+<li>Deadline cards query highest-priority items: overdue Training_Assignment__c (Status='Not Started' AND Due_Date__c < TODAY()), expiring Certification__c (Status='Active' AND Expiration_Date__c < TODAY()+30), next Opportunity close date (StageName='Proposal' AND CloseDate within 7 days)</li>
+<li>Countdown timer calculated as DAYS(Due_Date__c, TODAY()); displayed in amber if negative (overdue) or red if <= 3 days</li>
+<li>Cards sorted by urgency (most overdue first); limited to 3-5 top items on homepage</li>
+</ul></li>
+<li><strong>Quick Actions & Navigation</strong>
+<ul>
+<li>Quick Actions are hardcoded navigation links with icons (Browse Courses, View Deals, My Training, Certifications) that route to respective portal pages</li>
+<li>Cards are styled consistently and clickable; onClick redirects to target page</li>
+</ul></li>
+<li><strong>Recent Activity Feed</strong>
+<ul>
+<li>Recent Activity populated from ActivityHistory, Task, and Event records; SOQL query limited to 8-10 most recent (CreatedDate DESC)</li>
+<li>Each activity item displays: actor name (CreatedBy.Name), action description (Subject for Task/Event), timestamp (CreatedDate formatted as "X days ago")</li>
+<li>Activity items clickable; links navigate to related records (Opportunity detail, Training, etc.)</li>
+</ul></li>
+<li><strong>Announcements & Communications</strong>
+<ul>
+<li>Announcements fetched from Portal_Announcement__c WHERE IsActive__c=true, ordered by PostDate__c DESC; limited to 3 displayed on homepage</li>
+<li>Each announcement includes Title__c, Body__c, Icon_URL__c, and optional Link__c; truncated to preview length with "Read More" link</li>
+</ul></li>
+<li><strong>Dashboard Statistics & Support</strong>
+<ul>
+<li>Stats sidebar calculates: Active Deals = COUNT(Opportunity WHERE StageName != 'Closed Won' AND Account=Contact.Account__c), In Progress Training = COUNT(Partner_Training__c WHERE Contact=User.ContactId AND Status='In Progress'), YTD Commission = SUM(Commission_Tracking__c.Commission_Amount__c WHERE YEAR(Payment_Date__c)=YEAR(TODAY())), Days to Next Cert = MIN(days remaining for next certification requirement)</li>
+<li>PSM Support card fetches Account.PSM__c relationship; displays PSM name, title, email, phone; clicking card navigates to PSM profile or initiates contact action</li>
+</ul></li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Salesforce Queries & Logic</h4>
+<ul>
+<li>Welcome: Contact first name, Account.Partner_Tier__c, Certification progress = COUNT(Certification__c) where Contact=User.ContactId and Status='Active'</li>
+<li>Certification Progress percentage: (active cert count / tier requirement) * 100; tier requirement fetched from Tier_Cert_Requirement__mdt</li>
+<li>Deadline cards: highest-priority items from Training_Assignment__c (overdue), Certification__c (expiring soon), Opportunity (closing soon)</li>
+<li>Recent Activity: Query ActivityHistory, Task, Event limited to 10 records, ordered by CreatedDate DESC</li>
+<li>Announcements: Portal_Announcement__c WHERE IsActive__c = true, ordered by PostDate__c DESC, limited to 3</li>
+<li>Stats: COUNT(Opportunity) where Account = current contact's account and StageName != 'Closed Won', COUNT(Partner_Training__c) where Status='In Progress', Days to certification = MIN(Certification path completion date) - TODAY(), YTD Commission = SUM(Commission_Amount__c) from Commission_Tracking__c</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reports & Analytics — PSM · Equinix PCP</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: var(--wf-canvas, #f5f7fb); }
+    .slds-global-header { display: flex; align-items: center; background-color: var(--wf-ink, #1e2a3a); color: var(--wf-surface, #edf1f7); padding: 0 12px; height: 52px; gap: 12px; }
+    .slds-global-header__waffle { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; cursor: pointer; }
+    .slds-global-header__waffle svg { width: 20px; height: 20px; }
+    .slds-global-header__app { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; }
+    .slds-global-header__app-icon { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; background-color: var(--wf-accent, var(--wf-accent, #3d6daa)); color: var(--wf-surface, #edf1f7); border-radius: 4px; font-weight: 700; font-size: 12px; }
+    .slds-global-nav { display: flex; gap: 24px; margin-left: 24px; flex: 1; }
+    .slds-global-nav__item { color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 13px; padding: 8px 0; border-bottom: 3px solid transparent; cursor: pointer; transition: all 0.2s; }
+    .slds-global-nav__item:hover { color: var(--wf-surface, #edf1f7); }
+    .slds-global-nav__item.active { color: var(--wf-surface, #edf1f7); border-bottom-color: var(--wf-amber, #8b7745); }
+    .slds-global-header__search { margin-left: auto; margin-right: 16px; }
+    .slds-global-header__search input { padding: 6px 12px; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 4px; background-color: rgba(255, 255, 255, 0.1); color: var(--wf-surface, #edf1f7); width: 200px; font-size: 13px; }
+    .slds-global-header__search input::placeholder { color: rgba(255, 255, 255, 0.5); }
+    .slds-global-header__actions { display: flex; gap: 12px; align-items: center; }
+    .slds-global-header__action { cursor: pointer; font-size: 18px; opacity: 0.7; transition: opacity 0.2s; }
+    .slds-global-header__action:hover { opacity: 1; }
+    .page-container { padding: 24px; max-width: 1600px; margin: 0 auto; }
+    .slds-design-notes__title { font-size: 18px; font-weight: 700; color: var(--wf-text, #3b4f68); margin-bottom: 12px; display: flex; align-items: center; gap: 12px; }
+    .slds-badge { display: inline-block; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; }
+    .slds-badge--brand { background-color: var(--wf-accent, var(--wf-accent, #3d6daa)); color: var(--wf-surface, #edf1f7); }
+    .slds-badge--neutral { background-color: var(--wf-surface, #edf1f7); color: var(--wf-text, #3b4f68); }
+    .tabs { display: flex; gap: 0; border-bottom: 2px solid var(--wf-line, #b0bdd0); margin-bottom: 24px; background: var(--wf-surface, #edf1f7); border-radius: 4px 4px 0 0; overflow: hidden; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); }
+    .tab { padding: 12px 20px; font-size: 13px; font-weight: 600; color: var(--wf-muted, #6b7f99); cursor: pointer; border-right: 1px solid var(--wf-surface, #edf1f7); background: var(--wf-canvas, #f5f7fb); transition: all 0.2s; }
+    .tab:hover { background: var(--wf-canvas, #f5f7fb); color: var(--wf-text, #3b4f68); }
+    .tab.active { color: var(--wf-accent, var(--wf-accent, #3d6daa)); background: var(--wf-surface, #edf1f7); border-bottom: 3px solid var(--wf-accent, var(--wf-accent, #3d6daa)); margin-bottom: -2px; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .section-title { font-size: 16px; font-weight: 700; color: var(--wf-text, #3b4f68); margin-bottom: 12px; margin-top: 24px; }
+    .quick-metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 24px; }
+    .metric-card { background: var(--wf-surface, #edf1f7); padding: 16px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); }
+    .metric-label { font-size: 12px; color: var(--wf-muted, #6b7f99); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; font-weight: 600; }
+    .metric-value { font-size: 28px; font-weight: 700; color: var(--wf-accent, var(--wf-accent, #3d6daa)); }
+    .metric-trend { font-size: 12px; color: var(--wf-ink, #1e2a3a); margin-top: 4px; }
+    .report-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 24px; }
+    .report-card { background: var(--wf-surface, #edf1f7); padding: 20px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); min-height: 250px; }
+    .report-title { font-size: 14px; font-weight: 700; color: var(--wf-text, #3b4f68); margin-bottom: 12px; }
+    .report-description { font-size: 12px; color: var(--wf-muted, #6b7f99); margin-bottom: 16px; line-height: 1.5; }
+    .chart-area { background-color: var(--wf-canvas, #f5f7fb); border: 2px dashed var(--wf-line, #b0bdd0); border-radius: 4px; padding: 40px 20px; text-align: center; font-size: 12px; color: var(--wf-muted, #6b7f99); min-height: 150px; display: flex; align-items: center; justify-content: center; }
+    .chart-large { background-color: var(--wf-canvas, #f5f7fb); border: 2px dashed var(--wf-line, #b0bdd0); border-radius: 4px; padding: 60px 20px; text-align: center; font-size: 12px; color: var(--wf-muted, #6b7f99); min-height: 300px; display: flex; align-items: center; justify-content: center; margin-bottom: 24px; }
+    .btn { padding: 6px 12px; border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; margin-right: 4px; }
+    .btn-primary { background-color: var(--wf-accent, var(--wf-accent, #3d6daa)); color: var(--wf-surface, #edf1f7); }
+    .btn-primary:hover { background-color: var(--wf-accent, #3d6daa); }
+    .btn-secondary { background-color: var(--wf-surface, #edf1f7); color: var(--wf-text, #3b4f68); }
+    .btn-secondary:hover { background-color: var(--wf-line, #b0bdd0); }
+    .btn-small { padding: 4px 8px; font-size: 11px; }
+    .filter-controls { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+    .filter-control { padding: 6px 12px; border: 1px solid var(--wf-line, #b0bdd0); border-radius: 4px; background: var(--wf-surface, #edf1f7); font-size: 12px; cursor: pointer; }
+    .action-buttons { display: flex; gap: 6px; margin-top: 12px; }
+    .table-wrapper { background: var(--wf-surface, #edf1f7); border-radius: 4px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); overflow: hidden; margin-bottom: 24px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead { background-color: var(--wf-canvas, #f5f7fb); border-bottom: 2px solid var(--wf-line, #b0bdd0); }
+    th { padding: 12px; text-align: left; font-weight: 700; color: var(--wf-text, #3b4f68); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    td { padding: 12px; border-bottom: 1px solid var(--wf-surface, #edf1f7); color: var(--wf-text, #3b4f68); }
+    tbody tr:hover { background-color: var(--wf-canvas, #f5f7fb); }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 3px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+    .badge-scheduled { background-color: var(--wf-surface, #edf1f7); color: var(--wf-ink, #1e2a3a); }
+    .badge-active { background-color: var(--wf-surface, #edf1f7); color: var(--wf-accent, #3d6daa); }
+    .badge-completed { background-color: var(--wf-surface, #edf1f7); color: var(--wf-ink, #1e2a3a); }
+    .footer-pagination { display: flex; justify-content: space-between; align-items: center; padding: 16px; font-size: 12px; color: var(--wf-muted, #6b7f99); border-top: 1px solid var(--wf-surface, #edf1f7); }
+</style>
+</head>
+<body>
+
+<header class="wf-header">
+  <div class="wf-header-logo"><svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix"><path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/></svg></div>
+  <div class="wf-header-title">SFDC</div>
+  <nav class="wf-header-nav">
+    <a href="#">Dashboard</a>
+    <a href="#" class="active">PSM Portal</a>
+    <a href="#">Partners</a>
+    <a href="#">Deals</a>
+    <a href="#">Programs</a>
+    <a href="#">Reports</a>
+  </nav>
+  <div class="wf-header-util">
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+  </div>
+</header>
+    <div class="page-context-bar">
+  <div style="max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <span style="font-size:12px;color:var(--wf-muted);display:flex;align-items:center;gap:6px;">
+      <svg viewBox="0 0 20 13" style="width:18px;height:11px;fill:var(--wf-muted);" aria-hidden="true"><path d="M8.3 1.7A3.8 3.8 0 0 1 12 0a3.8 3.8 0 0 1 3.5 2.3A2.8 2.8 0 0 1 20 5a2.8 2.8 0 0 1-2.8 2.8H3.2A3.2 3.2 0 0 1 0 4.6 3.2 3.2 0 0 1 3.2 1.4c.18 0 .35.01.52.04A3.8 3.8 0 0 1 8.3 1.7z"/></svg>
+      <strong style="color:var(--wf-text);font-weight:600;">Salesforce Lightning</strong>&ensp;&middot;&ensp;PCP App
+    </span>
+    <span class="persona-badge persona-badge--psm">PSM</span>
+  </div>
+</div>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+<div class="page-container">
+
+  
+
+
+  <div class="quick-metrics">
+    <div class="metric-card">
+      <div class="metric-label">Total Partners</div>
+      <div class="metric-value">42</div>
+      <div class="metric-trend">↑ +3 new this quarter</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Avg Completion Rate</div>
+      <div class="metric-value">72%</div>
+      <div class="metric-trend">↑ +8% vs last quarter</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Revenue YTD</div>
+      <div class="metric-value">$18.4M</div>
+      <div class="metric-trend">↑ +12% vs last year</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Commission Paid</div>
+      <div class="metric-value">$1.2M</div>
+      <div class="metric-trend">↑ +18% vs prior period</div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab(event, 'training')">Training Reports</div>
+    <div class="tab" onclick="switchTab(event, 'revenue')">Revenue Reports</div>
+    <div class="tab" onclick="switchTab(event, 'program')">Program Health</div>
+    <div class="tab" onclick="switchTab(event, 'scheduled')">Scheduled Reports</div>
+  </div>
+
+  <!-- TAB 1: TRAINING REPORTS -->
+  <div id="training" class="tab-content active">
+    <div class="section-title">Training Reports</div>
+
+    <div class="filter-controls">
+      <select class="filter-control">
+        <option>All Tiers</option>
+        <option>Gold</option>
+        <option>Silver</option>
+        <option>Bronze</option>
+      </select>
+      <select class="filter-control">
+        <option>All Regions</option>
+        <option>North America</option>
+        <option>EMEA</option>
+        <option>APAC</option>
+      </select>
+      <select class="filter-control">
+        <option>Date Range: Last 12 Months</option>
+        <option>Last 90 Days</option>
+        <option>Last 6 Months</option>
+        <option>Custom Range</option>
+      </select>
+      <button class="btn btn-secondary btn-small">Apply Filters</button>
+      <button class="btn btn-secondary btn-small">Export CSV</button>
+    </div>
+
+    <div class="report-grid">
+      <div class="report-card">
+        <div class="report-title">Training Completion by Tier</div>
+        <div class="report-description">Average completion percentage by partner tier. Shows Gold, Silver, Bronze completion rates and trends.</div>
+        <div class="chart-area">Chart: Training Completion by Tier</div>
+        <div class="action-buttons">
+          <button class="btn btn-secondary btn-small">View Report</button>
+          <button class="btn btn-secondary btn-small">Schedule Delivery</button>
+        </div>
+      </div>
+
+      <div class="report-card">
+        <div class="report-title">Course Completion Rates</div>
+        <div class="report-description">Completion rates for each mandatory course. Identifies courses with low completion and potential blockers.</div>
+        <div class="chart-area">Chart: Course Completion Rates</div>
+        <div class="action-buttons">
+          <button class="btn btn-secondary btn-small">View Report</button>
+          <button class="btn btn-secondary btn-small">Schedule Delivery</button>
+        </div>
+      </div>
+
+      <div class="report-card">
+        <div class="report-title">Certification Status</div>
+        <div class="report-description">Current certification status for all partners: active, expired, expiring (30-90 days), and not started.</div>
+        <div class="chart-area">Chart: Certification Status</div>
+        <div class="action-buttons">
+          <button class="btn btn-secondary btn-small">View Report</button>
+          <button class="btn btn-secondary btn-small">Schedule Delivery</button>
+        </div>
+      </div>
+
+      <div class="report-card">
+        <div class="report-title">Expiring Certifications (90 Days)</div>
+        <div class="report-description">List of certifications expiring within the next 90 days with partner account names and contact info.</div>
+        <div class="chart-area">Chart: Expiring Certifications</div>
+        <div class="action-buttons">
+          <button class="btn btn-secondary btn-small">View Report</button>
+          <button class="btn btn-secondary btn-small">Schedule Delivery</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">Training Completion Trend — Last 12 Months</div>
+
+    <div class="chart-large">Chart Area: Training Completion Trend (Line Chart with Gold/Silver/Bronze breakdown)</div>
+  </div>
+
+  <!-- TAB 2: REVENUE REPORTS -->
+  <div id="revenue" class="tab-content">
+    <div class="section-title">Revenue Reports</div>
+
+    <div class="filter-controls">
+      <select class="filter-control">
+        <option>All Tiers</option>
+        <option>Gold</option>
+        <option>Silver</option>
+        <option>Bronze</option>
+      </select>
+      <select class="filter-control">
+        <option>All Regions</option>
+        <option>North America</option>
+        <option>EMEA</option>
+        <option>APAC</option>
+      </select>
+      <select class="filter-control">
+        <option>Date Range: Last 12 Months</option>
+        <option>Last 90 Days</option>
+        <option>Last 6 Months</option>
+        <option>Custom Range</option>
+      </select>
+      <button class="btn btn-secondary btn-small">Apply Filters</button>
+      <button class="btn btn-secondary btn-small">Export CSV</button>
+    </div>
+
+    <div class="report-grid">
+      <div class="report-card">
+        <div class="report-title">Partner Revenue by Tier</div>
+        <div class="report-description">Total YTD revenue generated by each tier. Shows average revenue per partner and top performers.</div>
+        <div class="chart-area">Chart: Partner Revenue by Tier</div>
+        <div class="action-buttons">
+          <button class="btn btn-secondary btn-small">View Report</button>
+          <button class="btn btn-secondary btn-small">Schedule Delivery</button>
+        </div>
+      </div>
+
+      <div class="report-card">
+        <div class="report-title">Deal Registration Pipeline</div>
+        <div class="report-description">Pipeline value and deal count by stage: Registered, In Negotiation, Pending, Won, Lost.</div>
+        <div class="chart-area">Chart: Deal Registration Pipeline</div>
+        <div class="action-buttons">
+          <button class="btn btn-secondary btn-small">View Report</button>
+          <button class="btn btn-secondary btn-small">Schedule Delivery</button>
+        </div>
+      </div>
+
+      <div class="report-card">
+        <div class="report-title">Commission Expense</div>
+        <div class="report-description">Total commissions paid to partners by tier and by month. Shows commission trends and tier contribution.</div>
+        <div class="chart-area">Chart: Commission Expense</div>
+        <div class="action-buttons">
+          <button class="btn btn-secondary btn-small">View Report</button>
+          <button class="btn btn-secondary btn-small">Schedule Delivery</button>
+        </div>
+      </div>
+
+      <div class="report-card">
+        <div class="report-title">Revenue Trend — 12 Month</div>
+        <div class="report-description">Month-over-month revenue trend across all partners with tier breakdown and forecast.</div>
+        <div class="chart-area">Chart: Revenue Trend</div>
+        <div class="action-buttons">
+          <button class="btn btn-secondary btn-small">View Report</button>
+          <button class="btn btn-secondary btn-small">Schedule Delivery</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">Revenue Breakdown by Partner (Top 10)</div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Partner Account</th>
+            <th>Tier</th>
+            <th>YTD Revenue</th>
+            <th>% of Total</th>
+            <th>Deals Won</th>
+            <th>Pipeline</th>
+            <th>Forecast Next Quarter</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Stark Industries</strong></td>
+            <td>Gold</td>
+            <td>$2,100,000</td>
+            <td>11.4%</td>
+            <td>8</td>
+            <td>$2,850,000</td>
+            <td>$520,000</td>
+          </tr>
+          <tr>
+            <td><strong>Wayne Enterprises</strong></td>
+            <td>Gold</td>
+            <td>$1,400,000</td>
+            <td>7.6%</td>
+            <td>6</td>
+            <td>$1,920,000</td>
+            <td>$380,000</td>
+          </tr>
+          <tr>
+            <td><strong>GlobalTech Partners</strong></td>
+            <td>Silver</td>
+            <td>$980,000</td>
+            <td>5.3%</td>
+            <td>5</td>
+            <td>$1,450,000</td>
+            <td>$290,000</td>
+          </tr>
+          <tr>
+            <td><strong>DataStream Inc</strong></td>
+            <td>Silver</td>
+            <td>$1,120,000</td>
+            <td>6.1%</td>
+            <td>5</td>
+            <td>$1,680,000</td>
+            <td>$320,000</td>
+          </tr>
+          <tr>
+            <td><strong>InnovateLabs</strong></td>
+            <td>Silver</td>
+            <td>$770,000</td>
+            <td>4.2%</td>
+            <td>4</td>
+            <td>$1,100,000</td>
+            <td>$210,000</td>
+          </tr>
+          <tr>
+            <td><strong>PrimeConnect</strong></td>
+            <td>Gold</td>
+            <td>$987,000</td>
+            <td>5.4%</td>
+            <td>4</td>
+            <td>$1,480,000</td>
+            <td>$280,000</td>
+          </tr>
+          <tr>
+            <td><strong>ProServices Hub</strong></td>
+            <td>Silver</td>
+            <td>$640,000</td>
+            <td>3.5%</td>
+            <td>3</td>
+            <td>$940,000</td>
+            <td>$180,000</td>
+          </tr>
+          <tr>
+            <td><strong>CloudSync Technology</strong></td>
+            <td>Bronze</td>
+            <td>$325,000</td>
+            <td>1.8%</td>
+            <td>2</td>
+            <td>$480,000</td>
+            <td>$95,000</td>
+          </tr>
+          <tr>
+            <td><strong>VentureTech Solutions</strong></td>
+            <td>Silver</td>
+            <td>$483,000</td>
+            <td>2.6%</td>
+            <td>2</td>
+            <td>$710,000</td>
+            <td>$135,000</td>
+          </tr>
+          <tr>
+            <td><strong>Oscorp</strong></td>
+            <td>Bronze</td>
+            <td>$198,000</td>
+            <td>1.1%</td>
+            <td>1</td>
+            <td>$290,000</td>
+            <td>$55,000</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB 3: PROGRAM HEALTH -->
+  <div id="program" class="tab-content">
+    <div class="section-title">Program Health Reports</div>
+
+    <div class="filter-controls">
+      <select class="filter-control">
+        <option>All PSMs</option>
+        <option>Sarah Martinez</option>
+        <option>James Wilson</option>
+        <option>Maria Santos</option>
+      </select>
+      <select class="filter-control">
+        <option>All Regions</option>
+        <option>North America</option>
+        <option>EMEA</option>
+        <option>APAC</option>
+      </select>
+      <button class="btn btn-secondary btn-small">Apply Filters</button>
+      <button class="btn btn-secondary btn-small">Export CSV</button>
+    </div>
+
+    <div class="report-grid">
+      <div class="report-card">
+        <div class="report-title">Partner Engagement Score</div>
+        <div class="report-description">Composite score (0-100) combining training completion, revenue growth, and training activity.</div>
+        <div class="chart-area">Chart: Partner Engagement Score Distribution</div>
+        <div class="action-buttons">
+          <button class="btn btn-secondary btn-small">View Report</button>
+          <button class="btn btn-secondary btn-small">Schedule Delivery</button>
+        </div>
+      </div>
+
+      <div class="report-card">
+        <div class="report-title">Onboarding Pipeline</div>
+        <div class="report-description">New partners in onboarding pipeline by stage: Negotiation, Onboarded, Active, Inactive.</div>
+        <div class="chart-area">Chart: Onboarding Pipeline</div>
+        <div class="action-buttons">
+          <button class="btn btn-secondary btn-small">View Report</button>
+          <button class="btn btn-secondary btn-small">Schedule Delivery</button>
+        </div>
+      </div>
+
+      <div class="report-card">
+        <div class="report-title">MDF Utilization</div>
+        <div class="report-description">Fund allocation vs. spend by partner. Shows over-budget, under-budget, and expiration risk.</div>
+        <div class="chart-area">Chart: MDF Utilization by Partner</div>
+        <div class="action-buttons">
+          <button class="btn btn-secondary btn-small">View Report</button>
+          <button class="btn btn-secondary btn-small">Schedule Delivery</button>
+        </div>
+      </div>
+
+      <div class="report-card">
+        <div class="report-title">JBP Progress</div>
+        <div class="report-description">Joint Business Plan status and progress. Shows plans on-track, at-risk, and behind schedule.</div>
+        <div class="chart-area">Chart: JBP Progress by Status</div>
+        <div class="action-buttons">
+          <button class="btn btn-secondary btn-small">View Report</button>
+          <button class="btn btn-secondary btn-small">Schedule Delivery</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 4: SCHEDULED REPORTS -->
+  <div id="scheduled" class="tab-content">
+    <div class="section-title">Scheduled Reports (4 Active)</div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Report Name</th>
+            <th>Cadence</th>
+            <th>Recipients</th>
+            <th>Last Run</th>
+            <th>Next Run</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Weekly Training Summary</strong></td>
+            <td>Every Monday 8:00 AM</td>
+            <td>psm-team@equinix.com (12 users)</td>
+            <td>2026-02-10 08:12</td>
+            <td>2026-02-17 08:00</td>
+            <td><span class="badge badge-active">Active</span></td>
+            <td><button class="btn btn-secondary btn-small">Edit</button></td>
+          </tr>
+          <tr>
+            <td><strong>Monthly Revenue Report</strong></td>
+            <td>First day of month 9:00 AM</td>
+            <td>leadership@equinix.com, finance@equinix.com (8 users)</td>
+            <td>2026-02-01 09:05</td>
+            <td>2026-03-01 09:00</td>
+            <td><span class="badge badge-active">Active</span></td>
+            <td><button class="btn btn-secondary btn-small">Edit</button></td>
+          </tr>
+          <tr>
+            <td><strong>Quarterly Partner Scorecard</strong></td>
+            <td>Every 90 days on 15th</td>
+            <td>vp-partnerships@equinix.com (3 users)</td>
+            <td>2026-01-15 10:22</td>
+            <td>2026-04-15 10:00</td>
+            <td><span class="badge badge-active">Active</span></td>
+            <td><button class="btn btn-secondary btn-small">Edit</button></td>
+          </tr>
+          <tr>
+            <td><strong>MDF Claims Expiration Alert</strong></td>
+            <td>Last Friday of quarter 4:00 PM</td>
+            <td>sarah.martinez@equinix.com, james.wilson@equinix.com (2 users)</td>
+            <td>2026-01-31 16:08</td>
+            <td>2026-03-28 16:00</td>
+            <td><span class="badge badge-scheduled">Scheduled</span></td>
+            <td><button class="btn btn-secondary btn-small">Edit</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div style="margin-top:24px">
+      <button class="btn btn-primary">New Scheduled Report</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function switchTab(evt, tabName) {
+  var i, tabcontent, tabs;
+  tabcontent = document.getElementsByClassName("tab-content");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].classList.remove("active");
+  }
+  tabs = document.getElementsByClassName("tab");
+  for (i = 0; i < tabs.length; i++) {
+    tabs[i].classList.remove("active");
+  }
+  document.getElementById(tabName).classList.add("active");
+  evt.currentTarget.classList.add("active");
+}
+</script>
+
+
+    <footer class="wf-footer">
+      &copy; 2026 Equinix · Partner Sales Manager · Internal Use Only
+    </footer>
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Centralized reporting and analytics hub providing pre-built and custom reports on partner program performance including training completion, revenue, MDF utilization, and onboarding pipeline. Featured report: Stark Industries performance snapshot (Gold tier, $180K MRR, 95% training completion, 5 active deals, near-Platinum status). Supports scheduled report delivery to stakeholders and ad-hoc data exports.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Provide centralized access to all program reporting and analytics</li>
+<li>Support data-driven decision making with multiple pre-built reports</li>
+<li>Allow custom report creation for specific analysis needs</li>
+<li>Enable automated report delivery to stakeholders on schedule</li>
+<li>Surface key metrics and trends across training, revenue, and program health</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>KPI header cards: Total Partners, Average Completion %, Program Health Score, Revenue Attainment %</li>
+<li>Tabbed interface with four sections: Training Reports, Revenue Reports, Program Health, Scheduled Reports</li>
+<li>Training Reports tab: 4 report cards (Course Adoption, Certification Completion, Training Timeline, Team Progress by Course) with View Report and Schedule Delivery buttons</li>
+<li>Revenue Reports tab: 4 report cards (Partner Revenue Growth, Deal Pipeline, Commission Analysis, Co-Market ROI) with View Report buttons</li>
+<li>Program Health tab: 4 report cards (Partner Engagement Score, Onboarding Pipeline, MDF Utilization, JBP Progress) with charts and View Report buttons</li>
+<li>Scheduled Reports tab: Table of active/scheduled reports showing name, cadence, recipients, last/next run, status</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Tab navigation buttons switching between Training, Revenue, Program Health, Scheduled Reports</li>
+<li>Report cards expandable to show full details and embedded charts</li>
+<li>Export CSV button in report headers for data export</li>
+<li>View Report button on each card to open full report view</li>
+<li>Schedule Delivery button to set up automated report email distribution</li>
+<li>Filter controls: Date Range selector, Partner Tier dropdown, Region dropdown</li>
+<li>New Scheduled Report button in Scheduled Reports tab</li>
+<li>Edit button on scheduled report rows to modify delivery schedule/recipients</li>
+<li>Apply Filters button to execute filtered report views</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>KPI Aggregation &amp; Caching</strong>
+<ul>
+<li>KPI header cards pull from cached aggregate views (Platform Cache or Aggregate Result) updated daily: Total Partners (COUNT Account), Average Completion % (AVERAGE Completion_Percentage__c), Program Health Score (AVERAGE Health_Score__c), Revenue Attainment % = (Revenue_This_Year / Revenue_Target) * 100</li>
+<li>Displays trend indicators showing period-over-period change with color coding</li>
+</ul></li>
+<li><strong>Training &amp; Revenue Reports Generation</strong>
+<ul>
+<li>Training Reports cards query Partner_Training__c, Certification__c, Partner_Scorecard__c records with filters: date range (Date_Completed__c), Partner_Tier__c selection; generates Course Adoption, Certification Completion, Training Timeline, Team Progress by Course reports</li>
+<li>Revenue Reports cards query Opportunity, Deal_Registration__c with Account grouping; displays top 10 partners revenue table with SUM(Amount) and commission calculations (Amount * Commission_Rate__c)</li>
+</ul></li>
+<li><strong>Program Health &amp; Onboarding Analytics</strong>
+<ul>
+<li>Program Health Reports aggregate Partner_Scorecard__c.Engagement_Score, Partner_Onboarding__c stage counts (grouping by Stage__c), MDF_Budget_Allocation__c spend % (SUM Paid / SUM Allocated), Joint_Business_Plan__c status counts</li>
+<li>Renders cards with embedded charts showing trend visualization</li>
+</ul></li>
+<li><strong>Export &amp; Data Sharing</strong>
+<ul>
+<li>Export CSV button generates downloadable file with report data respecting Salesforce sharing model: PSMs see only owned Account records, Admins see all accounts; limits export to 10K rows with notification for larger datasets</li>
+</ul></li>
+<li><strong>Report Scheduling &amp; Custom Reporting</strong>
+<ul>
+<li>Schedule Delivery action creates Report_Schedule__c record and triggers Flow to send email on selected cadence (weekly, monthly, quarterly) to specified recipient list</li>
+<li>Scheduled Reports table displays active Report_Schedule__c records with Next Run timestamp calculated from cron expression, Last Run timestamp, and report status</li>
+<li>Custom Report Builder enables users to select data source (Partner_Scorecard__c, Opportunity, Partner_Training__c), columns, filters (date range, tier, region), and grouping (by Account, by Tier, by Month)</li>
+<li>Report caching: Standard reports cached up to 24 hours via Platform Cache; real-time flag bypasses cache for up-to-the-minute data delivery</li>
+</ul></li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Validation &amp; Business Logic</h4>
+<ul>
+<li>Report (standard): Standard Salesforce reporting on Opportunity, Contact, Partner_Training__c, Jo...</li>
+<li>Dashboard (standard): Custom Dashboards with components for KPIs, training progress, revenue trend</li>
+<li>Partner_Scorecard__c (custom aggregate): Partner_Account__c, Training_Completion_Pct__c, Revenue_...</li>
+<li>CRM Analytics dataset (Tableau): Read-only views for training and revenue trends</li>
+</ul>
+<ul>
+<li>Reports respect sharing rules — PSM sees only owned accounts unless admin</li>
+<li>Export limited to 10K rows (use async export for larger datasets)</li>
+<li>Scheduled reports max 5 per user</li>
+<li>Report caching: Max 24 hours old; refresh forced for real-time reports</li>
+<li>Dashboard filters: User must have read access to filtered account</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

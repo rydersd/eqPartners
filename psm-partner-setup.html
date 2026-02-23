@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Partner Configuration — PSM · Equinix PCP</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Salesforce Sans", sans-serif; background: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); }
+
+    /* Header */
+    header { background: var(--wf-ink, #1e2a3a); color: white; padding: 1rem 2rem; }
+    .header-content { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    .logo { font-size: 1.4rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
+    nav { display: flex; gap: 1.5rem; }
+    nav a { color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.875rem; padding: 0.4rem 0.75rem; border-radius: 4px; }
+    nav a:hover { background: rgba(255,255,255,0.1); }
+    nav a.active { background: var(--wf-accent, #3d6daa); color: white; }
+    .user-pill { font-size: 0.8rem; color: rgba(255,255,255,0.6); display: flex; align-items: center; gap: 8px; }
+
+    /* Breadcrumb bar */
+    .page-context-bar { background: var(--wf-surface, #edf1f7); border-bottom: 1px solid var(--wf-line, #b0bdd0); padding: 7px 24px; }
+    .crumb-row { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+    .wf-breadcrumb { font-size: 11px; color: var(--wf-muted, #6b7f99); display: flex; align-items: center; gap: 0; }
+    .wf-breadcrumb a { color: var(--wf-accent, #3d6daa); text-decoration: none; }
+    .wf-breadcrumb a:hover { text-decoration: underline; }
+    .wf-breadcrumb-sep { margin: 0 5px; color: var(--wf-line, #b0bdd0); }
+    .wf-breadcrumb-current { color: var(--wf-text, #3b4f68); font-weight: 500; }
+    .persona-badge { display: inline-flex; align-items: center; padding: 2px 7px; border-radius: 3px; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border: 1.5px solid var(--wf-ink, #1e2a3a); color: var(--wf-ink, #1e2a3a); }
+
+    /* Main */
+    main { max-width: 1400px; margin: 0 auto; padding: 28px 2rem; }
+    .page-title-row { display: flex; align-items: center; gap: 16px; margin-bottom: 6px; }
+    .page-title { font-size: 1.75rem; font-weight: 700; color: var(--wf-ink, #1e2a3a); }
+    .page-subtitle { font-size: 0.9rem; color: var(--wf-muted, #6b7f99); margin-bottom: 24px; }
+    .status-badge { display: inline-flex; align-items: center; padding: 4px 12px; border-radius: 100px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+    .status-approved { background: transparent; border: 1.5px solid #5a7a45; color: #5a7a45; }
+
+    /* Success banner */
+    .success-banner { background: white; border: 1.5px solid #5a7a45; border-radius: 6px; padding: 14px 18px; font-size: 13px; color: var(--wf-text, #3b4f68); margin-bottom: 24px; display: flex; align-items: flex-start; gap: 10px; line-height: 1.5; }
+    .success-icon { color: #5a7a45; font-size: 18px; font-weight: 700; flex-shrink: 0; }
+
+    /* Cards */
+    .card { background: white; border: 1.5px solid var(--wf-line, #b0bdd0); border-radius: 6px; padding: 20px 24px; margin-bottom: 20px; }
+    .card-heading { font-size: 14px; font-weight: 700; color: var(--wf-ink, #1e2a3a); margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--wf-tint, #dce4ef); text-transform: uppercase; letter-spacing: 0.04em; font-size: 11px; }
+    .card-note { font-size: 12px; color: var(--wf-muted, #6b7f99); margin-bottom: 16px; padding: 8px 0; line-height: 1.4; }
+
+    /* Form fields */
+    .form-section { margin-bottom: 28px; }
+    .field-row { display: grid; gap: 16px; margin-bottom: 16px; }
+    .field-row.col2 { grid-template-columns: 1fr 1fr; }
+    .field-row.col3 { grid-template-columns: 1fr 1fr 1fr; }
+    .field { display: flex; flex-direction: column; gap: 5px; }
+    .field label { font-size: 11px; font-weight: 600; color: var(--wf-muted, #6b7f99); text-transform: uppercase; letter-spacing: 0.04em; }
+    .field input, .field select { border: 1.5px solid var(--wf-line, #b0bdd0); border-radius: 4px; padding: 8px 12px; font-size: 14px; color: var(--wf-ink, #1e2a3a); background: white; width: 100%; }
+    .field input.prefilled, .field select.prefilled { background: var(--wf-surface, #edf1f7); border-color: var(--wf-tint, #dce4ef); }
+    .field input:disabled, .field select:disabled { background: var(--wf-surface, #edf1f7); border-color: var(--wf-tint, #dce4ef); cursor: not-allowed; color: var(--wf-muted, #6b7f99); }
+    .field-note { font-size: 11px; color: var(--wf-muted, #6b7f99); line-height: 1.4; margin-top: 2px; }
+    .field-required::after { content: " *"; color: var(--wf-red, #8b4553); }
+
+    /* Info box */
+    .info-box { background: var(--wf-surface, #edf1f7); border: 1.5px solid var(--wf-tint, #dce4ef); border-radius: 6px; padding: 12px 16px; font-size: 13px; color: var(--wf-text, #3b4f68); margin-bottom: 16px; line-height: 1.5; }
+
+    /* Check options */
+    .check-opt { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: var(--wf-text, #3b4f68); padding: 8px 0; border-bottom: 1px solid var(--wf-tint, #dce4ef); }
+    .check-opt:last-child { border-bottom: none; }
+    .check-opt input[type="checkbox"] { margin-top: 2px; cursor: pointer; }
+    .check-opt-content { flex: 1; }
+    .check-opt-label { color: var(--wf-ink, #1e2a3a); font-size: 14px; font-weight: 600; display: block; }
+    .check-opt-note { font-size: 12px; color: var(--wf-muted, #6b7f99); display: block; margin-top: 2px; }
+
+    /* Table */
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th { text-align: left; font-size: 11px; font-weight: 700; color: var(--wf-muted, #6b7f99); text-transform: uppercase; letter-spacing: 0.04em; padding: 8px 12px; border-bottom: 2px solid var(--wf-tint, #dce4ef); background: var(--wf-surface, #edf1f7); }
+    td { padding: 10px 12px; border-bottom: 1px solid var(--wf-tint, #dce4ef); color: var(--wf-text, #3b4f68); vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    .status-progress { color: var(--wf-muted, #6b7f99); }
+
+    /* Action buttons */
+    .action-area { display: flex; gap: 12px; align-items: center; margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--wf-tint, #dce4ef); }
+    .btn { padding: 9px 20px; border-radius: 4px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1.5px solid transparent; }
+    .btn-primary { background: var(--wf-accent, #3d6daa); color: white; }
+    .btn-secondary { background: white; color: var(--wf-text, #3b4f68); border-color: var(--wf-line, #b0bdd0); }
+    .btn-large { padding: 12px 28px; font-size: 15px; }
+    .action-disclaimer { font-size: 12px; color: var(--wf-muted, #6b7f99); margin-left: 8px; }
+
+    /* Spec sidebar */
+    .spec-sidebar { position: fixed; right: 0; top: 0; bottom: 0; width: 320px; background: var(--wf-ink, #1e2a3a); color: var(--wf-tint, #dce4ef); padding: 24px 20px; overflow-y: auto; transform: translateX(100%); transition: transform 0.3s; z-index: 200; }
+    .spec-sidebar.open { transform: translateX(0); }
+    .spec-toggle { position: fixed; right: 0; top: 50%; transform: translateY(-50%); background: var(--wf-ink, #1e2a3a); color: white; padding: 12px 8px; border-radius: 4px 0 0 4px; cursor: pointer; font-size: 16px; z-index: 201; border: none; }
+    .spec-sidebar.open ~ .spec-toggle { right: 320px; }
+    .spec-panel-bd h3 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.5); border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; margin: 20px 0 10px; }
+    .spec-panel-bd p, .spec-panel-bd li { font-size: 13px; line-height: 1.6; color: rgba(255,255,255,0.8); }
+    .spec-panel-bd ul { padding-left: 16px; margin: 6px 0; }
+    .spec-panel-bd strong { color: white; font-size: 12px; display: block; margin-top: 10px; }
+    .spec-panel-bd hr { border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 12px 0; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-content">
+    <div class="logo">⚡ Equinix PCP — PSM Portal</div>
+    <nav>
+      <a href="psm-program-dashboard.html">Dashboard</a>
+      <a href="psm-partner-account-list.html" class="active">Partners</a>
+      <a href="psm-deal-registration.html">Deals</a>
+      <a href="psm-contact-training.html">Training</a>
+      <a href="psm-mdf-analytics.html">MDF</a>
+      <a href="psm-reports-analytics.html">Reports</a>
+    </nav>
+    <div class="user-pill">Marcus Chen · PSM · US West</div>
+  </div>
+</header>
+
+<!-- BREADCRUMB BAR -->
+<div class="page-context-bar">
+  <div style="max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <span style="font-size:12px;color:var(--wf-muted);display:flex;align-items:center;gap:6px;">
+      <svg viewBox="0 0 20 13" style="width:18px;height:11px;fill:var(--wf-muted);" aria-hidden="true"><path d="M8.3 1.7A3.8 3.8 0 0 1 12 0a3.8 3.8 0 0 1 3.5 2.3A2.8 2.8 0 0 1 20 5a2.8 2.8 0 0 1-2.8 2.8H3.2A3.2 3.2 0 0 1 0 4.6 3.2 3.2 0 0 1 3.2 1.4c.18 0 .35.01.52.04A3.8 3.8 0 0 1 8.3 1.7z"/></svg>
+      <strong style="color:var(--wf-text);font-weight:600;">Salesforce Lightning</strong>&ensp;&middot;&ensp;PCP App
+    </span>
+    <span class="persona-badge persona-badge--psm">PSM</span>
+  </div>
+</div>
+
+<main>
+  <div class="success-banner">
+    <span class="success-icon">✓</span>
+    <div>Application <strong>PCP-APP-2026-0089</strong> approved by Marcus Chen on <strong>January 31, 2026</strong>. Configure the Pym Technologies partner account below. Portal access will be provisioned automatically when you click <strong>Complete Setup &amp; Provision Access</strong>.</div>
+  </div>
+
+  <div class="page-title-row">
+    <h1 class="page-title">New Partner Configuration</h1>
+    <span class="status-badge status-approved">✓ Approved</span>
+  </div>
+  <p class="page-subtitle">Pym Technologies, Inc. · PCP-APP-2026-0089 · Approved Jan 31, 2026 · PSM: Marcus Chen</p>
+
+  <!-- Card 1: Account Identity -->
+  <div class="card">
+    <div class="card-heading">Account Identity</div>
+    <div class="field-row col2">
+      <div class="field">
+        <label for="partner-name" class="field-required">Partner Account Name</label>
+        <input type="text" id="partner-name" class="prefilled" value="Pym Technologies, Inc." />
+        <div class="field-note">Legal Name in Salesforce</div>
+      </div>
+      <div class="field">
+        <label for="salesforce-id">Salesforce Account ID</label>
+        <input type="text" id="salesforce-id" value="Will be assigned on save" disabled />
+        <div class="field-note">Auto-generated by Salesforce on first save.</div>
+      </div>
+    </div>
+    <div class="field-row col2">
+      <div class="field">
+        <label for="partner-type" class="field-required">Partner Type</label>
+        <select id="partner-type" class="prefilled">
+          <option>Reseller</option>
+          <option>Referral</option>
+          <option>Technology Partner</option>
+          <option>Distributor</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="partner-status" class="field-required">Status</label>
+        <select id="partner-status" class="prefilled">
+          <option>Prospect</option>
+          <option selected>Active</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 2: Program Tier & Territory -->
+  <div class="card">
+    <div class="card-heading">Program Tier & Territory</div>
+    <div class="info-box">New partners always begin at the Registered tier. Advancement to Silver requires $50K MRR and minimum certifications. Do not manually set a higher starting tier.</div>
+    <div class="field-row col3">
+      <div class="field">
+        <label for="starting-tier" class="field-required">Starting Tier</label>
+        <select id="starting-tier" class="prefilled">
+          <option selected>Registered</option>
+          <option>Silver</option>
+          <option>Gold</option>
+          <option>Platinum</option>
+        </select>
+        <div class="field-note">New partners must start at Registered.</div>
+      </div>
+      <div class="field">
+        <label for="commission-rate">Commission Rate</label>
+        <input type="text" id="commission-rate" value="10%" disabled />
+        <div class="field-note">Auto-set for Registered tier. Updates automatically at tier advancement.</div>
+      </div>
+      <div class="field">
+        <label for="mdf-eligibility">MDF Eligibility</label>
+        <input type="text" id="mdf-eligibility" value="Not eligible at Registered tier" disabled />
+      </div>
+    </div>
+    <div class="field-row col2">
+      <div class="field">
+        <label for="primary-territory" class="field-required">Primary Territory</label>
+        <select id="primary-territory" class="prefilled">
+          <option selected>US West</option>
+          <option>US East</option>
+          <option>Canada</option>
+          <option>EMEA</option>
+          <option>APAC</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="secondary-territories">Secondary Territories</label>
+        <div style="display: flex; gap: 16px; margin-top: 8px; flex-wrap: wrap; align-items: center;">
+          <label style="display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 400; text-transform: none; letter-spacing: 0;">
+            <input type="checkbox" /> US East
+          </label>
+          <label style="display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 400; text-transform: none; letter-spacing: 0;">
+            <input type="checkbox" /> Canada
+          </label>
+          <label style="display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 400; text-transform: none; letter-spacing: 0;">
+            <input type="checkbox" /> EMEA
+          </label>
+          <label style="display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 400; text-transform: none; letter-spacing: 0;">
+            <input type="checkbox" /> APAC
+          </label>
+        </div>
+      </div>
+    </div>
+    <div class="field-row col2">
+      <div class="field">
+        <label for="primary-psm" class="field-required">Primary PSM</label>
+        <select id="primary-psm" class="prefilled">
+          <option selected>Marcus Chen — US West</option>
+          <option>Lisa Park — US West</option>
+          <option>Other</option>
+        </select>
+        <div class="field-note">Auto-assigned by territory.</div>
+      </div>
+      <div class="field">
+        <label for="backup-psm">Backup PSM</label>
+        <select id="backup-psm" class="prefilled">
+          <option>Marcus Chen — US West</option>
+          <option selected>Lisa Park</option>
+          <option>Other</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 3: Product Track Configuration -->
+  <div class="card">
+    <div class="card-heading">Product Track Configuration</div>
+    <div class="card-note">Product tracks determine what Pym Technologies can sell, their certification requirements, and their deal registration eligibility.</div>
+
+    <div class="check-opt">
+      <input type="checkbox" id="track-fabric" checked />
+      <div class="check-opt-content">
+        <label for="track-fabric" class="check-opt-label">Equinix Fabric</label>
+        <span class="check-opt-note">Layer 2/3 interconnection. Required certs: Fabric Foundation (target: Apr 28, 2026) · Fabric Advanced (target: Jul 28, 2026)</span>
+      </div>
+    </div>
+    <div class="check-opt">
+      <input type="checkbox" id="track-colo" checked />
+      <div class="check-opt-content">
+        <label for="track-colo" class="check-opt-label">Colocation</label>
+        <span class="check-opt-note">IBX space, power, cooling. Required cert: Colo Fundamentals (target: Mar 28, 2026)</span>
+      </div>
+    </div>
+    <div class="check-opt">
+      <input type="checkbox" id="track-metal" />
+      <div class="check-opt-content">
+        <label for="track-metal" class="check-opt-label">Equinix Metal</label>
+        <span class="check-opt-note">On-demand bare metal compute. Required cert: Metal Practitioner.</span>
+      </div>
+    </div>
+    <div class="check-opt">
+      <input type="checkbox" id="track-edge" />
+      <div class="check-opt-content">
+        <label for="track-edge" class="check-opt-label">Network Edge</label>
+        <span class="check-opt-note">Virtual network functions. Required cert: Network Edge Essentials.</span>
+      </div>
+    </div>
+    <div class="check-opt">
+      <input type="checkbox" id="track-digital" />
+      <div class="check-opt-content">
+        <label for="track-digital" class="check-opt-label">Digital Edge</label>
+        <span class="check-opt-note">Distributed edge infrastructure. Required cert: Digital Edge Foundation.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 4: Training Requirements -->
+  <div class="card">
+    <div class="card-heading">Training Requirements — Auto-Calculated from Selected Tracks</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Certification</th>
+          <th>Track</th>
+          <th>Required By</th>
+          <th>Tier Threshold</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Colo Fundamentals</td>
+          <td>Colocation</td>
+          <td>Mar 28, 2026</td>
+          <td>Registered → Silver</td>
+          <td>Not Started</td>
+        </tr>
+        <tr>
+          <td>Equinix Fabric Foundation</td>
+          <td>Fabric</td>
+          <td>Apr 28, 2026</td>
+          <td>Registered → Silver</td>
+          <td>Not Started</td>
+        </tr>
+        <tr>
+          <td>Equinix Fabric Advanced</td>
+          <td>Fabric</td>
+          <td>Jul 28, 2026</td>
+          <td>Silver → Gold</td>
+          <td>Not Started</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="card-note" style="margin-top: 12px;">Certification due dates are calculated as 60 days (Colo) and 90 days (Fabric Foundation) from the account activation date of Jan 31, 2026.</div>
+  </div>
+
+  <!-- Card 5: Deal Protection Settings -->
+  <div class="card">
+    <div class="card-heading">Deal Protection Settings</div>
+    <div class="field-row col2">
+      <div class="field">
+        <label for="protection-period">Default Protection Period</label>
+        <input type="text" id="protection-period" value="90 days (standard)" disabled />
+      </div>
+      <div class="field">
+        <label for="extended-protection">Extended Protection Eligible</label>
+        <input type="text" id="extended-protection" value="No — requires Silver tier or above" disabled />
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 6: Provisioning Checklist -->
+  <div class="card">
+    <div class="card-heading">Will Be Created on "Complete Setup"</div>
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 50px;">#</th>
+          <th>Action</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td>Create Salesforce Account record (Pym Technologies, Inc.)</td>
+          <td><span class="status-progress">⏳ Pending</span></td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>Provision Partner Portal access — hope.vandyne@pymtech.com (PM role)</td>
+          <td><span class="status-progress">⏳ Pending</span></td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>Provision Partner Portal access — scott.lang@pymtech.com (Technical Contact role)</td>
+          <td><span class="status-progress">⏳ Pending</span></td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>Activate SumTotal training accounts (PM + Technical Contact)</td>
+          <td><span class="status-progress">⏳ Pending</span></td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>Send Welcome Email to Partner Manager (Hope van Dyne)</td>
+          <td><span class="status-progress">⏳ Pending</span></td>
+        </tr>
+        <tr>
+          <td>6</td>
+          <td>Send PSM Notification to Marcus Chen</td>
+          <td><span class="status-progress">⏳ Pending</span></td>
+        </tr>
+        <tr>
+          <td>7</td>
+          <td>Create Salesforce Kickoff Task for Marcus Chen (due Feb 7, 2026)</td>
+          <td><span class="status-progress">⏳ Pending</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="action-area">
+      <button class="btn btn-primary btn-large">Complete Setup &amp; Provision Access</button>
+      <button class="btn btn-secondary">Save Draft</button>
+      <span class="action-disclaimer">This action cannot be undone. Portal access will be provisioned immediately.</span>
+    </div>
+  </div>
+
+</main>
+
+<aside class="spec-sidebar" id="spec-sidebar">
+  <div class="spec-panel-bd">
+    <h3>Purpose</h3>
+    <p>After application approval, PSM configures the new partner organization record before provisioning portal access. This page controls tier assignment, territory, product tracks, and triggers automated account creation across Salesforce, Experience Cloud, and SumTotal.</p>
+
+    <h3>Functionality</h3>
+    <strong>Tier Assignment</strong>
+    <ul>
+      <li>New partners always begin at Registered tier regardless of existing relationships. Tier advancement must be earned through MRR, certification, and deal activity thresholds. PSM cannot manually override the starting tier.</li>
+      <li>Commission rate and MDF eligibility are automatically set based on tier selection and cannot be manually overridden on this screen.</li>
+    </ul>
+
+    <strong>Product Track Configuration</strong>
+    <ul>
+      <li>PSM selects which Equinix product lines the partner is authorized to sell. Selection drives: certification requirements in SumTotal, commission schedule mapping, deal registration product eligibility, and co-marketing fund eligibility.</li>
+      <li>Tracks can be added later via the partner's Account record but cannot be removed without PSM Manager approval.</li>
+    </ul>
+
+    <strong>Auto-Provisioning on Complete Setup</strong>
+    <ul>
+      <li>Triggers simultaneous creation of: Salesforce Account record, two Experience Cloud user accounts (PM + Technical Contact), SumTotal training enrollment, welcome email, and a kickoff call task assigned to the PSM.</li>
+      <li>The partner's PM will receive a portal invite at their registered email within 10 minutes of provisioning completion.</li>
+    </ul>
+
+    <strong>Training Timeline</strong>
+    <ul>
+      <li>Cert due dates are auto-calculated from the account activation date. The system creates training reminders in SumTotal and surfaces alerts in the PSM's dashboard if certs fall overdue.</li>
+    </ul>
+
+    <h3>Key Settings</h3>
+    <ul>
+      <li>Starting tier (always Registered) · Territory assignment · PSM ownership · Product track eligibility · Provisioning checklist</li>
+    </ul>
+  </div>
+</aside>
+<button class="spec-toggle" onclick="document.getElementById('spec-sidebar').classList.toggle('open')" aria-label="Toggle spec panel">≡</button>
+
+<script src="wf-nav.js"></script>
+</body>
+</html>

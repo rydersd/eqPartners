@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Services & Orders - Equinix Customer Portal</title>
+    <link rel="stylesheet" href="wireframe.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--wf-canvas, #f5f7fb);
+            color: var(--wf-text, #3b4f68);
+        }
+
+        /* Header */
+        header {
+            background-color: var(--wf-ink, #1e2a3a);
+            height: 56px;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            gap: 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-logo {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--wf-surface, #edf1f7);
+            letter-spacing: -0.5px;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 24px;
+            margin-left: 40px;
+            flex: 1;
+        }
+
+        .header-nav a {
+            color: var(--wf-surface, #edf1f7);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 8px 0;
+            border-bottom: 3px solid transparent;
+            transition: border-color 0.2s;
+        }
+
+        .header-nav a:hover {
+            border-bottom-color: rgba(255,255,255,0.5);
+        }
+
+        .header-nav a.active {
+            border-bottom-color: var(--wf-surface, #edf1f7);
+        }
+
+        .header-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-left: auto;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: rgba(255,255,255,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--wf-surface, #edf1f7);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        .page-subtitle {
+            font-size: 14px;
+            color: var(--wf-text, #3b4f68);
+        }
+
+        /* KPI Cards */
+        .kpi-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        .kpi-card {
+            background: var(--wf-surface, #edf1f7);
+            border-radius: 4px;
+            padding: 24px;
+            border-left: 4px solid var(--wf-accent, var(--wf-muted, #6b7f99));
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+            transition: box-shadow 0.2s;
+        }
+
+        .kpi-card:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .kpi-label {
+            font-size: 12px;
+            color: var(--wf-text, #3b4f68);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .kpi-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--wf-ink, #1e2a3a);
+            margin-bottom: 4px;
+        }
+
+        .kpi-detail {
+            font-size: 13px;
+            color: var(--wf-text, #3b4f68);
+        }
+
+        .kpi-sparkline {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--wf-line, #b0bdd0);
+        }
+
+        /* Section Headers */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            margin-top: 40px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        .section-controls {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--wf-accent, var(--wf-muted, #6b7f99));
+            color: var(--wf-surface, #edf1f7);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--wf-accent, #3d6daa);
+        }
+
+        .btn-secondary {
+            background-color: var(--wf-canvas, #f5f7fb);
+            color: var(--wf-text, #3b4f68);
+            border: 1px solid var(--wf-line, #b0bdd0);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--wf-line, #b0bdd0);
+        }
+
+        /* Metro Group Sections */
+        .metro-group {
+            background: var(--wf-surface, #edf1f7);
+            border-radius: 4px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+            border-top: 3px solid var(--wf-accent, var(--wf-muted, #6b7f99));
+        }
+
+        .metro-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--wf-line, #b0bdd0);
+        }
+
+        .metro-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        .metro-summary {
+            font-size: 13px;
+            color: var(--wf-text, #3b4f68);
+        }
+
+        .metro-stats {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 16px;
+        }
+
+        .metro-stat {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .metro-stat-label {
+            font-size: 11px;
+            color: var(--wf-text, #3b4f68);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .metro-stat-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+            margin-top: 4px;
+        }
+
+        .power-bar {
+            width: 100%;
+            height: 8px;
+            background-color: var(--wf-line, #b0bdd0);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 12px 0;
+        }
+
+        .power-bar-fill {
+            height: 100%;
+            background-color: var(--wf-accent, var(--wf-muted, #6b7f99));
+            border-radius: 4px;
+            transition: width 0.3s;
+        }
+
+        .power-bar-fill.warning {
+            background-color: var(--wf-amber, #8b7745);
+        }
+
+        .power-bar-fill.critical {
+            background-color: var(--wf-red, #8b4553);
+        }
+
+        /* Table Styles */
+        .table-container {
+            background: var(--wf-surface, #edf1f7);
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+            margin-bottom: 40px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        thead {
+            background-color: var(--wf-canvas, #f5f7fb);
+            border-bottom: 2px solid var(--wf-line, #b0bdd0);
+        }
+
+        th {
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--wf-text, #3b4f68);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-size: 11px;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--wf-line, #b0bdd0);
+            transition: background-color 0.2s;
+        }
+
+        tbody tr:hover {
+            background-color: var(--wf-canvas, #f5f7fb);
+        }
+
+        td {
+            padding: 14px 16px;
+            vertical-align: middle;
+        }
+
+        .service-id {
+            font-weight: 600;
+            color: var(--wf-accent, var(--wf-muted, #6b7f99));
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .service-id:hover {
+            text-decoration: underline;
+        }
+
+        /* Badge Styles */
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-operational {
+            background-color: var(--wf-surface, #edf1f7);
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        .badge-provisioning {
+            background-color: var(--wf-surface, #edf1f7);
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        .badge-maintenance {
+            background-color: var(--wf-surface, #edf1f7);
+            color: var(--wf-amber, #8b7745);
+        }
+
+        .badge-delivered {
+            background-color: var(--wf-surface, #edf1f7);
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        .badge-in-progress {
+            background-color: var(--wf-surface, #edf1f7);
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        .badge-pending {
+            background-color: var(--wf-surface, #edf1f7);
+            color: var(--wf-red, #8b4553);
+        }
+
+        .badge-pending-approval {
+            background-color: var(--wf-surface, #edf1f7);
+            color: var(--wf-amber, #8b7745);
+        }
+
+        .badge-delayed {
+            background-color: var(--wf-surface, #edf1f7);
+            color: var(--wf-red, #8b4553);
+        }
+
+        /* Urgency Badge */
+        .urgency-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--wf-red, #8b4553);
+        }
+
+        /* Expansion Panel */
+        .expansion-panel {
+            background: var(--wf-surface, #edf1f7);
+            border-radius: 4px;
+            margin-bottom: 24px;
+            border: 1px solid var(--wf-line, #b0bdd0);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+        }
+
+        .panel-header {
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.2s;
+        }
+
+        .panel-header:hover {
+            background-color: var(--wf-canvas, #f5f7fb);
+        }
+
+        .panel-header.outlier {
+            background-color: var(--wf-canvas, #f5f7fb);
+            border-left: 4px solid var(--wf-red, #8b4553);
+        }
+
+        .expand-icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            text-align: center;
+            line-height: 20px;
+            transition: transform 0.2s;
+            font-weight: bold;
+            color: var(--wf-text, #3b4f68);
+        }
+
+        .panel-header.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .panel-title {
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+            flex: 1;
+        }
+
+        .panel-meta {
+            font-size: 12px;
+            color: var(--wf-text, #3b4f68);
+        }
+
+        .panel-content {
+            display: none;
+            padding: 24px;
+            border-top: 1px solid var(--wf-line, #b0bdd0);
+            background-color: var(--wf-canvas, #f5f7fb);
+        }
+
+        .panel-content.active {
+            display: block;
+        }
+
+        /* Milestone Timeline */
+        .milestone-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin: 24px 0;
+        }
+
+        .milestone {
+            display: flex;
+            gap: 16px;
+        }
+
+        .milestone-marker {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .milestone-dot {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background-color: var(--wf-line, #b0bdd0);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 12px;
+            color: var(--wf-text, #3b4f68);
+        }
+
+        .milestone-dot.completed {
+            background-color: var(--wf-accent, var(--wf-muted, #6b7f99));
+            color: var(--wf-surface, #edf1f7);
+        }
+
+        .milestone-dot.in-progress {
+            background-color: var(--wf-accent, var(--wf-muted, #6b7f99));
+            color: var(--wf-surface, #edf1f7);
+        }
+
+        .milestone-line {
+            width: 2px;
+            flex: 1;
+            background-color: var(--wf-line, #b0bdd0);
+        }
+
+        .milestone-line.completed {
+            background-color: var(--wf-accent, var(--wf-muted, #6b7f99));
+        }
+
+        .milestone-content {
+            padding-top: 4px;
+        }
+
+        .milestone-title {
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        .milestone-status {
+            font-size: 12px;
+            color: var(--wf-text, #3b4f68);
+            margin-top: 4px;
+        }
+
+        /* Summary Grid */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 24px 0;
+        }
+
+        .summary-item {
+            background-color: var(--wf-surface, #edf1f7);
+            padding: 16px;
+            border-radius: 4px;
+            border-left: 3px solid var(--wf-accent, var(--wf-muted, #6b7f99));
+        }
+
+        .summary-label {
+            font-size: 11px;
+            color: var(--wf-text, #3b4f68);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .summary-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        /* Completed Orders Collapse */
+        .completed-orders-section {
+            background: var(--wf-surface, #edf1f7);
+            border-radius: 4px;
+            padding: 16px;
+            margin-top: 24px;
+            border: 1px solid var(--wf-line, #b0bdd0);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+        }
+
+        .completed-orders-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .completed-orders-header:hover {
+            background-color: var(--wf-canvas, #f5f7fb);
+        }
+
+        .completed-expand-icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            text-align: center;
+            line-height: 20px;
+            transition: transform 0.2s;
+            font-weight: bold;
+            color: var(--wf-text, #3b4f68);
+        }
+
+        .completed-orders-header.expanded .completed-expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .completed-orders-content {
+            display: none;
+            margin-top: 16px;
+        }
+
+        .completed-orders-content.active {
+            display: block;
+        }
+
+        /* Spec Section */
+        .spec-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--wf-ink, #1e2a3a);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .spec-content {
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--wf-text, #3b4f68);
+        }
+
+        .spec-list {
+            list-style: none;
+            margin: 12px 0;
+        }
+
+        .spec-list li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .spec-list li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--wf-accent, var(--wf-muted, #6b7f99));
+            font-weight: bold;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--wf-ink, #1e2a3a);
+            color: var(--wf-muted, #6b7f99);
+            padding: 40px 24px;
+            margin-top: 60px;
+            font-size: 12px;
+            text-align: center;
+            border-top: 1px solid var(--wf-line, #b0bdd0);
+        }
+
+        footer a {
+            color: var(--wf-accent, var(--wf-muted, #6b7f99));
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Design Brief Section */
+        /* Responsive */
+        @media (max-width: 768px) {
+            .kpi-section {
+                grid-template-columns: 1fr;
+            }
+
+            .header-nav {
+                display: none;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 10px 8px;
+            }
+
+            .metro-stats {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .section-header {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .section-controls {
+                width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+</style>
+</head>
+<body>
+    <!-- Wireframe Header -->
+    <header class="wf-header">
+      <div class="wf-header-logo">EQ</div>
+      <div class="wf-header-title">Equinix Customer Portal</div>
+      <nav class="wf-header-nav">
+        <a href="ecp-dashboard.html">Dashboard</a>
+        <a href="ecp-services-orders.html" class="active">Services</a>
+        <a href="#">Interconnection</a>
+        <a href="ecp-cases.html">Cases</a>
+      </nav>
+      <div class="wf-header-util">
+        <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+        <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+      </div>
+    </header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">Services & Orders</h1>
+            <p class="page-subtitle">Acme Corporation • Account ID: EQ-2024-0451</p>
+        </div>
+
+        <!-- KPI Section (5 Total) -->
+        <div class="kpi-section">
+            <div class="kpi-card">
+                <div class="kpi-label">Service Inventory</div>
+                <div class="kpi-value">44</div>
+                <div class="kpi-detail">12 cabinets, 28 XCs, 4 edge</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Metros Active</div>
+                <div class="kpi-value">3</div>
+                <div class="kpi-detail">DC5, SV5, NY9</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Monthly Burn Rate</div>
+                <div class="kpi-value">$47.5K</div>
+                <div class="kpi-detail">+$1,500 MoM growth</div>
+                <div class="kpi-sparkline">
+                    <svg width="100%" height="40" viewBox="0 0 240 40" style="margin-top: 8px;">
+                        <!-- Sparkline: $42.0K → $43.1K → $44.2K → $45.0K → $46.3K → $47.5K -->
+                        <polyline points="10,18 50,15 90,12 130,10 170,6 210,2" stroke="var(--wf-accent, var(--wf-muted, #6b7f99))" stroke-width="2" fill="none" vector-effect="non-scaling-stroke"/>
+                        <!-- Dots at data points -->
+                        <circle cx="10" cy="18" r="2" fill="var(--wf-accent, var(--wf-muted, #6b7f99))"/>
+                        <circle cx="50" cy="15" r="2" fill="var(--wf-accent, var(--wf-muted, #6b7f99))"/>
+                        <circle cx="90" cy="12" r="2" fill="var(--wf-accent, var(--wf-muted, #6b7f99))"/>
+                        <circle cx="130" cy="10" r="2" fill="var(--wf-accent, var(--wf-muted, #6b7f99))"/>
+                        <circle cx="170" cy="6" r="2" fill="var(--wf-accent, var(--wf-muted, #6b7f99))"/>
+                        <circle cx="210" cy="2" r="2" fill="var(--wf-accent, var(--wf-muted, #6b7f99))"/>
+                        <text x="5" y="35" font-size="10" fill="var(--wf-text, #3b4f68)">6mo trend</text>
+                    </svg>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Projected Annual Spend</div>
+                <div class="kpi-value">$570K</div>
+                <div class="kpi-detail">Based on current burn rate</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Orders Requiring Attention</div>
+                <div class="kpi-value">2</div>
+                <div class="kpi-detail">1 delayed, 1 pending approval</div>
+            </div>
+        </div>
+
+        <!-- Orders Requiring Attention Section -->
+        <div class="section-header">
+            <h2 class="section-title">Orders Requiring Attention</h2>
+            <div class="section-controls">
+                <button class="btn btn-secondary">Filter</button>
+            </div>
+        </div>
+
+        <!-- Outlier Orders (High Priority) -->
+        <div class="expansion-panel">
+            <div class="panel-header outlier" onclick="togglePanel(this)">
+                <span class="expand-icon">▼</span>
+                <span class="panel-title">ORD-2025-0156: 2x Additional Cabinets - DC5</span>
+                <span class="urgency-indicator">⚠️ 1 week behind schedule</span>
+                <span class="panel-meta" style="flex: 0; margin-left: auto;">Provisioning</span>
+            </div>
+            <div class="panel-content active">
+                <!-- Order Summary -->
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <div class="summary-label">Order Number</div>
+                        <div class="summary-value">ORD-2025-0156</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Order Type</div>
+                        <div class="summary-value">New</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Total Amount</div>
+                        <div class="summary-value">$5,680</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Expected Completion</div>
+                        <div class="summary-value">Feb 28, 2025</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Project Manager</div>
+                        <div class="summary-value">David Chen</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Service Location</div>
+                        <div class="summary-value">DC5-Ashburn, VA</div>
+                    </div>
+                </div>
+
+                <!-- Order Items -->
+                <h3 style="margin-top: 24px; margin-bottom: 12px; font-size: 14px; font-weight: 600;">Order Items</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Quantity</th>
+                                <th>Description</th>
+                                <th>Unit Price</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>COL-2U-CABINET</td>
+                                <td>2</td>
+                                <td>2U Standard Colocation Cabinet, 15A</td>
+                                <td>$2,840/mo</td>
+                                <td>$5,680/mo</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Provisioning Milestones -->
+                <h3 style="margin-top: 24px; margin-bottom: 12px; font-size: 14px; font-weight: 600;">Provisioning Milestones</h3>
+                <div class="milestone-timeline">
+                    <div class="milestone">
+                        <div class="milestone-marker">
+                            <div class="milestone-dot completed">✓</div>
+                            <div class="milestone-line completed"></div>
+                        </div>
+                        <div class="milestone-content">
+                            <div class="milestone-title">Order Placed</div>
+                            <div class="milestone-status">Completed on Feb 10, 2025 at 2:30 PM ET</div>
+                        </div>
+                    </div>
+
+                    <div class="milestone">
+                        <div class="milestone-marker">
+                            <div class="milestone-dot completed">✓</div>
+                            <div class="milestone-line completed"></div>
+                        </div>
+                        <div class="milestone-content">
+                            <div class="milestone-title">Site Survey</div>
+                            <div class="milestone-status">Completed on Feb 12, 2025 • Surveyor: Maria Rodriguez</div>
+                        </div>
+                    </div>
+
+                    <div class="milestone">
+                        <div class="milestone-marker">
+                            <div class="milestone-dot in-progress">●</div>
+                            <div class="milestone-line"></div>
+                        </div>
+                        <div class="milestone-content">
+                            <div class="milestone-title">Cabinet Installation</div>
+                            <div class="milestone-status">In Progress • Expected: Feb 24, 2025 • STATUS: 1 week behind</div>
+                        </div>
+                    </div>
+
+                    <div class="milestone">
+                        <div class="milestone-marker">
+                            <div class="milestone-dot"></div>
+                            <div class="milestone-line"></div>
+                        </div>
+                        <div class="milestone-content">
+                            <div class="milestone-title">Power Connection</div>
+                            <div class="milestone-status">Pending • Scheduled: Feb 25, 2025</div>
+                        </div>
+                    </div>
+
+                    <div class="milestone">
+                        <div class="milestone-marker">
+                            <div class="milestone-dot"></div>
+                            <div class="milestone-line"></div>
+                        </div>
+                        <div class="milestone-content">
+                            <div class="milestone-title">Cross-Connect Patching</div>
+                            <div class="milestone-status">Pending • Scheduled: Feb 26, 2025</div>
+                        </div>
+                    </div>
+
+                    <div class="milestone">
+                        <div class="milestone-marker">
+                            <div class="milestone-dot"></div>
+                        </div>
+                        <div class="milestone-content">
+                            <div class="milestone-title">Customer Acceptance Test</div>
+                            <div class="milestone-status">Pending • Scheduled: Feb 27-28, 2025</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Info -->
+                <div style="background-color: var(--wf-surface, #edf1f7); padding: 16px; border-radius: 4px; border: 1px solid var(--wf-line, #b0bdd0); margin-top: 24px;">
+                    <h4 style="font-size: 13px; font-weight: 600; margin-bottom: 12px;">Assigned Equinix Project Manager</h4>
+                    <p style="font-size: 13px; margin-bottom: 8px;"><strong>David Chen</strong><br/>
+                    Email: dchen@equinix.com<br/>
+                    Phone: +1-703-555-0142<br/>
+                    Mobile: +1-703-555-0158</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Second Outlier Order -->
+        <div class="expansion-panel">
+            <div class="panel-header outlier" onclick="togglePanel(this)">
+                <span class="expand-icon">▼</span>
+                <span class="panel-title">ORD-2025-0189: Power Upgrade SV5</span>
+                <span class="urgency-indicator">⚠️ Waiting 5 days (SLA: 3 days)</span>
+                <span class="panel-meta" style="flex: 0; margin-left: auto;">Pending Approval</span>
+            </div>
+            <div class="panel-content">
+                <!-- Order Summary -->
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <div class="summary-label">Order Number</div>
+                        <div class="summary-value">ORD-2025-0189</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Order Type</div>
+                        <div class="summary-value">Upgrade</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Total Amount</div>
+                        <div class="summary-value">$8,450</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Expected Completion</div>
+                        <div class="summary-value">Mar 15, 2025</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Project Manager</div>
+                        <div class="summary-value">Sarah Patterson</div>
+                    </div>
+                    <div class="summary-item">
+                        <div class="summary-label">Service Location</div>
+                        <div class="summary-value">SV5-San Jose, CA</div>
+                    </div>
+                </div>
+
+                <!-- Order Items -->
+                <h3 style="margin-top: 24px; margin-bottom: 12px; font-size: 14px; font-weight: 600;">Order Items</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Quantity</th>
+                                <th>Description</th>
+                                <th>Unit Price</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>PWR-30KW-UPGRADE</td>
+                                <td>1</td>
+                                <td>30kW Power Upgrade Module</td>
+                                <td>$8,450</td>
+                                <td>$8,450</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Status Note -->
+                <div style="background-color: var(--wf-surface, #edf1f7); padding: 16px; border-radius: 4px; border-left: 4px solid var(--wf-amber, #8b7745); margin-top: 24px;">
+                    <p style="font-size: 13px; color: var(--wf-amber, #8b7745);"><strong>Pending Approval Notice:</strong> This order has been awaiting engineering approval for 5 days, exceeding the 3 business day SLA. Contact Sarah Patterson to escalate.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Completed Orders Collapse Section -->
+        <div class="completed-orders-section">
+            <div class="completed-orders-header" onclick="toggleCompletedOrders(this)">
+                <span class="completed-expand-icon">▶</span>
+                <span style="font-weight: 600; color: var(--wf-ink, #1e2a3a);">Completed Orders (Last 6 Months)</span>
+                <span style="font-size: 12px; color: var(--wf-text, #3b4f68); margin-left: auto;">6 orders</span>
+            </div>
+            <div class="completed-orders-content">
+                <div class="table-container" style="margin-top: 16px;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Order #</th>
+                                <th>Date</th>
+                                <th>Description</th>
+                                <th>Type</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Delivery Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="service-id">ORD-2025-0142</span></td>
+                                <td>Feb 1, 2025</td>
+                                <td>30kW Power Upgrade at SV5</td>
+                                <td>Upgrade</td>
+                                <td>$8,450</td>
+                                <td><span class="badge badge-delivered">Delivered</span></td>
+                                <td>Feb 15, 2025</td>
+                            </tr>
+                            <tr>
+                                <td><span class="service-id">ORD-2025-0109</span></td>
+                                <td>Jan 8, 2025</td>
+                                <td>Network Edge deployment at SV5</td>
+                                <td>New</td>
+                                <td>$14,400</td>
+                                <td><span class="badge badge-delivered">Delivered</span></td>
+                                <td>Jan 25, 2025</td>
+                            </tr>
+                            <tr>
+                                <td><span class="service-id">ORD-2024-0987</span></td>
+                                <td>Dec 15, 2024</td>
+                                <td>Cabinet expansion at DC5-Ashburn</td>
+                                <td>Upgrade</td>
+                                <td>$2,840</td>
+                                <td><span class="badge badge-delivered">Delivered</span></td>
+                                <td>Dec 28, 2024</td>
+                            </tr>
+                            <tr>
+                                <td><span class="service-id">ORD-2024-0945</span></td>
+                                <td>Dec 1, 2024</td>
+                                <td>Additional cross-connects DC5</td>
+                                <td>New</td>
+                                <td>$1,800</td>
+                                <td><span class="badge badge-delivered">Delivered</span></td>
+                                <td>Dec 12, 2024</td>
+                            </tr>
+                            <tr>
+                                <td><span class="service-id">ORD-2024-0856</span></td>
+                                <td>Oct 20, 2024</td>
+                                <td>Interconnect service to AWS</td>
+                                <td>New</td>
+                                <td>$4,500</td>
+                                <td><span class="badge badge-delivered">Delivered</span></td>
+                                <td>Nov 8, 2024</td>
+                            </tr>
+                            <tr>
+                                <td><span class="service-id">ORD-2024-0823</span></td>
+                                <td>Sep 5, 2024</td>
+                                <td>Cross-connect to GCP NY9</td>
+                                <td>New</td>
+                                <td>$2,100</td>
+                                <td><span class="badge badge-delivered">Delivered</span></td>
+                                <td>Sep 20, 2024</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Service Inventory by Metro -->
+        <div class="section-header">
+            <h2 class="section-title">Service Inventory by Metro</h2>
+            <div class="section-controls">
+                <button class="btn btn-secondary">Export</button>
+                <button class="btn btn-primary">New Service Request</button>
+            </div>
+        </div>
+
+        <!-- DC5 Metro Group -->
+        <div class="metro-group">
+            <div class="metro-header">
+                <div>
+                    <div class="metro-title">DC5 — Ashburn, VA</div>
+                    <div class="metro-summary">8 cabinets, 24kW contracted, 18.5kW used (77%)</div>
+                </div>
+            </div>
+            
+            <div class="metro-stats">
+                <div class="metro-stat">
+                    <div class="metro-stat-label">Cabinets</div>
+                    <div class="metro-stat-value">8</div>
+                </div>
+                <div class="metro-stat">
+                    <div class="metro-stat-label">Cross-Connects</div>
+                    <div class="metro-stat-value">2</div>
+                </div>
+                <div class="metro-stat">
+                    <div class="metro-stat-label">Power Used</div>
+                    <div class="metro-stat-value">18.5 / 24 kW</div>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 12px;">
+                <div style="font-size: 12px; color: var(--wf-text, #3b4f68); margin-bottom: 4px;">Power Utilization: 77% (Healthy)</div>
+                <div class="power-bar">
+                    <div class="power-bar-fill" style="width: 77%;"></div>
+                </div>
+            </div>
+
+            <div class="table-container" style="margin-top: 16px; margin-bottom: 0;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Asset ID</th>
+                            <th>Type</th>
+                            <th>Details</th>
+                            <th>Status</th>
+                            <th>Monthly Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="service-id">AS-2024-0001</span></td>
+                            <td>Colocation</td>
+                            <td>Cage A-Row 12, Cabinet DC5-A-12</td>
+                            <td><span class="badge badge-operational">Operational</span></td>
+                            <td>$2,840/mo</td>
+                        </tr>
+                        <tr>
+                            <td><span class="service-id">AS-2024-0002</span></td>
+                            <td>Colocation</td>
+                            <td>Cage A-Row 12, Cabinet DC5-A-13</td>
+                            <td><span class="badge badge-operational">Operational</span></td>
+                            <td>$2,840/mo</td>
+                        </tr>
+                        <tr>
+                            <td><span class="service-id">AS-2024-0003</span></td>
+                            <td>Colocation</td>
+                            <td>Cage A-Row 14, Cabinet DC5-A-14</td>
+                            <td><span class="badge badge-operational">Operational</span></td>
+                            <td>$2,840/mo</td>
+                        </tr>
+                        <tr>
+                            <td><span class="service-id">XC-2024-0101</span></td>
+                            <td>Cross-Connect</td>
+                            <td>DC5-XC-001: 10GE to AWS Direct Connect</td>
+                            <td><span class="badge badge-operational">Operational</span></td>
+                            <td>$450/mo</td>
+                        </tr>
+                        <tr>
+                            <td><span class="service-id">XC-2024-0102</span></td>
+                            <td>Cross-Connect</td>
+                            <td>DC5-XC-002: 10GE to Google Cloud</td>
+                            <td><span class="badge badge-operational">Operational</span></td>
+                            <td>$450/mo</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- SV5 Metro Group -->
+        <div class="metro-group">
+            <div class="metro-header">
+                <div>
+                    <div class="metro-title">SV5 — San Jose, CA</div>
+                    <div class="metro-summary">3 cabinets, 9kW contracted, 7.2kW used (80%)</div>
+                </div>
+            </div>
+            
+            <div class="metro-stats">
+                <div class="metro-stat">
+                    <div class="metro-stat-label">Cabinets</div>
+                    <div class="metro-stat-value">3</div>
+                </div>
+                <div class="metro-stat">
+                    <div class="metro-stat-label">Cross-Connects</div>
+                    <div class="metro-stat-value">4</div>
+                </div>
+                <div class="metro-stat">
+                    <div class="metro-stat-label">Power Used</div>
+                    <div class="metro-stat-value">7.2 / 9 kW</div>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 12px;">
+                <div style="font-size: 12px; color: var(--wf-amber, #8b7745); margin-bottom: 4px;">Power Utilization: 80% (Warning - Expansion Recommended)</div>
+                <div class="power-bar">
+                    <div class="power-bar-fill warning" style="width: 80%;"></div>
+                </div>
+            </div>
+
+            <div class="table-container" style="margin-top: 16px; margin-bottom: 0;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Asset ID</th>
+                            <th>Type</th>
+                            <th>Details</th>
+                            <th>Status</th>
+                            <th>Monthly Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="service-id">AS-2024-0004</span></td>
+                            <td>Colocation</td>
+                            <td>Cage B-Row 8, Cabinet SV5-B-08</td>
+                            <td><span class="badge badge-operational">Operational</span></td>
+                            <td>$2,840/mo</td>
+                        </tr>
+                        <tr>
+                            <td><span class="service-id">AS-2024-0005</span></td>
+                            <td>Colocation</td>
+                            <td>Cage B-Row 9, Cabinet SV5-B-09</td>
+                            <td><span class="badge badge-operational">Operational</span></td>
+                            <td>$2,840/mo</td>
+                        </tr>
+                        <tr>
+                            <td><span class="service-id">XC-2024-0103</span></td>
+                            <td>Cross-Connect</td>
+                            <td>SV5-XC-001: 10GE to AWS Direct Connect</td>
+                            <td><span class="badge badge-operational">Operational</span></td>
+                            <td>$450/mo</td>
+                        </tr>
+                        <tr>
+                            <td><span class="service-id">NE-2024-0202</span></td>
+                            <td>Network Edge</td>
+                            <td>Virtual Router Instance: NE-ACME-SV5-VR01</td>
+                            <td><span class="badge badge-maintenance">Maintenance</span></td>
+                            <td>$1,200/mo</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- NY9 Metro Group -->
+        <div class="metro-group">
+            <div class="metro-header">
+                <div>
+                    <div class="metro-title">NY9 — New York, NY</div>
+                    <div class="metro-summary">1 cabinet, 3kW contracted, 2.1kW used (70%)</div>
+                </div>
+            </div>
+            
+            <div class="metro-stats">
+                <div class="metro-stat">
+                    <div class="metro-stat-label">Cabinets</div>
+                    <div class="metro-stat-value">1</div>
+                </div>
+                <div class="metro-stat">
+                    <div class="metro-stat-label">Cross-Connects</div>
+                    <div class="metro-stat-value">2</div>
+                </div>
+                <div class="metro-stat">
+                    <div class="metro-stat-label">Power Used</div>
+                    <div class="metro-stat-value">2.1 / 3 kW</div>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 12px;">
+                <div style="font-size: 12px; color: var(--wf-text, #3b4f68); margin-bottom: 4px;">Power Utilization: 70% (Healthy)</div>
+                <div class="power-bar">
+                    <div class="power-bar-fill" style="width: 70%;"></div>
+                </div>
+            </div>
+
+            <div class="table-container" style="margin-top: 16px; margin-bottom: 0;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Asset ID</th>
+                            <th>Type</th>
+                            <th>Details</th>
+                            <th>Status</th>
+                            <th>Monthly Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="service-id">AS-2024-0006</span></td>
+                            <td>Colocation</td>
+                            <td>Cage C-Row 4, Cabinet NY9-C-04</td>
+                            <td><span class="badge badge-operational">Operational</span></td>
+                            <td>$2,840/mo</td>
+                        </tr>
+                        <tr>
+                            <td><span class="service-id">XC-2024-0104</span></td>
+                            <td>Cross-Connect</td>
+                            <td>NY9-XC-001: 1GE to Microsoft Azure</td>
+                            <td><span class="badge badge-provisioning">Provisioning</span></td>
+                            <td>$250/mo</td>
+                        </tr>
+                        <tr>
+                            <td><span class="service-id">NE-2024-0201</span></td>
+                            <td>Network Edge</td>
+                            <td>Virtual Router Instance: NE-ACME-DC5-VR01</td>
+                            <td><span class="badge badge-operational">Operational</span></td>
+                            <td>$1,200/mo</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Design Brief -->
+<div class="design-brief-content">
+                <p><strong>Inventory-First Architecture:</strong> The Service Inventory section is now organized by metro location (DC5, SV5, NY9) rather than a flat asset table. This reflects how Acme Corporation thinks about their infrastructure—location-first. Each metro group displays cabinets, cross-connects, and edge devices co-located at that facility, with power utilization bars showing capacity health. Customers can quickly assess their footprint at each metro and identify expansion opportunities (e.g., SV5 at 80% utilization triggers an expansion recommendation).</p>
+                <p><strong>Monthly Burn Rate with Sparkline Trajectory:</strong> The KPI cards have been revised to surface financial planning data. The "Monthly Burn Rate: $47.5K" card includes a 6-month sparkline ($42.0K to $47.5K) that gives financial decision-makers instant visual context on cost trajectory. Paired with the "Projected Annual Spend: $570K" card, customers can budget confidently and plan for cost escalation. This replaces the generic "Contract Utilization: 78%" metric with actionable financial insights.</p>
+                <p><strong>Orders Requiring Attention (Outlier-First):</strong> The order view has been flipped. Outlier orders—those delayed, stuck, pending approval, or missing milestones—are now displayed first with high-priority urgency badges. Example: ORD-2025-0156 (1 week behind schedule) and ORD-2025-0189 (waiting 5 days, SLA 3 days) appear at the top for immediate action. Completed orders (6 months audit trail) are collapsed below in a secondary section, reducing cognitive load while preserving historical visibility.</p>
+                <p><strong>Data Integrity & Salesforce Foundation:</strong> All changes are backed by Salesforce objects (Asset, Order, OrderItem, ServiceContract, Product2, PricebookEntry, Account). Row-level security ensures Acme Corporation customers see only their own assets and orders. The page maintains WCAG 2.1 AA accessibility with keyboard navigation, screen reader support, and semantic HTML. Milestones, power utilization bars, and urgency indicators are all data-driven and live-updated via Salesforce automations (Asset_Provisioning_Flow, Order_Status_Notification_Flow, Power_Utilization_Alert_Flow).</p>
+            </div>
+        </div>
+
+        
+<footer class="wf-footer">
+        &copy; 2026 Equinix · Wireframe specification
+    </footer>
+
+    <script>
+        // Toggle expansion panel for orders
+        function togglePanel(header) {
+            const content = header.nextElementSibling;
+            header.classList.toggle('expanded');
+            content.classList.toggle('active');
+        }
+
+        // Toggle completed orders collapse
+        function toggleCompletedOrders(header) {
+            const content = header.nextElementSibling;
+            header.classList.toggle('expanded');
+            content.classList.toggle('active');
+        }
+
+        // Initialize tooltips (optional)
+        document.querySelectorAll('[title]').forEach(el => {
+            el.addEventListener('mouseenter', function(e) {
+                // Tooltip logic here
+            });
+        });
+    </script>
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Comprehensive order and service management dashboard enabling customers to track active provisioning, monitor costs and utilization, and identify at-risk orders requiring immediate attention.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Visualize service costs and project annual spend trends</li>
+<li>Identify orders at risk (delayed, pending approval) for management attention</li>
+<li>Track provisioning progress through milestone timeline</li>
+<li>Monitor power and space utilization per metro for capacity planning</li>
+<li>Review asset inventory and individual service details by location</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Service Inventory KPIs: total assets, active metros, monthly burn rate, projected annual spend</li>
+<li>Orders Requiring Attention section with delayed/pending approval orders highlighted</li>
+<li>Expansion panels showing order details, items, and provisioning milestones</li>
+<li>Completed Orders collapsible section with historical 6-month view</li>
+<li>Service Inventory by Metro with power utilization bars and asset tables per location</li>
+<li>Metro-level details: cabinets, cross-connects, power usage, capacity ratios</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Expand/collapse outlier order panels to view full details and milestones</li>
+<li>Export service inventory button for data analysis</li>
+<li>New Service Request button to initiate orders</li>
+<li>Collapsible Completed Orders section to hide historical data</li>
+<li>Click asset IDs to drill into service configuration details</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Order & Provisioning Management</strong>
+<ul>
+<li>Order status automation pulling provisioning state from fulfillment workflow via middleware callout updating Order.Status field from fulfillment system state codes</li>
+<li>Milestone tracking on Order records with due date calculations based on Order.Created_Date__c plus Service_SLA__c (in days) formula field</li>
+<li>Delay detection logic comparing Order.Actual_Completion_Date__c to Order.Expected_Completion_Date__c triggering escalation email if delta exceeds 2 days</li>
+</ul>
+</li>
+<li><strong>Financial Analytics & Cost Tracking</strong>
+<ul>
+<li>Cost tracking on Order and Asset records with monthly burn rate calculation using SOQL rollup summary fields summing monthly charges</li>
+<li>Trend sparkline generation via custom metric calculation storing prior 12 months of monthly charges in Order.Monthly_Charges_JSON__c field for charting</li>
+<li>Discrepancy alerts flagging when Order.Total_Cost__c deviates more than 10% from original estimate via formula field and workflow alert</li>
+</ul>
+</li>
+<li><strong>Capacity & Risk Management</strong>
+<ul>
+<li>Power and space utilization calculations aggregated by metro using SOQL GROUP BY queries summing Asset.Power_Draw_W__c and Asset.Rack_Units_Used__c per metro</li>
+<li>Utilization thresholds comparing aggregated values against Account-level contracted capacity stored in Account.Total_Power_W__c and Account.Total_RU__c</li>
+<li>At-risk order flagging based on deadline deviation using formula field when Order.Days_Until_Due__c is less than 7 days and Order.Status NOT IN ('Completed', 'Cancelled')</li>
+</ul>
+</li>
+<li><strong>Security & Access Control</strong>
+<ul>
+<li>Row-level security (RLS) enforcement at Account level ensuring logged-in customer user sees only Assets and Orders related to their Account via OrgWideDefault setting</li>
+<li>Sharing rule cascading Asset permissions from parent Account_Share__c records preventing cross-account data visibility</li>
+<li>Sensitive cost and margin fields using field-level security to hide from customer user profile while showing account team members</li>
+</ul>
+</li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Key Objects</h4>
+<ul>
+<li>Asset — Represents each purchased service (cabinets, cross-connects, Network Edge instances); linked to Account and related to Order via order fulfillment</li>
+<li>Order — Captures order history, status tracking, and provisioning workflows</li>
+<li>Account — Customer account data (Acme Corporation, EQ-2024-0451) with Account-level Row-Level Security (RLS)</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+</body>
+</html>

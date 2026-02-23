@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Organization Health — PM · Equinix PCP</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Salesforce Sans, sans-serif;
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    header {
+      background-color: var(--wf-ink, #1e2a3a);
+      color: white;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .eq-logo {
+      width: 40px;
+      height: 40px;
+      background-color: var(--wf-accent, #3d6daa);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 20px;
+      color: white;
+    }
+
+    .header-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    nav {
+      display: flex;
+      gap: 32px;
+      margin-left: 48px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-size: 14px;
+      transition: opacity 0.2s;
+    }
+
+    nav a:hover {
+      opacity: 0.8;
+    }
+
+    nav a.active {
+      border-bottom: 3px solid var(--wf-accent, #3d6daa);
+      padding-bottom: 6px;
+    }
+
+    .header-right {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .notification-bell {
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      background-color: var(--wf-accent, #3d6daa);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 32px 24px;
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 24px;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .card {
+      background: white;
+      border-radius: 8px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .completion-gauge {
+      text-align: center;
+      padding: 32px 24px;
+    }
+
+    .gauge-number {
+      font-size: 64px;
+      font-weight: 700;
+      color: var(--wf-accent, #3d6daa);
+      margin-bottom: 16px;
+    }
+
+    .gauge-label {
+      font-size: 14px;
+      color: var(--wf-muted, #6b7f99);
+      margin-bottom: 24px;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 12px;
+      background-color: var(--wf-tint, #dce4ef);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background-color: var(--wf-muted, #6b7f99);
+      width: 73%;
+      transition: width 0.3s ease;
+    }
+
+    .progress-text {
+      text-align: right;
+      font-size: 12px;
+      color: var(--wf-muted, #6b7f99);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    .kpi-card {
+      background: var(--wf-canvas, #f5f7fb);
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .kpi-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--wf-accent, #3d6daa);
+      margin-bottom: 8px;
+    }
+
+    .kpi-label {
+      font-size: 13px;
+      color: var(--wf-muted, #6b7f99);
+    }
+
+    .tier-breakdown {
+      margin-top: 20px;
+    }
+
+    .tier-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--wf-tint, #dce4ef);
+      font-size: 14px;
+    }
+
+    .tier-row:last-child {
+      border-bottom: none;
+    }
+
+    .tier-label {
+      color: var(--wf-ink, #1e2a3a);
+      font-weight: 500;
+    }
+
+    .tier-value {
+      color: var(--wf-muted, #6b7f99);
+    }
+
+    .tier-total {
+      padding: 12px 0;
+      font-weight: 600;
+      border-top: 2px solid var(--wf-tint, #dce4ef);
+      margin-top: 12px;
+    }
+
+    .tier-badge {
+      display: inline-block;
+      background-color: var(--wf-tint, #dce4ef);
+      color: var(--wf-ink, #1e2a3a);
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-top: 12px;
+    }
+
+    .alert-banner {
+      background-color: var(--wf-canvas, #f5f7fb);
+      border-left: 4px solid var(--wf-amber, #8b7745);
+      padding: 16px;
+      border-radius: 4px;
+      margin-bottom: 24px;
+      font-size: 14px;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .alert-banner strong {
+      color: var(--wf-amber, #8b7745);
+    }
+
+    .pipeline-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .pipeline-stage {
+      background: var(--wf-canvas, #f5f7fb);
+      border-radius: 6px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .stage-label {
+      font-size: 12px;
+      color: var(--wf-muted, #6b7f99);
+      margin-bottom: 8px;
+    }
+
+    .stage-count {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--wf-accent, #3d6daa);
+    }
+
+    .leaderboard-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+      font-size: 14px;
+    }
+
+    .leaderboard-table th {
+      background-color: var(--wf-canvas, #f5f7fb);
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+      border-bottom: 1px solid var(--wf-tint, #dce4ef);
+    }
+
+    .leaderboard-table td {
+      padding: 12px;
+      border-bottom: 1px solid var(--wf-tint, #dce4ef);
+    }
+
+    .leaderboard-table tr:hover {
+      background-color: var(--wf-canvas, #f5f7fb);
+    }
+
+    .rank-badge {
+      width: 28px;
+      height: 28px;
+      background-color: var(--wf-accent, #3d6daa);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .completion-bar {
+      width: 100%;
+      height: 6px;
+      background-color: var(--wf-tint, #dce4ef);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .completion-fill {
+      height: 100%;
+      background-color: var(--wf-muted, #6b7f99);
+    }
+
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-primary {
+      background-color: var(--wf-accent, #3d6daa);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--wf-accent, #3d6daa);
+    }
+
+    .btn-secondary {
+      background-color: white;
+      color: var(--wf-accent, #3d6daa);
+      border: 1px solid var(--wf-accent, #3d6daa);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--wf-canvas, #f5f7fb);
+    }
+
+    @media (max-width: 768px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+
+      .grid-4 {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      nav {
+        display: none;
+      }
+</style>
+</head>
+<body>
+<div class="page-context-bar">
+  <div style="max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <nav class="wf-breadcrumb" aria-label="Breadcrumb" style="margin-bottom:0;">
+      <a href="pm-home-dashboard.html">Home</a>
+      <span class="wf-breadcrumb-sep">›</span>
+      <span class="wf-breadcrumb-current">Organization Health</span>
+    </nav>
+    <span class="persona-badge persona-badge--pm">PM</span>
+  </div>
+</div>
+  <header class="wf-header">
+    <div class="wf-header-logo"><svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix"><path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/></svg></div>
+    <div class="wf-header-title">Partner Central</div>
+    <nav class="wf-header-nav">
+      <a href="pm-home-dashboard.html">Dashboard</a>
+      <a href="pm-team-management.html">Team</a>
+      <a href="pm-deals-revenue.html">Deals</a>
+      <a href="pm-team-training.html">Training</a>
+      <a href="pm-resources.html">Resources</a>
+    </nav>
+    <div class="wf-header-util">
+      <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+      <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+    </div>
+  </header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+  <div class="container">
+    <h1 class="page-title">Organization Health Dashboard</h1>
+
+    <div class="alert-banner" role="alert" aria-live="polite">
+      <strong>Near-Win Alert:</strong> Your team is 5 points from Gold tier! Focus on deal closure in Q1 to reach the next tier.
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="card-title">Team Completion</div>
+        <div class="completion-gauge">
+          <div class="gauge-number">73%</div>
+          <div class="gauge-label">Training Completion Rate</div>
+          <div class="progress-bar">
+            <div class="progress-fill"></div>
+          </div>
+          <div class="progress-text">73 of 100 team members completed training</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Current Tier Status</div>
+        <div class="tier-breakdown">
+          <div class="tier-row">
+            <span class="tier-label">Training (30% weight)</span>
+            <span class="tier-value">30% × 0.78 = 23.4</span>
+          </div>
+          <div class="tier-row">
+            <span class="tier-label">Revenue (40% weight)</span>
+            <span class="tier-value">40% × 0.65 = 26.0</span>
+          </div>
+          <div class="tier-row">
+            <span class="tier-label">Deals (30% weight)</span>
+            <span class="tier-value">30% × 0.52 = 15.6</span>
+          </div>
+          <div class="tier-row tier-total">
+            <span class="tier-label">Total Score</span>
+            <span class="tier-value">65.0</span>
+          </div>
+          <div class="tier-badge">Silver Tier (65-79 points)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Key Performance Indicators</div>
+      <div class="grid-4">
+        <div class="kpi-card">
+          <div class="kpi-value">$1.8M</div>
+          <div class="kpi-label">YTD Revenue</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-value">72%</div>
+          <div class="kpi-label">Quota Attainment</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-value">$216K</div>
+          <div class="kpi-label">Commission Earned</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-value">$324K</div>
+          <div class="kpi-label">Commission Potential</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Deal Pipeline Overview</div>
+      <div class="pipeline-grid">
+        <div class="pipeline-stage">
+          <div class="stage-label">Prospecting</div>
+          <div class="stage-count">4</div>
+        </div>
+        <div class="pipeline-stage">
+          <div class="stage-label">Qualification</div>
+          <div class="stage-count">3</div>
+        </div>
+        <div class="pipeline-stage">
+          <div class="stage-label">Proposal</div>
+          <div class="stage-count">2</div>
+        </div>
+        <div class="pipeline-stage">
+          <div class="stage-label">Negotiation</div>
+          <div class="stage-count">1</div>
+        </div>
+        <div class="pipeline-stage">
+          <div class="stage-label">Closed Won</div>
+          <div class="stage-count">8</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Training Leaderboard - Top 5</div>
+      <table class="leaderboard-table" role="table" aria-label="Training completion leaderboard">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Team Member</th>
+            <th>Completion %</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><div class="rank-badge">1</div></td>
+            <td>Sarah Johnson</td>
+            <td>
+              <div class="completion-bar">
+                <div class="completion-fill" style="width: 100%;"></div>
+              </div>
+            </td>
+            <td>100%</td>
+          </tr>
+          <tr>
+            <td><div class="rank-badge">2</div></td>
+            <td>Michael Chen</td>
+            <td>
+              <div class="completion-bar">
+                <div class="completion-fill" style="width: 95%;"></div>
+              </div>
+            </td>
+            <td>95%</td>
+          </tr>
+          <tr>
+            <td><div class="rank-badge">3</div></td>
+            <td>Jessica Martinez</td>
+            <td>
+              <div class="completion-bar">
+                <div class="completion-fill" style="width: 88%;"></div>
+              </div>
+            </td>
+            <td>88%</td>
+          </tr>
+          <tr>
+            <td><div class="rank-badge">4</div></td>
+            <td>David Patel</td>
+            <td>
+              <div class="completion-bar">
+                <div class="completion-fill" style="width: 82%;"></div>
+              </div>
+            </td>
+            <td>82%</td>
+          </tr>
+          <tr>
+            <td><div class="rank-badge">5</div></td>
+            <td>Emma Wilson</td>
+            <td>
+              <div class="completion-bar">
+                <div class="completion-fill" style="width: 78%;"></div>
+              </div>
+            </td>
+            <td>78%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="button-group">
+      <button class="btn btn-primary" aria-label="Send reminder to team">Send Reminder to Team</button>
+      <button class="btn btn-secondary" aria-label="Export organization health report">Export Report</button>
+    </div>
+</div>
+  <footer class="wf-footer">
+    &copy; 2026 Equinix Partner Manager Portal · Wireframe specification
+  </footer>
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>The Organization Health Dashboard provides partners with a scorecard view of their tier status, training completion, revenue progress, and pipeline health with actionable insights for tier advancement.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Monitor organization-wide health against program requirements and tier thresholds</li>
+<li>Understand current tier status and progress toward next tier (Gold or higher)</li>
+<li>See weighted scoring factors: training completion, revenue, deal registration, certifications</li>
+<li>Track team training completion rates and identify top performers for recognition</li>
+<li>View pipeline health and deal progression across all stages</li>
+<li>Communicate tier advancement goals and required actions to team members</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Near-Win Alert banner flagging opportunities for immediate tier advancement</li>
+<li>Team Completion card with training completion gauge and progress bar</li>
+<li>Current Tier Status card showing weighted score breakdown and factor contributions</li>
+<li>KPI cards: YTD Revenue, Quota Attainment %, Active Deals, Certifications Completed</li>
+<li>Deal Pipeline Overview grid showing stage distribution and deal counts</li>
+<li>Training Leaderboard table with member names, completion %, rank badges</li>
+<li>Next Steps section with recommended actions for tier advancement</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Progress bar visualization for team training completion with percentage</li>
+<li>Tier breakdown expandable section showing weighted factor calculations</li>
+<li>Tier badge indicating current status (Silver/Gold) with next tier preview</li>
+<li>Pipeline stage counters displaying deal progression with stage labels</li>
+<li>Leaderboard rank badges (Gold/Silver/Bronze stars) for top performers</li>
+<li>Completion fill bars for each team member with color coding</li>
+<li>Send Reminder and Export Report button actions for team communications</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Tier Scoring & Eligibility</strong>
+<ul>
+<li>Weighted tier score calculation: training_pct (30%) + revenue_ytd (35%) + deals_registered (20%) + certifications (15%) for fair assessment</li>
+<li>Tier eligibility threshold comparison: current_score vs. tier_minimums with visual gap analysis to show advancement path</li>
+</ul>
+</li>
+<li><strong>Data Aggregation & Refresh</strong>
+<ul>
+<li>Training completion aggregation from LMS/SumTotal with daily refresh for current metrics</li>
+<li>Revenue YTD sum from closed-won opportunities with quota comparison and attainment percentage</li>
+</ul>
+</li>
+<li><strong>Alerts, Ranking & Reporting</strong>
+<ul>
+<li>Near-win alert trigger: If (current_score >= 95% of next_tier_threshold), show banner to prompt action</li>
+<li>Leaderboard auto-ranking based on training completion with tie-breaking by recent activity for transparency</li>
+<li>Export report function: PDF generation of dashboard snapshot with team metrics and recommendations for stakeholder sharing</li>
+</ul>
+</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

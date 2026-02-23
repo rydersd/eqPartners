@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fabric Search — AE · Equinix PCP Partner Portal</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); }
+
+    header { background: var(--wf-ink, #1e2a3a); height: 56px; display: flex; align-items: center; padding: 0 24px; gap: 16px; }
+    .logo-box { display: flex; align-items: center; gap: 8px; }
+    .logo { width: 32px; height: 32px; border-radius: 6px; background: var(--wf-accent, #3d6daa); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 13px; }
+    .header-title { color: #fff; font-weight: 590; font-size: 14px; }
+    nav { display: flex; align-items: center; height: 56px; gap: 0; flex: 1; padding-left: 8px; }
+    nav a { padding: 0 16px; height: 56px; display: flex; align-items: center; font-size: 13px; color: rgba(255,255,255,.8); border-bottom: 3px solid transparent; text-decoration: none; }
+    nav a:hover { color: #fff; }
+
+    .search-header { background: #fff; border-bottom: 1px solid var(--wf-tint, #dce4ef); padding: 16px 24px; }
+    .search-container { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; gap: 12px; }
+    .search-input-wrap { flex: 1; position: relative; }
+    .search-input { width: 100%; padding: 10px 16px 10px 40px; border: 2px solid var(--wf-accent, #3d6daa); border-radius: 6px; font-size: 15px; font-family: inherit; outline: none; }
+    .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--wf-muted, #6b7f99); font-size: 16px; }
+    .search-clear { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--wf-muted, #6b7f99); font-size: 18px; cursor: pointer; background: none; border: none; }
+    .search-btn { padding: 10px 20px; background: var(--wf-accent, #3d6daa); color: #fff; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; }
+    .search-btn:hover { background: var(--wf-accent, #3d6daa); }
+
+    .container { max-width: 1400px; margin: 0 auto; padding: 24px; }
+
+    .results-summary { font-size: 14px; color: var(--wf-muted, #6b7f99); margin-bottom: 20px; }
+    .results-summary strong { color: var(--wf-ink, #1e2a3a); }
+    .results-summary .query { color: var(--wf-accent, #3d6daa); font-weight: 600; }
+
+    .tabs { display: flex; gap: 0; border-bottom: 2px solid var(--wf-tint, #dce4ef); margin-bottom: 24px; }
+    .tab { padding: 12px 20px; font-size: 13px; font-weight: 600; color: var(--wf-muted, #6b7f99); cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
+    .tab:hover { color: var(--wf-ink, #1e2a3a); }
+    .tab.active { color: var(--wf-accent, #3d6daa); border-bottom-color: var(--wf-accent, #3d6daa); }
+    .tab .count { background: var(--wf-tint, #dce4ef); color: var(--wf-muted, #6b7f99); padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-left: 6px; }
+    .tab.active .count { background: var(--wf-canvas, #f5f7fb); color: var(--wf-accent, #3d6daa); }
+
+    .result-section { margin-bottom: 28px; }
+    .section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--wf-muted, #6b7f99); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--wf-tint, #dce4ef); display: flex; align-items: center; gap: 8px; }
+    .section-icon { width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #fff; }
+
+    .result-card { background: #fff; padding: 16px 20px; border-radius: 6px; margin-bottom: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); display: flex; gap: 16px; align-items: flex-start; transition: all 0.15s; cursor: pointer; border-left: 3px solid transparent; }
+    .result-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.12); border-left-color: var(--wf-accent, #3d6daa); }
+    .result-icon { width: 36px; height: 36px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+    .result-body { flex: 1; min-width: 0; }
+    .result-title { font-size: 14px; font-weight: 600; color: var(--wf-accent, #3d6daa); margin: 0 0 4px 0; text-decoration: none; }
+    .result-title:hover { text-decoration: underline; }
+    .result-meta { font-size: 12px; color: var(--wf-muted, #6b7f99); margin: 0 0 6px 0; }
+    .result-snippet { font-size: 13px; color: var(--wf-text, #3b4f68); line-height: 1.5; margin: 0; }
+    .result-snippet mark { background: var(--wf-surface, #edf1f7); padding: 1px 2px; border-radius: 2px; }
+    .result-badge { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+    .badge-deal { background: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); }
+    .badge-account { background: var(--wf-canvas, #f5f7fb); color: var(--wf-accent, #3d6daa); }
+    .badge-course { background: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); }
+    .badge-resource { background: var(--wf-canvas, #f5f7fb); color: var(--wf-amber, #8b7745); }
+    .badge-commission { background: var(--wf-surface, #edf1f7); color: var(--wf-ink, #1e2a3a); }
+    .result-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+    .result-date { font-size: 11px; color: var(--wf-muted, #6b7f99); white-space: nowrap; }
+    .result-amount { font-size: 14px; font-weight: 700; color: var(--wf-muted, #6b7f99); }
+    .result-status { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 4px; }
+    .status-approved { background: var(--wf-surface, #edf1f7); color: var(--wf-ink, #1e2a3a); }
+    .status-pending { background: var(--wf-surface, #edf1f7); color: var(--wf-amber, #8b7745); }
+    .status-active { background: var(--wf-canvas, #f5f7fb); color: var(--wf-accent, #3d6daa); }
+    .status-submitted { background: var(--wf-canvas, #f5f7fb); color: var(--wf-accent, #3d6daa); }
+    .status-won { background: var(--wf-surface, #edf1f7); color: var(--wf-ink, #1e2a3a); }
+    .status-progress { background: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); }
+
+    .layout { display: grid; grid-template-columns: 240px 1fr; gap: 24px; }
+    .sidebar { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); height: fit-content; position: sticky; top: 24px; }
+    .sidebar h3 { margin: 0 0 16px 0; font-size: 13px; font-weight: 700; color: var(--wf-ink, #1e2a3a); }
+    .filter-group { margin-bottom: 20px; }
+    .filter-group:last-child { margin-bottom: 0; }
+    .filter-label { font-size: 11px; font-weight: 600; color: var(--wf-muted, #6b7f99); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+    .filter-option { display: flex; align-items: center; gap: 8px; padding: 6px 0; font-size: 13px; color: var(--wf-ink, #1e2a3a); cursor: pointer; }
+    .filter-option input[type="checkbox"] { margin: 0; }
+    .filter-option .fcount { color: var(--wf-muted, #6b7f99); font-size: 11px; margin-left: auto; }
+
+    .recent-searches { background: #fff; padding: 16px 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom: 20px; }
+    .recent-searches h4 { margin: 0 0 12px 0; font-size: 12px; font-weight: 600; color: var(--wf-muted, #6b7f99); text-transform: uppercase; letter-spacing: 0.5px; }
+    .recent-item { font-size: 13px; color: var(--wf-accent, #3d6daa); padding: 4px 0; cursor: pointer; text-decoration: none; display: block; }
+    .recent-item:hover { text-decoration: underline; }
+    .recent-item::before { content: "🕐 "; font-size: 11px; }
+
+    /* Suggested queries */
+    .did-you-mean { background: #fff; border: 1px solid var(--wf-tint, #dce4ef); border-radius: 6px; padding: 12px 16px; margin-bottom: 20px; font-size: 13px; color: var(--wf-muted, #6b7f99); }
+    .did-you-mean strong { color: var(--wf-ink, #1e2a3a); }
+    .did-you-mean a { color: var(--wf-accent, #3d6daa); text-decoration: none; font-weight: 600; }
+    .did-you-mean a:hover { text-decoration: underline; }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+</style>
+</head>
+<body>
+<div class="page-context-bar">
+  <div style="max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <nav class="wf-breadcrumb" aria-label="Breadcrumb" style="margin-bottom:0;">
+      <a href="rep-home.html">Home</a>
+      <span class="wf-breadcrumb-sep">›</span>
+      <span class="wf-breadcrumb-current">Fabric Search</span>
+    </nav>
+    <span class="persona-badge persona-badge--ae">AE</span>
+  </div>
+</div>
+  <header>
+    <div class="logo-box">
+      <div class="logo">EQ</div>
+      <span class="header-title">Equinix Partner Portal</span>
+    </div>
+    <nav>
+      <a href="rep-deals-commission.html">Deals</a>
+      <a href="rep-my-training.html">Training</a>
+      <a href="rep-marketing.html">Marketing</a>
+      <a href="rep-support.html">Support</a>
+      <a href="rep-resources.html">Resources</a>
+    </nav>
+  
+    <a href="rep-notifications.html" class="bell-wrapper" aria-label="Notifications" style="position:relative;color:white;text-decoration:none;margin-left:auto;">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+      <span style="position:absolute;top:-4px;right:-6px;background:var(--wf-red,#8b4555);color:white;font-size:10px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;">7</span>
+    </a>
+</header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+  <!-- Search Bar -->
+  <div class="search-header">
+    <div class="search-container">
+      <div class="search-input-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" value="Fabric" aria-label="Global search" placeholder="Search deals, courses, resources, customers...">
+        <button class="search-clear" aria-label="Clear search">×</button>
+      </div>
+      <button class="search-btn">Search</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Synonym expansion notice -->
+    <div class="did-you-mean">
+      Also showing results for <a href="#">"interconnection"</a> and <a href="#">"Cloud Router"</a> · <strong>Synonym group:</strong> fabric / interconnection / connect
+    </div>
+
+    <!-- Results Summary -->
+    <div class="results-summary">
+      <strong>18 results</strong> for <span class="query">"Fabric"</span> across deals, courses, resources, and customers · 0.4s
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs" role="tablist">
+      <div class="tab active" role="tab" aria-selected="true">All Results <span class="count">18</span></div>
+      <div class="tab" role="tab">Courses <span class="count">5</span></div>
+      <div class="tab" role="tab">Deals <span class="count">5</span></div>
+      <div class="tab" role="tab">Resources <span class="count">4</span></div>
+      <div class="tab" role="tab">Customers <span class="count">3</span></div>
+      <div class="tab" role="tab">Commission <span class="count">1</span></div>
+    </div>
+
+    <div class="layout">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="recent-searches">
+          <h4>Recent Searches</h4>
+          <a class="recent-item" href="rep-search-results.html">Acme</a>
+          <a class="recent-item" href="#">commission Q1</a>
+          <a class="recent-item" href="#">Security Fundamentals</a>
+          <a class="recent-item" href="#">colocation pricing</a>
+        </div>
+
+        <h3>Refine Results</h3>
+        <div class="filter-group">
+          <div class="filter-label">Object Type</div>
+          <label class="filter-option"><input type="checkbox" checked> Courses <span class="fcount">5</span></label>
+          <label class="filter-option"><input type="checkbox" checked> Deals <span class="fcount">5</span></label>
+          <label class="filter-option"><input type="checkbox" checked> Resources <span class="fcount">4</span></label>
+          <label class="filter-option"><input type="checkbox" checked> Accounts <span class="fcount">3</span></label>
+          <label class="filter-option"><input type="checkbox" checked> Commission <span class="fcount">1</span></label>
+        </div>
+        <div class="filter-group">
+          <div class="filter-label">Product Area</div>
+          <label class="filter-option"><input type="checkbox" checked> Fabric <span class="fcount">12</span></label>
+          <label class="filter-option"><input type="checkbox"> Cloud Router <span class="fcount">4</span></label>
+          <label class="filter-option"><input type="checkbox"> Virtual Connection <span class="fcount">3</span></label>
+          <label class="filter-option"><input type="checkbox"> Network Edge <span class="fcount">2</span></label>
+        </div>
+        <div class="filter-group">
+          <div class="filter-label">Date Range</div>
+          <label class="filter-option"><input type="radio" name="date" checked> All Time</label>
+          <label class="filter-option"><input type="radio" name="date"> Last 30 Days</label>
+          <label class="filter-option"><input type="radio" name="date"> Last 90 Days</label>
+        </div>
+      </aside>
+
+      <!-- Main Results -->
+      <main>
+        <!-- Courses Section (highest relevance for product keyword query) -->
+        <div class="result-section">
+          <div class="section-label">
+            <div class="section-icon" style="background:var(--wf-ink, #1e2a3a);">📚</div>
+            Courses &amp; Training (5)
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">📚</div>
+            <div class="result-body">
+              <a href="rep-course-detail.html" class="result-title">Equinix Fabric Fundamentals</a>
+              <p class="result-meta"><span class="result-badge badge-course">Course</span> · Product · 3 hours · Required for Silver+</p>
+              <p class="result-snippet">Deep dive into Equinix <mark>Fabric</mark> software-defined interconnection platform. Covers virtual connections, <mark>Cloud Router</mark>, service profiles, and multi-cloud network architecture. Prerequisite for Interconnection Specialist certification.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-status status-progress">60% Complete</span>
+              <span class="result-date">Last accessed Feb 10</span>
+            </div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">📚</div>
+            <div class="result-body">
+              <a href="rep-course-detail.html" class="result-title">Selling Interconnection Solutions</a>
+              <p class="result-meta"><span class="result-badge badge-course">Course</span> · Sales · 2 hours · Recommended</p>
+              <p class="result-snippet">Sales methodology for positioning <mark>Fabric</mark> and <mark>interconnection</mark> solutions. Covers competitive differentiation vs. MPLS/SD-WAN, ROI frameworks, and multi-cloud use cases. Includes objection handling for network-centric buyers.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-status status-active">Not Started</span>
+            </div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">📚</div>
+            <div class="result-body">
+              <a href="rep-course-detail.html" class="result-title">Cloud Router Configuration Workshop</a>
+              <p class="result-meta"><span class="result-badge badge-course">Course</span> · Technical · 4 hours · Lab-Based</p>
+              <p class="result-snippet">Hands-on lab: configuring <mark>Fabric</mark> <mark>Cloud Router</mark> for multi-cloud connectivity. Deploy virtual connections to AWS, Azure, and GCP from a single routing instance. Includes BGP peering setup and redundancy patterns.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-status status-active">Not Started</span>
+            </div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">📚</div>
+            <div class="result-body">
+              <a href="rep-course-detail.html" class="result-title">Hybrid Multicloud Architecture</a>
+              <p class="result-meta"><span class="result-badge badge-course">Course</span> · Technical · 3.5 hours · Required for Gold</p>
+              <p class="result-snippet">Designing hybrid architectures with Equinix <mark>Fabric</mark>, Network Edge, and colocation. Covers reference architectures, latency optimization, and workload placement strategies across cloud providers.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-status status-approved">Completed</span>
+              <span class="result-date">Jan 28, 2026</span>
+            </div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">📚</div>
+            <div class="result-body">
+              <a href="rep-course-detail.html" class="result-title">Network Edge & Virtual Appliances</a>
+              <p class="result-meta"><span class="result-badge badge-course">Course</span> · Technical · 2 hours · Optional</p>
+              <p class="result-snippet">Deploy virtual network functions on Equinix <mark>Fabric</mark> Network Edge. Covers firewalls (Palo Alto, Fortinet), routers (Cisco, Juniper), and SD-WAN appliances as managed services.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-status status-active">Not Started</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Deals Section -->
+        <div class="result-section">
+          <div class="section-label">
+            <div class="section-icon" style="background:var(--wf-muted, #6b7f99);">💼</div>
+            Deals (5)
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">💼</div>
+            <div class="result-body">
+              <a href="rep-pipeline.html" class="result-title">Acme Corp - Cloud Router Solution</a>
+              <p class="result-meta"><span class="result-badge badge-deal">Deal Registration</span> · Approved · Protection: 45 days</p>
+              <p class="result-snippet">Acme Corp <mark>Fabric</mark> <mark>Cloud Router</mark> deployment across 3 metros. <mark>Interconnection</mark> to AWS and Azure. Low-latency multi-cloud with single pane management.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-amount">$85,000</span>
+              <span class="result-status status-approved">Approved</span>
+              <span class="result-date">Jan 15, 2026</span>
+            </div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">💼</div>
+            <div class="result-body">
+              <a href="rep-pipeline.html" class="result-title">Global Finance Ltd - Fabric Interconnect</a>
+              <p class="result-meta"><span class="result-badge badge-deal">Deal Registration</span> · Under Review · PSM: Marcus Chen</p>
+              <p class="result-snippet">Global Finance <mark>Fabric</mark> virtual connections between London, Frankfurt, and Singapore hubs. 10G redundant connections to Bloomberg and Reuters low-latency feeds.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-amount">$156,000</span>
+              <span class="result-status status-pending">Under Review</span>
+              <span class="result-date">Feb 5, 2026</span>
+            </div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">💼</div>
+            <div class="result-body">
+              <a href="rep-pipeline.html" class="result-title">TechVision AI - Multi-Cloud Fabric</a>
+              <p class="result-meta"><span class="result-badge badge-deal">Deal Registration</span> · Approved · Protection: 72 days</p>
+              <p class="result-snippet">TechVision AI <mark>Fabric</mark> deployment connecting GPU clusters to AWS SageMaker, Azure ML, and GCP Vertex AI. <mark>Cloud Router</mark> for dynamic workload routing between clouds.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-amount">$210,000</span>
+              <span class="result-status status-approved">Approved</span>
+              <span class="result-date">Jan 22, 2026</span>
+            </div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">💼</div>
+            <div class="result-body">
+              <a href="rep-pipeline.html" class="result-title">Meridian Health - Cloud Migration Phase 2</a>
+              <p class="result-meta"><span class="result-badge badge-deal">Deal Registration</span> · Submitted · Pending PSM Review</p>
+              <p class="result-snippet">Meridian Health <mark>Fabric</mark> <mark>interconnection</mark> for HIPAA-compliant cloud migration. Virtual connections to Epic cloud and AWS HealthLake. Requires redundant 10G with encrypted overlay.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-amount">$98,000</span>
+              <span class="result-status status-submitted">Submitted</span>
+              <span class="result-date">Feb 11, 2026</span>
+            </div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">💼</div>
+            <div class="result-body">
+              <a href="rep-pipeline.html" class="result-title">Acme Interconnection Upgrade</a>
+              <p class="result-meta"><span class="result-badge badge-deal">Deal Registration</span> · Submitted · Pending PSM Review</p>
+              <p class="result-snippet">Acme Corporation upgrade from 1G to 10G ports at SV5. Additional <mark>Fabric</mark> virtual connections to 3 new cloud on-ramps. PSM: Marcus Chen.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-amount">$42,000</span>
+              <span class="result-status status-submitted">Submitted</span>
+              <span class="result-date">Feb 12, 2026</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resources Section -->
+        <div class="result-section">
+          <div class="section-label">
+            <div class="section-icon" style="background:var(--wf-amber, #8b7745);">📄</div>
+            Resources &amp; Documents (4)
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">📄</div>
+            <div class="result-body">
+              <a href="rep-sales-tools.html" class="result-title">Fabric Cloud Router — Technical Overview</a>
+              <p class="result-meta"><span class="result-badge badge-resource">Whitepaper</span> · PDF · 12 pages · Updated Feb 2026</p>
+              <p class="result-snippet">Technical overview of Equinix <mark>Fabric</mark> <mark>Cloud Router</mark>: architecture, supported protocols (BGP, static), latency benchmarks, and multi-cloud routing capabilities. Includes reference diagrams for customer presentations.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-date">Feb 3, 2026</span>
+            </div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">📄</div>
+            <div class="result-body">
+              <a href="rep-sales-tools.html" class="result-title">Interconnection Battle Card: vs. MPLS & SD-WAN</a>
+              <p class="result-meta"><span class="result-badge badge-resource">Battle Card</span> · PDF · Updated Jan 2026</p>
+              <p class="result-snippet">Competitive positioning for <mark>Fabric</mark> vs traditional MPLS and SD-WAN. Key differentiators: direct cloud on-ramps, sub-millisecond latency, software-defined provisioning. Includes pricing comparison framework.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-date">Jan 20, 2026</span>
+            </div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">📄</div>
+            <div class="result-body">
+              <a href="rep-sales-tools.html" class="result-title">Multi-Cloud Architecture — Customer Presentation Template</a>
+              <p class="result-meta"><span class="result-badge badge-resource">Template</span> · PPTX · 24 slides · Updated Feb 2026</p>
+              <p class="result-snippet">Customer-facing presentation template for <mark>Fabric</mark> multi-cloud solutions. Pre-built slides for architecture diagrams, ROI calculator, metro availability, and cloud provider connectivity matrix.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-date">Feb 7, 2026</span>
+            </div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">📄</div>
+            <div class="result-body">
+              <a href="rep-sales-tools.html" class="result-title">Fabric Pricing & Configuration Guide (Partner)</a>
+              <p class="result-meta"><span class="result-badge badge-resource">Guide</span> · PDF · 8 pages · Internal Only</p>
+              <p class="result-snippet">Partner-facing pricing guide for <mark>Fabric</mark> ports, virtual connections, and <mark>Cloud Router</mark> instances. Includes discount tiers by partner level and volume-based pricing breakpoints.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-date">Jan 15, 2026</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Customers Section -->
+        <div class="result-section">
+          <div class="section-label">
+            <div class="section-icon" style="background:var(--wf-accent, #3d6daa);">🏢</div>
+            Customers with Fabric Deployments (3)
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">🏢</div>
+            <div class="result-body">
+              <a href="#" class="result-title">TechVision AI</a>
+              <p class="result-meta"><span class="result-badge badge-account">Account</span> · Enterprise · SV5, NY5 · Gold Partner Customer</p>
+              <p class="result-snippet">Active <mark>Fabric</mark> customer — 6 virtual connections, 2 <mark>Cloud Router</mark> instances. Multi-cloud AI/ML workloads across AWS, Azure, GCP. Expanding to Asia-Pacific Q2 2026.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-date">Active Customer</span>
+            </div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">🏢</div>
+            <div class="result-body">
+              <a href="#" class="result-title">Global Finance Ltd</a>
+              <p class="result-meta"><span class="result-badge badge-account">Account</span> · Enterprise · LD5, FR5, SG1 · Silver Partner Customer</p>
+              <p class="result-snippet">Active <mark>Fabric</mark> customer — 4 virtual connections across EMEA and APAC. Low-latency trading <mark>interconnection</mark>. Evaluating <mark>Cloud Router</mark> for unified routing.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-date">Active Customer</span>
+            </div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">🏢</div>
+            <div class="result-body">
+              <a href="#" class="result-title">Acme Corporation</a>
+              <p class="result-meta"><span class="result-badge badge-account">Account</span> · Enterprise · SV5, NY5, CH1</p>
+              <p class="result-snippet">Active <mark>Fabric</mark> customer — 3 virtual connections. Currently upgrading to 10G with additional cloud on-ramps. <mark>Interconnection</mark> to AWS and Azure active since 2023.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-date">Active Customer</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Commission Section -->
+        <div class="result-section">
+          <div class="section-label">
+            <div class="section-icon" style="background:var(--wf-ink, #1e2a3a);">💰</div>
+            Commission (1)
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-surface, #edf1f7);">💰</div>
+            <div class="result-body">
+              <a href="rep-deals-commission.html" class="result-title">Commission: TechVision AI - Multi-Cloud Fabric</a>
+              <p class="result-meta"><span class="result-badge badge-commission">Commission</span> · Gold Tier (15%) · Pending Payment Q1 2026</p>
+              <p class="result-snippet">TechVision AI <mark>Fabric</mark> deal closed $210,000 MRR. Commission rate: 15% (Gold tier) + 2% co-sell bonus. Commission earned: $35,700. Payment status: Scheduled Mar 2026.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-amount">$35,700</span>
+              <span class="result-status status-pending">Scheduled</span>
+              <span class="result-date">Mar 2026</span>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div style="background: white; padding: 16px 24px; border-top: 1px solid var(--wf-tint, #dce4ef); margin-top: 40px; font-size: 12px; color: var(--wf-muted, #6b7f99); text-align: center;">
+    <p style="margin: 0;">Equinix Partner Portal · Logged in as: Sarah Connor (sc@stark.com) · PM: Pepper Potts | PSM: Marcus Chen · <a href="#" style="color: var(--wf-accent, #3d6daa); text-decoration: none;">Contact Support</a></p>
+  </div>
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Product keyword search results for Fabric product queries, prioritizing training content and deal pipeline information to help partners learn about and sell Equinix products.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Find Fabric product training courses quickly</li>
+<li>Locate battle cards and pricing guides for Fabric</li>
+<li>See related Fabric deals and opportunities</li>
+<li>Find reference customers for Fabric products</li>
+<li>Discover related products and services</li>
+<li>Check Fabric-related commission opportunities</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Synonym expansion banner showing "Fabric" alternatives</li>
+<li>Courses promoted first with progress indicators</li>
+<li>Product deals section with relevant opportunities</li>
+<li>Resources and documentation for Fabric products</li>
+<li>Related customer accounts and reference sites</li>
+<li>Commission records and earning opportunities</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Click synonym links to search related terms</li>
+<li>Filter by product area and resource type</li>
+<li>Reordered tabs prioritizing courses</li>
+<li>View course progress on course cards</li>
+<li>Click results to navigate to details</li>
+<li>Apply date and product filters</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Search &amp; Synonym Expansion</strong>
+<ul>
+<li>Synonym expansion configured in Salesforce Search Manager groups Fabric with interconnection, Cloud Router, and virtual connection terms</li>
+<li>Result snippets highlight matched synonym terms using HTML mark elements for visual emphasis</li>
+</ul></li>
+<li><strong>Dynamic Result Organization</strong>
+<ul>
+<li>Search results dynamically reorder sections based on search intent: courses for product keywords, deals for account/name searches</li>
+<li>Product Area filter sidebar replaces Deal Stage filter when product keyword detected in search query</li>
+</ul></li>
+<li><strong>Filtering &amp; Real-Time Updates</strong>
+<ul>
+<li>Filters AND-combined together and update result counts in real-time without page reload using client-side logic</li>
+<li>Apply date and product filters simultaneously to scope search results</li>
+</ul></li>
+<li><strong>Data Synchronization</strong>
+<ul>
+<li>Course progress automatically synced from Course_Enrollment__c object and displayed in status badge</li>
+</ul></li>
+</ul>
+<hr class="spec-divider">
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

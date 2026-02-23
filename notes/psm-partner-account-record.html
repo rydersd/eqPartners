@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Partner Account Record - Stark Industries</title>
+<link rel="stylesheet" href="wireframe.css">
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  background: var(--wf-canvas, #f5f7fb);
+}
+
+.slds-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.slds-global-header {
+  background: var(--wf-ink, #1e2a3a);
+  color: var(--wf-surface, #edf1f7);
+  padding: 0 16px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.slds-global-header__waffle {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.slds-global-header__waffle svg {
+  width: 20px;
+  height: 20px;
+}
+
+.slds-global-header__app {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.slds-global-header__app-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--wf-accent, #3d6daa);
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.slds-global-nav {
+  display: flex;
+  gap: 0;
+  flex: 1;
+  margin-left: 16px;
+}
+
+.slds-global-nav__item {
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  padding: 16px 16px;
+  font-size: 13px;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.slds-global-nav__item:hover {
+  color: var(--wf-surface, #edf1f7);
+  background: rgba(255,255,255,0.05);
+}
+
+.slds-global-nav__item.active {
+  color: var(--wf-surface, #edf1f7);
+  border-bottom-color: var(--wf-accent, #3d6daa);
+}
+
+.slds-global-header__search {
+  flex: 1;
+  max-width: 300px;
+}
+
+.slds-global-header__search input {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 2px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.1);
+  color: var(--wf-surface, #edf1f7);
+  font-size: 13px;
+}
+
+.slds-global-header__search input::placeholder {
+  color: rgba(255,255,255,0.5);
+}
+
+.slds-global-header__actions {
+  display: flex;
+  gap: 16px;
+  margin-left: auto;
+}
+
+.slds-global-header__action {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 2px;
+  font-size: 16px;
+}
+
+.slds-global-header__action:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.slds-main {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+.slds-design-notes__title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--wf-red, #8b4553);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.slds-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.slds-badge--brand {
+  background: var(--wf-accent, #3d6daa);
+  color: var(--wf-surface, #edf1f7);
+}
+
+.slds-badge--neutral {
+  background: var(--wf-tint, #dce4ef);
+  color: var(--wf-text, #3b4f68);
+}
+
+/* Page-specific styles */
+.record-header {
+  background: var(--wf-surface, #edf1f7);
+  border: 1px solid var(--wf-tint, #dce4ef);
+  border-radius: 4px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.record-header__info h1 {
+  margin: 0;
+  font-size: 20px;
+  color: var(--wf-ink, #1e2a3a);
+}
+
+.record-header__meta {
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--wf-muted, #6b7f99);
+}
+
+.record-header__meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.record-header__meta-label {
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+}
+
+.record-header__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.button {
+  padding: 8px 14px;
+  border: 1px solid var(--wf-line, #b0bdd0);
+  background: var(--wf-surface, #edf1f7);
+  border-radius: 2px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.button:hover {
+  background: var(--wf-canvas, #f5f7fb);
+  border-color: var(--wf-muted, #6b7f99);
+}
+
+.button--primary {
+  background: var(--wf-accent, #3d6daa);
+  color: var(--wf-surface, #edf1f7);
+  border-color: var(--wf-accent, #3d6daa);
+}
+
+.button--primary:hover {
+  background: var(--wf-accent, #3d6daa);
+  border-color: var(--wf-accent, #3d6daa);
+}
+
+.button--success {
+  background: var(--wf-ink, #1e2a3a);
+  color: var(--wf-surface, #edf1f7);
+  border-color: var(--wf-ink, #1e2a3a);
+}
+
+.button--success:hover {
+  background: var(--wf-ink, #1e2a3a);
+  border-color: var(--wf-ink, #1e2a3a);
+}
+
+.alert-banner {
+  border-radius: 4px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 12px;
+}
+
+.alert-banner--success {
+  background: var(--wf-canvas, #f5f7fb);
+  border-left: 4px solid var(--wf-ink, #1e2a3a);
+  color: var(--wf-ink, #1e2a3a);
+}
+
+.alert-banner--warning {
+  background: var(--wf-canvas, #f5f7fb);
+  border-left: 4px solid var(--wf-amber, #8b7745);
+  color: var(--wf-amber, #8b7745);
+}
+
+.alert-banner__icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.three-column-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr 300px;
+  gap: 16px;
+}
+
+.sidebar-card {
+  background: var(--wf-surface, #edf1f7);
+  border: 1px solid var(--wf-tint, #dce4ef);
+  border-radius: 4px;
+  padding: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  font-size: 12px;
+}
+
+.sidebar-card__title {
+  font-weight: 700;
+  color: var(--wf-ink, #1e2a3a);
+  margin-bottom: 12px;
+  font-size: 13px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--wf-tint, #dce4ef);
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--wf-canvas, #f5f7fb);
+}
+
+.stat-row:last-child {
+  border-bottom: none;
+}
+
+.stat-label {
+  color: var(--wf-muted, #6b7f99);
+}
+
+.stat-value {
+  font-weight: 700;
+  color: var(--wf-ink, #1e2a3a);
+}
+
+.center-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tier-progress-card {
+  background: var(--wf-surface, #edf1f7);
+  border: 1px solid var(--wf-tint, #dce4ef);
+  border-radius: 4px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.tier-progress-card__title {
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 12px;
+  color: var(--wf-ink, #1e2a3a);
+}
+
+.tier-indicator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.tier-badge {
+  background: var(--wf-surface, #edf1f7);
+  color: var(--wf-amber, #8b7745);
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.tier-badge--bronze {
+  background: var(--wf-canvas, #f5f7fb);
+  color: var(--wf-amber, #8b7745);
+}
+
+.tier-badge--silver {
+  background: var(--wf-tint, #dce4ef);
+  color: var(--wf-text, #3b4f68);
+}
+
+.tier-badge--gold {
+  background: var(--wf-surface, #edf1f7);
+  color: var(--wf-amber, #8b7745);
+}
+
+.arrow {
+  font-size: 16px;
+  color: var(--wf-muted, #6b7f99);
+}
+
+.progress-section {
+  margin-bottom: 12px;
+}
+
+.progress-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--wf-muted, #6b7f99);
+  margin-bottom: 6px;
+  letter-spacing: 0.5px;
+}
+
+.progress-bar-container {
+  background: var(--wf-canvas, #f5f7fb);
+  border-radius: 2px;
+  height: 8px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: var(--wf-ink, #1e2a3a);
+  border-radius: 2px;
+}
+
+.requirements-checklist {
+  margin-top: 12px;
+}
+
+.requirement {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  font-size: 11px;
+}
+
+.requirement--met {
+  color: var(--wf-ink, #1e2a3a);
+}
+
+.requirement--pending {
+  color: var(--wf-amber, #8b7745);
+}
+
+.requirement--gap {
+  color: var(--wf-red, #8b4553);
+}
+
+.requirement-icon {
+  font-weight: 700;
+}
+
+.tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--wf-tint, #dce4ef);
+  background: var(--wf-surface, #edf1f7);
+  border-radius: 4px 4px 0 0;
+  padding: 0 16px;
+}
+
+.tab {
+  padding: 12px 16px;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--wf-muted, #6b7f99);
+  transition: all 0.2s;
+}
+
+.tab:hover {
+  color: var(--wf-ink, #1e2a3a);
+  background: var(--wf-canvas, #f5f7fb);
+}
+
+.tab.active {
+  color: var(--wf-accent, #3d6daa);
+  border-bottom-color: var(--wf-accent, #3d6daa);
+  background: transparent;
+}
+
+.tree-grid-container {
+  background: var(--wf-surface, #edf1f7);
+  border: 1px solid var(--wf-tint, #dce4ef);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+thead {
+  background: var(--wf-canvas, #f5f7fb);
+  border-bottom: 1px solid var(--wf-tint, #dce4ef);
+}
+
+th {
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 700;
+  color: var(--wf-text, #3b4f68);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--wf-canvas, #f5f7fb);
+  color: var(--wf-text, #3b4f68);
+}
+
+tbody tr:hover {
+  background: var(--wf-canvas, #f5f7fb);
+}
+
+.tree-indent {
+  display: inline-block;
+  width: 16px;
+}
+
+.tree-expand {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--wf-muted, #6b7f99);
+  margin-right: 4px;
+  user-select: none;
+}
+
+.row-parent {
+  font-weight: 600;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.status-badge--complete {
+  background: var(--wf-canvas, #f5f7fb);
+  color: var(--wf-ink, #1e2a3a);
+}
+
+.status-badge--in-progress {
+  background: var(--wf-canvas, #f5f7fb);
+  color: var(--wf-accent, #3d6daa);
+}
+
+.status-badge--overdue {
+  background: var(--wf-canvas, #f5f7fb);
+  color: var(--wf-red, #8b4553);
+}
+
+.contact-name {
+  color: var(--wf-accent, #3d6daa);
+  text-decoration: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.contact-name:hover {
+  text-decoration: underline;
+}
+
+.activity-timeline {
+  background: var(--wf-surface, #edf1f7);
+  border: 1px solid var(--wf-tint, #dce4ef);
+  border-radius: 4px;
+  padding: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.activity-timeline__title {
+  font-weight: 700;
+  font-size: 13px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--wf-tint, #dce4ef);
+}
+
+.activity-item {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--wf-canvas, #f5f7fb);
+  font-size: 11px;
+}
+
+.activity-item:last-child {
+  border-bottom: none;
+}
+
+.activity-time {
+  color: var(--wf-muted, #6b7f99);
+  font-size: 10px;
+}
+
+.activity-text {
+  color: var(--wf-text, #3b4f68);
+  margin-top: 2px;
+</style>
+</head>
+<body>
+<div class="slds-page">
+<header class="wf-header">
+  <div class="wf-header-logo">EQ</div>
+  <div class="wf-header-title">Partner Sales Manager</div>
+  <nav class="wf-header-nav">
+    <a href="#">Dashboard</a>
+    <a href="#" class="active">PSM Portal</a>
+    <a href="#">Partners</a>
+    <a href="#">Deals</a>
+    <a href="#">Programs</a>
+    <a href="#">Reports</a>
+  </nav>
+  <div class="wf-header-util">
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+  </div>
+</header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+<div class="slds-main">
+
+
+<!-- Record Header -->
+<div class="record-header">
+  <div class="record-header__info">
+    <h1>Stark Industries</h1>
+    <div class="record-header__meta">
+      <div class="record-header__meta-item">
+        <span class="record-header__meta-label">Tier</span>
+        <span class="tier-badge tier-badge--gold">Gold</span>
+      </div>
+      <div class="record-header__meta-item">
+        <span class="record-header__meta-label">Region</span>
+        <span>US West</span>
+      </div>
+      <div class="record-header__meta-item">
+        <span class="record-header__meta-label">Partner Since</span>
+        <span>Jan 15, 2023</span>
+      </div>
+      <div class="record-header__meta-item">
+        <span class="record-header__meta-label">PSM Assigned</span>
+        <span>Sarah Chen</span>
+      </div>
+      <div class="record-header__meta-item">
+        <span class="record-header__meta-label">Completion</span>
+        <span style="font-weight: 700; color: var(--wf-ink, #1e2a3a);">95%</span>
+      </div>
+      <div class="record-header__meta-item">
+        <span class="record-header__meta-label">Team Size</span>
+        <span>12 members</span>
+      </div>
+    </div>
+  </div>
+  <div class="record-header__actions">
+    <button class="button button--primary">Encourage Partner Manager</button>
+    <button class="button">Share Tier Summary</button>
+    <button class="button">Contact Manager</button>
+    <button class="button">View Report</button>
+  </div>
+</div>
+
+<!-- Alert Banner -->
+<div class="alert-banner alert-banner--success">
+  <div class="alert-banner__icon">✓</div>
+  <div>
+    <strong>Near-Win!</strong> Stark Industries is Gold tier (highest) with 95% completion. Excellent progress. Continue momentum with team for future certifications.
+  </div>
+</div>
+
+<!-- Three Column Layout -->
+<div class="three-column-layout">
+
+<!-- LEFT COLUMN: Activity Timeline -->
+<div>
+  <div class="activity-timeline">
+    <div class="activity-timeline__title">📋 Activity Timeline</div>
+    <div class="activity-item">
+      <div class="activity-time">Today 10:34 AM</div>
+      <div class="activity-text">Encouragement sent to PM</div>
+    </div>
+    <div class="activity-item">
+      <div class="activity-time">3 days ago</div>
+      <div class="activity-text">Team completed Compliance cert</div>
+    </div>
+    <div class="activity-item">
+      <div class="activity-time">1 week ago</div>
+      <div class="activity-text">2 team members enrolled</div>
+    </div>
+    <div class="activity-item">
+      <div class="activity-time">2 weeks ago</div>
+      <div class="activity-text">Tier promoted to Gold</div>
+    </div>
+    <div class="activity-item">
+      <div class="activity-time">3 weeks ago</div>
+      <div class="activity-text">Encouragement sent to PM</div>
+    </div>
+    <div class="activity-item">
+      <div class="activity-time">1 month ago</div>
+      <div class="activity-text">First contact enrolled</div>
+    </div>
+  </div>
+</div>
+
+<!-- CENTER COLUMN: Main Content -->
+<div class="center-panel">
+
+  <!-- Tier Progress Card -->
+  <div class="tier-progress-card">
+    <div class="tier-progress-card__title">⭐ Tier Advancement Progress</div>
+
+    <div class="tier-indicator">
+      <span class="tier-badge tier-badge--silver">Silver</span>
+      <span class="arrow">→</span>
+      <span class="tier-badge tier-badge--gold">Gold</span>
+      <span style="margin-left: auto; font-weight: 700; color: var(--wf-ink, #1e2a3a);">ACHIEVED</span>
+    </div>
+
+    <div class="progress-section">
+      <div class="progress-label">Requirements Progress</div>
+      <div class="progress-bar-container">
+        <div class="progress-bar" style="width: 100%"></div>
+      </div>
+      <div style="font-size: 11px; color: var(--wf-muted, #6b7f99); margin-top: 4px;">8 of 8 required certifications completed</div>
+    </div>
+
+    <div class="requirements-checklist">
+      <div class="requirement requirement--met">
+        <span class="requirement-icon">✓</span>
+        <span>Cloud Infrastructure Fundamentals</span>
+      </div>
+      <div class="requirement requirement--met">
+        <span class="requirement-icon">✓</span>
+        <span>Enterprise Security</span>
+      </div>
+      <div class="requirement requirement--met">
+        <span class="requirement-icon">✓</span>
+        <span>Compliance & Governance</span>
+      </div>
+      <div class="requirement requirement--met">
+        <span class="requirement-icon">✓</span>
+        <span>Interconnection Solutions</span>
+      </div>
+      <div class="requirement requirement--met">
+        <span class="requirement-icon">✓</span>
+        <span>Advanced Networking</span>
+      </div>
+      <div class="requirement requirement--met">
+        <span class="requirement-icon">✓</span>
+        <span>Sales Enablement</span>
+      </div>
+      <div class="requirement requirement--met">
+        <span class="requirement-icon">✓</span>
+        <span>Technical Architecture</span>
+      </div>
+      <div class="requirement requirement--met">
+        <span class="requirement-icon">✓</span>
+        <span>Solution Design</span>
+      </div>
+    </div>
+
+    <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--wf-tint, #dce4ef); font-size: 11px; color: var(--wf-muted, #6b7f99);">
+      <strong style="color: var(--wf-ink, #1e2a3a);">Gold Tier Benefits:</strong> Co-marketing support, priority support access, expanded commission rates (15%), co-branded case studies.
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div style="background: var(--wf-surface, #edf1f7); border: 1px solid var(--wf-tint, #dce4ef); border-radius: 4px; overflow: hidden;">
+    <div class="tabs">
+      <div class="tab active">By Team Member</div>
+      <div class="tab">By Course</div>
+    </div>
+
+    <!-- Tree Grid -->
+    <div class="tree-grid-container" style="border: none; border-radius: 0;">
+      <table>
+        <thead>
+          <tr>
+            <th>Name / Course</th>
+            <th>Track</th>
+            <th>Category</th>
+            <th>Last Activity</th>
+            <th>Complete</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="row-parent">
+            <td><span class="tree-expand">▼</span><span class="tree-indent"></span><a class="contact-name" href="#">Tony Stark</a> (Sales Director)</td>
+            <td>BIZ</td>
+            <td>Sales Leadership</td>
+            <td>2 days ago</td>
+            <td><div style="background: var(--wf-canvas, #f5f7fb); border-radius: 2px; height: 6px;"><div style="background: var(--wf-ink, #1e2a3a); height: 100%; width: 100%; border-radius: 2px;"></div></div></td>
+          </tr>
+          <tr>
+            <td><span class="tree-indent">└─</span>Cloud Infrastructure Fundamentals</td>
+            <td>—</td>
+            <td>Training</td>
+            <td>15 days ago</td>
+            <td><span class="status-badge status-badge--complete">Complete</span></td>
+          </tr>
+          <tr>
+            <td><span class="tree-indent">└─</span>Interconnection Solutions</td>
+            <td>—</td>
+            <td>Training</td>
+            <td>10 days ago</td>
+            <td><span class="status-badge status-badge--complete">Complete</span></td>
+          </tr>
+          <tr>
+            <td><span class="tree-indent">└─</span>Sales Enablement</td>
+            <td>—</td>
+            <td>Training</td>
+            <td>2 days ago</td>
+            <td><span class="status-badge status-badge--complete">Complete</span></td>
+          </tr>
+
+          <tr class="row-parent">
+            <td><span class="tree-expand">▼</span><span class="tree-indent"></span><a class="contact-name" href="#">Pepper Potts</a> (Technical Lead)</td>
+            <td>TECH</td>
+            <td>Technical Leadership</td>
+            <td>3 days ago</td>
+            <td><div style="background: var(--wf-canvas, #f5f7fb); border-radius: 2px; height: 6px;"><div style="background: var(--wf-ink, #1e2a3a); height: 100%; width: 93%; border-radius: 2px;"></div></div></td>
+          </tr>
+          <tr>
+            <td><span class="tree-indent">└─</span>Cloud Infrastructure Fundamentals</td>
+            <td>—</td>
+            <td>Training</td>
+            <td>20 days ago</td>
+            <td><span class="status-badge status-badge--complete">Complete</span></td>
+          </tr>
+          <tr>
+            <td><span class="tree-indent">└─</span>Advanced Networking</td>
+            <td>—</td>
+            <td>Training</td>
+            <td>8 days ago</td>
+            <td><span class="status-badge status-badge--complete">Complete</span></td>
+          </tr>
+          <tr>
+            <td><span class="tree-indent">└─</span>Enterprise Security</td>
+            <td>—</td>
+            <td>Training</td>
+            <td>3 days ago</td>
+            <td><span class="status-badge status-badge--complete">Complete</span></td>
+          </tr>
+
+          <tr class="row-parent">
+            <td><span class="tree-expand">▼</span><span class="tree-indent"></span><a class="contact-name" href="#">James Rhodes</a> (Partner Manager)</td>
+            <td>BIZ</td>
+            <td>Sales Operations</td>
+            <td>5 days ago</td>
+            <td><div style="background: var(--wf-canvas, #f5f7fb); border-radius: 2px; height: 6px;"><div style="background: var(--wf-ink, #1e2a3a); height: 100%; width: 88%; border-radius: 2px;"></div></div></td>
+          </tr>
+          <tr>
+            <td><span class="tree-indent">└─</span>Compliance & Governance</td>
+            <td>—</td>
+            <td>Training</td>
+            <td>12 days ago</td>
+            <td><span class="status-badge status-badge--complete">Complete</span></td>
+          </tr>
+          <tr>
+            <td><span class="tree-indent">└─</span>Solution Design</td>
+            <td>—</td>
+            <td>Training</td>
+            <td>5 days ago</td>
+            <td><span class="status-badge status-badge--complete">Complete</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- RIGHT COLUMN: Sidebar Cards -->
+<div>
+  <!-- Training Overview Card -->
+  <div class="sidebar-card">
+    <div class="sidebar-card__title">📊 Training Overview</div>
+    <div class="stat-row">
+      <span class="stat-label">Completion Rate</span>
+      <span class="stat-value" style="color: var(--wf-ink, #1e2a3a);">95%</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-label">Enrolled</span>
+      <span class="stat-value">12</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-label">Completed</span>
+      <span class="stat-value">12</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-label">In Progress</span>
+      <span class="stat-value">0</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-label">Overdue</span>
+      <span class="stat-value">0</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-label">Last Sync</span>
+      <span class="stat-value" style="font-size: 11px;">Today 9:22 AM</span>
+    </div>
+  </div>
+
+  <!-- Einstein NBA Card -->
+  <div class="sidebar-card" style="margin-top: 16px; background: var(--wf-canvas, #f5f7fb);">
+    <div class="sidebar-card__title">💡 Einstein Recommendation</div>
+    <div style="font-size: 11px; color: var(--wf-text, #3b4f68); line-height: 1.5;">
+      <strong>Status: Excellent</strong><br><br>
+      Stark Industries is Gold tier with 95% completion. No near-term tier challenges. Consider opportunities for co-marketing engagement or advanced solution design workshops.
+    </div>
+  </div>
+
+  <!-- Partner Details Card -->
+  <div class="sidebar-card" style="margin-top: 16px;">
+    <div class="sidebar-card__title">🏢 Partner Details</div>
+    <div class="stat-row">
+      <span class="stat-label">Account Owner</span>
+      <span class="stat-value" style="font-size: 11px;">Sarah Chen</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-label">Primary Contact</span>
+      <span class="stat-value" style="font-size: 11px;">Tony Stark</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-label">Phone</span>
+      <span class="stat-value" style="font-size: 11px;">(555) 123-4567</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-label">Industry</span>
+      <span class="stat-value" style="font-size: 11px;">Technology</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-label">Employees</span>
+      <span class="stat-value" style="font-size: 11px;">250+</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-label">Annual Revenue</span>
+      <span class="stat-value" style="font-size: 11px;">$50M+</span>
+    </div>
+  </div>
+</div>
+
+</div><!-- end three-column-layout -->
+
+</div>
+</div>
+
+
+    <footer class="wf-footer">
+      &copy; 2026 Equinix · Partner Sales Manager · Internal Use Only
+    </footer>
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Provides detailed view of a single partner account including tier advancement progress, team training completion status, and recommended actions for the PSM to encourage the partner manager toward next tier achievement.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>PSM inspects individual partner account after spotting it on portfolio or dashboard</li>
+<li>Tier Progress Card shows exactly what's needed for advancement: "Gold requires 8 certs. You have 6. Need: Compliance, Security."</li>
+<li>Near-Win Alert includes primary CTA: "Encourage Partner Manager" — sends tier data + coaching message</li>
+<li>At-Risk Alert warns: "This partner may lose Silver status — 3 courses overdue"</li>
+<li>Team Training shows who's contributing and who's behind — but actions target Partner Manager, not individuals</li>
+<li>Einstein NBA recommends: "This partner is 2 courses from Gold — encourage [PM Name]"</li>
+<li>All CTAs target the Partner Manager — no actions targeting individual contacts</li>
+<li>Contact drill-down is diagnostic only — "who specifically is blocking progress?"</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Record header with Account name, Tier badge, Region, Partner Since date, PSM Assigned, Completion %, Team Size</li>
+<li>Contextual alert banner (Near-Win success or At-Risk warning)</li>
+<li>Tier Advancement Progress card showing current tier → next tier with progress bar and requirement checklist</li>
+<li>Team Training tree grid expandable by team member or course with completion status</li>
+<li>Left sidebar Activity Timeline showing recent engagement and milestone events</li>
+<li>Right sidebar Training Overview statistics and Einstein NBA recommendation card</li>
+<li>Partner Details card with account owner, primary contact, phone, industry, employee count, revenue</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Encourage Partner Manager primary action button with modal workflow</li>
+<li>Share Tier Summary, Contact Manager, and View Report buttons</li>
+<li>Tab toggle between "By Team Member" and "By Course" views in tree grid</li>
+<li>Tree grid expand/collapse controls for parent rows</li>
+<li>Clickable contact names navigating to Contact Record detail</li>
+<li>Alert banner contextual action (inherits near-win/at-risk status)</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Record Data Loading</strong>
+<ul>
+<li>Loads account record data via Account object with custom fields: Partner_Tier__c (Gold, Silver, Bronze), Completion_Percentage__c (95%), Team_Size__c (12), Assigned_PSM__c (Sarah Chen)</li>
+<li>Retrieves related field Partner Since date from Account.CreatedDate and PSM assignment from Account lookup field</li>
+</ul></li>
+<li><strong>Tier Status Calculation</strong>
+<ul>
+<li>Evaluates tier advancement logic: if Completion_Percentage__c >= 95% → near-win (green alert), if Completion_Percentage__c <= 50% → at-risk (warning alert)</li>
+<li>Compares current tier against next tier requirements; displays achievable certifications and gaps needed for advancement</li>
+<li>Triggers dynamic alert banner rendering based on calculated status with contextual messaging and primary CTA</li>
+</ul></li>
+<li><strong>Training Aggregation &amp; Display</strong>
+<ul>
+<li>Aggregates training completion using roll-up summary fields on Account: count of completed courses, in-progress courses, overdue courses</li>
+<li>Populates tree grid with Contact records linked to Account, joined with SumTotal enrollment data showing course completion status and progress bars per team member</li>
+</ul></li>
+<li><strong>Recommendations &amp; Activity Tracking</strong>
+<ul>
+<li>Einstein NBA integration evaluates Account tier and Completion_Percentage__c to return recommendation text (e.g., "Consider co-marketing engagement")</li>
+<li>Activity Timeline queries Salesforce Activity (Task, Event) and custom event log records filtering on Account Id, sorted by CreatedDate descending</li>
+</ul></li>
+<li><strong>Engagement Action Automation</strong>
+<ul>
+<li>Encourage Partner Manager button triggers workflow that composes email with tier data and sends to Assigned_PSM__c contact email address</li>
+<li>Email template references Account field values: Partner_Tier__c, Completion_Percentage__c, next tier achievement date estimate</li>
+</ul></li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Validation &amp; Business Logic</h4>
+<ul>
+<li>Record header: Stark Industries, Gold tier, US West region, Partner Since Jan 15 2023, PSM: Sarah Chen, Completion 95...</li>
+<li>Near-Win alert banner (green) confirming Gold tier achievement with momentum message</li>
+<li>Tier Advancement Progress card: Silver → Gold (ACHIEVED), 8/8 requirements completed with checklist of all 8 certific...</li>
+<li>Team Training tree grid (By Team Member / By Course tabs): Parent rows (Tony Stark, Pepper Potts, James Rhodes) with ...</li>
+<li>Activity Timeline (left sidebar): 6 activity entries showing encouragement sends, cert completions, tier promotion, e...</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+</body>
+</html>

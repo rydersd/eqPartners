@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Preferences — AE · Equinix PCP Partner Portal</title>
+<link rel="stylesheet" href="wireframe.css">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Salesforce Sans, sans-serif; background:var(--wf-canvas, #f5f7fb); color:var(--wf-text, #3b4f68); line-height:1.5; }
+
+/* Header */
+header { background:var(--wf-ink, #1e2a3a); color:white; padding:1rem 2rem; display:flex; justify-content:space-between; align-items:center; }
+.header-left { display:flex; align-items:center; gap:1.5rem; }
+.logo { width:40px; height:40px; background:white; border-radius:4px; display:flex; align-items:center; justify-content:center; font-weight:bold; color:var(--wf-ink); font-size:18px; }
+.header-title { border-left:3px solid var(--wf-muted, #6b7f99); padding-left:1rem; font-size:18px; font-weight:600; }
+nav { display:flex; gap:2rem; flex:1; margin-left:2rem; }
+nav a { color:white; text-decoration:none; font-size:14px; font-weight:500; padding-bottom:0.5rem; border-bottom:2px solid transparent; }
+nav a:hover { color:var(--wf-muted); }
+nav a.active { border-bottom-color:var(--wf-muted); color:var(--wf-muted); }
+.header-right { display:flex; align-items:center; gap:1.5rem; }
+.user-avatar { width:36px; height:36px; border-radius:50%; background:var(--wf-muted); display:flex; align-items:center; justify-content:center; color:white; font-weight:600; }
+
+/* Container */
+.container { max-width:900px; margin:0 auto; padding:2rem; }
+
+/* Breadcrumb */
+.breadcrumb { font-size:13px; color:var(--wf-muted); margin-bottom:1.5rem; }
+.breadcrumb a { color:var(--wf-accent, #3d6daa); text-decoration:none; }
+.breadcrumb a:hover { text-decoration:underline; }
+
+/* Page header */
+.page-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem; }
+.page-header h1 { font-size:24px; font-weight:700; color:var(--wf-ink, #1e2a3a); }
+.page-subtitle { font-size:14px; color:var(--wf-muted); margin-bottom:2rem; }
+.btn { padding:0.5rem 1.25rem; border-radius:4px; font-size:13px; font-weight:600; border:none; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:0.5rem; }
+.btn-primary { background:var(--wf-accent, #3d6daa); color:white; }
+.btn-secondary { background:var(--wf-surface, #edf1f7); color:var(--wf-text); border:1px solid var(--wf-line, #b0bdd0); }
+.btn:hover { opacity:0.9; }
+
+/* Card */
+.card { background:white; border:1px solid var(--wf-tint, #dce4ef); border-radius:8px; margin-bottom:1.5rem; overflow:hidden; }
+.card-header { padding:1.25rem 1.5rem; border-bottom:1px solid var(--wf-tint); display:flex; justify-content:space-between; align-items:center; }
+.card-header h2 { font-size:15px; font-weight:700; color:var(--wf-ink); }
+.card-header-sub { font-size:12px; color:var(--wf-muted); }
+.card-body { padding:0; }
+
+/* Preference rows */
+.pref-row { display:grid; grid-template-columns:1fr 100px 100px; align-items:center; padding:0.875rem 1.5rem; border-bottom:1px solid var(--wf-tint); gap:1rem; }
+.pref-row:last-child { border-bottom:none; }
+.pref-row.header-row { background:var(--wf-canvas); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--wf-muted); padding:0.625rem 1.5rem; }
+.pref-label { display:flex; flex-direction:column; gap:0.125rem; }
+.pref-label strong { font-size:13px; font-weight:600; color:var(--wf-ink); }
+.pref-label span { font-size:12px; color:var(--wf-muted); }
+
+/* Toggle switch */
+.toggle { position:relative; width:40px; height:22px; display:inline-block; }
+.toggle input { opacity:0; width:0; height:0; }
+.toggle-slider { position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background:var(--wf-line); border-radius:22px; transition:0.2s; }
+.toggle-slider:before { content:""; position:absolute; height:16px; width:16px; left:3px; bottom:3px; background:white; border-radius:50%; transition:0.2s; }
+.toggle input:checked + .toggle-slider { background:var(--wf-accent); }
+.toggle input:checked + .toggle-slider:before { transform:translateX(18px); }
+.toggle-cell { display:flex; justify-content:center; }
+
+/* Global controls */
+.global-bar { display:flex; justify-content:space-between; align-items:center; padding:1rem 1.5rem; background:var(--wf-surface); border-bottom:1px solid var(--wf-tint); }
+.global-bar-label { font-size:13px; font-weight:600; color:var(--wf-ink); }
+.global-bar-sub { font-size:12px; color:var(--wf-muted); }
+
+/* Quiet hours */
+.quiet-hours { padding:1.25rem 1.5rem; }
+.quiet-hours-row { display:flex; gap:1rem; align-items:center; margin-top:0.75rem; flex-wrap:wrap; }
+.time-input { padding:0.375rem 0.75rem; border:1px solid var(--wf-line); border-radius:4px; font-size:13px; color:var(--wf-text); background:white; width:110px; }
+.time-label { font-size:13px; color:var(--wf-muted); }
+
+/* Footer */
+.form-footer { display:flex; justify-content:space-between; align-items:center; padding-top:1.5rem; }
+.footer-note { font-size:12px; color:var(--wf-muted); }
+
+/* Spec block */
+</style>
+</head>
+<body>
+<div class="page-context-bar">
+  <div style="max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <nav class="wf-breadcrumb" aria-label="Breadcrumb" style="margin-bottom:0;">
+      <a href="rep-home.html">Home</a>
+      <span class="wf-breadcrumb-sep">›</span>
+      <a href="rep-notifications.html">Notifications</a>
+      <span class="wf-breadcrumb-sep">›</span>
+      <span class="wf-breadcrumb-current">Preferences</span>
+    </nav>
+    <span class="persona-badge persona-badge--ae">AE</span>
+  </div>
+</div>
+
+<!-- ── Header ── -->
+<header>
+  <div class="header-left">
+    <div class="logo">EQ</div>
+    <div class="header-title">Partner Portal</div>
+    <nav>
+      <a href="rep-deals-commission.html">Deals</a>
+      <a href="rep-my-training.html">Training</a>
+      <a href="rep-marketing.html">Marketing</a>
+      <a href="rep-support.html">Support</a>
+      <a href="rep-resources.html">Resources</a>
+    </nav>
+  </div>
+  <div class="header-right">
+    <div class="user-avatar">JD</div>
+  
+    <a href="rep-notifications.html" class="bell-wrapper" aria-label="Notifications" style="position:relative;color:white;text-decoration:none;margin-left:auto;">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+      <span style="position:absolute;top:-4px;right:-6px;background:var(--wf-red,#8b4555);color:white;font-size:10px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;">7</span>
+    </a>
+</div>
+</header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+<div class="container">
+
+  <div class="breadcrumb" aria-label="Breadcrumb">
+    <a href="rep-notifications.html">Notifications</a> &rsaquo; Preferences
+  </div>
+
+  <div class="page-header">
+    <h1>Notification Preferences</h1>
+    <button class="btn btn-primary">Save Changes</button>
+  </div>
+  <p class="page-subtitle">Choose how and when you receive notifications. Changes apply to your account only.</p>
+
+  <!-- ── Deal Registration Notifications ── -->
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <h2>Deal Registration</h2>
+        <div class="card-header-sub">Alerts for deal status changes, approvals, rejections, and expirations</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="pref-row header-row" role="row">
+        <div>Notification Type</div>
+        <div style="text-align:center;">In-App</div>
+        <div style="text-align:center;">Email</div>
+      </div>
+
+      <div class="pref-row">
+        <div class="pref-label">
+          <strong>Deal Approved</strong>
+          <span>When your deal registration is approved by Equinix</span>
+        </div>
+        <div class="toggle-cell"><label class="toggle"><input type="checkbox" checked aria-label="Deal Approved in-app"><span class="toggle-slider"></span></label></div>
+        <div class="toggle-cell"><label class="toggle"><input type="checkbox" checked aria-label="Deal Approved email"><span class="toggle-slider"></span></label></div>
+      </div>
+
+      <div class="pref-row">
+        <div class="pref-label">
+          <strong>Deal Rejected</strong>
+          <span>When a deal registration is declined (includes reason)</span>
+        </div>
+        <div class="toggle-cell"><label class="toggle"><input type="checkbox" checked aria-label="Deal Rejected in-app"><span class="toggle-slider"></span></label></div>
+        <div class="toggle-cell"><label class="toggle"><input type="checkbox" checked aria-label="Deal Rejected email"><span class="toggle-slider"></span></label></div>
+      </div>
+
+      <div class="pref-row">
+        <div class="pref-label">
+          <strong>Protection Expiring Soon</strong>
+          <span>Warning when deal protection period is within 30 days of expiry</span>
+        </div>
+        <div class="toggle-cell"><label class="toggle"><input type="checkbox" checked aria-label="Protection expiring in-app"><span class="toggle-slider"></span></label></div>
+        <div class="toggle-cell"><label class="toggle"><input type="checkbox" checked aria-label="Protection expiring email"><span class="toggle-slider"></span></label></div>
+      </div>
+
+      <div class="pref-row">
+        <div class="pref-label">
+          <strong>Protection Expired</strong>
+          <span>Alert when deal protection period has lapsed</span>
+        </div>
+        <div class="toggle-cell"><label class="toggle"><input type="checkbox" checked aria-label="Protection expired in-app"><span class="toggle-slider"></span></label></div>
+        <div class="toggle-cell"><label class="toggle"><input type="checkbox" aria-label="Protection expired email"><span class="toggle-slider"></span></label></div>
+      </div>
+
+      <div class="pref-row">
+        <div class="pref-label">
+          <strong>Extension Granted / Denied</strong>
+          <span>Response to your deal extension requests</span>
+        </div>
+        <div class="toggle-cell"><label class="toggle"><input type="checkbox" checked aria-label="Extension response in-app"><span class="toggle-slider"></span></label></div>
+        <div class="toggle-cell"><label class="toggle"><input type="checkbox" checked aria-label="Extension response email"><span class="toggle-slider"></span></label></div>
+      </div>
+
+      <div class="pref-row">
+        <div class="pref-label">
+          <strong>Stage Change</strong>
+          <span>When a deal moves to a new stage in the pipeline</span>
+        </div>
+        <div class="toggle-cell"><label class="toggle"><input type="checkbox" checked aria-label="Stage change in-app"><span class="toggle-slider"></span></label></div>
+        <div class="toggle-cell"><label class="toggle"><input type="checkbox" aria-label="Stage change email"><span class="toggle-slider"></span></label></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Commissions ── -->
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <h2>Commissions</h2>
+        <div class="card-header-sub">Payment notifications and earnings updates</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="pref-row header-row">
+        <div>Notification Type</div>
+        <div style="text-align:center;">In-App</div>
+        <div style="text-align:center;">Email</div>
+      </div>
+
+      <div class="pref-row">
+        <div class="pref-label">
+          <strong>Commission Paid</strong>
+          <span>When a commission payment has been deposited</span>
+        </div>
+        <div class="toggle-cell"><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+        <div class="toggle-cell"><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+      </div>
+
+      <div class="pref-row">
+        <div class="pref-label">
+          <strong>Commission Rate Change</strong>
+          <span>When your org's tier or commission rate is updated</span>
+        </div>
+        <div class="toggle-cell"><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+        <div class="toggle-cell"><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+      </div>
+
+      <div class="pref-row">
+        <div class="pref-label">
+          <strong>Quarterly Summary Available</strong>
+          <span>When the quarterly commission statement is ready to view</span>
+        </div>
+        <div class="toggle-cell"><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+        <div class="toggle-cell"><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Training & Certifications ── -->
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <h2>Training &amp; Certifications</h2>
+        <div class="card-header-sub">Learning assignments, completions, and certification deadlines</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="pref-row header-row">
+        <div>Notification Type</div>
+        <div style="text-align:center;">In-App</div>
+        <div style="text-align:center;">Email</div>
+      </div>
+
+      <div class="pref-row">
+        <div class="pref-label">
+          <strong>New Training Assigned</strong>
+          <span>When a learning path or module is assigned to you</span>
+        </div>
+        <div class="toggle-cell"><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+        <div class="toggle-cell"><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+      </div>
+
+      <div class="pref-row">
+        <div class="pref-label">
+          <strong>Certification Expiring</strong>
+          <span>Reminder when a certification renewal is due within 30 days</span>
+        </div>
+        <div class="toggle-cell"><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+        <div class="toggle-cell"><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+      </div>
+
+      <div class="pref-row">
+        <div class="pref-label">
+          <strong>Badge Earned</strong>
+          <span>When you complete a module and earn a certification badge</span>
+        </div>
+        <div class="toggle-cell"><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+        <div class="toggle-cell"><label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PSM & Partner Success ── -->
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <h2>Partner Success Manager</h2>
+        <div class="card-header-sub">Messages and updates from your assigned PSM</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="pref-row header-row">
+        <div>Notification Type</div>
+        <div style="text-align:center;">In-App</div>
+        <div style="text-align:center;">Email</div>
+      </div>
+
+      <div class="pref-row">
+        <div class="pref-label">
+          <strong>PSM Direct Message</strong>
+          <span>When your PSM sends you a message or shares information</span>
+        </div>
+        <div class="toggle-cell"><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+        <div class="toggle-cell"><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+      </div>
+
+      <div class="pref-row">
+        <div class="pref-label">
+          <strong>Competitive Intel Shared</strong>
+          <span>When new competitive intelligence is shared for your active deals</span>
+        </div>
+        <div class="toggle-cell"><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+        <div class="toggle-cell"><label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label></div>
+      </div>
+
+      <div class="pref-row">
+        <div class="pref-label">
+          <strong>QBR Scheduled</strong>
+          <span>When a Quarterly Business Review meeting is scheduled</span>
+        </div>
+        <div class="toggle-cell"><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+        <div class="toggle-cell"><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── System & Announcements ── -->
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <h2>System &amp; Announcements</h2>
+        <div class="card-header-sub">Portal maintenance, product updates, and partner program changes</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="pref-row header-row">
+        <div>Notification Type</div>
+        <div style="text-align:center;">In-App</div>
+        <div style="text-align:center;">Email</div>
+      </div>
+
+      <div class="pref-row">
+        <div class="pref-label">
+          <strong>Scheduled Maintenance</strong>
+          <span>Portal downtime and maintenance windows</span>
+        </div>
+        <div class="toggle-cell"><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+        <div class="toggle-cell"><label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label></div>
+      </div>
+
+      <div class="pref-row">
+        <div class="pref-label">
+          <strong>New Product Announcements</strong>
+          <span>Equinix product launches and feature updates</span>
+        </div>
+        <div class="toggle-cell"><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+        <div class="toggle-cell"><label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label></div>
+      </div>
+
+      <div class="pref-row">
+        <div class="pref-label">
+          <strong>Partner Program Updates</strong>
+          <span>Tier changes, new incentives, program policy updates</span>
+        </div>
+        <div class="toggle-cell"><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+        <div class="toggle-cell"><label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Quiet Hours ── -->
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <h2>Quiet Hours</h2>
+        <div class="card-header-sub">Pause email notifications during off-hours (in-app alerts are unaffected)</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="global-bar">
+        <div>
+          <div class="global-bar-label">Enable Quiet Hours</div>
+          <div class="global-bar-sub">Email notifications will be held and delivered after quiet hours end</div>
+        </div>
+        <label class="toggle"><input type="checkbox" checked aria-label="Enable quiet hours"><span class="toggle-slider"></span></label>
+      </div>
+      <div class="quiet-hours">
+        <div class="quiet-hours-row">
+          <span class="time-label">From</span>
+          <input type="time" value="18:00" class="time-input" aria-label="Quiet hours start time">
+          <span class="time-label">To</span>
+          <input type="time" value="08:00" class="time-input" aria-label="Quiet hours end time">
+          <span class="time-label">Timezone:</span>
+          <select class="time-input" style="width:180px;" aria-label="Timezone">
+            <option>US/Eastern (EST)</option>
+            <option>US/Central (CST)</option>
+            <option>US/Pacific (PST)</option>
+            <option>UTC</option>
+          </select>
+        </div>
+        <div class="quiet-hours-row" style="margin-top:0.5rem;">
+          <span class="time-label">Weekend pause:</span>
+          <label class="toggle"><input type="checkbox" checked aria-label="Pause email on weekends"><span class="toggle-slider"></span></label>
+          <span class="time-label" style="color:var(--wf-text);">Hold all email notifications on Saturdays and Sundays</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Email Digest ── -->
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <h2>Email Digest</h2>
+        <div class="card-header-sub">Receive a summary instead of individual emails</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="global-bar">
+        <div>
+          <div class="global-bar-label">Enable Daily Digest</div>
+          <div class="global-bar-sub">Receive one email per day summarizing all notifications instead of individual emails</div>
+        </div>
+        <label class="toggle"><input type="checkbox" aria-label="Enable daily digest"><span class="toggle-slider"></span></label>
+      </div>
+      <div class="pref-row">
+        <div class="pref-label">
+          <strong>Digest Delivery Time</strong>
+          <span>When the daily summary email is sent</span>
+        </div>
+        <div style="grid-column: span 2;">
+          <select class="time-input" style="width:180px;" aria-label="Digest delivery time">
+            <option>8:00 AM</option>
+            <option>9:00 AM</option>
+            <option>10:00 AM</option>
+            <option>12:00 PM</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Form Footer ── -->
+  <div class="form-footer">
+    <span class="footer-note">Changes are saved to your Salesforce user profile and sync across all devices.</span>
+    <div style="display:flex; gap:0.75rem;">
+      <button class="btn btn-secondary">Reset to Defaults</button>
+      <button class="btn btn-primary">Save Changes</button>
+    </div>
+  </div>
+
+  <!-- ── Spec Block ── -->
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h2>Design Notes</h2>
+    <button class="spec-panel-close" onclick="toggleSpec()" aria-label="Close notes panel">&times;</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Centralized control panel for managing notification delivery preferences across channels, categories, and times. Partners customize which alerts they receive via in-app and email, configure quiet hours and digest settings, and control notification volume across their entire user profile.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Control which notification categories are delivered via in-app and email</li>
+<li>Set do-not-disturb hours to pause email notifications outside business hours</li>
+<li>Opt-in to daily digest to consolidate multiple notifications</li>
+<li>Pause weekend notifications to reduce noise</li>
+<li>Configure timezone-aware quiet hours</li>
+<li>Reset all preferences to organization defaults</li>
+<li>View category-level descriptions to understand notification purpose</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Page title with Save Changes action in header</li>
+<li>Per-category preference cards: Deal Registration, Commissions, Training, Partner Success Manager, System &amp; Announcements</li>
+<li>Each card contains a table of notification types with toggles for In-App and Email delivery channels</li>
+<li>Quiet Hours configuration section with start/end time inputs, timezone selector, and weekend pause toggle</li>
+<li>Email Digest section with enable toggle and delivery time selector</li>
+<li>Form footer with Reset to Defaults and Save Changes buttons</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Toggle switches for each notification type per delivery channel (In-App, Email)</li>
+<li>Time picker inputs for Quiet Hours start and end times</li>
+<li>Timezone dropdown with timezone options</li>
+<li>Weekend pause toggle checkbox</li>
+<li>Daily Digest enable/disable toggle with delivery time selector dropdown</li>
+<li>Save Changes button to persist all preferences</li>
+<li>Reset to Defaults button to restore organization defaults</li>
+<li>Breadcrumb navigation back to Notifications page</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Preference Storage &amp; Synchronization</strong>
+<ul>
+<li>User preferences stored as Custom Settings or Custom Metadata records on User object in Salesforce</li>
+<li>Save Changes button validates and persists all toggle states to user profile asynchronously</li>
+<li>All changes sync across user's devices and sessions via Salesforce APIs</li>
+</ul></li>
+<li><strong>Channel-Specific Delivery Controls</strong>
+<ul>
+<li>In-app toggles control whether Custom Notifications are sent to user's notification center</li>
+<li>Email toggles control whether email alert actions are triggered for each notification type</li>
+<li>Validation enforces at least one delivery channel enabled per notification type</li>
+</ul></li>
+<li><strong>Quiet Hours &amp; Scheduling</strong>
+<ul>
+<li>Quiet Hours logic implemented via Flow or Apex: email actions check quiet hours window before sending</li>
+<li>Queued messages scheduled for delivery after quiet hours end time using time-based workflows</li>
+<li>Weekend pause flag prevents any email delivery on configured weekend days via conditional logic</li>
+<li>Timezone offset calculated server-side for accurate quiet hours window using user's selected timezone</li>
+</ul></li>
+<li><strong>Email Digest &amp; Aggregation</strong>
+<ul>
+<li>Daily Digest uses scheduled Apex or Flow to aggregate notification records and send single summary email</li>
+<li>Digest delivery time validated against user's timezone before scheduling</li>
+</ul></li>
+<li><strong>Reset &amp; Defaults</strong>
+<ul>
+<li>Reset to Defaults restores organization-level default preferences defined by PCP admin</li>
+</ul></li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Validation &amp; Business Logic</h4>
+<ul>
+<li>Preferences backed by Salesforce CustomNotificationType metadata for notification type definitions</li>
+<li>Timezone offset calculated server-side for accurate quiet hours window</li>
+<li>Digest delivery time validated against user's timezone</li>
+<li>At least one delivery channel required for each notification type (prevents disabling all channels)</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

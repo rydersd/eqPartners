@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sarah Chen — Training Record — Equinix Partner Manager</title>
+    <link rel="stylesheet" href="wireframe.css">
+    <style>
+        .wf-progress-inline {
+            display: inline-block;
+            width: 80px;
+            height: 20px;
+            background-color: var(--wf-bg-secondary, var(--wf-canvas, #f5f7fb));
+            border: 1px solid var(--wf-border, var(--wf-line, #b0bdd0));
+            border-radius: 3px;
+            overflow: hidden;
+            vertical-align: middle;
+        }
+        .wf-progress-fill {
+            height: 100%;
+            background-color: var(--wf-primary, var(--wf-muted, #6b7f99));
+            width: 100%;
+        }
+        .wf-action {
+            color: var(--wf-primary, var(--wf-muted, #6b7f99));
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            background: none;
+            padding: 0;
+            font: inherit;
+        }
+        .wf-action:hover {
+            text-decoration: underline;
+        }
+        .wf-action-separator {
+            color: var(--wf-border, var(--wf-line, #b0bdd0));
+            margin: 0 8px;
+        }
+        .wf-table td {
+            vertical-align: middle;
+        }
+        .wf-status-icon {
+            font-weight: bold;
+            font-size: 16px;
+        }
+        .wf-summary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-top: 16px;
+        }
+        .wf-summary-column {
+            padding: 12px 0;
+        }
+        .wf-summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--wf-border, var(--wf-line, #b0bdd0));
+        }
+        .wf-summary-row:last-child {
+            border-bottom: none;
+        }
+        .wf-summary-label {
+            color: var(--wf-text-secondary, var(--wf-muted, #6b7f99));
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .wf-summary-value {
+            color: var(--wf-text-primary, var(--wf-text, #3b4f68));
+            font-size: 14px;
+        }
+        .wf-kpi-row {
+            padding: 8px 0;
+        }
+        .wf-kpi-label {
+            color: var(--wf-text-secondary, var(--wf-muted, #6b7f99));
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        .wf-kpi-value {
+            color: var(--wf-text-primary, var(--wf-text, #3b4f68));
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .wf-progress-bar-container {
+            height: 24px;
+            background-color: var(--wf-bg-secondary, var(--wf-canvas, #f5f7fb));
+            border: 1px solid var(--wf-border, var(--wf-line, #b0bdd0));
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .wf-progress-bar-fill {
+            height: 100%;
+            background-color: var(--wf-primary, var(--wf-muted, #6b7f99));
+            width: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .wf-activity-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+        .wf-activity-table tr {
+            border-bottom: 1px solid var(--wf-border, var(--wf-line, #b0bdd0));
+        }
+        .wf-activity-table tr:last-child {
+            border-bottom: none;
+        }
+        .wf-activity-table th {
+            background-color: var(--wf-bg-secondary, var(--wf-canvas, #f5f7fb));
+            color: var(--wf-text-secondary, var(--wf-muted, #6b7f99));
+            text-align: left;
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            border-bottom: 2px solid var(--wf-border, var(--wf-line, #b0bdd0));
+        }
+        .wf-activity-table td {
+            padding: 10px 12px;
+            font-size: 13px;
+        }
+        .wf-annotation {
+            background-color: var(--wf-bg-secondary, var(--wf-canvas, #f5f7fb));
+            border-left: 3px solid var(--wf-primary, var(--wf-muted, #6b7f99));
+            padding: 8px 12px;
+            margin-top: 8px;
+            font-size: 12px;
+            color: var(--wf-text-secondary, var(--wf-muted, #6b7f99));
+</style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="wf-header">
+        <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div class="wf-logo">EQ</div>
+                <span style="font-size: 16px; font-weight: 600; color: var(--wf-tint, #dce4ef);">Equinix Partner Manager</span>
+            </div>
+            <nav style="display: flex; gap: 24px; flex: 1; margin-left: 40px;">
+                <a href="#" style="color: var(--wf-muted, #6b7f99); text-decoration: none; font-size: 14px;">Dashboard</a>
+                <a href="#" style="color: var(--wf-muted, #6b7f99); text-decoration: none; font-size: 14px;">Partners</a>
+                <a href="#" style="color: #ffffff; text-decoration: none; font-size: 14px; font-weight: 600; border-bottom: 2px solid var(--wf-accent, #3d6daa); padding-bottom: 2px;">Training</a>
+                <a href="#" style="color: var(--wf-muted, #6b7f99); text-decoration: none; font-size: 14px;">Team</a>
+                <a href="#" style="color: var(--wf-muted, #6b7f99); text-decoration: none; font-size: 14px;">Reports</a>
+                <a href="#" style="color: var(--wf-muted, #6b7f99); text-decoration: none; font-size: 14px;">Settings</a>
+            </nav>
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <svg class="wf-icon-sm" style="color: var(--wf-muted, #6b7f99);" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+                <div style="width: 28px; height: 28px; border: 1.5px solid var(--wf-muted, #6b7f99); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; color: var(--wf-tint, #dce4ef);">JM</div>
+            </div>
+        </div>
+    </header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+    <!-- BREADCRUMB -->
+    <div class="wf-breadcrumb">
+        <a href="#" style="color: var(--wf-primary, var(--wf-muted, #6b7f99)); text-decoration: none;">Training</a>
+        <span style="margin: 0 8px; color: var(--wf-border, var(--wf-line, #b0bdd0));">/</span>
+        <a href="#" style="color: var(--wf-primary, var(--wf-muted, #6b7f99)); text-decoration: none;">Team Training</a>
+        <span style="margin: 0 8px; color: var(--wf-border, var(--wf-line, #b0bdd0));">/</span>
+        <span style="color: var(--wf-text-secondary, var(--wf-muted, #6b7f99));">Sarah Chen</span>
+    </div>
+
+    <!-- PAGE TITLE -->
+    <div class="wf-page-title">Sarah Chen — Training Record</div>
+
+    <div class="wf-annotation">
+        <strong>PM VIEW</strong> · Partner_Training__c filtered by Contact__c = SC001
+    </div>
+
+    <!-- MEMBER SUMMARY SECTION -->
+    <section class="wf-section">
+        <div class="wf-section-label">Member Summary</div>
+        <div class="wf-summary-grid">
+            <div class="wf-summary-column">
+                <div class="wf-summary-row">
+                    <span class="wf-summary-label">Name</span>
+                    <span class="wf-summary-value">Sarah Chen</span>
+                </div>
+                <div class="wf-summary-row">
+                    <span class="wf-summary-label">Role</span>
+                    <span class="wf-summary-value">Sales Rep</span>
+                </div>
+                <div class="wf-summary-row">
+                    <span class="wf-summary-label">Partner</span>
+                    <span class="wf-summary-value">TechConnect Solutions (Silver)</span>
+                </div>
+                <div class="wf-summary-row">
+                    <span class="wf-summary-label">Start Date</span>
+                    <span class="wf-summary-value">Sep 15, 2025</span>
+                </div>
+                <div class="wf-summary-row">
+                    <span class="wf-summary-label">Email</span>
+                    <span class="wf-summary-value">sarah.chen@techconnect.com</span>
+                </div>
+            </div>
+            <div class="wf-summary-column">
+                <div class="wf-kpi-row">
+                    <div class="wf-kpi-label">Required Courses</div>
+                    <div class="wf-kpi-value">4/8 (50%)</div>
+                </div>
+                <div class="wf-kpi-row">
+                    <div class="wf-kpi-label">Elective Courses</div>
+                    <div class="wf-kpi-value">1/3</div>
+                </div>
+                <div class="wf-kpi-row">
+                    <div class="wf-kpi-label">Expiring</div>
+                    <div class="wf-kpi-value">1</div>
+                </div>
+                <div class="wf-kpi-row">
+                    <div class="wf-kpi-label">Overall Progress</div>
+                    <div class="wf-progress-bar-container">
+                        <div class="wf-progress-bar-fill">50%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- VIEW TOGGLE -->
+    <div class="wf-view-toggle">
+        <span style="background-color: var(--wf-primary, var(--wf-muted, #6b7f99)); color: white; padding: 6px 12px; border-radius: 3px; font-weight: 600; cursor: pointer;">T</span>
+    </div>
+
+    <!-- TABS -->
+    <div class="wf-tabs">
+        <button style="background-color: var(--wf-primary, var(--wf-muted, #6b7f99)); color: white; padding: 8px 16px; border: none; cursor: pointer; border-radius: 3px 3px 0 0; font-weight: 600;">All Courses (11)</button>
+        <button style="background-color: var(--wf-bg-secondary, var(--wf-canvas, #f5f7fb)); color: var(--wf-text-secondary, var(--wf-muted, #6b7f99)); padding: 8px 16px; border: 1px solid var(--wf-border, var(--wf-line, #b0bdd0)); border-radius: 3px 3px 0 0; cursor: pointer; margin-left: 4px; font-weight: 500;">Required (8)</button>
+        <button style="background-color: var(--wf-bg-secondary, var(--wf-canvas, #f5f7fb)); color: var(--wf-text-secondary, var(--wf-muted, #6b7f99)); padding: 8px 16px; border: 1px solid var(--wf-border, var(--wf-line, #b0bdd0)); border-radius: 3px 3px 0 0; cursor: pointer; margin-left: 4px; font-weight: 500;">Elective (3)</button>
+        <button style="background-color: var(--wf-bg-secondary, var(--wf-canvas, #f5f7fb)); color: var(--wf-text-secondary, var(--wf-muted, #6b7f99)); padding: 8px 16px; border: 1px solid var(--wf-border, var(--wf-line, #b0bdd0)); border-radius: 3px 3px 0 0; cursor: pointer; margin-left: 4px; font-weight: 500;">Completed (4)</button>
+        <button style="background-color: var(--wf-bg-secondary, var(--wf-canvas, #f5f7fb)); color: var(--wf-text-secondary, var(--wf-muted, #6b7f99)); padding: 8px 16px; border: 1px solid var(--wf-border, var(--wf-line, #b0bdd0)); border-radius: 3px 3px 0 0; cursor: pointer; margin-left: 4px; font-weight: 500;">Expired (1)</button>
+    </div>
+
+    <!-- FILTER BAR -->
+    <div class="wf-filter-bar">
+        <select style="padding: 8px 12px; border: 1px solid var(--wf-border, var(--wf-line, #b0bdd0)); border-radius: 3px; background-color: white; color: var(--wf-text-primary, var(--wf-text, #3b4f68)); font-size: 13px; cursor: pointer;">
+            <option>Sort by Status</option>
+            <option>Sort by Title</option>
+            <option>Sort by Due Date</option>
+        </select>
+        <input type="text" placeholder="Search courses..." style="padding: 8px 12px; border: 1px solid var(--wf-border, var(--wf-line, #b0bdd0)); border-radius: 3px; background-color: white; color: var(--wf-text-primary, var(--wf-text, #3b4f68)); font-size: 13px; margin-left: 12px; width: 200px;">
+    </div>
+
+    <!-- MAIN TABLE -->
+    <table class="wf-table">
+        <thead>
+            <tr>
+                <th style="width: 40px;">#</th>
+                <th>Course Title</th>
+                <th>Track</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Progress</th>
+                <th>Duration</th>
+                <th>Due Date</th>
+                <th>Completed</th>
+                <th>Score</th>
+                <th style="width: 100px;">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>Our Mission/Vision/Value Story</td>
+                <td><span class="wf-badge wf-badge-business">Business</span></td>
+                <td><span class="wf-badge wf-badge-required">Required</span></td>
+                <td><span class="wf-badge wf-badge-completed">Completed</span></td>
+                <td><span class="wf-status-icon">✓</span></td>
+                <td>45 min</td>
+                <td>—</td>
+                <td>Jan 8, 2026</td>
+                <td>92%</td>
+                <td><a href="#" class="wf-action">View Details</a></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Colocation Overview</td>
+                <td><span class="wf-badge wf-badge-business">Business</span></td>
+                <td><span class="wf-badge wf-badge-required">Required</span></td>
+                <td><span class="wf-badge wf-badge-completed">Completed</span></td>
+                <td><span class="wf-status-icon">✓</span></td>
+                <td>1.5 hrs</td>
+                <td>—</td>
+                <td>Feb 3, 2026</td>
+                <td>88%</td>
+                <td><a href="#" class="wf-action">View Details</a></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Eco-System Partnership</td>
+                <td><span class="wf-badge wf-badge-business">Business</span></td>
+                <td><span class="wf-badge wf-badge-required">Required</span></td>
+                <td><span class="wf-badge wf-badge-completed">Completed</span></td>
+                <td><span class="wf-status-icon">✓</span></td>
+                <td>1.5 hrs</td>
+                <td>—</td>
+                <td>Dec 20, 2025</td>
+                <td>95%</td>
+                <td><a href="#" class="wf-action">View Details</a></td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Hybrid Multicloud Networking</td>
+                <td><span class="wf-badge wf-badge-technical">Technical</span></td>
+                <td><span class="wf-badge wf-badge-required">Required</span></td>
+                <td><span class="wf-badge wf-badge-completed">Completed</span></td>
+                <td><span class="wf-status-icon">✓</span></td>
+                <td>2 hrs</td>
+                <td>—</td>
+                <td>Nov 28, 2025</td>
+                <td>90%</td>
+                <td><a href="#" class="wf-action">View Details</a></td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>Compliance & Data Privacy</td>
+                <td><span class="wf-badge wf-badge-business">Business</span></td>
+                <td><span class="wf-badge wf-badge-required">Required</span></td>
+                <td><span class="wf-badge wf-badge-inprogress">In Progress</span></td>
+                <td>
+                    <div class="wf-progress-inline">
+                        <div class="wf-progress-fill" style="width: 45%;"></div>
+                    </div>
+                </td>
+                <td>1.5 hrs</td>
+                <td>Mar 15, 2026</td>
+                <td>—</td>
+                <td>—</td>
+                <td><a href="#" class="wf-action">View Details</a></td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>Security Fundamentals</td>
+                <td><span class="wf-badge wf-badge-technical">Technical</span></td>
+                <td><span class="wf-badge wf-badge-required">Required</span></td>
+                <td><span class="wf-badge wf-badge-expired">Expired</span></td>
+                <td><span class="wf-status-icon">✕</span></td>
+                <td>2 hrs</td>
+                <td>—</td>
+                <td>—</td>
+                <td>—</td>
+                <td><a href="#" class="wf-action">View Details</a></td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>Interconnection Overview</td>
+                <td><span class="wf-badge wf-badge-technical">Technical</span></td>
+                <td><span class="wf-badge wf-badge-required">Required</span></td>
+                <td><span class="wf-badge wf-badge-notstarted">Not Started</span></td>
+                <td>—</td>
+                <td>2.5 hrs</td>
+                <td>Apr 30, 2026</td>
+                <td>—</td>
+                <td>—</td>
+                <td><a href="#" class="wf-action">View Details</a></td>
+            </tr>
+            <tr>
+                <td>8</td>
+                <td>Network Security Advanced</td>
+                <td><span class="wf-badge wf-badge-technical">Technical</span></td>
+                <td><span class="wf-badge wf-badge-required">Required</span></td>
+                <td><span class="wf-badge wf-badge-notstarted">Not Started</span></td>
+                <td>—</td>
+                <td>4 hrs</td>
+                <td>Jun 30, 2026</td>
+                <td>—</td>
+                <td>—</td>
+                <td><a href="#" class="wf-action">View Details</a></td>
+            </tr>
+            <tr>
+                <td>9</td>
+                <td>Network Edge Essentials</td>
+                <td><span class="wf-badge wf-badge-technical">Technical</span></td>
+                <td><span class="wf-badge wf-badge-elective">Elective</span></td>
+                <td><span class="wf-badge wf-badge-notstarted">Not Started</span></td>
+                <td>—</td>
+                <td>2.5 hrs</td>
+                <td>—</td>
+                <td>—</td>
+                <td>—</td>
+                <td><a href="#" class="wf-action">View Details</a></td>
+            </tr>
+            <tr>
+                <td>10</td>
+                <td>Equinix Fabric Technical</td>
+                <td><span class="wf-badge wf-badge-technical">Technical</span></td>
+                <td><span class="wf-badge wf-badge-elective">Elective</span></td>
+                <td><span class="wf-badge wf-badge-notstarted">Not Started</span></td>
+                <td>—</td>
+                <td>3 hrs</td>
+                <td>—</td>
+                <td>—</td>
+                <td>—</td>
+                <td><a href="#" class="wf-action">View Details</a></td>
+            </tr>
+            <tr>
+                <td>11</td>
+                <td>Solution Validation Center</td>
+                <td><span class="wf-badge wf-badge-business">Business</span></td>
+                <td><span class="wf-badge wf-badge-elective">Elective</span></td>
+                <td><span class="wf-badge wf-badge-notstarted">Not Started</span></td>
+                <td>—</td>
+                <td>2 hrs</td>
+                <td>—</td>
+                <td>—</td>
+                <td>—</td>
+                <td><a href="#" class="wf-action">View Details</a></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- PM ACTIONS SECTION -->
+    <section class="wf-section">
+        <div class="wf-section-label">PM Actions</div>
+        <div style="padding: 12px 0;">
+            <a href="#" class="wf-action">Send Reminder</a>
+            <span class="wf-action-separator">·</span>
+            <a href="#" class="wf-action">Assign Course</a>
+            <span class="wf-action-separator">·</span>
+            <a href="#" class="wf-action">Export to CSV</a>
+            <span class="wf-action-separator">·</span>
+            <a href="#" class="wf-action">View in Salesforce</a>
+        </div>
+        <div class="wf-annotation">
+            PM can nudge rep via PCP_Training_Reminder_Flow or manually assign courses
+        </div>
+    </section>
+
+    <!-- ACTIVITY LOG SECTION -->
+    <section class="wf-section">
+        <div class="wf-section-label">Recent Activity</div>
+        <table class="wf-activity-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Event</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Feb 3, 2026</td>
+                    <td>Completed Colocation Overview</td>
+                    <td>Score: 88%</td>
+                </tr>
+                <tr>
+                    <td>Jan 8, 2026</td>
+                    <td>Completed Our Mission/Vision/Value Story</td>
+                    <td>Score: 92%</td>
+                </tr>
+                <tr>
+                    <td>Nov 28, 2025</td>
+                    <td>Completed Hybrid Multicloud Networking</td>
+                    <td>Score: 90%</td>
+                </tr>
+                <tr>
+                    <td>Nov 12, 2025</td>
+                    <td>Started Compliance & Data Privacy</td>
+                    <td>Module 1/7</td>
+                </tr>
+                <tr>
+                    <td>Sep 15, 2025</td>
+                    <td>Enrolled in 8 required courses</td>
+                    <td>Auto-assigned</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    
+<footer class="wf-footer">
+        Equinix Partner Manager Portal · Training managed via SumTotal LMS · Last sync: Today at 2:30 PM
+    </footer>
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Individual team member training progress detail view enabling Partner Managers to monitor course completion, certification expiry, and learning path milestones. Provides actions to send reminders, assign courses, and download certificates.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Partner Manager reviews individual team member training progress</li>
+<li>Send targeted reminders for overdue or expiring courses</li>
+<li>Assign additional required or elective courses to the team member</li>
+<li>Download or view completion certificates for compliance tracking</li>
+<li>Identify training gaps and at-risk certifications before expiry</li>
+<li>Track learning path milestones toward tier qualification requirements</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Team member profile header (name, role, email, tier, company, last login)</li>
+<li>Overall training progress summary with completion percentage and status badge</li>
+<li>Course-by-course training table (course name, type, status, score, completion date, due date)</li>
+<li>Per-course progress bars showing module completion percentage</li>
+<li>Certification status cards with issue date, expiry date, and time-to-expire indicator</li>
+<li>Learning path progress showing required vs elective courses completed</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Back to Team Training button for navigation</li>
+<li>Send Reminder button to email team member about overdue courses</li>
+<li>Assign Course action button to open course assignment dialog</li>
+<li>Sort and filter controls on training table</li>
+<li>Download Certificate link for completed courses</li>
+<li>Expand course rows to view module-by-module details</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Progress Calculation & Tracking</strong>
+<ul>
+<li>Query Contact training assignments from Course_Assignment__c related to User lookup with status</li>
+<li>Calculate overall progress % as (completed courses / total assigned courses) * 100 and display badge</li>
+<li>Track per-course completion via CourseProgress__c module records and compute module percentages</li>
+</ul></li>
+<li><strong>Certification & Expiry Management</strong>
+<ul>
+<li>Retrieve Certification records linked to completed courses and sort by issue/expiry dates</li>
+<li>Identify at-risk certifications where Expiry_Date__c &lt; TODAY() + 30 days with warning indicator</li>
+<li>Display time-to-expire countdown for upcoming certification expirations</li>
+</ul></li>
+<li><strong>Course Status & Alerts</strong>
+<ul>
+<li>Auto-flag overdue courses where Due_Date__c &lt; TODAY() and Status__c != 'Completed'</li>
+<li>Apply visual styling to overdue items to highlight delinquent assignments</li>
+<li>Filter learning path completion by requirement type (Required vs Elective) for clarity</li>
+</ul></li>
+<li><strong>Notifications & Actions</strong>
+<ul>
+<li>Send reminder via email template when Send Reminder button clicked to user email address</li>
+<li>Generate assignment records when Assign Course action is triggered from dialog</li>
+<li>Enable certificate download for completed courses via document link generation</li>
+</ul></li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Validation &amp; Business Logic</h4>
+<ul>
+<li>Course assignment requires user to be part of account team</li>
+<li>Certification download only enabled for Completed status with Passed score</li>
+<li>Reminder email workflow validates email address before send</li>
+<li>Course expiry calculations use timezone settings of user's account</li>
+<li>At-risk certifications highlighted in amber when within 30-day window</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+</body>
+</html>

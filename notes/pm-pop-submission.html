@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Proof of Performance Submission | Equinix Partner Portal</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Salesforce Sans, sans-serif;
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    header {
+      background-color: var(--wf-ink, #1e2a3a);
+      color: white;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .eq-logo {
+      width: 40px;
+      height: 40px;
+      background-color: var(--wf-accent, #3d6daa);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 20px;
+      color: white;
+    }
+
+    .header-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    nav {
+      display: flex;
+      gap: 32px;
+      margin-left: 48px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-size: 14px;
+      transition: opacity 0.2s;
+    }
+
+    nav a:hover {
+      opacity: 0.8;
+    }
+
+    nav a.active {
+      border-bottom: 3px solid var(--wf-accent, #3d6daa);
+      padding-bottom: 6px;
+    }
+
+    .header-right {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .notification-bell {
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      background-color: var(--wf-accent, #3d6daa);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 32px 24px;
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .page-subtitle {
+      font-size: 14px;
+      color: var(--wf-muted, #6b7f99);
+      margin-bottom: 24px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 8px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .form-grid-full {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-label {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .required {
+      color: var(--wf-red, #8b4553);
+    }
+
+    .form-input,
+    .form-select {
+      padding: 10px 12px;
+      border: 1px solid var(--wf-tint, #dce4ef);
+      border-radius: 4px;
+      font-size: 14px;
+      font-family: inherit;
+      background-color: white;
+    }
+
+    .form-input:focus,
+    .form-select:focus {
+      outline: none;
+      border-color: var(--wf-accent, #3d6daa);
+      box-shadow: 0 0 0 3px rgba(0, 112, 210, 0.1);
+    }
+
+    .form-hint {
+      font-size: 12px;
+      color: var(--wf-muted, #6b7f99);
+      margin-top: 6px;
+    }
+
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .comparison-card {
+      background: var(--wf-canvas, #f5f7fb);
+      border-radius: 6px;
+      padding: 16px;
+      border-left: 4px solid var(--wf-accent, #3d6daa);
+    }
+
+    .comparison-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--wf-muted, #6b7f99);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .comparison-grid-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .comparison-row {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .comparison-key {
+      font-size: 12px;
+      color: var(--wf-muted, #6b7f99);
+      margin-bottom: 4px;
+    }
+
+    .comparison-value {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .variance-positive {
+      color: var(--wf-muted, #6b7f99);
+    }
+
+    .variance-negative {
+      color: var(--wf-amber, #8b7745);
+    }
+
+    .spend-breakdown {
+      margin-top: 16px;
+    }
+
+    .breakdown-row {
+      display: grid;
+      grid-template-columns: 200px 1fr 150px;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .breakdown-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .breakdown-input {
+      display: flex;
+      gap: 8px;
+    }
+
+    .breakdown-input input {
+      flex: 1;
+      padding: 8px 10px;
+      border: 1px solid var(--wf-tint, #dce4ef);
+      border-radius: 4px;
+      font-size: 13px;
+      font-family: inherit;
+    }
+
+    .breakdown-input input:focus {
+      outline: none;
+      border-color: var(--wf-accent, #3d6daa);
+      box-shadow: 0 0 0 3px rgba(0, 112, 210, 0.1);
+    }
+
+    .breakdown-value {
+      text-align: right;
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+      padding: 8px 10px;
+      background: var(--wf-canvas, #f5f7fb);
+      border-radius: 4px;
+      font-size: 13px;
+    }
+
+    .upload-area {
+      border: 2px dashed var(--wf-accent, #3d6daa);
+      border-radius: 6px;
+      padding: 32px;
+      text-align: center;
+      background-color: var(--wf-canvas, #f5f7fb);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .upload-area:hover {
+      background-color: var(--wf-canvas, #f5f7fb);
+    }
+
+    .upload-icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+    }
+
+    .upload-text {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 4px;
+    }
+
+    .upload-subtext {
+      font-size: 12px;
+      color: var(--wf-muted, #6b7f99);
+    }
+
+    .uploaded-files {
+      margin-top: 12px;
+    }
+
+    .file-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px;
+      background-color: var(--wf-canvas, #f5f7fb);
+      border-radius: 4px;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+
+    .file-icon {
+      font-size: 16px;
+    }
+
+    .file-name {
+      flex: 1;
+      color: var(--wf-ink, #1e2a3a);
+      font-weight: 500;
+    }
+
+    .file-size {
+      color: var(--wf-muted, #6b7f99);
+      font-size: 12px;
+    }
+
+    .file-remove {
+      color: var(--wf-red, #8b4553);
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background-color: var(--wf-accent, #3d6daa);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--wf-accent, #3d6daa);
+    }
+
+    .btn-secondary {
+      background-color: white;
+      color: var(--wf-accent, #3d6daa);
+      border: 1px solid var(--wf-accent, #3d6daa);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--wf-canvas, #f5f7fb);
+    }
+
+    .timeline-box {
+      background: var(--wf-canvas, #f5f7fb);
+      border-left: 4px solid var(--wf-muted, #6b7f99);
+      padding: 16px;
+      border-radius: 4px;
+      margin-bottom: 24px;
+      font-size: 13px;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .timeline-title {
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .previous-submissions {
+      margin-top: 32px;
+    }
+
+    .submission-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      margin-top: 16px;
+    }
+
+    .submission-table th {
+      background-color: var(--wf-canvas, #f5f7fb);
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+      border-bottom: 1px solid var(--wf-tint, #dce4ef);
+    }
+
+    .submission-table td {
+      padding: 12px;
+      border-bottom: 1px solid var(--wf-tint, #dce4ef);
+    }
+
+    .submission-table tr:hover {
+      background-color: var(--wf-canvas, #f5f7fb);
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .status-under-review {
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-amber, #8b7745);
+    }
+
+    .status-approved {
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-muted, #6b7f99);
+    }
+
+    .status-paid {
+      background-color: var(--wf-tint, #dce4ef);
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    @media (max-width: 768px) {
+      nav {
+        display: none;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .comparison-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .breakdown-row {
+        grid-template-columns: 1fr;
+</style>
+</head>
+<body>
+  <header class="wf-header">
+    <div class="wf-header-logo">EQ</div>
+    <div class="wf-header-title">Equinix Partner Manager</div>
+    <nav class="wf-header-nav">
+      <a href="pm-home-dashboard.html">Dashboard</a>
+      <a href="pm-team-management.html">Team</a>
+      <a href="pm-deals-revenue.html">Deals</a>
+      <a href="pm-team-training.html">Training</a>
+      <a href="pm-resources.html">Resources</a>
+    </nav>
+    <div class="wf-header-util">
+      <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+      <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+    </div>
+  </header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+  <div class="container">
+    <h1 class="page-title">Proof of Performance (PoP) Submission</h1>
+    <p class="page-subtitle">Submit actual results and documentation to complete your MDF campaign reimbursement</p>
+
+    <div class="timeline-box">
+      <div class="timeline-title">Reimbursement Timeline</div>
+      <div>Typical processing: 5-7 business days after approval. Documentation must be submitted within 30 days of campaign end date.</div>
+    </div>
+
+    <form>
+      <div class="card">
+        <div class="card-title">Campaign Selection</div>
+
+        <div class="form-group">
+          <label class="form-label">Select Approved Campaign <span class="required">*</span></label>
+          <select class="form-select" aria-label="Select campaign">
+            <option value="">Choose a campaign...</option>
+            <option value="campaign-001">Q4 2024 Hybrid Cloud Webinar (Approved - $3,500)</option>
+            <option value="campaign-002">Edge Computing Tech Summit Booth (Approved - $8,200)</option>
+          </select>
+          <div class="form-hint">Only approved MDF requests are available for PoP submission</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Actual Spend Breakdown</div>
+        <p style="font-size: 13px; color: var(--wf-muted, #6b7f99); margin-bottom: 16px;">Enter the actual costs incurred for each category. Total must match your approved budget or include explanation.</p>
+
+        <div class="spend-breakdown">
+          <div class="breakdown-row">
+            <label class="breakdown-label">Venue/Location Fees</label>
+            <div class="breakdown-input">
+              <input type="number" placeholder="0.00" aria-label="Venue fees" step="0.01">
+              <span style="display: flex; align-items: center; color: var(--wf-muted, #6b7f99);">USD</span>
+            </div>
+            <div class="breakdown-value">$1,200</div>
+          </div>
+
+          <div class="breakdown-row">
+            <label class="breakdown-label">Catering & Refreshments</label>
+            <div class="breakdown-input">
+              <input type="number" placeholder="0.00" aria-label="Catering costs" step="0.01">
+              <span style="display: flex; align-items: center; color: var(--wf-muted, #6b7f99);">USD</span>
+            </div>
+            <div class="breakdown-value">$850</div>
+          </div>
+
+          <div class="breakdown-row">
+            <label class="breakdown-label">Marketing & Promotion</label>
+            <div class="breakdown-input">
+              <input type="number" placeholder="0.00" aria-label="Marketing costs" step="0.01">
+              <span style="display: flex; align-items: center; color: var(--wf-muted, #6b7f99);">USD</span>
+            </div>
+            <div class="breakdown-value">$450</div>
+          </div>
+
+          <div class="breakdown-row">
+            <label class="breakdown-label">Materials & Printing</label>
+            <div class="breakdown-input">
+              <input type="number" placeholder="0.00" aria-label="Materials costs" step="0.01">
+              <span style="display: flex; align-items: center; color: var(--wf-muted, #6b7f99);">USD</span>
+            </div>
+            <div class="breakdown-value">$600</div>
+          </div>
+
+          <div class="breakdown-row">
+            <label class="breakdown-label">Other Expenses</label>
+            <div class="breakdown-input">
+              <input type="number" placeholder="0.00" aria-label="Other expenses" step="0.01">
+              <span style="display: flex; align-items: center; color: var(--wf-muted, #6b7f99);">USD</span>
+            </div>
+            <div class="breakdown-value">$400</div>
+          </div>
+        </div>
+
+        <div style="padding: 12px; background: var(--wf-canvas, #f5f7fb); border-radius: 4px; margin-top: 16px; display: flex; justify-content: space-between;">
+          <span style="font-weight: 600; color: var(--wf-ink, #1e2a3a);">Total Actual Spend:</span>
+          <span style="font-weight: 700; color: var(--wf-accent, #3d6daa); font-size: 16px;">$3,500</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Planned vs. Actual Performance</div>
+
+        <div class="comparison-grid">
+          <div class="comparison-card">
+            <div class="comparison-label">Planned Results (from MDF request)</div>
+            <div class="comparison-grid-inner">
+              <div class="comparison-row">
+                <div class="comparison-key">Expected Leads</div>
+                <div class="comparison-value">250</div>
+              </div>
+              <div class="comparison-row">
+                <div class="comparison-key">Expected Impressions</div>
+                <div class="comparison-value">5,000</div>
+              </div>
+              <div class="comparison-row">
+                <div class="comparison-key">Expected Registrations</div>
+                <div class="comparison-value">350</div>
+              </div>
+              <div class="comparison-row">
+                <div class="comparison-key">Expected Attendees</div>
+                <div class="comparison-value">180</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="comparison-card" style="border-left-color: var(--wf-muted, #6b7f99);">
+            <div class="comparison-label">Actual Results (submit below)</div>
+            <div class="comparison-grid-inner">
+              <div class="comparison-row">
+                <div class="comparison-key">Actual Leads</div>
+                <div class="comparison-value variance-positive">312 ✓</div>
+              </div>
+              <div class="comparison-row">
+                <div class="comparison-key">Actual Impressions</div>
+                <div class="comparison-value variance-positive">6,250 ✓</div>
+              </div>
+              <div class="comparison-row">
+                <div class="comparison-key">Actual Registrations</div>
+                <div class="comparison-value variance-negative">295 ⚠</div>
+              </div>
+              <div class="comparison-row">
+                <div class="comparison-key">Actual Attendees</div>
+                <div class="comparison-value variance-positive">215 ✓</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Metrics Achieved</div>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="form-label">Actual Leads <span class="required">*</span></label>
+            <input type="number" class="form-input" placeholder="Enter number of leads" aria-label="Actual leads">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Actual Impressions <span class="required">*</span></label>
+            <input type="number" class="form-input" placeholder="Enter number of impressions" aria-label="Actual impressions">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Actual Attendees <span class="required">*</span></label>
+            <input type="number" class="form-input" placeholder="Enter number of attendees" aria-label="Actual attendees">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Actual Registrations <span class="required">*</span></label>
+            <input type="number" class="form-input" placeholder="Enter number of registrations" aria-label="Actual registrations">
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Supporting Documentation</div>
+        <p style="font-size: 13px; color: var(--wf-muted, #6b7f99); margin-bottom: 16px;">Upload receipts, invoices, screenshots, and analytics reports to verify campaign performance and costs.</p>
+
+        <div class="form-group">
+          <label class="form-label">Upload Files <span class="required">*</span></label>
+          <div class="upload-area" onclick="this.querySelector('input').click()" role="button" aria-label="Upload supporting documentation">
+            <div class="upload-icon">📁</div>
+            <div class="upload-text">Drop files here or click to upload</div>
+            <div class="upload-subtext">Receipts, invoices, screenshots, analytics reports, etc. (PDF, JPG, PNG, XLSX - max 50MB total)</div>
+            <input type="file" multiple style="display: none;" aria-label="File input for documentation">
+          </div>
+
+          <div class="uploaded-files">
+            <div class="file-item">
+              <span class="file-icon">📄</span>
+              <span class="file-name">Event_Invoice_Final.pdf</span>
+              <span class="file-size">1.8 MB</span>
+              <span class="file-remove">×</span>
+            </div>
+            <div class="file-item">
+              <span class="file-icon">📊</span>
+              <span class="file-name">Analytics_Report.xlsx</span>
+              <span class="file-size">2.1 MB</span>
+              <span class="file-remove">×</span>
+            </div>
+            <div class="file-item">
+              <span class="file-icon">📸</span>
+              <span class="file-name">Event_Photos.zip</span>
+              <span class="file-size">15.3 MB</span>
+              <span class="file-remove">×</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="button-group">
+        <button type="submit" class="btn btn-primary">Submit for Review</button>
+        <button type="button" class="btn btn-secondary">Save as Draft</button>
+      </div>
+    </form>
+
+    <div class="card previous-submissions">
+      <div class="card-title">Previous PoP Submissions</div>
+
+      <table class="submission-table" role="table" aria-label="Previous proof of performance submissions">
+        <thead>
+          <tr>
+            <th>Campaign Name</th>
+            <th>Submitted Date</th>
+            <th>Approved Amount</th>
+            <th>Reimbursement Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Q3 2024 Sales Enablement Workshop</td>
+            <td>Sep 22, 2024</td>
+            <td>$4,500</td>
+            <td><span class="status-badge status-paid">Paid</span></td>
+          </tr>
+          <tr>
+            <td>Product Datasheet Creation</td>
+            <td>Aug 18, 2024</td>
+            <td>$2,800</td>
+            <td><span class="status-badge status-approved">Approved</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+</div>
+  <footer class="wf-footer">
+    &copy; 2026 Equinix Partner Manager Portal · Wireframe specification
+  </footer>
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h2>Design Notes</h2>
+    <button class="spec-panel-close" onclick="toggleSpec()" aria-label="Close notes panel">&times;</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Partners submit actual campaign performance metrics and supporting documentation to complete MDF reimbursement claims. Compares planned vs. actual results and tracks submission status through approval and payment.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Submit proof that MDF-funded activities were completed</li>
+<li>Provide documentation for reimbursement processing</li>
+<li>Track campaign results against original goals</li>
+<li>Ensure all required evidence is included</li>
+<li>Monitor reimbursement status after submission</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Proof of Performance submission form with campaign selection</li>
+<li>Reimbursement timeline and processing expectations</li>
+<li>Actual spend breakdown by category with calculated totals</li>
+<li>Planned vs. Actual performance comparison with variance indicators</li>
+<li>Metrics form (Leads, Impressions, Attendees, Registrations)</li>
+<li>Supporting documentation upload area (receipts, invoices, analytics, photos)</li>
+<li>Previous PoP submissions table showing status history</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Select approved MDF campaign from dropdown</li>
+<li>Enter actual spend amounts in breakdown row fields</li>
+<li>View auto-calculated totals and variance comparisons</li>
+<li>Upload multiple supporting document files</li>
+<li>Submit for Review or Save as Draft button actions</li>
+<li>View submission status and approval history</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Data Retrieval & Display</strong>
+<ul>
+<li>Query approved MDF_Request__c records and populate campaign dropdown with eligible campaigns</li>
+<li>Retrieve planned metrics from linked MDF_Request__c record and display in comparison grid</li>
+<li>Load previous PoP_Submission__c records with submission history and reimbursement status</li>
+</ul></li>
+<li><strong>Calculation & Variance</strong>
+<ul>
+<li>Calculate total actual spend from breakdown row inputs in real-time as user enters values</li>
+<li>Compute variance between planned and actual metrics (leads, impressions, registrations, attendees)</li>
+<li>Display variance indicators (✓ positive, ⚠ negative) based on achievement percentage</li>
+</ul></li>
+<li><strong>Submission & Routing</strong>
+<ul>
+<li>Create POP_Submission__c record with campaign reference and actual metrics on form submit</li>
+<li>Attach uploaded ContentDocument objects to submission record for file storage and tracking</li>
+<li>Route submission to approver via workflow rules based on campaign amount threshold</li>
+</ul></li>
+<li><strong>Status & Workflow</strong>
+<ul>
+<li>Track submission status (Draft, Under Review, Approved, Paid) in status field with workflow state changes</li>
+<li>Auto-trigger reimbursement workflow on approval status change to initiate payment processing</li>
+<li>Display reimbursement timeline and processing expectations (5-7 business days)</li>
+</ul></li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+</body>
+</html>

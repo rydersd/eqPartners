@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home — Day 0 New User · Equinix PCP Partner Portal</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: var(--wf-canvas, #f5f7fb); }
+    .container { max-width: 1400px; margin: 0 auto; padding: 24px; }
+
+    /* ── Welcome banner ──────────────────────────────── */
+    .welcome-banner {
+      background: linear-gradient(120deg, #1e2a3a 0%, #2a3d5a 100%);
+      color: white; padding: 28px 28px; border-radius: 8px;
+      margin-bottom: 20px; display: flex; align-items: center;
+      justify-content: space-between; gap: 20px;
+    }
+    .welcome-text h1 { margin: 0 0 6px; font-size: 26px; font-weight: 700; }
+    .welcome-text .welcome-sub { font-size: 14px; color: rgba(255,255,255,.88); margin: 0 0 6px; }
+    .welcome-text .welcome-company { font-size: 12px; color: rgba(255,255,255,.70); }
+    .welcome-pill {
+      background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.25);
+      border-radius: 20px; padding: 4px 12px; font-size: 11px;
+      font-weight: 700; display: inline-block; margin-bottom: 6px;
+      letter-spacing: .04em;
+    }
+    .welcome-actions { display: flex; gap: 10px; flex-shrink: 0; flex-wrap: wrap; }
+    .btn-ghost { background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.3); color: #fff; padding: 8px 16px; border-radius: 5px; font-size: 12px; font-weight: 600; cursor: pointer; text-decoration: none; }
+    .btn-ghost:hover { background: rgba(255,255,255,.25); }
+
+    /* ── Getting Started checklist ───────────────────── */
+    .gs-card {
+      background: #fff; border: 2px solid var(--wf-accent, #3d6daa);
+      border-radius: 8px; margin-bottom: 20px; overflow: hidden;
+    }
+    .gs-header {
+      background: var(--wf-accent, #3d6daa); padding: 14px 20px;
+      display: flex; align-items: center; gap: 12px; cursor: pointer;
+      user-select: none;
+    }
+    .gs-header-text { flex: 1; }
+    .gs-header-title { font-size: 14px; font-weight: 700; color: #fff; margin: 0 0 2px; }
+    .gs-header-sub   { font-size: 12px; color: rgba(255,255,255,.8); margin: 0; }
+    .gs-header-toggle { color: #fff; font-size: 18px; font-weight: 300; flex-shrink: 0; }
+    .gs-progress-wrap { padding: 12px 20px 0; }
+    .gs-progress-label { font-size: 11px; font-weight: 700; color: var(--wf-muted, #6b7f99); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .04em; }
+    .gs-progress-bar { background: var(--wf-tint, #dce4ef); height: 8px; border-radius: 4px; overflow: hidden; }
+    .gs-progress-fill { background: var(--wf-accent, #3d6daa); height: 100%; border-radius: 4px; transition: width .4s ease; }
+    .gs-body { padding: 0 20px 16px; }
+    .gs-items { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+    @media (max-width: 900px) { .gs-items { grid-template-columns: 1fr; } }
+    .gs-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 14px 0; border-bottom: 1px solid var(--wf-tint, #dce4ef);
+    }
+    .gs-items .gs-item:nth-last-child(-n+2) { border-bottom: none; }
+    .gs-item.done .gs-check { background: #1a7a3c; border-color: #1a7a3c; color: #fff; }
+    .gs-item.done .gs-item-title { text-decoration: line-through; color: var(--wf-muted, #6b7f99); }
+    .gs-check {
+      width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--wf-line, #b0bdd0);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; flex-shrink: 0; margin-top: 1px; cursor: pointer;
+      background: #fff; transition: all .15s;
+    }
+    .gs-item-content { flex: 1; }
+    .gs-item-title { font-size: 13px; font-weight: 600; color: var(--wf-ink, #1e2a3a); margin: 0 0 3px; }
+    .gs-item-desc  { font-size: 12px; color: var(--wf-muted, #6b7f99); margin: 0 0 6px; line-height: 1.4; }
+    .gs-item-cta   { font-size: 12px; color: var(--wf-accent, #3d6daa); font-weight: 600; text-decoration: none; }
+    .gs-item-cta:hover { text-decoration: underline; }
+    .gs-dismiss { margin-top: 12px; font-size: 12px; color: var(--wf-muted, #6b7f99); text-align: right; }
+    .gs-dismiss a { color: var(--wf-muted, #6b7f99); text-decoration: underline; cursor: pointer; }
+
+    /* ── Two-column grid ─────────────────────────────── */
+    .grid-2 { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 20px; }
+    @media (max-width: 960px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    /* ── Card base ───────────────────────────────────── */
+    .card {
+      background: #fff; border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,.08); overflow: hidden;
+    }
+    .card-header {
+      padding: 16px 20px 0; display: flex; align-items: center;
+      justify-content: space-between;
+    }
+    .card-title { font-size: 14px; font-weight: 700; color: var(--wf-ink, #1e2a3a); margin: 0; }
+    .card-body { padding: 16px 20px 20px; }
+
+    /* ── Programs card ───────────────────────────────── */
+    .program-row {
+      display: flex; align-items: center; gap: 14px; padding: 12px 0;
+      border-bottom: 1px solid var(--wf-tint, #dce4ef);
+    }
+    .program-row:last-child { border-bottom: none; }
+    .program-icon {
+      width: 40px; height: 40px; border-radius: 6px;
+      background: var(--wf-tint, #dce4ef); display: flex; align-items: center;
+      justify-content: center; font-size: 18px; flex-shrink: 0;
+    }
+    .program-info { flex: 1; }
+    .program-name { font-size: 13px; font-weight: 700; color: var(--wf-ink, #1e2a3a); margin: 0 0 2px; }
+    .program-meta { font-size: 11px; color: var(--wf-muted, #6b7f99); }
+    .program-badge {
+      font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px;
+      white-space: nowrap;
+    }
+    .program-badge.active { background: #e6f4ec; color: #1a7a3c; border: 1px solid #9dd5b1; }
+    .program-badge.pending { background: #fff8e1; color: #b35a00; border: 1px solid #ffd180; }
+    .program-req { font-size: 11px; color: var(--wf-muted, #6b7f99); margin-top: 4px; padding: 4px 8px; background: var(--wf-surface, #f0f4fa); border-radius: 4px; }
+
+    /* ── Empty state ─────────────────────────────────── */
+    .empty-state {
+      border: 1.5px dashed var(--wf-line, #b0bdd0); border-radius: 8px;
+      padding: 28px 24px; text-align: center;
+      background: var(--wf-surface, #f0f4fa);
+    }
+    .empty-icon { font-size: 32px; margin-bottom: 12px; }
+    .empty-title { font-size: 14px; font-weight: 700; color: var(--wf-ink, #1e2a3a); margin: 0 0 8px; }
+    .empty-desc { font-size: 13px; color: var(--wf-muted, #6b7f99); line-height: 1.5; margin: 0 0 16px; max-width: 380px; margin-left: auto; margin-right: auto; }
+
+    /* ── Button styles ───────────────────────────────── */
+    .btn { display: inline-block; padding: 8px 16px; background: var(--wf-accent, #3d6daa); color: white; text-decoration: none; border-radius: 5px; font-size: 12px; font-weight: 600; border: none; cursor: pointer; }
+    .btn-secondary { background: transparent; color: var(--wf-accent, #3d6daa); border: 1px solid var(--wf-accent, #3d6daa); }
+    .btn-sm { padding: 6px 12px; font-size: 11px; }
+
+    /* ── Quick actions ───────────────────────────────── */
+    .quick-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .quick-action {
+      background: white; padding: 16px; border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,.08); text-align: center;
+      cursor: pointer; text-decoration: none; display: block;
+      border: 1px solid transparent; transition: border-color .15s;
+    }
+    .quick-action:hover { border-color: var(--wf-accent, #3d6daa); }
+    .quick-action-icon { font-size: 28px; margin-bottom: 8px; }
+    .quick-action-title { font-size: 13px; font-weight: 700; color: var(--wf-ink, #1e2a3a); margin: 0 0 4px; }
+    .quick-action-sub { font-size: 11px; color: var(--wf-muted, #6b7f99); margin: 0; }
+
+    /* ── Announcements ───────────────────────────────── */
+    .announcements { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.08); }
+    .announcement-item { padding: 10px 12px; background: var(--wf-surface, #f0f4fa); border-left: 3px solid var(--wf-accent, #3d6daa); border-radius: 3px; margin-bottom: 10px; font-size: 12px; line-height: 1.6; }
+    .announcement-item:last-child { margin-bottom: 0; }
+    .announcement-item strong { color: var(--wf-ink, #1e2a3a); }
+    .announcement-link { color: var(--wf-accent, #3d6daa); text-decoration: none; font-weight: 600; }
+
+    /* ── PSM card ────────────────────────────────────── */
+    .psm-card {
+      background: var(--wf-ink, #1e2a3a); padding: 18px 20px;
+      border-radius: 8px; margin-top: 16px; color: rgba(255,255,255,.85);
+    }
+    .psm-card h3 { font-size: 12px; font-weight: 700; color: rgba(255,255,255,.6); text-transform: uppercase; letter-spacing: .05em; margin: 0 0 8px; }
+    .psm-name { font-size: 14px; font-weight: 700; color: #fff; margin: 0 0 4px; }
+    .psm-title { font-size: 12px; color: rgba(255,255,255,.65); margin: 0 0 10px; }
+    .psm-action { font-size: 12px; color: var(--wf-accent, #3d6daa); text-decoration: none; font-weight: 600; background: rgba(255,255,255,.1); padding: 5px 10px; border-radius: 4px; display: inline-block; }
+
+    /* ── In-App Guidance callout (wireframe annotation) ── */
+    .iag-callout {
+      position: relative; display: inline-block; margin-left: 8px;
+    }
+    .iag-badge {
+      background: #f5a623; color: #fff; font-size: 10px; font-weight: 700;
+      padding: 2px 7px; border-radius: 10px; cursor: pointer;
+      letter-spacing: .03em; user-select: none;
+    }
+    .iag-tooltip-box {
+      display: none; position: absolute; top: calc(100% + 8px); left: 0;
+      background: #fff; border: 1.5px solid #f5a623; border-radius: 6px;
+      padding: 10px 14px; font-size: 12px; color: var(--wf-ink, #1e2a3a);
+      width: 240px; line-height: 1.5; z-index: 100;
+      box-shadow: 0 4px 12px rgba(0,0,0,.12);
+    }
+    .iag-tooltip-box::before {
+      content: ""; position: absolute; top: -7px; left: 14px;
+      border: 6px solid transparent; border-bottom-color: #f5a623;
+      border-top: none;
+    }
+    .iag-callout:hover .iag-tooltip-box { display: block; }
+    .iag-tooltip-title { font-size: 11px; font-weight: 700; color: #b36000; text-transform: uppercase; letter-spacing: .05em; margin: 0 0 4px; }
+
+    /* ── EC feature annotation strip ────────────────── */
+    .ec-note {
+      display: flex; align-items: flex-start; gap: 8px;
+      padding: 8px 12px; background: #fff8e1;
+      border: 1px solid #ffd180; border-radius: 5px;
+      font-size: 11px; color: #7a4f00; line-height: 1.5;
+      margin-top: 10px;
+    }
+    .ec-note-icon { flex-shrink: 0; font-size: 14px; }
+    .ec-note strong { color: #5a3800; }
+
+    /* ── Section header ──────────────────────────────── */
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .section-title { font-size: 14px; font-weight: 700; color: var(--wf-ink, #1e2a3a); margin: 0; }
+    .section-link { font-size: 12px; color: var(--wf-accent, #3d6daa); text-decoration: none; font-weight: 600; }
+
+    /* ── Day label strip ─────────────────────────────── */
+    .day-label {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #e6f4ec; border: 1px solid #9dd5b1; color: #1a5c30;
+      font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 4px;
+      margin-bottom: 14px; letter-spacing: .04em; text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-context-bar">
+  <div style="max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <nav class="wf-breadcrumb" aria-label="Breadcrumb" style="margin-bottom:0;">
+      <span class="wf-breadcrumb-current">Home</span>
+    </nav>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span class="persona-badge persona-badge--ae">AE</span>
+      <span style="font-size:11px;font-weight:700;color:#1a5c30;background:#e6f4ec;border:1px solid #9dd5b1;padding:2px 8px;border-radius:4px;letter-spacing:.04em;">DAY 0</span>
+    </div>
+  </div>
+</div>
+
+<header class="wf-header">
+  <div class="wf-header-logo">
+    <svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix">
+      <path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/>
+    </svg>
+  </div>
+  <div class="wf-header-title">Partner Central</div>
+  <nav class="wf-header-nav">
+    <a href="rep-deals-commission.html">Deals</a>
+    <a href="rep-my-training.html">Training</a>
+    <a href="rep-marketing.html">Marketing</a>
+    <a href="rep-support.html">Support</a>
+    <a href="rep-resources.html">Resources</a>
+  </nav>
+  <div class="wf-header-util">
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+  </div>
+</header>
+
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>📋</span> Notes
+  </button>
+</div>
+
+<div class="container">
+
+  <!-- Welcome banner ──────────────────────────────── -->
+  <div class="welcome-banner" role="banner">
+    <div class="welcome-text">
+      <div class="welcome-pill">Deal Registration User · CloudBridge Technologies Inc.</div>
+      <h1>Welcome to Partner Central, Alex</h1>
+      <p class="welcome-sub">You're all set. Here are a few things to help you get started.</p>
+      <p class="welcome-company">CloudBridge Technologies Inc. · Approved Feb 20, 2026</p>
+    </div>
+    <div class="welcome-actions" aria-label="Onboarding actions">
+      <a href="rep-first-login.html" class="btn-ghost">Take the orientation →</a>
+    </div>
+  </div>
+
+  <!-- Getting Started checklist ─────────────────── -->
+  <div class="gs-card" role="region" aria-label="Getting started checklist">
+    <div class="gs-header" onclick="toggleGS()" aria-expanded="true" aria-controls="gs-body-content">
+      <div style="font-size:22px;" aria-hidden="true">🚀</div>
+      <div class="gs-header-text">
+        <p class="gs-header-title">Getting Started — 0 of 4 complete</p>
+        <p class="gs-header-sub">Takes about 10 minutes. This guide stays until you're done.</p>
+      </div>
+      <div class="gs-header-toggle" id="gs-toggle-icon" aria-hidden="true">−</div>
+    </div>
+
+    <div id="gs-body-content">
+      <div class="gs-progress-wrap">
+        <div class="gs-progress-label">Progress</div>
+        <div class="gs-progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Getting started: 0% complete">
+          <div class="gs-progress-fill" id="gs-fill" style="width:0%;"></div>
+        </div>
+      </div>
+      <div class="gs-body">
+        <div class="gs-items">
+
+          <div class="gs-item" id="gs-1">
+            <button class="gs-check" onclick="toggleGsItem(1)" aria-label="Mark profile as complete" aria-pressed="false"></button>
+            <div class="gs-item-content">
+              <p class="gs-item-title">Complete your profile</p>
+              <p class="gs-item-desc">Add your title, phone, and photo so your team and PSM can reach you.</p>
+              <a href="rep-profile.html" class="gs-item-cta">Go to profile →</a>
+            </div>
+          </div>
+
+          <div class="gs-item" id="gs-2">
+            <button class="gs-check" onclick="toggleGsItem(2)" aria-label="Mark programs reviewed as complete" aria-pressed="false"></button>
+            <div class="gs-item-content">
+              <p class="gs-item-title">Review your partner programs</p>
+              <p class="gs-item-desc">See what programs CloudBridge is enrolled in and what's required from you.</p>
+              <a href="#programs-section" class="gs-item-cta">View programs below ↓</a>
+            </div>
+          </div>
+
+          <div class="gs-item" id="gs-3">
+            <button class="gs-check" onclick="toggleGsItem(3)" aria-label="Mark deal registered as complete" aria-pressed="false"></button>
+            <div class="gs-item-content">
+              <p class="gs-item-title">Register your first deal</p>
+              <p class="gs-item-desc">Got an opportunity? Protect it with a deal registration before your competitors do.</p>
+              <a href="rep-register-deal.html" class="gs-item-cta">Register a deal →</a>
+            </div>
+          </div>
+
+          <div class="gs-item" id="gs-4">
+            <button class="gs-check" onclick="toggleGsItem(4)" aria-label="Mark training started as complete" aria-pressed="false"></button>
+            <div class="gs-item-content">
+              <p class="gs-item-title">Start a required training course</p>
+              <p class="gs-item-desc">CloudBridge needs 6 certifications for Gold tier. Your completions count toward the team total.</p>
+              <a href="rep-course-catalog.html" class="gs-item-cta">Browse courses →</a>
+            </div>
+          </div>
+
+        </div>
+        <div class="gs-dismiss">
+          <a onclick="dismissGS()" role="button">Dismiss for now</a> ·
+          <span style="color:var(--wf-muted);">Returns next login until all 4 are done</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main grid ────────────────────────────────────── -->
+  <div class="grid-2">
+
+    <!-- Left column ─────────────────────────── -->
+    <div>
+
+      <!-- Current Programs ─────────────────── -->
+      <div id="programs-section" style="margin-bottom:20px;">
+        <div class="section-header">
+          <h2 class="section-title">Your Partner Programs</h2>
+          <a href="#" class="section-link">
+            Program details →
+            <span class="iag-callout">
+              <span class="iag-badge">IAG</span>
+              <div class="iag-tooltip-box">
+                <p class="iag-tooltip-title">In-App Guidance</p>
+                First-visit prompt: "This shows the programs your org is enrolled in and what you need to do. Click any program to see full requirements."
+              </div>
+            </span>
+          </a>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+
+            <div class="program-row">
+              <div class="program-icon" aria-hidden="true">🏢</div>
+              <div class="program-info">
+                <p class="program-name">Colocation Reseller Program</p>
+                <p class="program-meta">Equinix IBX · Reseller · Joined Oct 2024</p>
+                <p class="program-req">Requires: 6 team certifications for Gold tier · 3 active deals/quarter</p>
+              </div>
+              <span class="program-badge active">Active</span>
+            </div>
+
+            <div class="program-row">
+              <div class="program-icon" aria-hidden="true">🔗</div>
+              <div class="program-info">
+                <p class="program-name">Equinix Fabric Lead Referral</p>
+                <p class="program-meta">Digital Infrastructure · Lead Referral · Joined Jan 2025</p>
+                <p class="program-req">Requires: 1 certification per active rep · Min. 2 qualified referrals/quarter</p>
+              </div>
+              <span class="program-badge active">Active</span>
+            </div>
+
+            <div class="program-row">
+              <div class="program-icon" aria-hidden="true">☁️</div>
+              <div class="program-info">
+                <p class="program-name">Metal by Equinix — Referral Track</p>
+                <p class="program-meta">Bare-Metal Cloud · Lead Referral · Application submitted</p>
+                <p class="program-req">Pending org admin countersignature before activation</p>
+              </div>
+              <span class="program-badge pending">Pending</span>
+            </div>
+
+          </div>
+        </div>
+        <div class="ec-note" role="note">
+          <span class="ec-note-icon">⚡</span>
+          <span><strong>EC — Audience targeting:</strong> Program cards query <code>Partner_Program_Member__c</code> for the user's Account and filter by <code>Status__c IN ('Active','Pending')</code>. Shown to all users on Day 0; on Day N, collapsed into a sidebar widget.</span>
+        </div>
+      </div>
+
+      <!-- Empty state: Deals ───────────────── -->
+      <div style="margin-bottom:20px;">
+        <div class="section-header">
+          <h2 class="section-title">My Deals</h2>
+          <a href="rep-register-deal.html" class="section-link">Register a deal →</a>
+        </div>
+        <div class="empty-state" role="status">
+          <div class="empty-icon" aria-hidden="true">💼</div>
+          <p class="empty-title">No deals registered yet</p>
+          <p class="empty-desc">Got a customer conversation that could be an Equinix opportunity? Register it now to protect your claim and start earning commission.</p>
+          <a href="rep-register-deal.html" class="btn" style="margin-bottom:10px;">Register my first deal →</a>
+          <div style="margin-top:10px;">
+            <a href="rep-resources.html" class="btn btn-secondary btn-sm">What makes a good Equinix opportunity?</a>
+          </div>
+        </div>
+        <div class="ec-note" role="note">
+          <span class="ec-note-icon">⚡</span>
+          <span><strong>EC — Empty state (Day 0):</strong> Shown when <code>COUNT(Deal_Registration__c WHERE Contact = User.ContactId) = 0</code>. Replaced on Day N with the deal summary card and pipeline stats. The "Register my first deal" CTA is the highest-priority action for this role.</span>
+        </div>
+      </div>
+
+      <!-- Empty state: Training ───────────── -->
+      <div>
+        <div class="section-header">
+          <h2 class="section-title">My Training</h2>
+          <a href="rep-course-catalog.html" class="section-link">Browse courses →</a>
+        </div>
+        <div class="empty-state" role="status">
+          <div class="empty-icon" aria-hidden="true">🎓</div>
+          <p class="empty-title">No courses started yet</p>
+          <p class="empty-desc">CloudBridge needs 6 certifications for Gold tier. Your completions count toward the team total. Start with the Colocation Fundamentals course — it's required for your role.</p>
+          <a href="rep-course-catalog.html" class="btn" style="margin-bottom:10px;">Start Colocation Fundamentals →</a>
+          <div style="margin-top:10px;">
+            <a href="rep-certifications.html" class="btn btn-secondary btn-sm">View all required certifications</a>
+          </div>
+        </div>
+        <div class="ec-note" role="note">
+          <span class="ec-note-icon">⚡</span>
+          <span><strong>EC — Empty state (Day 0):</strong> Shown when <code>COUNT(Partner_Training__c WHERE Contact = User.ContactId AND Status != 'Not Started') = 0</code>. Recommends a specific course based on the user's role (<code>Contact.Portal_Role__c</code>) and their org's tier-certification gap.</span>
+        </div>
+      </div>
+
+    </div><!-- /left column -->
+
+    <!-- Right column ────────────────────────── -->
+    <div>
+
+      <!-- Quick actions ─────────────────────── -->
+      <div style="margin-bottom:20px;">
+        <h2 class="section-title" style="margin-bottom:14px;">Quick Actions</h2>
+        <div class="quick-actions">
+          <a href="rep-register-deal.html" class="quick-action">
+            <div class="quick-action-icon" aria-hidden="true">💼</div>
+            <p class="quick-action-title">Register a Deal</p>
+            <p class="quick-action-sub">Protect your opportunity</p>
+          </a>
+          <a href="rep-course-catalog.html" class="quick-action">
+            <div class="quick-action-icon" aria-hidden="true">📚</div>
+            <p class="quick-action-title">Browse Courses</p>
+            <p class="quick-action-sub">32 courses available</p>
+          </a>
+          <a href="rep-profile.html" class="quick-action">
+            <div class="quick-action-icon" aria-hidden="true">👤</div>
+            <p class="quick-action-title">My Profile</p>
+            <p class="quick-action-sub">Complete your details</p>
+          </a>
+          <a href="rep-resources.html" class="quick-action">
+            <div class="quick-action-icon" aria-hidden="true">📎</div>
+            <p class="quick-action-title">Sales Resources</p>
+            <p class="quick-action-sub">Decks, one-pagers, guides</p>
+          </a>
+        </div>
+      </div>
+
+      <!-- Program announcements ────────────── -->
+      <div class="announcements" style="margin-bottom:16px;">
+        <h3 style="margin:0 0 14px;font-size:14px;font-weight:700;color:var(--wf-ink);">Program News</h3>
+        <div class="announcement-item">
+          <strong>🎉 Welcome:</strong> CloudBridge joins the Colocation Reseller Program. Your Gold tier status takes effect once 6 team certifications are complete.
+        </div>
+        <div class="announcement-item">
+          <strong>📚 Required:</strong> All Deal Registration Users must complete <a href="rep-course-catalog.html" class="announcement-link">Colocation Fundamentals</a> within 60 days of account activation.
+        </div>
+        <div class="announcement-item">
+          <strong>🔗 New program:</strong> Equinix Fabric Referral track now offers a 3% bonus referral fee on qualified cloud gateway opportunities. <a href="#" class="announcement-link">See details</a>
+        </div>
+      </div>
+      <div class="ec-note" role="note">
+        <span class="ec-note-icon">⚡</span>
+        <span><strong>EC — Audience targeting:</strong> Announcements filtered by <code>Partner_Program_Member__c</code> join. New-user announcements include onboarding requirements. Day N shows tier-specific news and deadlines.</span>
+      </div>
+
+      <!-- PSM contact ──────────────────────── -->
+      <div class="psm-card" role="complementary" aria-label="Partner Success Manager">
+        <h3>Your Partner Success Manager</h3>
+        <p class="psm-name">Marcus Chen</p>
+        <p class="psm-title">Partner Success Manager · Equinix</p>
+        <p style="font-size:12px;color:rgba(255,255,255,.7);margin:0 0 12px;line-height:1.5;">"Hi Alex — welcome to Partner Central. I'm here to help CloudBridge get up to speed. Reach out any time."</p>
+        <a href="rep-messages.html" class="psm-action">Message Marcus →</a>
+      </div>
+
+    </div><!-- /right column -->
+
+  </div><!-- /grid-2 -->
+
+</div><!-- /container -->
+
+<footer class="wf-footer">
+  &copy; 2026 Equinix Partner Portal · Wireframe specification — Day 0 New User State
+</footer>
+
+<!-- ── Spec panel ──────────────────────────────────────────── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+
+    <h3>About this page</h3>
+    <p>Day 0 state of the rep portal home page — shown to a user on their first login after account activation, or until all 4 Getting Started items are completed. Designed for a user who clicked "Skip" on the first-login orientation wizard (<a href="rep-first-login.html">rep-first-login.html</a>). Contrast with <a href="rep-home.html">rep-home.html</a> which is the Day N returning-user experience.</p>
+    <hr class="spec-divider">
+
+    <h3>Day 0 — Experience Cloud implementation notes</h3>
+
+    <h4>Getting Started checklist (persistent)</h4>
+    <p>The checklist is audience-targeted via a custom boolean field <code>Contact.GS_Checklist_Complete__c</code> (false by default). Each of the 4 items maps to a custom boolean on the Contact record (<code>GS_Profile_Done__c</code>, <code>GS_Programs_Viewed__c</code>, <code>GS_First_Deal__c</code>, <code>GS_First_Training__c</code>). The component queries these fields on render and reflects checked/unchecked state. When all 4 are true, <code>GS_Checklist_Complete__c</code> flips to true, and the Audience rule hides the checklist on future logins.</p>
+    <p>Dismiss behavior: clicking "Dismiss for now" sets a session cookie only — the checklist re-appears on the next login until <code>GS_Checklist_Complete__c = true</code>. This prevents the "skip everything and never see it again" failure mode.</p>
+    <p>Implementation: Salesforce LWC embedded in an Experience Builder page section, visible only to users where <code>GS_Checklist_Complete__c = false</code> (Audience rule based on Contact field).</p>
+
+    <h4>Empty state guidance</h4>
+    <p>The Deals and Training modules show contextual empty states when the user has no records. The copy is role-specific (pulled from <code>Contact.Portal_Role__c</code>) and program-specific (linked to the user's Account's active programs via <code>Partner_Program_Member__c</code>). On Day N, these modules show real data and the empty state disappears. The empty state CTA for Training recommends a specific course based on the org's certification gap — the recommended course ID is computed server-side and passed to the component as a prop.</p>
+
+    <h4>In-App Guidance (IAG) — first-visit prompts</h4>
+    <p>Experience Cloud In-App Guidance (Setup → In-App Guidance) is used to surface contextual tooltips and walkthroughs on first visit. Key prompts for Day 0:</p>
+    <ul>
+      <li><strong>Home prompt:</strong> Floating prompt on first login — "Getting started? Your checklist is pinned at the top." (Shows once, dismissable)</li>
+      <li><strong>Deals section prompt:</strong> Docked tooltip on first visit to the Deals nav item — "Ready to register a deal? Here's what you need: customer name, estimated value, and expected close date. Takes about 2 minutes." (Shows up to 3 times)</li>
+      <li><strong>Training section prompt:</strong> On first visit to Training — "Your org needs 6 certifications for Gold tier. Your completions count toward the team total." (Shows once)</li>
+    </ul>
+    <p>IAG prompts are targeted by Profile + <code>Contact.GS_Checklist_Complete__c = false</code> to avoid showing onboarding prompts to experienced users.</p>
+
+    <h4>Programs section (Day 0 prominence)</h4>
+    <p>The "Your Partner Programs" section is featured prominently on Day 0 because new users need to understand what they're enrolled in and what's expected of them. The data comes from <code>Partner_Program_Member__c</code> junction records linking the Account to program definitions. On Day N, this moves to a sidebar widget or collapsible section — it's reference information, not action-oriented.</p>
+
+    <h4>Welcome banner (no "back")</h4>
+    <p>The banner copy is controlled by <code>Contact.First_Login__c</code> (date/time, set on first OTP activation). If First_Login__c was within the last 7 days, show "Welcome to Partner Central, [Name]". After 7 days, switch to "Welcome back, [Name]" (the Day N pattern). The orientation link ("Take the orientation →") in the banner links to <a href="rep-first-login.html">rep-first-login.html</a> and is hidden on Day N.</p>
+
+    <hr class="spec-divider">
+    <h3>Day N — contrast with returning user experience</h3>
+    <p>See <a href="rep-home.html">rep-home.html</a> for the full Day N wireframe. Key differences on Day N:</p>
+    <ul>
+      <li>Banner: "Welcome back, Sarah" — personalized with tier progress badge (4/8 required)</li>
+      <li>Getting Started checklist: hidden (<code>GS_Checklist_Complete__c = true</code>, Audience rule removes component)</li>
+      <li>Deals module: real data — active deals, pipeline value, protection period alerts</li>
+      <li>Training module: real data — in-progress courses, deadline cards (overdue/expiring/upcoming)</li>
+      <li>Programs section: collapsed into a sidebar widget, not full card</li>
+      <li>IAG prompts: different set — "new feature" announcements, deadline nudges, not onboarding basics</li>
+      <li>Activity feed: recent actions log (last 30 days)</li>
+      <li>PSM message: personalized (Marcus has context from prior deals)</li>
+    </ul>
+
+    <hr class="spec-divider">
+    <h3>Salesforce objects</h3>
+    <ul>
+      <li><code>Contact</code> — First name, role, GS checklist booleans, First_Login__c</li>
+      <li><code>Partner_Program_Member__c</code> — Junction between Account and Program__c, with Status__c</li>
+      <li><code>Program__c</code> — Program name, tier requirements, certification count</li>
+      <li><code>Deal_Registration__c</code> — Filtered by Contact.Id; empty check drives empty state</li>
+      <li><code>Partner_Training__c</code> — Filtered by Contact.Id; recommended course logic runs server-side</li>
+    </ul>
+
+    <hr class="spec-divider">
+    <h3>Personas</h3>
+    <p><strong>Alex Kim</strong> — Deal Registration User, CloudBridge Technologies Inc. First login after admin approval via join request flow. No prior portal activity. Compare with <strong>Sarah Connor</strong> on rep-home.html (Day N, Gold Partner at Stark Industries, 50% certified).</p>
+    <p>Connected pages: <a href="partner-user-request.html">partner-user-request.html</a> → <a href="onboarding-rep-approval-email.html">onboarding-rep-approval-email.html</a> → <a href="onboarding-auth-setup.html">onboarding-auth-setup.html</a> → <a href="rep-first-login.html">rep-first-login.html</a> (or skip) → this page.</p>
+
+  </div>
+</aside>
+
+<script>
+  /* ── Spec panel ──────────────────────────────── */
+  function toggleSpec() {
+    var p = document.getElementById('spec-panel');
+    var b = document.getElementById('spec-toggle');
+    if (!p || !b) return;
+    var isOpen = p.classList.toggle('open');
+    b.setAttribute('aria-expanded', isOpen);
+  }
+
+  /* ── Getting Started checklist ───────────────── */
+  var gsCount = 0;
+  var gsTotal = 4;
+
+  function toggleGsItem(n) {
+    var item = document.getElementById('gs-' + n);
+    var btn  = item.querySelector('.gs-check');
+    var isDone = item.classList.toggle('done');
+    btn.setAttribute('aria-pressed', String(isDone));
+    btn.textContent = isDone ? '✓' : '';
+    gsCount = isDone ? gsCount + 1 : gsCount - 1;
+    if (gsCount < 0) gsCount = 0;
+    updateGsProgress();
+  }
+
+  function updateGsProgress() {
+    var pct = Math.round((gsCount / gsTotal) * 100);
+    document.getElementById('gs-fill').style.width = pct + '%';
+    var hdr = document.querySelector('.gs-header-title');
+    if (hdr) hdr.textContent = 'Getting Started — ' + gsCount + ' of ' + gsTotal + ' complete';
+    var bar = document.querySelector('.gs-progress-bar');
+    if (bar) bar.setAttribute('aria-valuenow', pct);
+  }
+
+  function toggleGS() {
+    var body = document.getElementById('gs-body-content');
+    var icon = document.getElementById('gs-toggle-icon');
+    var hdr  = document.querySelector('.gs-header');
+    if (!body) return;
+    var hidden = body.style.display === 'none';
+    body.style.display = hidden ? '' : 'none';
+    if (icon) icon.textContent = hidden ? '−' : '+';
+    hdr.setAttribute('aria-expanded', String(hidden));
+  }
+
+  function dismissGS() {
+    var card = document.querySelector('.gs-card');
+    if (card) card.style.opacity = '0.4';
+    var dismiss = document.querySelector('.gs-dismiss');
+    if (dismiss) dismiss.innerHTML = '<span style="color:var(--wf-muted)">Checklist will reappear on your next login.</span>';
+  }
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

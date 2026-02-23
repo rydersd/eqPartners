@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Partner Onboarding Pipeline - Equinix PSM</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: var(--wf-canvas, #f5f7fb);
+    }
+    .slds-global-header {
+      display: flex;
+      align-items: center;
+      background-color: var(--wf-ink, #1e2a3a);
+      color: var(--wf-surface, #edf1f7);
+      padding: 0 12px;
+      height: 52px;
+      gap: 12px;
+    }
+    .slds-global-header__waffle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+    }
+    .slds-global-header__waffle svg {
+      width: 20px;
+      height: 20px;
+    }
+    .slds-global-header__app {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .slds-global-header__app-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      background-color: var(--wf-accent, var(--wf-accent, #3d6daa));
+      color: var(--wf-surface, #edf1f7);
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 12px;
+    }
+    .slds-global-nav {
+      display: flex;
+      gap: 24px;
+      margin-left: 24px;
+      flex: 1;
+    }
+    .slds-global-nav__item {
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      font-size: 13px;
+      padding: 8px 0;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .slds-global-nav__item:hover {
+      color: var(--wf-surface, #edf1f7);
+    }
+    .slds-global-nav__item.active {
+      color: var(--wf-surface, #edf1f7);
+      border-bottom-color: var(--wf-amber, #8b7745);
+    }
+    .slds-global-header__search {
+      margin-left: auto;
+      margin-right: 16px;
+    }
+    .slds-global-header__search input {
+      padding: 6px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 4px;
+      background-color: rgba(255, 255, 255, 0.1);
+      color: var(--wf-surface, #edf1f7);
+      width: 200px;
+      font-size: 13px;
+    }
+    .slds-global-header__search input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+    .slds-global-header__actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .slds-global-header__action {
+      cursor: pointer;
+      font-size: 18px;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    .slds-global-header__action:hover {
+      opacity: 1;
+    }
+
+    .page-container {
+      padding: 24px;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    .slds-design-notes__title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--wf-text, #3b4f68);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .slds-badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .slds-badge--brand {
+      background-color: var(--wf-accent, var(--wf-accent, #3d6daa));
+      color: var(--wf-surface, #edf1f7);
+    }
+    .slds-badge--neutral {
+      background-color: var(--wf-surface, #edf1f7);
+      color: var(--wf-text, #3b4f68);
+    }
+
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: var(--wf-surface, #edf1f7);
+      padding: 16px;
+      border-radius: 4px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    .stat-label {
+      font-size: 12px;
+      color: var(--wf-muted, #6b7f99);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--wf-accent, var(--wf-accent, #3d6daa));
+    }
+
+    .kanban-board {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .kanban-column {
+      background: var(--wf-surface, #edf1f7);
+      border-radius: 4px;
+      padding: 12px;
+      min-height: 600px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    .kanban-column-header {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--wf-text, #3b4f68);
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--wf-surface, #edf1f7);
+    }
+    .kanban-column-count {
+      display: inline-block;
+      background-color: var(--wf-surface, #edf1f7);
+      color: var(--wf-text, #3b4f68);
+      padding: 2px 6px;
+      border-radius: 10px;
+      font-size: 11px;
+      margin-left: 6px;
+    }
+
+    .kanban-card {
+      background: var(--wf-surface, #edf1f7);
+      border: 2px solid var(--wf-surface, #edf1f7);
+      border-radius: 4px;
+      padding: 12px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .kanban-card:hover {
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+      border-color: var(--wf-accent, var(--wf-accent, #3d6daa));
+    }
+    .kanban-card.stalled {
+      border-color: var(--wf-muted, #6b7f99);
+      border-width: 3px;
+    }
+    .kanban-card-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--wf-text, #3b4f68);
+      margin-bottom: 6px;
+    }
+    .kanban-card-meta {
+      font-size: 11px;
+      color: var(--wf-muted, #6b7f99);
+      margin-bottom: 4px;
+    }
+    .kanban-card-days {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 6px;
+      border-radius: 3px;
+      display: inline-block;
+      margin-top: 6px;
+    }
+    .kanban-card-days.normal {
+      background-color: var(--wf-surface, #edf1f7);
+      color: var(--wf-ink, #1e2a3a);
+    }
+    .kanban-card-days.warning {
+      background-color: var(--wf-tint, #dce4ef);
+      color: var(--wf-amber, #8b7745);
+    }
+    .kanban-card-days.critical {
+      background-color: var(--wf-surface, #edf1f7);
+      color: var(--wf-red, #8b4553);
+    }
+
+    .card-progress {
+      margin-top: 8px;
+      font-size: 10px;
+      color: var(--wf-muted, #6b7f99);
+    }
+    .progress-bar {
+      width: 100%;
+      height: 4px;
+      background-color: var(--wf-surface, #edf1f7);
+      border-radius: 2px;
+      margin-top: 4px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background-color: var(--wf-ink, #1e2a3a);
+      border-radius: 2px;
+    }
+
+    .expanded-card {
+      background: var(--wf-surface, #edf1f7);
+      border: 2px solid var(--wf-accent, var(--wf-accent, #3d6daa));
+      border-radius: 4px;
+      padding: 16px;
+      margin-bottom: 24px;
+      grid-column: 1 / -1;
+    }
+    .expanded-card-header {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--wf-text, #3b4f68);
+      margin-bottom: 12px;
+    }
+    .checklist {
+      list-style: none;
+      padding: 0;
+      margin: 12px 0;
+    }
+    .checklist-item {
+      padding: 8px 0;
+      font-size: 13px;
+      color: var(--wf-text, #3b4f68);
+      border-bottom: 1px solid var(--wf-surface, #edf1f7);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .checklist-item::before {
+      content: '☑';
+      font-size: 14px;
+      color: var(--wf-ink, #1e2a3a);
+      width: 16px;
+    }
+    .checklist-item.pending::before {
+      content: '☐';
+      color: var(--wf-muted, #6b7f99);
+    }
+
+    .stalled-section {
+      background: var(--wf-surface, #edf1f7);
+      border-left: 4px solid var(--wf-muted, #6b7f99);
+      padding: 16px;
+      margin-bottom: 24px;
+      border-radius: 4px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+    .stalled-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--wf-muted, #6b7f99);
+      margin-bottom: 12px;
+    }
+    .stalled-item {
+      padding: 8px 0;
+      font-size: 13px;
+      color: var(--wf-text, #3b4f68);
+      border-bottom: 1px solid var(--wf-surface, #edf1f7);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .stalled-item:last-child {
+      border-bottom: none;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .btn {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background-color: var(--wf-accent, var(--wf-accent, #3d6daa));
+      color: var(--wf-surface, #edf1f7);
+    }
+    .btn-primary:hover {
+      background-color: var(--wf-accent, #3d6daa);
+    }
+    .btn-secondary {
+      background-color: var(--wf-surface, #edf1f7);
+      color: var(--wf-text, #3b4f68);
+    }
+    .btn-secondary:hover {
+      background-color: var(--wf-line, #b0bdd0);
+</style>
+</head>
+<body>
+
+<header class="wf-header">
+  <div class="wf-header-logo">EQ</div>
+  <div class="wf-header-title">Partner Sales Manager</div>
+  <nav class="wf-header-nav">
+    <a href="#">Dashboard</a>
+    <a href="#" class="active">PSM Portal</a>
+    <a href="#">Partners</a>
+    <a href="#">Deals</a>
+    <a href="#">Programs</a>
+    <a href="#">Reports</a>
+  </nav>
+  <div class="wf-header-util">
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+  </div>
+</header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+<div class="page-container">
+
+  
+
+
+  <div class="stats-bar">
+    <div class="stat-card">
+      <div class="stat-label">Total in Pipeline</div>
+      <div class="stat-value">24</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Avg Onboarding Time</div>
+      <div class="stat-value">32d</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Stalled (>14d)</div>
+      <div class="stat-value">3</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Completed This Month</div>
+      <div class="stat-value">4</div>
+    </div>
+  </div>
+
+  <div class="kanban-board">
+    <div class="kanban-column">
+      <div class="kanban-column-header">Recruitment <span class="kanban-column-count">2</span></div>
+
+      <div class="kanban-card">
+        <div class="kanban-card-title">Oscorp</div>
+        <div class="kanban-card-meta">Enterprise | 500+ emp</div>
+        <div class="kanban-card-meta">Entered: 2026-02-10</div>
+        <div class="kanban-card-meta">PSM: Jennifer Lee</div>
+        <div class="kanban-card-days normal">3 days in stage</div>
+        <div class="action-buttons">
+          <button class="btn btn-secondary">Details</button>
+        </div>
+      </div>
+
+      <div class="kanban-card">
+        <div class="kanban-card-title">Acme Corp</div>
+        <div class="kanban-card-meta">Mid-market | 150 emp</div>
+        <div class="kanban-card-meta">Entered: 2026-02-08</div>
+        <div class="kanban-card-meta">PSM: Marcus Chen</div>
+        <div class="kanban-card-days normal">5 days in stage</div>
+        <div class="action-buttons">
+          <button class="btn btn-secondary">Details</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="kanban-column">
+      <div class="kanban-column-header">Application Review <span class="kanban-column-count">3</span></div>
+
+      <div class="kanban-card">
+        <div class="kanban-card-title">Stark Industries</div>
+        <div class="kanban-card-meta">Enterprise | 800+ emp</div>
+        <div class="kanban-card-meta">Entered: 2026-01-28</div>
+        <div class="kanban-card-meta">PSM: Sarah Martinez</div>
+        <div class="kanban-card-days warning">16 days in stage</div>
+        <div class="action-buttons">
+          <button class="btn btn-secondary">Details</button>
+        </div>
+      </div>
+
+      <div class="kanban-card">
+        <div class="kanban-card-title">Wayne Enterprises</div>
+        <div class="kanban-card-meta">Enterprise | 1000+ emp</div>
+        <div class="kanban-card-meta">Entered: 2026-02-04</div>
+        <div class="kanban-card-meta">PSM: Jennifer Lee</div>
+        <div class="kanban-card-days normal">9 days in stage</div>
+        <div class="action-buttons">
+          <button class="btn btn-secondary">Details</button>
+        </div>
+      </div>
+
+      <div class="kanban-card">
+        <div class="kanban-card-title">TechVenture Inc</div>
+        <div class="kanban-card-meta">Small business | 45 emp</div>
+        <div class="kanban-card-meta">Entered: 2026-02-07</div>
+        <div class="kanban-card-meta">PSM: Marcus Chen</div>
+        <div class="kanban-card-days normal">6 days in stage</div>
+        <div class="action-buttons">
+          <button class="btn btn-secondary">Details</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="kanban-column">
+      <div class="kanban-column-header">Agreement Signed <span class="kanban-column-count">2</span></div>
+
+      <div class="kanban-card">
+        <div class="kanban-card-title">Lexcorp</div>
+        <div class="kanban-card-meta">Mid-market | 200 emp</div>
+        <div class="kanban-card-meta">Entered: 2026-01-22</div>
+        <div class="kanban-card-meta">PSM: David Rodriguez</div>
+        <div class="kanban-card-days warning">22 days in stage</div>
+        <div class="action-buttons">
+          <button class="btn btn-secondary">Details</button>
+        </div>
+      </div>
+
+      <div class="kanban-card">
+        <div class="kanban-card-title">InnovateLabs</div>
+        <div class="kanban-card-meta">Mid-market | 120 emp</div>
+        <div class="kanban-card-meta">Entered: 2026-01-31</div>
+        <div class="kanban-card-meta">PSM: Jennifer Lee</div>
+        <div class="kanban-card-days normal">13 days in stage</div>
+        <div class="action-buttons">
+          <button class="btn btn-secondary">Details</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="kanban-column">
+      <div class="kanban-column-header">Portal Setup <span class="kanban-column-count">2</span></div>
+
+      <div class="kanban-card">
+        <div class="kanban-card-title">CloudCore Solutions</div>
+        <div class="kanban-card-meta">Enterprise | 350 emp</div>
+        <div class="kanban-card-meta">Entered: 2026-02-03</div>
+        <div class="kanban-card-meta">PSM: Marcus Chen</div>
+        <div class="kanban-card-days normal">10 days in stage</div>
+        <div class="card-progress">2/3 checklist items complete</div>
+        <div class="progress-bar"><div class="progress-fill" style="width: 67%"></div></div>
+        <div class="action-buttons">
+          <button class="btn btn-secondary">Details</button>
+        </div>
+      </div>
+
+      <div class="kanban-card">
+        <div class="kanban-card-title">QuantumNet Corp</div>
+        <div class="kanban-card-meta">Mid-market | 180 emp</div>
+        <div class="kanban-card-meta">Entered: 2026-02-01</div>
+        <div class="kanban-card-meta">PSM: Sarah Martinez</div>
+        <div class="kanban-card-days normal">12 days in stage</div>
+        <div class="card-progress">1/3 checklist items complete</div>
+        <div class="progress-bar"><div class="progress-fill" style="width: 33%"></div></div>
+        <div class="action-buttons">
+          <button class="btn btn-secondary">Details</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="kanban-column">
+      <div class="kanban-column-header">Initial Training <span class="kanban-column-count">3</span></div>
+
+      <div class="kanban-card">
+        <div class="kanban-card-title">GlobalTech Partners</div>
+        <div class="kanban-card-meta">Mid-market | 250 emp</div>
+        <div class="kanban-card-meta">Entered: 2026-01-20</div>
+        <div class="kanban-card-meta">PSM: David Rodriguez</div>
+        <div class="kanban-card-days warning">24 days in stage</div>
+        <div class="card-progress">8/12 attendees complete</div>
+        <div class="progress-bar"><div class="progress-fill" style="width: 67%"></div></div>
+        <div class="action-buttons">
+          <button class="btn btn-secondary">Details</button>
+        </div>
+      </div>
+
+      <div class="kanban-card">
+        <div class="kanban-card-title">DataStream Inc</div>
+        <div class="kanban-card-meta">Enterprise | 600 emp</div>
+        <div class="kanban-card-meta">Entered: 2026-01-26</div>
+        <div class="kanban-card-meta">PSM: Jennifer Lee</div>
+        <div class="kanban-card-days normal">18 days in stage</div>
+        <div class="card-progress">6/8 attendees complete</div>
+        <div class="progress-bar"><div class="progress-fill" style="width: 75%"></div></div>
+        <div class="action-buttons">
+          <button class="btn btn-secondary">Details</button>
+        </div>
+      </div>
+
+      <div class="kanban-card">
+        <div class="kanban-card-title">VelocityNet</div>
+        <div class="kanban-card-meta">Small business | 60 emp</div>
+        <div class="kanban-card-meta">Entered: 2026-02-02</div>
+        <div class="kanban-card-meta">PSM: Marcus Chen</div>
+        <div class="kanban-card-days normal">11 days in stage</div>
+        <div class="card-progress">2/3 attendees complete</div>
+        <div class="progress-bar"><div class="progress-fill" style="width: 67%"></div></div>
+        <div class="action-buttons">
+          <button class="btn btn-secondary">Details</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="kanban-column">
+      <div class="kanban-column-header">First Deal Registered <span class="kanban-column-count">2</span></div>
+
+      <div class="kanban-card">
+        <div class="kanban-card-title">NetMatrix Global</div>
+        <div class="kanban-card-meta">Mid-market | 210 emp</div>
+        <div class="kanban-card-meta">Entered: 2026-02-05</div>
+        <div class="kanban-card-meta">PSM: Sarah Martinez</div>
+        <div class="kanban-card-days normal">8 days in stage</div>
+        <div class="card-progress">Deal: $45K Colocation</div>
+        <div class="action-buttons">
+          <button class="btn btn-secondary">Details</button>
+        </div>
+      </div>
+
+      <div class="kanban-card">
+        <div class="kanban-card-title">FutureTech Solutions</div>
+        <div class="kanban-card-meta">Enterprise | 420 emp</div>
+        <div class="kanban-card-meta">Entered: 2026-01-29</div>
+        <div class="kanban-card-meta">PSM: David Rodriguez</div>
+        <div class="kanban-card-days normal">15 days in stage</div>
+        <div class="card-progress">Deal: $120K Multi-location</div>
+        <div class="action-buttons">
+          <button class="btn btn-secondary">Details</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="kanban-column">
+      <div class="kanban-column-header">Onboarded <span class="kanban-column-count">2</span></div>
+
+      <div class="kanban-card">
+        <div class="kanban-card-title">PrimeConnect</div>
+        <div class="kanban-card-meta">Mid-market | 175 emp</div>
+        <div class="kanban-card-meta">Completed: 2026-01-15</div>
+        <div class="kanban-card-meta">PSM: Marcus Chen</div>
+        <div class="card-progress">Onboarded - Tier: Silver</div>
+        <div class="action-buttons">
+          <button class="btn btn-secondary">Details</button>
+        </div>
+      </div>
+
+      <div class="kanban-card">
+        <div class="kanban-card-title">ProServices Hub</div>
+        <div class="kanban-card-meta">Enterprise | 300 emp</div>
+        <div class="kanban-card-meta">Completed: 2026-01-22</div>
+        <div class="kanban-card-meta">PSM: Jennifer Lee</div>
+        <div class="card-progress">Onboarded - Tier: Gold</div>
+        <div class="action-buttons">
+          <button class="btn btn-secondary">Details</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="expanded-card">
+    <div class="expanded-card-header">📋 Expanded View: CloudCore Solutions - Portal Setup Stage</div>
+    <p style="font-size:13px;color:var(--wf-muted, #6b7f99);margin-bottom:12px">Partner Manager: <strong>Robert Chang</strong> (robert.chang@cloudcore.com) | Account Assigned: 2026-02-03</p>
+
+    <div style="margin-bottom:16px">
+      <h5 style="font-size:12px;font-weight:700;color:var(--wf-text, #3b4f68);margin-bottom:8px">Portal Setup Checklist</h5>
+      <ul class="checklist">
+        <li class="checklist-item">Account created in Partner Portal</li>
+        <li class="checklist-item">Portal credentials sent to Partner Manager</li>
+        <li class="checklist-item pending">Primary Account Contact identified</li>
+      </ul>
+    </div>
+
+    <div style="margin-bottom:16px">
+      <h5 style="font-size:12px;font-weight:700;color:var(--wf-text, #3b4f68);margin-bottom:8px">Required Next Steps</h5>
+      <p style="font-size:13px;color:var(--wf-text, #3b4f68);margin:0">Identify primary account contact who will lead training completion for all 5 team members. Once identified, Training Plan assignment will be triggered automatically.</p>
+    </div>
+
+    <div class="action-buttons">
+      <button class="btn btn-primary">Assign Training Plan</button>
+      <button class="btn btn-secondary">View Portal Credentials</button>
+      <button class="btn btn-secondary">Send Reminder</button>
+    </div>
+  </div>
+
+  <div class="stalled-section">
+    <div class="stalled-title">⚠️ Stalled Onboardings (>14 Days in Stage)</div>
+    <div class="stalled-item">
+      <span><strong>Stark Industries</strong> - Application Review stage (16 days)</span>
+      <button class="btn btn-secondary">Send Reminder</button>
+    </div>
+    <div class="stalled-item">
+      <span><strong>Lexcorp</strong> - Agreement Signed stage (22 days)</span>
+      <button class="btn btn-secondary">Send Reminder</button>
+    </div>
+    <div class="stalled-item">
+      <span><strong>GlobalTech Partners</strong> - Initial Training stage (24 days)</span>
+      <button class="btn btn-secondary">Send Reminder</button>
+    </div>
+  </div>
+
+  <div style="text-align: right; margin-top: 24px;">
+    <button class="btn btn-primary">New Partner Application</button>
+  </div>
+
+</div>
+
+
+    <footer class="wf-footer">
+      &copy; 2026 Equinix · Partner Sales Manager · Internal Use Only
+    </footer>
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Visualizes partner lifecycle stages from initial prospect through onboarded status. PSMs use this Kanban board to monitor onboarding progress, identify stalled applications, and manage stage transitions through required checklist items.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Tracks full partner lifecycle from first contact to active partner with status badges</li>
+<li>Each stage has required checklist items (8-item master checklist)</li>
+<li>Stalled detection: cards turn red border after 14 days in same stage</li>
+<li>Stage advancement (auto or manual) triggers automated stage-based emails and Portal provisioning</li>
+<li>Completed onboarding (all checklist items done) rolls partner into active Account with Bronze tier default</li>
+<li>Partnership types: Reseller, Referral, Technology Partner, Systems Integrator (SI)</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Five Kanban board columns: Prospect, Application Review, Agreement Signed, Portal Setup, Onboarded</li>
+<li>KPI header cards displaying key metrics (Active Prospects, Applications This Month, Stalled Count)</li>
+<li>Partner cards per column showing company name, size, contact person, PSM assigned, partnership type</li>
+<li>Expanded detail card for selected onboarding showing stage-specific checklist and next steps</li>
+<li>Stalled Onboardings alert section highlighting applications > 14 days in current stage</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Drag and drop partner cards between columns to advance stage</li>
+<li>Details button to expand card and view checklist items and required actions</li>
+<li>Send Reminder button on stalled cards to notify partner manager</li>
+<li>Filter controls by Partnership Type and Region</li>
+<li>New Partner Application button to initiate new onboarding</li>
+<li>Bulk Send Reminder action on stalled section</li>
+<li>Assign Training Plan, View Portal Credentials, and Send Reminder buttons in expanded view</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Kanban State Management</strong>
+<ul>
+<li>Reads Partner_Onboarding__c.Stage__c field tracking five stages: Prospect, Application Review, Agreement Signed, Portal Setup, Onboarded</li>
+<li>Updates Stage__c and Stage_Entry_Date__c when partner card is dragged between columns, triggering stage-specific workflows</li>
+</ul></li>
+<li><strong>Stalled Onboarding Detection</strong>
+<ul>
+<li>Calculates stalled status via formula: Stage_Entry_Date__c + 14 days < TODAY() triggers red border styling on partner card</li>
+<li>Alerts aggregates all stalled onboardings and displays "Send Reminder" bulk action to notify PSMs of aged applications</li>
+</ul></li>
+<li><strong>Checklist Validation &amp; Stage Blocking</strong>
+<ul>
+<li>Validation rule prevents stage advancement if required checklist items incomplete (e.g., "NDA must be signed before Application Review")</li>
+<li>Expanded detail card displays 8-item master checklist with checkboxes; stage transition blocked until all prerequisites marked complete</li>
+</ul></li>
+<li><strong>Portal Provisioning &amp; Completion</strong>
+<ul>
+<li>Portal_Setup stage entry triggers automated workflow: creates Partner Portal user account via Salesforce Partner Community API and generates credential email</li>
+<li>Onboarded stage completion converts Partner_Onboarding__c record to Account object with IsPartner__c = true, Partner_Tier__c = 'Bronze', sets Active_Status__c = 'Active'</li>
+</ul></li>
+<li><strong>Auto-Rejection &amp; Email Workflows</strong>
+<ul>
+<li>Scheduled batch job evaluates Prospect stage entries with no activity (Task/Event CreatedDate) for 30 days, auto-marks as Rejected_Status__c = true</li>
+<li>Stage transitions trigger Salesforce Flow to send predefined email templates to Partner_Manager__c contact and internal PSM team via email alert</li>
+</ul></li>
+<li><strong>Duplicate Prevention</strong>
+<ul>
+<li>Before stage advance, system queries Account and Partner_Onboarding__c records matching submitted Account Name; displays warning modal if duplicate found</li>
+</ul></li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Validation &amp; Business Logic</h4>
+<ul>
+<li>"Cannot advance to Agreement without completed due diligence" — validation rule blocks stage change</li>
+<li>"NDA must be signed before application review" — checklist item prerequisite</li>
+<li>"Portal access requires signed agreement" — blocks provisioning step if agreement not signed</li>
+<li>"Auto-reject if no activity for 30 days in Prospect stage" — batch job auto-marks as rejected if ...</li>
+<li>"Duplicate company detected — existing partner/customer record found" — check for Account Name ma...</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+</body>
+</html>

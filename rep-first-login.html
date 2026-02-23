@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Equinix Partner Portal — AE · Equinix PCP Partner Portal</title>
+    <link rel="stylesheet" href="wireframe.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Salesforce Sans", sans-serif;
+            background-color: var(--wf-canvas, #f5f7fb);
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        /* Header & Navigation */
+        header {
+            background-color: var(--wf-ink, #1e2a3a);
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .eq-logo {
+            width: 32px;
+            height: 32px;
+            background-color: var(--wf-accent, #3d6daa);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 14px;
+        }
+
+        .header-title {
+            color: white;
+            font-size: 16px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .bell-icon {
+            width: 24px;
+            height: 24px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: white;
+            font-size: 14px;
+        }
+
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            background-color: var(--wf-ink, #1e2a3a);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        /* Navigation Bar */
+        nav {
+            background-color: white;
+            height: 48px;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            border-bottom: 1px solid var(--wf-surface, #edf1f7);
+        }
+
+        nav a {
+            color: var(--wf-line, #b0bdd0);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: not-allowed;
+            display: inline-block;
+            padding: 4px 0;
+        }
+
+        nav a:hover {
+            color: var(--wf-line, #b0bdd0);
+        }
+
+        /* Main Container */
+        main {
+            max-width: 900px;
+            margin: 32px auto;
+            padding: 0 24px;
+        }
+
+        /* Step Indicator */
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 48px;
+            position: relative;
+        }
+
+        .step-indicator::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background-color: var(--wf-surface, #edf1f7);
+            z-index: 0;
+        }
+
+        .step {
+            flex: 1;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px;
+            font-weight: 600;
+            font-size: 14px;
+            background-color: white;
+            border: 2px solid var(--wf-surface, #edf1f7);
+            color: var(--wf-muted, #6b7f99);
+            position: relative;
+        }
+
+        .step.completed .step-number {
+            background-color: var(--wf-ink, #1e2a3a);
+            border-color: var(--wf-ink, #1e2a3a);
+            color: white;
+        }
+
+        .step.completed .step-number::after {
+            content: '✓';
+            font-size: 16px;
+        }
+
+        .step.completed .step-number {
+            font-size: 0;
+        }
+
+        .step.active .step-number {
+            background-color: var(--wf-accent, #3d6daa);
+            border-color: var(--wf-accent, #3d6daa);
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(0, 112, 210, 0.7);
+            }
+            50% {
+                box-shadow: 0 0 0 8px rgba(0, 112, 210, 0);
+            }
+        }
+
+        .step.pending .step-number {
+            background-color: var(--wf-canvas, #f5f7fb);
+            border-color: var(--wf-surface, #edf1f7);
+            color: var(--wf-line, #b0bdd0);
+        }
+
+        .step-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--wf-muted, #6b7f99);
+        }
+
+        .step.completed .step-label {
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        .step.active .step-label {
+            color: var(--wf-accent, #3d6daa);
+            font-weight: 600;
+        }
+
+        .step.pending .step-label {
+            color: var(--wf-line, #b0bdd0);
+        }
+
+        /* Content Card */
+        .content-card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--wf-surface, #edf1f7);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+            margin-bottom: 4px;
+        }
+
+        .card-subtitle {
+            font-size: 14px;
+            color: var(--wf-muted, #6b7f99);
+        }
+
+        .card-content {
+            padding: 24px;
+        }
+
+        .card.collapsed .card-content {
+            display: none;
+        }
+
+        .step-summary {
+            padding: 16px 24px;
+            background-color: var(--wf-canvas, #f5f7fb);
+            border-radius: 4px;
+            font-size: 13px;
+            color: var(--wf-muted, #6b7f99);
+            margin-bottom: 16px;
+        }
+
+        .step-summary-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .step-summary-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .checkmark {
+            color: var(--wf-ink, #1e2a3a);
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+
+        label {
+            display: block;
+            font-weight: 500;
+            font-size: 13px;
+            color: var(--wf-ink, #1e2a3a);
+            margin-bottom: 6px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--wf-tint, #dce4ef);
+            border-radius: 4px;
+            font-size: 13px;
+            font-family: inherit;
+        }
+
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="tel"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--wf-accent, #3d6daa);
+            box-shadow: 0 0 0 3px rgba(0, 112, 210, 0.1);
+        }
+
+        input[type="text"]:disabled,
+        input[type="email"]:disabled {
+            background-color: var(--wf-canvas, #f5f7fb);
+            color: var(--wf-muted, #6b7f99);
+            cursor: not-allowed;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-row.full {
+            grid-template-columns: 1fr;
+        }
+
+        .checkbox-group {
+            margin-bottom: 20px;
+        }
+
+        .checkbox-group label {
+            margin-bottom: 12px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+
+        .checkbox-item:last-child {
+            margin-bottom: 0;
+        }
+
+        input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+            cursor: pointer;
+            accent-color: var(--wf-accent, #3d6daa);
+        }
+
+        .profile-photo-upload {
+            border: 2px dashed var(--wf-tint, #dce4ef);
+            border-radius: 4px;
+            padding: 32px 24px;
+            text-align: center;
+            background-color: var(--wf-canvas, #f5f7fb);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .profile-photo-upload:hover {
+            border-color: var(--wf-accent, #3d6daa);
+            background-color: var(--wf-canvas, #f5f7fb);
+        }
+
+        .avatar-placeholder {
+            width: 64px;
+            height: 64px;
+            background-color: var(--wf-surface, #edf1f7);
+            border-radius: 50%;
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: var(--wf-muted, #6b7f99);
+        }
+
+        .upload-text {
+            font-size: 13px;
+            color: var(--wf-muted, #6b7f99);
+            margin-bottom: 4px;
+        }
+
+        .upload-hint {
+            font-size: 12px;
+            color: var(--wf-muted, #6b7f99);
+        }
+
+        /* Training Courses */
+        .training-course {
+            padding: 16px;
+            border: 1px solid var(--wf-surface, #edf1f7);
+            border-radius: 4px;
+            margin-bottom: 12px;
+            background-color: var(--wf-canvas, #f5f7fb);
+        }
+
+        .training-course:last-child {
+            margin-bottom: 0;
+        }
+
+        .course-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .course-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        .course-meta {
+            font-size: 12px;
+            color: var(--wf-muted, #6b7f99);
+            margin-top: 4px;
+        }
+
+        .course-status {
+            display: inline-block;
+            padding: 4px 8px;
+            background-color: var(--wf-surface, #edf1f7);
+            color: var(--wf-amber, #8b7745);
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .course-status.not-started {
+            background-color: var(--wf-surface, #edf1f7);
+            color: var(--wf-red, #8b4553);
+        }
+
+        .course-status.required {
+            background-color: var(--wf-canvas, #f5f7fb);
+            color: var(--wf-text, #3b4f68);
+            margin-left: 8px;
+        }
+
+        .red-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background-color: var(--wf-red, #8b4553);
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+
+        .training-summary {
+            background-color: var(--wf-canvas, #f5f7fb);
+            border-left: 4px solid var(--wf-ink, #1e2a3a);
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: var(--wf-ink, #1e2a3a);
+            margin-bottom: 20px;
+        }
+
+        .training-deadline {
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        button, .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background-color: var(--wf-accent, #3d6daa);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--wf-accent, #3d6daa);
+        }
+
+        .btn-primary:active {
+            background-color: var(--wf-ink, #1e2a3a);
+        }
+
+        .btn-secondary {
+            background-color: var(--wf-canvas, #f5f7fb);
+            color: var(--wf-accent, #3d6daa);
+            border: 1px solid var(--wf-tint, #dce4ef);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--wf-canvas, #f5f7fb);
+        }
+
+        .btn-link {
+            background: none;
+            color: var(--wf-accent, #3d6daa);
+            padding: 0;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            font-weight: 500;
+            font-size: 13px;
+        }
+
+        .btn-link:hover {
+            text-decoration: underline;
+        }
+
+        .button-group .btn-link {
+            margin-top: 10px;
+        }
+
+        /* Info Callout */
+        .info-callout {
+            background-color: var(--wf-surface, #edf1f7);
+            border-left: 4px solid var(--wf-accent, #3d6daa);
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            color: var(--wf-ink, #1e2a3a);
+            margin-bottom: 20px;
+        }
+
+        .info-callout strong {
+            color: var(--wf-accent, #3d6daa);
+        }
+
+        /* Key Contacts */
+        .contacts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .contact-item {
+            background-color: var(--wf-canvas, #f5f7fb);
+            padding: 16px;
+            border-radius: 4px;
+            border: 1px solid var(--wf-surface, #edf1f7);
+        }
+
+        .contact-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--wf-muted, #6b7f99);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .contact-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+            margin-bottom: 4px;
+        }
+
+        .contact-email {
+            font-size: 12px;
+            color: var(--wf-accent, #3d6daa);
+            word-break: break-all;
+        }
+
+        .contact-phone {
+            font-size: 12px;
+            color: var(--wf-muted, #6b7f99);
+        }
+
+        /* Figma Spec Block */
+        .figma-spec {
+            background-color: var(--wf-ink, #1e2a3a);
+            border: 2px solid var(--wf-ink, #1e2a3a);
+            border-radius: 8px;
+            padding: 24px;
+            margin-top: 32px;
+            color: var(--wf-tint, #dce4ef);
+        }
+
+        .figma-spec-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--wf-ink, #1e2a3a);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+
+        .figma-spec-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .spec-section:last-child {
+            border-right: none;
+        }
+
+        .spec-label {
+            color: var(--wf-muted, #6b7f99);
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 4px;
+            font-size: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .spec-value {
+            color: var(--wf-tint, #dce4ef);
+            margin-bottom: 12px;
+        }
+
+        .spec-list {
+            margin-top: 12px;
+            padding-left: 20px;
+            list-style-type: disc;
+        }
+
+        .spec-list li {
+            margin-bottom: 6px;
+            color: var(--wf-tint, #dce4ef);
+        }
+
+        /* Accessibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .contacts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .figma-spec-content {
+                grid-template-columns: 1fr;
+            }
+
+            nav {
+                overflow-x: auto;
+            }
+</style>
+</head>
+<body>
+<div class="page-context-bar">
+  <div style="max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <nav class="wf-breadcrumb" aria-label="Breadcrumb" style="margin-bottom:0;">
+      <span class="wf-breadcrumb-current">Welcome to Equinix Partner Portal</span>
+    </nav>
+    <span class="persona-badge persona-badge--ae">AE</span>
+  </div>
+</div>
+    <!-- Header -->
+    <header>
+        <div class="header-left">
+            <div class="eq-logo">EQ</div>
+            <div class="header-title">Equinix Partner Portal</div>
+        </div>
+        <div class="header-right">
+    <a href="rep-notifications.html" class="bell-wrapper" aria-label="Notifications" style="position:relative;color:white;text-decoration:none;">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+      <span style="position:absolute;top:-4px;right:-6px;background:var(--wf-red,#8b4555);color:white;font-size:10px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;">7</span>
+    </a>
+            <div class="user-avatar" title="Steve Rogers">SR</div>
+        </div>
+    </header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+    <!-- Navigation -->
+    <nav>
+      <a href="rep-deals-commission.html">Deals</a>
+      <a href="rep-my-training.html">Training</a>
+      <a href="rep-marketing.html">Marketing</a>
+      <a href="rep-support.html">Support</a>
+      <a href="rep-resources.html">Resources</a>
+    </nav>
+
+    <!-- Main Content -->
+    <main>
+
+        <!-- Wizard exit bar -->
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding:10px 0;">
+          <span style="font-size:13px;color:var(--wf-muted,#6b7f99);font-weight:600;">Getting Started · Step 3 of 5</span>
+          <a href="rep-home.html" style="font-size:12px;color:var(--wf-accent,#3d6daa);text-decoration:none;font-weight:600;display:flex;align-items:center;gap:4px;" aria-label="Exit setup wizard and go to dashboard">
+            Skip setup, go to dashboard
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2 6h8M7 3l3 3-3 3"/></svg>
+          </a>
+        </div>
+
+        <!-- Step Indicator -->
+        <div class="step-indicator" role="progressbar" aria-valuenow="3" aria-valuemin="1" aria-valuemax="5" aria-label="Onboarding Progress">
+            <div class="step completed">
+                <div class="step-number" aria-hidden="true"></div>
+                <div class="step-label">Welcome</div>
+            </div>
+            <div class="step completed">
+                <div class="step-number" aria-hidden="true"></div>
+                <div class="step-label">Security Setup</div>
+            </div>
+            <div class="step active" aria-current="step">
+                <div class="step-number" aria-hidden="true">3</div>
+                <div class="step-label">Your Profile</div>
+            </div>
+            <div class="step pending">
+                <div class="step-number" aria-hidden="true">4</div>
+                <div class="step-label">Training</div>
+            </div>
+            <div class="step pending">
+                <div class="step-number" aria-hidden="true">5</div>
+                <div class="step-label">Ready to Go</div>
+            </div>
+        </div>
+
+        <!-- Step 1: Welcome (Collapsed) -->
+        <div class="content-card collapsed">
+            <div class="card-header">
+                <div class="card-title">Welcome to Equinix Partner Central, Steve!</div>
+                <div class="card-subtitle">Step 1 of 5 — Completed</div>
+            </div>
+            <div class="card-content">
+                <p style="margin-bottom: 16px; color: var(--wf-muted, #6b7f99); font-size: 13px;">
+                    You can now register deals, complete training assignments, and track your commissions in Partner Central. Everything you need to succeed as an Equinix partner is at your fingertips.
+                </p>
+                <div class="step-summary">
+                    <div style="font-weight: 600; margin-bottom: 8px; color: var(--wf-ink, #1e2a3a);">Your Organization</div>
+                    <div style="margin-bottom: 4px;"><strong>Company:</strong> CloudBridge Solutions</div>
+                    <div style="margin-bottom: 4px;"><strong>Tier:</strong> Bronze Tier Partner</div>
+                    <div><strong>Channel Manager:</strong> Marcus Chen</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Security Setup (Collapsed) -->
+        <div class="content-card collapsed">
+            <div class="card-header">
+                <div class="card-title">Security Setup Complete</div>
+                <div class="card-subtitle">Step 2 of 5 — Completed</div>
+            </div>
+            <div class="card-content">
+                <div class="step-summary">
+                    <div class="step-summary-item">
+                        <span class="checkmark">✓</span>
+                        <span>MFA enrollment completed</span>
+                    </div>
+                    <div class="step-summary-item">
+                        <span class="checkmark">✓</span>
+                        <span>Authenticator app configured</span>
+                    </div>
+                    <div class="step-summary-item">
+                        <span class="checkmark">✓</span>
+                        <span>Recovery codes generated and saved</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Your Profile (Expanded - Current Step) -->
+        <div class="content-card">
+            <div class="card-header">
+                <div class="card-title">Complete Your Profile</div>
+                <div class="card-subtitle">Step 3 of 5 — Help us personalize your Partner Central experience</div>
+            </div>
+            <div class="card-content">
+                <form id="profileForm" name="profileForm">
+                    <!-- Basic Information -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="fullName">Full Name</label>
+                            <input type="text" id="fullName" name="fullName" value="Steve Rogers" disabled>
+                            <div style="font-size: 12px; color: var(--wf-muted, #6b7f99); margin-top: 4px;">From your invitation</div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" value="s.rogers@cloudbridge.io" disabled>
+                            <div style="font-size: 12px; color: var(--wf-muted, #6b7f99); margin-top: 4px;">From your invitation</div>
+                        </div>
+                    </div>
+
+                    <!-- Job Details -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="jobTitle">Job Title <span style="color:var(--wf-red,#8b4553);">*</span></label>
+                            <input type="text" id="jobTitle" name="jobTitle" placeholder="e.g., Account Executive">
+                        </div>
+                        <div class="form-group">
+                            <label for="jobFunction">Job Function <span style="color:var(--wf-red,#8b4553);">*</span></label>
+                            <select id="jobFunction" name="jobFunction">
+                                <option value="" disabled selected>Select function...</option>
+                                <option value="sales">Sales / Account Executive</option>
+                                <option value="solutions-engineer">Solutions Engineer / Pre-Sales</option>
+                                <option value="marketing">Marketing</option>
+                                <option value="executive">Executive / Management</option>
+                                <option value="operations">Operations</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="phone">Phone</label>
+                            <input type="tel" id="phone" name="phone" placeholder="e.g., +1 (555) 123-4567">
+                        </div>
+                        <div class="form-group">
+                            <label for="territory">Territory / Region</label>
+                            <select id="territory" name="territory">
+                                <option value="americas" selected>Americas</option>
+                                <option value="emea">EMEA</option>
+                                <option value="apac">APAC</option>
+                                <option value="latam">LATAM</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Company Address -->
+                    <div class="form-group">
+                        <label for="companyAddress">Company Address <span style="color:var(--wf-red,#8b4553);">*</span></label>
+                        <input type="text" id="companyStreet" name="companyStreet" placeholder="Street address" style="margin-bottom:8px;">
+                        <div class="form-row">
+                            <input type="text" id="companyCity" name="companyCity" placeholder="City">
+                            <input type="text" id="companyState" name="companyState" placeholder="State / Province">
+                        </div>
+                        <div class="form-row" style="margin-top:8px;">
+                            <input type="text" id="companyPostal" name="companyPostal" placeholder="Postal code">
+                            <select id="companyCountry" name="companyCountry">
+                                <option value="" disabled selected>Country...</option>
+                                <option value="US">United States</option>
+                                <option value="CA">Canada</option>
+                                <option value="GB">United Kingdom</option>
+                                <option value="DE">Germany</option>
+                                <option value="FR">France</option>
+                                <option value="JP">Japan</option>
+                                <option value="AU">Australia</option>
+                                <option value="SG">Singapore</option>
+                                <option value="BR">Brazil</option>
+                                <option value="other">Other...</option>
+                            </select>
+                        </div>
+                        <div style="font-size:12px;color:var(--wf-muted,#6b7f99);margin-top:4px;">Pre-populated from partner application if available</div>
+                    </div>
+
+                    <!-- Language & Time Zone -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="language">Language Preference <span style="color:var(--wf-red,#8b4553);">*</span></label>
+                            <select id="language" name="language">
+                                <option value="en" selected>English</option>
+                                <option value="es">Español</option>
+                                <option value="pt">Português</option>
+                                <option value="fr">Français</option>
+                                <option value="de">Deutsch</option>
+                                <option value="ja">日本語</option>
+                                <option value="zh">中文</option>
+                                <option value="ko">한국어</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="timezone">Time Zone <span style="color:var(--wf-red,#8b4553);">*</span></label>
+                            <select id="timezone" name="timezone">
+                                <option value="" disabled selected>Select time zone...</option>
+                                <option value="PT">(UTC-8) Pacific Time</option>
+                                <option value="MT">(UTC-7) Mountain Time</option>
+                                <option value="CT">(UTC-6) Central Time</option>
+                                <option value="ET">(UTC-5) Eastern Time</option>
+                                <option value="GMT">(UTC+0) GMT / London</option>
+                                <option value="CET">(UTC+1) Central European</option>
+                                <option value="IST">(UTC+5:30) India</option>
+                                <option value="SGT">(UTC+8) Singapore</option>
+                                <option value="JST">(UTC+9) Japan</option>
+                                <option value="AEST">(UTC+10) Australia Eastern</option>
+                            </select>
+                            <div style="font-size:12px;color:var(--wf-muted,#6b7f99);margin-top:4px;">Used for notification delivery and training deadlines</div>
+                        </div>
+                    </div>
+
+                    <!-- Specializations -->
+                    <div class="form-group">
+                        <label>Specialization</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="colocation" name="specialization" value="colocation">
+                                <label for="colocation" style="margin: 0; font-weight: 400;">Colocation</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="interconnection" name="specialization" value="interconnection">
+                                <label for="interconnection" style="margin: 0; font-weight: 400;">Interconnection</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="baremetal" name="specialization" value="baremetal">
+                                <label for="baremetal" style="margin: 0; font-weight: 400;">Network Edge</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="networkedge" name="specialization" value="networkedge">
+                                <label for="networkedge" style="margin: 0; font-weight: 400;">Network Edge</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="fabric" name="specialization" value="fabric">
+                                <label for="fabric" style="margin: 0; font-weight: 400;">Equinix Fabric</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="network-edge" name="specialization" value="network-edge">
+                                <label for="network-edge" style="margin: 0; font-weight: 400;">Network Edge</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Profile Photo -->
+                    <div class="form-group">
+                        <label>Profile Photo (Optional)</label>
+                        <div class="profile-photo-upload" role="button" tabindex="0" aria-label="Upload profile photo">
+                            <div class="avatar-placeholder">👤</div>
+                            <div class="upload-text">Drag photo here or click to browse</div>
+                            <div class="upload-hint">JPG, PNG, or GIF (max 5 MB)</div>
+                        </div>
+                    </div>
+
+                    <!-- Communication Preferences -->
+                    <div class="form-group">
+                        <label>Communication Preferences</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="pref-deals" name="preferences" value="deal-updates" checked>
+                                <label for="pref-deals" style="margin: 0; font-weight: 400;">Deal status updates (email)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="pref-training" name="preferences" value="training-reminders" checked>
+                                <label for="pref-training" style="margin: 0; font-weight: 400;">Training reminders (email)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="pref-commission" name="preferences" value="commission-notifications">
+                                <label for="pref-commission" style="margin: 0; font-weight: 400;">Commission notifications (email)</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="pref-announcements" name="preferences" value="announcements" checked>
+                                <label for="pref-announcements" style="margin: 0; font-weight: 400;">Partner program announcements</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="pref-marketing" name="preferences" value="marketing-newsletters">
+                                <label for="pref-marketing" style="margin: 0; font-weight: 400;">Marketing newsletters</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="button-group">
+                        <button type="submit" class="btn btn-primary">Continue</button>
+                        <button type="button" class="btn-link" onclick="skipStep()">Skip for Now</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Step 4: Training Assignment (Pending with Preview) -->
+        <div class="content-card">
+            <div class="card-header">
+                <div class="card-title">Your Required Training</div>
+                <div class="card-subtitle">Step 4 of 5 — Your administrator has assigned the following courses to get you started</div>
+            </div>
+            <div class="card-content">
+                <div class="training-summary">
+                    <div class="training-deadline">Deadline: Complete required courses by March 18, 2026 (30 days)</div>
+                </div>
+
+                <!-- REQUIRED LEARNING — prioritized list -->
+                <div style="margin-bottom:24px;">
+                    <div style="font-size:13px;font-weight:600;color:var(--wf-ink);margin-bottom:8px;display:flex;align-items:center;gap:6px;">
+                        <span style="color:var(--wf-red,#8b4553);">●</span> Required Learning
+                        <span style="font-weight:400;color:var(--wf-muted);font-size:12px;margin-left:auto;">3 courses · ~4 hrs</span>
+                    </div>
+                    <div style="font-size:12px;color:var(--wf-muted);margin-bottom:12px;">Complete these before your 30-day deadline to unlock full deal registration access.</div>
+
+                    <div class="training-course" style="border-left:3px solid var(--wf-red,#8b4553);">
+                        <div class="course-header">
+                            <div style="flex:1;">
+                                <div class="course-title">1. Equinix Partner Onboarding Essentials</div>
+                                <div class="course-meta">
+                                    <span style="color:var(--wf-muted);">BUS-100</span>
+                                    <span style="margin-left:12px;">~2 hrs</span>
+                                    <span class="course-status not-started">Not Started</span>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" style="padding:6px 14px;font-size:12px;" onclick="startTraining()">Start</button>
+                        </div>
+                    </div>
+
+                    <div class="training-course" style="border-left:3px solid var(--wf-red,#8b4553);">
+                        <div class="course-header">
+                            <div style="flex:1;">
+                                <div class="course-title">2. Colocation Sales Fundamentals</div>
+                                <div class="course-meta">
+                                    <span style="color:var(--wf-muted);">BUS-201</span>
+                                    <span style="margin-left:12px;">~1.5 hrs</span>
+                                    <span class="course-status not-started">Not Started</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="training-course" style="border-left:3px solid var(--wf-red,#8b4553);">
+                        <div class="course-header">
+                            <div style="flex:1;">
+                                <div class="course-title">3. Deal Registration Best Practices</div>
+                                <div class="course-meta">
+                                    <span style="color:var(--wf-muted);">BUS-110</span>
+                                    <span style="margin-left:12px;">~30 min</span>
+                                    <span class="course-status not-started">Not Started</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RECOMMENDED FOR YOUR ROLE — additional useful content -->
+                <div style="margin-bottom:24px;">
+                    <div style="font-size:13px;font-weight:600;color:var(--wf-ink);margin-bottom:8px;display:flex;align-items:center;gap:6px;">
+                        <span style="color:var(--wf-accent,#3d6daa);">●</span> Recommended for Your Role
+                        <span style="font-weight:400;color:var(--wf-muted);font-size:12px;margin-left:auto;">Based on: Sales Rep + Colocation</span>
+                    </div>
+                    <div style="font-size:12px;color:var(--wf-muted);margin-bottom:12px;">These will help you sell more effectively. Take them at your own pace.</div>
+
+                    <div class="training-course">
+                        <div class="course-header">
+                            <div style="flex:1;">
+                                <div class="course-title">Equinix Fabric Overview</div>
+                                <div class="course-meta">
+                                    <span style="color:var(--wf-muted);">TEC-302</span>
+                                    <span style="margin-left:12px;">~45 min</span>
+                                    <span class="course-status" style="color:var(--wf-accent);">Recommended</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="training-course">
+                        <div class="course-header">
+                            <div style="flex:1;">
+                                <div class="course-title">Competitive Positioning for Colo Sales</div>
+                                <div class="course-meta">
+                                    <span style="color:var(--wf-muted);">BUS-215</span>
+                                    <span style="margin-left:12px;">~1 hr</span>
+                                    <span class="course-status" style="color:var(--wf-accent);">Recommended</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="training-course">
+                        <div class="course-header">
+                            <div style="flex:1;">
+                                <div class="course-title">Hybrid Multicloud Networking Essentials</div>
+                                <div class="course-meta">
+                                    <span style="color:var(--wf-muted);">TEC-301</span>
+                                    <span style="margin-left:12px;">~2 hrs</span>
+                                    <span class="course-status" style="color:var(--wf-accent);">Recommended</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CERTIFICATION PATH -->
+                <div style="margin-bottom:24px;">
+                    <div style="font-size:13px;font-weight:600;color:var(--wf-ink);margin-bottom:8px;display:flex;align-items:center;gap:6px;">
+                        <span style="color:var(--wf-ink);">●</span> Certification Path
+                    </div>
+                    <div style="padding:16px;background:var(--wf-canvas);border:1px solid var(--wf-surface);border-radius:4px;">
+                        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+                            <div style="width:40px;height:40px;border-radius:50%;background:var(--wf-surface);display:flex;align-items:center;justify-content:center;font-size:18px;">🏅</div>
+                            <div>
+                                <div style="font-size:14px;font-weight:600;color:var(--wf-ink);">Equinix Certified Sales Associate</div>
+                                <div style="font-size:12px;color:var(--wf-muted);">Complete all 3 required courses + pass assessment (80% min)</div>
+                            </div>
+                            <div style="margin-left:auto;padding:4px 10px;background:var(--wf-surface);border-radius:3px;font-size:11px;font-weight:600;color:var(--wf-muted);">0 / 3 prerequisites</div>
+                        </div>
+                        <div style="font-size:12px;color:var(--wf-muted);">Certification unlocks: premium battle cards, advanced pricing tools, and priority deal registration review.</div>
+                    </div>
+                </div>
+
+                <div style="padding:12px;background-color:var(--wf-canvas,#f5f7fb);border-radius:4px;font-size:12px;color:var(--wf-muted,#6b7f99);margin-bottom:16px;">
+                    <strong>Total Assigned:</strong> ~4 hrs required · ~3.75 hrs recommended · 1 certification available
+                </div>
+
+                <div class="info-callout">
+                    <strong>Heads up:</strong> Completing all required training unlocks full deal registration access. Until then, you can submit deals for admin review.
+                </div>
+
+                <div class="button-group">
+                    <button type="button" class="btn btn-primary" onclick="startTraining()">Start First Course</button>
+                    <a href="rep-my-training.html" class="btn btn-secondary">View Full Catalog</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 5: Ready to Go -->
+        <div class="content-card">
+            <div class="card-header">
+                <div class="card-title">You're All Set!</div>
+                <div class="card-subtitle">Step 5 of 5 — Setup complete</div>
+            </div>
+            <div class="card-content">
+                <p style="color: var(--wf-muted, #6b7f99); font-size: 13px; margin-bottom: 20px;">
+                    Your account is configured and ready. You can access your personalized dashboard to register deals, track training, and manage your pipeline — or return to any setup step from your profile settings at any time.
+                </p>
+                <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+                  <a href="rep-home.html" class="btn btn-primary" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;">
+                    Go to Dashboard
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg>
+                  </a>
+                  <a href="rep-my-training.html" style="font-size:13px;color:var(--wf-accent,#3d6daa);text-decoration:none;font-weight:500;">Start first training course →</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Contacts Card -->
+        <div class="content-card" style="margin-top: 32px;">
+            <div class="card-header">
+                <div class="card-title">Key Contacts</div>
+            </div>
+            <div class="card-content">
+                <div class="contacts-grid">
+                    <div class="contact-item">
+                        <div class="contact-label">Your Admin</div>
+                        <div class="contact-name">Jordan Reeves</div>
+                        <div class="contact-email">jordan.reeves@cloudbridge.io</div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-label">Channel Manager</div>
+                        <div class="contact-name">Marcus Chen</div>
+                        <div class="contact-email">marcus.chen@equinix.com</div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-label">Partner Support</div>
+                        <div class="contact-name">Equinix Partner Support</div>
+                        <div class="contact-email">partner-support@equinix.com</div>
+                        <div class="contact-phone">1-866-EQX-PRTN</div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-label">Need Help?</div>
+                        <div style="margin-top: 8px;">
+                            <a href="rep-resources.html" style="color: var(--wf-accent, #3d6daa); text-decoration: none; font-size: 13px; font-weight: 500;">
+                                Visit Resources →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // Profile form submission
+        document.getElementById('profileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            console.log('Profile form submitted');
+            // In a real implementation, this would validate and save form data
+            alert('Profile saved! Proceeding to training step...');
+            // Move to next step
+            goToStep(4);
+        });
+
+        // Skip for now functionality
+        function skipStep() {
+            alert('Skipping profile step. You can complete it later from your dashboard.');
+            goToStep(4);
+        }
+
+        // Start training
+        function startTraining() {
+            alert('Starting first course: Equinix Partner Onboarding Essentials');
+            window.location.href = 'rep-my-training.html';
+        }
+
+        // Navigate to specific step
+        function goToStep(stepNumber) {
+            console.log('Navigating to step ' + stepNumber);
+            // In a real implementation, this would handle step navigation and state management
+            // For demo purposes, just log the action
+        }
+
+        // Profile photo upload handling
+        document.querySelector('.profile-photo-upload').addEventListener('click', function() {
+            alert('In a real application, this would open a file picker for profile photo upload.');
+        });
+
+        document.querySelector('.profile-photo-upload').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                this.click();
+            }
+        });
+
+        // Smooth scroll to form section
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-scroll to the current step (Your Profile) when page loads
+            const currentStep = document.querySelector('.step.active');
+            if (currentStep) {
+                currentStep.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    </script>
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>First-login onboarding wizard for new partner reps with multi-step guided tour covering security setup, profile completion, feature overview, and assigned training. Peter Parker (peter.parker@stark.com) welcome onboarding as Junior Sales Rep at Stark Industries (joined Jan 30, 2026). Steps progress through MFA enrollment, profile customization, portal navigation, and initial training assignments (BIZ track, Marcus Chen assigned as PSM).</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Guide new partners through portal features</li>
+<li>Collect initial profile and setup information</li>
+<li>Highlight key functionality for first use</li>
+<li>Set expectations for portal capabilities</li>
+<li>Provide quick access to help and support</li>
+<li>Enable smooth transition to portal home</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Welcome headline with partner rep name and portal introduction</li>
+<li>Step indicator bar (visual progress: 1-4 steps, showing current step)</li>
+<li>Step 1: MFA Setup — Multi-factor authentication enrollment instructions with authenticator app steps</li>
+<li>Step 2: Profile Completion — Form fields for name, email, title, department, phone</li>
+<li>Step 3: Portal Features — Feature overview cards (Training, Deals, Resources, Certifications)</li>
+<li>Step 4: Assigned Training — List of required and recommended courses from Training_Assignment__c</li>
+<li>Next/Previous buttons for step navigation</li>
+<li>Skip This Step and Complete Onboarding action buttons</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Next/Previous buttons for step navigation</li>
+<li>Form input fields for profile data (name, email, title, etc.)</li>
+<li>Checkbox inputs for authenticator app confirmation steps</li>
+<li>Skip This Step link on optional steps</li>
+<li>Complete Onboarding button (final step)</li>
+<li>Feature cards with icons and descriptions</li>
+<li>Training course list with start/view buttons</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>First-Login Detection & Wizard State</strong>
+<ul>
+<li>First-login detection via User.IsFirstLogin__c flag set by provisioning flow on account creation; portal landing page checks this flag and routes to onboarding wizard</li>
+<li>Multi-step wizard progression stored in session state; steps fetched from Onboarding_Step__c and ordered by Step_Order__c</li>
+<li>Current step displayed dynamically; Next/Skip buttons update session and load subsequent step</li>
+</ul></li>
+<li><strong>MFA Setup & Authentication</strong>
+<ul>
+<li>Step 1 (Multi-Factor Auth): Triggers Salesforce Identity MFA enrollment flow via API callout or embedded Salesforce Identity component</li>
+<li>MFA completion status stored in User.MFA_Verified__c; verified users bypass MFA setup on future logins</li>
+<li>QR code and backup codes displayed for authenticator app setup</li>
+</ul></li>
+<li><strong>Profile Completion & Preferences</strong>
+<ul>
+<li>Step 2 (Complete Profile): Form inputs update Contact fields (Title, Phone, Department, Company) and User.Preferred_Name__c via form submit</li>
+<li>Form validation checks required fields (Email from User object, Title from Contact); shows validation errors inline if missing</li>
+<li>Save Profile triggers UPDATE Contact and User records; Next button enabled after successful save</li>
+</ul></li>
+<li><strong>Feature Discovery & Training Assignments</strong>
+<ul>
+<li>Step 3 (Discover Features): Static content with feature cards fetched from Portal_Feature__mdt custom metadata; cards include Feature_Name__c, Description__c, Icon_URL__c, Display_Order__c</li>
+<li>Step 4 (Assigned Training): Queries Training_Assignment__c WHERE Contact__c=[logged-in user] WITH linked Course details; displays Status, Due_Date__c, and Start Course links</li>
+<li>Training cards sorted by Due_Date__c (soonest first); course links navigate to course detail pages</li>
+</ul></li>
+<li><strong>Completion & Routing</strong>
+<ul>
+<li>Skip Step link sets Onboarding_Step__c.Skipped__c=true; Next button marks current step as Completed__c=true and advances to next step</li>
+<li>Complete Onboarding button (final step): updates User.IsFirstLogin__c=false, Onboarding_Checklist__c.Status='Complete', then redirects to home page</li>
+<li>Provisioning flow triggers on completion: sends welcome email, creates initial audit log entry, syncs Contact to external systems</li>
+</ul></li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Salesforce Objects & Flow</h4>
+<ul>
+<li>User object: IsFirstLogin__c (boolean), MFA_Verified__c (checkbox), Preferred_Name__c (text)</li>
+<li>Onboarding_Step__c custom object (junction to User): Step_Order__c, Step_Name__c, Completed__c (checkbox), Skipped__c (checkbox)</li>
+<li>Onboarding_Checklist__c custom object: User__c (lookup), Status__c (In Progress|Complete), Completion_Date__c</li>
+<li>Training_Assignment__c: Contact__c, Course__c (lookup), Status__c, Due_Date__c</li>
+<li>Portal_Feature__mdt: Feature_Name__c, Description__c, Icon_URL__c, Link__c, Display_Order__c</li>
+<li>On complete onboarding: Provisioning flow updates Contact sync, sends welcome email, creates initial audit log entry</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

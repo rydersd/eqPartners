@@ -1,0 +1,1284 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stark Industries — PSM · Equinix PCP</title>
+<link rel="stylesheet" href="wireframe.css">
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  background: var(--wf-canvas, #f5f7fb);
+}
+
+.slds-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.slds-global-header {
+  background: var(--wf-ink, #1e2a3a);
+  color: var(--wf-surface, #edf1f7);
+  padding: 0 16px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.slds-global-header__waffle {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.slds-global-header__waffle svg {
+  width: 20px;
+  height: 20px;
+}
+
+.slds-global-header__app {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.slds-global-header__app-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--wf-accent, #3d6daa);
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.slds-global-nav {
+  display: flex;
+  gap: 0;
+  flex: 1;
+  margin-left: 16px;
+}
+
+.slds-global-nav__item {
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  padding: 16px 16px;
+  font-size: 13px;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.slds-global-nav__item:hover {
+  color: var(--wf-surface, #edf1f7);
+  background: rgba(255,255,255,0.05);
+}
+
+.slds-global-nav__item.active {
+  color: var(--wf-surface, #edf1f7);
+  border-bottom-color: var(--wf-accent, #3d6daa);
+}
+
+.slds-global-header__search {
+  flex: 1;
+  max-width: 300px;
+}
+
+.slds-global-header__search input {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 2px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.1);
+  color: var(--wf-surface, #edf1f7);
+  font-size: 13px;
+}
+
+.slds-global-header__search input::placeholder {
+  color: rgba(255,255,255,0.5);
+}
+
+.slds-global-header__actions {
+  display: flex;
+  gap: 16px;
+  margin-left: auto;
+}
+
+.slds-global-header__action {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 2px;
+  font-size: 16px;
+}
+
+.slds-global-header__action:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.slds-main {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+.slds-design-notes__title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--wf-red, #8b4553);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.slds-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.slds-badge--brand {
+  background: var(--wf-accent, #3d6daa);
+  color: var(--wf-surface, #edf1f7);
+}
+
+.slds-badge--neutral {
+  background: var(--wf-tint, #dce4ef);
+  color: var(--wf-text, #3b4f68);
+}
+
+/* Page-specific styles */
+.record-header {
+  background: var(--wf-surface, #edf1f7);
+  border: 1px solid var(--wf-tint, #dce4ef);
+  border-radius: 4px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.record-header__info h1 {
+  margin: 0;
+  font-size: 20px;
+  color: var(--wf-ink, #1e2a3a);
+}
+
+.record-header__meta {
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--wf-muted, #6b7f99);
+}
+
+.record-header__meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.record-header__meta-label {
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+}
+
+.record-header__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.button {
+  padding: 8px 14px;
+  border: 1px solid var(--wf-line, #b0bdd0);
+  background: var(--wf-surface, #edf1f7);
+  border-radius: 2px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.button:hover {
+  background: var(--wf-canvas, #f5f7fb);
+  border-color: var(--wf-muted, #6b7f99);
+}
+
+.button--primary {
+  background: var(--wf-accent, #3d6daa);
+  color: var(--wf-surface, #edf1f7);
+  border-color: var(--wf-accent, #3d6daa);
+}
+
+.button--primary:hover {
+  background: var(--wf-accent, #3d6daa);
+  border-color: var(--wf-accent, #3d6daa);
+}
+
+.button--success {
+  background: var(--wf-ink, #1e2a3a);
+  color: var(--wf-surface, #edf1f7);
+  border-color: var(--wf-ink, #1e2a3a);
+}
+
+.button--success:hover {
+  background: var(--wf-ink, #1e2a3a);
+  border-color: var(--wf-ink, #1e2a3a);
+}
+
+.alert-banner {
+  border-radius: 4px;
+  padding: 12px 16px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 12px;
+}
+
+.alert-banner--success {
+  background: var(--wf-canvas, #f5f7fb);
+  border-left: 4px solid var(--wf-ink, #1e2a3a);
+  color: var(--wf-ink, #1e2a3a);
+}
+
+.alert-banner--warning {
+  background: var(--wf-canvas, #f5f7fb);
+  border-left: 4px solid var(--wf-amber, #8b7745);
+  color: var(--wf-amber, #8b7745);
+}
+
+.alert-banner__icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.three-column-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr 300px;
+  gap: 16px;
+}
+
+.sidebar-card {
+  background: var(--wf-surface, #edf1f7);
+  border: 1px solid var(--wf-tint, #dce4ef);
+  border-radius: 4px;
+  padding: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  font-size: 12px;
+}
+
+.sidebar-card__title {
+  font-weight: 700;
+  color: var(--wf-ink, #1e2a3a);
+  margin-bottom: 12px;
+  font-size: 13px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--wf-tint, #dce4ef);
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--wf-canvas, #f5f7fb);
+}
+
+.stat-row:last-child {
+  border-bottom: none;
+}
+
+.stat-label {
+  color: var(--wf-muted, #6b7f99);
+}
+
+.stat-value {
+  font-weight: 700;
+  color: var(--wf-ink, #1e2a3a);
+}
+
+.center-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tier-progress-card {
+  background: var(--wf-surface, #edf1f7);
+  border: 1px solid var(--wf-tint, #dce4ef);
+  border-radius: 4px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.tier-progress-card__title {
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 12px;
+  color: var(--wf-ink, #1e2a3a);
+}
+
+.tier-indicator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.tier-badge {
+  background: var(--wf-surface, #edf1f7);
+  color: var(--wf-amber, #8b7745);
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.tier-badge--bronze {
+  background: var(--wf-canvas, #f5f7fb);
+  color: var(--wf-amber, #8b7745);
+}
+
+.tier-badge--silver {
+  background: var(--wf-tint, #dce4ef);
+  color: var(--wf-text, #3b4f68);
+}
+
+.tier-badge--gold {
+  background: var(--wf-surface, #edf1f7);
+  color: var(--wf-amber, #8b7745);
+}
+
+.arrow {
+  font-size: 16px;
+  color: var(--wf-muted, #6b7f99);
+}
+
+.progress-section {
+  margin-bottom: 12px;
+}
+
+.progress-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--wf-muted, #6b7f99);
+  margin-bottom: 6px;
+  letter-spacing: 0.5px;
+}
+
+.progress-bar-container {
+  background: var(--wf-canvas, #f5f7fb);
+  border-radius: 2px;
+  height: 8px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: var(--wf-ink, #1e2a3a);
+  border-radius: 2px;
+}
+
+.requirements-checklist {
+  margin-top: 12px;
+}
+
+.requirement {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  font-size: 11px;
+}
+
+.requirement--met {
+  color: var(--wf-ink, #1e2a3a);
+}
+
+.requirement--pending {
+  color: var(--wf-amber, #8b7745);
+}
+
+.requirement--gap {
+  color: var(--wf-red, #8b4553);
+}
+
+.requirement-icon {
+  font-weight: 700;
+}
+
+.tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--wf-tint, #dce4ef);
+  background: var(--wf-surface, #edf1f7);
+  border-radius: 4px 4px 0 0;
+  padding: 0 16px;
+}
+
+.tab {
+  padding: 12px 16px;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--wf-muted, #6b7f99);
+  transition: all 0.2s;
+}
+
+.tab:hover {
+  color: var(--wf-ink, #1e2a3a);
+  background: var(--wf-canvas, #f5f7fb);
+}
+
+.tab.active {
+  color: var(--wf-accent, #3d6daa);
+  border-bottom-color: var(--wf-accent, #3d6daa);
+  background: transparent;
+}
+
+.tree-grid-container {
+  background: var(--wf-surface, #edf1f7);
+  border: 1px solid var(--wf-tint, #dce4ef);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+thead {
+  background: var(--wf-canvas, #f5f7fb);
+  border-bottom: 1px solid var(--wf-tint, #dce4ef);
+}
+
+th {
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 700;
+  color: var(--wf-text, #3b4f68);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--wf-canvas, #f5f7fb);
+  color: var(--wf-text, #3b4f68);
+}
+
+tbody tr:hover {
+  background: var(--wf-canvas, #f5f7fb);
+}
+
+.tree-indent {
+  display: inline-block;
+  width: 16px;
+}
+
+.tree-expand {
+  cursor: pointer;
+  font-weight: 700;
+  color: var(--wf-muted, #6b7f99);
+  margin-right: 4px;
+  user-select: none;
+}
+
+.row-parent {
+  font-weight: 600;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.status-badge--complete {
+  background: var(--wf-canvas, #f5f7fb);
+  color: var(--wf-ink, #1e2a3a);
+}
+
+.status-badge--in-progress {
+  background: var(--wf-canvas, #f5f7fb);
+  color: var(--wf-accent, #3d6daa);
+}
+
+.status-badge--overdue {
+  background: var(--wf-canvas, #f5f7fb);
+  color: var(--wf-red, #8b4553);
+}
+
+.contact-name {
+  color: var(--wf-accent, #3d6daa);
+  text-decoration: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.contact-name:hover {
+  text-decoration: underline;
+}
+
+.activity-timeline {
+  background: var(--wf-surface, #edf1f7);
+  border: 1px solid var(--wf-tint, #dce4ef);
+  border-radius: 4px;
+  padding: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.activity-timeline__title {
+  font-weight: 700;
+  font-size: 13px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--wf-tint, #dce4ef);
+}
+
+.activity-item {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--wf-canvas, #f5f7fb);
+  font-size: 11px;
+}
+
+.activity-item:last-child {
+  border-bottom: none;
+}
+
+.activity-time {
+  color: var(--wf-muted, #6b7f99);
+  font-size: 10px;
+}
+
+.activity-text {
+  color: var(--wf-text, #3b4f68);
+  margin-top: 2px;
+}
+
+/* Training badge styles */
+.training-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.training-badge--ontrack {
+  background: var(--wf-canvas, #f5f7fb);
+  color: var(--wf-ink, #1e2a3a);
+}
+
+.training-badge--attention {
+  background: var(--wf-canvas, #f5f7fb);
+  color: var(--wf-amber, #8b7745);
+}
+
+.training-badge--overdue {
+  background: var(--wf-canvas, #f5f7fb);
+  color: var(--wf-red, #8b4553);
+}
+
+/* Deal pipeline table styles */
+.deal-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  margin-bottom: 16px;
+}
+
+.deal-table thead {
+  background: var(--wf-canvas, #f5f7fb);
+  border-bottom: 1px solid var(--wf-tint, #dce4ef);
+}
+
+.deal-table th {
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 700;
+  color: var(--wf-text, #3b4f68);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.deal-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--wf-canvas, #f5f7fb);
+  color: var(--wf-text, #3b4f68);
+}
+
+.deal-table tbody tr:hover {
+  background: var(--wf-canvas, #f5f7fb);
+}
+
+/* Rep performance grid */
+.rep-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.rep-card {
+  background: var(--wf-surface, #edf1f7);
+  border: 1px solid var(--wf-tint, #dce4ef);
+  border-radius: 4px;
+  padding: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  font-size: 12px;
+}
+
+.rep-card__name {
+  font-weight: 700;
+  color: var(--wf-ink, #1e2a3a);
+  margin-bottom: 8px;
+}
+
+.rep-card__role {
+  font-size: 11px;
+  color: var(--wf-muted, #6b7f99);
+  margin-bottom: 8px;
+}
+
+.rep-card__stat {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  font-size: 11px;
+}
+
+.rep-card__stat-label {
+  color: var(--wf-muted, #6b7f99);
+}
+
+.rep-card__stat-value {
+  font-weight: 600;
+  color: var(--wf-ink, #1e2a3a);
+}
+
+/* Financial summary card */
+.financial-summary-card {
+  background: var(--wf-surface, #edf1f7);
+  border: 1px solid var(--wf-tint, #dce4ef);
+  border-radius: 4px;
+  padding: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  margin-bottom: 16px;
+}
+
+.financial-summary-card__title {
+  font-weight: 700;
+  font-size: 13px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--wf-tint, #dce4ef);
+  color: var(--wf-ink, #1e2a3a);
+}
+
+.financial-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--wf-canvas, #f5f7fb);
+  font-size: 12px;
+}
+
+.financial-row:last-child {
+  border-bottom: none;
+}
+
+.financial-label {
+  color: var(--wf-muted, #6b7f99);
+}
+
+.financial-value {
+  font-weight: 700;
+  color: var(--wf-ink, #1e2a3a);
+}
+
+.action-link {
+  color: var(--wf-accent, #3d6daa);
+  text-decoration: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.action-link:hover {
+  text-decoration: underline;
+}
+</style>
+</head>
+<body>
+<div class="slds-page">
+<header class="wf-header">
+  <div class="wf-header-logo"><svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix"><path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/></svg></div>
+  <div class="wf-header-title">SFDC</div>
+  <nav class="wf-header-nav">
+    <a href="#">Dashboard</a>
+    <a href="#" class="active">PSM Portal</a>
+    <a href="#">Partners</a>
+    <a href="#">Deals</a>
+    <a href="#">Programs</a>
+    <a href="#">Reports</a>
+  </nav>
+  <div class="wf-header-util">
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+  </div>
+</header>
+<div class="page-context-bar">
+  <div style="max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <span style="font-size:12px;color:var(--wf-muted);display:flex;align-items:center;gap:6px;">
+      <svg viewBox="0 0 20 13" style="width:18px;height:11px;fill:var(--wf-muted);" aria-hidden="true"><path d="M8.3 1.7A3.8 3.8 0 0 1 12 0a3.8 3.8 0 0 1 3.5 2.3A2.8 2.8 0 0 1 20 5a2.8 2.8 0 0 1-2.8 2.8H3.2A3.2 3.2 0 0 1 0 4.6 3.2 3.2 0 0 1 3.2 1.4c.18 0 .35.01.52.04A3.8 3.8 0 0 1 8.3 1.7z"/></svg>
+      <strong style="color:var(--wf-text);font-weight:600;">Salesforce Lightning</strong>&ensp;&middot;&ensp;PCP App
+    </span>
+    <span class="persona-badge persona-badge--psm">PSM</span>
+  </div>
+</div>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+<div class="slds-main">
+
+
+<!-- Record Header -->
+<div class="record-header">
+  <div class="record-header__info">
+    <h1>Stark Industries</h1>
+    <div class="record-header__meta">
+      <div class="record-header__meta-item">
+        <span class="record-header__meta-label">Tier</span>
+        <span class="tier-badge tier-badge--gold">Gold</span>
+      </div>
+      <div class="record-header__meta-item">
+        <span class="record-header__meta-label">Region</span>
+        <span>US West</span>
+      </div>
+      <div class="record-header__meta-item">
+        <span class="record-header__meta-label">Partner Since</span>
+        <span>Jan 15, 2023</span>
+      </div>
+      <div class="record-header__meta-item">
+        <span class="record-header__meta-label">PSM Assigned</span>
+        <span>Marcus Chen</span>
+      </div>
+      <div class="record-header__meta-item">
+        <span class="record-header__meta-label">Current MRR</span>
+        <span style="font-weight: 700; color: var(--wf-ink, #1e2a3a);">$180K</span>
+      </div>
+      <div class="record-header__meta-item">
+        <span class="record-header__meta-label">Pipeline MRR</span>
+        <span style="font-weight: 700; color: var(--wf-ink, #1e2a3a);">+$97K</span>
+      </div>
+      <div class="record-header__meta-item">
+        <span class="record-header__meta-label">Near Tier</span>
+        <span style="font-weight: 700; color: var(--wf-amber, #8b7745);">Platinum (5%)</span>
+      </div>
+    </div>
+  </div>
+  <div class="record-header__actions">
+    <button class="button button--primary">Encourage Partner Manager</button>
+    <button class="button">Share Tier Summary</button>
+    <button class="button">Contact Manager</button>
+    <button class="button">View Report</button>
+  </div>
+</div>
+
+<!-- Alert Banner -->
+<div class="alert-banner alert-banner--success">
+  <div class="alert-banner__icon">✓</div>
+  <div>
+    <strong>Near-Win!</strong> S.H.I.E.L.D. Secure Connect ($45K MRR, 85% prob) closes the $10K gap to Platinum. Pepper Potts' Advanced Security cert is the final training blocker.
+  </div>
+</div>
+
+<!-- Three Column Layout -->
+<div class="three-column-layout">
+
+<!-- LEFT COLUMN: Activity Timeline -->
+<div>
+  <div class="activity-timeline">
+    <div class="activity-timeline__title">📋 Activity Timeline</div>
+    <div class="activity-item">
+      <div class="activity-time">Feb 12, 2026</div>
+      <div class="activity-text">Hammer Industries deal flagged as stalled (40% prob)</div>
+    </div>
+    <div class="activity-item">
+      <div class="activity-time">Feb 10, 2026</div>
+      <div class="activity-text">Sarah Connor registered Global Finance Corp deal (DR-2026-4422)</div>
+    </div>
+    <div class="activity-item">
+      <div class="activity-time">Feb 5, 2026</div>
+      <div class="activity-text">S.H.I.E.L.D. Secure Connect moved to Negotiation (85% prob)</div>
+    </div>
+    <div class="activity-item">
+      <div class="activity-time">Jan 30, 2026</div>
+      <div class="activity-text">Peter Parker joined as Junior Sales Rep</div>
+    </div>
+    <div class="activity-item">
+      <div class="activity-time">Jan 22, 2026</div>
+      <div class="activity-text">Tony Stark registered S.H.I.E.L.D. Secure Connect (DR-2026-4401)</div>
+    </div>
+    <div class="activity-item">
+      <div class="activity-time">Jan 15, 2026</div>
+      <div class="activity-text">Sarah Connor's Security Fundamentals cert expired</div>
+    </div>
+  </div>
+</div>
+
+<!-- CENTER COLUMN: Main Content -->
+<div class="center-panel">
+
+  <!-- Tier Progress Card -->
+  <div class="tier-progress-card">
+    <div class="tier-progress-card__title">⭐ Gold → Platinum Advancement</div>
+
+    <div class="tier-indicator">
+      <span class="tier-badge tier-badge--gold">Gold ($180K)</span>
+      <span class="arrow">→</span>
+      <span class="tier-badge" style="background: var(--wf-surface, #edf1f7); color: var(--wf-accent, #3d6daa);">Platinum</span>
+    </div>
+
+    <div class="requirements-checklist">
+      <div class="requirement requirement--gap">
+        <span class="requirement-icon">⬤</span>
+        <span><strong>MRR Threshold:</strong> $190K required (need +$10K) — <a class="action-link" href="#">S.H.I.E.L.D. Secure Connect will close gap</a></span>
+      </div>
+      <div class="requirement requirement--pending">
+        <span class="requirement-icon">⏳</span>
+        <span><strong>Pepper Potts cert pending:</strong> Advanced Security (required for Platinum team credential)</span>
+      </div>
+      <div class="requirement requirement--met">
+        <span class="requirement-icon">✓</span>
+        <span>Tony Stark (Sales Director) — 100% certified (8/8)</span>
+      </div>
+      <div class="requirement requirement--met">
+        <span class="requirement-icon">✓</span>
+        <span>James Rhodes (Sr. Partner Manager) — 88% certified (6/8)</span>
+      </div>
+      <div class="requirement requirement--met">
+        <span class="requirement-icon">✓</span>
+        <span>Bruce Banner (Solutions Engineer) — 83% certified (7/8)</span>
+      </div>
+    </div>
+
+    <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--wf-tint, #dce4ef); font-size: 11px; color: var(--wf-muted, #6b7f99);">
+      <strong style="color: var(--wf-ink, #1e2a3a);">Platinum Tier Benefits (20% commission):</strong> Dedicated strategic account review, co-executive engagement, MDF boost to $100K/yr, joint GTM planning.
+    </div>
+  </div>
+
+  <!-- Deal Pipeline Section -->
+  <div style="background: var(--wf-surface, #edf1f7); border: 1px solid var(--wf-tint, #dce4ef); border-radius: 4px; overflow: hidden; margin-bottom: 16px;">
+    <div class="tabs">
+      <div class="tab active">Active Deals</div>
+    </div>
+    <div style="padding: 16px;">
+      <table class="deal-table">
+        <thead>
+          <tr>
+            <th>Deal Name</th>
+            <th>Rep</th>
+            <th>Stage</th>
+            <th>Value</th>
+            <th>Probability</th>
+            <th>Protection Expires</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a class="action-link" href="#">S.H.I.E.L.D. Secure Connect</a></td>
+            <td>Tony Stark</td>
+            <td>Negotiation</td>
+            <td>$45K MRR</td>
+            <td>85%</td>
+            <td>Mar 15, 2026</td>
+            <td><span class="status-badge" style="background: var(--wf-canvas, #f5f7fb); color: var(--wf-accent, #3d6daa);">Near Win</span></td>
+          </tr>
+          <tr>
+            <td><a class="action-link" href="#">Hammer Industries Data Hub</a></td>
+            <td>James Rhodes</td>
+            <td>Qualification</td>
+            <td>$22K MRR</td>
+            <td>40%</td>
+            <td>Feb 28, 2026</td>
+            <td><span class="status-badge" style="background: var(--wf-canvas, #f5f7fb); color: var(--wf-red, #8b4553);">At Risk</span></td>
+          </tr>
+          <tr>
+            <td><a class="action-link" href="#">Roxxon Energy Colocation</a></td>
+            <td>Happy Hogan</td>
+            <td>Proposal</td>
+            <td>$18K MRR</td>
+            <td>60%</td>
+            <td>Apr 30, 2026</td>
+            <td><span class="status-badge status-badge--in-progress">On Track</span></td>
+          </tr>
+          <tr>
+            <td><a class="action-link" href="#">Global Finance Corp DR</a></td>
+            <td>Sarah Connor</td>
+            <td>Proposal</td>
+            <td>$95K TCV</td>
+            <td>55%</td>
+            <td>May 15, 2026</td>
+            <td><span class="status-badge status-badge--in-progress">On Track</span></td>
+          </tr>
+          <tr>
+            <td><a class="action-link" href="#">AIM Technologies Edge</a></td>
+            <td>Clint Barton</td>
+            <td>Submitted</td>
+            <td>$12K MRR</td>
+            <td>30%</td>
+            <td>Jun 30, 2026</td>
+            <td><span class="status-badge status-badge--in-progress">Early Stage</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Rep Performance Section -->
+  <div style="margin-bottom: 16px;">
+    <h3 style="font-size: 13px; font-weight: 700; margin-bottom: 12px; color: var(--wf-ink, #1e2a3a);">👥 Rep Performance Overview</h3>
+    <div class="rep-grid">
+      <div class="rep-card">
+        <div class="rep-card__name">Tony Stark</div>
+        <div class="rep-card__role">Sales Director</div>
+        <div class="rep-card__stat">
+          <span class="rep-card__stat-label">Certs:</span>
+          <span class="rep-card__stat-value">8/8 (100%) <span class="training-badge training-badge--ontrack">On Track</span></span>
+        </div>
+        <div class="rep-card__stat">
+          <span class="rep-card__stat-label">Active Deals:</span>
+          <span class="rep-card__stat-value">1</span>
+        </div>
+        <div class="rep-card__stat">
+          <span class="rep-card__stat-label">Deal Value:</span>
+          <span class="rep-card__stat-value">$45K MRR</span>
+        </div>
+      </div>
+
+      <div class="rep-card">
+        <div class="rep-card__name">Pepper Potts</div>
+        <div class="rep-card__role">Partner Manager (COO)</div>
+        <div class="rep-card__stat">
+          <span class="rep-card__stat-label">Certs:</span>
+          <span class="rep-card__stat-value">7/8 (93%) <span class="training-badge training-badge--attention">Attention</span></span>
+        </div>
+        <div class="rep-card__stat">
+          <span class="rep-card__stat-label">Pending:</span>
+          <span class="rep-card__stat-value">Advanced Security</span>
+        </div>
+        <div class="rep-card__stat">
+          <span class="rep-card__stat-label">Role:</span>
+          <span class="rep-card__stat-value">Key to Platinum</span>
+        </div>
+      </div>
+
+      <div class="rep-card">
+        <div class="rep-card__name">James Rhodes</div>
+        <div class="rep-card__role">Sr. Partner Manager</div>
+        <div class="rep-card__stat">
+          <span class="rep-card__stat-label">Certs:</span>
+          <span class="rep-card__stat-value">6/8 (88%) <span class="training-badge training-badge--ontrack">On Track</span></span>
+        </div>
+        <div class="rep-card__stat">
+          <span class="rep-card__stat-label">Active Deals:</span>
+          <span class="rep-card__stat-value">1 (Stalled)</span>
+        </div>
+        <div class="rep-card__stat">
+          <span class="rep-card__stat-label">Deal Value:</span>
+          <span class="rep-card__stat-value">$22K MRR</span>
+        </div>
+      </div>
+
+      <div class="rep-card">
+        <div class="rep-card__name">Sarah Connor</div>
+        <div class="rep-card__role">Account Executive</div>
+        <div class="rep-card__stat">
+          <span class="rep-card__stat-label">Certs:</span>
+          <span class="rep-card__stat-value">4/8 (50%) <span class="training-badge training-badge--overdue">Overdue</span></span>
+        </div>
+        <div class="rep-card__stat">
+          <span class="rep-card__stat-label">Expired:</span>
+          <span class="rep-card__stat-value">Security Fund. (Jan 15)</span>
+        </div>
+        <div class="rep-card__stat">
+          <span class="rep-card__stat-label">Deal Value:</span>
+          <span class="rep-card__stat-value">$95K TCV</span>
+        </div>
+      </div>
+
+      <div class="rep-card">
+        <div class="rep-card__name">Clint Barton</div>
+        <div class="rep-card__role">Account Executive</div>
+        <div class="rep-card__stat">
+          <span class="rep-card__stat-label">Certs:</span>
+          <span class="rep-card__stat-value">6/8 (75%) <span class="training-badge training-badge--ontrack">On Track</span></span>
+        </div>
+        <div class="rep-card__stat">
+          <span class="rep-card__stat-label">Active Deals:</span>
+          <span class="rep-card__stat-value">1</span>
+        </div>
+        <div class="rep-card__stat">
+          <span class="rep-card__stat-label">Deal Value:</span>
+          <span class="rep-card__stat-value">$12K MRR</span>
+        </div>
+      </div>
+
+      <div class="rep-card">
+        <div class="rep-card__name">Happy Hogan</div>
+        <div class="rep-card__role">Account Executive</div>
+        <div class="rep-card__stat">
+          <span class="rep-card__stat-label">Certs:</span>
+          <span class="rep-card__stat-value">6/8 (75%) <span class="training-badge training-badge--ontrack">On Track</span></span>
+        </div>
+        <div class="rep-card__stat">
+          <span class="rep-card__stat-label">Active Deals:</span>
+          <span class="rep-card__stat-value">1</span>
+        </div>
+        <div class="rep-card__stat">
+          <span class="rep-card__stat-label">Deal Value:</span>
+          <span class="rep-card__stat-value">$18K MRR</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RIGHT COLUMN: Sidebar Cards -->
+<div>
+  <!-- Financial Summary Card -->
+  <div class="financial-summary-card">
+    <div class="financial-summary-card__title">💰 Financial Summary</div>
+    <div class="financial-row">
+      <span class="financial-label">Current MRR</span>
+      <span class="financial-value">$180K</span>
+    </div>
+    <div class="financial-row">
+      <span class="financial-label">Pipeline MRR</span>
+      <span class="financial-value">+$97K</span>
+    </div>
+    <div class="financial-row">
+      <span class="financial-label">Potential at Platinum</span>
+      <span class="financial-value">$277K</span>
+    </div>
+    <div class="financial-row">
+      <span class="financial-label">QoQ MRR Growth</span>
+      <span class="financial-value" style="color: var(--wf-ink, #1e2a3a);">+18%</span>
+    </div>
+    <div class="financial-row">
+      <span class="financial-label">Commission Pending</span>
+      <span class="financial-value">$27K (15%)</span>
+    </div>
+    <div class="financial-row">
+      <span class="financial-label">JBP FY2026 Attainment</span>
+      <span class="financial-value">62% ($1.55M/$2.5M)</span>
+    </div>
+    <div class="financial-row">
+      <span class="financial-label">MDF Remaining</span>
+      <span class="financial-value">$28K / $75K</span>
+    </div>
+  </div>
+
+  <!-- Einstein NBA Card -->
+  <div class="sidebar-card" style="margin-top: 16px; background: var(--wf-canvas, #f5f7fb);">
+    <div class="sidebar-card__title">💡 Einstein Recommendation</div>
+    <div style="font-size: 11px; color: var(--wf-text, #3b4f68); line-height: 1.5;">
+      <strong>Status: Excellent</strong><br><br>
+      Stark Industries is Gold tier with 95% completion. No near-term tier challenges. Consider opportunities for co-marketing engagement or advanced solution design workshops.
+    </div>
+  </div>
+
+  <!-- Partner Details Card -->
+  <div class="sidebar-card" style="margin-top: 16px;">
+    <div class="sidebar-card__title">🏢 Partner Details</div>
+    <div class="stat-row">
+      <span class="stat-label">PSM (Equinix)</span>
+      <span class="stat-value" style="font-size: 11px;">Marcus Chen</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-label">Partner Manager</span>
+      <span class="stat-value" style="font-size: 11px;">Pepper Potts (COO)</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-label">Primary Contact</span>
+      <span class="stat-value" style="font-size: 11px;">Tony Stark</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-label">Phone</span>
+      <span class="stat-value" style="font-size: 11px;">(555) 123-4567</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-label">Industry</span>
+      <span class="stat-value" style="font-size: 11px;">Technology</span>
+    </div>
+    <div class="stat-row">
+      <span class="stat-label">Employees</span>
+      <span class="stat-value" style="font-size: 11px;">250+</span>
+    </div>
+  </div>
+</div>
+
+</div><!-- end three-column-layout -->
+
+</div>
+</div>
+
+
+    <footer class="wf-footer">
+      &copy; 2026 Equinix · Partner Sales Manager · Internal Use Only
+    </footer>
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Provides PSM a complete financial and relationship view of partner account: MRR growth trajectory, active deal pipeline by rep, training health as signal for deal readiness, and tier advancement framed around revenue + certification requirements (not just training metrics).</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>PSM inspects individual partner account to understand financial health and next actions</li>
+<li>Tier Advancement card shows: "Gold $180K → Platinum requires $190K MRR + Pepper Potts' Advanced Security cert. S.H.I.E.L.D. deal will close the gap."</li>
+<li>Deal Pipeline table shows 5 active deals, staged by probability, highlighting which deals are "Near Win" and which are "At Risk"</li>
+<li>Rep Performance grid shows each rep's training + deal activity, flagging training gaps (Sarah Connor overdue cert despite owning $95K TCV deal)</li>
+<li>Activity Timeline focuses on deal milestones, cert expirations, and stalled deals — not just enrollment events</li>
+<li>Financial Summary sidebar shows MRR, pipeline value, commission pending, JBP attainment, and MDF burn</li>
+<li>Near-Win alert directly links to S.H.I.E.L.D. Secure Connect deal with close date and revenue impact</li>
+<li>Drives PSM action: "Get Pepper Potts' Advanced Security cert done so S.H.I.E.L.D. closes and we hit Platinum"</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Record header with Account name, Tier badge, Region, Partner Since date, PSM Assigned, Current MRR, Pipeline MRR, Near Tier indicator</li>
+<li>Contextual alert banner showing primary blocker: "S.H.I.E.L.D. deal closes $10K gap to Platinum; Pepper Potts cert is final training blocker"</li>
+<li>Tier Advancement Progress card showing Gold → Platinum with MRR threshold as primary blocker, cert pending status, and team certs summary</li>
+<li>Deal Pipeline table showing 5 active deals with stage, value, probability, protection expiry, and near-win/at-risk status badges</li>
+<li>Rep Performance grid showing each rep's role, cert count, active deals, deal value, and training status badge (On Track/Attention/Overdue)</li>
+<li>Left sidebar Activity Timeline focused on deal registration, deal stage changes, and cert expirations</li>
+<li>Right sidebar Financial Summary card with MRR, pipeline, QoQ growth, commission pending, JBP attainment, MDF remaining</li>
+<li>Partner Details card with PSM, Partner Manager, primary contact, phone, industry, employee count</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Encourage Partner Manager primary action button with modal workflow (links to S.H.I.E.L.D. deal and Pepper cert gap)</li>
+<li>Share Tier Summary, Contact Manager, and View Report buttons</li>
+<li>Deal name links in pipeline table navigate to Deal Record detail</li>
+<li>Rep performance cards show inline training status badges</li>
+<li>Alert banner contextual action links to near-win deal with close date</li>
+<li>Financial metrics link to JBP performance and MDF usage breakdown</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Record Data Loading</strong>
+<ul>
+<li>Loads account record data via Account object: Partner_Tier__c (Gold), Current_MRR__c ($180K), Pipeline_MRR__c ($97K), Assigned_PSM__c (Marcus Chen)</li>
+<li>Retrieves Opportunity records linked to Account with Stage, StageName, Amount, Probability, CloseDate; calculates pipeline total and near-term deals</li>
+<li>Joins Contact records (reps) with their assigned Opportunities and training completion status</li>
+</ul></li>
+<li><strong>Tier Status Calculation</strong>
+<ul>
+<li>Evaluates Gold → Platinum advancement: compares Current_MRR__c against $190K threshold; identifies Platinum_MRR_Gap__c</li>
+<li>Retrieves Opportunity Amount and Probability to calculate if any single deal closes gap (e.g., S.H.I.E.L.D. at $45K and 85%)</li>
+<li>Checks Partner Manager (Pepper Potts) certification status against Platinum requirement (Advanced Security); flags as pending blocker</li>
+<li>Triggers alert with specific deal name and cert requirement driving next action</li>
+</ul></li>
+<li><strong>Deal Pipeline Aggregation &amp; Display</strong>
+<ul>
+<li>Populates Deal Pipeline table with all Opportunities where Account matches Stark Industries, sorted by Probability descending</li>
+<li>Calculates probability status: &gt;80% = Near Win, &lt;50% = At Risk, 50-80% = On Track</li>
+<li>Shows protection expiry from Opportunity.Expiration_Date__c (e.g., Mar 15 for S.H.I.E.L.D.)</li>
+<li>Links rep via Opportunity.Owner field to show who owns each deal</li>
+</ul></li>
+<li><strong>Rep Performance Grid &amp; Training Health</strong>
+<ul>
+<li>Aggregates Contact records by Role; counts completed/pending certs from training enrollment records</li>
+<li>Calculates training badge status: completion_percent &gt;= 80% = On Track, 50-80% = Attention, &lt;50% or expired certs = Overdue</li>
+<li>Counts active Opportunity records (Stage != Closed Won/Lost) per rep; sums Amount for deal value display</li>
+<li>Highlights deal ownership mismatches (e.g., Sarah Connor 50% trained but owns $95K TCV deal)</li>
+</ul></li>
+<li><strong>Activity Timeline &amp; Recommendations</strong>
+<ul>
+<li>Activity Timeline queries Opportunity creation/stage change events and Contact training enrollment/expiration events</li>
+<li>Surfaces deal-critical activities: "S.H.I.E.L.D. registered", "Hammer Industries stalled", cert expirations blocking tier progress</li>
+<li>Financial Summary calculates: QoQ_MRR_Growth from historical MRR trending; Commission_Pending = Current_MRR * Commission_Rate (15%); JBP_Attainment from Account YTD deals</li>
+</ul></li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Validation &amp; Business Logic</h4>
+<ul>
+<li>Record header: Stark Industries, Gold tier, US West region, Partner Since Jan 15 2023, PSM: Marcus Chen, Current MRR $180K, Pipeline $97K, Near Tier Platinum (5%)</li>
+<li>Near-Win alert (green): Directly references S.H.I.E.L.D. deal closing $10K gap to Platinum, calls out Pepper Potts cert blocker</li>
+<li>Tier Advancement card: Gold ($180K) → Platinum with MRR threshold $190K required (+$10K gap), Pepper Potts Advanced Security pending, top 3 certs shown</li>
+<li>Deal Pipeline table: 5 deals listed with S.H.I.E.L.D. (Negotiation, 85%, Near Win), Hammer (Qualification, 40%, At Risk), Roxxon/Global Finance (Proposal, 55-60%), AIM (Submitted, 30%)</li>
+<li>Rep Performance grid: 6 cards showing Tony (100%), Pepper (93% pending), James (88%), Sarah (50% overdue), Clint (75%), Happy (75%) with active deal counts and values</li>
+<li>Activity Timeline (left sidebar): 6 recent deal/cert milestones (stalled flag, new registrations, stage changes, expiration) — no training enrollments</li>
+<li>Financial Summary: $180K MRR, +$97K pipeline, $277K potential, +18% QoQ growth, $27K pending commission, 62% JBP ($1.55M/$2.5M), $28K MDF remaining</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

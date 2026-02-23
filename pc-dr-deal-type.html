@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relationship Type — Deal Registration · Partner Central · Equinix PCP</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: var(--wf-white); }
+
+    /* ── Partner Central Header (dark wireframe style) ──────── */
+    .pc-header {
+      background: var(--wf-ink);
+      height: 56px;
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .pc-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+    .pc-logo-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      background: var(--wf-accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0;
+    }
+    .pc-logo-wordmark {
+      font-size: 14px;
+      font-weight: 590;
+      color: white;
+    }
+    .pc-header-nav {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      height: 56px;
+    }
+    .pc-header-nav a {
+      display: flex;
+      align-items: center;
+      height: 56px;
+      padding: 0 16px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.8);
+      text-decoration: none;
+      border-bottom: 3px solid transparent;
+      transition: all 0.15s;
+    }
+    .pc-header-nav a.active { color: white; border-bottom-color: white; }
+    .pc-header-nav a:hover { color: white; background: rgba(255,255,255,0.05); }
+    .pc-header-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    .pc-icon-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: rgba(255,255,255,0.7);
+      border: none;
+      transition: background 0.15s;
+    }
+    .pc-icon-btn:hover { background: rgba(255,255,255,0.25); }
+    .pc-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    /* ── Page Header ────────────────────────────────────────── */
+    .pc-hero {
+      background: var(--wf-canvas);
+      border-bottom: 1px solid var(--wf-tint);
+      padding: 20px 0;
+    }
+    .pc-hero-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      background: white;
+      border: 1px solid var(--wf-line);
+      border-radius: 6px;
+      padding: 20px 24px;
+    }
+    .pc-hero-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--wf-ink);
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+    .pc-hero-sub {
+      font-size: 13px;
+      color: var(--wf-muted);
+      line-height: 1.5;
+    }
+
+    /* ── Page Content ───────────────────────────────────────── */
+    .pc-content {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 28px 0 48px;
+    }
+
+    /* ── Question block ─────────────────────────────────────── */
+    .pc-question {
+      font-size: 18px;
+      font-weight: 600;
+      color: #131925;
+      line-height: 1.3;
+      margin-bottom: 20px;
+    }
+
+    /* ── Deal Type Cards ────────────────────────────────────── */
+    .pc-card-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+    .pc-deal-card {
+      border: 1px solid #e1e3e7;
+      border-radius: 6px;
+      padding: 24px;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: white;
+      position: relative;
+    }
+    .pc-deal-card:hover {
+      border-color: var(--wf-accent);
+      box-shadow: 0 4px 16px rgba(61,109,170,0.12);
+    }
+    .pc-deal-card.selected {
+      border-color: var(--wf-accent);
+      box-shadow: 0 0 0 2px rgba(61,109,170,0.2), 0 4px 16px rgba(61,109,170,0.1);
+    }
+    .pc-deal-card.selected::before {
+      content: "✓";
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 22px;
+      height: 22px;
+      background: var(--wf-accent);
+      color: white;
+      border-radius: 50%;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 22px;
+      text-align: center;
+    }
+    .pc-card-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: #131925;
+      margin-bottom: 8px;
+    }
+    .pc-card-tagline {
+      font-size: 14px;
+      color: var(--wf-accent);
+      font-weight: 500;
+      margin-bottom: 24px;
+    }
+    .pc-card-row {
+      display: flex;
+      gap: 4px;
+      font-size: 13px;
+      line-height: 1.5;
+      margin-bottom: 8px;
+      color: #5a657b;
+    }
+    .pc-card-row:last-child { margin-bottom: 0; }
+    .pc-card-label {
+      font-weight: 700;
+      color: #131925;
+      flex-shrink: 0;
+    }
+
+    /* ── Deal Registration Matrix Table ─────────────────────── */
+    .pc-matrix {
+      background: var(--wf-surface);
+      border-radius: 6px;
+      padding: 24px 28px;
+      margin-bottom: 48px;
+    }
+    .dr-matrix-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .dr-matrix-table thead th {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--wf-muted);
+      padding: 0 16px 12px;
+      text-align: left;
+      border-bottom: 2px solid var(--wf-line);
+    }
+    .dr-matrix-table thead th:first-child { padding-left: 0; }
+    .dr-matrix-table tbody tr { border-bottom: 1px solid var(--wf-tint); }
+    .dr-matrix-table tbody tr:last-child { border-bottom: none; }
+    .dr-matrix-table tbody td {
+      padding: 13px 16px;
+      vertical-align: top;
+      color: var(--wf-text);
+      line-height: 1.55;
+    }
+    .dr-matrix-table tbody td:first-child {
+      padding-left: 0;
+      font-weight: 700;
+      color: var(--wf-ink);
+      width: 38%;
+    }
+    .dr-matrix-table tbody tr:hover td { background: var(--wf-tint); }
+    .dr-rule-row td {
+      background: white;
+      border-radius: 3px;
+      font-style: italic;
+      color: var(--wf-text);
+    }
+    .dr-rule-row td:first-child {
+      font-style: normal;
+      font-weight: 700;
+      color: var(--wf-ink);
+    }
+
+    /* ── Footer actions ─────────────────────────────────────── */
+    .pc-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-top: 32px;
+      border-top: 1px solid var(--wf-surface);
+    }
+    .btn-pc {
+      display: inline-block;
+      padding: 10px 28px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      border: none;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    .btn-pc-primary {
+      background: var(--wf-accent);
+      color: white;
+    }
+    .btn-pc-primary:hover { background: var(--wf-color-primary-dark, #2c5a94); }
+    .btn-pc-primary:disabled {
+      background: var(--wf-line);
+      cursor: not-allowed;
+    }
+    .btn-pc-ghost {
+      background: transparent;
+      color: var(--wf-muted);
+      border: 1px solid var(--wf-line);
+    }
+    .btn-pc-ghost:hover { color: var(--wf-ink); border-color: var(--wf-text); }
+
+    /* ── Design Brief ───────────────────────────────────────── */
+    .design-brief {
+      margin: 0 32px 0;
+      border-top: 1px solid var(--wf-tint);
+      padding: 24px 0;
+      font-size: 12px;
+      color: var(--wf-muted);
+      line-height: 1.6;
+    }
+    .design-brief strong { color: var(--wf-ink); }
+  </style>
+</head>
+<body>
+
+<!-- ── WIREFRAME CONTEXT BAR ──────────────────────────────── -->
+<div class="page-context-bar">
+  <div style="max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:flex-end;">
+    <span class="persona-badge persona-badge--pm" title="Jordan Reeves — Portal Admin / Sales Ops">Admin</span>
+  </div>
+</div>
+
+<!-- ── SPEC NOTES TAB ──────────────────────────────────────── -->
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+<!-- ── PARTNER CENTRAL HEADER ─────────────────────────────── -->
+<header class="pc-header" role="banner">
+  <a href="pc-home.html" class="pc-logo" aria-label="Equinix Partner Central home">
+    <div class="pc-logo-icon" aria-hidden="true">EQ</div>
+    <span class="pc-logo-wordmark">
+      EQUINIX
+      <span class="pc-logo-divider"> | </span>
+      <span class="pc-logo-product">Partner Central</span>
+    </span>
+  </a>
+
+  <nav class="pc-header-nav" aria-label="Primary navigation">
+    <a href="pc-home.html" class="active" aria-current="page">Home</a>
+  </nav>
+
+  <div class="pc-header-controls">
+    <button class="pc-icon-btn" aria-label="Search">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+        <circle cx="5.5" cy="5.5" r="4.5" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M9 9l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <button class="pc-icon-btn" aria-label="Notifications">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+        <path d="M7 1a4 4 0 0 0-4 4v4H2v1h10v-1h-1V5a4 4 0 0 0-4-4zm0 12a1.5 1.5 0 0 1-1.5-1.5h3A1.5 1.5 0 0 1 7 13z" fill="currentColor"/>
+      </svg>
+    </button>
+    <div class="pc-avatar" role="button" aria-label="User account" tabindex="0">JR</div>
+  </div>
+</header>
+
+<!-- ── PAGE HEADER ────────────────────────────────────────── -->
+<div class="pc-hero" role="region" aria-label="Page header">
+  <div class="pc-hero-inner">
+    <h1 class="pc-hero-title">Deal Registration</h1>
+    <p class="pc-hero-sub">
+      All the required fields must be filled out in English.
+      You can save and return later if you don't have all the information now.
+    </p>
+  </div>
+</div>
+
+<!-- ── PAGE CONTENT ───────────────────────────────────────── -->
+<main class="pc-content" id="main-content">
+
+  <!-- Intro / context -->
+  <div style="margin-bottom:28px;">
+    <p style="font-size:14px;color:var(--wf-text);line-height:1.6;margin-bottom:10px;max-width:680px;">
+      Choose the partner type that matches how you work with customers. The main difference is whether you refer opportunities for Equinix to sell directly, or resell Equinix services as part of what you offer.
+    </p>
+    <p style="font-size:14px;color:var(--wf-text);line-height:1.6;max-width:680px;">
+      Not sure which one fits? Use the quick descriptions below — pick the option that matches your go-to-market today. If your motion is mixed, choose the one you'll use most often and we'll validate the best fit during review.
+    </p>
+  </div>
+
+  <!-- Deal type selection -->
+  <section aria-labelledby="q-heading">
+    <h2 class="pc-question" id="q-heading">
+      Choose what kind of relationship you will have with Equinix
+    </h2>
+
+    <div class="pc-card-grid" role="radiogroup" aria-labelledby="q-heading">
+
+      <!-- Referral card -->
+      <div class="pc-deal-card selected"
+           role="radio"
+           aria-checked="true"
+           tabindex="0"
+           aria-label="Referral — You refer opportunities. Equinix sells."
+           onclick="selectCard(this)">
+        <h3 class="pc-card-title">Referral</h3>
+        <p class="pc-card-tagline">You refer opportunities. Equinix sells.</p>
+        <div class="pc-card-row">
+          <span class="pc-card-label">You:&nbsp;</span>
+          <span>introduce qualified leads</span>
+        </div>
+        <div class="pc-card-row">
+          <span class="pc-card-label">Equinix:&nbsp;</span>
+          <span>quotes, contracts, delivers, and bills</span>
+        </div>
+        <div class="pc-card-row">
+          <span class="pc-card-label">Best when:&nbsp;</span>
+          <span>you influence the deal but don't transact</span>
+        </div>
+      </div>
+
+      <!-- Resale card -->
+      <div class="pc-deal-card"
+           role="radio"
+           aria-checked="false"
+           tabindex="0"
+           aria-label="Resale — You sell Equinix as part of your offering."
+           onclick="selectCard(this)">
+        <h3 class="pc-card-title">Resale</h3>
+        <p class="pc-card-tagline">You sell Equinix as part of your offering.</p>
+        <div class="pc-card-row">
+          <span class="pc-card-label">You&nbsp;</span>
+          <span>own the commercial relationship and package the offer</span>
+        </div>
+        <div class="pc-card-row">
+          <span class="pc-card-label">Equinix&nbsp;</span>
+          <span>fulfills the service and supports delivery</span>
+        </div>
+        <div class="pc-card-row">
+          <span class="pc-card-label">Best when&nbsp;</span>
+          <span>you transact and may bundle with your services</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Deal Registration Matrix -->
+    <div class="pc-matrix">
+      <table class="dr-matrix-table" aria-label="Deal Registration Matrix — Referral vs. Resale comparison">
+        <thead>
+          <tr>
+            <th scope="col">Decision Question</th>
+            <th scope="col">Lead Referral Partner</th>
+            <th scope="col">Reseller</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Do you sign the customer contract for Equinix services?</td>
+            <td>No — Equinix contracts directly</td>
+            <td>Yes / Often — you transact (varies by model)</td>
+          </tr>
+          <tr>
+            <td>Do you invoice the customer for Equinix services?</td>
+            <td>No</td>
+            <td>Yes / Often (or bundled into your invoice)</td>
+          </tr>
+          <tr>
+            <td>Who owns the customer commercially?</td>
+            <td>Equinix</td>
+            <td>You</td>
+          </tr>
+          <tr>
+            <td>What are you primarily doing?</td>
+            <td>Introducing opportunities</td>
+            <td>Selling + packaging services</td>
+          </tr>
+          <tr>
+            <td>Do you bundle Equinix with your own services?</td>
+            <td>Sometimes, but typically influence-only</td>
+            <td>Common (managed services / solution bundles)</td>
+          </tr>
+          <tr>
+            <td>Who runs quoting + order placement?</td>
+            <td>Equinix</td>
+            <td>You (or you initiate and manage the process)</td>
+          </tr>
+          <tr>
+            <td>Who provides first-line customer support?</td>
+            <td>Equinix</td>
+            <td>You (with Equinix escalation/support)</td>
+          </tr>
+          <tr>
+            <td>What do you need to be set up for?</td>
+            <td>Lead submission + tracking</td>
+            <td>Commercial model + quoting/ordering + operational readiness</td>
+          </tr>
+          <tr>
+            <td>Best fit if…</td>
+            <td>You want to refer and stay lightweight</td>
+            <td>You want to sell and own the relationship</td>
+          </tr>
+          <tr class="dr-rule-row">
+            <td>Quick picker rule 1</td>
+            <td>If you don't contract AND don't bill → Lead Referral Partner</td>
+            <td>If you do contract AND/OR bill → Reseller</td>
+          </tr>
+          <tr class="dr-rule-row">
+            <td>Quick picker rule 2</td>
+            <td colspan="2">If you're mixed, choose your primary motion; validate during review</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Page actions -->
+    <div class="pc-actions">
+      <button class="btn-pc btn-pc-primary" type="button">
+        Register
+      </button>
+    </div>
+  </section>
+
+</main>
+
+<!-- ── SPEC PANEL (fly-in sidebar) ────────────────────────── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Notes</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+
+    <h3>Summary</h3>
+    <p>Step 1 of the Deal Registration wizard in Partner Central. Jordan Reeves (portal admin / sales ops at CloudBridge) selects the relationship type — Lead Referral Partner or Reseller — that governs how this specific deal is being registered. This is separate from Partner Organization Registration (how a company joins the Equinix partner program). The Deal Registration Matrix helps the user self-qualify before proceeding.</p>
+
+    <hr class="spec-divider">
+
+    <h3>Figma Source</h3>
+    <ul>
+      <li><strong>File:</strong> Partner-Central</li>
+      <li><strong>Node:</strong> 2662:12994</li>
+      <li><strong>Frame:</strong> "00 Deal Type / Deal Registration P1 – Prospect"</li>
+    </ul>
+
+    <hr class="spec-divider">
+
+    <h3>Flow Position</h3>
+    <ul>
+      <li><strong>Flow:</strong> Deal Registration wizard — Step 1 of 5</li>
+      <li><strong>Triggered from:</strong> Partner Central Home → Register a Deal (or Deals &amp; Opportunities → New)</li>
+      <li><strong>Next:</strong> pc-dr-p2-prospect.html (Prospect Details)</li>
+      <li>Referral selected → Lead Referral Partner deal registration flow</li>
+      <li>Resale selected → Reseller deal registration flow</li>
+      <li><strong>Note:</strong> Separate from Partner Organization Registration (the onboarding flow for new partner companies joining the program)</li>
+    </ul>
+
+    <hr class="spec-divider">
+
+    <h3>Jobs to Be Done</h3>
+    <ul>
+      <li>Help the partner self-select their engagement model (Referral vs. Resale)</li>
+      <li>Surface the decision matrix so partners can confirm they're choosing correctly</li>
+      <li>Route to the correct deal registration form based on selection</li>
+    </ul>
+
+    <hr class="spec-divider">
+
+    <h3>Design Specification</h3>
+
+    <h4>Primary Content</h4>
+    <ul>
+      <li>Page title: "Deal Registration" with supporting sub-copy</li>
+      <li>Intro paragraph explaining Referral vs. Resale and pointing to the matrix for self-qualification</li>
+      <li>Two relationship-type cards: Lead Referral Partner and Reseller (radio behavior)</li>
+      <li>Each card shows: tagline, You / Equinix / Best when rows</li>
+      <li>Deal Registration Matrix — 11-row decision table (Decision Question | Referral | Reseller) for self-qualification</li>
+      <li>Register CTA button (right-aligned, primary)</li>
+    </ul>
+
+    <h4>Interactive Elements</h4>
+    <ul>
+      <li>Relationship-type cards act as radio group — selecting one deselects the other</li>
+      <li>Cards are keyboard-accessible (Enter / Space activates; focus ring visible)</li>
+      <li>Notes sidebar toggle button (fly-in spec panel)</li>
+      <li>Register button — advances to Step 2 (Prospect Details), carrying the selected relationship type</li>
+    </ul>
+
+    <h4>Functionality</h4>
+    <ul>
+      <li><strong>Card Radio Selection</strong> — mutual exclusion via <code>aria-checked</code> and <code>role="radio"</code>; Referral selected by default per Figma spec</li>
+      <li><strong>Deal Registration Matrix</strong> — informational only; no form input on this step</li>
+      <li><strong>Register</strong> — passes selected relationship type to the next wizard step; ideally disabled until a card is explicitly chosen (Referral pre-selected counts as chosen)</li>
+      <li><strong>Keyboard nav</strong> — Enter/Space fires <code>selectCard()</code> for each card</li>
+    </ul>
+
+    <hr class="spec-divider">
+
+    <h3>Design Notes</h3>
+    <ul>
+      <li>Referral card shown selected by default (per Figma spec)</li>
+      <li>Card selection persists into next wizard step</li>
+      <li>Deal Registration Matrix is a decision table — not a form element</li>
+      <li>Partner Central uses white header + Nexa typeface (Figma); wireframe approximates with system font</li>
+      <li>Header nav shows only "Home" at this stage — expanded once partner type is confirmed</li>
+    </ul>
+
+  </div>
+</aside>
+
+<script>
+  function toggleSpec() {
+    var p = document.getElementById('spec-panel');
+    var b = document.getElementById('spec-toggle');
+    if (!p || !b) return;
+    var isOpen = p.classList.toggle('open');
+    b.setAttribute('aria-expanded', isOpen);
+  }
+
+  function selectCard(el) {
+    const grid = el.closest('[role="radiogroup"]');
+    grid.querySelectorAll('.pc-deal-card').forEach(c => {
+      c.classList.remove('selected');
+      c.setAttribute('aria-checked', 'false');
+    });
+    el.classList.add('selected');
+    el.setAttribute('aria-checked', 'true');
+  }
+
+  // Keyboard nav for cards
+  document.querySelectorAll('.pc-deal-card').forEach(card => {
+    card.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        selectCard(card);
+      }
+    });
+  });
+</script>
+
+<script src="wf-nav.js"></script>
+</body>
+</html>

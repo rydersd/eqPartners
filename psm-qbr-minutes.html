@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>QBR Minutes — PSM · Equinix PCP</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Salesforce Sans", sans-serif;
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    /* Header */
+    header {
+      background-color: var(--wf-ink, #1e2a3a);
+      color: var(--wf-surface, #edf1f7);
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .lightning-icon {
+      font-size: 1.5rem;
+    }
+
+    nav {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    nav a {
+      color: var(--wf-surface, #edf1f7);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      transition: background-color 0.2s;
+    }
+
+    nav a:hover {
+      background-color: rgba(255,255,255,0.1);
+    }
+
+    nav a.active {
+      background-color: var(--wf-accent, var(--wf-accent, #3d6daa));
+    }
+
+    /* Main Content */
+    main {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+
+    .page-title {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 0.5rem;
+    }
+
+    .page-subtitle {
+      font-size: 0.95rem;
+      color: var(--wf-text, #3b4f68);
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background: var(--wf-surface, #edf1f7);
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--wf-canvas, #f5f7fb);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .metric-box {
+      background: var(--wf-canvas, #f5f7fb);
+      padding: 1rem;
+      border-radius: 6px;
+      border-left: 4px solid var(--wf-accent, var(--wf-accent, #3d6daa));
+    }
+
+    .metric-label {
+      font-size: 0.85rem;
+      color: var(--wf-text, #3b4f68);
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .metric-value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .status-green {
+      background-color: var(--wf-surface, #edf1f7);
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .status-yellow {
+      background-color: var(--wf-surface, #edf1f7);
+      color: var(--wf-amber, #8b7745);
+    }
+
+    .status-red {
+      background-color: var(--wf-surface, #edf1f7);
+      color: var(--wf-red, #8b4553);
+    }
+
+    .health-indicator {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid var(--wf-canvas, #f5f7fb);
+    }
+
+    .health-indicator:last-child {
+      border-bottom: none;
+    }
+
+    .indicator-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .indicator-green { background-color: var(--wf-ink, #1e2a3a); }
+    .indicator-yellow { background-color: var(--wf-line, #b0bdd0); }
+    .indicator-red { background-color: var(--wf-red, #8b4553); }
+
+    .indicator-text {
+      flex: 1;
+      font-weight: 500;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 24px;
+      background-color: var(--wf-canvas, #f5f7fb);
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 0.5rem 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background-color: var(--wf-accent, var(--wf-accent, #3d6daa));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--wf-surface, #edf1f7);
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    thead {
+      background-color: var(--wf-canvas, #f5f7fb);
+      border-bottom: 2px solid var(--wf-canvas, #f5f7fb);
+    }
+
+    th {
+      padding: 0.75rem;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--wf-ink, #1e2a3a);
+      text-transform: uppercase;
+    }
+
+    td {
+      padding: 0.75rem;
+      border-bottom: 1px solid var(--wf-canvas, #f5f7fb);
+      font-size: 0.9rem;
+    }
+
+    tr:hover {
+      background-color: var(--wf-canvas, #f5f7fb);
+    }
+
+    .button {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background-color: var(--wf-accent, var(--wf-accent, #3d6daa));
+      color: var(--wf-surface, #edf1f7);
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: background-color 0.2s;
+    }
+
+    .button:hover {
+      background-color: var(--wf-accent, #3d6daa);
+    }
+
+    .button-secondary {
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-ink, #1e2a3a);
+      border: 1px solid var(--wf-line, #b0bdd0);
+    }
+
+    .button-secondary:hover {
+      background-color: var(--wf-tint, #dce4ef);
+    }
+
+    .button-group {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .alert {
+      padding: 1rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+      border-left: 4px solid;
+    }
+
+    .alert-info {
+      background-color: var(--wf-surface, #edf1f7);
+      border-color: var(--wf-ink, #1e2a3a);
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .alert-warning {
+      background-color: var(--wf-surface, #edf1f7);
+      border-color: var(--wf-amber, #8b7745);
+      color: var(--wf-amber, #8b7745);
+    }
+
+    .attendees-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .attendee-item {
+      background: var(--wf-canvas, #f5f7fb);
+      padding: 0.75rem;
+      border-radius: 4px;
+      border-left: 3px solid var(--wf-accent, var(--wf-accent, #3d6daa));
+    }
+
+    .attendee-name {
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+      font-size: 0.9rem;
+    }
+
+    .attendee-role {
+      font-size: 0.8rem;
+      color: var(--wf-text, #3b4f68);
+      margin-top: 0.25rem;
+    }
+
+    .notes-section {
+      background: var(--wf-canvas, #f5f7fb);
+      padding: 1rem;
+      border-radius: 6px;
+      border-left: 3px solid var(--wf-accent, var(--wf-accent, #3d6daa));
+      margin-top: 1rem;
+      line-height: 1.6;
+      color: var(--wf-ink, #1e2a3a);
+      font-size: 0.9rem;
+    }
+
+    /* Design Brief */
+    @media (max-width: 768px) {
+      nav {
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+
+      .header-content {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+    }
+  
+/* ── 3-Column Record Layout ── */
+.record-layout { display:grid; grid-template-columns:280px 1fr 300px; gap:1rem; padding:1rem 2rem; max-width:1600px; }
+@media (max-width:1200px) { .record-layout { grid-template-columns:1fr; } }
+.left-rail .card, .right-rail .card { margin-bottom:1rem; }
+.center-content .card { margin-bottom:1rem; }
+.card { background:var(--wf-surface,#edf1f7); border:1px solid var(--wf-tint,#dce4ef); border-radius:6px; overflow:hidden; }
+.card-hd { padding:0.75rem 1rem; border-bottom:1px solid var(--wf-tint); display:flex; justify-content:space-between; align-items:center; }
+.card-hd h3 { font-size:13px; font-weight:700; color:var(--wf-ink); margin:0; }
+.card-hd-action { font-size:11px; color:var(--wf-accent); text-decoration:none; font-weight:600; cursor:pointer; }
+.card-bd { padding:1rem; }
+.hl-row { display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:12px; }
+.hl-row:last-child { border-bottom:none; }
+.hl-label { color:var(--wf-muted); }
+.hl-value { font-weight:700; color:var(--wf-ink); }
+.hl-value.warn { color:var(--wf-amber,#8b7745); }
+.rel-item { display:flex; align-items:center; gap:0.625rem; padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:12px; }
+.rel-item:last-child { border-bottom:none; }
+.rel-icon { width:28px; height:28px; border-radius:50%; background:var(--wf-tint); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.rel-icon svg { width:14px; height:14px; color:var(--wf-ink); }
+.rel-info { flex:1; }
+.rel-title { font-size:12px; font-weight:600; color:var(--wf-ink); }
+.rel-sub { font-size:11px; color:var(--wf-muted); }
+.rel-meta { font-size:11px; color:var(--wf-muted); text-align:right; white-space:nowrap; }
+/* Right-rail tabs */
+.rail-tabs { display:flex; border-bottom:1px solid var(--wf-tint); }
+.rail-tab { flex:1; padding:0.5rem; font-size:11px; font-weight:600; text-align:center; color:var(--wf-muted); cursor:pointer; border-bottom:2px solid transparent; background:none; border-top:none; border-left:none; border-right:none; }
+.rail-tab.active { color:var(--wf-accent); border-bottom-color:var(--wf-accent); }
+.rail-tab-content { display:none; }
+.rail-tab-content.active { display:block; }
+/* Activity feed in right rail */
+.feed-sm { padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:11px; }
+.feed-sm:last-child { border-bottom:none; }
+.feed-sm-text { color:var(--wf-text); line-height:1.4; }
+.feed-sm-text strong { color:var(--wf-ink); }
+.feed-sm-time { color:var(--wf-muted); font-size:10px; margin-top:2px; }
+/* Quick action buttons */
+.action-btn { width:100%; padding:0.5rem; border-radius:4px; font-size:12px; font-weight:600; cursor:pointer; margin-bottom:0.375rem; border:1px solid var(--wf-line); text-align:center; }
+.action-btn:last-child { margin-bottom:0; }
+.action-btn-primary { background:var(--wf-accent); color:white; border-color:var(--wf-accent); }
+.action-btn-secondary { background:var(--wf-surface); color:var(--wf-text); }
+</style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="wf-header">
+  <div class="wf-header-logo"><svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix"><path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/></svg></div>
+  <div class="wf-header-title">SFDC</div>
+  <nav class="wf-header-nav">
+    <a href="#">Dashboard</a>
+    <a href="#" class="active">PSM Portal</a>
+    <a href="#">Partners</a>
+    <a href="#">Deals</a>
+    <a href="#">Programs</a>
+    <a href="#">Reports</a>
+  </nav>
+  <div class="wf-header-util">
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+  </div>
+</header>
+    <div class="page-context-bar">
+  <div style="max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <span style="font-size:12px;color:var(--wf-muted);display:flex;align-items:center;gap:6px;">
+      <svg viewBox="0 0 20 13" style="width:18px;height:11px;fill:var(--wf-muted);" aria-hidden="true"><path d="M8.3 1.7A3.8 3.8 0 0 1 12 0a3.8 3.8 0 0 1 3.5 2.3A2.8 2.8 0 0 1 20 5a2.8 2.8 0 0 1-2.8 2.8H3.2A3.2 3.2 0 0 1 0 4.6 3.2 3.2 0 0 1 3.2 1.4c.18 0 .35.01.52.04A3.8 3.8 0 0 1 8.3 1.7z"/></svg>
+      <strong style="color:var(--wf-text);font-weight:600;">Salesforce Lightning</strong>&ensp;&middot;&ensp;PCP App
+    </span>
+    <span class="persona-badge persona-badge--psm">PSM</span>
+  </div>
+</div>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+
+<!-- ── 3-Column Record Layout ── -->
+<div class="record-layout">
+
+  <!-- ════════ LEFT RAIL — Related Objects ════════ -->
+  <div class="left-rail">
+    <div class="card">
+      <div class="card-hd"><h3>Attendees</h3></div>
+      <div class="card-bd">
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0"/></svg></div>
+          <div class="rel-info"><div class="rel-title">Sarah Chen</div><div class="rel-sub">PSM</div></div>
+        </div>
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0"/></svg></div>
+          <div class="rel-info"><div class="rel-title">James Rhodes</div><div class="rel-sub">PM</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><h3>Related</h3></div>
+      <div class="card-bd">
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg></div>
+          <div class="rel-info"><div class="rel-title">QBR Deck</div><div class="rel-sub">Slides</div></div>
+        </div>
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg></div>
+          <div class="rel-info"><div class="rel-title">Q4 2025 Minutes</div><div class="rel-sub">Previous</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ CENTER — Main Content ════════ -->
+  <div class="center-content">
+  <!-- Main Content -->
+  <main role="main">
+    <h1 class="page-title">Q1 2026 QBR — Stark Industries</h1>
+    <p class="page-subtitle">Quarterly Business Review Agenda & Minutes | Status: Scheduled Feb 28, 2026</p>
+
+    <!-- Meeting Info -->
+    <div class="card">
+      <div class="card-title">Meeting Information</div>
+      <div class="grid-2">
+        <div class="metric-box">
+          <div class="metric-label">Meeting Date</div>
+          <div class="metric-value">Feb 28, 2026 (Scheduled)</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">Next QBR Scheduled</div>
+          <div class="metric-value">Q2 2026 (May)</div>
+        </div>
+      </div>
+      <p style="font-size: 0.9rem; color: var(--wf-text, #3b4f68); margin-bottom: 1rem;">Location: TBD | Attendees: Marcus Chen (PSM), David Kim (SA), Lisa Park (RM) + Pepper Potts, Tony Stark, James Rhodes</p>
+    </div>
+
+    <!-- Performance Review -->
+    <div class="card">
+      <div class="card-title">Performance Review</div>
+
+      <div style="margin-bottom: 2rem;">
+        <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Revenue vs Target</label>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 62%; background-color: var(--wf-ink, #1e2a3a);">
+            MRR $180K | +12% QoQ
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 2rem;">
+        <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Deal Activity</label>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 65%; background-color: var(--wf-accent, var(--wf-accent, #3d6daa));">
+            5 Active Deals | $197K Pipeline
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 2rem;">
+        <label style="display: block; font-weight: 600; margin-bottom: 0.5rem;">Training Progress</label>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 95%; background-color: var(--wf-ink, #1e2a3a);">
+            95% Overall | 1 Expired Cert
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Partnership Health Scorecard -->
+    <div class="card">
+      <div class="card-title">Partnership Health Scorecard</div>
+
+      <div class="health-indicator">
+        <div class="indicator-dot indicator-green"></div>
+        <div class="indicator-text">Revenue Performance</div>
+        <span class="status-badge status-green">Green</span>
+      </div>
+
+      <div class="health-indicator">
+        <div class="indicator-dot indicator-yellow"></div>
+        <div class="indicator-text">Training Engagement</div>
+        <span class="status-badge status-yellow">Yellow</span>
+      </div>
+
+      <div class="health-indicator">
+        <div class="indicator-dot indicator-yellow"></div>
+        <div class="indicator-text">MDF Usage</div>
+        <span class="status-badge status-yellow">Yellow</span>
+      </div>
+
+      <div class="health-indicator">
+        <div class="indicator-dot indicator-green"></div>
+        <div class="indicator-text">Deal Activity</div>
+        <span class="status-badge status-green">Green</span>
+      </div>
+
+      <div class="health-indicator">
+        <div class="indicator-dot indicator-yellow"></div>
+        <div class="indicator-text">Certification Coverage</div>
+        <span class="status-badge status-yellow">Yellow</span>
+      </div>
+    </div>
+
+    <!-- Pipeline & Forecast Review -->
+    <div class="card">
+      <div class="card-title">Pipeline & Forecast Review</div>
+      <table aria-label="Active Opportunities">
+        <thead>
+          <tr>
+            <th>Deal Name</th>
+            <th>Amount</th>
+            <th>Close Date</th>
+            <th>Probability</th>
+            <th>Stage</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>S.H.I.E.L.D. Initiative</td>
+            <td>$85K</td>
+            <td>March 15, 2026</td>
+            <td>90%</td>
+            <td><span class="status-badge status-green">Closing</span></td>
+          </tr>
+          <tr>
+            <td>Hammer Industries DR-2026-4287</td>
+            <td>$22K</td>
+            <td>April 30, 2026</td>
+            <td>35%</td>
+            <td><span class="status-badge status-yellow">Qualification</span></td>
+          </tr>
+          <tr>
+            <td>Infrastructure Optimization</td>
+            <td>$55K</td>
+            <td>May 15, 2026</td>
+            <td>70%</td>
+            <td><span class="status-badge status-yellow">Proposal</span></td>
+          </tr>
+          <tr>
+            <td>Managed Services Package</td>
+            <td>$20K MRR</td>
+            <td>April 1, 2026</td>
+            <td>60%</td>
+            <td><span class="status-badge status-yellow">Negotiation</span></td>
+          </tr>
+          <tr>
+            <td>Disaster Recovery Services</td>
+            <td>$15K</td>
+            <td>June 30, 2026</td>
+            <td>45%</td>
+            <td><span class="status-badge status-yellow">Evaluation</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Training & Certification Progress -->
+    <div class="card">
+      <div class="card-title">Training & Certification Progress</div>
+      <div class="grid-2">
+        <div class="metric-box">
+          <div class="metric-label">Overall Certification</div>
+          <div class="metric-value">95%</div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 95%;">11/12 Current</div>
+          </div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">Certification Gap</div>
+          <div class="metric-value">1 Expired</div>
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 33%;">Sarah Connor · Action Needed</div>
+          </div>
+        </div>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--wf-text, #3b4f68); margin-top: 1rem;">Last update: February 18, 2026 | Pending: Pepper Potts (Advanced Security)</p>
+    </div>
+
+    <!-- Action Items -->
+    <div class="card">
+      <div class="card-title">Action Items</div>
+      <table aria-label="QBR Action Items">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Owner</th>
+            <th>Due Date</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Complete Pepper Potts Advanced Security Cert</td>
+            <td>James Rhodes (Stark)</td>
+            <td>March 15, 2026</td>
+            <td><span class="status-badge status-yellow">In Progress</span></td>
+          </tr>
+          <tr>
+            <td>Re-engage Hammer Industries deal DR-2026-4287</td>
+            <td>Marcus Chen + James Rhodes</td>
+            <td>February 28, 2026</td>
+            <td><span class="status-badge">Not Started</span></td>
+          </tr>
+          <tr>
+            <td>Q2 MDF planning and campaign execution</td>
+            <td>Pepper Potts (Stark)</td>
+            <td>March 1, 2026</td>
+            <td><span class="status-badge">Not Started</span></td>
+          </tr>
+          <tr>
+            <td>Sarah Connor re-enrollment (Security Fundamentals)</td>
+            <td>Pepper Potts (Stark)</td>
+            <td>February 28, 2026</td>
+            <td><span class="status-badge">Not Started</span></td>
+          </tr>
+          <tr>
+            <td>Establish Q2 QBR cadence and schedule</td>
+            <td>Marcus Chen (PSM)</td>
+            <td>March 15, 2026</td>
+            <td><span class="status-badge">Not Started</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Meeting Attendees -->
+    <div class="card">
+      <div class="card-title">Meeting Attendees</div>
+      <div class="attendees-list">
+        <div class="attendee-item">
+          <div class="attendee-name">Pepper Potts</div>
+          <div class="attendee-role">Stark Industries | COO / PM</div>
+        </div>
+        <div class="attendee-item">
+          <div class="attendee-name">Tony Stark</div>
+          <div class="attendee-role">Stark Industries | Sales Director</div>
+        </div>
+        <div class="attendee-item">
+          <div class="attendee-name">James Rhodes</div>
+          <div class="attendee-role">Stark Industries | Sr. PM</div>
+        </div>
+        <div class="attendee-item">
+          <div class="attendee-name">Marcus Chen</div>
+          <div class="attendee-role">Equinix | PSM</div>
+        </div>
+        <div class="attendee-item">
+          <div class="attendee-name">David Kim</div>
+          <div class="attendee-role">Equinix | Sales Engineer</div>
+        </div>
+        <div class="attendee-item">
+          <div class="attendee-name">Lisa Park</div>
+          <div class="attendee-role">Equinix | Regional Manager</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notes & Minutes -->
+    <div class="card">
+      <div class="card-title">Meeting Notes & Minutes</div>
+      <div class="notes-section">
+        <p><strong>Q1 Performance Review:</strong> Pepper Potts opened QBR noting strong Q1 close. MRR at $180K with +12% QoQ growth trending toward FY2026 targets. Revenue performance Green. Active deal count: 5 opportunities totaling $197K pipeline.</p>
+
+        <p style="margin-top: 1rem;"><strong>S.H.I.E.L.D. Deal Status:</strong> Expected to close March 15, 2026. Deal value supports Platinum tier advancement if combined with Pepper's Advanced Security cert completion. James Rhodes to confirm close date and Pepper's certification timeline.</p>
+
+        <p style="margin-top: 1rem;"><strong>Hammer Industries Recovery Plan:</strong> DR-2026-4287 stalled for 3 weeks (Qualification stage, $22K MRR). Team agreed to co-sell call with Marcus Chen and Equinix SE support. James Rhodes to re-engage this week with competitive positioning and technical validation.</p>
+
+        <p style="margin-top: 1rem;"><strong>Training & Certification:</strong> Overall 95% completion with 11 of 12 certified. Sarah Connor cert expired (Security Fundamentals) — Pepper to re-enroll by Feb 28. Pepper's Advanced Security cert pending (due Mar 15) — tracks to Platinum qualification. 3 reps below 75% coverage threshold; Q2 focused training recommended.</p>
+
+        <p style="margin-top: 1rem;"><strong>MDF & Marketing:</strong> Q1 utilization at $47K of $75K budget (63%). $28K carryover to Q2. Discussed Partner Summit co-marketing execution and digital campaign planning for H1 launch. Pepper to finalize Q2 campaign plan by March 1.</p>
+
+        <p style="margin-top: 1rem;"><strong>Platinum Path Forward:</strong> Discussed two requirements: (1) Close S.H.I.E.L.D. deal by Mar 15 (+$85K), (2) Complete Pepper's Advanced Security cert by Mar 15. Together, these would advance Stark from Gold to Platinum, unlocking increased MDF, dedicated PSM resources, and enhanced benefits package.</p>
+
+        <p style="margin-top: 1rem;"><strong>Next Steps:</strong> Q1 QBR scheduled Feb 28, 2026. Q2 QBR date TBD (May 2026). All action items assigned with target dates. Marcus Chen to send follow-up summary and deal recovery plan within 48 hours.</p>
+      </div>
+    </div>
+
+    <!-- Button Actions -->
+    <div style="margin-bottom: 2rem;">
+      <div class="button-group">
+        <button class="button" aria-label="Export QBR Minutes as PDF">Export as PDF</button>
+        <button class="button button-secondary" aria-label="Send QBR minutes to attendees">Email to Attendees</button>
+        <button class="button button-secondary" aria-label="Schedule next QBR">Schedule Next QBR</button>
+      </div>
+    </div>
+
+    <!-- Design Brief -->  </div>
+
+  <!-- ════════ RIGHT RAIL — Activity & Insights ════════ -->
+  <div class="right-rail">
+    <div class="card">
+      <div class="rail-tabs">
+        <button class="rail-tab active" onclick="document.querySelectorAll('.rail-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active');document.querySelectorAll('.rail-tab-content').forEach(c=>c.classList.remove('active'));document.getElementById('tab-activity').classList.add('active');">Activity</button>
+        <button class="rail-tab" onclick="document.querySelectorAll('.rail-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active');document.querySelectorAll('.rail-tab-content').forEach(c=>c.classList.remove('active'));document.getElementById('tab-einstein').classList.add('active');">Einstein</button>
+      </div>
+      <div id="tab-activity" class="rail-tab-content active">
+        <div class="card-bd">
+          <div class="feed-sm"><div class="feed-sm-text">QBR completed</div><div class="feed-sm-time">Today</div></div>
+          <div class="feed-sm"><div class="feed-sm-text">Minutes drafted</div><div class="feed-sm-time">Today</div></div>
+          <div class="feed-sm"><div class="feed-sm-text">Scorecard refreshed</div><div class="feed-sm-time">2 days ago</div></div>
+        </div>
+      </div>
+      <div id="tab-einstein" class="rail-tab-content">
+        <div class="card-bd" style="font-size:12px;color:var(--wf-text);line-height:1.5;">
+          <div style="font-size:11px;font-weight:700;color:var(--wf-accent);text-transform:uppercase;letter-spacing:0.03em;margin-bottom:0.5rem;">AI Recommendation</div>
+          5 action items assigned. Priority: cert gap (3 uncertified). Revenue trending down — follow up in 2 weeks.
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><h3>Actions</h3></div>
+      <div class="card-bd">
+        <button class="action-btn action-btn-primary">Share Minutes</button>
+        <button class="action-btn action-btn-secondary">Create Tasks</button>
+        <button class="action-btn action-btn-secondary">Schedule Next QBR</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+</main>
+
+  <!-- SPEC BLOCK -->
+<!-- /SPEC BLOCK -->
+    <footer class="wf-footer">
+      &copy; 2026 Equinix · Partner Sales Manager · Internal Use Only
+    </footer>
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h2>Design Notes</h2>
+    <button class="spec-panel-close" onclick="toggleSpec()" aria-label="Close notes panel">&times;</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Records and documents quarterly business review meetings with partners including discussion notes, performance metrics, and action item commitments. PSMs use this record to track partnership progress, maintain accountability, and prepare for future QBR meetings.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Document quarterly business review (QBR) outcomes and commitments</li>
+<li>Track action items and follow-ups from partner meetings</li>
+<li>Record partner feedback and satisfaction scores</li>
+<li>Maintain historical QBR records for partner relationship history</li>
+<li>Share QBR summaries with stakeholders</li>
+<li>Monitor partner health trends across multiple QBRs</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>QBR header: Partner account name, meeting date, next QBR scheduled date</li>
+<li>Partner Scorecard metrics: Health Score, Engagement Score, Growth Score, and Key Performance Indicators (Revenue, Training Completion, Certification Progress)</li>
+<li>Action Items table: Item description, owner, due date, status (Not Started, In Progress, Completed)</li>
+<li>Meeting Attendees list showing name and role for each participant</li>
+<li>Meeting Notes & Minutes narrative sections covering Opening Remarks, Revenue Discussion, Training & Enablement, MDF Utilization, Deal Registration & Pipeline, Next Steps</li>
+<li>Button actions for Export as PDF, Email to Attendees, Schedule Next QBR</li>
+<li>Right rail Activity/Einstein tabs showing QBR completion timeline and AI recommendations</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Expand/collapse sections within Meeting Notes</li>
+<li>Mark action items as complete with checkbox in table</li>
+<li>Status badge updates: Not Started, In Progress, Completed (with color coding)</li>
+<li>Export as PDF button to download QBR document</li>
+<li>Email to Attendees button to send meeting minutes</li>
+<li>Schedule Next QBR button to create follow-up meeting</li>
+<li>Activity/Einstein tab toggle in right rail</li>
+<li>Share Minutes, Create Tasks, and Schedule Next QBR action buttons in right rail</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>QBR Record &amp; Account Data Loading</strong>
+<ul>
+<li>Loads QBR_Minutes__c record with fields: Partner_Account__c lookup, QBR_Date__c, Next_QBR_Date__c, Notes_Body__c (rich text), and related Partner Account metrics</li>
+<li>Displays QBR header: Partner account name, meeting date, next scheduled QBR date from linked Account record</li>
+</ul></li>
+<li><strong>Partner Scorecard Metrics Display</strong>
+<ul>
+<li>Auto-populates from Partner_Scorecard__c roll-up fields: Health_Score__c, Engagement_Score__c, Growth_Score__c; displays latest Training Completion %, Revenue Attainment %, Certification Completion %</li>
+<li>Renders color-coded health badges and progress bars for visual assessment</li>
+</ul></li>
+<li><strong>Action Items &amp; Meeting Attendees Management</strong>
+<ul>
+<li>Loads QBR_Action_Item__c child records with Action_Item__c description, Owner__c (user/contact), Due_Date__c, Status__c (Not Started, In Progress, Completed); enables checkbox completion status</li>
+<li>Fetches QBR_Attendee__c junction records linking attendee Contacts with Title__c and Attendee_Email__c for tracking participants</li>
+</ul></li>
+<li><strong>Meeting Notes &amp; AI Recommendations</strong>
+<ul>
+<li>Renders QBR_Minutes__c.Notes_Body__c rich text field with collapsible sections for Opening Remarks, Revenue Discussion, Training & Enablement, MDF Utilization, Deal Registration & Pipeline, Next Steps</li>
+<li>Einstein NBA analyzes Partner_Scorecard__c metrics trends, certification gaps, and revenue forecast to return strategic recommendations and growth opportunities</li>
+</ul></li>
+<li><strong>Document Generation &amp; Distribution</strong>
+<ul>
+<li>Export PDF button generates downloadable document with all QBR content using Salesforce Documents API, includes Partner Scorecard, Action Items table, Meeting Notes, Attendees list</li>
+<li>Email to Attendees button sends meeting summary email to all QBR_Attendee__c.Attendee_Email__c addresses via Salesforce email service with QBR document attachment</li>
+<li>Schedule Next QBR button creates new QBR_Minutes__c record with Next_QBR_Date__c preset; Create Tasks button generates Task records for each QBR_Action_Item__c with owner assignment and due date</li>
+</ul></li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Key Objects</h4>
+<ul>
+<li>QBR_Minutes__c: Partner_Account__c, QBR_Date__c, Next_QBR_Date__c, Health_Score__c, Engagement_Score__c</li>
+<li>QBR_Action_Item__c: QBR_Minutes__c, Action_Item__c, Owner__c, Due_Date__c, Status__c</li>
+<li>QBR_Attendee__c: QBR_Minutes__c, Attendee_Name__c, Attendee_Email__c, Title__c</li>
+</ul>
+<h4>Validation &amp; Business Logic</h4>
+<ul>
+<li>QBR date must be within 90 days of previous QBR</li>
+<li>Health score calculated from multiple engagement metrics</li>
+<li>All action items require owner assignment before QBR closure</li>
+<li>Meeting minutes required before QBR can be marked complete</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

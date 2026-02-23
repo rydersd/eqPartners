@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile — Portal Admin · Equinix PCP Partner Portal</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: var(--wf-canvas, #f5f7fb); }
+    .container { max-width: 960px; margin: 0 auto; padding: 24px; }
+
+    .page-header { display: flex; align-items: center; gap: 8px; margin-bottom: 24px; }
+    .page-header h1 { margin: 0; font-size: 22px; font-weight: 700; color: var(--wf-ink); }
+
+    /* ── Profile hero ─────────────────────────────────────── */
+    .profile-hero {
+      background: var(--wf-ink);
+      border-radius: 8px;
+      padding: 32px;
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+    .avatar-large {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: var(--wf-accent, #3d6daa);
+      border: 3px solid rgba(255,255,255,0.4);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 30px; font-weight: 700; color: white;
+      flex-shrink: 0;
+    }
+    .profile-hero-info h2 { margin: 0 0 4px; font-size: 22px; font-weight: 700; }
+    .profile-hero-info .role-tag {
+      display: inline-block; font-size: 11px; font-weight: 600;
+      background: rgba(61,109,170,0.5); border-radius: 3px;
+      padding: 2px 8px; margin-bottom: 6px;
+    }
+    .profile-hero-info .company { font-size: 13px; color: rgba(255,255,255,0.8); margin: 0; }
+    .profile-hero-info .email   { font-size: 12px; color: rgba(255,255,255,0.65); margin: 2px 0 0; }
+    .profile-hero-actions { margin-left: auto; }
+
+    /* ── Layout ───────────────────────────────────────────── */
+    .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+    .card { background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow: hidden; }
+    .card-full { grid-column: 1 / -1; }
+    .card-header {
+      padding: 14px 20px 12px;
+      border-bottom: 1px solid var(--wf-tint);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .card-header h3 { margin: 0; font-size: 13px; font-weight: 700; color: var(--wf-ink); }
+    .card-body { padding: 20px; }
+
+    .field-row { margin-bottom: 16px; }
+    .field-row:last-child { margin-bottom: 0; }
+    .field-label { font-size: 11px; font-weight: 600; color: var(--wf-muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }
+    .field-value { font-size: 13px; color: var(--wf-ink); }
+    .field-value.placeholder { color: var(--wf-muted); font-style: italic; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid transparent; }
+    .btn-primary { background: var(--wf-accent); color: white; }
+    .btn-secondary { background: white; color: var(--wf-ink); border-color: var(--wf-line); }
+    .btn-ghost { background: rgba(255,255,255,0.15); color: white; border-color: rgba(255,255,255,0.3); }
+
+    .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--wf-tint); }
+    .toggle-row:last-child { border-bottom: none; }
+    .toggle-label { font-size: 13px; color: var(--wf-ink); }
+    .toggle-sub { font-size: 11px; color: var(--wf-muted); margin-top: 2px; }
+    .toggle-pill {
+      width: 36px; height: 20px; border-radius: 10px;
+      background: var(--wf-accent); flex-shrink: 0;
+      position: relative; cursor: pointer;
+    }
+    .toggle-pill::after { content: ''; position: absolute; top: 2px; right: 2px; width: 16px; height: 16px; background: white; border-radius: 50%; }
+    .toggle-pill.off { background: var(--wf-line); }
+    .toggle-pill.off::after { left: 2px; right: auto; }
+
+    .activity-row { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--wf-tint); font-size: 12px; }
+    .activity-row:last-child { border-bottom: none; }
+    .activity-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+    .activity-desc { flex: 1; color: var(--wf-text); line-height: 1.4; }
+    .activity-time { color: var(--wf-muted); font-size: 11px; white-space: nowrap; }
+
+    .permission-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--wf-tint); font-size: 12px; }
+    .permission-row:last-child { border-bottom: none; }
+    .permission-name { font-weight: 600; color: var(--wf-ink); font-size: 13px; }
+    .permission-scope { color: var(--wf-muted); font-size: 11px; margin-top: 2px; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 10px; font-weight: 700; text-transform: uppercase; }
+    .badge-blue  { background: var(--wf-accent-lt, #e8eff8); color: var(--wf-accent, #3d6daa); }
+    .badge-green { background: #e8f5e9; color: #2e7d32; }
+    .badge-gray  { background: var(--wf-tint); color: var(--wf-muted); }
+  </style>
+</head>
+<body>
+
+<!-- wf-header injected by wf-nav.js -->
+<div class="wf-header" data-page="pm-profile">
+  <div class="wf-header-left">
+    <img src="data:image/svg+xml,%3Csvg viewBox='0 0 120 32' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='120' height='32' fill='%23212b36'/%3E%3Ctext x='8' y='22' font-family='Arial' font-size='14' font-weight='700' fill='white'%3EEQUINIX%3C/text%3E%3C/svg%3E" alt="Equinix" height="32">
+    <nav class="wf-header-nav">
+      <a href="pm-home-dashboard.html" class="wf-header-nav-link">Dashboard</a>
+      <a href="pm-deals-revenue.html" class="wf-header-nav-link">Deals &amp; Revenue</a>
+      <a href="pm-team-management.html" class="wf-header-nav-link">Team</a>
+      <a href="pm-resources.html" class="wf-header-nav-link">Resources</a>
+    </nav>
+  </div>
+  <div class="wf-header-right">
+    <a href="pm-notifications.html" class="bell-wrapper" aria-label="Notifications" style="position:relative;color:inherit;text-decoration:none;">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+      <span style="position:absolute;top:-4px;right:-6px;background:var(--wf-red,#8b4555);color:white;font-size:10px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;">2</span>
+    </a>
+    <button class="wf-header-icon-btn" aria-label="Messages">💬</button>
+    <!-- Avatar triggers this page -->
+    <button class="wf-header-avatar wf-header-avatar--pm" aria-label="My Profile" aria-current="page"
+      style="width:32px;height:32px;border-radius:50%;background:var(--wf-accent,#3d6daa);border:2px solid rgba(61,109,170,0.4);color:white;font-size:13px;font-weight:700;cursor:pointer;">JR</button>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="page-header">
+    <h1>My Profile</h1>
+  </div>
+
+  <!-- Hero card -->
+  <div class="profile-hero">
+    <div class="avatar-large">JR</div>
+    <div class="profile-hero-info">
+      <div class="role-tag">Portal Admin</div>
+      <h2>Jordan Reeves</h2>
+      <p class="company">CloudBridge Inc.</p>
+      <p class="email">jreeves@cloudbridge.com</p>
+    </div>
+    <div class="profile-hero-actions">
+      <button class="btn btn-ghost">Edit Photo</button>
+    </div>
+  </div>
+
+  <div class="profile-grid">
+
+    <!-- Personal Information -->
+    <div class="card">
+      <div class="card-header">
+        <h3>Personal Information</h3>
+        <button class="btn btn-secondary" style="font-size:11px;padding:5px 10px;">Edit</button>
+      </div>
+      <div class="card-body">
+        <div class="two-col">
+          <div class="field-row">
+            <div class="field-label">First Name</div>
+            <div class="field-value">Jordan</div>
+          </div>
+          <div class="field-row">
+            <div class="field-label">Last Name</div>
+            <div class="field-value">Reeves</div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Job Title</div>
+          <div class="field-value">Sales Operations Manager</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Email</div>
+          <div class="field-value">jreeves@cloudbridge.com</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Phone</div>
+          <div class="field-value">+1 (415) 555-0182</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Time Zone</div>
+          <div class="field-value">America/Los_Angeles (UTC−8)</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Language</div>
+          <div class="field-value">English (US)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Admin Role & Permissions -->
+    <div class="card">
+      <div class="card-header">
+        <h3>Admin Role &amp; Permissions</h3>
+        <span class="badge badge-blue">Admin</span>
+      </div>
+      <div class="card-body" style="padding-top:8px;padding-bottom:8px;">
+        <div class="permission-row">
+          <div>
+            <div class="permission-name">User Management</div>
+            <div class="permission-scope">Invite, deactivate, and assign roles to team members</div>
+          </div>
+          <span class="badge badge-green">Full</span>
+        </div>
+        <div class="permission-row">
+          <div>
+            <div class="permission-name">Deal Registration</div>
+            <div class="permission-scope">Submit, edit, and approve deal registrations</div>
+          </div>
+          <span class="badge badge-green">Full</span>
+        </div>
+        <div class="permission-row">
+          <div>
+            <div class="permission-name">MDF Management</div>
+            <div class="permission-scope">Request, approve, and report on MDF funds</div>
+          </div>
+          <span class="badge badge-green">Full</span>
+        </div>
+        <div class="permission-row">
+          <div>
+            <div class="permission-name">Reports &amp; Analytics</div>
+            <div class="permission-scope">View org-level dashboards and export data</div>
+          </div>
+          <span class="badge badge-green">Full</span>
+        </div>
+        <div class="permission-row">
+          <div>
+            <div class="permission-name">Program Settings</div>
+            <div class="permission-scope">Modify partner program configuration</div>
+          </div>
+          <span class="badge badge-gray">Read only</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Organization -->
+    <div class="card">
+      <div class="card-header">
+        <h3>Organization</h3>
+      </div>
+      <div class="card-body">
+        <div class="field-row">
+          <div class="field-label">Partner Organization</div>
+          <div class="field-value">CloudBridge Inc.</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Partner Tier</div>
+          <div class="field-value">Gold</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Portal Role</div>
+          <div class="field-value">Administrator</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Assigned PSM</div>
+          <div class="field-value">Marcus Chen</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Team Size</div>
+          <div class="field-value">8 active users</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Admin Since</div>
+          <div class="field-value">January 2022</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Security -->
+    <div class="card">
+      <div class="card-header">
+        <h3>Security</h3>
+      </div>
+      <div class="card-body">
+        <div class="field-row">
+          <div class="field-label">Password</div>
+          <div class="field-value" style="display:flex;align-items:center;justify-content:space-between;">
+            <span>••••••••••••</span>
+            <button class="btn btn-secondary" style="font-size:11px;padding:4px 10px;">Change</button>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Two-Factor Authentication</div>
+          <div class="field-value" style="display:flex;align-items:center;justify-content:space-between;">
+            <span style="color:#2e7d32;font-weight:600;">Enabled (Authenticator App)</span>
+            <button class="btn btn-secondary" style="font-size:11px;padding:4px 10px;">Manage</button>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">SSO</div>
+          <div class="field-value">Linked — cloudbridge.com</div>
+        </div>
+        <div class="field-row">
+          <div class="field-label">Last Login</div>
+          <div class="field-value">Today, 8:02 AM — Chrome / macOS</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notification Preferences -->
+    <div class="card">
+      <div class="card-header">
+        <h3>Notification Preferences</h3>
+      </div>
+      <div class="card-body" style="padding-top:8px;padding-bottom:8px;">
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">New User Requests</div>
+            <div class="toggle-sub">When a team member requests portal access</div>
+          </div>
+          <div class="toggle-pill"></div>
+        </div>
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">Deal Approvals &amp; Disputes</div>
+            <div class="toggle-sub">Status changes on your org's deals</div>
+          </div>
+          <div class="toggle-pill"></div>
+        </div>
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">MDF Activity</div>
+            <div class="toggle-sub">Approvals, rejections, and upcoming deadlines</div>
+          </div>
+          <div class="toggle-pill"></div>
+        </div>
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">Tier Status Changes</div>
+            <div class="toggle-sub">When your org's partner tier is at risk or changes</div>
+          </div>
+          <div class="toggle-pill"></div>
+        </div>
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-label">Weekly Summary Email</div>
+            <div class="toggle-sub">Org activity digest every Monday</div>
+          </div>
+          <div class="toggle-pill off"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="card">
+      <div class="card-header">
+        <h3>Recent Activity</h3>
+      </div>
+      <div class="card-body" style="padding-top:8px;padding-bottom:8px;">
+        <div class="activity-row">
+          <div class="activity-icon">👤</div>
+          <div class="activity-desc">Approved access request for <strong>Taylor Kim</strong> (Sales Rep)</div>
+          <div class="activity-time">1h ago</div>
+        </div>
+        <div class="activity-row">
+          <div class="activity-icon">💰</div>
+          <div class="activity-desc">Submitted MDF request: <strong>Q1 Event Sponsorship — $12,000</strong></div>
+          <div class="activity-time">Yesterday</div>
+        </div>
+        <div class="activity-row">
+          <div class="activity-icon">📊</div>
+          <div class="activity-desc">Downloaded org health report for Q4 2025</div>
+          <div class="activity-time">2 days ago</div>
+        </div>
+        <div class="activity-row">
+          <div class="activity-icon">🔄</div>
+          <div class="activity-desc">Updated team training assignments for 6 users</div>
+          <div class="activity-time">4 days ago</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /profile-grid -->
+</div><!-- /container -->
+
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Wireframe notes">
+  <div id="spec-toggle" class="spec-toggle-btn" aria-expanded="false">Notes</div>
+  <div class="spec-content">
+    <h2>My Profile — Portal Admin</h2>
+    <h3>Trigger</h3>
+    <p>This page is reached by clicking the user avatar in the top-right of the Partner Portal navigation bar. The admin avatar shows initials with the Portal Admin color (blue accent). An <code>aria-current="page"</code> attribute marks it as active when on this page.</p>
+    <h3>Design Notes</h3>
+    <ul>
+      <li>Unlike the Sales Rep profile, the Admin profile shows the Permissions card instead of Certifications, since certifications are less central to the admin role</li>
+      <li>Admin role and permissions are managed by Equinix/PSM, not self-service — the section is read-only</li>
+      <li>SSO linking is only shown for organizations that have configured SSO via Equinix's identity broker</li>
+      <li>The Notification Preferences section will have more rows for admins than sales reps due to org-level events</li>
+      <li>Recent Activity for admins logs administrative actions (user management, MDF, reports) not just personal activity</li>
+    </ul>
+    <h3>Differences from Sales Rep Profile</h3>
+    <p>Portal Admin profile swaps the Certifications card for an Admin Permissions card. The hero role tag uses blue (Portal Admin color) instead of violet (Sales Rep color). The activity log reflects admin actions rather than deal/training activity.</p>
+  </div>
+</aside>
+
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

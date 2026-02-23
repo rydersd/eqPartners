@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notifications — Equinix Customer Portal</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    :root {
+      --wf-ink: #1e2a3a;
+      --wf-accent: #3d6daa;
+      --wf-muted: #6b7f99;
+      --wf-amber: #8b7745;
+      --wf-red: #8b4553;
+      --wf-canvas: #f5f7fb;
+      --wf-tint: #dce4ef;
+      --wf-surface: #edf1f7;
+      --wf-text: #3b4f68;
+      --wf-line: #b0bdd0;
+    }
+
+    /* Page-specific styles */
+    .notifications-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .notifications-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+    }
+
+    .notifications-header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .notifications-header-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--wf-ink);
+      margin: 0;
+    }
+
+    .unread-badge {
+      display: inline-block;
+      background-color: var(--wf-amber);
+      color: white;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .notifications-header-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .mark-read-btn {
+      padding: 8px 16px;
+      background: transparent;
+      border: 1px solid var(--wf-line);
+      border-radius: 4px;
+      color: var(--wf-text);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .mark-read-btn:hover {
+      background-color: var(--wf-surface);
+      border-color: var(--wf-muted);
+    }
+
+    .preferences-link {
+      color: var(--wf-accent);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: color 0.2s ease;
+    }
+
+    .preferences-link:hover {
+      color: var(--wf-ink);
+      text-decoration: underline;
+    }
+
+    /* Filter tabs */
+    .filter-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      border-bottom: 1px solid var(--wf-line);
+      padding-bottom: 16px;
+    }
+
+    .filter-tab {
+      padding: 8px 14px;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 20px;
+      color: var(--wf-muted);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .filter-tab:hover {
+      background-color: var(--wf-surface);
+      color: var(--wf-text);
+    }
+
+    .filter-tab.active {
+      background-color: var(--wf-tint);
+      color: var(--wf-ink);
+      border-color: var(--wf-accent);
+    }
+
+    /* Notification list */
+    .notification-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+
+    .notification-card {
+      display: flex;
+      gap: 16px;
+      padding: 16px;
+      background: white;
+      border: 1px solid var(--wf-line);
+      border-radius: 6px;
+      border-left: 3px solid var(--wf-line);
+      transition: all 0.2s ease;
+    }
+
+    .notification-card:hover {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .notification-card.unread {
+      background-color: var(--wf-surface);
+      border-left-color: var(--wf-accent);
+    }
+
+    .notification-card.unread.type-alert {
+      border-left-color: var(--wf-amber);
+    }
+
+    .notification-card.unread.type-order {
+      border-left-color: var(--wf-red);
+    }
+
+    .notification-card.type-alert {
+      border-left-color: var(--wf-amber);
+    }
+
+    .notification-card.type-order {
+      border-left-color: var(--wf-red);
+    }
+
+    .notification-card.type-case {
+      border-left-color: var(--wf-accent);
+    }
+
+    .notification-card.type-maintenance {
+      border-left-color: var(--wf-amber);
+    }
+
+    .notification-card.type-billing {
+      border-left-color: var(--wf-muted);
+    }
+
+    .notification-card.type-contract {
+      border-left-color: var(--wf-amber);
+    }
+
+    .notification-card.type-system {
+      border-left-color: var(--wf-accent);
+    }
+
+    .notification-icon {
+      flex-shrink: 0;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      border-radius: 4px;
+      background-color: var(--wf-canvas);
+    }
+
+    .notification-content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .notification-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--wf-ink);
+      margin: 0 0 6px 0;
+    }
+
+    .notification-body {
+      font-size: 13px;
+      color: var(--wf-text);
+      line-height: 1.5;
+      margin: 0 0 8px 0;
+    }
+
+    .notification-footer {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 12px;
+      color: var(--wf-muted);
+    }
+
+    .notification-actions {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 8px;
+      justify-content: flex-start;
+    }
+
+    .unread-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background-color: var(--wf-accent);
+      border-radius: 50%;
+    }
+
+    .notification-action-link {
+      color: var(--wf-accent);
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: color 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .notification-action-link:hover {
+      color: var(--wf-ink);
+      text-decoration: underline;
+    }
+
+    /* Preferences section */
+    .preferences-section {
+      margin-top: 32px;
+      border-top: 1px solid var(--wf-line);
+      padding-top: 24px;
+    }
+
+    .preferences-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .preferences-toggle {
+      display: inline-block;
+      font-size: 12px;
+      color: var(--wf-muted);
+      transition: transform 0.2s ease;
+    }
+
+    .preferences-toggle.expanded {
+      transform: rotate(90deg);
+    }
+
+    .preferences-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--wf-ink);
+      margin: 0;
+    }
+
+    .preferences-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      padding: 16px;
+      background-color: var(--wf-canvas);
+      border-radius: 6px;
+    }
+
+    .preference-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .preference-checkbox {
+      width: 16px;
+      height: 16px;
+      border: 1px solid var(--wf-line);
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      color: white;
+      cursor: pointer;
+    }
+
+    .preference-checkbox.checked {
+      background-color: var(--wf-accent);
+      border-color: var(--wf-accent);
+    }
+
+    .preference-label {
+      font-size: 13px;
+      color: var(--wf-text);
+      cursor: pointer;
+    }
+
+    /* Spec panel */
+    .spec-panel {
+      position: fixed;
+      right: 0;
+      top: 0;
+      width: 380px;
+      height: 100vh;
+      background: white;
+      border-left: 1px solid var(--wf-line);
+      overflow-y: auto;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+    }
+
+    .spec-panel.open {
+      transform: translateX(0);
+    }
+
+    .spec-panel-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--wf-line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .spec-panel-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--wf-ink);
+      margin: 0;
+    }
+
+    .spec-panel-close {
+      background: none;
+      border: none;
+      font-size: 20px;
+      color: var(--wf-muted);
+      cursor: pointer;
+      padding: 0;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .spec-panel-content {
+      padding: 20px;
+      font-size: 13px;
+      color: var(--wf-text);
+      line-height: 1.6;
+    }
+
+    .spec-anchor {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 48px;
+      height: 48px;
+      background-color: var(--wf-accent);
+      color: white;
+      border: none;
+      border-radius: 24px;
+      font-size: 18px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .spec-anchor:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .notifications-container {
+        padding: 16px;
+      }
+
+      .notifications-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .notifications-header-right {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+      .notification-card {
+        flex-direction: column;
+      }
+
+      .notification-actions {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .preferences-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .filter-tabs {
+        gap: 6px;
+      }
+
+      .filter-tab {
+        font-size: 12px;
+        padding: 6px 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="wf-header">
+    <div class="wf-header-inner">
+      <a class="wf-logo" href="ecp-dashboard.html">Equinix</a>
+      <nav class="wf-header-nav">
+        <a href="ecp-dashboard.html">Dashboard</a>
+        <a href="ecp-services-orders.html">Services</a>
+        <a href="ecp-notifications.html" class="active">Notifications</a>
+        <a href="ecp-cases.html">Cases</a>
+        <a href="ecp-product-catalog.html">Catalog</a>
+      </nav>
+      <div class="wf-header-util">
+        <span style="font-size:11px;color:#2d4029;background:#e8f0e4;border:1px solid #c0d8b0;border-radius:12px;padding:3px 10px;font-weight:600;white-space:nowrap;">Maria Hill &nbsp;&bull;&nbsp; S.H.I.E.L.D.</span>
+        <button style="background:none; border:none; font-size:18px; cursor:pointer; color:var(--wf-text);">🔔</button>
+        <button style="background:none; border:none; font-size:18px; cursor:pointer; color:var(--wf-text);">👤</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Breadcrumb bar -->
+  <div class="page-context-bar">
+    <div style="max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+      <nav class="wf-breadcrumb" style="margin-bottom:0;">
+        <a href="ecp-dashboard.html">ECP Home</a>
+        <span class="wf-breadcrumb-sep">›</span>
+        <span class="wf-breadcrumb-current">Notifications</span>
+      </nav>
+      <span class="persona-badge persona-badge--euc">EUC</span>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <main class="notifications-container">
+    <!-- Page header -->
+    <div class="notifications-header">
+      <div class="notifications-header-left">
+        <h1 class="notifications-header-title">Notifications</h1>
+        <span class="unread-badge">2 Unread</span>
+      </div>
+      <div class="notifications-header-right">
+        <button class="mark-read-btn">Mark all read</button>
+        <a class="preferences-link" onclick="togglePreferencesSection(event)">Preferences</a>
+      </div>
+    </div>
+
+    <!-- Filter tabs -->
+    <div class="filter-tabs">
+      <button class="filter-tab active">All (9)</button>
+      <button class="filter-tab">⚠ Alerts (2)</button>
+      <button class="filter-tab">📦 Orders (3)</button>
+      <button class="filter-tab">💬 Cases (1)</button>
+      <button class="filter-tab">🔧 Maintenance (1)</button>
+      <button class="filter-tab">💳 Billing (1)</button>
+      <button class="filter-tab">ℹ System (1)</button>
+    </div>
+
+    <!-- Notification list -->
+    <div class="notification-list">
+      <!-- 1. Maintenance Alert (UNREAD) -->
+      <div class="notification-card unread type-maintenance">
+        <div class="notification-icon">🔧</div>
+        <div class="notification-content">
+          <h3 class="notification-title">Planned Maintenance — SV5 IBX Cooling System</h3>
+          <p class="notification-body">Scheduled maintenance window: Feb 22, 2026, 02:00–06:00 PST. Cabinet CAB-A7-04 is in the affected zone. Services may experience brief interruption. A Stark Industries NOC engineer will monitor remotely.</p>
+          <div class="notification-footer">
+            <span>Feb 18, 2026 · 9:14 AM</span>
+          </div>
+        </div>
+        <div class="notification-actions">
+          <span class="unread-dot"></span>
+          <a class="notification-action-link">View Details</a>
+        </div>
+      </div>
+
+      <!-- 2. Order Update - SLA Breach (UNREAD) -->
+      <div class="notification-card unread type-order">
+        <div class="notification-icon">📦</div>
+        <div class="notification-content">
+          <h3 class="notification-title">ORD-2025-0189 Power Upgrade — SLA Breach Notification</h3>
+          <p class="notification-body">This order is 5 business days past its estimated completion date. Your assigned PSM Marcus Chen has been notified. Equinix Site Operations has opened an internal escalation (ESC-2026-0041).</p>
+          <div class="notification-footer">
+            <span>Feb 17, 2026 · 3:52 PM</span>
+          </div>
+        </div>
+        <div class="notification-actions">
+          <span class="unread-dot"></span>
+          <a class="notification-action-link">View Order</a>
+        </div>
+      </div>
+
+      <!-- 3. Case Update (READ) -->
+      <div class="notification-card type-case">
+        <div class="notification-icon">💬</div>
+        <div class="notification-content">
+          <h3 class="notification-title">Case INC-2026-0012 — Response from Stark Industries</h3>
+          <p class="notification-body">James Rhodes (Stark Industries, VP Infrastructure) has provided a response to your connectivity query regarding SV5 Fabric port FP-SV5-10032. A scheduled diagnostics window has been booked for Feb 20, 2026, 10:00 AM PST.</p>
+          <div class="notification-footer">
+            <span>Feb 16, 2026 · 11:27 AM</span>
+          </div>
+        </div>
+        <div class="notification-actions">
+          <a class="notification-action-link">View Case</a>
+        </div>
+      </div>
+
+      <!-- 4. Order Update - Delay Notice (READ) -->
+      <div class="notification-card type-order">
+        <div class="notification-icon">📦</div>
+        <div class="notification-content">
+          <h3 class="notification-title">ORD-2025-0156 Cabinet Deployment — Delay Notice</h3>
+          <p class="notification-body">Installation of CAB-A7-04 has been delayed by approximately 7 days due to SV5 cage density constraints. New estimated completion: Feb 24, 2026. No action required — Stark Industries has been notified.</p>
+          <div class="notification-footer">
+            <span>Feb 15, 2026 · 8:03 AM</span>
+          </div>
+        </div>
+        <div class="notification-actions">
+          <a class="notification-action-link">View Order</a>
+        </div>
+      </div>
+
+      <!-- 5. Billing Invoice (READ) -->
+      <div class="notification-card type-billing">
+        <div class="notification-icon">💳</div>
+        <div class="notification-content">
+          <h3 class="notification-title">Invoice Ready — EQX-INV-2026-0089</h3>
+          <p class="notification-body">Your January 2026 invoice is available for review. Amount due: $47,820.00. Payment due date: Mar 1, 2026. This invoice covers colocation, cross-connects, Fabric, and Smart Hands services.</p>
+          <div class="notification-footer">
+            <span>Feb 14, 2026 · 6:00 AM</span>
+          </div>
+        </div>
+        <div class="notification-actions">
+          <a class="notification-action-link">View Invoice</a>
+        </div>
+      </div>
+
+      <!-- 6. Order Update - Status Change (READ) -->
+      <div class="notification-card type-order">
+        <div class="notification-icon">📦</div>
+        <div class="notification-content">
+          <h3 class="notification-title">ORD-2025-0189 Power Upgrade — Status Change</h3>
+          <p class="notification-body">Order status updated to 'Engineering Review'. An Equinix site engineer has been assigned to assess the SV5-A7 power infrastructure before installing the additional 20A circuit. Est. completion pending review.</p>
+          <div class="notification-footer">
+            <span>Feb 10, 2026 · 2:15 PM</span>
+          </div>
+        </div>
+        <div class="notification-actions">
+          <a class="notification-action-link">View Order</a>
+        </div>
+      </div>
+
+      <!-- 7. Contract Renewal Reminder (READ) -->
+      <div class="notification-card type-contract">
+        <div class="notification-icon">⚠️</div>
+        <div class="notification-content">
+          <h3 class="notification-title">Contract Renewal Reminder — 90 Days Notice</h3>
+          <p class="notification-body">Your Equinix Master Service Agreement (MSA-SHIELD-2023) expires on May 15, 2026. Your partner Stark Industries has been notified. Please contact James Rhodes at Stark Industries to discuss renewal terms.</p>
+          <div class="notification-footer">
+            <span>Feb 5, 2026 · 6:00 AM</span>
+          </div>
+        </div>
+        <div class="notification-actions">
+          <a class="notification-action-link">Contact Partner</a>
+        </div>
+      </div>
+
+      <!-- 8. System Update (READ) -->
+      <div class="notification-card type-system">
+        <div class="notification-icon">ℹ️</div>
+        <div class="notification-content">
+          <h3 class="notification-title">Portal Update — New Features Available</h3>
+          <p class="notification-body">The Equinix Customer Portal has been updated with improved inventory management, a new product catalog showing your partner's available solutions, and enhanced order tracking. Explore the new features in the Services and Catalog sections.</p>
+          <div class="notification-footer">
+            <span>Feb 1, 2026 · 9:00 AM</span>
+          </div>
+        </div>
+        <div class="notification-actions">
+          <a class="notification-action-link">Explore</a>
+        </div>
+      </div>
+
+      <!-- 9. Order Update - Accepted (READ) -->
+      <div class="notification-card type-order">
+        <div class="notification-icon">📦</div>
+        <div class="notification-content">
+          <h3 class="notification-title">ORD-2025-0156 Cabinet Deployment — Order Accepted</h3>
+          <p class="notification-body">Your cabinet deployment order has been accepted and assigned to SV5 Site Operations team. Order confirmation: SO-EQX-2025-0156-A. Estimated completion: Feb 17, 2026.</p>
+          <div class="notification-footer">
+            <span>Jan 16, 2026 · 10:44 AM</span>
+          </div>
+        </div>
+        <div class="notification-actions">
+          <a class="notification-action-link">View Order</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notification Preferences Section -->
+    <div class="preferences-section" id="preferencesSection" style="display: none;">
+      <div class="preferences-header" onclick="togglePreferencesContent()">
+        <span class="preferences-toggle" id="prefToggle">▸</span>
+        <h3 class="preferences-title">Notification Preferences</h3>
+      </div>
+      <div class="preferences-grid" id="preferencesGrid">
+        <div class="preference-item">
+          <div class="preference-checkbox checked">✓</div>
+          <label class="preference-label">Email alerts</label>
+        </div>
+        <div class="preference-item">
+          <div class="preference-checkbox"></div>
+          <label class="preference-label">SMS alerts</label>
+        </div>
+        <div class="preference-item">
+          <div class="preference-checkbox checked">✓</div>
+          <label class="preference-label">Maintenance windows</label>
+        </div>
+        <div class="preference-item">
+          <div class="preference-checkbox checked">✓</div>
+          <label class="preference-label">Order updates</label>
+        </div>
+        <div class="preference-item">
+          <div class="preference-checkbox checked">✓</div>
+          <label class="preference-label">Billing notices</label>
+        </div>
+        <div class="preference-item">
+          <div class="preference-checkbox checked">✓</div>
+          <label class="preference-label">Case activity</label>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Spec panel -->
+  <div class="spec-panel" id="specPanel">
+    <div class="spec-panel-header">
+      <h3 class="spec-panel-title">Notes & Spec</h3>
+      <button class="spec-panel-close" onclick="toggleSpec()">✕</button>
+    </div>
+    <div class="spec-panel-content">
+      <p><strong>EUC Notification Center</strong></p>
+      <p>Notifications are generated by three primary sources:</p>
+      <ol style="margin: 12px 0; padding-left: 18px;">
+        <li><strong>Equinix automated systems</strong> — maintenance, billing, SLA breach alerts</li>
+        <li><strong>Partner activity</strong> — Stark Industries case responses, order status changes</li>
+        <li><strong>PSM activity</strong> — Marcus Chen escalations and priority updates</li>
+      </ol>
+      <p><strong>Unread Count Badge:</strong> The header badge displays the count of notifications with status=unread. "Mark all read" clears the badge and updates all visible notifications to read status.</p>
+      <p><strong>Notification Preferences:</strong> Toggles control email/SMS delivery channels. In-portal notifications are always shown regardless of preference settings.</p>
+      <p><strong>Critical Alerts:</strong> Alert and SLA breach notifications trigger email delivery to maria.hill@shield.gov regardless of SMS or digest preferences.</p>
+      <p><strong>Color Coding:</strong> Left border indicates notification type — amber for maintenance/contract, red for SLA breaches, blue for cases/system, grey for standard order/billing updates.</p>
+    </div>
+  </div>
+
+  <!-- Spec anchor button -->
+  <button class="spec-anchor" onclick="toggleSpec()" title="View spec & notes">📋</button>
+
+  <script>
+    function toggleSpec() {
+      const panel = document.getElementById('specPanel');
+      panel.classList.toggle('open');
+    }
+
+    function togglePreferencesSection(event) {
+      if (event) {
+        event.preventDefault();
+      }
+      const section = document.getElementById('preferencesSection');
+      section.style.display = section.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function togglePreferencesContent() {
+      const grid = document.getElementById('preferencesGrid');
+      const toggle = document.getElementById('prefToggle');
+      grid.style.display = grid.style.display === 'none' ? 'grid' : 'none';
+      toggle.classList.toggle('expanded');
+    }
+  </script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

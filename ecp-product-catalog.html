@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solutions Catalog — Equinix Customer Portal</title>
+    <link rel="stylesheet" href="../wireframe.css">
+    <style>
+        /* Page-specific layout & styling */
+        .page-header {
+            padding: 2rem 2rem 1.5rem;
+            border-bottom: 1px solid var(--wf-line);
+        }
+
+        .page-header h1 {
+            font-size: 1.875rem;
+            font-weight: 600;
+            color: var(--wf-ink);
+            margin: 0 0 0.5rem 0;
+        }
+
+        .page-header .subtitle {
+            font-size: 0.9375rem;
+            color: var(--wf-text);
+            margin: 0;
+        }
+
+        /* Context banner */
+        .context-banner {
+            margin: 1.5rem 2rem;
+            padding: 1rem 1rem 1rem 3rem;
+            background: linear-gradient(135deg, #f0f4fb 0%, #e8ecf5 100%);
+            border-left: 3px solid var(--wf-accent);
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .context-banner::before {
+            content: "ℹ️";
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.25rem;
+        }
+
+        .context-banner p {
+            margin: 0;
+            font-size: 0.9375rem;
+            color: var(--wf-text);
+            line-height: 1.5;
+        }
+
+        /* Filter & sort row */
+        .filter-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--wf-line);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .filter-pills {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-pill {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--wf-line);
+            background: white;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            color: var(--wf-text);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-pill.active {
+            background: var(--wf-accent);
+            color: white;
+            border-color: var(--wf-accent);
+        }
+
+        .filter-pill:hover {
+            border-color: var(--wf-accent);
+        }
+
+        .sort-control {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9375rem;
+            color: var(--wf-text);
+        }
+
+        .sort-dropdown {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid var(--wf-line);
+            background: white;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            color: var(--wf-text);
+        }
+
+        /* Status legend */
+        .status-legend {
+            padding: 0 2rem 1rem 2rem;
+            font-size: 0.8125rem;
+            color: var(--wf-muted);
+        }
+
+        .status-legend span {
+            margin-right: 1.5rem;
+        }
+
+        .status-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 0.4rem;
+        }
+
+        .status-dot.active {
+            background: #4caf50;
+        }
+
+        .status-dot.available {
+            border: 2px solid var(--wf-muted);
+            background: transparent;
+            width: 6px;
+            height: 6px;
+        }
+
+        /* Cards grid */
+        .cards-container {
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 1200px) {
+            .cards-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .solution-card {
+            background: white;
+            border: 1px solid var(--wf-line);
+            border-radius: 4px;
+            overflow: hidden;
+            transition: all 0.2s;
+        }
+
+        .solution-card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border-color: var(--wf-accent);
+        }
+
+        .solution-card.active {
+            border-top: 3px solid #4caf50;
+            border-top-left-radius: 4px;
+            border-top-right-radius: 4px;
+        }
+
+        /* Card header */
+        .card-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--wf-line);
+        }
+
+        .card-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+            gap: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--wf-ink);
+            margin: 0;
+        }
+
+        .card-badges {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .category-tag {
+            padding: 0.25rem 0.75rem;
+            background: var(--wf-tint);
+            color: var(--wf-accent);
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .status-badge.unavailable {
+            background: #f5f5f5;
+            color: var(--wf-muted);
+        }
+
+        .card-tagline {
+            font-size: 0.9375rem;
+            color: var(--wf-text);
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        /* What's included section */
+        .whats-included {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--wf-line);
+        }
+
+        .whats-included-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--wf-ink);
+            margin: 0 0 1rem 0;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .components-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .component-column h4 {
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--wf-text);
+            margin: 0 0 0.75rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .component-column h4::before {
+            content: "";
+            display: inline-block;
+            width: 4px;
+            height: 4px;
+            background: var(--wf-accent);
+            border-radius: 50%;
+        }
+
+        .equinix-column h4::before {
+            background: #3d6daa;
+        }
+
+        .stark-column h4::before {
+            background: #8b7745;
+        }
+
+        .component-item {
+            font-size: 0.8125rem;
+            color: var(--wf-text);
+            margin-bottom: 0.6rem;
+            padding-left: 1.25rem;
+            position: relative;
+        }
+
+        .component-item::before {
+            content: "–";
+            position: absolute;
+            left: 0;
+            color: var(--wf-muted);
+        }
+
+        /* Pricing row */
+        .pricing-row {
+            padding: 1rem 1.5rem;
+            background: var(--wf-canvas);
+            border-bottom: 1px solid var(--wf-line);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .price-label {
+            font-size: 0.75rem;
+            color: var(--wf-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: 0.25rem;
+        }
+
+        .price-amount {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--wf-ink);
+        }
+
+        .price-period {
+            font-size: 0.8125rem;
+            color: var(--wf-muted);
+        }
+
+        .use-case-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .use-case-tag {
+            font-size: 0.75rem;
+            color: var(--wf-accent);
+            background: var(--wf-tint);
+            padding: 0.25rem 0.6rem;
+            border-radius: 3px;
+        }
+
+        /* Card footer / actions */
+        .card-footer {
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 0.625rem 1.25rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-accent {
+            background: var(--wf-accent);
+            color: white;
+        }
+
+        .btn-accent:hover {
+            background: #2d5a8a;
+        }
+
+        .btn-outline {
+            background: white;
+            color: var(--wf-accent);
+            border: 1px solid var(--wf-accent);
+        }
+
+        .btn-outline:hover {
+            background: var(--wf-tint);
+        }
+
+        .link-small {
+            font-size: 0.8125rem;
+            color: var(--wf-accent);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .link-small:hover {
+            text-decoration: underline;
+        }
+
+        .card-note {
+            font-size: 0.75rem;
+            color: var(--wf-muted);
+            font-style: italic;
+            margin-top: 0.5rem;
+        }
+
+        /* Custom CTA section */
+        .custom-cta-section {
+            margin: 2rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, #f0f4fb 0%, #e8ecf5 100%);
+            border: 1px solid var(--wf-line);
+            border-radius: 4px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        @media (max-width: 768px) {
+            .custom-cta-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .custom-cta-content h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--wf-ink);
+            margin: 0 0 0.75rem 0;
+        }
+
+        .custom-cta-content p {
+            font-size: 0.9375rem;
+            color: var(--wf-text);
+            margin: 0 0 1.25rem 0;
+            line-height: 1.5;
+        }
+
+        .custom-cta-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .contact-card {
+            background: white;
+            border: 1px solid var(--wf-line);
+            border-radius: 4px;
+            padding: 1.5rem;
+            min-width: 250px;
+        }
+
+        .contact-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--wf-ink);
+            margin: 0 0 0.25rem 0;
+        }
+
+        .contact-title {
+            font-size: 0.8125rem;
+            color: var(--wf-muted);
+            margin: 0 0 1rem 0;
+        }
+
+        .contact-info {
+            font-size: 0.8125rem;
+            color: var(--wf-text);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .contact-info a {
+            color: var(--wf-accent);
+            text-decoration: none;
+        }
+
+        .contact-info a:hover {
+            text-decoration: underline;
+        }
+
+        /* Utility */
+        .flex-spacer {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="navbar-left">
+                <div class="logo">Equinix Customer Portal</div>
+            </div>
+            <div class="navbar-center">
+                <a href="ecp-dashboard.html" class="nav-link">Dashboard</a>
+                <a href="ecp-services-orders.html" class="nav-link">Services</a>
+                <a href="ecp-notifications.html" class="nav-link">Notifications</a>
+                <a href="ecp-cases.html" class="nav-link">Cases</a>
+                <a href="ecp-product-catalog.html" class="nav-link active">Catalog</a>
+            </div>
+            <div class="navbar-right">
+                <div class="user-menu">Maria Hill</div>
+            </div>
+        </div>
+    </nav>
+
+<div class="page-context-bar">
+  <div style="max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <nav class="wf-breadcrumb" aria-label="Breadcrumb" style="margin-bottom:0;">
+      <a href="ecp-dashboard.html" class="wf-breadcrumb-link">ECP Home</a><span class="wf-breadcrumb-sep">›</span><span class="wf-breadcrumb-current">Solutions Catalog</span>
+    </nav>
+    <span class="persona-badge persona-badge--euc">EUC</span>
+  </div>
+</div>
+
+    <div class="breadcrumb">
+        <a href="ecp-dashboard.html">ECP Home</a>
+        <span class="separator">›</span>
+        <span class="current">Catalog</span>
+        <span class="separator">›</span>
+        <span class="badge badge-accent">EUC</span>
+    </div>
+
+    <div id="spec-tab-anchor" class="spec-tab-anchor">
+        <button class="spec-tab-button" onclick="toggleSpec()">📋 Spec</button>
+    </div>
+
+    <div class="page-header">
+        <h1>Solutions Catalog</h1>
+        <p class="subtitle">Infrastructure packages available to S.H.I.E.L.D. from Stark Industries · Curated multi-vendor solutions</p>
+    </div>
+
+    <div class="context-banner">
+        <p>The solutions below are packaged and managed by Stark Industries, your Equinix reseller partner. Each suite combines Equinix infrastructure with complementary vendor technologies and Stark-managed services. Contact James Rhodes to add a new solution or modify an existing one.</p>
+    </div>
+
+    <div class="filter-row">
+        <div class="filter-pills">
+            <button class="filter-pill active" onclick="filterByCategory('all')">All (5)</button>
+            <button class="filter-pill" onclick="filterByCategory('cloud-connectivity')">Cloud Connectivity (1)</button>
+            <button class="filter-pill" onclick="filterByCategory('security-edge')">Security & Edge (1)</button>
+            <button class="filter-pill" onclick="filterByCategory('managed-colo')">Managed Colocation (1)</button>
+            <button class="filter-pill" onclick="filterByCategory('wan-branch')">WAN & Branch (1)</button>
+            <button class="filter-pill" onclick="filterByCategory('internet-peering')">Internet & Peering (1)</button>
+        </div>
+        <div class="sort-control">
+            <label>Sort by:</label>
+            <select class="sort-dropdown">
+                <option>Most Popular</option>
+                <option>Price: Low to High</option>
+                <option>Price: High to Low</option>
+                <option>Newest</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="status-legend">
+        <span><span class="status-dot active"></span> Active (subscribed)</span>
+        <span><span class="status-dot available"></span> Available (not subscribed)</span>
+    </div>
+
+    <div class="cards-container">
+        <!-- Card 1: Hybrid Cloud Connect -->
+        <div class="solution-card active" data-category="cloud-connectivity">
+            <div class="card-header">
+                <div class="card-title-row">
+                    <h3 class="card-title">Hybrid Cloud Connect</h3>
+                    <div class="card-badges">
+                        <span class="category-tag">Cloud Connectivity</span>
+                        <span class="status-badge">✓ Active</span>
+                    </div>
+                </div>
+                <p class="card-tagline">Direct, private connectivity from SV5 to AWS and Azure — no public internet traversal.</p>
+            </div>
+
+            <div class="whats-included">
+                <h4 class="whats-included-title">What's Included</h4>
+                <div class="components-grid">
+                    <div class="component-column equinix-column">
+                        <h4>Equinix Infrastructure</h4>
+                        <div class="component-item">Equinix Fabric port — SV5, 10G</div>
+                        <div class="component-item">AWS Direct Connect — us-west-2, 1G dedicated</div>
+                        <div class="component-item">Azure ExpressRoute — West US, 1G</div>
+                        <div class="component-item">Equinix Internet Exchange port</div>
+                    </div>
+                    <div class="component-column stark-column">
+                        <h4>Stark & Partner Services</h4>
+                        <div class="component-item">Palo Alto VM-300 NGFW (Network Edge, Stark-managed)</div>
+                        <div class="component-item">BGP routing management (Stark NOC)</div>
+                        <div class="component-item">24×7 connection monitoring</div>
+                        <div class="component-item">Monthly performance report</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pricing-row">
+                <div>
+                    <div class="price-label">Monthly Pricing</div>
+                    <div class="price-amount">$8,200</div>
+                    <div class="price-period">per month</div>
+                </div>
+                <div class="use-case-tags">
+                    <span class="use-case-tag">#HybridCloud</span>
+                    <span class="use-case-tag">#MultiCloud</span>
+                    <span class="use-case-tag">#LowLatency</span>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <div class="card-actions">
+                    <button class="btn btn-accent">Manage →</button>
+                    <a href="#" class="link-small">View SLA</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 2: Secure Edge Colocation -->
+        <div class="solution-card active" data-category="security-edge">
+            <div class="card-header">
+                <div class="card-title-row">
+                    <h3 class="card-title">Secure Edge Colocation</h3>
+                    <div class="card-badges">
+                        <span class="category-tag">Security & Edge</span>
+                        <span class="status-badge">✓ Active</span>
+                    </div>
+                </div>
+                <p class="card-tagline">Fully managed colocation at SV5 with integrated physical security stack and 24×7 NOC coverage.</p>
+            </div>
+
+            <div class="whats-included">
+                <h4 class="whats-included-title">What's Included</h4>
+                <div class="components-grid">
+                    <div class="component-column equinix-column">
+                        <h4>Equinix Infrastructure</h4>
+                        <div class="component-item">SV5 Half Cabinet (CAB-A7-04, 24U)</div>
+                        <div class="component-item">2 × 20A power circuits</div>
+                        <div class="component-item">Smart Hands plan (20 hrs/mo)</div>
+                        <div class="component-item">Remote Hands coverage</div>
+                    </div>
+                    <div class="component-column stark-column">
+                        <h4>Stark & Partner Services</h4>
+                        <div class="component-item">Fortinet FortiGate 400F NGFW (physical, rack-mounted by Stark)</div>
+                        <div class="component-item">Cisco Catalyst 9200 switching</div>
+                        <div class="component-item">Stark NOC — 24×7 monitoring & incident response</div>
+                        <div class="component-item">Quarterly physical security audit</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pricing-row">
+                <div>
+                    <div class="price-label">Monthly Pricing</div>
+                    <div class="price-amount">$12,400</div>
+                    <div class="price-period">per month</div>
+                </div>
+                <div class="use-case-tags">
+                    <span class="use-case-tag">#Colocation</span>
+                    <span class="use-case-tag">#PhysicalSecurity</span>
+                    <span class="use-case-tag">#ManagedNOC</span>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <div class="card-actions">
+                    <button class="btn btn-accent">Manage →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 3: Compliance-Ready Infrastructure -->
+        <div class="solution-card" data-category="managed-colo">
+            <div class="card-header">
+                <div class="card-title-row">
+                    <h3 class="card-title">Compliance-Ready Infrastructure</h3>
+                    <div class="card-badges">
+                        <span class="category-tag">Managed Colocation</span>
+                        <span class="status-badge unavailable">○ Not Subscribed</span>
+                    </div>
+                </div>
+                <p class="card-tagline">FedRAMP/HIPAA-aligned compute and storage stack with end-to-end audit trail and quarterly compliance reporting.</p>
+            </div>
+
+            <div class="whats-included">
+                <h4 class="whats-included-title">What's Included</h4>
+                <div class="components-grid">
+                    <div class="component-column equinix-column">
+                        <h4>Equinix Infrastructure</h4>
+                        <div class="component-item">Equinix colo cage (isolated, SV5 or NY4)</div>
+                        <div class="component-item">Equinix Fabric private connections (no internet path)</div>
+                        <div class="component-item">Enhanced SLA (99.9999% uptime)</div>
+                    </div>
+                    <div class="component-column stark-column">
+                        <h4>Stark & Partner Services</h4>
+                        <div class="component-item">Dell PowerEdge R750 servers (provisioned by Stark)</div>
+                        <div class="component-item">Veeam Backup & Replication (managed)</div>
+                        <div class="component-item">Splunk SIEM (Stark-managed, 90-day retention)</div>
+                        <div class="component-item">SOC 2 Type II compliance report (quarterly)</div>
+                        <div class="component-item">Dedicated Stark compliance engineer</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pricing-row">
+                <div>
+                    <div class="price-label">Custom Pricing</div>
+                    <div class="price-amount">$24,600+</div>
+                    <div class="price-period">per month (scope-dependent)</div>
+                </div>
+                <div class="use-case-tags">
+                    <span class="use-case-tag">#FedRAMP</span>
+                    <span class="use-case-tag">#HIPAA</span>
+                    <span class="use-case-tag">#Compliance</span>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <div class="card-actions">
+                    <button class="btn btn-outline">Request Quote →</button>
+                </div>
+                <div class="card-note">Contact your Stark account manager to scope for your specific compliance requirements</div>
+            </div>
+        </div>
+
+        <!-- Card 4: SD-WAN Branch Connect -->
+        <div class="solution-card" data-category="wan-branch">
+            <div class="card-header">
+                <div class="card-title-row">
+                    <h3 class="card-title">SD-WAN Branch Connect</h3>
+                    <div class="card-badges">
+                        <span class="category-tag">WAN & Branch</span>
+                        <span class="status-badge unavailable">○ Not Subscribed</span>
+                    </div>
+                </div>
+                <p class="card-tagline">Enterprise SD-WAN connecting your branch offices to SV5 colocation and cloud resources via Cisco and Zscaler.</p>
+            </div>
+
+            <div class="whats-included">
+                <h4 class="whats-included-title">What's Included</h4>
+                <div class="components-grid">
+                    <div class="component-column equinix-column">
+                        <h4>Equinix Infrastructure</h4>
+                        <div class="component-item">Equinix Network Edge (Cisco Catalyst SD-WAN virtual device)</div>
+                        <div class="component-item">Equinix Fabric port — SV5, 1G</div>
+                    </div>
+                    <div class="component-column stark-column">
+                        <h4>Stark & Partner Services</h4>
+                        <div class="component-item">Cisco Meraki MX appliances (1 per branch, provisioned & shipped)</div>
+                        <div class="component-item">Zscaler Internet Access (ZIA) — SaaS, resold by Stark</div>
+                        <div class="component-item">Cisco SD-WAN policy management (Stark NOC)</div>
+                        <div class="component-item">Automated failover between WAN paths</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pricing-row">
+                <div>
+                    <div class="price-label">Monthly Pricing</div>
+                    <div class="price-amount">$3,800</div>
+                    <div class="price-period">base + $450 per branch</div>
+                </div>
+                <div class="use-case-tags">
+                    <span class="use-case-tag">#SDWAN</span>
+                    <span class="use-case-tag">#BranchOffice</span>
+                    <span class="use-case-tag">#ZeroTrust</span>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <div class="card-actions">
+                    <button class="btn btn-outline">Request Quote →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card 5: Internet Peering Bundle -->
+        <div class="solution-card" data-category="internet-peering">
+            <div class="card-header">
+                <div class="card-title-row">
+                    <h3 class="card-title">Internet Peering Bundle</h3>
+                    <div class="card-badges">
+                        <span class="category-tag">Internet & Peering</span>
+                        <span class="status-badge unavailable">○ Not Subscribed</span>
+                    </div>
+                </div>
+                <p class="card-tagline">High-performance internet access and peering at Equinix SV5, with DDoS protection and BGP optimization.</p>
+            </div>
+
+            <div class="whats-included">
+                <h4 class="whats-included-title">What's Included</h4>
+                <div class="components-grid">
+                    <div class="component-column equinix-column">
+                        <h4>Equinix Infrastructure</h4>
+                        <div class="component-item">Equinix Internet Exchange port — SV5, 10G</div>
+                        <div class="component-item">Equinix Connect (dedicated internet access)</div>
+                    </div>
+                    <div class="component-column stark-column">
+                        <h4>Stark & Partner Services</h4>
+                        <div class="component-item">Cloudflare Magic Transit (DDoS scrubbing, resold by Stark)</div>
+                        <div class="component-item">BGP peering optimization (Stark engineering team)</div>
+                        <div class="component-item">Peering analytics dashboard</div>
+                        <div class="component-item">Quarterly traffic engineering review</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pricing-row">
+                <div>
+                    <div class="price-label">Monthly Pricing</div>
+                    <div class="price-amount">$5,100</div>
+                    <div class="price-period">per month</div>
+                </div>
+                <div class="use-case-tags">
+                    <span class="use-case-tag">#Peering</span>
+                    <span class="use-case-tag">#DDoS</span>
+                    <span class="use-case-tag">#HighPerformance</span>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <div class="card-actions">
+                    <button class="btn btn-outline">Request Quote →</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom CTA Section -->
+    <div class="custom-cta-section">
+        <div class="custom-cta-content">
+            <h3>Don't see what you need?</h3>
+            <p>Stark Industries can design a custom infrastructure solution built around your specific requirements. Our solution architects combine Equinix's global platform with best-in-class vendor technologies to solve any enterprise infrastructure challenge.</p>
+            <div class="custom-cta-buttons">
+                <button class="btn btn-accent">Schedule a consultation →</button>
+                <button class="btn btn-outline">Download Stark Solutions Brochure</button>
+            </div>
+        </div>
+        <div class="contact-card">
+            <h4 class="contact-name">James Rhodes</h4>
+            <div class="contact-title">VP Infrastructure, Stark Industries</div>
+            <div class="contact-info">
+                <a href="mailto:j.rhodes@starkindustries.com">j.rhodes@starkindustries.com</a><br>
+                +1 (650) 555-0182
+            </div>
+        </div>
+    </div>
+
+    <!-- Spec panel -->
+    <div id="spec-panel" class="spec-panel">
+        <div class="spec-content">
+            <h3>Product Catalog — Spec Notes</h3>
+            <p><strong>Purpose:</strong> Product catalog shows partner-defined solution suites (not Equinix's own solutions). Stark Industries assembles multi-vendor packages that include Equinix infrastructure as a key component alongside other vendor technologies. This model is standard for Equinix reseller partners (VARs, MSPs, SIs).</p>
+            
+            <p><strong>Current Subscriptions (S.H.I.E.L.D.):</strong></p>
+            <ul>
+                <li><strong>Hybrid Cloud Connect</strong> — Maps to FP-SV5-10032 + NVD-SV5-0041 in inventory</li>
+                <li><strong>Secure Edge Colocation</strong> — Maps to CAB-A7-04 + SHP-SV5-SHIELD-22</li>
+            </ul>
+
+            <p><strong>Key Features:</strong></p>
+            <ul>
+                <li>Two-column component breakdown (Equinix vs. Stark/Partner) shows how VAR adds value on top of infrastructure</li>
+                <li>Visual distinction: Active cards show green top border; unavailable cards are muted</li>
+                <li>Category filtering and use case tags for discovery</li>
+                <li>Context banner explains the reseller relationship and partner role</li>
+                <li>Pricing reflects full managed service (not just connectivity or colocation)</li>
+            </ul>
+
+            <p><strong>Quote Workflow:</strong> The 'Request Quote' flow opens a pre-configured contact request to James Rhodes at Stark Industries with the selected solution pre-filled.</p>
+
+            <p><strong>Compliance Solutions:</strong> Custom scoping is required for Compliance-Ready Infrastructure as FedRAMP alignment requirements vary by agency and workload type.</p>
+        </div>
+    </div>
+
+    <script>
+        function filterByCategory(category) {
+            const cards = document.querySelectorAll('.solution-card');
+            const pills = document.querySelectorAll('.filter-pill');
+
+            // Update active pill
+            pills.forEach(pill => pill.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Show/hide cards
+            if (category === 'all') {
+                cards.forEach(card => card.style.display = 'block');
+            } else {
+                cards.forEach(card => {
+                    if (card.dataset.category === category) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            }
+        }
+
+        function toggleSpec() {
+            const panel = document.getElementById('spec-panel');
+            panel.classList.toggle('open');
+        }
+    </script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

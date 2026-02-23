@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Results: "commission Q1" - Equinix Partner Portal</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); }
+    header { background: var(--wf-ink, #1e2a3a); height: 56px; display: flex; align-items: center; padding: 0 24px; gap: 16px; }
+    .logo-box { display: flex; align-items: center; gap: 8px; }
+    .logo { width: 32px; height: 32px; border-radius: 6px; background: var(--wf-accent, #3d6daa); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 13px; }
+    .header-title { color: #fff; font-weight: 590; font-size: 14px; }
+    nav { display: flex; align-items: center; height: 56px; gap: 0; flex: 1; padding-left: 8px; }
+    nav a { padding: 0 16px; height: 56px; display: flex; align-items: center; font-size: 13px; color: rgba(255,255,255,.8); border-bottom: 3px solid transparent; text-decoration: none; }
+    nav a:hover { color: #fff; }
+    .search-header { background: #fff; border-bottom: 1px solid var(--wf-tint, #dce4ef); padding: 16px 24px; }
+    .search-container { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; gap: 12px; }
+    .search-input-wrap { flex: 1; position: relative; }
+    .search-input { width: 100%; padding: 10px 16px 10px 40px; border: 2px solid var(--wf-accent, #3d6daa); border-radius: 6px; font-size: 15px; font-family: inherit; outline: none; }
+    .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--wf-muted, #6b7f99); font-size: 16px; }
+    .search-clear { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--wf-muted, #6b7f99); font-size: 18px; cursor: pointer; background: none; border: none; }
+    .search-btn { padding: 10px 20px; background: var(--wf-accent, #3d6daa); color: #fff; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; }
+    .search-btn:hover { background: var(--wf-accent, #3d6daa); }
+    .container { max-width: 1400px; margin: 0 auto; padding: 24px; }
+    .results-summary { font-size: 14px; color: var(--wf-muted, #6b7f99); margin-bottom: 20px; }
+    .results-summary strong { color: var(--wf-ink, #1e2a3a); }
+    .results-summary .query { color: var(--wf-accent, #3d6daa); font-weight: 600; }
+    .tabs { display: flex; gap: 0; border-bottom: 2px solid var(--wf-tint, #dce4ef); margin-bottom: 24px; }
+    .tab { padding: 12px 20px; font-size: 13px; font-weight: 600; color: var(--wf-muted, #6b7f99); cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
+    .tab:hover { color: var(--wf-ink, #1e2a3a); }
+    .tab.active { color: var(--wf-accent, #3d6daa); border-bottom-color: var(--wf-accent, #3d6daa); }
+    .tab .count { background: var(--wf-tint, #dce4ef); color: var(--wf-muted, #6b7f99); padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-left: 6px; }
+    .tab.active .count { background: var(--wf-canvas, #f5f7fb); color: var(--wf-accent, #3d6daa); }
+    .result-section { margin-bottom: 28px; }
+    .section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--wf-muted, #6b7f99); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--wf-tint, #dce4ef); display: flex; align-items: center; gap: 8px; }
+    .section-icon { width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #fff; }
+    .result-card { background: #fff; padding: 16px 20px; border-radius: 6px; margin-bottom: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); display: flex; gap: 16px; align-items: flex-start; transition: all 0.15s; cursor: pointer; border-left: 3px solid transparent; }
+    .result-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.12); border-left-color: var(--wf-accent, #3d6daa); }
+    .result-icon { width: 36px; height: 36px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+    .result-body { flex: 1; min-width: 0; }
+    .result-title { font-size: 14px; font-weight: 600; color: var(--wf-accent, #3d6daa); margin: 0 0 4px 0; text-decoration: none; }
+    .result-title:hover { text-decoration: underline; }
+    .result-meta { font-size: 12px; color: var(--wf-muted, #6b7f99); margin: 0 0 6px 0; }
+    .result-snippet { font-size: 13px; color: var(--wf-text, #3b4f68); line-height: 1.5; margin: 0; }
+    .result-snippet mark { background: var(--wf-surface, #edf1f7); padding: 1px 2px; border-radius: 2px; }
+    .result-badge { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+    .badge-commission { background: var(--wf-surface, #edf1f7); color: var(--wf-ink, #1e2a3a); }
+    .badge-deal { background: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); }
+    .badge-resource { background: var(--wf-canvas, #f5f7fb); color: var(--wf-amber, #8b7745); }
+    .result-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+    .result-date { font-size: 11px; color: var(--wf-muted, #6b7f99); white-space: nowrap; }
+    .result-amount { font-size: 14px; font-weight: 700; color: var(--wf-muted, #6b7f99); }
+    .result-status { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 4px; }
+    .status-paid { background: var(--wf-surface, #edf1f7); color: var(--wf-ink, #1e2a3a); }
+    .status-pending { background: var(--wf-surface, #edf1f7); color: var(--wf-amber, #8b7745); }
+    .status-scheduled { background: var(--wf-canvas, #f5f7fb); color: var(--wf-accent, #3d6daa); }
+    .status-approved { background: var(--wf-surface, #edf1f7); color: var(--wf-ink, #1e2a3a); }
+    .status-won { background: var(--wf-surface, #edf1f7); color: var(--wf-ink, #1e2a3a); }
+
+    /* Summary Card */
+    .summary-card { background: var(--wf-ink, #1e2a3a); border-radius: 10px; padding: 24px; color: #fff; margin-bottom: 24px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    .summary-stat { text-align: center; }
+    .summary-stat .label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,.7); margin-bottom: 6px; }
+    .summary-stat .value { font-size: 24px; font-weight: 700; }
+    .summary-stat .value.teal { color: var(--wf-muted, #6b7f99); }
+    .summary-stat .sub { font-size: 11px; color: rgba(255,255,255,.6); margin-top: 4px; }
+    .summary-stat .divider { width: 1px; background: rgba(255,255,255,.2); }
+
+    .layout { display: grid; grid-template-columns: 240px 1fr; gap: 24px; }
+    .sidebar { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); height: fit-content; position: sticky; top: 24px; }
+    .sidebar h3 { margin: 0 0 16px 0; font-size: 13px; font-weight: 700; color: var(--wf-ink, #1e2a3a); }
+    .filter-group { margin-bottom: 20px; }
+    .filter-group:last-child { margin-bottom: 0; }
+    .filter-label { font-size: 11px; font-weight: 600; color: var(--wf-muted, #6b7f99); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+    .filter-option { display: flex; align-items: center; gap: 8px; padding: 6px 0; font-size: 13px; color: var(--wf-ink, #1e2a3a); cursor: pointer; }
+    .filter-option input { margin: 0; }
+    .filter-option .fcount { color: var(--wf-muted, #6b7f99); font-size: 11px; margin-left: auto; }
+    .recent-searches { background: #fff; padding: 16px 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom: 20px; }
+    .recent-searches h4 { margin: 0 0 12px 0; font-size: 12px; font-weight: 600; color: var(--wf-muted, #6b7f99); text-transform: uppercase; letter-spacing: 0.5px; }
+    .recent-item { font-size: 13px; color: var(--wf-accent, #3d6daa); padding: 4px 0; cursor: pointer; text-decoration: none; display: block; }
+    .recent-item:hover { text-decoration: underline; }
+    .recent-item::before { content: "🕐 "; font-size: 11px; }
+
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .summary-card { grid-template-columns: repeat(2, 1fr); }
+</style>
+</head>
+<body>
+  <header>
+    <div class="logo-box">
+      <div class="logo">EQ</div>
+      <span class="header-title">Equinix Partner Portal</span>
+    </div>
+    <nav>
+      <a href="rep-home.html">Home</a>
+      <a href="rep-my-training.html">My Training</a>
+      <a href="rep-certifications.html">Certifications</a>
+      <a href="rep-deals-commission.html">Deals</a>
+      <a href="rep-resources.html">Resources</a>
+    </nav>
+  
+    <a href="rep-notifications.html" class="bell-wrapper" aria-label="Notifications" style="position:relative;color:white;text-decoration:none;margin-left:auto;">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+      <span style="position:absolute;top:-4px;right:-6px;background:var(--wf-red,#8b4555);color:white;font-size:10px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;">7</span>
+    </a>
+</header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+  <div class="search-header">
+    <div class="search-container">
+      <div class="search-input-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" value="commission Q1" aria-label="Global search" placeholder="Search deals, courses, resources, customers...">
+        <button class="search-clear" aria-label="Clear search">×</button>
+      </div>
+      <button class="search-btn">Search</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Q1 Commission Summary Card -->
+    <div class="summary-card" role="region" aria-label="Q1 2026 Commission Summary">
+      <div class="summary-stat">
+        <div class="label">Q1 2026 Earned</div>
+        <div class="value teal">$78,825</div>
+        <div class="sub">3 deals closed</div>
+      </div>
+      <div class="summary-stat">
+        <div class="label">Paid to Date</div>
+        <div class="value">$43,125</div>
+        <div class="sub">1 payment processed</div>
+      </div>
+      <div class="summary-stat">
+        <div class="label">Pending Payment</div>
+        <div class="value" style="color:var(--wf-amber, #8b7745);">$35,700</div>
+        <div class="sub">Scheduled Mar 2026</div>
+      </div>
+      <div class="summary-stat">
+        <div class="label">Pipeline Commission</div>
+        <div class="value" style="color:rgba(255,255,255,.7);">$47,880</div>
+        <div class="sub">5 active deals</div>
+      </div>
+    </div>
+
+    <div class="results-summary">
+      <strong>8 results</strong> for <span class="query">"commission Q1"</span> across commissions, deals, and resources · 0.3s
+    </div>
+
+    <div class="tabs" role="tablist">
+      <div class="tab active" role="tab" aria-selected="true">All Results <span class="count">8</span></div>
+      <div class="tab" role="tab">Commission <span class="count">3</span></div>
+      <div class="tab" role="tab">Deals <span class="count">3</span></div>
+      <div class="tab" role="tab">Resources <span class="count">2</span></div>
+    </div>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="recent-searches">
+          <h4>Recent Searches</h4>
+          <a class="recent-item" href="rep-search-fabric.html">Fabric Cloud Router</a>
+          <a class="recent-item" href="rep-search-results.html">Acme</a>
+          <a class="recent-item" href="rep-search-training.html">Security Fundamentals</a>
+          <a class="recent-item" href="#">Global Finance</a>
+        </div>
+
+        <h3>Refine Results</h3>
+        <div class="filter-group">
+          <div class="filter-label">Payment Status</div>
+          <label class="filter-option"><input type="checkbox" checked> Paid <span class="fcount">1</span></label>
+          <label class="filter-option"><input type="checkbox" checked> Scheduled <span class="fcount">1</span></label>
+          <label class="filter-option"><input type="checkbox" checked> Pending Approval <span class="fcount">1</span></label>
+        </div>
+        <div class="filter-group">
+          <div class="filter-label">Quarter</div>
+          <label class="filter-option"><input type="radio" name="quarter" checked> Q1 2026</label>
+          <label class="filter-option"><input type="radio" name="quarter"> Q4 2025</label>
+          <label class="filter-option"><input type="radio" name="quarter"> All Quarters</label>
+        </div>
+        <div class="filter-group">
+          <div class="filter-label">Partner Tier</div>
+          <label class="filter-option"><input type="checkbox" checked> Gold (15%) <span class="fcount">2</span></label>
+          <label class="filter-option"><input type="checkbox" checked> Silver (12%) <span class="fcount">1</span></label>
+        </div>
+      </aside>
+
+      <main>
+        <!-- Commission Records -->
+        <div class="result-section">
+          <div class="section-label">
+            <div class="section-icon" style="background:var(--wf-ink, #1e2a3a);">💰</div>
+            Commission Records (3)
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-surface, #edf1f7);">💰</div>
+            <div class="result-body">
+              <a href="rep-deals-commission.html" class="result-title">Commission: Acme Cloud Migration</a>
+              <p class="result-meta"><span class="result-badge badge-commission">Commission</span> · Gold Tier (15%) · Paid Dec 31, 2025</p>
+              <p class="result-snippet">Acme Cloud Migration deal — $287,500 MRR. <mark>Commission</mark> rate: 15% (Gold). <mark>Commission</mark> earned: $43,125. Payment deposited Dec 31, 2025. Counted toward <mark>Q1</mark> 2026 YTD earnings.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-amount">$43,125</span>
+              <span class="result-status status-paid">Paid</span>
+              <span class="result-date">Dec 31, 2025</span>
+            </div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-surface, #edf1f7);">💰</div>
+            <div class="result-body">
+              <a href="rep-deals-commission.html" class="result-title">Commission: TechVision AI - Multi-Cloud Fabric</a>
+              <p class="result-meta"><span class="result-badge badge-commission">Commission</span> · Gold Tier (15%) + Co-sell (2%) · Scheduled Mar 2026</p>
+              <p class="result-snippet">TechVision AI Fabric deal — $210,000 MRR. <mark>Commission</mark> rate: 17% (Gold + co-sell). <mark>Commission</mark> earned: $35,700. Payment scheduled for <mark>Q1</mark> 2026 payout cycle (March 31).</p>
+            </div>
+            <div class="result-right">
+              <span class="result-amount">$35,700</span>
+              <span class="result-status status-scheduled">Scheduled</span>
+              <span class="result-date">Mar 31, 2026</span>
+            </div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-surface, #edf1f7);">💰</div>
+            <div class="result-body">
+              <a href="rep-deals-commission.html" class="result-title">Commission: Global Finance Ltd - Colocation Phase 1</a>
+              <p class="result-meta"><span class="result-badge badge-commission">Commission</span> · Silver Tier (12%) · Pending Approval</p>
+              <p class="result-snippet">Global Finance colocation deployment — $78,000 MRR. <mark>Commission</mark> rate: 12% (Silver). <mark>Commission</mark> pending: $9,360. Awaiting finance approval. Expected payout <mark>Q1</mark> 2026.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-amount">$9,360</span>
+              <span class="result-status status-pending">Pending Approval</span>
+              <span class="result-date">Est. Mar 2026</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Related Deals -->
+        <div class="result-section">
+          <div class="section-label">
+            <div class="section-icon" style="background:var(--wf-muted, #6b7f99);">💼</div>
+            Related Deals — <mark>Q1</mark> Closeable (3)
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">💼</div>
+            <div class="result-body">
+              <a href="rep-pipeline.html" class="result-title">Global Finance Ltd - Fabric Interconnect</a>
+              <p class="result-meta"><span class="result-badge badge-deal">Deal Registration</span> · Under Review · Est. close: Mar 2026</p>
+              <p class="result-snippet">If approved and closed in <mark>Q1</mark>, estimated <mark>commission</mark>: $18,720 (Silver 12%). Fabric virtual connections between London, Frankfurt, and Singapore.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-amount">$156,000</span>
+              <span class="result-status status-pending">Under Review</span>
+              <span class="result-date">Feb 5, 2026</span>
+            </div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">💼</div>
+            <div class="result-body">
+              <a href="rep-pipeline.html" class="result-title">Acme Corporation - Colocation Expansion</a>
+              <p class="result-meta"><span class="result-badge badge-deal">Deal Registration</span> · Draft · Est. close: Mar 2026</p>
+              <p class="result-snippet">If registered and closed in <mark>Q1</mark>, estimated <mark>commission</mark>: $18,750 (Gold 15%). 4 new cabinets at SV5. Currently in draft — submit to lock protection.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-amount">$125,000</span>
+              <span class="result-status status-pending">Draft</span>
+              <span class="result-date">Feb 8, 2026</span>
+            </div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">💼</div>
+            <div class="result-body">
+              <a href="rep-pipeline.html" class="result-title">Acme Interconnection Upgrade</a>
+              <p class="result-meta"><span class="result-badge badge-deal">Deal Registration</span> · Submitted · Est. close: Mar 2026</p>
+              <p class="result-snippet">If approved and closed in <mark>Q1</mark>, estimated <mark>commission</mark>: $6,300 (Gold 15%). Upgrade from 1G to 10G + Fabric virtual connections.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-amount">$42,000</span>
+              <span class="result-status status-pending">Submitted</span>
+              <span class="result-date">Feb 12, 2026</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resources -->
+        <div class="result-section">
+          <div class="section-label">
+            <div class="section-icon" style="background:var(--wf-amber, #8b7745);">📄</div>
+            Resources (2)
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">📄</div>
+            <div class="result-body">
+              <a href="rep-resources.html" class="result-title">Partner Commission Guide 2026</a>
+              <p class="result-meta"><span class="result-badge badge-resource">Guide</span> · PDF · 6 pages · Updated Jan 2026</p>
+              <p class="result-snippet">Complete <mark>commission</mark> structure for 2026: Bronze 8%, Silver 12%, Gold 15%. Co-sell bonus +2%. MRR-only (NRR excluded). Payment cycle: quarterly. <mark>Q1</mark> payout deadline: March 31.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-date">Jan 5, 2026</span>
+            </div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">📄</div>
+            <div class="result-body">
+              <a href="rep-resources.html" class="result-title">Commission Dispute & Inquiry FAQ</a>
+              <p class="result-meta"><span class="result-badge badge-resource">FAQ</span> · Knowledge Article · Updated Feb 2026</p>
+              <p class="result-snippet">How to file a <mark>commission</mark> dispute, typical resolution timelines (5-10 business days), escalation path (PM → PSM → Finance). Includes examples of common <mark>commission</mark> calculation questions.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-date">Feb 1, 2026</span>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Design Brief -->
+<div style="margin-bottom: 8px;"><strong>Summary Card:</strong> When "commission" + a time period (Q1, Q2, 2026, etc.) is detected, a contextual summary card appears above results showing earned/paid/pending/pipeline commission for that period. This gives the rep their answer immediately without parsing individual results. Summary is built from a SOQL aggregate query on Partner_Commission__c filtered by Payment_Date__c or Earned_Date__c within the quarter.</div>
+      <div style="margin-bottom: 8px;"><strong>Pipeline Commission:</strong> The "Related Deals — Q1 Closeable" section surfaces deals in the pipeline that could close within the searched quarter, with estimated commission calculated using the rep's current tier rate. This forward-looking view helps reps understand their potential earnings and prioritize deal progression.</div>
+      <div style="margin-bottom: 8px;"><strong>Contextual Filters:</strong> Payment Status (Paid, Scheduled, Pending Approval) replaces standard object type filters. Quarter selector provides quick navigation between time periods. Partner Tier filter shows commission rate alongside tier name for transparency.</div>
+      <div style="margin-bottom: 8px;"><strong>Accessibility:</strong> Summary card has role="region" with aria-label. Financial amounts use consistent formatting ($XX,XXX). Status badges use text + color (not color alone). All monetary values are right-aligned for scanability. Screen reader announces: "Commission: Acme Cloud Migration, forty-three thousand one hundred twenty-five dollars, status: paid."</div>
+      <div><strong>Agentic Search Opportunity:</strong> Commission queries are the strongest candidate for agentic augmentation: (1) proactive insight — "Your Q1 earnings are tracking 23% above Q4. If you close the Global Finance Fabric deal, you'll hit $97,545 — your best quarter since joining," (2) action suggestion — "Your Acme Colocation Expansion is still in draft. Submitting it this week gives it time for PSM review before the Q1 close deadline," (3) anomaly detection — "Your commission for Global Finance Phase 1 looks lower than expected. This may be because it was registered at Silver tier — check if your recent Gold upgrade should be retroactively applied."</div>
+    </div>
+  </div>
+
+  <div style="background: white; padding: 16px 24px; border-top: 1px solid var(--wf-tint, #dce4ef); margin-top: 40px; font-size: 12px; color: var(--wf-muted, #6b7f99); text-align: center;">
+    <p style="margin: 0;">Equinix Partner Portal · Logged in as: Sarah Connor (sc@stark.com) · PM: Pepper Potts | PSM: Marcus Chen · <a href="#" style="color: var(--wf-accent, #3d6daa); text-decoration: none;">Contact Support</a></p>
+  </div>
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Searchable commission explorer with contextual summary cards showing quarterly earnings broken down by earned, paid, and pending status. Partners can filter by quarter, tier, and payment status, explore commission calculations, and forecast pipeline earnings potential.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>See quarterly commission totals at a glance</li>
+<li>Check payment status and expected payout dates</li>
+<li>Estimate earnings from pipeline deals</li>
+<li>Access commission documentation and FAQs</li>
+<li>Prioritize deals to maximize quarterly earnings</li>
+<li>Forecast revenue and commission projections</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Search input with natural language support for time periods (Q1, Q2, 2026, etc.)</li>
+<li>Commission summary card showing earned, paid, pending, and pipeline totals for selected quarter</li>
+<li>Commission records table with: Deal Name, Customer, Amount, Commission Earned, Payment Status, Expected Payout Date</li>
+<li>Related Deals section showing pipeline deals with estimated commission using current tier rate</li>
+<li>Filter bar with quarter selector, payment status filter, and partner tier filter</li>
+<li>Commission documentation and policy reference section</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Search input accepts natural language queries detecting quarters and years</li>
+<li>Quarter radio button selector for quick period navigation</li>
+<li>Payment Status filter chips: All, Paid, Scheduled, Pending Approval</li>
+<li>Partner Tier dropdown showing tier name and commission rate</li>
+<li>Commission record row click shows full transaction details</li>
+<li>Deal row click displays commission calculation breakdown</li>
+<li>Download button exports commission statement for selected quarter</li>
+<li>Summary card sections collapse/expand to show detailed breakdowns</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Search &amp; Filtering</strong>
+<ul>
+<li>Search input parses natural language to detect quarter/year references (Q1, Q2, 2026) using regex patterns</li>
+<li>Payment status filter updates results without page reload by toggling visibility or querying SOQL</li>
+<li>Partner Tier filter shows commission percentage alongside tier name retrieved from user's tier record</li>
+</ul></li>
+<li><strong>Data Aggregation &amp; Calculation</strong>
+<ul>
+<li>Summary card aggregates Partner_Commission__c records by status using SOQL sum operations</li>
+<li>Pipeline commission calculates estimated earnings from open deals using current user's tier rate</li>
+<li>Quarter selector automatically calculates date range from selected period and refreshes data via API call</li>
+</ul></li>
+<li><strong>Display &amp; Accessibility</strong>
+<ul>
+<li>Right-aligned monetary values for scannable presentation and easier visual parsing</li>
+<li>Status badges use text plus color for accessibility and visual differentiation</li>
+<li>Summary card sections collapse/expand to show detailed breakdowns without navigation</li>
+</ul></li>
+<li><strong>Navigation &amp; Export</strong>
+<ul>
+<li>Record click navigates to detailed transaction view with full commission context</li>
+<li>Export generates PDF or CSV statement for audit/documentation purposes via document generation service</li>
+</ul></li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Validation &amp; Business Logic</h4>
+<ul>
+<li>Commission records queried from Partner_Commission__c filtered by Payment_Date__c or Earned_Date__c</li>
+<li>Summary aggregation uses SOQL sum/count on status groups</li>
+<li>Pipeline commission calculated using rep's current tier rate from OrgTier__c or equivalent</li>
+<li>Payment date range validation ensures quarter boundaries are correct</li>
+<li>Export document generation respects user's access permissions</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+</body>
+</html>

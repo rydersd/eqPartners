@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SumTotal Sync Monitor — PSM · Equinix PCP</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Salesforce Sans", sans-serif;
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    /* Header */
+    header {
+      background-color: var(--wf-ink, #1e2a3a);
+      color: var(--wf-surface, #edf1f7);
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .lightning-icon {
+      font-size: 1.5rem;
+    }
+
+    nav {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    nav a {
+      color: var(--wf-surface, #edf1f7);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      transition: background-color 0.2s;
+    }
+
+    nav a:hover {
+      background-color: rgba(255,255,255,0.1);
+    }
+
+    nav a.active {
+      background-color: var(--wf-accent, var(--wf-accent, #3d6daa));
+    }
+
+    /* Main Content */
+    main {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+
+    .page-title {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 0.5rem;
+    }
+
+    .page-subtitle {
+      font-size: 0.95rem;
+      color: var(--wf-text, #3b4f68);
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background: var(--wf-surface, #edf1f7);
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--wf-canvas, #f5f7fb);
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .kpi-card {
+      background: var(--wf-ink, #1e2a3a);
+      padding: 1.25rem;
+      border-radius: 6px;
+      border-left: 4px solid var(--wf-accent, var(--wf-accent, #3d6daa));
+    }
+
+    .kpi-label {
+      font-size: 0.75rem;
+      color: var(--wf-line, #b0bdd0);
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .kpi-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--wf-white, #ffffff);
+      margin-bottom: 0.25rem;
+    }
+
+    .kpi-subtitle {
+      font-size: 0.7rem;
+      color: var(--wf-line, #b0bdd0);
+    }
+
+    .status-box {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 2rem;
+      background: var(--wf-ink, #1e2a3a);
+      border-radius: 8px;
+      border: 2px solid var(--wf-ink, #1e2a3a);
+      margin-bottom: 2rem;
+    }
+
+    .status-indicator {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background-color: var(--wf-ink, #1e2a3a);
+      flex-shrink: 0;
+    }
+
+    .status-content {
+      flex: 1;
+    }
+
+    .status-label {
+      font-size: 0.85rem;
+      color: var(--wf-ink, #1e2a3a);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .status-text {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .status-green {
+      background-color: var(--wf-surface, #edf1f7);
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .status-yellow {
+      background-color: var(--wf-surface, #edf1f7);
+      color: var(--wf-amber, #8b7745);
+    }
+
+    .status-red {
+      background-color: var(--wf-surface, #edf1f7);
+      color: var(--wf-red, #8b4553);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    thead {
+      background-color: var(--wf-canvas, #f5f7fb);
+      border-bottom: 2px solid var(--wf-canvas, #f5f7fb);
+    }
+
+    th {
+      padding: 0.75rem;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--wf-ink, #1e2a3a);
+      text-transform: uppercase;
+    }
+
+    td {
+      padding: 0.75rem;
+      border-bottom: 1px solid var(--wf-canvas, #f5f7fb);
+      font-size: 0.9rem;
+    }
+
+    tr:hover {
+      background-color: var(--wf-canvas, #f5f7fb);
+    }
+
+    .error-row {
+      background-color: var(--wf-canvas, #f5f7fb);
+    }
+
+    .error-type {
+      font-family: monospace;
+      font-size: 0.85rem;
+      background-color: var(--wf-surface, #edf1f7);
+      padding: 0.25rem 0.5rem;
+      border-radius: 3px;
+      color: var(--wf-red, #8b4553);
+    }
+
+    .error-message {
+      font-family: monospace;
+      font-size: 0.8rem;
+      color: var(--wf-red, #8b4553);
+      background-color: var(--wf-canvas, #f5f7fb);
+      padding: 0.5rem;
+      border-radius: 3px;
+      margin-top: 0.25rem;
+    }
+
+    .timestamp {
+      font-size: 0.85rem;
+      color: var(--wf-text, #3b4f68);
+      font-family: monospace;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background-color: var(--wf-accent, var(--wf-accent, #3d6daa));
+      color: var(--wf-surface, #edf1f7);
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: background-color 0.2s;
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .button:hover {
+      background-color: var(--wf-accent, #3d6daa);
+    }
+
+    .button-warning {
+      background-color: var(--wf-line, #b0bdd0);
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .button-warning:hover {
+      background-color: var(--wf-amber, #8b7745);
+    }
+
+    .button-secondary {
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-ink, #1e2a3a);
+      border: 1px solid var(--wf-line, #b0bdd0);
+    }
+
+    .button-secondary:hover {
+      background-color: var(--wf-tint, #dce4ef);
+    }
+
+    .button-link {
+      background: none;
+      border: none;
+      color: var(--wf-accent, var(--wf-accent, #3d6daa));
+      text-decoration: underline;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 0;
+      margin: 0;
+    }
+
+    .button-link:hover {
+      color: var(--wf-accent, #3d6daa);
+    }
+
+    .alert {
+      padding: 1rem;
+      border-radius: 6px;
+      border-left: 4px solid;
+      margin-bottom: 1.5rem;
+    }
+
+    .alert-info {
+      background-color: var(--wf-surface, #edf1f7);
+      border-color: var(--wf-ink, #1e2a3a);
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .alert-warning {
+      background-color: var(--wf-surface, #edf1f7);
+      border-color: var(--wf-amber, #8b7745);
+      color: var(--wf-amber, #8b7745);
+    }
+
+    .config-section {
+      background: var(--wf-canvas, #f5f7fb);
+      padding: 1rem;
+      border-radius: 6px;
+      margin-top: 1rem;
+    }
+
+    .config-label {
+      display: block;
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .config-input {
+      width: 200px;
+      padding: 0.5rem;
+      border: 1px solid var(--wf-line, #b0bdd0);
+      border-radius: 4px;
+      font-size: 0.9rem;
+      font-family: monospace;
+    }
+
+    .config-input:focus {
+      outline: none;
+      border-color: var(--wf-accent, var(--wf-accent, #3d6daa));
+      box-shadow: 0 0 0 3px rgba(0,112,210,0.1);
+    }
+
+    .metric-box {
+      background: var(--wf-canvas, #f5f7fb);
+      padding: 1rem;
+      border-radius: 6px;
+      border-left: 4px solid var(--wf-accent, var(--wf-accent, #3d6daa));
+    }
+
+    .metric-label {
+      font-size: 0.85rem;
+      color: var(--wf-text, #3b4f68);
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .metric-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    /* Design Brief */
+    @media (max-width: 1200px) {
+      .kpi-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .status-box {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      nav {
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+</style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="wf-header">
+  <div class="wf-header-logo"><svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix"><path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/></svg></div>
+  <div class="wf-header-title">SFDC</div>
+  <nav class="wf-header-nav">
+    <a href="#">Dashboard</a>
+    <a href="#" class="active">PSM Portal</a>
+    <a href="#">Partners</a>
+    <a href="#">Deals</a>
+    <a href="#">Programs</a>
+    <a href="#">Reports</a>
+  </nav>
+  <div class="wf-header-util">
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+  </div>
+</header>
+    <div class="page-context-bar">
+  <div style="max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <span style="font-size:12px;color:var(--wf-muted);display:flex;align-items:center;gap:6px;">
+      <svg viewBox="0 0 20 13" style="width:18px;height:11px;fill:var(--wf-muted);" aria-hidden="true"><path d="M8.3 1.7A3.8 3.8 0 0 1 12 0a3.8 3.8 0 0 1 3.5 2.3A2.8 2.8 0 0 1 20 5a2.8 2.8 0 0 1-2.8 2.8H3.2A3.2 3.2 0 0 1 0 4.6 3.2 3.2 0 0 1 3.2 1.4c.18 0 .35.01.52.04A3.8 3.8 0 0 1 8.3 1.7z"/></svg>
+      <strong style="color:var(--wf-text);font-weight:600;">Salesforce Lightning</strong>&ensp;&middot;&ensp;PCP App
+    </span>
+    <span class="persona-badge persona-badge--psm">PSM</span>
+  </div>
+</div>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+  <!-- Main Content -->
+  <main role="main">
+    <h1 class="page-title">SumTotal Sync Monitor</h1>
+    <p class="page-subtitle">LMS ↔ Salesforce Integration Health Check | Last Updated: March 12, 2026 6:15 AM</p>
+
+    <!-- KPI Cards -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Last Sync</div>
+        <div class="kpi-value">Today</div>
+        <div class="kpi-subtitle">6:00 AM EST</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Records Synced</div>
+        <div class="kpi-value">1,247</div>
+        <div class="kpi-subtitle">This sync</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Failed Records</div>
+        <div class="kpi-value">3</div>
+        <div class="kpi-subtitle">Requires review</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Success Rate</div>
+        <div class="kpi-value">99.8%</div>
+        <div class="kpi-subtitle">Excellent</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Next Scheduled</div>
+        <div class="kpi-value">Tomorrow</div>
+        <div class="kpi-subtitle">6:00 AM EST</div>
+      </div>
+    </div>
+
+    <!-- Status Indicator -->
+    <div class="status-box" role="status" aria-label="Sync Status: Healthy">
+      <div class="status-indicator"></div>
+      <div class="status-content">
+        <div class="status-label">Integration Status</div>
+        <div class="status-text">Healthy</div>
+      </div>
+    </div>
+
+    <!-- Error Log -->
+    <div class="card">
+      <div class="card-title">Error Log (Failed Records)</div>
+      <table aria-label="Failed Records Log">
+        <thead>
+          <tr>
+            <th>Record ID</th>
+            <th>Contact Name</th>
+            <th>Error Type</th>
+            <th>Error Message</th>
+            <th>Timestamp</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="error-row">
+            <td>SUMTOT-004891</td>
+            <td>Sarah Connor (Stark Industries)</td>
+            <td><span class="error-type">ENROLLMENT_ERROR</span></td>
+            <td>
+              <div class="error-message">Security Fundamentals (SEC-101) re-enrollment sync failed. Existing cert expired 2026-01-15. Manual re-enrollment required in SumTotal before auto-sync can process.</div>
+            </td>
+            <td><span class="timestamp">2026-03-12 13:47:22</span></td>
+          </tr>
+          <tr class="error-row">
+            <td>SUMTOT-004589</td>
+            <td>Lisa Chen</td>
+            <td><span class="error-type">CONTACT_ERROR</span></td>
+            <td>
+              <div class="error-message">Contact marked inactive in Salesforce (Last activity: 2024-08-30)</div>
+            </td>
+            <td><span class="timestamp">2026-03-12 06:03:42</span></td>
+          </tr>
+          <tr class="error-row">
+            <td>SUMTOT-004612</td>
+            <td>James Wilson</td>
+            <td><span class="error-type">MAPPING_ERROR</span></td>
+            <td>
+              <div class="error-message">Custom field "Completion_Timestamp" missing mapping in Salesforce object definition</div>
+            </td>
+            <td><span class="timestamp">2026-03-12 06:05:08</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="alert alert-warning" style="margin-top: 1rem;">
+        <strong>Action Required (Priority — Stark Industries):</strong> Sarah Connor (Stark Industries) — Security Fundamentals cert expired 2026-01-15. Re-enroll her in SumTotal immediately to allow sync to process. This impacts Stark's training compliance for the Global Finance Corp deal protection period. Contact Marcus Chen (PSM) to escalate to Pepper Potts (Partner Manager). Also review 2 other failed records: Lisa Chen should be reactivated or excluded. James Wilson record requires field mapping configuration.
+      </div>
+    </div>
+
+    <!-- Sync History -->
+    <div class="card">
+      <div class="card-title">Sync History (Last 7 Days)</div>
+      <table aria-label="Sync History">
+        <thead>
+          <tr>
+            <th>Sync Date & Time</th>
+            <th>Records Processed</th>
+            <th>Failed</th>
+            <th>Success Rate</th>
+            <th>Duration</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="timestamp">2026-03-12 06:00:00</span></td>
+            <td>1,247</td>
+            <td>3</td>
+            <td>99.8%</td>
+            <td>4m 32s</td>
+            <td><span class="status-badge status-green">Success</span></td>
+          </tr>
+          <tr>
+            <td><span class="timestamp">2026-03-11 06:00:00</span></td>
+            <td>1,198</td>
+            <td>1</td>
+            <td>99.9%</td>
+            <td>4m 18s</td>
+            <td><span class="status-badge status-green">Success</span></td>
+          </tr>
+          <tr>
+            <td><span class="timestamp">2026-03-10 06:00:00</span></td>
+            <td>1,210</td>
+            <td>0</td>
+            <td>100%</td>
+            <td>4m 41s</td>
+            <td><span class="status-badge status-green">Success</span></td>
+          </tr>
+          <tr>
+            <td><span class="timestamp">2026-03-09 06:00:00</span></td>
+            <td>1,185</td>
+            <td>2</td>
+            <td>99.8%</td>
+            <td>4m 25s</td>
+            <td><span class="status-badge status-green">Success</span></td>
+          </tr>
+          <tr>
+            <td><span class="timestamp">2026-03-08 06:00:00</span></td>
+            <td>1,221</td>
+            <td>4</td>
+            <td>99.7%</td>
+            <td>4m 38s</td>
+            <td><span class="status-badge status-green">Success</span></td>
+          </tr>
+          <tr>
+            <td><span class="timestamp">2026-03-07 06:00:00</span></td>
+            <td>1,156</td>
+            <td>0</td>
+            <td>100%</td>
+            <td>4m 12s</td>
+            <td><span class="status-badge status-green">Success</span></td>
+          </tr>
+          <tr>
+            <td><span class="timestamp">2026-03-06 06:00:00</span></td>
+            <td>1,203</td>
+            <td>1</td>
+            <td>99.9%</td>
+            <td>4m 35s</td>
+            <td><span class="status-badge status-green">Success</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Apex Jobs Monitor -->
+    <div class="card">
+      <div class="card-title">Apex Jobs & Scheduled Flows</div>
+      <div style="margin-bottom: 1rem;">
+        <button class="button-link" aria-label="Open Apex Jobs Monitor in Salesforce">Open Apex Jobs Monitor</button> (Salesforce Setup)
+      </div>
+      <p style="font-size: 0.9rem; color: var(--wf-text, #3b4f68); line-height: 1.6;">
+        The Apex Jobs Monitor displays all scheduled batch jobs and queueable jobs. Key job to monitor: <strong>SumTotal_CourseCompletion_Sync</strong> runs daily at 6:00 AM EST. If status shows "Failed," check Salesforce debug logs for detailed error information.
+      </p>
+    </div>
+
+    <!-- Manual Sync Trigger -->
+    <div class="card">
+      <div class="card-title">Manual Sync Trigger</div>
+      <p style="font-size: 0.9rem; color: var(--wf-text, #3b4f68); margin-bottom: 1rem;">
+        Manually execute a full sync between SumTotal LMS and Salesforce. Use this to recover from sync failures or after data corrections.
+      </p>
+      <button class="button button-warning" aria-label="Trigger manual sync now">Execute Manual Sync Now</button>
+      <div class="alert alert-warning" style="margin-top: 1rem;">
+        <strong>Warning:</strong> Manual syncs may take 5-10 minutes to complete and will temporarily increase Salesforce API usage. Avoid triggering during business hours if possible. Only use when data corrections require immediate sync.
+      </div>
+    </div>
+
+    <!-- Alert Configuration -->
+    <div class="card">
+      <div class="card-title">Alert Settings & Configuration</div>
+
+      <div style="margin-bottom: 2rem;">
+        <label class="config-label">Stale Sync Threshold (hours)</label>
+        <div style="display: flex; gap: 1rem; align-items: center;">
+          <input type="number" class="config-input" value="24" aria-label="Stale sync threshold in hours">
+          <span style="font-size: 0.85rem; color: var(--wf-text, #3b4f68);">Alert if last successful sync is older than this threshold</span>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 2rem;">
+        <label class="config-label">Failed Record Threshold</label>
+        <div style="display: flex; gap: 1rem; align-items: center;">
+          <input type="number" class="config-input" value="10" aria-label="Failed record alert threshold">
+          <span style="font-size: 0.85rem; color: var(--wf-text, #3b4f68);">Alert if failed records exceed this count</span>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 2rem;">
+        <label class="config-label">Alert Recipients (Email)</label>
+        <div style="display: flex; gap: 1rem; align-items: center;">
+          <input type="text" class="config-input" value="psm-team@equinix.com" placeholder="Enter email" aria-label="Alert recipients email">
+          <span style="font-size: 0.85rem; color: var(--wf-text, #3b4f68);">Comma-separated email addresses for notifications</span>
+        </div>
+      </div>
+
+      <div>
+        <button class="button" aria-label="Save alert configuration">Save Configuration</button>
+        <button class="button button-secondary" aria-label="Reset to defaults">Reset to Defaults</button>
+      </div>
+    </div>
+
+    <!-- System Health Metrics -->
+    <div class="card">
+      <div class="card-title">System Health Summary</div>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+        <div class="metric-box">
+          <div class="metric-label">7-Day Uptime</div>
+          <div class="metric-value">100%</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">Avg Sync Time</div>
+          <div class="metric-value">4m 24s</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">Avg Success Rate</div>
+          <div class="metric-value">99.8%</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Information Section -->
+    <div class="alert alert-info">
+      <strong>Integration Details:</strong> SumTotal LMS syncs partner training completion records to Salesforce Contact records twice daily (6:00 AM and 6:00 PM EST). Custom fields tracked: Course_Completion_Date, Certification_Status, Training_Score. Contact Equinix Integration team if sync issues persist beyond 24 hours.
+    </div>
+
+    <!-- Design Brief -->
+</main>
+
+
+    <footer class="wf-footer">
+      &copy; 2026 Equinix · Partner Sales Manager · Internal Use Only
+    </footer>
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Monitors the SumTotal LMS to Salesforce integration health, displaying real-time sync status, error logs, and historical performance metrics. Stark Industries sync data: 9 contacts synced, last sync 2 hours ago, 1 error (Sarah Connor Security Fundamentals enrollment re-sync required). Allows PSMs to diagnose sync failures and manually trigger synchronization operations.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Monitor SumTotal LMS integration health with real-time status indicators</li>
+<li>Track sync completion, record counts, success rates, and failure patterns</li>
+<li>Identify and diagnose sync failures with error details and classification</li>
+<li>Manually trigger syncs and retry failed records without developer assistance</li>
+<li>Configure alerts for stale syncs, high failure rates, and integration issues</li>
+<li>Maintain audit trail of all sync operations with timestamp and result logging</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Five KPI cards: Last Sync, Records Synced, Failed Records, Success Rate, Next Scheduled</li>
+<li>Integration Status indicator showing "Healthy" connection state</li>
+<li>Error Log table with Record ID, Contact Name, Error Type, Error Message, Timestamp</li>
+<li>Sync History table with 7-day records showing Sync Date & Time, Records Processed, Failed, Success Rate, Duration, Status</li>
+<li>Apex Jobs & Scheduled Flows section tracking automated sync processes</li>
+<li>Manual Sync Trigger card with warning alert for impact</li>
+<li>Alert Settings & Configuration section for notification thresholds (stale sync, failed records, alert recipients)</li>
+<li>System Health Summary card with 7-Day Uptime, Avg Sync Time, Avg Success Rate</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Manual Sync Trigger button to execute on-demand synchronization</li>
+<li>Configuration inputs for stale sync threshold (hours), failed record threshold, alert recipients (email)</li>
+<li>Save Configuration and Reset to Defaults buttons</li>
+<li>Open Apex Jobs Monitor link to Salesforce Setup</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Scheduled Sync Job Execution</strong>
+<ul>
+<li>SumTotal_CourseCompletion_Sync batch job (Scheduled Apex class) runs daily at 6:00 AM EST and 6:00 PM EST on schedule via Salesforce Apex Scheduler</li>
+<li>KPI cards display Last Sync timestamp, Records_Synced__c count, Failed_Records__c count, Success_Rate__c %, and Next_Scheduled_Sync__c datetime</li>
+</ul></li>
+<li><strong>Contact &amp; Course Data Synchronization</strong>
+<ul>
+<li>Batch job processes Partner_Training__c and Contact records querying SumTotal LMS API endpoints for enrollment and completion data; maps to custom fields: Course_Completion_Date__c, Certification_Status__c, Training_Score__c, Completion_Percentage__c</li>
+<li>Integration Status indicator displays "Healthy" if last sync succeeded within 24 hours; shows "Warning" if 24-48 hours stale, "Error" if > 48 hours stale</li>
+</ul></li>
+<li><strong>Error Detection &amp; Classification</strong>
+<ul>
+<li>Validation errors logged on missing courses (Course not found in Salesforce), inactive contacts (Contact.Status__c = 'Inactive'), or field mapping failures; triggers Integration_Error_Log__c creation with Error_Type__c and Error_Message__c</li>
+<li>Error Log table displays Record ID, Contact Name, Error Type classification, Error Message detail, CreatedDate timestamp with search/filter capability</li>
+</ul></li>
+<li><strong>Manual Sync &amp; Alert Configuration</strong>
+<ul>
+<li>Manual Sync Trigger button executes SumTotal_Integration_Service.startSync() apex method on-demand with warning alert "This will process all pending enrollments"; blocks execution if sync already running (Scheduled_Actions with Status = 'Running')</li>
+<li>Alert Settings form captures configurable thresholds: Stale_Sync_Hours__c (alert if LastSyncDate > 48 hours), Failed_Records_Threshold__c (alert if count > 100), Alert_Recipients__c (email comma list)</li>
+<li>Sync History table queries Integration_Sync_Log__c records for 7 days, displays Sync_Date_Time__c, Records_Processed__c, Failed_Count__c, Success_Rate__c %, Duration_Minutes__c, Status__c badge</li>
+</ul></li>
+<li><strong>System Health Monitoring</strong>
+<ul>
+<li>System Health Summary card calculates 7-Day Uptime (sync_success_count / total_sync_count * 100), Avg Sync Time (AVERAGE Duration_Minutes__c), Avg Success Rate (AVERAGE Success_Rate__c) from Integration_Sync_Log__c</li>
+<li>Open Apex Jobs Monitor link navigates to Salesforce Setup → Monitoring → Apex Jobs page for real-time batch job status</li>
+</ul></li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>System Integration</h4>
+<ul>
+<li>Real-time SumTotal LMS API integration syncing twice daily (6:00 AM and 6:00 PM EST)</li>
+<li>Salesforce batch job monitoring for SumTotal_CourseCompletion_Sync</li>
+<li>Debug log access for troubleshooting failed batch jobs</li>
+<li>Configurable alert thresholds for stale syncs and high failure rates</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

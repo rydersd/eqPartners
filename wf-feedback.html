@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wireframe Feedback — PCP</title>
+  <style>
+    /* ── Tokens ─────────────────────────────────────────────────── */
+    :root {
+      --ink:     #1e2a3a;
+      --text:    #3b4f68;
+      --muted:   #4a5f7f;
+      --line:    #b0bdd0;
+      --tint:    #dce4ef;
+      --surface: #edf1f7;
+      --canvas:  #f5f7fb;
+      --white:   #ffffff;
+      --accent:  #3d6daa;
+      --accent-lt: #e8eff8;
+      --red:     #7a2d3a;
+      --amber:   #6b5a2f;
+      --green:   #2d5c42;
+      --purple:  #4a3d6b;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --radius: 4px;
+    }
+
+    /* ── Reset / Base ────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: var(--font);
+      font-size: 14px;
+      color: var(--text);
+      background: var(--canvas);
+      line-height: 1.5;
+    }
+    a { color: var(--accent); }
+    a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    /* ── Header ─────────────────────────────────────────────────── */
+    .wff-header {
+      background: var(--ink);
+      color: var(--white);
+      padding: 0 24px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .wff-header-left { display: flex; align-items: center; gap: 12px; }
+    .wff-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--white); }
+    .wff-logo svg { flex-shrink: 0; }
+    .wff-title { font-size: 15px; font-weight: 600; color: var(--white); }
+    .wff-subtitle { font-size: 11px; color: rgba(255,255,255,0.65); margin-top: 1px; }
+    .wff-header-actions { display: flex; align-items: center; gap: 8px; }
+    .wff-btn {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 5px 12px; font-size: 12px; font-weight: 500;
+      border-radius: var(--radius); cursor: pointer; white-space: nowrap;
+      transition: background .12s, color .12s;
+      font-family: var(--font);
+    }
+    .wff-btn-ghost {
+      background: rgba(255,255,255,0.1); color: var(--white);
+      border: 1px solid rgba(255,255,255,0.25);
+    }
+    .wff-btn-ghost:hover { background: rgba(255,255,255,0.2); }
+    .wff-btn-primary {
+      background: var(--accent); color: var(--white);
+      border: 1px solid var(--accent);
+    }
+    .wff-btn-primary:hover { background: #2c5a94; border-color: #2c5a94; }
+    .wff-btn-danger {
+      background: none; color: #f5a0a8;
+      border: 1px solid rgba(245,160,168,0.35);
+    }
+    .wff-btn-danger:hover { background: rgba(245,160,168,0.1); }
+    .wff-count-badge {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 20px; height: 20px; padding: 0 5px;
+      background: rgba(255,255,255,0.18); color: var(--white);
+      border-radius: 10px; font-size: 11px; font-weight: 700;
+    }
+
+    /* ── Layout ─────────────────────────────────────────────────── */
+    .wff-layout {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      min-height: calc(100vh - 52px);
+    }
+
+    /* ── Sidebar / Form ─────────────────────────────────────────── */
+    .wff-sidebar {
+      background: var(--white);
+      border-right: 1px solid var(--line);
+      padding: 20px;
+      overflow-y: auto;
+      position: sticky;
+      top: 0;
+      max-height: calc(100vh - 52px);
+    }
+    .wff-form-title {
+      font-size: 13px; font-weight: 700; color: var(--ink);
+      text-transform: uppercase; letter-spacing: 0.05em;
+      margin: 0 0 16px 0;
+    }
+    .wff-field { margin-bottom: 14px; }
+    .wff-label {
+      display: block; font-size: 11px; font-weight: 600;
+      color: var(--muted); text-transform: uppercase;
+      letter-spacing: 0.04em; margin-bottom: 4px;
+    }
+    .wff-required { color: var(--red); margin-left: 2px; }
+    .wff-input, .wff-select, .wff-textarea {
+      width: 100%; padding: 7px 10px;
+      font-size: 13px; font-family: var(--font); color: var(--ink);
+      background: var(--white); border: 1px solid var(--line);
+      border-radius: var(--radius); transition: border-color .12s;
+    }
+    .wff-input:focus, .wff-select:focus, .wff-textarea:focus {
+      border-color: var(--accent); outline: none;
+    }
+    .wff-textarea { resize: vertical; min-height: 80px; }
+    .wff-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    /* Type pills in form */
+    .wff-type-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;
+    }
+    .wff-type-pill {
+      padding: 5px 4px; font-size: 11px; font-weight: 600;
+      text-align: center; border-radius: 3px; cursor: pointer;
+      border: 2px solid transparent; transition: all .1s;
+      color: var(--text); background: var(--surface);
+      user-select: none;
+    }
+    .wff-type-pill input[type="radio"] { position: absolute; opacity: 0; pointer-events: none; }
+    .wff-type-pill:has(input:checked) { border-color: var(--accent); background: var(--accent-lt); color: var(--ink); }
+    .wff-type-pill:hover { background: var(--tint); }
+
+    /* Screenshot drop zone */
+    .wff-dropzone {
+      border: 2px dashed var(--line); border-radius: var(--radius);
+      padding: 16px; text-align: center; cursor: pointer;
+      transition: border-color .12s, background .12s; color: var(--muted);
+      position: relative;
+    }
+    .wff-dropzone:hover, .wff-dropzone.drag-over {
+      border-color: var(--accent); background: var(--accent-lt);
+    }
+    .wff-dropzone input[type="file"] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer;
+    }
+    .wff-dropzone-icon { font-size: 22px; margin-bottom: 4px; }
+    .wff-dropzone-text { font-size: 12px; }
+    .wff-preview {
+      margin-top: 8px; border-radius: var(--radius); overflow: hidden;
+      border: 1px solid var(--line); position: relative;
+    }
+    .wff-preview img { display: block; width: 100%; max-height: 180px; object-fit: cover; }
+    .wff-preview-remove {
+      position: absolute; top: 4px; right: 4px;
+      background: rgba(0,0,0,0.6); color: white; border: none;
+      border-radius: 50%; width: 22px; height: 22px;
+      font-size: 12px; cursor: pointer; display: flex;
+      align-items: center; justify-content: center; line-height: 1;
+    }
+
+    .wff-submit {
+      width: 100%; padding: 10px; font-size: 13px; font-weight: 600;
+      background: var(--accent); color: var(--white); border: none;
+      border-radius: var(--radius); cursor: pointer; font-family: var(--font);
+      transition: background .12s; margin-top: 4px;
+    }
+    .wff-submit:hover { background: #2c5a94; }
+    .wff-submit:disabled { background: var(--line); cursor: default; }
+
+    /* ── Main Content ────────────────────────────────────────────── */
+    .wff-main { padding: 20px; overflow-y: auto; }
+
+    /* Toolbar */
+    .wff-toolbar {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .wff-filter-input {
+      flex: 1; min-width: 180px; padding: 6px 10px;
+      font-size: 13px; font-family: var(--font); color: var(--ink);
+      background: var(--white); border: 1px solid var(--line);
+      border-radius: var(--radius);
+    }
+    .wff-filter-input:focus { border-color: var(--accent); outline: none; }
+    .wff-filter-select {
+      padding: 6px 10px; font-size: 12px; font-family: var(--font);
+      color: var(--ink); background: var(--white); border: 1px solid var(--line);
+      border-radius: var(--radius); cursor: pointer;
+    }
+
+    /* Empty state */
+    .wff-empty {
+      text-align: center; padding: 60px 20px; color: var(--muted);
+    }
+    .wff-empty-icon { font-size: 40px; margin-bottom: 12px; }
+    .wff-empty-title { font-size: 16px; font-weight: 600; color: var(--ink); margin-bottom: 6px; }
+    .wff-empty-text { font-size: 13px; color: var(--muted); }
+
+    /* Feedback cards grid */
+    .wff-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 14px;
+    }
+
+    /* Individual card */
+    .wff-card {
+      background: var(--white); border: 1px solid var(--line);
+      border-radius: 6px; overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+    .wff-card-screenshot img {
+      display: block; width: 100%;
+      max-height: 200px; object-fit: cover;
+      border-bottom: 1px solid var(--tint);
+    }
+    .wff-card-body { padding: 14px; flex: 1; }
+    .wff-card-header {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; gap: 8px; margin-bottom: 8px;
+    }
+    .wff-card-badges { display: flex; gap: 5px; flex-wrap: wrap; }
+    .wff-badge {
+      display: inline-flex; align-items: center;
+      padding: 2px 7px; font-size: 10px; font-weight: 700;
+      border-radius: 3px; text-transform: uppercase; letter-spacing: 0.04em;
+    }
+    .wff-badge-issue    { background: #fce8ea; color: var(--red); }
+    .wff-badge-decision { background: #e8f0fb; color: var(--accent); }
+    .wff-badge-question { background: #ede8f8; color: var(--purple); }
+    .wff-badge-suggestion { background: #e8f5ee; color: var(--green); }
+    .wff-badge-stakeholder  { background: #fdf5e6; color: var(--amber); }
+    .wff-badge-transcript   { background: #edf2fa; color: #3b5ea6; }
+    .wff-card--transcript .wff-card-desc {
+      font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+      font-size: 10.5px;
+      line-height: 1.65;
+      white-space: pre-wrap;
+      max-height: 220px;
+      overflow: hidden;
+      position: relative;
+    }
+    .wff-card--transcript .wff-card-desc.expanded { max-height: none; }
+    .wff-transcript-expand {
+      display: inline-block;
+      margin-top: 4px;
+      font-size: 11px;
+      color: var(--accent);
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      font-family: inherit;
+    }
+    .wff-transcript-expand:hover { text-decoration: underline; }
+    .wff-badge-critical { background: #fce8ea; color: var(--red); border: 1px solid #f5b0b8; }
+    .wff-badge-major    { background: #fdf5e6; color: var(--amber); }
+    .wff-badge-minor    { background: #ede8f8; color: var(--purple); }
+    .wff-badge-info     { background: var(--surface); color: var(--muted); }
+    .wff-card-page {
+      font-size: 11px; font-weight: 600; color: var(--accent);
+      text-decoration: none; font-family: var(--font);
+    }
+    .wff-card-page:hover { text-decoration: underline; }
+    .wff-card-delete {
+      background: none; border: none; color: var(--line);
+      cursor: pointer; padding: 2px; font-size: 16px; line-height: 1;
+      flex-shrink: 0; transition: color .1s;
+    }
+    .wff-card-delete:hover { color: var(--red); }
+    .wff-card-desc {
+      font-size: 13px; color: var(--text); line-height: 1.55;
+      margin: 6px 0 10px 0;
+    }
+    .wff-card-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 10px; border-top: 1px solid var(--tint);
+      font-size: 11px; color: var(--muted);
+    }
+    .wff-card-reviewer { font-weight: 600; color: var(--muted); }
+    .wff-card-date { color: var(--muted); }
+
+    /* ── Toast ───────────────────────────────────────────────────── */
+    .wff-toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px);
+      background: var(--ink); color: var(--white);
+      padding: 10px 20px; border-radius: 6px; font-size: 13px; font-weight: 500;
+      z-index: 9999; transition: transform .22s cubic-bezier(.17,.67,.38,1.2);
+      pointer-events: none; white-space: nowrap;
+    }
+    .wff-toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ── Print / Report ──────────────────────────────────────────── */
+    @media print {
+      .wff-header-actions, .wff-sidebar, .wff-toolbar { display: none; }
+      .wff-layout { display: block; }
+      .wff-card { break-inside: avoid; }
+    }
+
+    /* ── Responsive ──────────────────────────────────────────────── */
+    @media (max-width: 900px) {
+      .wff-layout { grid-template-columns: 1fr; }
+      .wff-sidebar { position: static; max-height: none; border-right: none; border-bottom: 1px solid var(--line); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="wff-header">
+  <div class="wff-header-left">
+    <a href="sitemap-pcp-v2.html" class="wff-logo" aria-label="Back to sitemap">
+      <svg height="18" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/>
+      </svg>
+    </a>
+    <div>
+      <div class="wff-title">Wireframe Feedback</div>
+      <div class="wff-subtitle">PCP — Partner Channel Program</div>
+    </div>
+    <span class="wff-count-badge" id="total-count" aria-live="polite">0</span>
+  </div>
+  <div class="wff-header-actions">
+    <button class="wff-btn wff-btn-ghost" onclick="importFeedback()" aria-label="Import feedback from JSON">
+      ↑ Import
+    </button>
+    <button class="wff-btn wff-btn-ghost" onclick="exportJSON()" aria-label="Export feedback as JSON">
+      ↓ Export JSON
+    </button>
+    <button class="wff-btn wff-btn-ghost" onclick="printReport()" aria-label="Print feedback report">
+      🖨 Print Report
+    </button>
+    <button class="wff-btn wff-btn-danger" onclick="clearAll()" aria-label="Clear all feedback">
+      Clear All
+    </button>
+  </div>
+</header>
+
+<div class="wff-layout">
+
+  <!-- Sidebar: Add Feedback Form -->
+  <aside class="wff-sidebar" aria-label="Add feedback">
+    <div class="wff-form-title">Add Feedback</div>
+    <form id="feedback-form" onsubmit="submitFeedback(event)" novalidate>
+
+      <div class="wff-field">
+        <label class="wff-label" for="f-page">Page <span class="wff-required" aria-hidden="true">*</span></label>
+        <select class="wff-select" id="f-page" required>
+          <option value="">— select page —</option>
+          <optgroup label="Reference">
+            <option value="sitemap-pcp-v2">Sitemap v2.4</option>
+            <option value="personas">Personas</option>
+            <option value="story-reference">Story Reference</option>
+            <option value="research-best-practices">Research &amp; Best Practices</option>
+            <option value="persona-cards">Persona Cards</option>
+            <option value="pc-dr-deal-type">Deal Type Reference</option>
+          </optgroup>
+          <optgroup label="AE / Sales Rep">
+            <option value="rep-home">Home</option>
+            <option value="rep-first-login">First Login</option>
+            <option value="rep-deals-commission">Deals</option>
+            <option value="rep-pipeline">Pipeline</option>
+            <option value="rep-register-deal">Register Deal</option>
+            <option value="rep-search-commission">Search Commission</option>
+            <option value="rep-deal-expiring">Deal Expiring</option>
+            <option value="rep-my-training">Training</option>
+            <option value="rep-my-training-table">Training — Table View</option>
+            <option value="rep-my-training-kanban">Training — Kanban View</option>
+            <option value="rep-course-catalog">Course Catalog</option>
+            <option value="rep-course-detail">Course Detail</option>
+            <option value="rep-search-training">Search Training</option>
+            <option value="rep-certifications">Certifications</option>
+            <option value="rep-marketing">Marketing</option>
+            <option value="rep-support">Support</option>
+            <option value="rep-resources">Resources</option>
+            <option value="rep-sales-tools">Sales Tools</option>
+            <option value="rep-notifications">Notifications</option>
+            <option value="rep-notification-history">Notification History</option>
+            <option value="rep-notification-preferences">Notification Preferences</option>
+            <option value="rep-messages">Messages</option>
+            <option value="rep-search-results">Search Results</option>
+            <option value="rep-search-fabric">Fabric Search</option>
+          </optgroup>
+          <optgroup label="Portal Admin">
+            <option value="pm-home-dashboard">Home Dashboard</option>
+            <option value="pm-first-login">First Login</option>
+            <option value="pm-deals-revenue">Deals &amp; Revenue</option>
+            <option value="pm-opportunities">Opportunities</option>
+            <option value="pm-team-training">Team Training</option>
+            <option value="pm-team-training-user">Team Training — User Detail</option>
+            <option value="pm-course-catalog">Course Catalog</option>
+            <option value="pm-cert-tracker">Cert Tracker</option>
+            <option value="pm-mdf-request">MDF Request</option>
+            <option value="pm-mdf-comarketing">MDF Co-Marketing</option>
+            <option value="pm-resources">Resources</option>
+            <option value="pm-asset-library">Asset Library</option>
+            <option value="pm-playbooks">Playbooks</option>
+            <option value="pm-support-center">Support Center</option>
+            <option value="pm-org-health">Org Health</option>
+            <option value="pm-customer-health">Customer Health</option>
+            <option value="pm-deal-registration">Deal Registration</option>
+            <option value="pm-pop-submission">PoP Submission</option>
+            <option value="pm-team-management">Team Management</option>
+            <option value="pm-role-permissions">Role Permissions</option>
+            <option value="pm-org-onboarding-start">Org Onboarding</option>
+            <option value="partner-user-request">Partner User Request</option>
+          </optgroup>
+          <optgroup label="PSM">
+            <option value="psm-executive-dashboard">Executive Dashboard</option>
+            <option value="psm-program-dashboard">Program Dashboard</option>
+            <option value="psm-partner-account-list">Partner Account List</option>
+            <option value="psm-partner-account-record">Partner Account Record</option>
+            <option value="psm-health-scorecard">Health Scorecard</option>
+            <option value="psm-deal-registration">Deal Registration</option>
+            <option value="psm-deal-review-detail">Deal Review Detail</option>
+            <option value="psm-deal-reg-rules">Deal Reg Rules</option>
+            <option value="psm-opportunity-record">Opportunity Record</option>
+            <option value="psm-commission-processing">Commission Processing</option>
+            <option value="psm-contact-training">Contact Training</option>
+            <option value="psm-sumtotal-monitor">SumTotal Monitor</option>
+            <option value="psm-mdf-management">MDF Management</option>
+            <option value="psm-mdf-analytics">MDF Analytics</option>
+            <option value="psm-partner-application">Partner Lifecycle</option>
+            <option value="psm-partner-onboarding">Partner Onboarding</option>
+            <option value="psm-partner-setup">Partner Setup</option>
+            <option value="psm-onboarding-plan">Onboarding Plan</option>
+            <option value="psm-partner-qualification">Qualification</option>
+            <option value="psm-contracts">Contracts</option>
+            <option value="psm-joint-business-plan">Joint Business Plan</option>
+            <option value="psm-reports-analytics">Reports &amp; Analytics</option>
+            <option value="psm-qbr-minutes">QBR Minutes</option>
+            <option value="psm-pop-review">PoP Review</option>
+            <option value="psm-reimbursement">Reimbursement</option>
+            <option value="psm-program-admin">Program Admin</option>
+          </optgroup>
+          <optgroup label="Customer Portal (ECP)">
+            <option value="ecp-dashboard">Dashboard</option>
+            <option value="ecp-services-orders">Services &amp; Orders</option>
+            <option value="ecp-order-detail">Order Detail</option>
+            <option value="ecp-inventory">Inventory</option>
+            <option value="ecp-cases">Cases</option>
+            <option value="ecp-support-new">New Support Case</option>
+            <option value="ecp-notifications">Notifications</option>
+            <option value="ecp-product-catalog">Product Catalog</option>
+            <option value="ecp-partner-dashboard">Partner Dashboard</option>
+            <option value="ecp-partner-account-detail">Partner Account Detail</option>
+          </optgroup>
+          <optgroup label="Partner Onboarding">
+            <option value="onboarding-apply-wizard">Apply Wizard</option>
+            <option value="onboarding-apply">Apply (Landing)</option>
+            <option value="onboarding-apply-form">Apply Form</option>
+            <option value="onboarding-acceptance-email">Acceptance Email</option>
+            <option value="onboarding-agreement">Agreement</option>
+            <option value="onboarding-agreement-confirmation">Agreement Confirmed</option>
+            <option value="onboarding-auth-setup">Auth Setup</option>
+            <option value="onboarding-welcome">Welcome</option>
+            <option value="onboarding-wizard">Onboarding Wizard</option>
+            <option value="onboarding-confirmation">Confirmation</option>
+          </optgroup>
+        </select>
+      </div>
+
+      <div class="wff-field">
+        <span class="wff-label">Type <span class="wff-required" aria-hidden="true">*</span></span>
+        <div class="wff-type-grid" role="group" aria-label="Feedback type">
+          <label class="wff-type-pill">
+            <input type="radio" name="f-type" value="issue" required> Issue
+          </label>
+          <label class="wff-type-pill">
+            <input type="radio" name="f-type" value="decision"> Decision
+          </label>
+          <label class="wff-type-pill">
+            <input type="radio" name="f-type" value="question"> Question
+          </label>
+          <label class="wff-type-pill">
+            <input type="radio" name="f-type" value="suggestion"> Suggestion
+          </label>
+          <label class="wff-type-pill">
+            <input type="radio" name="f-type" value="stakeholder"> Stakeholder
+          </label>
+          <label class="wff-type-pill">
+            <input type="radio" name="f-type" value="approved"> ✓ Approved
+          </label>
+        </div>
+      </div>
+
+      <div class="wff-field" id="severity-field">
+        <label class="wff-label" for="f-severity">Severity</label>
+        <select class="wff-select" id="f-severity">
+          <option value="">— select —</option>
+          <option value="critical">Critical — blocks progress</option>
+          <option value="major">Major — significant rework needed</option>
+          <option value="minor">Minor — small fix needed</option>
+          <option value="info">Info — note for reference</option>
+        </select>
+      </div>
+
+      <div class="wff-field">
+        <label class="wff-label" for="f-desc">Description <span class="wff-required" aria-hidden="true">*</span></label>
+        <textarea class="wff-textarea" id="f-desc" required
+          placeholder="What did you observe? What should change? What was decided?"></textarea>
+      </div>
+
+      <div class="wff-field">
+        <label class="wff-label">Screenshot (optional)</label>
+        <div class="wff-dropzone" id="drop-zone"
+          ondragover="event.preventDefault();this.classList.add('drag-over')"
+          ondragleave="this.classList.remove('drag-over')"
+          ondrop="handleDrop(event)">
+          <input type="file" id="f-screenshot" accept="image/*" onchange="handleScreenshot(this)">
+          <div class="wff-dropzone-icon" aria-hidden="true">🖼</div>
+          <div class="wff-dropzone-text">Click or drag a screenshot here</div>
+        </div>
+        <div class="wff-preview" id="screenshot-preview" style="display:none">
+          <img id="screenshot-img" src="" alt="Screenshot preview">
+          <button type="button" class="wff-preview-remove" onclick="removeScreenshot()" aria-label="Remove screenshot">×</button>
+        </div>
+      </div>
+
+      <div class="wff-row">
+        <div class="wff-field">
+          <label class="wff-label" for="f-name">Your Name</label>
+          <input class="wff-input" type="text" id="f-name" placeholder="Ryder">
+        </div>
+        <div class="wff-field">
+          <label class="wff-label" for="f-role">Role</label>
+          <input class="wff-input" type="text" id="f-role" placeholder="UX Lead">
+        </div>
+      </div>
+
+      <button type="submit" class="wff-submit" id="submit-btn">Add Feedback</button>
+    </form>
+  </aside>
+
+  <!-- Main: Feedback list -->
+  <main class="wff-main" aria-label="Feedback items">
+    <div class="wff-toolbar" role="search">
+      <input class="wff-filter-input" type="search" id="filter-search"
+        placeholder="Search feedback…" aria-label="Search feedback"
+        oninput="renderCards()">
+      <select class="wff-filter-select" id="filter-type" aria-label="Filter by type" onchange="renderCards()">
+        <option value="">All types</option>
+        <option value="issue">Issue</option>
+        <option value="decision">Decision</option>
+        <option value="question">Question</option>
+        <option value="suggestion">Suggestion</option>
+        <option value="stakeholder">Stakeholder</option>
+        <option value="approved">Approved</option>
+        <option value="transcript">Transcript</option>
+      </select>
+      <select class="wff-filter-select" id="filter-severity" aria-label="Filter by severity" onchange="renderCards()">
+        <option value="">All severities</option>
+        <option value="critical">Critical</option>
+        <option value="major">Major</option>
+        <option value="minor">Minor</option>
+        <option value="info">Info</option>
+      </select>
+      <select class="wff-filter-select" id="filter-page" aria-label="Filter by page" onchange="renderCards()">
+        <option value="">All pages</option>
+      </select>
+    </div>
+
+    <div id="feedback-list" aria-live="polite"></div>
+  </main>
+</div>
+
+<!-- Hidden import file input -->
+<input type="file" id="import-file" accept=".json" style="display:none" onchange="loadImport(this)">
+
+<!-- Toast -->
+<div class="wff-toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ── State ─────────────────────────────────────────────────────── */
+var STORAGE_KEY = 'pcp-wf-feedback-v1';
+var items = [];
+var screenshotData = null; // base64 string
+
+/* ── Boot ──────────────────────────────────────────────────────── */
+(function init() {
+  var saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) {
+    try { items = JSON.parse(saved); } catch(e) { items = []; }
+  }
+  // Restore reviewer name/role from last session
+  var savedName = localStorage.getItem('pcp-wf-reviewer-name');
+  var savedRole = localStorage.getItem('pcp-wf-reviewer-role');
+  if (savedName) {
+    document.getElementById('f-name').value = savedName;
+  } else {
+    // Fall back to the email they signed in with
+    var sessionEmail = sessionStorage.getItem('pcp-wf-reviewer-email') || '';
+    if (sessionEmail) document.getElementById('f-name').value = sessionEmail;
+  }
+  if (savedRole) document.getElementById('f-role').value = savedRole;
+
+  populatePageFilter();
+  renderCards();
+})();
+
+/* ── Persistence ───────────────────────────────────────────────── */
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+}
+
+/* ── Screenshot handling ────────────────────────────────────────── */
+function handleScreenshot(input) {
+  var file = input.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    screenshotData = e.target.result;
+    showPreview(screenshotData);
+    document.getElementById('drop-zone').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('drop-zone').classList.remove('drag-over');
+  var file = e.dataTransfer.files[0];
+  if (!file || !file.type.startsWith('image/')) return;
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    screenshotData = ev.target.result;
+    showPreview(screenshotData);
+    document.getElementById('drop-zone').style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+
+function showPreview(src) {
+  var el = document.getElementById('screenshot-preview');
+  document.getElementById('screenshot-img').src = src;
+  el.style.display = 'block';
+}
+
+function removeScreenshot() {
+  screenshotData = null;
+  document.getElementById('screenshot-preview').style.display = 'none';
+  document.getElementById('drop-zone').style.display = 'block';
+  document.getElementById('f-screenshot').value = '';
+}
+
+/* ── Form submit ───────────────────────────────────────────────── */
+function submitFeedback(e) {
+  e.preventDefault();
+  var page     = document.getElementById('f-page').value;
+  var typeEl   = document.querySelector('input[name="f-type"]:checked');
+  var type     = typeEl ? typeEl.value : '';
+  var severity = document.getElementById('f-severity').value;
+  var desc     = document.getElementById('f-desc').value.trim();
+  var name     = document.getElementById('f-name').value.trim();
+  var role     = document.getElementById('f-role').value.trim();
+
+  if (!page)  { showToast('Please select a page.'); return; }
+  if (!type)  { showToast('Please select a feedback type.'); return; }
+  if (!desc)  { showToast('Please add a description.'); return; }
+
+  var item = {
+    id:         Date.now(),
+    page:       page,
+    type:       type,
+    severity:   severity,
+    desc:       desc,
+    reviewer:   name || 'Anonymous',
+    role:       role,
+    screenshot: screenshotData,
+    createdAt:  new Date().toISOString()
+  };
+
+  items.unshift(item);
+  save();
+
+  // Persist reviewer info
+  if (name) localStorage.setItem('pcp-wf-reviewer-name', name);
+  if (role) localStorage.setItem('pcp-wf-reviewer-role', role);
+
+  // Email notification → rybooth@equinix.com
+  var reviewerEmail  = sessionStorage.getItem('pcp-wf-reviewer-email') || '';
+  var severityLabel  = severity || 'unset';
+  var reviewerLine   = (name || 'Anonymous') +
+                       (role ? ', ' + role : '') +
+                       (reviewerEmail ? ' <' + reviewerEmail + '>' : '');
+  var mailSubject    = encodeURIComponent('[PCP Feedback] ' + page + ' \u2013 ' + type + ' (' + severityLabel + ')');
+  var mailBody       = encodeURIComponent(
+    'Page: ' + page + '\n' +
+    'Type: ' + type + '\n' +
+    'Severity: ' + severityLabel + '\n' +
+    'Reviewer: ' + reviewerLine + '\n' +
+    '\n' +
+    desc + '\n' +
+    '\n---\nSubmitted: ' + new Date().toLocaleString()
+  );
+  window.open('mailto:rybooth@equinix.com?subject=' + mailSubject + '&body=' + mailBody, '_blank');
+
+  // Reset form (keep name/role)
+  document.getElementById('f-page').value = '';
+  if (typeEl) typeEl.checked = false;
+  document.getElementById('f-severity').value = '';
+  document.getElementById('f-desc').value = '';
+  removeScreenshot();
+
+  populatePageFilter();
+  renderCards();
+  showToast('Feedback added \u2014 your email client should open to send it.');
+}
+
+/* ── Render ─────────────────────────────────────────────────────── */
+var TYPE_LABELS = {
+  issue: 'Issue', decision: 'Decision', question: 'Question',
+  suggestion: 'Suggestion', stakeholder: 'Stakeholder', approved: '✓ Approved',
+  transcript: '📄 Transcript'
+};
+var SEV_LABELS = { critical: 'Critical', major: 'Major', minor: 'Minor', info: 'Info' };
+
+function renderCards() {
+  var search   = (document.getElementById('filter-search').value || '').toLowerCase();
+  var fType    = document.getElementById('filter-type').value;
+  var fSev     = document.getElementById('filter-severity').value;
+  var fPage    = document.getElementById('filter-page').value;
+
+  var filtered = items.filter(function(item) {
+    if (fType && item.type !== fType) return false;
+    if (fSev  && item.severity !== fSev) return false;
+    if (fPage && item.page !== fPage) return false;
+    if (search && !(
+      item.desc.toLowerCase().includes(search) ||
+      item.page.toLowerCase().includes(search) ||
+      (item.reviewer || '').toLowerCase().includes(search)
+    )) return false;
+    return true;
+  });
+
+  document.getElementById('total-count').textContent = items.length;
+
+  var list = document.getElementById('feedback-list');
+  if (filtered.length === 0) {
+    list.innerHTML = items.length === 0
+      ? '<div class="wff-empty">' +
+          '<div class="wff-empty-icon" aria-hidden="true">💬</div>' +
+          '<div class="wff-empty-title">No feedback yet</div>' +
+          '<div class="wff-empty-text">Open a wireframe, note something worth capturing, then come back here to log it.</div>' +
+        '</div>'
+      : '<div class="wff-empty">' +
+          '<div class="wff-empty-icon" aria-hidden="true">🔍</div>' +
+          '<div class="wff-empty-title">No results</div>' +
+          '<div class="wff-empty-text">Try adjusting the filters.</div>' +
+        '</div>';
+    return;
+  }
+
+  var html = '<div class="wff-grid">';
+  filtered.forEach(function(item) {
+    var dateStr = new Date(item.createdAt).toLocaleDateString('en-US', {
+      month: 'short', day: 'numeric', year: 'numeric'
+    });
+    var pageLabel = pageNameLabel(item.page);
+    var isTranscript = (item.type === 'transcript');
+    html += '<article class="wff-card' + (isTranscript ? ' wff-card--transcript' : '') + '">';
+    if (item.screenshot) {
+      html += '<div class="wff-card-screenshot">' +
+        '<img src="' + escHtml(item.screenshot) + '" alt="Screenshot for ' + escHtml(pageLabel) + '">' +
+        '</div>';
+    }
+    html += '<div class="wff-card-body">';
+    html += '<div class="wff-card-header">';
+    html += '<div>';
+    html += '<a href="' + escHtml(item.page) + '.html" class="wff-card-page">' + escHtml(pageLabel) + '</a>';
+    if (isTranscript && item.sessionTitle) {
+      html += '<div style="font-size:11px;color:var(--muted);margin-top:1px">' + escHtml(item.sessionTitle) + '</div>';
+    }
+    html += '<div class="wff-card-badges" style="margin-top:4px">';
+    html += '<span class="wff-badge wff-badge-' + escHtml(item.type) + '">' + escHtml(TYPE_LABELS[item.type] || item.type) + '</span>';
+    if (item.severity) {
+      html += '<span class="wff-badge wff-badge-' + escHtml(item.severity) + '">' + escHtml(SEV_LABELS[item.severity] || item.severity) + '</span>';
+    }
+    html += '</div></div>';
+    html += '<button class="wff-card-delete" onclick="deleteItem(\'' + escHtml(item.id) + '\')" aria-label="Delete this feedback item">×</button>';
+    html += '</div>';
+    var descId = 'desc-' + escHtml(item.id);
+    html += '<p class="wff-card-desc" id="' + descId + '">' + escHtml(item.desc) + '</p>';
+    if (isTranscript) {
+      html += '<button class="wff-transcript-expand" onclick="wffToggleTranscript(\'' + escHtml(item.id) + '\')">Show full transcript ↓</button>';
+    }
+    html += '<div class="wff-card-footer">';
+    html += '<span class="wff-card-reviewer">' + escHtml(item.reviewer || '') + (item.role ? ' · ' + escHtml(item.role) : '') + '</span>';
+    html += '<span class="wff-card-date">' + dateStr + '</span>';
+    html += '</div>';
+    html += '</div></article>';
+  });
+  html += '</div>';
+  list.innerHTML = html;
+}
+
+function pageNameLabel(slug) {
+  // Build a readable label from page slug
+  return slug
+    .replace(/^(rep|pm|psm|ecp|onboarding)-?/, function(m, p) {
+      return { rep: 'AE · ', pm: 'Admin · ', psm: 'PSM · ', ecp: 'ECP · ', onboarding: 'Onboarding · ' }[p] || '';
+    })
+    .replace(/-/g, ' ')
+    .replace(/\b\w/g, function(c) { return c.toUpperCase(); });
+}
+
+function populatePageFilter() {
+  var sel = document.getElementById('filter-page');
+  var current = sel.value;
+  // Get unique pages from items
+  var pages = [];
+  items.forEach(function(item) {
+    if (pages.indexOf(item.page) === -1) pages.push(item.page);
+  });
+  pages.sort();
+  // Rebuild
+  while (sel.options.length > 1) sel.remove(1);
+  pages.forEach(function(p) {
+    var opt = document.createElement('option');
+    opt.value = p;
+    opt.textContent = pageNameLabel(p);
+    sel.appendChild(opt);
+  });
+  sel.value = current;
+}
+
+/* ── Transcript expand / collapse ────────────────────────────────── */
+function wffToggleTranscript(id) {
+  var descEl = document.getElementById('desc-' + id);
+  var btn    = descEl && descEl.nextElementSibling;
+  if (!descEl || !btn) return;
+  var isExpanded = descEl.classList.toggle('expanded');
+  btn.textContent = isExpanded ? 'Collapse ↑' : 'Show full transcript ↓';
+}
+
+/* ── Delete ─────────────────────────────────────────────────────── */
+function deleteItem(id) {
+  if (!confirm('Remove this feedback item?')) return;
+  // Use loose string comparison to handle both legacy numeric and new string IDs
+  items = items.filter(function(i) { return String(i.id) !== String(id); });
+  save();
+  populatePageFilter();
+  renderCards();
+  showToast('Item removed.');
+}
+
+/* ── Clear all ──────────────────────────────────────────────────── */
+function clearAll() {
+  if (items.length === 0) { showToast('Nothing to clear.'); return; }
+  if (!confirm('Clear all ' + items.length + ' feedback items? This cannot be undone.')) return;
+  items = [];
+  save();
+  populatePageFilter();
+  renderCards();
+  showToast('All feedback cleared.');
+}
+
+/* ── Export JSON ────────────────────────────────────────────────── */
+function exportJSON() {
+  if (items.length === 0) { showToast('No feedback to export.'); return; }
+  var blob = new Blob([JSON.stringify(items, null, 2)], { type: 'application/json' });
+  var url  = URL.createObjectURL(blob);
+  var a    = document.createElement('a');
+  var date = new Date().toISOString().slice(0,10);
+  a.href     = url;
+  a.download = 'pcp-feedback-' + date + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('Exported ' + items.length + ' items.');
+}
+
+/* ── Import JSON ─────────────────────────────────────────────────── */
+function importFeedback() {
+  document.getElementById('import-file').click();
+}
+
+function loadImport(input) {
+  var file = input.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      var imported = JSON.parse(e.target.result);
+      if (!Array.isArray(imported)) throw new Error('Not an array');
+      var merged = items.slice();
+      var existingIds = items.map(function(i) { return i.id; });
+      var added = 0;
+      imported.forEach(function(item) {
+        if (existingIds.indexOf(item.id) === -1) {
+          merged.push(item);
+          added++;
+        }
+      });
+      // Sort by createdAt desc
+      merged.sort(function(a,b) { return new Date(b.createdAt) - new Date(a.createdAt); });
+      items = merged;
+      save();
+      populatePageFilter();
+      renderCards();
+      showToast('Imported ' + added + ' new items.');
+    } catch(err) {
+      showToast('Invalid file — expected a JSON array.');
+    }
+    input.value = '';
+  };
+  reader.readAsText(file);
+}
+
+/* ── Print report ────────────────────────────────────────────────── */
+function printReport() {
+  if (items.length === 0) { showToast('No feedback to print.'); return; }
+  window.print();
+}
+
+/* ── Toast ───────────────────────────────────────────────────────── */
+var toastTimer;
+function showToast(msg) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function() { el.classList.remove('show'); }, 2400);
+}
+
+/* ── Util ────────────────────────────────────────────────────────── */
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>

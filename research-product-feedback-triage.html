@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product Research: AI Feedback Triage — Equinix PCP</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; line-height: 1.65; color: var(--wf-ink, #1e2a3a); background: var(--wf-canvas, #f5f7fb); }
+
+    .page-header { background: linear-gradient(135deg, #1e3a2f 0%, #2d5a44 100%); color: #fff; padding: 2rem 2rem 1.5rem; }
+    .page-header h1 { font-size: 1.6rem; font-weight: 700; margin-bottom: .4rem; }
+    .page-header .subtitle { font-size: .9rem; opacity: .8; }
+    .header-meta { display: flex; gap: .75rem; margin-top: 1rem; flex-wrap: wrap; }
+    .header-pill { background: rgba(255,255,255,.15); padding: .2rem .7rem; border-radius: 4px; font-size: .75rem; font-weight: 600; }
+    .header-pill.draft { background: rgba(255,200,0,.25); color: #ffe484; }
+
+    .container { max-width: 880px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+    .back-link { display: inline-flex; align-items: center; gap: .375rem; color: var(--wf-accent, #3d6daa); text-decoration: none; font-size: .875rem; font-weight: 500; margin-bottom: 1.75rem; }
+    .back-link:hover { text-decoration: underline; }
+
+    .insight-banner { background: white; border-left: 4px solid #2d5a44; border-radius: 4px; padding: 1rem 1.25rem; margin-bottom: 2rem; font-size: .875rem; color: var(--wf-text, #3b4f68); }
+    .insight-banner strong { color: #2d5a44; }
+
+    section { background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,.08); padding: 1.75rem 2rem; margin-bottom: 1.5rem; }
+    section h2 { font-size: 1.05rem; font-weight: 700; color: var(--wf-ink, #1e2a3a); margin-bottom: 1rem; padding-bottom: .6rem; border-bottom: 2px solid var(--wf-tint, #dce4ef); }
+    section h3 { font-size: .9rem; font-weight: 700; color: var(--wf-ink, #1e2a3a); margin: 1.25rem 0 .4rem; }
+    section p { font-size: .9rem; color: var(--wf-text, #3b4f68); margin-bottom: .75rem; }
+    section p:last-child { margin-bottom: 0; }
+
+    .problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: .75rem; }
+    .problem-cell { background: var(--wf-canvas, #f5f7fb); border-radius: 6px; padding: .9rem 1rem; font-size: .85rem; }
+    .problem-cell .label { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--wf-muted, #6b7f99); margin-bottom: .4rem; }
+    .problem-cell p { font-size: .85rem; margin: 0; }
+
+    .flow { display: flex; flex-direction: column; gap: 0; margin-top: .75rem; }
+    .flow-step { display: flex; gap: 1rem; align-items: flex-start; }
+    .flow-step + .flow-step { margin-top: .5rem; }
+    .flow-connector { width: 32px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; }
+    .flow-node { width: 32px; height: 32px; border-radius: 50%; background: #2d5a44; color: white; font-size: .75rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .flow-line { width: 2px; height: 20px; background: var(--wf-line, #b0bdd0); margin: 3px 0; }
+    .flow-body { padding-top: 6px; }
+    .flow-body strong { font-size: .875rem; color: var(--wf-ink, #1e2a3a); display: block; margin-bottom: .2rem; }
+    .flow-body p { font-size: .825rem; color: var(--wf-muted, #6b7f99); margin: 0; }
+
+    .routing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; margin-top: .75rem; }
+    .routing-card { background: var(--wf-canvas, #f5f7fb); border-radius: 6px; padding: .8rem 1rem; }
+    .routing-card .team { font-size: .75rem; font-weight: 700; color: var(--wf-accent, #3d6daa); text-transform: uppercase; letter-spacing: .04em; margin-bottom: .3rem; }
+    .routing-card .examples { font-size: .825rem; color: var(--wf-text, #3b4f68); }
+
+    .jtbd-table { width: 100%; border-collapse: collapse; font-size: .85rem; margin-top: .75rem; }
+    .jtbd-table th { background: var(--wf-tint, #dce4ef); padding: .5rem .75rem; text-align: left; font-size: .75rem; font-weight: 700; color: var(--wf-ink, #1e2a3a); }
+    .jtbd-table td { padding: .6rem .75rem; border-bottom: 1px solid var(--wf-line, #b0bdd0); vertical-align: top; }
+    .jtbd-table tr:last-child td { border-bottom: none; }
+    .pri-chip { display: inline-block; font-size: .7rem; font-weight: 700; padding: 2px 7px; border-radius: 10px; }
+    .pri-high   { background: #fde8e8; color: #8b2d2d; }
+    .pri-medium { background: #fef3cd; color: #7a5c1e; }
+    .pri-low    { background: var(--wf-tint, #dce4ef); color: var(--wf-muted, #6b7f99); }
+
+    .meta-note { background: #fffbe6; border: 1px solid #e8d88a; border-radius: 6px; padding: 1rem 1.1rem; font-size: .85rem; margin-top: 1rem; color: var(--wf-text, #3b4f68); }
+    .meta-note strong { color: #7a5c1e; }
+
+    .origin-badge { display: inline-flex; align-items: center; gap: 5px; background: #f0f4f9; border: 1px solid var(--wf-line, #b0bdd0); border-radius: 12px; padding: 3px 10px; font-size: .75rem; color: var(--wf-muted, #6b7f99); font-weight: 500; margin-bottom: 1rem; }
+
+    @media (max-width: 600px) {
+      .problem-grid, .routing-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="wf-header">
+  <div class="wf-header-logo"><svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix"><path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/></svg></div>
+  <div class="wf-header-title">Partner Central</div>
+  <nav class="wf-header-nav">
+    <a href="research-best-practices.html">Partner Research</a>
+    <a href="#" class="active">Product Research</a>
+  </nav>
+</header>
+
+<div class="page-header">
+  <h1>Product Research: AI-Assisted Feedback Triage</h1>
+  <p class="subtitle">A design concept for closing the partner feedback loop in production portals</p>
+  <div class="header-meta">
+    <span class="header-pill">Product Design</span>
+    <span class="header-pill">LLM Integration</span>
+    <span class="header-pill">Partner Experience</span>
+    <span class="header-pill draft">Concept — Not Scoped</span>
+  </div>
+</div>
+
+<div class="container">
+  <a href="research-best-practices.html" class="back-link">← Partner Program Research</a>
+
+  <div class="insight-banner">
+    <strong>Origin:</strong> This concept emerged from building the wireframe review feedback tool (wf-nav.js / feedback-review.html). The same capture-and-response mechanic — adapted with an LLM triage layer — could serve as a production feedback channel in the live PCP portal itself.
+  </div>
+
+  <!-- THE PROBLEM -->
+  <section aria-labelledby="s1">
+    <h2 id="s1">The Problem: Partner Portals Have a Broken Feedback Loop</h2>
+    <p>Partners who encounter friction — a confusing form, a broken workflow, a policy they don't understand — have almost no structured way to surface it. What they typically find:</p>
+    <div class="problem-grid">
+      <div class="problem-cell">
+        <div class="label">What exists today</div>
+        <p>A "Contact Support" link that opens a ticket. A PSM email address. Maybe an NPS survey every six months.</p>
+      </div>
+      <div class="problem-cell">
+        <div class="label">What gets lost</div>
+        <p>Friction that isn't severe enough to file a ticket. Confusion about process. Small UX issues that compound across hundreds of partners.</p>
+      </div>
+      <div class="problem-cell">
+        <div class="label">Who sees it</div>
+        <p>Support queues and PSM inboxes — where feedback gets triaged manually, inconsistently, and often not routed to the team that can actually fix it.</p>
+      </div>
+      <div class="problem-cell">
+        <div class="label">What never gets done</div>
+        <p>Pattern detection. If 40 partners are confused by the same deal registration field, that signal is spread across 40 separate tickets and never surfaced as a design problem.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE CONCEPT -->
+  <section aria-labelledby="s2">
+    <h2 id="s2">The Concept: Inline Capture + LLM Triage Pipeline</h2>
+    <p>An in-portal feedback widget (similar to the wireframe review tool) lets partners flag friction in context — on the page where it happens. An LLM layer then processes each submission through a structured triage pipeline before it lands with any human.</p>
+
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-connector"><div class="flow-node">1</div><div class="flow-line"></div></div>
+        <div class="flow-body">
+          <strong>Partner submits feedback in context</strong>
+          <p>A persistent widget on every portal page lets partners flag a bug, ask a question, or report confusion — without leaving the page. Type is captured (bug / question / suggestion / confusion). Optional screenshot. Minimal friction.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-connector"><div class="flow-node">2</div><div class="flow-line"></div></div>
+        <div class="flow-body">
+          <strong>LLM refines the issue</strong>
+          <p>If the submission is vague ("this doesn't work"), the LLM extracts what it can from context (page, partner type, tier) and either asks one clarifying follow-up or rewrites the issue into a structured, actionable form. The partner sees the refined version and can correct it before it's submitted.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-connector"><div class="flow-node">3</div><div class="flow-line"></div></div>
+        <div class="flow-body">
+          <strong>LLM validates and routes</strong>
+          <p>The LLM determines whether the issue is actionable and routes it to the right team — portal product, deal desk, partner success, legal, or content. Spam and noise is filtered before it reaches anyone's queue.</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-connector"><div class="flow-node">4</div><div class="flow-line"></div></div>
+        <div class="flow-body">
+          <strong>LLM clusters and prioritizes</strong>
+          <p>Each new submission is compared against existing open feedback. If 12 partners have reported confusion on the same deal registration step, the 13th submission is linked to that cluster — and the cluster priority is re-evaluated based on frequency, partner tier, and JTBD impact (see below).</p>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-connector"><div class="flow-node">5</div></div>
+        <div class="flow-body">
+          <strong>Human reviewer sees structured, prioritized work</strong>
+          <p>The internal review interface shows clustered issues, not individual submissions. Reviewers respond to patterns, not noise. Responses can be sent back to all partners in a cluster simultaneously.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ROUTING -->
+  <section aria-labelledby="s3">
+    <h2 id="s3">Routing Logic: Which Team Gets What</h2>
+    <p>The LLM routes based on issue type, page context, and content. Routing is a suggestion — reviewers can override. Approximate intent:</p>
+    <div class="routing-grid">
+      <div class="routing-card">
+        <div class="team">Portal Product Team</div>
+        <div class="examples">Broken UI, confusing navigation, missing functionality, form validation errors, mobile issues.</div>
+      </div>
+      <div class="routing-card">
+        <div class="team">Deal Desk / Ops</div>
+        <div class="examples">Deal registration problems, commission disputes, approval delays, deal status confusion.</div>
+      </div>
+      <div class="routing-card">
+        <div class="team">Partner Success (PSM)</div>
+        <div class="examples">Tier status questions, MDF eligibility, program requirement confusion, relationship issues.</div>
+      </div>
+      <div class="routing-card">
+        <div class="team">Enablement / Content</div>
+        <div class="examples">Missing training content, outdated documentation, broken links, certification questions.</div>
+      </div>
+      <div class="routing-card">
+        <div class="team">Legal / Compliance</div>
+        <div class="examples">Contract questions, T&amp;C interpretation, data handling concerns, program policy disputes.</div>
+      </div>
+      <div class="routing-card">
+        <div class="team">Filtered / No Action</div>
+        <div class="examples">Test submissions, duplicate of resolved issue, out of scope for Equinix to address, spam.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- JTBD PRIORITIZATION -->
+  <section aria-labelledby="s4">
+    <h2 id="s4">Priority Scoring Against Jobs-to-Be-Done</h2>
+    <p>Not all friction is equal. A partner who can't submit a deal registration is blocked from their primary job. A partner who finds a label ambiguous is mildly annoyed. The LLM assigns priority by mapping the issue to the JTBD it impedes and weighting by frequency and partner segment.</p>
+
+    <table class="jtbd-table">
+      <thead>
+        <tr>
+          <th>Partner JTBD</th>
+          <th>Example friction</th>
+          <th>Impact weight</th>
+          <th>Suggested priority</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Register and protect a deal</td>
+          <td>Deal reg form times out; can't find the "New Deal" button on mobile</td>
+          <td>Revenue-blocking</td>
+          <td><span class="pri-chip pri-high">High</span></td>
+        </tr>
+        <tr>
+          <td>Understand commission / payout status</td>
+          <td>Commission tracker shows incorrect figure; no explanation for pending status</td>
+          <td>Trust &amp; retention</td>
+          <td><span class="pri-chip pri-high">High</span></td>
+        </tr>
+        <tr>
+          <td>Access and spend MDF</td>
+          <td>MDF request form returns error; unclear what expenses qualify</td>
+          <td>Program utilization</td>
+          <td><span class="pri-chip pri-high">High</span></td>
+        </tr>
+        <tr>
+          <td>Track progress toward tier advancement</td>
+          <td>Tier progress bar doesn't update after completing certification</td>
+          <td>Engagement &amp; behavior</td>
+          <td><span class="pri-chip pri-medium">Medium</span></td>
+        </tr>
+        <tr>
+          <td>Complete required training / certification</td>
+          <td>Video player broken in Firefox; course won't mark complete after finishing</td>
+          <td>Compliance &amp; enablement</td>
+          <td><span class="pri-chip pri-medium">Medium</span></td>
+        </tr>
+        <tr>
+          <td>Understand program rules and requirements</td>
+          <td>Contradictory information between two help articles; no clear answer from search</td>
+          <td>Overhead reduction</td>
+          <td><span class="pri-chip pri-medium">Medium</span></td>
+        </tr>
+        <tr>
+          <td>Navigate and find content</td>
+          <td>Search returns irrelevant results; section label is ambiguous</td>
+          <td>UX friction</td>
+          <td><span class="pri-chip pri-low">Low</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p style="margin-top:.9rem;">Priority is also weighted by <strong>partner segment</strong>. The same issue reported by a Gold/Platinum partner with active pipeline carries more urgency than the same issue reported by a new applicant who has not yet completed onboarding. The LLM has access to the submitter's tier and deal registration history from the session context.</p>
+  </section>
+
+  <!-- CONNECTION TO THIS PROJECT -->
+  <section aria-labelledby="s5">
+    <h2 id="s5">Connection to This Project</h2>
+    <p>The wireframe review tool built for this project (wf-nav.js + feedback-review.html) demonstrates the capture and response mechanics: contextual feedback attached to a specific page, type and severity tagging, queue management, and reviewer responses. The production version of this concept would sit on top of that same structural foundation, with the LLM triage layer added between submission and human review.</p>
+
+    <p>The key difference between the wireframe review tool and the production concept is directionality. In the wireframe tool, <em>designers and stakeholders</em> leave feedback about a prototype. In the production concept, <em>partners</em> leave feedback about a live product — and the stakes are higher because that feedback directly affects revenue-generating workflows.</p>
+
+    <div class="meta-note">
+      <strong>Design consideration:</strong> The wireframe tool can serve double duty. Running it during usability sessions with real partner personas (Steve, Jordan) on prototype builds would surface JTBD-level friction <em>before</em> launch — the same issues the production triage system would catch after. The same feedback schema (type, severity, page, description, response) works for both contexts.
+    </div>
+  </section>
+
+  <!-- OPEN QUESTIONS -->
+  <section aria-labelledby="s6">
+    <h2 id="s6">Open Questions Before Scoping</h2>
+    <h3>Which LLM and who controls the API costs?</h3>
+    <p>Per-submission LLM calls are cheap at volume (a few cents each) but need to be owned by Equinix product or IT, not individual portal users. This is a backend service, not a client-side integration. Cost is not a barrier but ownership needs to be resolved early.</p>
+
+    <h3>Where does the feedback data live?</h3>
+    <p>The review interface and clustered feedback database needs a home in Equinix's stack — Salesforce, Jira, or a purpose-built internal tool. The routing integrations (to deal desk, PSM, content team) depend on where those teams already work.</p>
+
+    <h3>How does the partner know their feedback was acted on?</h3>
+    <p>Closing the loop with the submitting partner is the hardest and most important part. A "Your feedback has been addressed — here's what changed" notification — even for cluster-level resolutions — would meaningfully differentiate PCP from portals that feel like black boxes.</p>
+
+    <h3>Does the clarification step add friction partners won't accept?</h3>
+    <p>The LLM follow-up question (step 2 above) risks feeling like a form when partners just want to vent. The model should ask at most one question, and only when the submission is genuinely ambiguous. If the issue is clear enough to route, skip the clarification and route it.</p>
+  </section>
+
+</div>
+
+<script>
+  function toggleSpec() {
+    const panel = document.getElementById('spec-panel');
+    document.getElementById('spec-toggle').setAttribute('aria-expanded', panel.classList.toggle('open'));
+  }
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

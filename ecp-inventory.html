@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infrastructure Inventory - Equinix Customer Portal</title>
+    <link rel="stylesheet" href="wireframe.css">
+    <style>
+        /* Page-specific styles */
+        :root {
+            --wf-ink: #1e2a3a;
+            --wf-accent: #3d6daa;
+            --wf-muted: #6b7f99;
+            --wf-amber: #8b7745;
+            --wf-red: #8b4553;
+            --wf-canvas: #f5f7fb;
+            --wf-tint: #dce4ef;
+            --wf-surface: #edf1f7;
+            --wf-text: #3b4f68;
+            --wf-line: #b0bdd0;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--wf-ink);
+            margin: 0 0 0.5rem 0;
+        }
+
+        .page-subtitle {
+            font-size: 0.95rem;
+            color: var(--wf-muted);
+            margin: 0;
+        }
+
+        /* KPI Strip */
+        .kpi-strip {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: var(--wf-canvas);
+            border: 1px solid var(--wf-line);
+            border-radius: 4px;
+        }
+
+        .kpi-item {
+            text-align: center;
+        }
+
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--wf-accent);
+            margin: 0 0 0.25rem 0;
+        }
+
+        .kpi-label {
+            font-size: 0.85rem;
+            color: var(--wf-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Filter / Tab row */
+        .filter-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .tab-group {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--wf-line);
+            background: #fff;
+            color: var(--wf-text);
+            border-radius: 4px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab-button.active {
+            background: var(--wf-accent);
+            color: #fff;
+            border-color: var(--wf-accent);
+        }
+
+        .tab-button:hover:not(.active) {
+            border-color: var(--wf-accent);
+            color: var(--wf-accent);
+        }
+
+        .search-export {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .search-input {
+            padding: 0.6rem 1rem;
+            border: 1px solid var(--wf-line);
+            border-radius: 4px;
+            font-size: 0.9rem;
+            width: 220px;
+        }
+
+        .btn-export {
+            padding: 0.6rem 1.2rem;
+            border: 1px solid var(--wf-accent);
+            background: #fff;
+            color: var(--wf-accent);
+            border-radius: 4px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-export:hover {
+            background: var(--wf-accent);
+            color: #fff;
+        }
+
+        /* Section header */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin: 2.5rem 0 1.5rem 0;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--wf-line);
+        }
+
+        .section-icon {
+            font-size: 1.25rem;
+            color: var(--wf-accent);
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--wf-ink);
+            margin: 0;
+        }
+
+        /* Cabinet Cards */
+        .cabinet-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .asset-card {
+            border: 1px solid var(--wf-line);
+            border-radius: 4px;
+            background: #fff;
+            overflow: hidden;
+        }
+
+        .asset-card-header {
+            padding: 1.2rem 1.5rem;
+            background: var(--wf-surface);
+            border-bottom: 1px solid var(--wf-line);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .asset-id {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--wf-ink);
+            margin: 0;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.35rem 0.75rem;
+            border-radius: 3px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-provisioning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .asset-card-body {
+            padding: 1.5rem;
+        }
+
+        .asset-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--wf-tint);
+            font-size: 0.9rem;
+        }
+
+        .asset-row:last-child {
+            border-bottom: none;
+        }
+
+        .asset-label {
+            color: var(--wf-muted);
+            font-weight: 500;
+            min-width: 140px;
+        }
+
+        .asset-value {
+            color: var(--wf-text);
+            text-align: right;
+            flex: 1;
+        }
+
+        /* Utilization bar */
+        .util-bar-container {
+            margin-top: 0.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .util-bar {
+            width: 100%;
+            height: 6px;
+            background: var(--wf-tint);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .util-bar-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--wf-accent), #5b9bc4);
+            border-radius: 3px;
+        }
+
+        .util-label {
+            font-size: 0.8rem;
+            color: var(--wf-muted);
+            margin-top: 0.25rem;
+        }
+
+        /* Cross Connects Table */
+        .xc-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            border: 1px solid var(--wf-line);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+
+        .xc-table thead {
+            background: var(--wf-surface);
+            border-bottom: 1px solid var(--wf-line);
+        }
+
+        .xc-table th {
+            padding: 1rem 1.2rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--wf-ink);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .xc-table td {
+            padding: 0.9rem 1.2rem;
+            border-bottom: 1px solid var(--wf-tint);
+            font-size: 0.9rem;
+            color: var(--wf-text);
+        }
+
+        .xc-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .xc-id {
+            font-weight: 600;
+            color: var(--wf-ink);
+        }
+
+        /* Fabric Ports Cards */
+        .fabric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .connection-list {
+            margin: 0.75rem 0 0 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .connection-item {
+            padding: 0.6rem 0.8rem;
+            background: var(--wf-canvas);
+            border-left: 3px solid var(--wf-accent);
+            margin-bottom: 0.5rem;
+            border-radius: 2px;
+            font-size: 0.85rem;
+            color: var(--wf-text);
+        }
+
+        .connection-name {
+            font-weight: 600;
+            color: var(--wf-ink);
+        }
+
+        .connection-detail {
+            font-size: 0.8rem;
+            color: var(--wf-muted);
+        }
+
+        /* Network Edge Card */
+        .nvd-card {
+            border: 1px solid var(--wf-line);
+            border-radius: 4px;
+            background: #fff;
+            overflow: hidden;
+            max-width: 500px;
+            margin-bottom: 2rem;
+        }
+
+        /* Smart Hands Card */
+        .smart-hands-card {
+            border: 1px solid var(--wf-line);
+            border-radius: 4px;
+            background: #fff;
+            overflow: hidden;
+            max-width: 500px;
+            margin-bottom: 2rem;
+        }
+
+        .smart-hands-note {
+            padding: 1rem;
+            background: var(--wf-canvas);
+            border-top: 1px solid var(--wf-line);
+            font-size: 0.85rem;
+            color: var(--wf-muted);
+            line-height: 1.5;
+        }
+
+        /* Cost Summary */
+        .cost-summary {
+            margin-top: 3rem;
+            padding: 1.5rem;
+            background: var(--wf-canvas);
+            border: 2px solid var(--wf-accent);
+            border-radius: 4px;
+        }
+
+        .cost-summary-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--wf-ink);
+            margin: 0 0 1rem 0;
+        }
+
+        .cost-total {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--wf-accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .cost-note {
+            font-size: 0.85rem;
+            color: var(--wf-muted);
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .cost-breakdown {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .cost-breakdown td {
+            padding: 0.65rem 0;
+            border-bottom: 1px solid var(--wf-line);
+            font-size: 0.9rem;
+        }
+
+        .cost-breakdown td:first-child {
+            color: var(--wf-text);
+            font-weight: 500;
+        }
+
+        .cost-breakdown td:last-child {
+            text-align: right;
+            color: var(--wf-ink);
+            font-weight: 600;
+        }
+
+        .cost-breakdown tr:last-child td {
+            border-bottom: none;
+            border-top: 2px solid var(--wf-accent);
+            padding-top: 0.85rem;
+            font-size: 1rem;
+        }
+
+        /* Spec panel (hidden by default) */
+        .spec-panel {
+            display: none;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: #f9f9f9;
+            border: 1px solid var(--wf-line);
+            border-radius: 4px;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: var(--wf-text);
+        }
+
+        .spec-panel.active {
+            display: block;
+        }
+
+        .spec-panel p {
+            margin: 0;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            font-size: 0.85rem;
+            color: var(--wf-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .breadcrumb a {
+            color: var(--wf-accent);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .euc-badge {
+            display: inline-block;
+            margin-left: 0.5rem;
+            padding: 0.2rem 0.5rem;
+            background: var(--wf-tint);
+            border-radius: 3px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--wf-accent);
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header / Nav -->
+    <header class="ecp-header">
+        <div class="header-top">
+            <div class="logo-section">
+                <h1 class="ecp-logo">ECP</h1>
+            </div>
+            <nav class="main-nav">
+                <a href="ecp-dashboard.html" class="nav-link">Dashboard</a>
+                <a href="ecp-services-orders.html" class="nav-link active">Services</a>
+                <a href="ecp-notifications.html" class="nav-link">Notifications</a>
+                <a href="ecp-cases.html" class="nav-link">Cases</a>
+                <a href="ecp-product-catalog.html" class="nav-link">Catalog</a>
+            </nav>
+            <div class="user-section">
+                <span style="font-size:11px;color:#2d4029;background:#e8f0e4;border:1px solid #c0d8b0;border-radius:12px;padding:2px 10px;font-weight:600;white-space:nowrap;margin-right:6px;">Maria Hill &nbsp;&bull;&nbsp; S.H.I.E.L.D.</span>
+                <span class="user-name" style="display:none;">Maria Hill</span>
+                <span class="user-org" style="display:none;">S.H.I.E.L.D.</span>
+            </div>
+        </div>
+    </header>
+
+<div class="page-context-bar">
+  <div style="max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <nav class="wf-breadcrumb" aria-label="Breadcrumb" style="margin-bottom:0;">
+      <a href="ecp-dashboard.html" class="wf-breadcrumb-link">ECP Home</a><span class="wf-breadcrumb-sep">›</span><span class="wf-breadcrumb-current">Infrastructure Inventory</span>
+    </nav>
+    <span class="persona-badge persona-badge--euc">EUC</span>
+  </div>
+</div>
+
+    <main class="ecp-main">
+        <div class="container">
+            <!-- Breadcrumb -->
+            <div class="breadcrumb">
+                <a href="#">ECP Home</a> › <a href="#">Services & Orders</a> › <strong>Inventory</strong>
+                <span class="euc-badge">EUC</span>
+            </div>
+
+            <!-- Page Header -->
+            <div class="page-header">
+                <h2 class="page-title">Infrastructure Inventory</h2>
+                <p class="page-subtitle">
+                    S.H.I.E.L.D. — All provisioned assets across Equinix IBX locations, managed via Stark Industries
+                </p>
+            </div>
+
+            <!-- Spec Tab Anchor -->
+            <button class="spec-tab-anchor" id="spec-toggle" onclick="toggleSpec()">
+                Show Technical Specifications
+            </button>
+
+            <!-- KPI Strip -->
+            <div class="kpi-strip">
+                <div class="kpi-item">
+                    <div class="kpi-value">2</div>
+                    <div class="kpi-label">Cabinets</div>
+                </div>
+                <div class="kpi-item">
+                    <div class="kpi-value">4</div>
+                    <div class="kpi-label">Cross Connects</div>
+                </div>
+                <div class="kpi-item">
+                    <div class="kpi-value">2</div>
+                    <div class="kpi-label">Fabric Ports</div>
+                </div>
+                <div class="kpi-item">
+                    <div class="kpi-value">1</div>
+                    <div class="kpi-label">Network Edge</div>
+                </div>
+                <div class="kpi-item">
+                    <div class="kpi-value">1</div>
+                    <div class="kpi-label">Smart Hands Plan</div>
+                </div>
+            </div>
+
+            <!-- Filter / Tab Row -->
+            <div class="filter-row">
+                <div class="tab-group">
+                    <button class="tab-button active">All Assets</button>
+                    <button class="tab-button">Cabinets (2)</button>
+                    <button class="tab-button">Cross Connects (4)</button>
+                    <button class="tab-button">Fabric (2)</button>
+                    <button class="tab-button">Network Edge (1)</button>
+                    <button class="tab-button">Smart Hands (1)</button>
+                </div>
+                <div class="search-export">
+                    <input type="text" class="search-input" placeholder="Search by asset ID or location…">
+                    <button class="btn-export">Export CSV</button>
+                </div>
+            </div>
+
+            <!-- CABINETS SECTION -->
+            <div class="section-header">
+                <span class="section-icon">📍</span>
+                <h3 class="section-title">Colocation Cabinets</h3>
+            </div>
+
+            <div class="cabinet-grid">
+                <!-- Cabinet 1 -->
+                <div class="asset-card">
+                    <div class="asset-card-header">
+                        <h4 class="asset-id">CAB-A7-04</h4>
+                        <span class="status-badge status-pending">⏳ Pending Installation</span>
+                    </div>
+                    <div class="asset-card-body">
+                        <div class="asset-row">
+                            <span class="asset-label">Asset ID</span>
+                            <span class="asset-value">CAB-A7-04</span>
+                        </div>
+                        <div class="asset-row">
+                            <span class="asset-label">IBX Location</span>
+                            <span class="asset-value">SV5 · San Jose, CA</span>
+                        </div>
+                        <div class="asset-row">
+                            <span class="asset-label">Cage / Zone</span>
+                            <span class="asset-value">A7</span>
+                        </div>
+                        <div class="asset-row">
+                            <span class="asset-label">Type</span>
+                            <span class="asset-value">Half Cabinet · 24U usable</span>
+                        </div>
+                        <div class="asset-row">
+                            <span class="asset-label">Power Allocation</span>
+                            <span class="asset-value">2 × 20A, 208V (0W utilized)</span>
+                        </div>
+                        <div class="asset-row">
+                            <span class="asset-label">Cooling</span>
+                            <span class="asset-value">In-row (included)</span>
+                        </div>
+                        <div class="asset-row">
+                            <span class="asset-label">Provisioned via</span>
+                            <span class="asset-value">Stark Industries (ORD-2025-0156, ECD Feb 24)</span>
+                        </div>
+                        <div class="asset-row">
+                            <span class="asset-label">Monthly Cost</span>
+                            <span class="asset-value"><strong>$1,840 / mo</strong></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cabinet 2 -->
+                <div class="asset-card">
+                    <div class="asset-card-header">
+                        <h4 class="asset-id">CAB-B2-11</h4>
+                        <span class="status-badge status-active">✅ Active</span>
+                    </div>
+                    <div class="asset-card-body">
+                        <div class="asset-row">
+                            <span class="asset-label">Asset ID</span>
+                            <span class="asset-value">CAB-B2-11</span>
+                        </div>
+                        <div class="asset-row">
+                            <span class="asset-label">IBX Location</span>
+                            <span class="asset-value">NY4 · New York, NY</span>
+                        </div>
+                        <div class="asset-row">
+                            <span class="asset-label">Cage / Zone</span>
+                            <span class="asset-value">B2</span>
+                        </div>
+                        <div class="asset-row">
+                            <span class="asset-label">Type</span>
+                            <span class="asset-value">Half Cabinet · 16U usable</span>
+                        </div>
+                        <div class="asset-row">
+                            <span class="asset-label">Power Allocation</span>
+                            <span class="asset-value">1 × 20A, 208V · Utilized: 9A (45%)</span>
+                        </div>
+                        <div class="util-bar-container">
+                            <div class="util-bar">
+                                <div class="util-bar-fill" style="width: 45%;"></div>
+                            </div>
+                            <div class="util-label">45% utilized</div>
+                        </div>
+                        <div class="asset-row">
+                            <span class="asset-label">Cooling</span>
+                            <span class="asset-value">In-row (included)</span>
+                        </div>
+                        <div class="asset-row">
+                            <span class="asset-label">Occupied Space</span>
+                            <span class="asset-value">12U of 16U</span>
+                        </div>
+                        <div class="asset-row">
+                            <span class="asset-label">Monthly Cost</span>
+                            <span class="asset-value"><strong>$1,620 / mo</strong></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CROSS CONNECTS SECTION -->
+            <div class="section-header">
+                <span class="section-icon">⚡</span>
+                <h3 class="section-title">Cross Connects</h3>
+            </div>
+
+            <table class="xc-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Type</th>
+                        <th>From</th>
+                        <th>To</th>
+                        <th>Speed</th>
+                        <th>Status</th>
+                        <th style="text-align: right;">Monthly</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="xc-id">XC-SV5-0023</td>
+                        <td>SV5</td>
+                        <td>S.H.I.E.L.D. (A7)</td>
+                        <td>Equinix Internet Exchange</td>
+                        <td>10G</td>
+                        <td><span class="status-badge status-provisioning">⏳ Provisioning</span></td>
+                        <td style="text-align: right;"><strong>$285/mo</strong></td>
+                    </tr>
+                    <tr>
+                        <td class="xc-id">XC-SV5-0024</td>
+                        <td>SV5</td>
+                        <td>S.H.I.E.L.D. (A7)</td>
+                        <td>AT&T — Primary WAN</td>
+                        <td>1G</td>
+                        <td><span class="status-badge status-provisioning">⏳ Provisioning</span></td>
+                        <td style="text-align: right;"><strong>$190/mo</strong></td>
+                    </tr>
+                    <tr>
+                        <td class="xc-id">XC-NY4-0187</td>
+                        <td>NY4</td>
+                        <td>S.H.I.E.L.D. (B2)</td>
+                        <td>Verizon — WAN Redundancy</td>
+                        <td>1G</td>
+                        <td><span class="status-badge status-active">✅ Active</span></td>
+                        <td style="text-align: right;"><strong>$190/mo</strong></td>
+                    </tr>
+                    <tr>
+                        <td class="xc-id">XC-NY4-0188</td>
+                        <td>NY4</td>
+                        <td>S.H.I.E.L.D. (B2)</td>
+                        <td>Equinix Internet Exchange</td>
+                        <td>10G</td>
+                        <td><span class="status-badge status-active">✅ Active</span></td>
+                        <td style="text-align: right;"><strong>$285/mo</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- FABRIC PORTS SECTION -->
+            <div class="section-header">
+                <span class="section-icon">🌐</span>
+                <h3 class="section-title">Equinix Fabric Ports</h3>
+            </div>
+
+            <div class="fabric-grid">
+                <!-- Fabric Port 1 -->
+                <div class="asset-card">
+                    <div class="asset-card-header">
+                        <h4 class="asset-id">FP-SV5-10032</h4>
+                        <span class="status-badge status-active">✅ Active</span>
+                    </div>
+                    <div class="asset-card-body">
+                        <div class="asset-row">
+                            <span class="asset-label">Asset ID</span>
+                            <span class="asset-value">FP-SV5-10032</span>
+                        </div>
+                        <div class="asset-row">
+                            <span class="asset-label">IBX Location</span>
+                            <span class="asset-value">SV5 · San Jose, CA</span>
+                        </div>
+                        <div class="asset-row">
+                            <span class="asset-label">Port Speed</span>
+                            <span class="asset-value">10G</span>
+                        </div>
+                        <div class="asset-row">
+                            <span class="asset-label">Avg Utilization</span>
+                            <span class="asset-value">2.3 Gbps (23%)</span>
+                        </div>
+                        <div class="util-bar-container">
+                            <div class="util-bar">
+                                <div class="util-bar-fill" style="width: 23%;"></div>
+                            </div>
+                        </div>
+                        <div class="asset-row">
+                            <span class="asset-label">Active Connections</span>
+                            <span class="asset-value">2</span>
+                        </div>
+                        <ul class="connection-list">
+                            <li class="connection-item">
+                                <span class="connection-name">→ AWS Direct Connect us-west-2</span><br>
+                                <span class="connection-detail">1G, Virtual Connection VC-2025-0441</span>
+                            </li>
+                            <li class="connection-item">
+                                <span class="connection-name">→ Azure ExpressRoute West US</span><br>
+                                <span class="connection-detail">1G, Virtual Connection VC-2025-0442</span>
+                            </li>
+                        </ul>
+                        <div class="asset-row">
+                            <span class="asset-label">Monthly Cost</span>
+                            <span class="asset-value"><strong>$2,270 / mo</strong></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fabric Port 2 -->
+                <div class="asset-card">
+                    <div class="asset-card-header">
+                        <h4 class="asset-id">FP-NY4-10015</h4>
+                        <span class="status-badge status-active">✅ Active</span>
+                    </div>
+                    <div class="asset-card-body">
+                        <div class="asset-row">
+                            <span class="asset-label">Asset ID</span>
+                            <span class="asset-value">FP-NY4-10015</span>
+                        </div>
+                        <div class="asset-row">
+                            <span class="asset-label">IBX Location</span>
+                            <span class="asset-value">NY4 · New York, NY</span>
+                        </div>
+                        <div class="asset-row">
+                            <span class="asset-label">Port Speed</span>
+                            <span class="asset-value">1G</span>
+                        </div>
+                        <div class="asset-row">
+                            <span class="asset-label">Avg Utilization</span>
+                            <span class="asset-value">340 Mbps (34%)</span>
+                        </div>
+                        <div class="util-bar-container">
+                            <div class="util-bar">
+                                <div class="util-bar-fill" style="width: 34%;"></div>
+                            </div>
+                        </div>
+                        <div class="asset-row">
+                            <span class="asset-label">Active Connections</span>
+                            <span class="asset-value">1</span>
+                        </div>
+                        <ul class="connection-list">
+                            <li class="connection-item">
+                                <span class="connection-name">→ AWS Direct Connect us-east-1</span><br>
+                                <span class="connection-detail">1G, Virtual Connection VC-2025-0398</span>
+                            </li>
+                        </ul>
+                        <div class="asset-row">
+                            <span class="asset-label">Monthly Cost</span>
+                            <span class="asset-value"><strong>$860 / mo</strong></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NETWORK EDGE SECTION -->
+            <div class="section-header">
+                <span class="section-icon">🛡️</span>
+                <h3 class="section-title">Network Edge Devices</h3>
+            </div>
+
+            <div class="nvd-card">
+                <div class="asset-card-header">
+                    <h4 class="asset-id">NVD-SV5-0041</h4>
+                    <span class="status-badge status-active">✅ Active</span>
+                </div>
+                <div class="asset-card-body">
+                    <div class="asset-row">
+                        <span class="asset-label">Device ID</span>
+                        <span class="asset-value">NVD-SV5-0041</span>
+                    </div>
+                    <div class="asset-row">
+                        <span class="asset-label">Vendor / Model</span>
+                        <span class="asset-value">Palo Alto Networks VM-300 NGFW</span>
+                    </div>
+                    <div class="asset-row">
+                        <span class="asset-label">IBX Location</span>
+                        <span class="asset-value">SV5 · San Jose, CA</span>
+                    </div>
+                    <div class="asset-row">
+                        <span class="asset-label">Compute Resources</span>
+                        <span class="asset-value">4 vCPU · 8 GB RAM · 10G throughput</span>
+                    </div>
+                    <div class="asset-row">
+                        <span class="asset-label">Software Version</span>
+                        <span class="asset-value">PAN-OS 11.1.2</span>
+                    </div>
+                    <div class="asset-row">
+                        <span class="asset-label">Connected to</span>
+                        <span class="asset-value">Fabric Port FP-SV5-10032 (10G internal)</span>
+                    </div>
+                    <div class="asset-row">
+                        <span class="asset-label">CPU Utilization</span>
+                        <span class="asset-value">18%</span>
+                    </div>
+                    <div class="util-bar-container">
+                        <div class="util-bar">
+                            <div class="util-bar-fill" style="width: 18%;"></div>
+                        </div>
+                    </div>
+                    <div class="asset-row">
+                        <span class="asset-label">Management</span>
+                        <span class="asset-value">Stark Industries NOC (managed service)</span>
+                    </div>
+                    <div class="asset-row">
+                        <span class="asset-label">Monthly Cost</span>
+                        <span class="asset-value"><strong>$1,420 / mo</strong></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SMART HANDS SECTION -->
+            <div class="section-header">
+                <span class="section-icon">🔧</span>
+                <h3 class="section-title">Smart Hands Plans</h3>
+            </div>
+
+            <div class="smart-hands-card">
+                <div class="asset-card-header">
+                    <h4 class="asset-id">SHP-SV5-SHIELD-22</h4>
+                    <span class="status-badge status-active">✅ Active</span>
+                </div>
+                <div class="asset-card-body">
+                    <div class="asset-row">
+                        <span class="asset-label">Plan ID</span>
+                        <span class="asset-value">SHP-SV5-SHIELD-22</span>
+                    </div>
+                    <div class="asset-row">
+                        <span class="asset-label">IBX Location</span>
+                        <span class="asset-value">SV5 · San Jose, CA</span>
+                    </div>
+                    <div class="asset-row">
+                        <span class="asset-label">Plan Type</span>
+                        <span class="asset-value">Managed Hours — 20 hrs/month</span>
+                    </div>
+                    <div class="asset-row">
+                        <span class="asset-label">Hours Used This Month</span>
+                        <span class="asset-value">2 hrs (10%)</span>
+                    </div>
+                    <div class="util-bar-container">
+                        <div class="util-bar">
+                            <div class="util-bar-fill" style="width: 10%;"></div>
+                        </div>
+                    </div>
+                    <div class="asset-row">
+                        <span class="asset-label">Hours Remaining</span>
+                        <span class="asset-value">18 hrs</span>
+                    </div>
+                    <div class="asset-row">
+                        <span class="asset-label">Rollover Policy</span>
+                        <span class="asset-value">No (unused hours expire monthly)</span>
+                    </div>
+                    <div class="asset-row">
+                        <span class="asset-label">Included Services</span>
+                        <span class="asset-value">Rack & stack, cable management, hardware swaps, remote hands</span>
+                    </div>
+                    <div class="asset-row">
+                        <span class="asset-label">Monthly Cost</span>
+                        <span class="asset-value"><strong>$1,100 / mo</strong></span>
+                    </div>
+                </div>
+                <div class="smart-hands-note">
+                    Hours coordinated through Stark Industries NOC. Submit a support case to request Smart Hands work.
+                </div>
+            </div>
+
+            <!-- COST SUMMARY -->
+            <div class="cost-summary">
+                <h3 class="cost-summary-title">Monthly Cost Summary</h3>
+                <div class="cost-total">$10,060 / mo</div>
+                <p class="cost-note">
+                    Billed via Stark Industries. Your Equinix invoice reflects services provisioned through your reseller partner.
+                </p>
+                <table class="cost-breakdown">
+                    <tbody>
+                        <tr>
+                            <td>Cabinets</td>
+                            <td>$3,460</td>
+                        </tr>
+                        <tr>
+                            <td>Cross Connects</td>
+                            <td>$950</td>
+                        </tr>
+                        <tr>
+                            <td>Fabric Ports & Connections</td>
+                            <td>$3,130</td>
+                        </tr>
+                        <tr>
+                            <td>Network Edge Device</td>
+                            <td>$1,420</td>
+                        </tr>
+                        <tr>
+                            <td>Smart Hands Plan</td>
+                            <td>$1,100</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Total Monthly Recurring</strong></td>
+                            <td><strong>$10,060</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- SPEC PANEL -->
+            <div class="spec-panel" id="spec-panel">
+                <p>
+                    <strong>Infrastructure Inventory Specifications:</strong><br><br>
+                    Infrastructure inventory shows all S.H.I.E.L.D. assets provisioned through Stark Industries. EUC cannot provision or decommission assets directly — all changes must be requested via support case or through their Stark Industries account manager (James Rhodes). The inventory is read-only from the EUC perspective. Assets in 'Provisioning' status are tied to open order ORD-2025-0156. The monthly costs shown are Equinix wholesale rates billed to Stark Industries — S.H.I.E.L.D.'s actual invoiced amount (EQX-INV-2026-0089, $47,820/mo) reflects Stark's markup and additional managed services.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function toggleSpec() {
+            const panel = document.getElementById('spec-panel');
+            const toggle = document.getElementById('spec-toggle');
+            panel.classList.toggle('active');
+            toggle.textContent = panel.classList.contains('active') 
+                ? 'Hide Technical Specifications' 
+                : 'Show Technical Specifications';
+        }
+    </script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

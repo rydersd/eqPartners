@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MDF Program Analytics - Equinix PCP PSM Portal</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Salesforce Sans", sans-serif;
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    /* Header */
+    header {
+      background-color: var(--wf-ink, #1e2a3a);
+      color: var(--wf-surface, #edf1f7);
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .lightning-icon {
+      font-size: 1.5rem;
+    }
+
+    nav {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    nav a {
+      color: var(--wf-surface, #edf1f7);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      transition: background-color 0.2s;
+    }
+
+    nav a:hover {
+      background-color: rgba(255,255,255,0.1);
+    }
+
+    nav a.active {
+      background-color: var(--wf-accent, var(--wf-accent, #3d6daa));
+    }
+
+    /* Main Content */
+    main {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+
+    .page-title {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 0.5rem;
+    }
+
+    .page-subtitle {
+      font-size: 0.95rem;
+      color: var(--wf-text, #3b4f68);
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background: var(--wf-surface, #edf1f7);
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--wf-canvas, #f5f7fb);
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .kpi-card {
+      background: var(--wf-ink, #1e2a3a);
+      padding: 1.25rem;
+      border-radius: 6px;
+      border-left: 4px solid var(--wf-accent, var(--wf-accent, #3d6daa));
+      text-align: center;
+    }
+
+    .kpi-label {
+      font-size: 0.75rem;
+      color: var(--wf-text, #3b4f68);
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .kpi-value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 0.25rem;
+    }
+
+    .kpi-subtitle {
+      font-size: 0.7rem;
+      color: var(--wf-text, #3b4f68);
+    }
+
+    .chart-container {
+      margin: 2rem 0;
+    }
+
+    .chart-label {
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+    }
+
+    .bar-chart {
+      margin-bottom: 1.5rem;
+    }
+
+    .bar-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+      gap: 1rem;
+    }
+
+    .bar-label {
+      width: 150px;
+      font-size: 0.9rem;
+      color: var(--wf-ink, #1e2a3a);
+      font-weight: 500;
+    }
+
+    .bar-container {
+      flex: 1;
+      height: 30px;
+      background-color: var(--wf-canvas, #f5f7fb);
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: var(--wf-surface, #edf1f7) 0%, var(--wf-accent, #3d6daa) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 0.5rem;
+      color: var(--wf-surface, #edf1f7);
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .bar-fill.accent1 { background: var(--wf-surface, #edf1f7) 0%, var(--wf-accent, #3d6daa) 100%); }
+    .bar-fill.accent2 { background: var(--wf-ink, #1e2a3a); }
+    .bar-fill.accent3 { background: var(--wf-surface, #edf1f7); }
+    .bar-fill.accent4 { background: var(--wf-surface, #edf1f7); }
+    .bar-fill.accent5 { background: var(--wf-surface, #edf1f7); }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .status-green {
+      background-color: var(--wf-surface, #edf1f7);
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .status-yellow {
+      background-color: var(--wf-surface, #edf1f7);
+      color: var(--wf-amber, #8b7745);
+    }
+
+    .status-red {
+      background-color: var(--wf-surface, #edf1f7);
+      color: var(--wf-red, #8b4553);
+    }
+
+    .participation-row {
+      display: flex;
+      align-items: center;
+      padding: 1rem;
+      border-bottom: 1px solid var(--wf-canvas, #f5f7fb);
+      gap: 2rem;
+    }
+
+    .participation-row:last-child {
+      border-bottom: none;
+    }
+
+    .tier-label {
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+      min-width: 100px;
+    }
+
+    .tier-percentage {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--wf-ink, #1e2a3a);
+      min-width: 80px;
+    }
+
+    .tier-progress {
+      flex: 1;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 24px;
+      background-color: var(--wf-canvas, #f5f7fb);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background-color: var(--wf-accent, var(--wf-accent, #3d6daa));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--wf-surface, #edf1f7);
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    thead {
+      background-color: var(--wf-canvas, #f5f7fb);
+      border-bottom: 2px solid var(--wf-canvas, #f5f7fb);
+    }
+
+    th {
+      padding: 0.75rem;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--wf-ink, #1e2a3a);
+      text-transform: uppercase;
+    }
+
+    td {
+      padding: 0.75rem;
+      border-bottom: 1px solid var(--wf-canvas, #f5f7fb);
+      font-size: 0.9rem;
+    }
+
+    tr:hover {
+      background-color: var(--wf-canvas, #f5f7fb);
+    }
+
+    .alert {
+      padding: 1rem;
+      border-radius: 6px;
+      border-left: 4px solid;
+      margin-bottom: 1.5rem;
+    }
+
+    .alert-warning {
+      background-color: var(--wf-surface, #edf1f7);
+      border-color: var(--wf-amber, #8b7745);
+      color: var(--wf-amber, #8b7745);
+    }
+
+    .alert-info {
+      background-color: var(--wf-surface, #edf1f7);
+      border-color: var(--wf-ink, #1e2a3a);
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .button {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background-color: var(--wf-accent, var(--wf-accent, #3d6daa));
+      color: var(--wf-surface, #edf1f7);
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: background-color 0.2s;
+      margin-right: 0.5rem;
+    }
+
+    .button:hover {
+      background-color: var(--wf-accent, #3d6daa);
+    }
+
+    .button-secondary {
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-ink, #1e2a3a);
+      border: 1px solid var(--wf-line, #b0bdd0);
+    }
+
+    .button-secondary:hover {
+      background-color: var(--wf-tint, #dce4ef);
+    }
+
+    .metric-box {
+      background: var(--wf-canvas, #f5f7fb);
+      padding: 1rem;
+      border-radius: 6px;
+      border-left: 4px solid var(--wf-accent, var(--wf-accent, #3d6daa));
+      margin-bottom: 1rem;
+    }
+
+    .metric-label {
+      font-size: 0.85rem;
+      color: var(--wf-text, #3b4f68);
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .metric-value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    /* Design Brief */
+    @media (max-width: 1200px) {
+      .kpi-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .bar-label {
+        width: 100px;
+        font-size: 0.85rem;
+      }
+
+      .participation-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+
+      nav {
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+</style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="wf-header">
+  <div class="wf-header-logo">EQ</div>
+  <div class="wf-header-title">Partner Sales Manager</div>
+  <nav class="wf-header-nav">
+    <a href="#">Dashboard</a>
+    <a href="#" class="active">PSM Portal</a>
+    <a href="#">Partners</a>
+    <a href="#">Deals</a>
+    <a href="#">Programs</a>
+    <a href="#">Reports</a>
+  </nav>
+  <div class="wf-header-util">
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+  </div>
+</header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+  <!-- Main Content -->
+  <main role="main">
+    <h1 class="page-title">MDF Program Analytics</h1>
+    <p class="page-subtitle">Market Development Funds Performance | Q1 2026</p>
+
+    <!-- KPI Cards -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Total Allocated</div>
+        <div class="kpi-value">$750K</div>
+        <div class="kpi-subtitle">Annual budget</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Total Spent</div>
+        <div class="kpi-value">$487K</div>
+        <div class="kpi-subtitle">To date</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Utilization Rate</div>
+        <div class="kpi-value">65%</div>
+        <div class="kpi-subtitle">$263K remaining</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Avg ROI</div>
+        <div class="kpi-value">3.2x</div>
+        <div class="kpi-subtitle">Per dollar spent</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Active Campaigns</div>
+        <div class="kpi-value">23</div>
+        <div class="kpi-subtitle">In progress</div>
+      </div>
+    </div>
+
+    <!-- Spending by Category -->
+    <div class="card">
+      <div class="card-title">Spending by Category</div>
+      <div class="chart-container">
+        <div class="bar-chart">
+          <div class="bar-item">
+            <div class="bar-label">Events & Sponsorships</div>
+            <div class="bar-container">
+              <div class="bar-fill accent1" style="width: 35%;">35%</div>
+            </div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">Digital Marketing</div>
+            <div class="bar-container">
+              <div class="bar-fill accent2" style="width: 25%;">25%</div>
+            </div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">Content Creation</div>
+            <div class="bar-container">
+              <div class="bar-fill accent3" style="width: 15%;">15%</div>
+            </div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">Enablement & Training</div>
+            <div class="bar-container">
+              <div class="bar-fill accent4" style="width: 12%;">12%</div>
+            </div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">Other</div>
+            <div class="bar-container">
+              <div class="bar-fill accent5" style="width: 13%;">13%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--wf-text, #3b4f68); margin-top: 1rem;">Percentages reflect total MDF spend across all partners and campaigns.</p>
+    </div>
+
+    <!-- ROI by Activity Type -->
+    <div class="card">
+      <div class="card-title">Average ROI by Activity Type</div>
+      <div class="chart-container">
+        <div class="bar-chart">
+          <div class="bar-item">
+            <div class="bar-label">Events</div>
+            <div class="bar-container">
+              <div class="bar-fill accent1" style="width: 100%;">4.1x</div>
+            </div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">Webinars & Virtual</div>
+            <div class="bar-container">
+              <div class="bar-fill accent2" style="width: 93%;">3.8x</div>
+            </div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">Content (Whitepapers)</div>
+            <div class="bar-container">
+              <div class="bar-fill accent3" style="width: 71%;">2.9x</div>
+            </div>
+          </div>
+          <div class="bar-item">
+            <div class="bar-label">Digital Advertising</div>
+            <div class="bar-container">
+              <div class="bar-fill accent4" style="width: 51%;">2.1x</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p style="font-size: 0.85rem; color: var(--wf-text, #3b4f68); margin-top: 1rem;">ROI calculated as total revenue influenced divided by MDF spend for each activity type.</p>
+    </div>
+
+    <!-- Partner Participation Rate -->
+    <div class="card">
+      <div class="card-title">Partner Participation Rate by Tier</div>
+
+      <div class="participation-row">
+        <div class="tier-label">Gold Partners</div>
+        <div class="tier-percentage">92%</div>
+        <div class="tier-progress">
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 92%; background-color: var(--wf-ink, #1e2a3a);">24 of 26 Partners</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="participation-row">
+        <div class="tier-label">Silver Partners</div>
+        <div class="tier-percentage">71%</div>
+        <div class="tier-progress">
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 71%; background-color: var(--wf-accent, var(--wf-accent, #3d6daa));">12 of 17 Partners</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="participation-row">
+        <div class="tier-label">Bronze Partners</div>
+        <div class="tier-percentage">34%</div>
+        <div class="tier-progress">
+          <div class="progress-bar">
+            <div class="progress-fill" style="width: 34%; background-color: var(--wf-line, #b0bdd0);">2 of 6 Partners</div>
+          </div>
+        </div>
+      </div>
+
+      <p style="font-size: 0.85rem; color: var(--wf-text, #3b4f68); margin-top: 1rem;">Participation rate reflects partners actively using MDF during the current year.</p>
+    </div>
+
+    <!-- Top Campaigns -->
+    <div class="card">
+      <div class="card-title">Top Performing Campaigns</div>
+      <table aria-label="Top Performing MDF Campaigns">
+        <thead>
+          <tr>
+            <th>Campaign Name</th>
+            <th>Partner</th>
+            <th>Spend</th>
+            <th>Leads Generated</th>
+            <th>ROI</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Q1 Virtual Summit 2026</td>
+            <td>TechCorp Solutions</td>
+            <td>$42K</td>
+            <td>187</td>
+            <td><span class="status-badge status-green">4.8x</span></td>
+          </tr>
+          <tr>
+            <td>Cloud Security Webinar Series</td>
+            <td>Security Solutions LLC</td>
+            <td>$28K</td>
+            <td>142</td>
+            <td><span class="status-badge status-green">4.2x</span></td>
+          </tr>
+          <tr>
+            <td>Data Center Transformation eBook</td>
+            <td>Infrastructure Innovations</td>
+            <td>$18K</td>
+            <td>89</td>
+            <td><span class="status-badge status-green">3.7x</span></td>
+          </tr>
+          <tr>
+            <td>Enterprise Summit Sponsorship</td>
+            <td>Digital Transformation Group</td>
+            <td>$65K</td>
+            <td>234</td>
+            <td><span class="status-badge status-green">5.1x</span></td>
+          </tr>
+          <tr>
+            <td>LinkedIn Digital Campaign</td>
+            <td>Multi-Cloud Consulting</td>
+            <td>$24K</td>
+            <td>76</td>
+            <td><span class="status-badge status-yellow">2.3x</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Underutilized Budget Alert -->
+    <div class="alert alert-warning">
+      <strong>Underutilized Budget Alert:</strong> Bronze tier partners are significantly underutilizing allocated MDF (34% participation). Consider targeted enablement workshops or simplified approval processes to increase engagement. $45K in Bronze allocations remain unspent through Q1.
+    </div>
+
+    <!-- Budget Status -->
+    <div class="card">
+      <div class="card-title">Budget Status & Projections</div>
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem;">
+        <div class="metric-box">
+          <div class="metric-label">Total Allocated (Annual)</div>
+          <div class="metric-value">$750K</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">Spent YTD</div>
+          <div class="metric-value">$487K</div>
+        </div>
+        <div class="metric-box">
+          <div class="metric-label">Remaining</div>
+          <div class="metric-value">$263K</div>
+        </div>
+      </div>
+      <p style="font-size: 0.9rem; color: var(--wf-text, #3b4f68); margin-bottom: 1rem;">At current spending rate ($162K per quarter), full annual budget will be utilized by Q4 2026. Recommend 25% reserve allocation for high-ROI opportunistic campaigns.</p>
+    </div>
+
+    <!-- Campaign Recommendations -->
+    <div class="card">
+      <div class="card-title">Recommendations for Remaining Budget</div>
+      <div style="padding: 1rem 0;">
+        <div style="padding: 1rem; background: var(--wf-canvas, #f5f7fb); border-radius: 6px; border-left: 3px solid var(--wf-accent, var(--wf-accent, #3d6daa)); margin-bottom: 1rem;">
+          <strong style="color: var(--wf-ink, #1e2a3a);">Increase Event Sponsorships:</strong> Events show highest ROI at 4.1x. Allocate additional $60K to high-profile industry conferences targeting new customer verticals. Estimated lead generation: 280+ qualified leads.
+        </div>
+        <div style="padding: 1rem; background: var(--wf-canvas, #f5f7fb); border-radius: 6px; border-left: 3px solid var(--wf-accent, var(--wf-accent, #3d6daa)); margin-bottom: 1rem;">
+          <strong style="color: var(--wf-ink, #1e2a3a);">Bronze Partner Enablement:</strong> Launch simplified MDF program for Bronze tier with pre-approved templates. Allocate $50K for co-branded marketing assets, training, and campaign automation to boost participation from 34% to 65%.
+        </div>
+        <div style="padding: 1rem; background: var(--wf-canvas, #f5f7fb); border-radius: 6px; border-left: 3px solid var(--wf-accent, var(--wf-accent, #3d6daa));">
+          <strong style="color: var(--wf-ink, #1e2a3a);">Strategic Content Investment:</strong> Develop 3-4 premium var(--wf-surface, #edf1f7)papers (Case Studies, Industry Benchmarks). Allocate $35K. Content has moderate ROI (2.9x) but provides long-tail demand generation and supports 12+ campaigns.
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div style="margin-bottom: 2rem;">
+      <button class="button" aria-label="View Detailed Campaign Analytics">View Detailed Analytics</button>
+      <button class="button button-secondary" aria-label="Export MDF Report">Export Report</button>
+      <button class="button button-secondary" aria-label="Approve New Campaigns">New Campaign Request</button>
+    </div>
+
+    <!-- Design Brief -->
+</main>
+
+
+    <footer class="wf-footer">
+      &copy; 2026 Equinix · Partner Sales Manager · Internal Use Only
+    </footer>
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Analytics dashboard for MDF spending visibility, ROI analysis by campaign category, partner participation rates, and budget forecasting with actionable recommendations.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Provides leadership visibility into MDF program ROI and spending effectiveness across activity types</li>
+<li>Identifies highest-ROI campaign categories (Events 4.1x) to guide budget reallocation</li>
+<li>Highlights partner engagement gaps by tier (Bronze 34% participation) for targeted enablement</li>
+<li>Forecasts annual budget utilization (on pace for 85% EOY) to prevent over/under spending</li>
+<li>Supports data-driven recommendations for budget optimization and program expansion decisions</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Five KPI cards: Total Allocated, Total Spent</li>
+<li>Spending by Category horizontal bar chart showing Events & Sponsorships</li>
+<li>Average ROI by Activity Type chart displaying Events, Webinars & Virtual</li>
+<li>Partner Participation Rate by Tier</li>
+<li>Top Performing Campaigns table</li>
+<li>Underutilized Budget Alert noting Bronze partners significantly underutilizin...</li>
+<li>Budget Status & Projections section showing Total Allocated, Spent YTD</li>
+<li>Recommendations for Remaining Budget highlighting three strategic initiatives...</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>View Detailed Analytics button to drill into campaign performance metrics</li>
+<li>Export Report button for download and stakeholder sharing</li>
+<li>New Campaign Request button to initiate MDF request workflow</li>
+<li>Table row hover states highlighting individual campaign records for selection</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>MDF Spend Aggregation & Analysis</strong>
+<ul>
+<li>Aggregate MDF_Request__c records by activity category (Event, Digital Campaign, Content, etc.) and sum Approved_Amount__c</li>
+<li>Calculate ROI per request by dividing Pipeline_Generated__c by Approved_Amount__c</li>
+<li>Sort and rank campaigns by ROI, spend, and partner tier to identify top performers</li>
+</ul></li>
+<li><strong>Budget Utilization Tracking</strong>
+<ul>
+<li>Calculate quarterly budget utilization burn rate as (Actual Spend / Quarterly Allocation) × 100</li>
+<li>Forecast EOY spend using linear projection from YTD spend and remaining quarter count</li>
+<li>Compare forecast vs. annual budget and alert if projected overrun &gt;5%</li>
+</ul></li>
+<li><strong>Partner Segmentation & Participation Analytics</strong>
+<ul>
+<li>Query Account records filtered by Partner_Tier__c (Gold, Silver, Bronze) and count active MDF requests</li>
+<li>Calculate participation rate per tier as (Partners with MDF requests / Total partners in tier) × 100</li>
+<li>Identify underutilized cohorts (Bronze tier &lt;40% participation) and flag with alert recommendations</li>
+</ul></li>
+<li><strong>Campaign Performance Metrics</strong>
+<ul>
+<li>Calculate cost per lead by dividing campaign spend by leads generated from campaign tracking</li>
+<li>Aggregate pipeline revenue generated from campaigns using Deal_Registration__c linked via Campaign_Source__c field</li>
+<li>Display metrics by activity type and tier to enable comparative performance analysis</li>
+</ul></li>
+<li><strong>Reporting & Export</strong>
+<ul>
+<li>Generate exportable analytics report as PDF with spend trends, ROI rankings, and participation heatmaps</li>
+<li>Include executive summary with KPIs and recommendations for MDF allocation optimization</li>
+<li>Track report export timestamps for audit trail and stakeholder communication history</li>
+</ul></li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+</body>
+</html>

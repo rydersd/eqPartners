@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Program Administration — PSM · Equinix PCP</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: var(--wf-canvas, #f5f7fb);
+    }
+    .slds-global-header {
+      display: flex;
+      align-items: center;
+      background-color: var(--wf-ink, #1e2a3a);
+      color: var(--wf-surface, #edf1f7);
+      padding: 0 12px;
+      height: 52px;
+      gap: 12px;
+    }
+    .slds-global-header__waffle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+    }
+    .slds-global-header__waffle svg {
+      width: 20px;
+      height: 20px;
+    }
+    .slds-global-header__app {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .slds-global-header__app-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 32px;
+      height: 32px;
+      background-color: var(--wf-accent, var(--wf-accent, #3d6daa));
+      color: var(--wf-surface, #edf1f7);
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 12px;
+    }
+    .slds-global-nav {
+      display: flex;
+      gap: 24px;
+      margin-left: 24px;
+      flex: 1;
+    }
+    .slds-global-nav__item {
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      font-size: 13px;
+      padding: 8px 0;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .slds-global-nav__item:hover {
+      color: var(--wf-surface, #edf1f7);
+    }
+    .slds-global-nav__item.active {
+      color: var(--wf-surface, #edf1f7);
+      border-bottom-color: var(--wf-amber, #8b7745);
+    }
+    .slds-global-header__search {
+      margin-left: auto;
+      margin-right: 16px;
+    }
+    .slds-global-header__search input {
+      padding: 6px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 4px;
+      background-color: rgba(255, 255, 255, 0.1);
+      color: var(--wf-surface, #edf1f7);
+      width: 200px;
+      font-size: 13px;
+    }
+    .slds-global-header__search input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+    .slds-global-header__actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .slds-global-header__action {
+      cursor: pointer;
+      font-size: 18px;
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    .slds-global-header__action:hover {
+      opacity: 1;
+    }
+
+    .page-container {
+      padding: 24px;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    .slds-design-notes__title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--wf-text, #3b4f68);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .slds-badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+    .slds-badge--brand {
+      background-color: var(--wf-accent, var(--wf-accent, #3d6daa));
+      color: var(--wf-surface, #edf1f7);
+    }
+    .slds-badge--neutral {
+      background-color: var(--wf-surface, #edf1f7);
+      color: var(--wf-text, #3b4f68);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 2px solid var(--wf-line, #b0bdd0);
+      margin-bottom: 24px;
+      background: var(--wf-surface, #edf1f7);
+      border-radius: 4px 4px 0 0;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .tab {
+      padding: 12px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--wf-muted, #6b7f99);
+      cursor: pointer;
+      border-right: 1px solid var(--wf-surface, #edf1f7);
+      background: var(--wf-canvas, #f5f7fb);
+      transition: all 0.2s;
+    }
+
+    .tab:hover {
+      background: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-text, #3b4f68);
+    }
+
+    .tab.active {
+      color: var(--wf-accent, var(--wf-accent, #3d6daa));
+      background: var(--wf-surface, #edf1f7);
+      border-bottom: 3px solid var(--wf-accent, var(--wf-accent, #3d6daa));
+      margin-bottom: -2px;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--wf-text, #3b4f68);
+      margin-bottom: 16px;
+      margin-top: 24px;
+    }
+
+    .tier-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .tier-card {
+      background: var(--wf-surface, #edf1f7);
+      padding: 16px;
+      border-radius: 4px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .tier-card-header {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--wf-text, #3b4f68);
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--wf-surface, #edf1f7);
+    }
+
+    .tier-card-row {
+      padding: 8px 0;
+      font-size: 12px;
+      border-bottom: 1px solid var(--wf-canvas, #f5f7fb);
+    }
+
+    .tier-card-row:last-child {
+      border-bottom: none;
+    }
+
+    .tier-card-label {
+      color: var(--wf-muted, #6b7f99);
+      display: inline-block;
+      width: 140px;
+    }
+
+    .tier-card-value {
+      font-weight: 600;
+      color: var(--wf-accent, var(--wf-accent, #3d6daa));
+    }
+
+    .config-panel {
+      background: var(--wf-surface, #edf1f7);
+      padding: 16px;
+      border-radius: 4px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      margin-bottom: 24px;
+    }
+
+    .config-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--wf-text, #3b4f68);
+      margin-bottom: 12px;
+    }
+
+    .config-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--wf-surface, #edf1f7);
+    }
+
+    .config-row:last-child {
+      border-bottom: none;
+    }
+
+    .config-label {
+      width: 180px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--wf-text, #3b4f68);
+    }
+
+    .slider {
+      flex: 1;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--wf-surface, #edf1f7);
+      position: relative;
+      cursor: pointer;
+    }
+
+    .slider-fill {
+      height: 100%;
+      background: var(--wf-accent, var(--wf-accent, #3d6daa));
+      border-radius: 3px;
+    }
+
+    .slider-value {
+      width: 60px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--wf-accent, var(--wf-accent, #3d6daa));
+      text-align: right;
+    }
+
+    .btn {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background-color: var(--wf-accent, var(--wf-accent, #3d6daa));
+      color: var(--wf-surface, #edf1f7);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--wf-accent, #3d6daa);
+    }
+
+    .btn-secondary {
+      background-color: var(--wf-surface, #edf1f7);
+      color: var(--wf-text, #3b4f68);
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--wf-line, #b0bdd0);
+    }
+
+    .btn-small {
+      padding: 4px 8px;
+      font-size: 11px;
+    }
+
+    .health-indicator {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 6px;
+    }
+
+    .health-good {
+      background-color: var(--wf-ink, #1e2a3a);
+    }
+
+    .health-warning {
+      background-color: var(--wf-amber, #8b7745);
+    }
+
+    .health-critical {
+      background-color: var(--wf-muted, #6b7f99);
+    }
+
+    .sync-panel {
+      background: var(--wf-surface, #edf1f7);
+      padding: 16px;
+      border-radius: 4px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      margin-bottom: 24px;
+    }
+
+    .sync-status {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 0;
+      font-size: 13px;
+    }
+
+    .sync-label {
+      flex: 1;
+    }
+
+    .sync-value {
+      font-weight: 600;
+      color: var(--wf-text, #3b4f68);
+    }
+
+    .course-table {
+      width: 100%;
+      background: var(--wf-surface, #edf1f7);
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    thead {
+      background-color: var(--wf-canvas, #f5f7fb);
+      border-bottom: 2px solid var(--wf-line, #b0bdd0);
+    }
+
+    th {
+      padding: 12px;
+      text-align: left;
+      font-weight: 700;
+      color: var(--wf-text, #3b4f68);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    td {
+      padding: 12px;
+      border-bottom: 1px solid var(--wf-surface, #edf1f7);
+      color: var(--wf-text, #3b4f68);
+    }
+
+    tbody tr:hover {
+      background-color: var(--wf-canvas, #f5f7fb);
+    }
+
+    .audit-log {
+      background: var(--wf-surface, #edf1f7);
+      padding: 16px;
+      border-radius: 4px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .audit-entry {
+      padding: 8px 0;
+      border-bottom: 1px solid var(--wf-surface, #edf1f7);
+      font-size: 12px;
+    }
+
+    .audit-entry:last-child {
+      border-bottom: none;
+    }
+
+    .audit-time {
+      color: var(--wf-muted, #6b7f99);
+      font-size: 11px;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 8px;
+      margin-top: 20px;
+      justify-content: flex-end;
+    }
+
+    .course-checkbox {
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+</style>
+</head>
+<body>
+
+<header class="wf-header">
+  <div class="wf-header-logo"><svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix"><path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/></svg></div>
+  <div class="wf-header-title">SFDC</div>
+  <nav class="wf-header-nav">
+    <a href="#">Dashboard</a>
+    <a href="#" class="active">PSM Portal</a>
+    <a href="#">Partners</a>
+    <a href="#">Deals</a>
+    <a href="#">Programs</a>
+    <a href="#">Reports</a>
+  </nav>
+  <div class="wf-header-util">
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+  </div>
+</header>
+    <div class="page-context-bar">
+  <div style="max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <span style="font-size:12px;color:var(--wf-muted);display:flex;align-items:center;gap:6px;">
+      <svg viewBox="0 0 20 13" style="width:18px;height:11px;fill:var(--wf-muted);" aria-hidden="true"><path d="M8.3 1.7A3.8 3.8 0 0 1 12 0a3.8 3.8 0 0 1 3.5 2.3A2.8 2.8 0 0 1 20 5a2.8 2.8 0 0 1-2.8 2.8H3.2A3.2 3.2 0 0 1 0 4.6 3.2 3.2 0 0 1 3.2 1.4c.18 0 .35.01.52.04A3.8 3.8 0 0 1 8.3 1.7z"/></svg>
+      <strong style="color:var(--wf-text);font-weight:600;">Salesforce Lightning</strong>&ensp;&middot;&ensp;PCP App
+    </span>
+    <span class="persona-badge persona-badge--psm">PSM</span>
+  </div>
+</div>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+<div class="page-container">
+
+  
+
+
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab(event, 'tier-config')">Tier Configuration</div>
+    <div class="tab" onclick="switchTab(event, 'scoring')">Scoring Weights</div>
+    <div class="tab" onclick="switchTab(event, 'courses')">Course Requirements</div>
+    <div class="tab" onclick="switchTab(event, 'sync')">Sync Monitor</div>
+    <div class="tab" onclick="switchTab(event, 'commission')">Commission Settings</div>
+    <div class="tab" onclick="switchTab(event, 'notifications')">Notifications</div>
+  </div>
+
+  <!-- TAB 1: TIER CONFIGURATION -->
+  <div id="tier-config" class="tab-content active">
+    <div class="section-title">Tier Configuration</div>
+
+    <div class="tier-cards">
+      <div class="tier-card">
+        <div class="tier-card-header">🥇 Gold Tier</div>
+        <div class="tier-card-row">
+          <span class="tier-card-label">Threshold Score:</span>
+          <span class="tier-card-value">≥ 80</span>
+        </div>
+        <div class="tier-card-row">
+          <span class="tier-card-label">Commission Rate:</span>
+          <span class="tier-card-value">15%</span>
+        </div>
+        <div class="tier-card-row">
+          <span class="tier-card-label">Annual MDF Allocation:</span>
+          <span class="tier-card-value">$50,000</span>
+        </div>
+        <div class="tier-card-row">
+          <span class="tier-card-label">Required Certifications:</span>
+          <span class="tier-card-value">25+</span>
+        </div>
+        <div class="tier-card-row">
+          <span class="tier-card-label">Benefits:</span>
+          <span class="tier-card-value">All</span>
+        </div>
+        <button class="btn btn-secondary btn-small" style="margin-top: 12px;">Edit Tier</button>
+      </div>
+
+      <div class="tier-card">
+        <div class="tier-card-header">🥈 Silver Tier</div>
+        <div class="tier-card-row">
+          <span class="tier-card-label">Threshold Score:</span>
+          <span class="tier-card-value">60-79</span>
+        </div>
+        <div class="tier-card-row">
+          <span class="tier-card-label">Commission Rate:</span>
+          <span class="tier-card-value">12%</span>
+        </div>
+        <div class="tier-card-row">
+          <span class="tier-card-label">Annual MDF Allocation:</span>
+          <span class="tier-card-value">$25,000</span>
+        </div>
+        <div class="tier-card-row">
+          <span class="tier-card-label">Required Certifications:</span>
+          <span class="tier-card-value">15+</span>
+        </div>
+        <div class="tier-card-row">
+          <span class="tier-card-label">Benefits:</span>
+          <span class="tier-card-value">Core</span>
+        </div>
+        <button class="btn btn-secondary btn-small" style="margin-top: 12px;">Edit Tier</button>
+      </div>
+
+      <div class="tier-card">
+        <div class="tier-card-header">🥉 Bronze Tier</div>
+        <div class="tier-card-row">
+          <span class="tier-card-label">Threshold Score:</span>
+          <span class="tier-card-value">&lt; 60</span>
+        </div>
+        <div class="tier-card-row">
+          <span class="tier-card-label">Commission Rate:</span>
+          <span class="tier-card-value">8%</span>
+        </div>
+        <div class="tier-card-row">
+          <span class="tier-card-label">Annual MDF Allocation:</span>
+          <span class="tier-card-value">$10,000</span>
+        </div>
+        <div class="tier-card-row">
+          <span class="tier-card-label">Required Certifications:</span>
+          <span class="tier-card-value">5+</span>
+        </div>
+        <div class="tier-card-row">
+          <span class="tier-card-label">Benefits:</span>
+          <span class="tier-card-value">Basic</span>
+        </div>
+        <button class="btn btn-secondary btn-small" style="margin-top: 12px;">Edit Tier</button>
+      </div>
+    </div>
+
+    <div class="action-buttons">
+      <button class="btn btn-secondary">Revert Changes</button>
+      <button class="btn btn-primary">Save Configuration</button>
+    </div>
+  </div>
+
+  <!-- TAB 2: SCORING WEIGHTS -->
+  <div id="scoring" class="tab-content">
+    <div class="section-title">Partner Scoring Model Weights</div>
+
+    <div class="config-panel">
+      <div class="config-title">Adjust scoring weight allocation (Total must = 100%)</div>
+
+      <div class="config-row">
+        <div class="config-label">Training Completion Weight</div>
+        <div class="slider">
+          <div class="slider-fill" style="width: 30%;"></div>
+        </div>
+        <div class="slider-value">30%</div>
+      </div>
+
+      <div class="config-row">
+        <div class="config-label">Revenue Generation Weight</div>
+        <div class="slider">
+          <div class="slider-fill" style="width: 40%;"></div>
+        </div>
+        <div class="slider-value">40%</div>
+      </div>
+
+      <div class="config-row">
+        <div class="config-label">Deal Registration Weight</div>
+        <div class="slider">
+          <div class="slider-fill" style="width: 30%;"></div>
+        </div>
+        <div class="slider-value">30%</div>
+      </div>
+    </div>
+
+    <p style="font-size: 12px; color: var(--wf-muted, #6b7f99); margin-bottom: 16px;">Changes to scoring weights will trigger automatic recalculation of all partner scores within 1 hour.</p>
+
+    <div class="action-buttons">
+      <button class="btn btn-secondary">Revert Changes</button>
+      <button class="btn btn-primary">Save Configuration</button>
+    </div>
+  </div>
+
+  <!-- TAB 3: COURSE REQUIREMENTS -->
+  <div id="courses" class="tab-content">
+    <div class="section-title">Partner Training Course Requirements</div>
+
+    <div style="margin-bottom: 16px;">
+      <button class="btn btn-primary">Add Course Requirement</button>
+      <button class="btn btn-secondary">Import from CSV</button>
+    </div>
+
+    <table class="course-table">
+      <thead>
+        <tr>
+          <th>Course Name</th>
+          <th>Course ID</th>
+          <th>Track</th>
+          <th>Required for Gold</th>
+          <th>Required for Silver</th>
+          <th>Required for Bronze</th>
+          <th>Display Order</th>
+          <th>Active</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Equinix Foundation</strong></td>
+          <td>EQX-FOUND-101</td>
+          <td>Business</td>
+          <td><input type="checkbox" class="course-checkbox" checked></td>
+          <td><input type="checkbox" class="course-checkbox" checked></td>
+          <td><input type="checkbox" class="course-checkbox" checked></td>
+          <td>1</td>
+          <td>✓</td>
+          <td><button class="btn btn-secondary btn-small">Edit</button></td>
+        </tr>
+        <tr>
+          <td><strong>Equinix Core Services</strong></td>
+          <td>EQX-CORE-201</td>
+          <td>Business</td>
+          <td><input type="checkbox" class="course-checkbox" checked></td>
+          <td><input type="checkbox" class="course-checkbox" checked></td>
+          <td><input type="checkbox" class="course-checkbox"></td>
+          <td>2</td>
+          <td>✓</td>
+          <td><button class="btn btn-secondary btn-small">Edit</button></td>
+        </tr>
+        <tr>
+          <td><strong>Equinix Technical Fundamentals</strong></td>
+          <td>EQX-TECH-301</td>
+          <td>Technical</td>
+          <td><input type="checkbox" class="course-checkbox" checked></td>
+          <td><input type="checkbox" class="course-checkbox" checked></td>
+          <td><input type="checkbox" class="course-checkbox"></td>
+          <td>3</td>
+          <td>✓</td>
+          <td><button class="btn btn-secondary btn-small">Edit</button></td>
+        </tr>
+        <tr>
+          <td><strong>Colocation Architecture & Design</strong></td>
+          <td>EQX-ARCH-401</td>
+          <td>Technical</td>
+          <td><input type="checkbox" class="course-checkbox" checked></td>
+          <td><input type="checkbox" class="course-checkbox"></td>
+          <td><input type="checkbox" class="course-checkbox"></td>
+          <td>4</td>
+          <td>✓</td>
+          <td><button class="btn btn-secondary btn-small">Edit</button></td>
+        </tr>
+        <tr>
+          <td><strong>Advanced Cloud Integration</strong></td>
+          <td>EQX-CLOUD-501</td>
+          <td>Technical</td>
+          <td><input type="checkbox" class="course-checkbox" checked></td>
+          <td><input type="checkbox" class="course-checkbox"></td>
+          <td><input type="checkbox" class="course-checkbox"></td>
+          <td>5</td>
+          <td>✓</td>
+          <td><button class="btn btn-secondary btn-small">Edit</button></td>
+        </tr>
+        <tr>
+          <td><strong>Partner Sales Enablement</strong></td>
+          <td>EQX-SALES-101</td>
+          <td>Business</td>
+          <td><input type="checkbox" class="course-checkbox" checked></td>
+          <td><input type="checkbox" class="course-checkbox" checked></td>
+          <td><input type="checkbox" class="course-checkbox" checked></td>
+          <td>6</td>
+          <td>✓</td>
+          <td><button class="btn btn-secondary btn-small">Edit</button></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="action-buttons">
+      <button class="btn btn-secondary">Revert Changes</button>
+      <button class="btn btn-primary">Save Configuration</button>
+    </div>
+  </div>
+
+  <!-- TAB 4: SYNC MONITOR -->
+  <div id="sync" class="tab-content">
+    <div class="section-title">SumTotal Integration Health Monitor</div>
+
+    <div class="sync-panel">
+      <div class="config-title">Current Sync Status</div>
+
+      <div class="sync-status">
+        <span class="health-indicator health-good"></span>
+        <span class="sync-label"><strong>Overall Health</strong></span>
+        <span class="sync-value">HEALTHY</span>
+      </div>
+
+      <div class="sync-status">
+        <span class="sync-label"><strong>Last Sync Timestamp</strong></span>
+        <span class="sync-value">2026-02-13 03:45 UTC (4 hours ago)</span>
+      </div>
+
+      <div class="sync-status">
+        <span class="sync-label"><strong>Records Synced</strong></span>
+        <span class="sync-value">1,247 total | 32 created | 84 updated | 2 failed</span>
+      </div>
+
+      <div class="sync-status">
+        <span class="sync-label"><strong>Sync Frequency</strong></span>
+        <span class="sync-value">Every 4 hours (automated)</span>
+      </div>
+
+      <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--wf-surface, #edf1f7);">
+        <button class="btn btn-primary">Manual Re-Sync Now</button>
+        <button class="btn btn-secondary">View Error Log</button>
+        <button class="btn btn-secondary">Sync Detailed Report</button>
+      </div>
+    </div>
+
+    <div class="section-title">Recent Sync Events</div>
+
+    <div class="audit-log">
+      <div class="audit-entry">
+        <div><strong>✓ Successful Sync</strong> - 2026-02-13 03:45 UTC</div>
+        <div class="audit-time">Synced 1,247 records (32 new, 84 updated, 2 errors)</div>
+      </div>
+      <div class="audit-entry">
+        <div><strong>⚠️ Sync Completed with Warnings</strong> - 2026-02-12 23:45 UTC</div>
+        <div class="audit-time">Synced 1,198 records with 3 validation failures. See error log.</div>
+      </div>
+      <div class="audit-entry">
+        <div><strong>✓ Successful Sync</strong> - 2026-02-12 19:45 UTC</div>
+        <div class="audit-time">Synced 1,176 records (12 new, 56 updated)</div>
+      </div>
+      <div class="audit-entry">
+        <div><strong>✓ Successful Sync</strong> - 2026-02-12 15:45 UTC</div>
+        <div class="audit-time">Synced 1,210 records (45 new, 78 updated, 1 error)</div>
+      </div>
+      <div class="audit-entry">
+        <div><strong>✓ Successful Sync</strong> - 2026-02-12 11:45 UTC</div>
+        <div class="audit-time">Synced 1,187 records (28 new, 63 updated)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 5: COMMISSION SETTINGS -->
+  <div id="commission" class="tab-content">
+    <div class="section-title">Partner Commission Configuration</div>
+
+    <div class="config-panel">
+      <div class="config-title">Base Commission Rates by Tier</div>
+
+      <div class="config-row">
+        <div class="config-label">Gold Tier Base Rate</div>
+        <div style="flex: 1; padding: 0 12px;">
+          <input type="text" value="15%" style="width: 60px; padding: 4px; border: 1px solid var(--wf-line, #b0bdd0); border-radius: 3px; font-weight: 600; color: var(--wf-accent, var(--wf-accent, #3d6daa));">
+        </div>
+      </div>
+
+      <div class="config-row">
+        <div class="config-label">Silver Tier Base Rate</div>
+        <div style="flex: 1; padding: 0 12px;">
+          <input type="text" value="12%" style="width: 60px; padding: 4px; border: 1px solid var(--wf-line, #b0bdd0); border-radius: 3px; font-weight: 600; color: var(--wf-accent, var(--wf-accent, #3d6daa));">
+        </div>
+      </div>
+
+      <div class="config-row">
+        <div class="config-label">Bronze Tier Base Rate</div>
+        <div style="flex: 1; padding: 0 12px;">
+          <input type="text" value="8%" style="width: 60px; padding: 4px; border: 1px solid var(--wf-line, #b0bdd0); border-radius: 3px; font-weight: 600; color: var(--wf-accent, var(--wf-accent, #3d6daa));">
+        </div>
+      </div>
+    </div>
+
+    <div class="config-panel">
+      <div class="config-title">Accelerator Bonuses</div>
+
+      <div class="config-row">
+        <div class="config-label">Revenue Accelerator Threshold</div>
+        <div style="flex: 1; padding: 0 12px;">
+          <input type="text" value="$500,000" style="width: 120px; padding: 4px; border: 1px solid var(--wf-line, #b0bdd0); border-radius: 3px;">
+        </div>
+        <div style="width: 180px; font-size: 12px; color: var(--wf-muted, #6b7f99);">When exceeded, add 2% bonus</div>
+      </div>
+
+      <div class="config-row">
+        <div class="config-label">Certification Accelerator</div>
+        <div style="flex: 1; padding: 0 12px;">
+          <input type="text" value="20" style="width: 60px; padding: 4px; border: 1px solid var(--wf-line, #b0bdd0); border-radius: 3px;"> certifications
+        </div>
+        <div style="width: 180px; font-size: 12px; color: var(--wf-muted, #6b7f99);">When reached, add 1% bonus</div>
+      </div>
+    </div>
+
+    <div class="action-buttons">
+      <button class="btn btn-secondary">Revert Changes</button>
+      <button class="btn btn-primary">Save Configuration</button>
+    </div>
+  </div>
+
+  <!-- TAB 6: NOTIFICATIONS -->
+  <div id="notifications" class="tab-content">
+    <div class="section-title">Notification Templates & Settings</div>
+
+    <div class="config-panel">
+      <div class="config-title">Email Notification Templates</div>
+
+      <div style="margin-bottom: 12px;">
+        <label style="display: block; font-size: 12px; font-weight: 600; color: var(--wf-text, #3b4f68); margin-bottom: 4px;">
+          <input type="checkbox" checked> Partner Onboarding Complete
+        </label>
+        <div style="font-size: 11px; color: var(--wf-muted, #6b7f99); margin-left: 20px; margin-bottom: 12px;">Sent when partner moves to "Onboarded" stage | Next: 0 pending</div>
+
+        <label style="display: block; font-size: 12px; font-weight: 600; color: var(--wf-text, #3b4f68); margin-bottom: 4px;">
+          <input type="checkbox" checked> Certification Expiring Soon
+        </label>
+        <div style="font-size: 11px; color: var(--wf-muted, #6b7f99); margin-left: 20px; margin-bottom: 12px;">Sent 30 days before expiration | Next: 15 scheduled</div>
+
+        <label style="display: block; font-size: 12px; font-weight: 600; color: var(--wf-text, #3b4f68); margin-bottom: 4px;">
+          <input type="checkbox" checked> MDF Claim Approved
+        </label>
+        <div style="font-size: 11px; color: var(--wf-muted, #6b7f99); margin-left: 20px; margin-bottom: 12px;">Sent when claim is approved for payment | Next: 3 pending</div>
+
+        <label style="display: block; font-size: 12px; font-weight: 600; color: var(--wf-text, #3b4f68); margin-bottom: 4px;">
+          <input type="checkbox" checked> Tier Movement Alert
+        </label>
+        <div style="font-size: 11px; color: var(--wf-muted, #6b7f99); margin-left: 20px;">Sent when partner tier changes (promote or demote) | Next: 1 pending</div>
+      </div>
+    </div>
+
+    <div class="config-panel">
+      <div class="config-title">Quick Actions</div>
+
+      <button class="btn btn-secondary" style="margin-right: 8px;">Edit Email Templates</button>
+      <button class="btn btn-secondary" style="margin-right: 8px;">Test Notifications</button>
+      <button class="btn btn-secondary">View Notification History</button>
+    </div>
+  </div>
+
+  <!-- AUDIT LOG (Always visible at bottom) -->
+  <div class="section-title" style="margin-top: 40px;">Configuration Audit Log (Last 10 Changes)</div>
+
+  <div class="audit-log" style="max-height: 400px;">
+    <div class="audit-entry">
+      <div><strong>Tier Configuration Updated</strong> - Bronze threshold score changed from <55 to <60</div>
+      <div class="audit-time">2026-02-10 14:32 UTC by admin@equinix.com</div>
+    </div>
+    <div class="audit-entry">
+      <div><strong>Scoring Weights Modified</strong> - Training weight: 30% → 32%, Revenue weight: 40% → 38%</div>
+      <div class="audit-time">2026-02-08 09:15 UTC by admin@equinix.com</div>
+    </div>
+    <div class="audit-entry">
+      <div><strong>Course Added</strong> - Advanced Cloud Integration (EQX-CLOUD-501) added to requirements</div>
+      <div class="audit-time">2026-02-05 16:44 UTC by admin@equinix.com</div>
+    </div>
+    <div class="audit-entry">
+      <div><strong>Commission Rates Updated</strong> - Gold: 15%, Silver: 12%, Bronze: 8% (no change)</div>
+      <div class="audit-time">2026-02-01 10:20 UTC by admin@equinix.com</div>
+    </div>
+    <div class="audit-entry">
+      <div><strong>Tier Configuration Updated</strong> - Gold annual MDF allocation increased from $45K to $50K</div>
+      <div class="audit-time">2026-01-28 13:05 UTC by admin@equinix.com</div>
+    </div>
+    <div class="audit-entry">
+      <div><strong>Notification Template Updated</strong> - "Certification Expiring Soon" template modified</div>
+      <div class="audit-time">2026-01-25 11:30 UTC by admin@equinix.com</div>
+    </div>
+    <div class="audit-entry">
+      <div><strong>Course Removed</strong> - Legacy Training Module (EQX-LEGACY-001) marked inactive</div>
+      <div class="audit-time">2026-01-20 08:45 UTC by admin@equinix.com</div>
+    </div>
+    <div class="audit-entry">
+      <div><strong>Sync Configuration Updated</strong> - SumTotal sync frequency changed 6h → 4h</div>
+      <div class="audit-time">2026-01-15 15:22 UTC by admin@equinix.com</div>
+    </div>
+    <div class="audit-entry">
+      <div><strong>Course Requirements Updated</strong> - Gold tier now requires 25 certs (was 20)</div>
+      <div class="audit-time">2026-01-10 12:10 UTC by admin@equinix.com</div>
+    </div>
+    <div class="audit-entry">
+      <div><strong>Scoring Weights Modified</strong> - Revenue weight increased from 35% to 40%</div>
+      <div class="audit-time">2026-01-05 09:33 UTC by admin@equinix.com</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function switchTab(evt, tabName) {
+  var i, tabcontent, tabs;
+  tabcontent = document.getElementsByClassName("tab-content");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].classList.remove("active");
+  }
+  tabs = document.getElementsByClassName("tab");
+  for (i = 0; i < tabs.length; i++) {
+    tabs[i].classList.remove("active");
+  }
+  document.getElementById(tabName).classList.add("active");
+  evt.currentTarget.classList.add("active");
+}
+</script>
+
+
+    <footer class="wf-footer">
+      &copy; 2026 Equinix · Partner Sales Manager · Internal Use Only
+    </footer>
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Centralized admin console for configuring partner program parameters including tier definitions, scoring weights, course requirements, commission rates, and system integrations. System admins use this interface to manage program-wide settings without code changes.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Admin configures tier thresholds and scoring model without developer help</li>
+<li>Changes recalculate all partner scores immediately (batch job)</li>
+<li>Course requirement changes reflected in all training widgets</li>
+<li>SumTotal sync monitoring with alerting when sync fails or stale (>24 hours)</li>
+<li>Manual re-sync for specific accounts or full batch</li>
+<li>Error log shows field-level validation failures with API responses</li>
+<li>Commission rates configurable per tier with accelerator bonuses</li>
+<li>Notification templates editable with merge fields</li>
+<li>All config changes logged with admin identity and timestamp</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Tabbed interface with six configuration sections (Tier Configuration, Scoring Weights, Course Requirements, Sync Monitor, Commission Settings, Notifications)</li>
+<li>Tier Configuration: Bronze/Silver/Gold threshold scores, names, benefits descriptions</li>
+<li>Scoring Weights sliders: Training Completion %, Revenue Target %, Customer Engagement %, Certification Retention % (must total 100%)</li>
+<li>Course Requirements table: Course Name, ID, Track, tier requirements (checkboxes), display order, active status</li>
+<li>SumTotal Sync Monitor: Health indicator, last sync timestamp, records synced count, sync frequency display</li>
+<li>Commission Configuration: Gold/Silver/Bronze base rates, revenue accelerator thresholds, certification bonus thresholds</li>
+<li>Notification Templates: Checkboxes for enabled notifications with next scheduled count, edit/test buttons</li>
+<li>Configuration Audit Log: Last 10 changes with timestamps, admin names, descriptions of changes</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Inline edit inputs for tier thresholds and rates</li>
+<li>Scoring weight sliders with % display and auto-normalization to 100%</li>
+<li>Add Course Requirement button and course table Edit buttons</li>
+<li>Import from CSV button for bulk course requirements</li>
+<li>Manual Re-Sync Now, View Error Log, and Sync Detailed Report buttons</li>
+<li>Edit Email Templates, Test Notifications, and View Notification History buttons</li>
+<li>Save Configuration and Revert Changes buttons on each tab</li>
+<li>Checkbox toggles for notification template activation</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Configuration Loading &amp; Storage</strong>
+<ul>
+<li>Loads all program configuration from Custom Metadata Types: Tier_Configuration__mdt (Bronze/Silver/Gold thresholds), Scoring_Model__mdt (weight percentages), Course_Requirements__mdt (course roster with tier mapping)</li>
+<li>Displays current values in tabbed interface: Tier Configuration (threshold scores, benefits), Scoring Weights (sliders totaling 100%), Course Requirements (table with active/inactive status)</li>
+</ul></li>
+<li><strong>Tier &amp; Scoring Recalculation</strong>
+<ul>
+<li>Tier threshold changes trigger batch job: recalculates all Partner_Scorecard__c records using updated thresholds within 5 minutes via Salesforce Batch Apex</li>
+<li>Scoring weight changes auto-normalize: if total > 100%, redistributes proportionally; blocks save if < 100% with validation error</li>
+<li>Course requirement updates immediately invalidate Partner_Training_Cache__c records; partners see recalculated requirements on next dashboard refresh</li>
+</ul></li>
+<li><strong>System Integration Monitoring</strong>
+<ul>
+<li>SumTotal sync health pulled from Integration_Health__c.Status__c and last Platform Event CreatedDate timestamp; displays red indicator if sync stale > 24 hours</li>
+<li>Manual Re-Sync Now button invokes SumTotal_Integration_Service.startFullSync() apex class which queues a scheduled action batch job for enrollment data sync</li>
+</ul></li>
+<li><strong>Commission &amp; Payment Configuration</strong>
+<ul>
+<li>Commission configuration stores to Commission_Model__c custom metadata with base rates per tier (Gold 15%, Silver 10%, Bronze 5%), revenue accelerator thresholds ($100K+), certification bonus multipliers</li>
+<li>Changes take effect for next deal calculation and payment processing; historical commission records unaffected</li>
+</ul></li>
+<li><strong>Notification &amp; Audit Management</strong>
+<ul>
+<li>Notification template changes saved to Email_Template__c records with sample merge field preview (e.g., {!Partner.Name}, {!Tier__c}, {!Completion_Percentage__c})</li>
+<li>All configuration changes logged to Program_Config_Audit__c child record: admin user ID (UserId), timestamp (CreatedDate), change_description__c with before/after values</li>
+<li>Revert Changes button reverts current form to last saved configuration state; no undo capability for previous saves</li>
+</ul></li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Validation &amp; Business Logic</h4>
+<ul>
+<li>Tier configuration panel with thresholds and rates</li>
+<li>Scoring weights adjustable sliders</li>
+<li>Course requirements manager</li>
+<li>SumTotal sync monitor with health indicator</li>
+<li>Commission configuration by tier</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Health Scorecard — PSM · Equinix PCP</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Salesforce Sans", sans-serif;
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    /* Header */
+    header {
+      background-color: var(--wf-ink, #1e2a3a);
+      color: var(--wf-surface, #edf1f7);
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .lightning-icon {
+      font-size: 1.5rem;
+    }
+
+    nav {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    nav a {
+      color: var(--wf-surface, #edf1f7);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      transition: background-color 0.2s;
+    }
+
+    nav a:hover {
+      background-color: rgba(255,255,255,0.1);
+    }
+
+    nav a.active {
+      background-color: var(--wf-accent, var(--wf-accent, #3d6daa));
+    }
+
+    /* Main Content */
+    main {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+
+    .page-title {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 0.5rem;
+    }
+
+    .page-subtitle {
+      font-size: 0.95rem;
+      color: var(--wf-text, #3b4f68);
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background: var(--wf-surface, #edf1f7);
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--wf-canvas, #f5f7fb);
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .kpi-card {
+      background: var(--wf-ink, #1e2a3a);
+      padding: 1.25rem;
+      border-radius: 6px;
+      border-left: 4px solid var(--wf-accent, var(--wf-accent, #3d6daa));
+      text-align: center;
+    }
+
+    .kpi-label {
+      font-size: 0.8rem;
+      color: var(--wf-text, #3b4f68);
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .kpi-value {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 0.25rem;
+    }
+
+    .kpi-subtitle {
+      font-size: 0.75rem;
+      color: var(--wf-text, #3b4f68);
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .status-green {
+      background-color: var(--wf-surface, #edf1f7);
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .status-yellow {
+      background-color: var(--wf-surface, #edf1f7);
+      color: var(--wf-amber, #8b7745);
+    }
+
+    .status-red {
+      background-color: var(--wf-surface, #edf1f7);
+      color: var(--wf-red, #8b4553);
+    }
+
+    .health-indicator-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem;
+      border-bottom: 1px solid var(--wf-canvas, #f5f7fb);
+      transition: background-color 0.2s;
+    }
+
+    .health-indicator-row:last-child {
+      border-bottom: none;
+    }
+
+    .health-indicator-row:hover {
+      background-color: var(--wf-canvas, #f5f7fb);
+    }
+
+    .health-indicator-content {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex: 1;
+    }
+
+    .indicator-dot {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .indicator-green { background-color: var(--wf-ink, #1e2a3a); }
+    .indicator-yellow { background-color: var(--wf-line, #b0bdd0); }
+    .indicator-red { background-color: var(--wf-red, #8b4553); }
+
+    .indicator-name {
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+      font-size: 0.95rem;
+    }
+
+    .trend-section {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+      font-size: 0.75rem;
+    }
+
+    .trend-item {
+      background: var(--wf-canvas, #f5f7fb);
+      padding: 0.5rem;
+      border-radius: 4px;
+      text-align: center;
+      color: var(--wf-text, #3b4f68);
+    }
+
+    .trend-label {
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .trend-arrow {
+      font-size: 1rem;
+      margin: 0.25rem 0;
+    }
+
+    .arrow-up { color: var(--wf-ink, #1e2a3a); }
+    .arrow-stable { color: var(--wf-line, #b0bdd0); }
+    .arrow-down { color: var(--wf-red, #8b4553); }
+
+    .overall-health-box {
+      background: var(--wf-ink, #1e2a3a);
+      padding: 2rem;
+      border-radius: 8px;
+      text-align: center;
+      border: 2px solid var(--wf-surface, #edf1f7);
+      margin: 1.5rem 0;
+    }
+
+    .overall-health-label {
+      font-size: 0.9rem;
+      color: var(--wf-text, #3b4f68);
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .overall-health-score {
+      font-size: 3.5rem;
+      font-weight: 700;
+      color: var(--wf-amber, #8b7745);
+      margin-bottom: 0.25rem;
+    }
+
+    .overall-health-status {
+      font-size: 0.95rem;
+      color: var(--wf-amber, #8b7745);
+      font-weight: 600;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 24px;
+      background-color: var(--wf-canvas, #f5f7fb);
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 0.5rem 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background-color: var(--wf-accent, var(--wf-accent, #3d6daa));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--wf-surface, #edf1f7);
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .recommendation-item {
+      background: var(--wf-canvas, #f5f7fb);
+      padding: 1rem;
+      border-radius: 6px;
+      border-left: 3px solid var(--wf-accent, var(--wf-accent, #3d6daa));
+      margin-bottom: 1rem;
+    }
+
+    .recommendation-title {
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 0.5rem;
+    }
+
+    .recommendation-text {
+      font-size: 0.9rem;
+      color: var(--wf-text, #3b4f68);
+      line-height: 1.5;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background-color: var(--wf-accent, var(--wf-accent, #3d6daa));
+      color: var(--wf-surface, #edf1f7);
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: background-color 0.2s;
+      margin-right: 0.5rem;
+    }
+
+    .button:hover {
+      background-color: var(--wf-accent, #3d6daa);
+    }
+
+    .button-secondary {
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-ink, #1e2a3a);
+      border: 1px solid var(--wf-line, #b0bdd0);
+    }
+
+    .button-secondary:hover {
+      background-color: var(--wf-tint, #dce4ef);
+    }
+
+    .alert {
+      padding: 1rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+      border-left: 4px solid;
+    }
+
+    .alert-warning {
+      background-color: var(--wf-surface, #edf1f7);
+      border-color: var(--wf-amber, #8b7745);
+      color: var(--wf-amber, #8b7745);
+    }
+
+    .metric-box {
+      background: var(--wf-canvas, #f5f7fb);
+      padding: 1rem;
+      border-radius: 6px;
+      border-left: 4px solid var(--wf-accent, var(--wf-accent, #3d6daa));
+      margin-bottom: 1rem;
+    }
+
+    .metric-label {
+      font-size: 0.85rem;
+      color: var(--wf-text, #3b4f68);
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .metric-value {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    /* Design Brief */
+    @media (max-width: 1024px) {
+      .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .trend-section {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .kpi-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .health-indicator-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .trend-section {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      nav {
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+    }
+  
+/* ── 3-Column Record Layout ── */
+.record-layout { display:grid; grid-template-columns:280px 1fr 300px; gap:1rem; padding:1rem 2rem; max-width:1600px; }
+@media (max-width:1200px) { .record-layout { grid-template-columns:1fr; } }
+.left-rail .card, .right-rail .card { margin-bottom:1rem; }
+.center-content .card { margin-bottom:1rem; }
+.card { background:var(--wf-surface,#edf1f7); border:1px solid var(--wf-tint,#dce4ef); border-radius:6px; overflow:hidden; }
+.card-hd { padding:0.75rem 1rem; border-bottom:1px solid var(--wf-tint); display:flex; justify-content:space-between; align-items:center; }
+.card-hd h3 { font-size:13px; font-weight:700; color:var(--wf-ink); margin:0; }
+.card-hd-action { font-size:11px; color:var(--wf-accent); text-decoration:none; font-weight:600; cursor:pointer; }
+.card-bd { padding:1rem; }
+.hl-row { display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:12px; }
+.hl-row:last-child { border-bottom:none; }
+.hl-label { color:var(--wf-muted); }
+.hl-value { font-weight:700; color:var(--wf-ink); }
+.hl-value.warn { color:var(--wf-amber,#8b7745); }
+.rel-item { display:flex; align-items:center; gap:0.625rem; padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:12px; }
+.rel-item:last-child { border-bottom:none; }
+.rel-icon { width:28px; height:28px; border-radius:50%; background:var(--wf-tint); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.rel-icon svg { width:14px; height:14px; color:var(--wf-ink); }
+.rel-info { flex:1; }
+.rel-title { font-size:12px; font-weight:600; color:var(--wf-ink); }
+.rel-sub { font-size:11px; color:var(--wf-muted); }
+.rel-meta { font-size:11px; color:var(--wf-muted); text-align:right; white-space:nowrap; }
+/* Right-rail tabs */
+.rail-tabs { display:flex; border-bottom:1px solid var(--wf-tint); }
+.rail-tab { flex:1; padding:0.5rem; font-size:11px; font-weight:600; text-align:center; color:var(--wf-muted); cursor:pointer; border-bottom:2px solid transparent; background:none; border-top:none; border-left:none; border-right:none; }
+.rail-tab.active { color:var(--wf-accent); border-bottom-color:var(--wf-accent); }
+.rail-tab-content { display:none; }
+.rail-tab-content.active { display:block; }
+/* Activity feed in right rail */
+.feed-sm { padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:11px; }
+.feed-sm:last-child { border-bottom:none; }
+.feed-sm-text { color:var(--wf-text); line-height:1.4; }
+.feed-sm-text strong { color:var(--wf-ink); }
+.feed-sm-time { color:var(--wf-muted); font-size:10px; margin-top:2px; }
+/* Quick action buttons */
+.action-btn { width:100%; padding:0.5rem; border-radius:4px; font-size:12px; font-weight:600; cursor:pointer; margin-bottom:0.375rem; border:1px solid var(--wf-line); text-align:center; }
+.action-btn:last-child { margin-bottom:0; }
+.action-btn-primary { background:var(--wf-accent); color:white; border-color:var(--wf-accent); }
+.action-btn-secondary { background:var(--wf-surface); color:var(--wf-text); }
+</style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="wf-header">
+  <div class="wf-header-logo"><svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix"><path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/></svg></div>
+  <div class="wf-header-title">SFDC</div>
+  <nav class="wf-header-nav">
+    <a href="#">Dashboard</a>
+    <a href="#" class="active">PSM Portal</a>
+    <a href="#">Partners</a>
+    <a href="#">Deals</a>
+    <a href="#">Programs</a>
+    <a href="#">Reports</a>
+  </nav>
+  <div class="wf-header-util">
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+  </div>
+</header>
+    <div class="page-context-bar">
+  <div style="max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <span style="font-size:12px;color:var(--wf-muted);display:flex;align-items:center;gap:6px;">
+      <svg viewBox="0 0 20 13" style="width:18px;height:11px;fill:var(--wf-muted);" aria-hidden="true"><path d="M8.3 1.7A3.8 3.8 0 0 1 12 0a3.8 3.8 0 0 1 3.5 2.3A2.8 2.8 0 0 1 20 5a2.8 2.8 0 0 1-2.8 2.8H3.2A3.2 3.2 0 0 1 0 4.6 3.2 3.2 0 0 1 3.2 1.4c.18 0 .35.01.52.04A3.8 3.8 0 0 1 8.3 1.7z"/></svg>
+      <strong style="color:var(--wf-text);font-weight:600;">Salesforce Lightning</strong>&ensp;&middot;&ensp;PCP App
+    </span>
+    <span class="persona-badge persona-badge--psm">PSM</span>
+  </div>
+</div>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+
+<!-- ── 3-Column Record Layout ── -->
+<div class="record-layout">
+
+  <!-- ════════ LEFT RAIL — Related Objects ════════ -->
+  <div class="left-rail">
+    <div class="card">
+      <div class="card-hd"><h3>Partner</h3></div>
+      <div class="card-bd">
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0"/></svg></div>
+          <div class="rel-info"><div class="rel-title">Stark Industries</div><div class="rel-sub">Gold | MRR $180K | US West</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><h3>Related</h3></div>
+      <div class="card-bd">
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m9.86-5.632a4.5 4.5 0 00-6.364 0l-4.5 4.5a4.5 4.5 0 001.242 7.244"/></svg></div>
+          <div class="rel-info"><div class="rel-title">Q1 2026 QBR Upcoming</div><div class="rel-sub">Feb 28, 2026</div></div>
+        </div>
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m9.86-5.632a4.5 4.5 0 00-6.364 0l-4.5 4.5a4.5 4.5 0 001.242 7.244"/></svg></div>
+          <div class="rel-info"><div class="rel-title">PSM: Marcus Chen</div><div class="rel-sub">Partner Success</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ CENTER — Main Content ════════ -->
+  <div class="center-content">
+  <!-- Main Content -->
+  <main role="main">
+    <h1 class="page-title">Partnership Health Scorecard</h1>
+    <p class="page-subtitle">Stark Industries | Gold Tier | Last Updated: February 18, 2026</p>
+
+    <!-- KPI Cards -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Monthly Recurring Revenue</div>
+        <div class="kpi-value">$180K</div>
+        <div class="kpi-subtitle">+12% QoQ Growth</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Training Completion</div>
+        <div class="kpi-value">95%</div>
+        <div class="kpi-subtitle">11 of 12 Active</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">MDF Utilization</div>
+        <div class="kpi-value">63%</div>
+        <div class="kpi-subtitle">$47K / $75K</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Deal Activity</div>
+        <div class="kpi-value">5</div>
+        <div class="kpi-subtitle">Active Deals</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Pipeline Value</div>
+        <div class="kpi-value">$197K</div>
+        <div class="kpi-subtitle">All Stages</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Cert Coverage Gap</div>
+        <div class="kpi-value">9/12</div>
+        <div class="kpi-subtitle">≥75% Coverage</div>
+      </div>
+    </div>
+
+    <!-- Health Indicators Card -->
+    <div class="card">
+      <div class="card-title">Health Indicators by Category</div>
+
+      <div class="health-indicator-row">
+        <div class="health-indicator-content">
+          <div class="indicator-dot indicator-green"></div>
+          <div class="indicator-name">Revenue Performance</div>
+        </div>
+        <span class="status-badge status-green">Green</span>
+      </div>
+
+      <div class="health-indicator-row">
+        <div class="health-indicator-content">
+          <div class="indicator-dot indicator-yellow"></div>
+          <div class="indicator-name">Training Engagement</div>
+        </div>
+        <span class="status-badge status-yellow">Yellow</span>
+      </div>
+
+      <div class="health-indicator-row">
+        <div class="health-indicator-content">
+          <div class="indicator-dot indicator-yellow"></div>
+          <div class="indicator-name">MDF Usage</div>
+        </div>
+        <span class="status-badge status-yellow">Yellow</span>
+      </div>
+
+      <div class="health-indicator-row">
+        <div class="health-indicator-content">
+          <div class="indicator-dot indicator-green"></div>
+          <div class="indicator-name">Deal Activity</div>
+        </div>
+        <span class="status-badge status-green">Green</span>
+      </div>
+
+      <div class="health-indicator-row">
+        <div class="health-indicator-content">
+          <div class="indicator-dot indicator-red"></div>
+          <div class="indicator-name">Certification Coverage</div>
+        </div>
+        <span class="status-badge status-red">Red</span>
+      </div>
+    </div>
+
+    <!-- Trend Analysis -->
+    <div class="card">
+      <div class="card-title">Trend Analysis (Last 4 Quarters)</div>
+
+      <div style="margin-bottom: 2rem;">
+        <label style="display: block; font-weight: 600; margin-bottom: 1rem;">Revenue Performance</label>
+        <div class="trend-section">
+          <div class="trend-item">
+            <div class="trend-label">Q1 2025</div>
+            <div class="trend-arrow arrow-stable">→</div>
+            <div style="font-size: 0.7rem; color: var(--wf-text, #3b4f68);">Stable</div>
+          </div>
+          <div class="trend-item">
+            <div class="trend-label">Q2 2025</div>
+            <div class="trend-arrow arrow-up">↑</div>
+            <div style="font-size: 0.7rem; color: var(--wf-ink, #1e2a3a);">Improving</div>
+          </div>
+          <div class="trend-item">
+            <div class="trend-label">Q3 2025</div>
+            <div class="trend-arrow arrow-up">↑</div>
+            <div style="font-size: 0.7rem; color: var(--wf-ink, #1e2a3a);">Improving</div>
+          </div>
+          <div class="trend-item">
+            <div class="trend-label">Q4 2025</div>
+            <div class="trend-arrow arrow-stable">→</div>
+            <div style="font-size: 0.7rem; color: var(--wf-text, #3b4f68);">Stable</div>
+          </div>
+          <div class="trend-item">
+            <div class="trend-label">Q1 2026</div>
+            <div class="trend-arrow arrow-down">↓</div>
+            <div style="font-size: 0.7rem; color: var(--wf-red, #8b4553);">Declining</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 2rem;">
+        <label style="display: block; font-weight: 600; margin-bottom: 1rem;">Training Engagement</label>
+        <div class="trend-section">
+          <div class="trend-item">
+            <div class="trend-label">Q1 2025</div>
+            <div class="trend-arrow arrow-up">↑</div>
+            <div style="font-size: 0.7rem; color: var(--wf-ink, #1e2a3a);">Improving</div>
+          </div>
+          <div class="trend-item">
+            <div class="trend-label">Q2 2025</div>
+            <div class="trend-arrow arrow-up">↑</div>
+            <div style="font-size: 0.7rem; color: var(--wf-ink, #1e2a3a);">Improving</div>
+          </div>
+          <div class="trend-item">
+            <div class="trend-label">Q3 2025</div>
+            <div class="trend-arrow arrow-stable">→</div>
+            <div style="font-size: 0.7rem; color: var(--wf-text, #3b4f68);">Stable</div>
+          </div>
+          <div class="trend-item">
+            <div class="trend-label">Q4 2025</div>
+            <div class="trend-arrow arrow-down">↓</div>
+            <div style="font-size: 0.7rem; color: var(--wf-red, #8b4553);">Declining</div>
+          </div>
+          <div class="trend-item">
+            <div class="trend-label">Q1 2026</div>
+            <div class="trend-arrow arrow-down">↓</div>
+            <div style="font-size: 0.7rem; color: var(--wf-red, #8b4553);">Declining</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 2rem;">
+        <label style="display: block; font-weight: 600; margin-bottom: 1rem;">MDF Utilization</label>
+        <div class="trend-section">
+          <div class="trend-item">
+            <div class="trend-label">Q1 2025</div>
+            <div class="trend-arrow arrow-stable">→</div>
+            <div style="font-size: 0.7rem; color: var(--wf-text, #3b4f68);">Stable</div>
+          </div>
+          <div class="trend-item">
+            <div class="trend-label">Q2 2025</div>
+            <div class="trend-arrow arrow-down">↓</div>
+            <div style="font-size: 0.7rem; color: var(--wf-red, #8b4553);">Declining</div>
+          </div>
+          <div class="trend-item">
+            <div class="trend-label">Q3 2025</div>
+            <div class="trend-arrow arrow-up">↑</div>
+            <div style="font-size: 0.7rem; color: var(--wf-ink, #1e2a3a);">Improving</div>
+          </div>
+          <div class="trend-item">
+            <div class="trend-label">Q4 2025</div>
+            <div class="trend-arrow arrow-up">↑</div>
+            <div style="font-size: 0.7rem; color: var(--wf-ink, #1e2a3a);">Improving</div>
+          </div>
+          <div class="trend-item">
+            <div class="trend-label">Q1 2026</div>
+            <div class="trend-arrow arrow-stable">→</div>
+            <div style="font-size: 0.7rem; color: var(--wf-text, #3b4f68);">Stable</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 2rem;">
+        <label style="display: block; font-weight: 600; margin-bottom: 1rem;">Deal Activity</label>
+        <div class="trend-section">
+          <div class="trend-item">
+            <div class="trend-label">Q1 2025</div>
+            <div class="trend-arrow arrow-down">↓</div>
+            <div style="font-size: 0.7rem; color: var(--wf-red, #8b4553);">Declining</div>
+          </div>
+          <div class="trend-item">
+            <div class="trend-label">Q2 2025</div>
+            <div class="trend-arrow arrow-up">↑</div>
+            <div style="font-size: 0.7rem; color: var(--wf-ink, #1e2a3a);">Improving</div>
+          </div>
+          <div class="trend-item">
+            <div class="trend-label">Q3 2025</div>
+            <div class="trend-arrow arrow-up">↑</div>
+            <div style="font-size: 0.7rem; color: var(--wf-ink, #1e2a3a);">Improving</div>
+          </div>
+          <div class="trend-item">
+            <div class="trend-label">Q4 2025</div>
+            <div class="trend-arrow arrow-up">↑</div>
+            <div style="font-size: 0.7rem; color: var(--wf-ink, #1e2a3a);">Improving</div>
+          </div>
+          <div class="trend-item">
+            <div class="trend-label">Q1 2026</div>
+            <div class="trend-arrow arrow-stable">→</div>
+            <div style="font-size: 0.7rem; color: var(--wf-text, #3b4f68);">Stable</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <label style="display: block; font-weight: 600; margin-bottom: 1rem;">Certification Coverage</label>
+        <div class="trend-section">
+          <div class="trend-item">
+            <div class="trend-label">Q1 2025</div>
+            <div class="trend-arrow arrow-up">↑</div>
+            <div style="font-size: 0.7rem; color: var(--wf-ink, #1e2a3a);">Improving</div>
+          </div>
+          <div class="trend-item">
+            <div class="trend-label">Q2 2025</div>
+            <div class="trend-arrow arrow-up">↑</div>
+            <div style="font-size: 0.7rem; color: var(--wf-ink, #1e2a3a);">Improving</div>
+          </div>
+          <div class="trend-item">
+            <div class="trend-label">Q3 2025</div>
+            <div class="trend-arrow arrow-stable">→</div>
+            <div style="font-size: 0.7rem; color: var(--wf-text, #3b4f68);">Stable</div>
+          </div>
+          <div class="trend-item">
+            <div class="trend-label">Q4 2025</div>
+            <div class="trend-arrow arrow-down">↓</div>
+            <div style="font-size: 0.7rem; color: var(--wf-red, #8b4553);">Declining</div>
+          </div>
+          <div class="trend-item">
+            <div class="trend-label">Q1 2026</div>
+            <div class="trend-arrow arrow-down">↓</div>
+            <div style="font-size: 0.7rem; color: var(--wf-red, #8b4553);">Declining</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Overall Health Score -->
+    <div class="overall-health-box">
+      <div class="overall-health-label">Overall Partnership Health Score</div>
+      <div class="overall-health-score">72/100</div>
+      <div class="overall-health-status"><span class="status-badge status-yellow">Yellow</span> — Requires Attention</div>
+    </div>
+
+    <!-- Recommendations -->
+    <div class="card">
+      <div class="card-title">Action Recommendations</div>
+
+      <div class="recommendation-item">
+        <div class="recommendation-title">1. Close S.H.I.E.L.D. Deal for Platinum Advancement</div>
+        <div class="recommendation-text">Deal expected to close Mar 15, 2026 (currently 90% confident). Closing this deal combined with Pepper's Advanced Security cert completion would advance Stark from Gold to Platinum tier. Platinum unlocks higher MDF allocation, dedicated PSM resource priority, and enhanced benefits. James Rhodes driving deal close; Marcus Chen to support.</div>
+      </div>
+
+      <div class="recommendation-item">
+        <div class="recommendation-title">2. Recover Stalled Hammer Industries Opportunity</div>
+        <div class="recommendation-text">DR-2026-4287 stalled for 3 weeks in Qualification ($22K MRR impact). Team recommended co-sell call with Equinix SE support and competitive positioning strategy. James Rhodes to re-engage this week. This deal recovery adds meaningful revenue and validates Marcus Chen's support value.</div>
+      </div>
+
+      <div class="recommendation-item">
+        <div class="recommendation-title">3. Complete Training Gaps & Certification Coverage</div>
+        <div class="recommendation-text">Sarah Connor cert expired (Security Fundamentals) — Pepper must re-enroll by Feb 28. Pepper's Advanced Security cert pending (due Mar 15) — critical for Platinum advancement. 3 reps below 75% coverage threshold. Q2 focused training plan recommended. Overall health improving if action taken on these certifications.</div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div style="margin-bottom: 2rem;">
+      <button class="button" aria-label="Schedule Health Review Meeting">Schedule Health Review</button>
+      <button class="button button-secondary" aria-label="Export Health Scorecard as PDF">Export as PDF</button>
+      <button class="button button-secondary" aria-label="View Historical Trends">View Full Trends</button>
+    </div>
+
+    <!-- Design Brief -->  </div>
+
+  <!-- ════════ RIGHT RAIL — Activity & Insights ════════ -->
+  <div class="right-rail">
+    <div class="card">
+      <div class="rail-tabs">
+        <button class="rail-tab active" onclick="document.querySelectorAll('.rail-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active');document.querySelectorAll('.rail-tab-content').forEach(c=>c.classList.remove('active'));document.getElementById('tab-activity').classList.add('active');">Activity</button>
+        <button class="rail-tab" onclick="document.querySelectorAll('.rail-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active');document.querySelectorAll('.rail-tab-content').forEach(c=>c.classList.remove('active'));document.getElementById('tab-einstein').classList.add('active');">Einstein</button>
+      </div>
+      <div id="tab-activity" class="rail-tab-content active">
+        <div class="card-bd">
+          <div class="feed-sm"><div class="feed-sm-text">Health review scheduled</div><div class="feed-sm-time">Today</div></div>
+          <div class="feed-sm"><div class="feed-sm-text">Score unchanged at 72</div><div class="feed-sm-time">2 days ago</div></div>
+          <div class="feed-sm"><div class="feed-sm-text">MDF utilization alert</div><div class="feed-sm-time">1 week ago</div></div>
+        </div>
+      </div>
+      <div id="tab-einstein" class="rail-tab-content">
+        <div class="card-bd" style="font-size:12px;color:var(--wf-text);line-height:1.5;">
+          <div style="font-size:11px;font-weight:700;color:var(--wf-accent);text-transform:uppercase;letter-spacing:0.03em;margin-bottom:0.5rem;">AI Recommendation</div>
+          Certification coverage declining. 3 uncertified members need training. Revenue trend warrants accelerated QBR.
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><h3>Actions</h3></div>
+      <div class="card-bd">
+        <button class="action-btn action-btn-primary">Schedule Health Review</button>
+        <button class="action-btn action-btn-secondary">Export PDF</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+</main>
+
+
+    <footer class="wf-footer">
+      &copy; 2026 Equinix · Partner Sales Manager · Internal Use Only
+    </footer>
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Health scorecard for a single partner account, aggregating engagement, revenue, and performance metrics with trend analysis and actionable intervention recommendations.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Provide comprehensive health assessment of individual partner at a glance</li>
+<li>Identify partnership risks and areas needing intervention before churn occurs</li>
+<li>Track partner trajectory over time with quarterly trend arrows</li>
+<li>Translate data into actionable recommendations for PSM engagement</li>
+<li>Support QBR preparation with data-driven conversation starters</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Six KPI cards: Revenue vs Target, Training Completion</li>
+<li>Health Indicators by Categoryrows with color dots for Revenue Performance</li>
+<li>Trend Analysis sectionquarterly trend visualizations for Revenue, Training</li>
+<li>Overall Partnership Health Score/100, Yellow status</li>
+<li>Action Recommendationscards with titles and detailed text</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Schedule Health Review Meeting button</li>
+<li>Export as PDF button</li>
+<li>View Full Trends button</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Revenue Aggregation & Performance Tracking</strong>
+<ul>
+<li>Aggregate quarterly revenue from Account's Opportunity rollups filtered by status = Closed/Won</li>
+<li>Compare current period revenue against target from Account_Target_Revenue__c field to display % attainment</li>
+<li>Calculate YTD revenue by summing all Closed/Won Opportunities from January through current month</li>
+</ul></li>
+<li><strong>Multi-Dimensional Health Scoring</strong>
+<ul>
+<li>Score health indicators (revenue, engagement, MDF spend, training certification, deal velocity) on 0-100 scale</li>
+<li>Weight component scores: Revenue 30%, Training 25%, MDF Utilization 20%, Deal Activity 15%, Certification Coverage 10%</li>
+<li>Calculate overall health as weighted average and display status badge (Green 75+, Yellow 50-75, Red &lt;50)</li>
+</ul></li>
+<li><strong>Trend Analysis & Historical Benchmarking</strong>
+<ul>
+<li>Generate quarterly trend data by querying Partner_Health_Score_History__c for last 4 quarters</li>
+<li>Compare current quarter to prior quarter baseline to display trend arrows (↑ improving, → stable, ↓ declining)</li>
+<li>Benchmark partner against tier cohort average from Account_Partner_Tier__c lookup</li>
+</ul></li>
+<li><strong>Risk Detection & AI Recommendations</strong>
+<ul>
+<li>Flag low-scoring categories (score &lt; 60) and trigger alert recommendations for intervention</li>
+<li>Detect churn signals by analyzing declining trends, low engagement scores, and 90+ day inactivity</li>
+<li>Generate AI-recommended action items with priority levels based on health score impact and urgency</li>
+</ul></li>
+<li><strong>Engagement & Export Functionality</strong>
+<ul>
+<li>Schedule Health Review meeting by creating Task and CalendarEvent records linked to Account</li>
+<li>Export scorecard as PDF via Salesforce rendering engine with all metrics, trends, and recommendations</li>
+<li>Render historical QBR artifacts and prior scorecard versions for comparison</li>
+</ul></li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

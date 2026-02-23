@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MDF Approval Dashboard — PSM · Equinix PCP</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: var(--wf-canvas, #f5f7fb); }
+    .slds-global-header { display: flex; align-items: center; background-color: var(--wf-ink, #1e2a3a); color: var(--wf-surface, #edf1f7); padding: 0 12px; height: 52px; gap: 12px; }
+    .slds-global-header__waffle { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; cursor: pointer; }
+    .slds-global-header__waffle svg { width: 20px; height: 20px; }
+    .slds-global-header__app { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; }
+    .slds-global-header__app-icon { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; background-color: var(--wf-accent, var(--wf-accent, #3d6daa)); color: var(--wf-surface, #edf1f7); border-radius: 4px; font-weight: 700; font-size: 12px; }
+    .slds-global-nav { display: flex; gap: 24px; margin-left: 24px; flex: 1; }
+    .slds-global-nav__item { color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 13px; padding: 8px 0; border-bottom: 3px solid transparent; cursor: pointer; transition: all 0.2s; }
+    .slds-global-nav__item:hover { color: var(--wf-surface, #edf1f7); }
+    .slds-global-nav__item.active { color: var(--wf-surface, #edf1f7); border-bottom-color: var(--wf-amber, #8b7745); }
+    .slds-global-header__search { margin-left: auto; margin-right: 16px; }
+    .slds-global-header__search input { padding: 6px 12px; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 4px; background-color: rgba(255, 255, 255, 0.1); color: var(--wf-surface, #edf1f7); width: 200px; font-size: 13px; }
+    .slds-global-header__search input::placeholder { color: rgba(255, 255, 255, 0.5); }
+    .slds-global-header__actions { display: flex; gap: 12px; align-items: center; }
+    .slds-global-header__action { cursor: pointer; font-size: 18px; opacity: 0.7; transition: opacity 0.2s; }
+    .slds-global-header__action:hover { opacity: 1; }
+    .page-container { padding: 24px; max-width: 1600px; margin: 0 auto; }
+    .slds-design-notes__title { font-size: 18px; font-weight: 700; color: var(--wf-text, #3b4f68); margin-bottom: 12px; display: flex; align-items: center; gap: 12px; }
+    .slds-badge { display: inline-block; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; }
+    .slds-badge--brand { background-color: var(--wf-accent, var(--wf-accent, #3d6daa)); color: var(--wf-surface, #edf1f7); }
+    .slds-badge--neutral { background-color: var(--wf-surface, #edf1f7); color: var(--wf-text, #3b4f68); }
+    .kpi-row { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 24px; }
+    .kpi-card { background: var(--wf-surface, #edf1f7); padding: 16px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); }
+    .kpi-label { font-size: 12px; color: var(--wf-muted, #6b7f99); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; font-weight: 600; }
+    .kpi-value { font-size: 24px; font-weight: 700; color: var(--wf-accent, var(--wf-accent, #3d6daa)); }
+    .kpi-trend { font-size: 12px; color: var(--wf-ink, #1e2a3a); margin-top: 4px; }
+    .section-title { font-size: 16px; font-weight: 700; color: var(--wf-text, #3b4f68); margin-bottom: 12px; margin-top: 24px; }
+    .table-wrapper { background: var(--wf-surface, #edf1f7); border-radius: 4px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); overflow: hidden; margin-bottom: 24px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead { background-color: var(--wf-canvas, #f5f7fb); border-bottom: 2px solid var(--wf-line, #b0bdd0); }
+    th { padding: 12px; text-align: left; font-weight: 700; color: var(--wf-text, #3b4f68); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    td { padding: 12px; border-bottom: 1px solid var(--wf-surface, #edf1f7); color: var(--wf-text, #3b4f68); }
+    tbody tr:hover { background-color: var(--wf-canvas, #f5f7fb); }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 3px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+    .badge-gold { background-color: var(--wf-surface, #edf1f7); color: var(--wf-amber, #8b7745); }
+    .badge-silver { background-color: var(--wf-surface, #edf1f7); color: var(--wf-muted, #6b7f99); }
+    .badge-bronze { background-color: var(--wf-amber, #8b7745); color: #fff; }
+    .badge-pending { background-color: var(--wf-surface, #edf1f7); color: var(--wf-amber, #8b7745); }
+    .badge-approved { background-color: var(--wf-surface, #edf1f7); color: var(--wf-ink, #1e2a3a); }
+    .badge-rejected { background-color: var(--wf-surface, #edf1f7); color: var(--wf-red, #8b4553); }
+    .badge-paid { background-color: var(--wf-surface, #edf1f7); color: var(--wf-ink, #1e2a3a); }
+    .progress-bar-cell { display: flex; align-items: center; gap: 8px; }
+    .progress-bar { flex: 1; height: 6px; background-color: var(--wf-surface, #edf1f7); border-radius: 3px; overflow: hidden; }
+    .progress-fill { height: 100%; background-color: var(--wf-accent, var(--wf-accent, #3d6daa)); border-radius: 3px; }
+    .btn { padding: 6px 12px; border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; margin-right: 4px; }
+    .btn-primary { background-color: var(--wf-accent, var(--wf-accent, #3d6daa)); color: var(--wf-surface, #edf1f7); }
+    .btn-primary:hover { background-color: var(--wf-accent, #3d6daa); }
+    .btn-secondary { background-color: var(--wf-surface, #edf1f7); color: var(--wf-text, #3b4f68); }
+    .btn-secondary:hover { background-color: var(--wf-line, #b0bdd0); }
+    .btn-small { padding: 4px 8px; font-size: 11px; }
+    .chart-container { background: var(--wf-surface, #edf1f7); padding: 20px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); margin-bottom: 24px; text-align: center; }
+    .chart-title { font-size: 14px; font-weight: 700; color: var(--wf-text, #3b4f68); margin-bottom: 16px; }
+    /* pie-chart removed — replaced with horizontal bar chart for accessibility and precision */
+    .chart-legend { display: flex; justify-content: center; gap: 24px; margin-top: 16px; font-size: 12px; flex-wrap: wrap; }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .legend-color { width: 12px; height: 12px; border-radius: 2px; }
+    .filter-bar { display: flex; gap: 12px; margin-bottom: 16px; align-items: center; }
+    .filter-control { padding: 6px 12px; border: 1px solid var(--wf-line, #b0bdd0); border-radius: 4px; background: var(--wf-surface, #edf1f7); font-size: 12px; cursor: pointer; }
+    .action-buttons { display: flex; gap: 6px; }
+    .header-actions { display: flex; gap: 12px; margin-bottom: 16px; justify-content: flex-end; }
+    .footer-pagination { display: flex; justify-content: space-between; align-items: center; padding: 16px; font-size: 12px; color: var(--wf-muted, #6b7f99); border-top: 1px solid var(--wf-surface, #edf1f7); }
+</style>
+</head>
+<body>
+
+<header class="wf-header">
+  <div class="wf-header-logo"><svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix"><path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/></svg></div>
+  <div class="wf-header-title">SFDC</div>
+  <nav class="wf-header-nav">
+    <a href="#">Dashboard</a>
+    <a href="#" class="active">PSM Portal</a>
+    <a href="#">Partners</a>
+    <a href="#">Deals</a>
+    <a href="#">Programs</a>
+    <a href="#">Reports</a>
+  </nav>
+  <div class="wf-header-util">
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+  </div>
+</header>
+<div class="page-context-bar">
+  <div style="max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <span style="font-size:12px;color:var(--wf-muted);display:flex;align-items:center;gap:6px;">
+      <svg viewBox="0 0 20 13" style="width:18px;height:11px;fill:var(--wf-muted);" aria-hidden="true"><path d="M8.3 1.7A3.8 3.8 0 0 1 12 0a3.8 3.8 0 0 1 3.5 2.3A2.8 2.8 0 0 1 20 5a2.8 2.8 0 0 1-2.8 2.8H3.2A3.2 3.2 0 0 1 0 4.6 3.2 3.2 0 0 1 3.2 1.4c.18 0 .35.01.52.04A3.8 3.8 0 0 1 8.3 1.7z"/></svg>
+      <strong style="color:var(--wf-text);font-weight:600;">Salesforce Lightning</strong>&ensp;&middot;&ensp;PCP App
+    </span>
+    <span class="persona-badge persona-badge--psm">PSM</span>
+  </div>
+</div>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+<div class="page-container">
+
+  
+
+
+  <div class="kpi-row">
+    <div class="kpi-card">
+      <div class="kpi-label">Total Allocated</div>
+      <div class="kpi-value">$2.4M</div>
+      <div class="kpi-trend">↑ All Tiers FY2026</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Total Spent</div>
+      <div class="kpi-value">$1.6M</div>
+      <div class="kpi-trend">↑ +18% vs Q4</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Utilization Rate</div>
+      <div class="kpi-value">67%</div>
+      <div class="kpi-trend">On pace for 85% EOY</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Pending Claims</div>
+      <div class="kpi-value">8</div>
+      <div class="kpi-trend">↓ -2 from last week</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Avg ROI</div>
+      <div class="kpi-value">3.2x</div>
+      <div class="kpi-trend">↑ +0.4x improvement</div>
+    </div>
+  </div>
+
+  <div class="header-actions">
+    <button class="btn btn-primary">New MDF Allocation</button>
+    <button class="btn btn-secondary">Export Report</button>
+  </div>
+
+  <div class="section-title">Fund Allocations by Partner (10 Rows)</div>
+
+  <div class="filter-bar">
+    <select class="filter-control">
+      <option>All Tiers</option>
+      <option>Gold Tier</option>
+      <option>Silver Tier</option>
+      <option>Bronze Tier</option>
+    </select>
+    <select class="filter-control">
+      <option>All Regions</option>
+      <option>North America</option>
+      <option>EMEA</option>
+      <option>APAC</option>
+    </select>
+    <select class="filter-control">
+      <option>All Fiscal Years</option>
+      <option>FY 2026</option>
+      <option>FY 2025</option>
+    </select>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Partner Account</th>
+          <th>Tier</th>
+          <th>Annual Allocation</th>
+          <th>YTD Spent</th>
+          <th>Remaining Balance</th>
+          <th>Utilization %</th>
+          <th>Pending Claims</th>
+          <th>Last Claim Date</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Stark Industries</strong></td>
+          <td><span class="badge badge-gold">Gold</span></td>
+          <td>$75,000</td>
+          <td>$52,400</td>
+          <td><div class="progress-bar-cell"><div class="progress-bar"><div class="progress-fill" style="width: 70%"></div></div><span>$22,600</span></div></td>
+          <td>70%</td>
+          <td>2</td>
+          <td>2026-02-10</td>
+          <td><button class="btn btn-secondary btn-small">Adjust</button></td>
+        </tr>
+        <tr>
+          <td><strong>Wayne Enterprises</strong></td>
+          <td><span class="badge badge-gold">Gold</span></td>
+          <td>$75,000</td>
+          <td>$68,200</td>
+          <td><div class="progress-bar-cell"><div class="progress-bar"><div class="progress-fill" style="width: 91%"></div></div><span>$6,800</span></div></td>
+          <td>91%</td>
+          <td>1</td>
+          <td>2026-02-12</td>
+          <td><button class="btn btn-secondary btn-small">Adjust</button></td>
+        </tr>
+        <tr>
+          <td><strong>GlobalTech Partners</strong></td>
+          <td><span class="badge badge-silver">Silver</span></td>
+          <td>$40,000</td>
+          <td>$28,500</td>
+          <td><div class="progress-bar-cell"><div class="progress-bar"><div class="progress-fill" style="width: 71%"></div></div><span>$11,500</span></div></td>
+          <td>71%</td>
+          <td>1</td>
+          <td>2026-02-08</td>
+          <td><button class="btn btn-secondary btn-small">Adjust</button></td>
+        </tr>
+        <tr>
+          <td><strong>DataStream Inc</strong></td>
+          <td><span class="badge badge-silver">Silver</span></td>
+          <td>$40,000</td>
+          <td>$33,100</td>
+          <td><div class="progress-bar-cell"><div class="progress-bar"><div class="progress-fill" style="width: 83%"></div></div><span>$6,900</span></div></td>
+          <td>83%</td>
+          <td>2</td>
+          <td>2026-02-11</td>
+          <td><button class="btn btn-secondary btn-small">Adjust</button></td>
+        </tr>
+        <tr>
+          <td><strong>Oscorp</strong></td>
+          <td><span class="badge badge-bronze">Bronze</span></td>
+          <td>$15,000</td>
+          <td>$10,200</td>
+          <td><div class="progress-bar-cell"><div class="progress-bar"><div class="progress-fill" style="width: 68%"></div></div><span>$4,800</span></div></td>
+          <td>68%</td>
+          <td>0</td>
+          <td>2026-01-30</td>
+          <td><button class="btn btn-secondary btn-small">Adjust</button></td>
+        </tr>
+        <tr>
+          <td><strong>InnovateLabs</strong></td>
+          <td><span class="badge badge-silver">Silver</span></td>
+          <td>$40,000</td>
+          <td>$18,700</td>
+          <td><div class="progress-bar-cell"><div class="progress-bar"><div class="progress-fill" style="width: 53%"></div></div><span>$21,300</span></div></td>
+          <td>53%</td>
+          <td>1</td>
+          <td>2026-02-05</td>
+          <td><button class="btn btn-secondary btn-small">Adjust</button></td>
+        </tr>
+        <tr>
+          <td><strong>PrimeConnect</strong></td>
+          <td><span class="badge badge-gold">Gold</span></td>
+          <td>$75,000</td>
+          <td>$41,300</td>
+          <td><div class="progress-bar-cell"><div class="progress-bar"><div class="progress-fill" style="width: 55%"></div></div><span>$33,700</span></div></td>
+          <td>55%</td>
+          <td>1</td>
+          <td>2026-02-09</td>
+          <td><button class="btn btn-secondary btn-small">Adjust</button></td>
+        </tr>
+        <tr>
+          <td><strong>ProServices Hub</strong></td>
+          <td><span class="badge badge-silver">Silver</span></td>
+          <td>$40,000</td>
+          <td>$24,600</td>
+          <td><div class="progress-bar-cell"><div class="progress-bar"><div class="progress-fill" style="width: 62%"></div></div><span>$15,400</span></div></td>
+          <td>62%</td>
+          <td>0</td>
+          <td>2026-01-28</td>
+          <td><button class="btn btn-secondary btn-small">Adjust</button></td>
+        </tr>
+        <tr>
+          <td><strong>CloudSync Technology</strong></td>
+          <td><span class="badge badge-bronze">Bronze</span></td>
+          <td>$15,000</td>
+          <td>$8,900</td>
+          <td><div class="progress-bar-cell"><div class="progress-bar"><div class="progress-fill" style="width: 59%"></div></div><span>$6,100</span></div></td>
+          <td>59%</td>
+          <td>0</td>
+          <td>2026-02-03</td>
+          <td><button class="btn btn-secondary btn-small">Adjust</button></td>
+        </tr>
+        <tr>
+          <td><strong>VentureTech Solutions</strong></td>
+          <td><span class="badge badge-silver">Silver</span></td>
+          <td>$40,000</td>
+          <td>$29,800</td>
+          <td><div class="progress-bar-cell"><div class="progress-bar"><div class="progress-fill" style="width: 75%"></div></div><span>$10,200</span></div></td>
+          <td>75%</td>
+          <td>0</td>
+          <td>2026-02-06</td>
+          <td><button class="btn btn-secondary btn-small">Adjust</button></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="footer-pagination">
+      <span>Showing 10 of 42 allocations</span>
+      <div><button class="btn btn-secondary btn-small">← Prev</button> <button class="btn btn-secondary btn-small">Next →</button></div>
+    </div>
+  </div>
+
+  <div class="section-title">Claims Queue (Awaiting Review) — SLA: 30 Days</div>
+
+  <div class="filter-bar">
+    <select class="filter-control">
+      <option>All Statuses</option>
+      <option>Pending</option>
+      <option>Approved</option>
+      <option>Rejected</option>
+      <option>Paid</option>
+    </select>
+    <select class="filter-control">
+      <option>All Activity Types</option>
+      <option>Events (35%)</option>
+      <option>Digital Marketing (25%)</option>
+      <option>Content Creation (15%)</option>
+      <option>Enablement (12%)</option>
+      <option>Other (13%)</option>
+    </select>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Claim ID</th>
+          <th>Partner</th>
+          <th>Activity Type</th>
+          <th>Claimed Amount</th>
+          <th>Supporting Docs</th>
+          <th>Submission Date</th>
+          <th>SLA Countdown</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>CLM-2026-0852</strong></td>
+          <td>Stark Industries</td>
+          <td>Events</td>
+          <td>$6,500</td>
+          <td>✓ 4 files</td>
+          <td>2026-02-11</td>
+          <td><span style="color:var(--wf-muted, #6b7f99);font-weight:600">19 days left</span></td>
+          <td><span class="badge badge-pending">Pending</span></td>
+          <td><div class="action-buttons"><button class="btn btn-secondary btn-small">Approve</button><button class="btn btn-secondary btn-small">Reject</button></div></td>
+        </tr>
+        <tr>
+          <td><strong>CLM-2026-0851</strong></td>
+          <td>Wayne Enterprises</td>
+          <td>Digital Marketing</td>
+          <td>$4,200</td>
+          <td>✓ 6 files</td>
+          <td>2026-02-10</td>
+          <td><span style="color:var(--wf-muted, #6b7f99);font-weight:600">20 days left</span></td>
+          <td><span class="badge badge-pending">Pending</span></td>
+          <td><div class="action-buttons"><button class="btn btn-secondary btn-small">Approve</button><button class="btn btn-secondary btn-small">Reject</button></div></td>
+        </tr>
+        <tr>
+          <td><strong>CLM-2026-0850</strong></td>
+          <td>GlobalTech Partners</td>
+          <td>Content Creation</td>
+          <td>$3,100</td>
+          <td>✓ 3 files</td>
+          <td>2026-02-08</td>
+          <td>22 days left</td>
+          <td><span class="badge badge-approved">Approved</span></td>
+          <td><div class="action-buttons"><button class="btn btn-secondary btn-small">View Details</button></div></td>
+        </tr>
+        <tr>
+          <td><strong>CLM-2026-0849</strong></td>
+          <td>DataStream Inc</td>
+          <td>Events</td>
+          <td>$5,800</td>
+          <td>✓ 5 files</td>
+          <td>2026-02-12</td>
+          <td>18 days left</td>
+          <td><span class="badge badge-pending">Pending</span></td>
+          <td><div class="action-buttons"><button class="btn btn-secondary btn-small">Approve</button><button class="btn btn-secondary btn-small">Reject</button></div></td>
+        </tr>
+        <tr>
+          <td><strong>CLM-2026-0848</strong></td>
+          <td>InnovateLabs</td>
+          <td>Enablement</td>
+          <td>$2,400</td>
+          <td>✓ 2 files</td>
+          <td>2026-02-09</td>
+          <td>21 days left</td>
+          <td><span class="badge badge-rejected">Rejected</span></td>
+          <td><div class="action-buttons"><button class="btn btn-secondary btn-small">View Details</button></div></td>
+        </tr>
+        <tr>
+          <td><strong>CLM-2026-0847</strong></td>
+          <td>PrimeConnect</td>
+          <td>Digital Marketing</td>
+          <td>$3,700</td>
+          <td>✓ 4 files</td>
+          <td>2026-02-07</td>
+          <td>23 days left</td>
+          <td><span class="badge badge-paid">Paid</span></td>
+          <td><div class="action-buttons"><button class="btn btn-secondary btn-small">View Details</button></div></td>
+        </tr>
+        <tr>
+          <td><strong>CLM-2026-0846</strong></td>
+          <td>Oscorp</td>
+          <td>Content Creation</td>
+          <td>$1,950</td>
+          <td>✓ 2 files</td>
+          <td>2026-02-06</td>
+          <td>24 days left</td>
+          <td><span class="badge badge-approved">Approved</span></td>
+          <td><div class="action-buttons"><button class="btn btn-secondary btn-small">View Details</button></div></td>
+        </tr>
+        <tr>
+          <td><strong>CLM-2026-0845</strong></td>
+          <td>ProServices Hub</td>
+          <td>Events</td>
+          <td>$7,200</td>
+          <td>✓ 5 files</td>
+          <td>2026-02-05</td>
+          <td>25 days left</td>
+          <td><span class="badge badge-pending">Pending</span></td>
+          <td><div class="action-buttons"><button class="btn btn-secondary btn-small">Approve</button><button class="btn btn-secondary btn-small">Reject</button></div></td>
+        </tr>
+        <tr>
+          <td><strong>CLM-2026-0844</strong></td>
+          <td>CloudSync Technology</td>
+          <td>Digital Marketing</td>
+          <td>$2,600</td>
+          <td>✓ 3 files</td>
+          <td>2026-02-04</td>
+          <td>26 days left</td>
+          <td><span class="badge badge-approved">Approved</span></td>
+          <td><div class="action-buttons"><button class="btn btn-secondary btn-small">View Details</button></div></td>
+        </tr>
+        <tr>
+          <td><strong>CLM-2026-0843</strong></td>
+          <td>VentureTech Solutions</td>
+          <td>Enablement</td>
+          <td>$3,350</td>
+          <td>✓ 4 files</td>
+          <td>2026-02-03</td>
+          <td>27 days left</td>
+          <td><span class="badge badge-pending">Pending</span></td>
+          <td><div class="action-buttons"><button class="btn btn-secondary btn-small">Approve</button><button class="btn btn-secondary btn-small">Reject</button></div></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="footer-pagination">
+      <span>Showing 10 of 8 pending claims</span>
+      <div><button class="btn btn-secondary btn-small" disabled>← Prev</button> <button class="btn btn-secondary btn-small" disabled>Next →</button></div>
+    </div>
+  </div>
+
+  <div class="section-title">ROI Tracker (Approved Claims with Outcome Metrics)</div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Claim ID</th>
+          <th>Partner</th>
+          <th>Activity Type</th>
+          <th>Approved Amount</th>
+          <th>Approval Date</th>
+          <th>Leads Generated</th>
+          <th>Pipeline Created</th>
+          <th>Revenue Influenced</th>
+          <th>ROI Multiple</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>CLM-2025-1234</strong></td>
+          <td>Stark Industries</td>
+          <td>Events</td>
+          <td>$5,200</td>
+          <td>2025-11-15</td>
+          <td>12</td>
+          <td>$185,000</td>
+          <td>$38,500</td>
+          <td><span style="color:var(--wf-ink, #1e2a3a);font-weight:600">7.4x</span></td>
+        </tr>
+        <tr>
+          <td><strong>CLM-2025-1233</strong></td>
+          <td>Wayne Enterprises</td>
+          <td>Digital Marketing</td>
+          <td>$3,800</td>
+          <td>2025-10-22</td>
+          <td>8</td>
+          <td>$142,000</td>
+          <td>$28,400</td>
+          <td><span style="color:var(--wf-ink, #1e2a3a);font-weight:600">7.5x</span></td>
+        </tr>
+        <tr>
+          <td><strong>CLM-2025-1232</strong></td>
+          <td>GlobalTech Partners</td>
+          <td>Content Creation</td>
+          <td>$2,100</td>
+          <td>2025-12-01</td>
+          <td>5</td>
+          <td>$78,000</td>
+          <td>$15,600</td>
+          <td><span style="color:var(--wf-ink, #1e2a3a);font-weight:600">7.4x</span></td>
+        </tr>
+        <tr>
+          <td><strong>CLM-2025-1231</strong></td>
+          <td>DataStream Inc</td>
+          <td>Events</td>
+          <td>$4,600</td>
+          <td>2025-09-18</td>
+          <td>15</td>
+          <td>$245,000</td>
+          <td>$49,000</td>
+          <td><span style="color:var(--wf-ink, #1e2a3a);font-weight:600">10.7x</span></td>
+        </tr>
+        <tr>
+          <td><strong>CLM-2025-1230</strong></td>
+          <td>InnovateLabs</td>
+          <td>Enablement</td>
+          <td>$1,950</td>
+          <td>2025-11-05</td>
+          <td>4</td>
+          <td>$62,000</td>
+          <td>$12,400</td>
+          <td><span style="color:var(--wf-ink, #1e2a3a);font-weight:600">6.4x</span></td>
+        </tr>
+        <tr>
+          <td><strong>CLM-2025-1229</strong></td>
+          <td>PrimeConnect</td>
+          <td>Digital Marketing</td>
+          <td>$2,800</td>
+          <td>2025-10-10</td>
+          <td>7</td>
+          <td>$112,000</td>
+          <td>$22,400</td>
+          <td><span style="color:var(--wf-ink, #1e2a3a);font-weight:600">8.0x</span></td>
+        </tr>
+        <tr>
+          <td><strong>CLM-2025-1228</strong></td>
+          <td>Oscorp</td>
+          <td>Events</td>
+          <td>$3,200</td>
+          <td>2025-12-12</td>
+          <td>6</td>
+          <td>$95,000</td>
+          <td>$19,000</td>
+          <td><span style="color:var(--wf-ink, #1e2a3a);font-weight:600">5.9x</span></td>
+        </tr>
+        <tr>
+          <td><strong>CLM-2025-1227</strong></td>
+          <td>ProServices Hub</td>
+          <td>Content Creation</td>
+          <td>$1,700</td>
+          <td>2025-11-28</td>
+          <td>3</td>
+          <td>$48,000</td>
+          <td>$9,600</td>
+          <td><span style="color:var(--wf-ink, #1e2a3a);font-weight:600">5.6x</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-title">MDF Activity Breakdown (by Percentage)</div>
+
+  <div class="chart-container">
+    <div class="chart-title">MDF Spending by Activity Type (YTD)</div>
+    <!-- Horizontal bar chart ranked by spend — precise, accessible, sorts by importance -->
+    <div style="max-width:500px;margin:0 auto;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <span style="width:120px;font-size:12px;font-weight:600;color:var(--wf-text, #3b4f68);text-align:right;">Events</span>
+        <div style="flex:1;height:22px;background:var(--wf-canvas, #f5f7fb);border-radius:3px;overflow:hidden;" role="progressbar" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100" aria-label="Events: 35%, $26,250">
+          <div style="width:35%;height:100%;background:var(--wf-accent, var(--wf-accent, #3d6daa));border-radius:3px;display:flex;align-items:center;padding-left:6px;font-size:11px;font-weight:600;color:#fff;">35%</div>
+        </div>
+        <span style="width:60px;font-size:12px;color:var(--wf-muted, #6b7f99);">$26,250</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <span style="width:120px;font-size:12px;font-weight:600;color:var(--wf-text, #3b4f68);text-align:right;">Digital Marketing</span>
+        <div style="flex:1;height:22px;background:var(--wf-canvas, #f5f7fb);border-radius:3px;overflow:hidden;" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" aria-label="Digital Marketing: 25%, $18,750">
+          <div style="width:25%;height:100%;background:var(--wf-ink, #1e2a3a);border-radius:3px;display:flex;align-items:center;padding-left:6px;font-size:11px;font-weight:600;color:#fff;">25%</div>
+        </div>
+        <span style="width:60px;font-size:12px;color:var(--wf-muted, #6b7f99);">$18,750</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <span style="width:120px;font-size:12px;font-weight:600;color:var(--wf-text, #3b4f68);text-align:right;">Content Creation</span>
+        <div style="flex:1;height:22px;background:var(--wf-canvas, #f5f7fb);border-radius:3px;overflow:hidden;" role="progressbar" aria-valuenow="15" aria-valuemin="0" aria-valuemax="100" aria-label="Content Creation: 15%, $11,250">
+          <div style="width:15%;height:100%;background:var(--wf-amber, #8b7745);border-radius:3px;display:flex;align-items:center;padding-left:6px;font-size:11px;font-weight:600;color:var(--wf-white);">15%</div>
+        </div>
+        <span style="width:60px;font-size:12px;color:var(--wf-muted, #6b7f99);">$11,250</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <span style="width:120px;font-size:12px;font-weight:600;color:var(--wf-text, #3b4f68);text-align:right;">Other</span>
+        <div style="flex:1;height:22px;background:var(--wf-canvas, #f5f7fb);border-radius:3px;overflow:hidden;" role="progressbar" aria-valuenow="13" aria-valuemin="0" aria-valuemax="100" aria-label="Other: 13%, $9,750">
+          <div style="width:13%;height:100%;background:var(--wf-muted, #6b7f99);border-radius:3px;display:flex;align-items:center;padding-left:6px;font-size:11px;font-weight:600;color:#fff;">13%</div>
+        </div>
+        <span style="width:60px;font-size:12px;color:var(--wf-muted, #6b7f99);">$9,750</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <span style="width:120px;font-size:12px;font-weight:600;color:var(--wf-text, #3b4f68);text-align:right;">Enablement</span>
+        <div style="flex:1;height:22px;background:var(--wf-canvas, #f5f7fb);border-radius:3px;overflow:hidden;" role="progressbar" aria-valuenow="12" aria-valuemin="0" aria-valuemax="100" aria-label="Enablement: 12%, $9,000">
+          <div style="width:12%;height:100%;background:var(--wf-red, #8b4553);border-radius:3px;display:flex;align-items:center;padding-left:6px;font-size:11px;font-weight:600;color:#fff;">12%</div>
+        </div>
+        <span style="width:60px;font-size:12px;color:var(--wf-muted, #6b7f99);">$9,000</span>
+      </div>
+    </div>
+    <div style="font-size:11px;color:var(--wf-muted, #6b7f99);text-align:center;margin-top:12px;">Total YTD Spend: $75,000 · Based on approved claims</div>
+    <div style="display:flex;gap:0px;font-size:0px;color:var(--wf-text, #3b4f68);flex-wrap:wrap;">
+      <!-- Legend no longer needed — labels are inline with bars -->
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+    <footer class="wf-footer">
+      &copy; 2026 Equinix · Partner Sales Manager · Internal Use Only
+    </footer>
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Dashboard for PSM to manage MDF allocations across partners, review and approve claims with SLA monitoring, and track marketing spend effectiveness by activity type.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Centralizes MDF allocation management across all partner tiers with budget tracking and visibility</li>
+<li>Streamlines MDF claim approval workflow with 30-day SLA monitoring and bulk action support</li>
+<li>Tracks marketing ROI performance by activity type to optimize future spending allocation</li>
+<li>Enables budget rebalancing and tier-based fair distribution with remaining balance monitoring</li>
+<li>Provides spend analytics and claim history for finance reconciliation and program ROI justification</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>KPI cards: Total Allocated, Spent</li>
+<li>Fund allocation table</li>
+<li>Claims queue: Partner, activity type</li>
+<li>MDF activity type horizontal bar chart: Events, Digital</li>
+<li>ROI tracker: approved claims with leads, pipeline</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>New MDF Allocation and Export Report buttons for workflow initiation</li>
+<li>Filter dropdowns for Tier, Region</li>
+<li>Approve/Reject buttons on pending claims with SLA countdown indicators</li>
+<li>Adjust button per allocation to modify partner budget amounts</li>
+<li>Pagination controls showing "Showing X of Y" records with Previous/Next navig...</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Allocation & Balance Tracking</strong>
+<ul>
+<li>Query MDF_Allocation__c records filtered by Partner Account and Fiscal_Year__c to display allocation details</li>
+<li>Calculate Spent balance by summing Approved_Amount__c from MDF_Claim__c records with Status = Approved</li>
+<li>Calculate Remaining balance as (Allocated_Amount__c - Spent_Amount__c) and format as currency and percentage</li>
+</ul></li>
+<li><strong>Claim Validation & Routing</strong>
+<ul>
+<li>Fetch pending MDF_Claim__c records and validate claimed amount does not exceed allocation Remaining__c balance</li>
+<li>Route claim approvals based on partner tier (Gold: pre/post-execution split 50/50, Silver/Bronze: post-only 100%)</li>
+<li>Validate proof of execution attached when Claimed_Amount__c &gt; $5K threshold</li>
+</ul></li>
+<li><strong>SLA Management & Escalation</strong>
+<ul>
+<li>Auto-calculate SLA expiry date as 30 days from Claim_Submission_Date__c and display countdown indicator</li>
+<li>Trigger escalation alert workflow when SLA &lt; 5 days remaining with email notification to approver</li>
+<li>Auto-archive claims if SLA exceeded 30 days without approval (set Status to Expired)</li>
+</ul></li>
+<li><strong>ROI Metrics & Performance Tracking</strong>
+<ul>
+<li>Generate ROI metrics from approved claims: sum Leads_Sourced__c, aggregate Pipeline_Value__c created from activity</li>
+<li>Calculate conversion rate from leads to pipeline using Deal_Registration__c linked records</li>
+<li>Display cost per lead metric as (Claimed_Amount__c / Leads_Sourced__c) and compare across activity types</li>
+</ul></li>
+<li><strong>Reporting & Approval Workflow</strong>
+<ul>
+<li>Submit MDF requests for approval with SLA tracking and configurable approval routing by tier</li>
+<li>Approve/Reject claims with optional comment feedback routed back to partner</li>
+<li>Auto-update Spent_Amount__c on MDF_Allocation__c when claim approved and maintain real-time balance accuracy</li>
+</ul></li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Validation &amp; Business Logic</h4>
+<ul>
+<li>MDF_Allocation__c: Partner_Account__c, Fiscal_Year__c, Allocated_Amount__c, Spent_Amount__c, Rema...</li>
+<li>MDF_Claim__c: Allocation__c, Activity_Type__c, Claimed_Amount__c, Claim_Status__c, Submission_Dat...</li>
+<li>MDF_Activity_Type__mdt: Name, Description__c, Category__c, Display_Order__c</li>
+</ul>
+<ul>
+<li>Claim amount cannot exceed remaining allocation balance</li>
+<li>Proof of execution required for amounts > $5K; auto-optional for ≤ $5K</li>
+<li>Claims must be submitted within 90 days of activity completion (Activity_Date__c + 90 days)</li>
+<li>Gold partners: 50% pre-approval, 50% post-execution; Silver/Bronze: 100% post-execution</li>
+<li>Fiscal year allocation expires if not claimed by March 31 (auto-archive)</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

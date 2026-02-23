@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Setup Workflow · Equinix PCP Partner Portal</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Salesforce Sans, sans-serif;
+      background: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-ink, #1e2a3a);
+    }
+    .container { max-width: 860px; margin: 0 auto; padding: 24px; }
+
+    /* ── Stepper header ───────────────────────────────────── */
+    .stepper-shell {
+      background: white;
+      border-bottom: 1px solid var(--wf-tint, #e0e7f0);
+      padding: 0;
+    }
+    .stepper-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 24px 24px 0;
+    }
+    .stepper-eyebrow {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--wf-muted, #6b7f99);
+      margin-bottom: 20px;
+    }
+    .stepper {
+      display: flex;
+      align-items: flex-start;
+      gap: 0;
+      margin-bottom: 0;
+    }
+    .step-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      position: relative;
+    }
+    .step-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 16px;
+      left: 50%;
+      right: -50%;
+      height: 2px;
+      background: var(--wf-tint, #e0e7f0);
+      z-index: 0;
+    }
+    .step-item.done:not(:last-child)::after  { background: #1a7a3c; }
+    .step-item.active:not(:last-child)::after{ background: var(--wf-tint, #e0e7f0); }
+
+    .step-circle {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 700;
+      border: 2px solid var(--wf-tint, #e0e7f0);
+      background: white;
+      color: var(--wf-muted, #6b7f99);
+      position: relative; z-index: 1;
+      flex-shrink: 0;
+    }
+    .step-item.done   .step-circle { background: #1a7a3c; border-color: #1a7a3c; color: white; }
+    .step-item.active .step-circle { background: var(--wf-ink, #1e2a3a); border-color: var(--wf-ink, #1e2a3a); color: white; }
+
+    .step-name {
+      font-size: 11px; font-weight: 600; margin-top: 8px; text-align: center;
+      color: var(--wf-muted, #6b7f99); max-width: 100px;
+    }
+    .step-item.done   .step-name { color: #1a7a3c; }
+    .step-item.active .step-name { color: var(--wf-ink, #1e2a3a); }
+
+    .stepper-tab-row {
+      display: flex;
+      gap: 0;
+      margin-top: 20px;
+    }
+    .stepper-tab {
+      flex: 1; text-align: center; padding: 10px 0;
+      font-size: 12px; font-weight: 600; cursor: pointer;
+      color: var(--wf-muted, #6b7f99);
+      border-bottom: 3px solid transparent;
+      transition: all 0.15s;
+      border: none; background: none;
+    }
+    .stepper-tab.active { color: var(--wf-ink, #1e2a3a); border-bottom: 3px solid var(--wf-ink, #1e2a3a); }
+    .stepper-tab.done   { color: #1a7a3c; }
+
+    /* ── Content area ─────────────────────────────────────── */
+    .step-content { display: none; }
+    .step-content.visible { display: block; }
+
+    .step-panel {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+    .step-panel-head {
+      padding: 20px 24px 18px;
+      border-bottom: 1px solid var(--wf-tint, #e0e7f0);
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+    }
+    .step-badge {
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+      padding: 3px 8px; border-radius: 3px;
+      flex-shrink: 0; margin-top: 2px;
+    }
+    .badge-done    { background: #d1fae5; color: #065f46; }
+    .badge-current { background: var(--wf-ink, #1e2a3a); color: white; }
+    .badge-pending { background: var(--wf-surface, #edf1f7); color: var(--wf-muted, #6b7f99); }
+    .step-panel-title { font-size: 18px; font-weight: 600; color: var(--wf-ink, #1e2a3a); margin-bottom: 4px; }
+    .step-panel-sub   { font-size: 13px; color: var(--wf-muted, #6b7f99); line-height: 1.4; }
+    .step-panel-body  { padding: 24px; }
+
+    /* ── Step 1 — org profile ─────────────────────────────── */
+    .done-banner {
+      background: #f0fdf4;
+      border: 1px solid #86efac;
+      border-radius: 6px;
+      padding: 16px 20px;
+      display: flex; align-items: center; gap: 14px;
+    }
+    .done-icon { font-size: 24px; flex-shrink: 0; }
+    .done-text { font-size: 13px; color: #15803d; line-height: 1.5; }
+    .done-text strong { display: block; font-size: 14px; margin-bottom: 2px; }
+    .profile-preview {
+      margin-top: 20px;
+      background: var(--wf-canvas, #f5f7fb);
+      border-radius: 6px;
+      padding: 16px 20px;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    }
+    .preview-field label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--wf-muted, #6b7f99); display: block; margin-bottom: 3px; }
+    .preview-field span  { font-size: 13px; color: var(--wf-ink, #1e2a3a); font-weight: 500; }
+
+    /* ── Step 2 — user requests ───────────────────────────── */
+    .requests-intro {
+      background: #fffbeb; border-left: 3px solid #f5a623;
+      border-radius: 0 6px 6px 0; padding: 12px 16px;
+      font-size: 12px; color: #7a5c00; margin-bottom: 20px; line-height: 1.5;
+    }
+    .request-card {
+      border: 1px solid var(--wf-tint, #e0e7f0);
+      border-radius: 6px; overflow: hidden; margin-bottom: 14px;
+    }
+    .request-card:last-of-type { margin-bottom: 0; }
+    .request-head {
+      padding: 14px 18px;
+      display: flex; align-items: center; gap: 14px;
+    }
+    .req-avatar {
+      width: 40px; height: 40px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700; color: white; flex-shrink: 0;
+    }
+    .req-name   { font-size: 14px; font-weight: 600; color: var(--wf-ink, #1e2a3a); }
+    .req-meta   { font-size: 12px; color: var(--wf-muted, #6b7f99); margin-top: 2px; }
+    .req-status {
+      margin-left: auto; font-size: 10px; font-weight: 700;
+      padding: 3px 8px; border-radius: 10px;
+      background: #fef3c7; color: #92400e;
+    }
+    .request-body { padding: 12px 18px 16px; border-top: 1px solid var(--wf-tint, #e0e7f0); background: var(--wf-canvas, #f5f7fb); }
+    .req-detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+    .req-field label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--wf-muted, #6b7f99); display: block; margin-bottom: 2px; }
+    .req-field span  { font-size: 12px; color: var(--wf-ink, #1e2a3a); }
+    .req-actions { display: flex; gap: 8px; }
+    .btn-approve {
+      font-size: 12px; font-weight: 600; padding: 7px 16px;
+      background: #1a7a3c; color: white; border-radius: 4px;
+      border: none; cursor: pointer; text-decoration: none;
+    }
+    .btn-approve:hover { background: #155c36; }
+    .btn-deny {
+      font-size: 12px; font-weight: 600; padding: 7px 16px;
+      background: white; color: var(--wf-red, #8b4555);
+      border: 1px solid var(--wf-red, #8b4555); border-radius: 4px; cursor: pointer;
+    }
+    .btn-deny:hover { background: #fdf0f2; }
+    .btn-view-detail {
+      font-size: 12px; font-weight: 500; padding: 7px 12px;
+      background: white; color: var(--wf-accent, #3d6daa);
+      border: 1px solid var(--wf-tint, #e0e7f0); border-radius: 4px; cursor: pointer;
+    }
+
+    /* ── Step 3 — training ────────────────────────────────── */
+    .training-callout {
+      background: var(--wf-surface, #edf1f7);
+      border-radius: 6px; padding: 16px 20px; margin-bottom: 20px;
+    }
+    .training-callout h3 { font-size: 13px; font-weight: 700; color: var(--wf-ink, #1e2a3a); margin-bottom: 8px; }
+    .training-callout p  { font-size: 12px; color: var(--wf-muted, #6b7f99); line-height: 1.5; }
+    .course-table { width: 100%; border-collapse: collapse; }
+    .course-table th {
+      font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--wf-muted, #6b7f99);
+      padding: 8px 12px; border-bottom: 2px solid var(--wf-tint, #e0e7f0); text-align: left;
+    }
+    .course-table td { font-size: 12px; color: var(--wf-ink, #1e2a3a); padding: 10px 12px; border-bottom: 1px solid var(--wf-tint, #e0e7f0); vertical-align: middle; }
+    .course-table tr:last-child td { border-bottom: none; }
+    .req-toggle {
+      appearance: none; width: 36px; height: 20px;
+      background: var(--wf-tint, #e0e7f0); border-radius: 10px;
+      position: relative; cursor: pointer; border: none;
+      transition: background 0.2s;
+    }
+    .req-toggle::after {
+      content: ''; position: absolute; width: 14px; height: 14px;
+      background: white; border-radius: 50%; top: 3px; left: 3px;
+      transition: left 0.2s;
+    }
+    .req-toggle.on { background: #1a7a3c; }
+    .req-toggle.on::after { left: 19px; }
+
+    /* ── Step 4 — backup admin ────────────────────────────── */
+    .backup-intro { font-size: 13px; color: var(--wf-muted, #6b7f99); margin-bottom: 20px; line-height: 1.5; }
+    .team-member-list { display: flex; flex-direction: column; gap: 8px; }
+    .team-member-row {
+      display: flex; align-items: center; gap: 14px;
+      padding: 12px 16px; border: 1px solid var(--wf-tint, #e0e7f0);
+      border-radius: 6px; cursor: pointer; transition: all 0.15s;
+    }
+    .team-member-row:hover { border-color: var(--wf-accent, #3d6daa); background: #f0f5ff; }
+    .team-member-row.selected { border-color: #1a7a3c; background: #f0fdf4; }
+    .tm-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: white; flex-shrink: 0; }
+    .tm-name   { font-size: 13px; font-weight: 600; color: var(--wf-ink, #1e2a3a); }
+    .tm-meta   { font-size: 11px; color: var(--wf-muted, #6b7f99); margin-top: 2px; }
+    .tm-radio  {
+      margin-left: auto; width: 18px; height: 18px;
+      border-radius: 50%; border: 2px solid var(--wf-tint, #e0e7f0);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .team-member-row.selected .tm-radio { border-color: #1a7a3c; background: #1a7a3c; }
+    .team-member-row.selected .tm-radio::after { content: ''; width: 8px; height: 8px; background: white; border-radius: 50%; }
+
+    /* ── Navigation footer ────────────────────────────────── */
+    .step-nav {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 0;
+    }
+    .btn-back {
+      font-size: 12px; font-weight: 600; padding: 8px 18px;
+      background: white; color: var(--wf-ink, #1e2a3a);
+      border: 1px solid var(--wf-tint, #e0e7f0); border-radius: 4px; cursor: pointer;
+    }
+    .btn-next {
+      font-size: 12px; font-weight: 600; padding: 8px 20px;
+      background: var(--wf-ink, #1e2a3a); color: white;
+      border: none; border-radius: 4px; cursor: pointer;
+    }
+    .btn-next:hover { background: #152130; }
+    .btn-finish {
+      font-size: 12px; font-weight: 600; padding: 8px 20px;
+      background: #1a7a3c; color: white;
+      border: none; border-radius: 4px; cursor: pointer;
+    }
+    .step-nav-hint { font-size: 11px; color: var(--wf-muted, #6b7f99); }
+
+    /* ── EC annotation strips ─────────────────────────────── */
+    .ec-note {
+      background: #fffbeb; border: 1px solid #f5d060; border-left: 3px solid #f5a623;
+      border-radius: 0 4px 4px 0; padding: 7px 10px; font-size: 11px; color: #7a5c00;
+      line-height: 1.4; margin-top: 16px;
+    }
+    .iag-badge { display: inline-block; background: #f97316; color: white; font-size: 9px; font-weight: 800; padding: 1px 5px; border-radius: 2px; letter-spacing: 0.5px; margin-right: 4px; }
+
+    /* ── Spec panel ───────────────────────────────────────── */
+    .spec-tab-anchor { position: fixed; right: 0; top: 50%; transform: translateY(-50%); z-index: 200; }
+    .spec-tab-btn { background: var(--wf-ink, #1e2a3a); color: white; border: none; cursor: pointer; writing-mode: vertical-rl; text-orientation: mixed; padding: 12px 8px; border-radius: 6px 0 0 6px; font-size: 11px; font-weight: 600; letter-spacing: 0.5px; }
+    .spec-panel { position: fixed; right: -440px; top: 0; bottom: 0; width: 440px; background: white; box-shadow: -4px 0 20px rgba(0,0,0,0.15); z-index: 300; overflow-y: auto; transition: right 0.3s ease; padding: 28px 24px; }
+    .spec-panel.open { right: 0; }
+    .spec-panel h3 { font-size: 13px; font-weight: 700; margin: 0 0 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .spec-panel p, .spec-panel li { font-size: 12px; line-height: 1.6; color: #3d4a5c; }
+    .spec-panel ul { padding-left: 18px; margin: 0; }
+    .spec-section { margin-bottom: 22px; padding-bottom: 20px; border-bottom: 1px solid var(--wf-tint, #e0e7f0); }
+    .spec-section:last-child { border-bottom: none; }
+    .spec-close { position: absolute; top: 12px; right: 16px; background: none; border: none; font-size: 20px; cursor: pointer; color: var(--wf-muted, #6b7f99); }
+  </style>
+</head>
+<body>
+
+<!-- Context bar -->
+<div class="page-context-bar">
+  <div style="max-width:860px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <nav class="wf-breadcrumb" aria-label="Breadcrumb" style="margin-bottom:0;">
+      <a class="wf-breadcrumb-link" href="pm-home-day0.html">Admin Home</a>
+      <span class="wf-breadcrumb-sep">›</span>
+      <span class="wf-breadcrumb-current">Admin Setup</span>
+    </nav>
+    <span class="persona-badge persona-badge--pm">PM · Jordan Reeves</span>
+  </div>
+</div>
+
+<!-- App header -->
+<header class="wf-header">
+  <div class="wf-header-logo">
+    <svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix">
+      <path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/>
+    </svg>
+  </div>
+  <div class="wf-header-title">Partner Central</div>
+  <nav class="wf-header-nav">
+    <a href="pm-home-day0.html">Dashboard</a>
+    <a href="pm-team-management.html">Team</a>
+    <a href="pm-deals-revenue.html">Deals</a>
+    <a href="pm-team-training.html">Training</a>
+    <a href="pm-resources.html">Resources</a>
+  </nav>
+  <div class="wf-header-util">
+    <button class="wf-header-avatar" aria-label="My Profile"
+      style="width:32px;height:32px;border-radius:50%;background:#1a6b40;border:2px solid rgba(255,255,255,0.35);color:white;font-size:13px;font-weight:700;cursor:pointer;">JR</button>
+  </div>
+</header>
+
+<!-- Spec tab -->
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">📋 Notes</button>
+</div>
+
+<!-- Stepper -->
+<div class="stepper-shell">
+  <div class="stepper-inner">
+    <div class="stepper-eyebrow">Admin Setup — 4 steps to get your team up and running</div>
+    <div class="stepper" role="list" aria-label="Setup steps">
+
+      <div class="step-item done" role="listitem" aria-label="Step 1: Complete org profile — Done">
+        <div class="step-circle" aria-hidden="true">✓</div>
+        <div class="step-name">Org Profile</div>
+      </div>
+
+      <div class="step-item active" id="stepper-2" role="listitem" aria-label="Step 2: Review user requests — Current">
+        <div class="step-circle" aria-hidden="true">2</div>
+        <div class="step-name">User Requests</div>
+      </div>
+
+      <div class="step-item" id="stepper-3" role="listitem" aria-label="Step 3: Set training — Pending">
+        <div class="step-circle" aria-hidden="true">3</div>
+        <div class="step-name">Training</div>
+      </div>
+
+      <div class="step-item" id="stepper-4" role="listitem" aria-label="Step 4: Backup admin — Pending">
+        <div class="step-circle" aria-hidden="true">4</div>
+        <div class="step-name">Backup Admin</div>
+      </div>
+
+    </div>
+    <div class="stepper-tab-row" role="tablist">
+      <button class="stepper-tab done"   role="tab" aria-selected="false" onclick="goTo(1)" id="tab-1">1 · Org Profile</button>
+      <button class="stepper-tab active" role="tab" aria-selected="true"  onclick="goTo(2)" id="tab-2">2 · User Requests</button>
+      <button class="stepper-tab"        role="tab" aria-selected="false" onclick="goTo(3)" id="tab-3">3 · Training</button>
+      <button class="stepper-tab"        role="tab" aria-selected="false" onclick="goTo(4)" id="tab-4">4 · Backup Admin</button>
+    </div>
+  </div>
+</div>
+
+<div class="container" style="padding-top:28px;">
+
+  <!-- ── STEP 1 — Org Profile ─────────────────────────────── -->
+  <div class="step-content" id="step-1" role="tabpanel" aria-labelledby="tab-1">
+    <div class="step-panel">
+      <div class="step-panel-head">
+        <div>
+          <div class="step-panel-title">Complete org profile</div>
+          <div class="step-panel-sub">Make sure Equinix and your PSM have accurate information about CloudBridge.</div>
+        </div>
+        <span class="step-badge badge-done">Done</span>
+      </div>
+      <div class="step-panel-body">
+        <div class="done-banner">
+          <div class="done-icon">✅</div>
+          <div class="done-text">
+            <strong>Org profile is complete.</strong>
+            Your company details are on file. You can edit any field from Org Profile in the admin menu.
+          </div>
+        </div>
+        <div class="profile-preview">
+          <div class="preview-field"><label>Company name</label><span>CloudBridge Technologies Inc.</span></div>
+          <div class="preview-field"><label>DUNS number</label><span>07-842-6154</span></div>
+          <div class="preview-field"><label>Headquarters</label><span>San Francisco, CA</span></div>
+          <div class="preview-field"><label>Primary contact</label><span>Jordan Reeves</span></div>
+          <div class="preview-field"><label>Business phone</label><span>(415) 555-0182</span></div>
+          <div class="preview-field"><label>Partnership since</label><span>February 2026</span></div>
+        </div>
+        <div class="ec-note" role="note" style="margin-top:20px;">
+          EC object: <code>Account</code> (partner account). Profile data pulled via Screen Flow embedded in this wizard step. Changes sync to Salesforce in real time. DUNS verified via Dun &amp; Bradstreet integration on Account <code>DUNS_Number__c</code>.
+        </div>
+      </div>
+    </div>
+    <div class="step-nav">
+      <span class="step-nav-hint">Step 1 of 4</span>
+      <button class="btn-next" onclick="goTo(2)">Next — Review user requests →</button>
+    </div>
+  </div>
+
+  <!-- ── STEP 2 — User Requests ───────────────────────────── -->
+  <div class="step-content visible" id="step-2" role="tabpanel" aria-labelledby="tab-2">
+    <div class="step-panel">
+      <div class="step-panel-head">
+        <div>
+          <div class="step-panel-title">Review user requests</div>
+          <div class="step-panel-sub">2 people from CloudBridge Technologies have requested access to Partner Central. Approve them to create their portal accounts.</div>
+        </div>
+        <span class="step-badge badge-current">Current</span>
+      </div>
+      <div class="step-panel-body">
+
+        <div class="requests-intro" role="note">
+          <strong>What happens when you approve:</strong> A Community User record is created in Salesforce, a welcome email with a one-time setup link is sent, and the rep lands on their Day 0 dashboard. Denying sends a rejection notice and closes the request.
+        </div>
+
+        <!-- Request: Alex Kim -->
+        <div class="request-card" id="req-alex">
+          <div class="request-head">
+            <div class="req-avatar" style="background:#3d6daa;">AK</div>
+            <div>
+              <div class="req-name">Alex Kim</div>
+              <div class="req-meta">Sales Representative · CloudBridge Technologies Inc.</div>
+            </div>
+            <span class="req-status">Awaiting review</span>
+          </div>
+          <div class="request-body">
+            <div class="req-detail-grid">
+              <div class="req-field"><label>Work email</label><span>akim@cloudbridge.com</span></div>
+              <div class="req-field"><label>Territory</label><span>Pacific Northwest</span></div>
+              <div class="req-field"><label>Manager</label><span>Jordan Reeves</span></div>
+              <div class="req-field"><label>Request date</label><span>Feb 19, 2026</span></div>
+            </div>
+            <div class="req-actions">
+              <button class="btn-approve" onclick="approveRequest('alex')">Approve →</button>
+              <button class="btn-deny">Deny</button>
+              <button class="btn-view-detail">View full request</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Request: Sam Chen -->
+        <div class="request-card" id="req-sam">
+          <div class="request-head">
+            <div class="req-avatar" style="background:#8b4555;">SC</div>
+            <div>
+              <div class="req-name">Sam Chen</div>
+              <div class="req-meta">Sales Representative · CloudBridge Technologies Inc.</div>
+            </div>
+            <span class="req-status">Awaiting review</span>
+          </div>
+          <div class="request-body">
+            <div class="req-detail-grid">
+              <div class="req-field"><label>Work email</label><span>schen@cloudbridge.com</span></div>
+              <div class="req-field"><label>Territory</label><span>Bay Area / SoCal</span></div>
+              <div class="req-field"><label>Manager</label><span>Jordan Reeves</span></div>
+              <div class="req-field"><label>Request date</label><span>Feb 19, 2026</span></div>
+            </div>
+            <div class="req-actions">
+              <button class="btn-approve" onclick="approveRequest('sam')">Approve →</button>
+              <button class="btn-deny">Deny</button>
+              <button class="btn-view-detail">View full request</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="ec-note" role="note">
+          <span class="iag-badge" title="IAG prompt on first load of this step">IAG</span>
+          Prompt: <em>"Alex Kim and Sam Chen are waiting — approve them to send their portal invites."</em>
+          Approval triggers a Salesforce Flow: creates <code>Community User</code>, links to <code>Contact</code>,
+          sets <code>PartnerUserRequest__c.Status = Approved</code>, enqueues the PCP-REP-APPROVE email.
+          Sets <code>Admin_GS_Requests__c = true</code> on the admin Contact when all requests are resolved.
+        </div>
+      </div>
+    </div>
+    <div class="step-nav">
+      <button class="btn-back" onclick="goTo(1)">← Back</button>
+      <span class="step-nav-hint">Step 2 of 4</span>
+      <button class="btn-next" onclick="goTo(3)">Next — Set training →</button>
+    </div>
+  </div>
+
+  <!-- ── STEP 3 — Training ─────────────────────────────────── -->
+  <div class="step-content" id="step-3" role="tabpanel" aria-labelledby="tab-3">
+    <div class="step-panel">
+      <div class="step-panel-head">
+        <div>
+          <div class="step-panel-title">Set required training</div>
+          <div class="step-panel-sub">Mark which courses your reps must complete before they can submit deal registrations. Required courses are enforced at time of deal submission.</div>
+        </div>
+        <span class="step-badge badge-pending">Pending</span>
+      </div>
+      <div class="step-panel-body">
+
+        <div class="training-callout">
+          <h3>How required training works</h3>
+          <p>Courses marked "Required" are synced nightly from SumTotal to Salesforce. A validation rule on <code>Deal_Registration__c</code> blocks deal submission if a rep has any required course with <code>Status__c ≠ Completed</code>. Elective courses are visible but not blocking.</p>
+        </div>
+
+        <table class="course-table">
+          <thead>
+            <tr>
+              <th>Course</th>
+              <th>Duration</th>
+              <th>Required?</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div style="font-weight:600;">Equinix Partner Foundations</div>
+                <div style="font-size:11px;color:var(--wf-muted,#6b7f99);">Products, pricing, positioning basics</div>
+              </td>
+              <td>45 min</td>
+              <td><button class="req-toggle on" onclick="this.classList.toggle('on')" aria-label="Toggle required: Equinix Partner Foundations" title="Required"></button></td>
+            </tr>
+            <tr>
+              <td>
+                <div style="font-weight:600;">Colocation Sales Certification</div>
+                <div style="font-size:11px;color:var(--wf-muted,#6b7f99);">Technical and commercial colo knowledge</div>
+              </td>
+              <td>2 hr</td>
+              <td><button class="req-toggle on" onclick="this.classList.toggle('on')" aria-label="Toggle required: Colocation Sales Certification" title="Required"></button></td>
+            </tr>
+            <tr>
+              <td>
+                <div style="font-weight:600;">Deal Registration Best Practices</div>
+                <div style="font-size:11px;color:var(--wf-muted,#6b7f99);">How to register and protect deals</div>
+              </td>
+              <td>30 min</td>
+              <td><button class="req-toggle on" onclick="this.classList.toggle('on')" aria-label="Toggle required: Deal Registration" title="Required"></button></td>
+            </tr>
+            <tr>
+              <td>
+                <div style="font-weight:600;">Equinix Fabric Overview</div>
+                <div style="font-size:11px;color:var(--wf-muted,#6b7f99);">Interconnection and Fabric fundamentals</div>
+              </td>
+              <td>1 hr</td>
+              <td><button class="req-toggle" onclick="this.classList.toggle('on')" aria-label="Toggle required: Fabric Overview" title="Elective"></button></td>
+            </tr>
+            <tr>
+              <td>
+                <div style="font-weight:600;">Partner Portal Navigation</div>
+                <div style="font-size:11px;color:var(--wf-muted,#6b7f99);">Getting around Partner Central</div>
+              </td>
+              <td>20 min</td>
+              <td><button class="req-toggle" onclick="this.classList.toggle('on')" aria-label="Toggle required: Portal Navigation" title="Elective"></button></td>
+            </tr>
+            <tr>
+              <td>
+                <div style="font-weight:600;">Equinix Metal for Partners</div>
+                <div style="font-size:11px;color:var(--wf-muted,#6b7f99);">Bare-metal infrastructure overview</div>
+              </td>
+              <td>45 min</td>
+              <td><button class="req-toggle" onclick="this.classList.toggle('on')" aria-label="Toggle required: Metal for Partners" title="Elective"></button></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="ec-note" role="note">
+          Toggles write to <code>Partner_Training__c.Required__c</code> (boolean) via LWC calling Apex.
+          SumTotal is the system of record — changes sync nightly via scheduled Apex job.
+          Sets <code>Admin_GS_Training__c = true</code> on the admin Contact when at least one course is marked required and saved.
+        </div>
+      </div>
+    </div>
+    <div class="step-nav">
+      <button class="btn-back" onclick="goTo(2)">← Back</button>
+      <span class="step-nav-hint">Step 3 of 4</span>
+      <button class="btn-next" onclick="goTo(4)">Next — Backup admin →</button>
+    </div>
+  </div>
+
+  <!-- ── STEP 4 — Backup Admin ─────────────────────────────── -->
+  <div class="step-content" id="step-4" role="tabpanel" aria-labelledby="tab-4">
+    <div class="step-panel">
+      <div class="step-panel-head">
+        <div>
+          <div class="step-panel-title">Designate a backup admin</div>
+          <div class="step-panel-sub">Choose someone who can approve requests and manage the team if you're unavailable. They get the same admin access as you.</div>
+        </div>
+        <span class="step-badge badge-pending">Pending</span>
+      </div>
+      <div class="step-panel-body">
+        <p class="backup-intro">
+          Your backup admin receives portal admin permissions and will appear as a secondary admin to Equinix's Partner Success team. They'll receive the same notifications and can approve user requests on your behalf.
+        </p>
+
+        <div class="team-member-list" role="radiogroup" aria-label="Select backup admin">
+
+          <div class="team-member-row" onclick="selectBackup(this)" role="radio" aria-checked="false" tabindex="0">
+            <div class="tm-avatar" style="background:#3d6daa;">AK</div>
+            <div>
+              <div class="tm-name">Alex Kim</div>
+              <div class="tm-meta">Sales Representative · Pacific NW</div>
+            </div>
+            <div class="tm-radio" aria-hidden="true"></div>
+          </div>
+
+          <div class="team-member-row" onclick="selectBackup(this)" role="radio" aria-checked="false" tabindex="0">
+            <div class="tm-avatar" style="background:#8b4555;">SC</div>
+            <div>
+              <div class="tm-name">Sam Chen</div>
+              <div class="tm-meta">Sales Representative · Bay Area / SoCal</div>
+            </div>
+            <div class="tm-radio" aria-hidden="true"></div>
+          </div>
+
+          <div class="team-member-row" onclick="selectBackup(this)" role="radio" aria-checked="false" tabindex="0">
+            <div class="tm-avatar" style="background:#6b7f99;">KL</div>
+            <div>
+              <div class="tm-name">Kelly Liu</div>
+              <div class="tm-meta">Sales Manager · Pacific Region</div>
+            </div>
+            <div class="tm-radio" aria-hidden="true"></div>
+          </div>
+
+        </div>
+
+        <div id="backup-none-selected" style="margin-top:12px;font-size:12px;color:var(--wf-muted,#6b7f99);">
+          Select a team member above to designate as backup admin.
+        </div>
+
+        <div class="ec-note" role="note" style="margin-top:20px;">
+          Sets <code>Contact.Is_Backup_Admin__c = true</code> on the selected Contact and links via <code>Account.Backup_Admin__c</code> lookup. Backup admin is notified via email. Sets <code>Admin_GS_Backup__c = true</code> → triggers <code>Admin_GS_Complete__c = true</code> if all other steps are done → switches home page to Day N view on next login.
+        </div>
+      </div>
+    </div>
+    <div class="step-nav">
+      <button class="btn-back" onclick="goTo(3)">← Back</button>
+      <span class="step-nav-hint">Step 4 of 4</span>
+      <button class="btn-finish" onclick="finishSetup()">Finish setup — Go to dashboard →</button>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<!-- Spec panel -->
+<div class="spec-panel" id="spec-panel" role="dialog" aria-modal="false" aria-label="Design notes">
+  <button class="spec-close" onclick="toggleSpec()" aria-label="Close notes">×</button>
+  <h2 style="font-size:16px;font-weight:700;margin-bottom:20px;padding-right:28px;">Admin Setup Workflow · Design Notes</h2>
+
+  <div class="spec-section">
+    <h3>Purpose and placement</h3>
+    <p>This wizard is the step-by-step guided companion to the Day 0 Dashboard summary card. It's linked from every "Continue setup" or "Open setup wizard" CTA on the Day 0 dashboard. The wizard opens at the current incomplete step (determined by the admin's Contact boolean fields). After all 4 steps are complete, <code>Admin_GS_Complete__c</code> flips to true and the user is redirected to the Day N dashboard.</p>
+  </div>
+
+  <div class="spec-section">
+    <h3>EC implementation</h3>
+    <p>The wizard is a Salesforce Screen Flow embedded as an EC component. Each step is a Screen within the Flow. Navigation (Back/Next) uses standard Flow navigation. Step state is read from Contact boolean fields at load time. On completion, a Flow invokes Apex to set <code>Admin_GS_Complete__c = true</code> and redirects to the dashboard via a Navigate action.</p>
+  </div>
+
+  <div class="spec-section">
+    <h3>Step SF fields</h3>
+    <ul>
+      <li><strong>Step 1:</strong> <code>Admin_GS_Profile__c</code> — set when Account profile fields pass completeness check</li>
+      <li><strong>Step 2:</strong> <code>Admin_GS_Requests__c</code> — set when all open <code>PartnerUserRequest__c</code> records are resolved</li>
+      <li><strong>Step 3:</strong> <code>Admin_GS_Training__c</code> — set when at least 1 course has <code>Required__c = true</code></li>
+      <li><strong>Step 4:</strong> <code>Admin_GS_Backup__c</code> — set when <code>Account.Backup_Admin__c</code> is populated</li>
+      <li><strong>All done:</strong> <code>Admin_GS_Complete__c</code> — formula OR Apex trigger fires when all 4 are true</li>
+    </ul>
+  </div>
+
+  <div class="spec-section">
+    <h3>Accessibility</h3>
+    <ul>
+      <li>Stepper uses <code>role="list"</code> / <code>role="listitem"</code> with <code>aria-label</code> on each step</li>
+      <li>Tab row uses <code>role="tablist"</code> / <code>role="tab"</code> / <code>aria-selected</code></li>
+      <li>Content panels use <code>role="tabpanel"</code> + <code>aria-labelledby</code></li>
+      <li>Training toggles are <code>&lt;button&gt;</code> elements with <code>aria-label</code> and <code>title</code></li>
+      <li>Backup admin list uses <code>role="radiogroup"</code> + <code>role="radio"</code> + <code>aria-checked</code></li>
+      <li>Step indicators convey state via text label, not color alone</li>
+    </ul>
+  </div>
+
+  <div class="spec-section">
+    <h3>Companion pages</h3>
+    <ul>
+      <li><a href="pm-home-day0.html">pm-home-day0.html</a> — Admin Home Day 0 (dashboard)</li>
+      <li><a href="pm-home-dashboard.html">pm-home-dashboard.html</a> — Admin Home Day N</li>
+      <li><a href="pm-user-request-review.html">pm-user-request-review.html</a> — Standalone request review page</li>
+    </ul>
+  </div>
+</div>
+
+<script>
+  var currentStep = 2;
+
+  function goTo(n) {
+    // Hide all
+    document.querySelectorAll('.step-content').forEach(function(el) { el.classList.remove('visible'); });
+    document.querySelectorAll('.stepper-tab').forEach(function(el) { el.classList.remove('active'); el.setAttribute('aria-selected', 'false'); });
+
+    // Show target
+    document.getElementById('step-' + n).classList.add('visible');
+    var tab = document.getElementById('tab-' + n);
+    tab.classList.add('active');
+    tab.setAttribute('aria-selected', 'true');
+    currentStep = n;
+
+    // Scroll to top of container
+    window.scrollTo({ top: 120, behavior: 'smooth' });
+  }
+
+  function approveRequest(who) {
+    var id = who === 'alex' ? 'req-alex' : 'req-sam';
+    var card = document.getElementById(id);
+    var statusBadge = card.querySelector('.req-status');
+    var actions = card.querySelector('.req-actions');
+    statusBadge.textContent = 'Approved';
+    statusBadge.style.background = '#d1fae5';
+    statusBadge.style.color = '#065f46';
+    actions.innerHTML = '<span style="font-size:12px;color:#1a7a3c;font-weight:600;">✓ Approved — welcome email sent</span>';
+    card.style.opacity = '0.7';
+  }
+
+  function selectBackup(row) {
+    document.querySelectorAll('.team-member-row').forEach(function(r) {
+      r.classList.remove('selected');
+      r.setAttribute('aria-checked', 'false');
+    });
+    row.classList.add('selected');
+    row.setAttribute('aria-checked', 'true');
+    document.getElementById('backup-none-selected').style.display = 'none';
+  }
+
+  function finishSetup() {
+    window.location.href = 'pm-home-dashboard.html';
+  }
+
+  function toggleSpec() {
+    var panel  = document.getElementById('spec-panel');
+    var toggle = document.getElementById('spec-toggle');
+    var open   = panel.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', open);
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lead Referral Partner Application — Partner Central</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); }
+    .wizard-shell { max-width: 780px; margin: 0 auto; padding: 40px 24px 80px; }
+    .wizard-intro { margin-bottom: 28px; }
+    .wizard-intro h1 { font-size: 22px; font-weight: 700; margin: 0 0 6px; }
+    .wizard-intro p  { font-size: 14px; color: var(--wf-muted, #6b7f99); margin: 0; }
+    .stepper { display: flex; align-items: flex-start; margin-bottom: 32px; }
+    .stepper-step { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; }
+    .stepper-step:not(:last-child)::after { content: ""; position: absolute; top: 16px; left: 50%; width: 100%; height: 2px; background: var(--wf-line, #b0bdd0); z-index: 0; }
+    .stepper-step.completed::after { background: var(--wf-accent, #3d6daa); }
+    .step-circle { width: 32px; height: 32px; border-radius: 50%; background: var(--wf-tint, #dce4ef); border: 2px solid var(--wf-line, #b0bdd0); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: var(--wf-muted, #6b7f99); z-index: 1; position: relative; transition: all 0.2s; }
+    .stepper-step.active    .step-circle { background: var(--wf-accent, #3d6daa); border-color: var(--wf-accent, #3d6daa); color: white; }
+    .stepper-step.completed .step-circle { background: var(--wf-accent, #3d6daa); border-color: var(--wf-accent, #3d6daa); color: white; }
+    .step-label { font-size: 11px; font-weight: 600; color: var(--wf-muted, #6b7f99); margin-top: 6px; text-align: center; line-height: 1.3; }
+    .stepper-step.active    .step-label { color: var(--wf-accent, #3d6daa); }
+    .stepper-step.completed .step-label { color: var(--wf-ink, #1e2a3a); }
+    .step-section { display: none; }
+    .step-section.active { display: block; }
+    .card { background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.10); padding: 28px 32px; margin-bottom: 16px; }
+    .card-title { font-size: 15px; font-weight: 700; color: var(--wf-ink, #1e2a3a); margin: 0 0 4px; }
+    .card-desc  { font-size: 13px; color: var(--wf-muted, #6b7f99); margin: 0 0 20px; line-height: 1.5; }
+
+    /* ── Type confirmation banner ──────────────────────────────────── */
+    .type-confirm { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; background: var(--wf-tint, #dce4ef); border: 2px solid var(--wf-accent, #3d6daa); border-radius: 8px; margin-bottom: 20px; }
+    .type-confirm-left { display: flex; align-items: center; gap: 10px; }
+    .type-confirm-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--wf-accent, #3d6daa); box-shadow: inset 0 0 0 3px white, 0 0 0 2px var(--wf-accent, #3d6daa); flex-shrink: 0; }
+    .type-confirm-label { font-size: 13px; font-weight: 700; color: var(--wf-ink, #1e2a3a); }
+    .type-confirm-sub { font-size: 12px; color: var(--wf-muted, #6b7f99); }
+    .type-confirm-change { font-size: 12px; color: var(--wf-accent, #3d6daa); font-weight: 600; text-decoration: none; white-space: nowrap; }
+    .type-confirm-change:hover { text-decoration: underline; }
+
+    /* ── Buttons ───────────────────────────────────────────────────── */
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: 6px; font-size: 13px; font-weight: 600; border: none; cursor: pointer; transition: background 0.15s; font-family: inherit; }
+    .btn-primary   { background: var(--wf-accent, #3d6daa); color: white; }
+    .btn-primary:hover  { background: var(--wf-ink, #1e2a3a); }
+    .btn-secondary { background: var(--wf-tint, #dce4ef); color: var(--wf-ink, #1e2a3a); }
+    .btn-secondary:hover { background: var(--wf-line, #b0bdd0); }
+
+    /* ── Form fields ───────────────────────────────────────────────── */
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .form-grid.full  { grid-template-columns: 1fr; }
+    .form-group { display: flex; flex-direction: column; gap: 5px; }
+    .form-group label { font-size: 12px; font-weight: 600; color: var(--wf-ink, #1e2a3a); }
+    .req { color: var(--wf-red, #8b4553); }
+    .form-group input, .form-group select, .form-group textarea { padding: 9px 12px; border: 1px solid var(--wf-line, #b0bdd0); border-radius: 6px; font-size: 13px; font-family: inherit; color: var(--wf-ink, #1e2a3a); background: white; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--wf-accent, #3d6daa); box-shadow: 0 0 0 3px rgba(61,109,170,0.12); }
+    .form-group textarea { resize: vertical; min-height: 80px; }
+    .field-hint { font-size: 11px; color: var(--wf-muted, #6b7f99); }
+    .divider { border: none; border-top: 1px solid var(--wf-line, #b0bdd0); margin: 24px 0; }
+    .field-label-group { margin-bottom: 16px; }
+    .fgl-label { font-size: 12px; font-weight: 700; color: var(--wf-ink, #1e2a3a); margin-bottom: 6px; display: block; }
+    .fgl-hint  { font-size: 11px; color: var(--wf-muted, #6b7f99); margin-bottom: 10px; display: block; }
+
+    /* ── Checkbox / radio grids ────────────────────────────────────── */
+    .checkbox-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 8px; }
+    .checkbox-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+    .checkbox-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+    .cg-item { display: flex; align-items: flex-start; gap: 9px; padding: 10px 14px; border: 1px solid var(--wf-line, #b0bdd0); border-radius: 6px; cursor: pointer; transition: all 0.15s; font-size: 13px; color: var(--wf-ink, #1e2a3a); background: white; user-select: none; }
+    .cg-item:hover { border-color: var(--wf-accent, #3d6daa); }
+    .cg-item input[type="checkbox"] { width: 15px; height: 15px; flex-shrink: 0; accent-color: var(--wf-accent, #3d6daa); cursor: pointer; margin-top: 1px; }
+    .cg-item:has(input:checked) { border-color: var(--wf-accent, #3d6daa); background: var(--wf-tint, #dce4ef); }
+    .cg-item small { display: block; font-size: 11px; color: var(--wf-muted, #6b7f99); margin-top: 2px; }
+    .radio-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 8px; }
+    .rg-item { display: flex; align-items: center; gap: 9px; padding: 10px 14px; border: 1px solid var(--wf-line, #b0bdd0); border-radius: 6px; cursor: pointer; transition: all 0.15s; font-size: 13px; color: var(--wf-ink, #1e2a3a); background: white; user-select: none; }
+    .rg-item:hover { border-color: var(--wf-accent, #3d6daa); }
+    .rg-item input[type="radio"] { width: 15px; height: 15px; flex-shrink: 0; accent-color: var(--wf-accent, #3d6daa); cursor: pointer; }
+    .rg-item:has(input:checked) { border-color: var(--wf-accent, #3d6daa); background: var(--wf-tint, #dce4ef); }
+
+    /* ── Legal / submission ────────────────────────────────────────── */
+    .legal-text { font-size: 13px; line-height: 1.6; margin-bottom: 16px; }
+    .legal-text a { color: var(--wf-accent, #3d6daa); }
+    .check-item { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; margin-bottom: 10px; cursor: pointer; }
+    .check-item input[type="checkbox"] { margin-top: 2px; flex-shrink: 0; accent-color: var(--wf-accent, #3d6daa); width: 15px; height: 15px; }
+    .recaptcha-box { border: 1px solid var(--wf-line, #b0bdd0); border-radius: 4px; padding: 14px 16px; display: flex; align-items: center; gap: 12px; margin: 20px 0; background: var(--wf-canvas, #f5f7fb); max-width: 304px; }
+    .recap-check { width: 24px; height: 24px; border: 2px solid var(--wf-line, #b0bdd0); border-radius: 3px; flex-shrink: 0; background: white; }
+    .recap-logo  { margin-left: auto; font-size: 9px; color: var(--wf-muted, #6b7f99); text-align: center; }
+
+    /* ── Step nav ──────────────────────────────────────────────────── */
+    .step-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 24px; }
+    .step-nav-right { display: flex; align-items: center; gap: 12px; }
+    .step-of { font-size: 12px; color: var(--wf-muted, #6b7f99); }
+
+    /* ── Review ────────────────────────────────────────────────────── */
+    .review-section { margin-bottom: 20px; }
+    .review-section-hd { display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; border-bottom: 1px solid var(--wf-line, #b0bdd0); margin-bottom: 8px; }
+    .review-section-hd h4 { font-size: 13px; font-weight: 700; color: var(--wf-ink, #1e2a3a); margin: 0; }
+    .review-edit { font-size: 12px; color: var(--wf-accent, #3d6daa); font-weight: 600; background: none; border: none; cursor: pointer; font-family: inherit; padding: 0; }
+    .review-edit:hover { text-decoration: underline; }
+    .review-row { display: flex; gap: 16px; padding: 4px 0; font-size: 13px; line-height: 1.5; }
+    .review-label { color: var(--wf-muted, #6b7f99); width: 150px; flex-shrink: 0; font-weight: 500; }
+    .review-value { color: var(--wf-ink, #1e2a3a); font-weight: 500; flex: 1; }
+    .review-value.empty { color: var(--wf-muted, #6b7f99); font-style: italic; font-weight: 400; }
+    .ptype-badge { display: inline-block; font-size: 12px; font-weight: 600; background: var(--wf-tint, #dce4ef); color: var(--wf-ink, #1e2a3a); border-radius: 10px; padding: 2px 10px; }
+
+    /* ── Context bar ───────────────────────────────────────────────── */
+    .page-context-bar { background: var(--wf-tint, #dce4ef); border-bottom: 1px solid var(--wf-line, #b0bdd0); padding: 6px 24px; display: flex; justify-content: space-between; align-items: center; }
+    .persona-badge { font-size: 11px; font-weight: 600; color: var(--wf-muted, #6b7f99); background: white; border: 1px solid var(--wf-line, #b0bdd0); padding: 3px 10px; border-radius: 12px; }
+
+    @media (max-width: 640px) { .form-grid { grid-template-columns: 1fr; } .checkbox-grid.cols-3 { grid-template-columns: 1fr 1fr; } }
+  </style>
+</head>
+<body>
+
+<header class="wf-header">
+  <div class="wf-header-logo"><svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix"><path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/></svg></div>
+  <div class="wf-header-title">Partner Central</div>
+  <nav class="wf-header-nav">
+    <a href="#" class="active">Partner Application</a>
+  </nav>
+  <div class="wf-header-util" style="font-size:11px; color:rgba(255,255,255,.5);">
+    Path: Lead Referral &nbsp;|&nbsp; <a href="onboarding-apply-form.html" style="color:rgba(255,255,255,.7); text-decoration:none; font-weight:600;">→ Reseller path</a>
+  </div>
+</header>
+
+<div class="page-context-bar">
+  <span class="persona-badge">Persona: New Partner Applicant (pre-auth) — Lead Referral</span>
+  <span style="font-size:11px; color:var(--wf-muted,#6b7f99);">Lead Referral Partner Application</span>
+</div>
+
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+<main>
+<div class="wizard-shell">
+
+  <div class="wizard-intro">
+    <h1>Lead Referral Partner Application</h1>
+    <p>About 5 minutes. You'll receive a confirmation email once your application is reviewed (3–5 business days).</p>
+  </div>
+
+  <!-- Type confirmation + start -->
+  <section class="step-section active" id="step-0">
+    <div class="card">
+      <p class="card-title">You're applying as a Lead Referral Partner</p>
+      <p class="card-desc">You refer qualified opportunities to Equinix. Equinix owns the contract, billing, and delivery — you earn referral fees and get access to the partner portal for lead tracking and reporting.</p>
+      <div class="type-confirm" aria-label="Selected partner type: Lead Referral Partner">
+        <div class="type-confirm-left">
+          <div class="type-confirm-dot" aria-hidden="true"></div>
+          <div>
+            <div class="type-confirm-label">Lead Referral Partner</div>
+            <div class="type-confirm-sub">You refer · Equinix sells · Lighter setup</div>
+          </div>
+        </div>
+        <a class="type-confirm-change" href="onboarding-partner-type.html">← Change type</a>
+      </div>
+    </div>
+    <div class="step-nav">
+      <span></span>
+      <div class="step-nav-right">
+        <button class="btn btn-primary" onclick="goToStep(1)" type="button">Start application →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stepper (hidden on step 0) -->
+  <nav class="stepper" id="main-stepper" aria-label="Application steps" style="display:none">
+    <div class="stepper-step" id="sn-1"><div class="step-circle">1</div><div class="step-label">Company &amp; You</div></div>
+    <div class="stepper-step" id="sn-2"><div class="step-circle">2</div><div class="step-label">Your Markets</div></div>
+    <div class="stepper-step" id="sn-3"><div class="step-circle">3</div><div class="step-label">Your Business</div></div>
+    <div class="stepper-step" id="sn-4"><div class="step-circle">4</div><div class="step-label">Review</div></div>
+  </nav>
+
+  <!-- STEP 1 — Company & You -->
+  <section class="step-section" id="step-1">
+
+    <div class="card">
+      <p class="card-title">Company information</p>
+      <p class="card-desc">Tell us about your organization.</p>
+      <div class="form-grid" style="margin-bottom:14px;">
+        <div class="form-group">
+          <label for="co-name">Company name <span class="req">*</span></label>
+          <input type="text" id="co-name" autocomplete="organization">
+        </div>
+        <div class="form-group">
+          <label for="co-website">Company website <span class="req">*</span></label>
+          <input type="text" id="co-website" placeholder="https://">
+        </div>
+      </div>
+      <div class="form-grid" style="margin-bottom:14px;">
+        <div class="form-group">
+          <label for="co-country">Country <span class="req">*</span></label>
+          <select id="co-country">
+            <option value="">Select country…</option>
+            <option>United States</option>
+            <option>United Kingdom</option>
+            <option>Germany</option>
+            <option>France</option>
+            <option>Japan</option>
+            <option>Australia</option>
+            <option>Singapore</option>
+            <option>Canada</option>
+            <option>Netherlands</option>
+            <option>Brazil</option>
+            <option>India</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="co-city">City</label>
+          <input type="text" id="co-city" autocomplete="address-level2">
+        </div>
+      </div>
+      <div class="form-grid full">
+        <div class="form-group">
+          <label for="co-street">Street address</label>
+          <input type="text" id="co-street" autocomplete="street-address">
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p class="card-title">Your information</p>
+      <p class="card-desc">You'll be the primary contact for your organization's partner account.</p>
+      <div class="form-grid" style="margin-bottom:14px;">
+        <div class="form-group">
+          <label for="lang">Preferred language</label>
+          <select id="lang" style="max-width:260px;">
+            <option>English</option><option>French</option><option>German</option>
+            <option>Spanish</option><option>Japanese</option><option>Portuguese (Brazil)</option>
+            <option>Simplified Chinese</option><option>Korean</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-grid" style="margin-bottom:14px;">
+        <div class="form-group"><label for="first-name">First name <span class="req">*</span></label><input type="text" id="first-name" autocomplete="given-name"></div>
+        <div class="form-group"><label for="last-name">Last name <span class="req">*</span></label><input type="text" id="last-name" autocomplete="family-name"></div>
+      </div>
+      <div class="form-grid full" style="margin-bottom:14px;">
+        <div class="form-group"><label for="job-title">Job title <span class="req">*</span></label><input type="text" id="job-title" autocomplete="organization-title"></div>
+      </div>
+      <div class="form-grid" style="margin-bottom:14px;">
+        <div class="form-group">
+          <label for="email">Business email <span class="req">*</span></label>
+          <input type="email" id="email" autocomplete="email">
+          <span class="field-hint">Use your work email address.</span>
+        </div>
+        <div class="form-group"><label for="phone">Phone <span class="req">*</span></label><input type="tel" id="phone" autocomplete="tel"></div>
+      </div>
+      <div class="form-grid">
+        <div class="form-group"><label for="mobile">Mobile <span style="font-weight:400;color:var(--wf-muted,#6b7f99)">(optional)</span></label><input type="tel" id="mobile" autocomplete="tel"></div>
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn btn-secondary" onclick="goToStep(0)" type="button">← Back</button>
+      <div class="step-nav-right">
+        <span class="step-of">Step 1 of 4</span>
+        <button class="btn btn-primary" onclick="goToStep(2)" type="button">Next: Your markets →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 2 — Your Markets -->
+  <section class="step-section" id="step-2">
+    <div class="card">
+      <p class="card-title">Your markets</p>
+      <p class="card-desc">Helps us configure the right program track. Select all that apply.</p>
+
+      <div class="field-label-group">
+        <label class="fgl-label" id="v-label">Target vertical markets <span class="req">*</span></label>
+        <div class="checkbox-grid" role="group" aria-labelledby="v-label">
+          <label class="cg-item"><input type="checkbox" name="vertical" value="cloud-it"> Cloud &amp; IT Services</label>
+          <label class="cg-item"><input type="checkbox" name="vertical" value="content"> Content &amp; Digital Media</label>
+          <label class="cg-item"><input type="checkbox" name="vertical" value="enterprise"> Enterprise</label>
+          <label class="cg-item"><input type="checkbox" name="vertical" value="financial"> Financial Services</label>
+          <label class="cg-item"><input type="checkbox" name="vertical" value="network"> Network</label>
+          <label class="cg-item"><input type="checkbox" name="vertical" value="govt"> Government &amp; Public Sector</label>
+          <label class="cg-item"><input type="checkbox" name="vertical" value="healthcare"> Healthcare &amp; Life Sciences</label>
+          <label class="cg-item"><input type="checkbox" name="vertical" value="other"> Other</label>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="field-label-group">
+        <label class="fgl-label" id="r-label">Regions you serve <span class="req">*</span></label>
+        <div class="checkbox-grid cols-3" role="group" aria-labelledby="r-label">
+          <label class="cg-item"><input type="checkbox" name="region" value="amer-n"> Americas — North</label>
+          <label class="cg-item"><input type="checkbox" name="region" value="amer-s"> Americas — South</label>
+          <label class="cg-item"><input type="checkbox" name="region" value="emea"> Europe, Middle East &amp; Africa</label>
+          <label class="cg-item"><input type="checkbox" name="region" value="apac"> Asia Pacific</label>
+          <label class="cg-item"><input type="checkbox" name="region" value="japan"> Japan</label>
+          <label class="cg-item"><input type="checkbox" name="region" value="china"> China</label>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <div class="field-label-group">
+        <label class="fgl-label" id="cs-label">Target customer size</label>
+        <div class="checkbox-grid cols-3" role="group" aria-labelledby="cs-label">
+          <label class="cg-item"><input type="checkbox" name="custsize" value="smb"><span>SMB<small>Under 500 employees</small></span></label>
+          <label class="cg-item"><input type="checkbox" name="custsize" value="mid"><span>Mid-market<small>500–5,000 employees</small></span></label>
+          <label class="cg-item"><input type="checkbox" name="custsize" value="ent"><span>Enterprise<small>5,000+ employees</small></span></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn btn-secondary" onclick="goToStep(1)" type="button">← Back</button>
+      <div class="step-nav-right">
+        <span class="step-of">Step 2 of 4</span>
+        <button class="btn btn-primary" onclick="goToStep(3)" type="button">Next: Your business →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 3 — Your Business (Lead Referral–specific) -->
+  <section class="step-section" id="step-3">
+    <div class="card">
+      <p class="card-title">Your business — Lead Referral Partner</p>
+      <p class="card-desc">Helps us align your account to the right program track and configure your portal for lead submission.</p>
+
+      <!-- Business type -->
+      <div class="form-grid" style="margin-bottom:20px;">
+        <div class="form-group">
+          <label for="biz-type">Business type <span class="req">*</span></label>
+          <select id="biz-type">
+            <option value="">Select type…</option>
+            <option>IT Reseller / VAR</option>
+            <option>Independent Consultant</option>
+            <option>Independent Software Vendor (ISV)</option>
+            <option>Managed Service Provider (MSP)</option>
+            <option>Systems Integrator</option>
+            <option>Telecom Agent / Broker</option>
+            <option>Technology Alliance Partner</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="years-in-business">Years in business</label>
+          <select id="years-in-business">
+            <option value="">Select…</option>
+            <option>Less than 1 year</option>
+            <option>1–3 years</option>
+            <option>3–5 years</option>
+            <option>5–10 years</option>
+            <option>10–20 years</option>
+            <option>20+ years</option>
+          </select>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <!-- Lead generation -->
+      <div class="field-label-group">
+        <label class="fgl-label" id="lg-l">How do you typically generate leads? <span class="req">*</span></label>
+        <div class="checkbox-grid" role="group" aria-labelledby="lg-l">
+          <label class="cg-item"><input type="checkbox" name="leadgen" value="existing"> Existing customer relationships</label>
+          <label class="cg-item"><input type="checkbox" name="leadgen" value="events"> Events &amp; conferences</label>
+          <label class="cg-item"><input type="checkbox" name="leadgen" value="digital"> Digital &amp; content marketing</label>
+          <label class="cg-item"><input type="checkbox" name="leadgen" value="field"> Field sales &amp; account management</label>
+          <label class="cg-item"><input type="checkbox" name="leadgen" value="ecosystem"> Vendor / ecosystem partnerships</label>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <!-- Typical deal value -->
+      <div class="field-label-group">
+        <label class="fgl-label" id="dv-l">Typical deal value you refer <span class="req">*</span></label>
+        <div class="radio-grid" role="radiogroup" aria-labelledby="dv-l">
+          <label class="rg-item"><input type="radio" name="dealval" value="sub-25k"> Under $25K/yr</label>
+          <label class="rg-item"><input type="radio" name="dealval" value="25k-100k"> $25K–$100K/yr</label>
+          <label class="rg-item"><input type="radio" name="dealval" value="100k-500k"> $100K–$500K/yr</label>
+          <label class="rg-item"><input type="radio" name="dealval" value="500k+"> $500K+/yr</label>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <!-- Estimated annual referrals -->
+      <div class="field-label-group">
+        <label class="fgl-label" id="ar-l">Estimated referrals per year</label>
+        <div class="radio-grid" role="radiogroup" aria-labelledby="ar-l">
+          <label class="rg-item"><input type="radio" name="annualrefs" value="1-5"> 1–5</label>
+          <label class="rg-item"><input type="radio" name="annualrefs" value="6-15"> 6–15</label>
+          <label class="rg-item"><input type="radio" name="annualrefs" value="16-50"> 16–50</label>
+          <label class="rg-item"><input type="radio" name="annualrefs" value="50+"> 50+</label>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <!-- Existing Equinix customer? -->
+      <div class="form-grid" style="margin-bottom:16px;">
+        <div class="form-group">
+          <label for="existing-customer">Are you an existing Equinix customer?</label>
+          <select id="existing-customer">
+            <option value="">Select…</option>
+            <option>Yes</option>
+            <option>No</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="existing-partner">Do you have an existing Equinix channel relationship?</label>
+          <select id="existing-partner">
+            <option value="">Select…</option>
+            <option>Yes — I have a PSM</option>
+            <option>Yes — prior engagement, no PSM</option>
+            <option>No</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Notes -->
+      <div class="form-grid full">
+        <div class="form-group">
+          <label for="ref-notes">Anything else we should know?</label>
+          <textarea id="ref-notes" placeholder="Optional context that helps us configure the right program track, e.g. existing partnerships, specific Equinix products you plan to refer, or target geographies."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="step-nav">
+      <button class="btn btn-secondary" onclick="goToStep(2)" type="button">← Back</button>
+      <div class="step-nav-right">
+        <span class="step-of">Step 3 of 4</span>
+        <button class="btn btn-primary" onclick="goToStep(4)" type="button">Next: Review →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- STEP 4 — Review & Submit -->
+  <section class="step-section" id="step-4" aria-label="Step 4: Review your application">
+
+    <div class="card">
+      <p class="card-title">Review your application</p>
+      <p class="card-desc">Check everything below before you submit. Use the Edit links to go back and change anything.</p>
+
+      <div class="review-section">
+        <div class="review-section-hd">
+          <h4>Partner type</h4>
+          <button class="review-edit" onclick="goToStep(0)" type="button">Edit</button>
+        </div>
+        <div class="review-row">
+          <span class="review-label">Type</span>
+          <span class="review-value"><span class="ptype-badge">Lead Referral Partner</span></span>
+        </div>
+      </div>
+
+      <div class="review-section">
+        <div class="review-section-hd"><h4>Company</h4><button class="review-edit" onclick="goToStep(1)" type="button">Edit</button></div>
+        <div class="review-row"><span class="review-label">Organization</span><span class="review-value" id="rv-co-name">—</span></div>
+        <div class="review-row"><span class="review-label">Website</span><span class="review-value" id="rv-co-website">—</span></div>
+        <div class="review-row"><span class="review-label">Location</span><span class="review-value" id="rv-co-location">—</span></div>
+      </div>
+
+      <div class="review-section">
+        <div class="review-section-hd"><h4>Your contact info</h4><button class="review-edit" onclick="goToStep(1)" type="button">Edit</button></div>
+        <div class="review-row"><span class="review-label">Name</span><span class="review-value" id="rv-name">—</span></div>
+        <div class="review-row"><span class="review-label">Title</span><span class="review-value" id="rv-title">—</span></div>
+        <div class="review-row"><span class="review-label">Email</span><span class="review-value" id="rv-email">—</span></div>
+        <div class="review-row"><span class="review-label">Phone</span><span class="review-value" id="rv-phone">—</span></div>
+      </div>
+
+      <div class="review-section">
+        <div class="review-section-hd"><h4>Markets</h4><button class="review-edit" onclick="goToStep(2)" type="button">Edit</button></div>
+        <div class="review-row"><span class="review-label">Verticals</span><span class="review-value" id="rv-verticals"><em style="color:var(--wf-muted)">None selected</em></span></div>
+        <div class="review-row"><span class="review-label">Regions</span><span class="review-value" id="rv-regions"><em style="color:var(--wf-muted)">None selected</em></span></div>
+        <div class="review-row"><span class="review-label">Customer size</span><span class="review-value" id="rv-custsize"><em style="color:var(--wf-muted)">None selected</em></span></div>
+      </div>
+
+      <div class="review-section">
+        <div class="review-section-hd"><h4>Business details</h4><button class="review-edit" onclick="goToStep(3)" type="button">Edit</button></div>
+        <div id="rv-biz-rows"><!-- populated by JS --></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p class="card-title">Agreement &amp; submission</p>
+      <p class="legal-text">Check all three boxes below before submitting. By submitting you confirm the information is accurate and that you have authority to apply on behalf of your organization. Applications are reviewed within 3–5 business days.</p>
+      <label class="check-item"><input type="checkbox" id="auth-check"> I am duly authorized to submit this application and enter into agreements on behalf of my organization.</label>
+      <label class="check-item"><input type="checkbox" id="cert-check"> I certify that the information provided is accurate and complete.</label>
+      <label class="check-item"><input type="checkbox" id="terms-check"> I have read and agree to the <a href="#">Equinix Lead Referral Partner Program Terms &amp; Conditions</a>.</label>
+      <div class="recaptcha-box">
+        <div class="recap-check"></div>
+        <span style="font-size:13px;">I'm not a robot</span>
+        <span class="recap-logo">reCAPTCHA<br>Privacy · Terms</span>
+      </div>
+      <div class="step-nav" style="margin-top:0;">
+        <button class="btn btn-secondary" onclick="goToStep(3)" type="button">← Back</button>
+        <div class="step-nav-right">
+          <span class="step-of">Step 4 of 4</span>
+          <button class="btn btn-primary" onclick="submitApplication()" type="button">Submit application</button>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+</div>
+</main>
+
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Notes</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+    <h3>Summary</h3>
+    <p>Lead Referral Partner Application — separate registration path for partners who refer opportunities (vs. resellers). Entered from <code>onboarding-partner-type.html</code> after selecting Lead Referral. Step 0 confirms the type selection and links back to the type guide if the user wants to change. Steps 1–4 are: Company &amp; You → Your Markets → Your Business (referral-specific) → Review &amp; Submit.</p>
+    <hr class="spec-divider">
+    <h3>Flow Position</h3>
+    <ul>
+      <li><strong>Entry:</strong> <code>onboarding-partner-type.html</code> (user selected Lead Referral and clicked Continue)</li>
+      <li><strong>On submit:</strong> → <code>onboarding-agreement-confirmation.html</code></li>
+      <li><strong>Sibling form:</strong> <code>onboarding-apply-form.html</code> (Reseller path)</li>
+      <li><strong>Auth required:</strong> No — public / unauthenticated</li>
+    </ul>
+    <hr class="spec-divider">
+    <h3>Step 3 — Lead Referral–Specific Fields</h3>
+    <ul>
+      <li><strong>Business type:</strong> IT Reseller/VAR, Independent Consultant, ISV, MSP, Systems Integrator, Telecom Agent/Broker, Technology Alliance Partner, Other</li>
+      <li><strong>Years in business:</strong> Less than 1 year → 20+ years</li>
+      <li><strong>Lead generation methods:</strong> Checkboxes (multi-select) — 5 options</li>
+      <li><strong>Typical deal value referred:</strong> Radio — Under $25K / $25K–$100K / $100K–$500K / $500K+</li>
+      <li><strong>Estimated annual referrals:</strong> Radio — 1–5 / 6–15 / 16–50 / 50+</li>
+      <li><strong>Existing Equinix customer:</strong> Yes / No</li>
+      <li><strong>Existing channel relationship:</strong> Yes with PSM / Prior engagement / No</li>
+      <li><strong>Notes:</strong> Optional free-text</li>
+    </ul>
+    <hr class="spec-divider">
+    <h3>Design Notes</h3>
+    <ul>
+      <li>No type gate — type is confirmed (pre-selected) at Step 0. "Change type" link goes back to <code>onboarding-partner-type.html</code>.</li>
+      <li>Shorter than reseller form — no revenue history, employee counts, or business mix. ~5 minutes estimated.</li>
+      <li>Step 3 fields are referral-specific; Steps 1–2 and 4 are identical in structure to the reseller form.</li>
+      <li>Review step shows partner type as a static badge (not editable — user must go to Step 0 via Edit link to change).</li>
+      <li>Both paths (this form + <code>onboarding-apply-form.html</code>) submit to <code>onboarding-agreement-confirmation.html</code>.</li>
+    </ul>
+  </div>
+</aside>
+
+<script>
+  function goToStep(n) {
+    document.querySelectorAll('.step-section').forEach(function(el) { el.classList.remove('active'); });
+    var target = document.getElementById('step-' + n);
+    if (target) target.classList.add('active');
+    var stepper = document.getElementById('main-stepper');
+    if (stepper) stepper.style.display = n === 0 ? 'none' : '';
+    for (var i = 1; i <= 4; i++) {
+      var sn = document.getElementById('sn-' + i);
+      if (!sn) continue;
+      sn.classList.remove('active','completed');
+      if (i < n) sn.classList.add('completed');
+      if (i === n) sn.classList.add('active');
+    }
+    if (n === 4) populateReview();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function populateReview() {
+    function checkedLabels(name) {
+      var boxes = document.querySelectorAll('input[name="' + name + '"]:checked');
+      if (!boxes.length) return null;
+      return Array.from(boxes).map(function(b) { return b.closest('label').textContent.trim(); }).join(', ');
+    }
+    function val(id) {
+      var el = document.getElementById(id);
+      return el ? (el.value || '').trim() : '';
+    }
+    function setRv(id, text) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      if (text) {
+        el.textContent = text;
+        el.classList.remove('empty');
+      } else {
+        el.innerHTML = '<em style="color:var(--wf-muted)">Not provided</em>';
+        el.classList.add('empty');
+      }
+    }
+
+    setRv('rv-co-name',    val('co-name'));
+    setRv('rv-co-website', val('co-website'));
+    var country = val('co-country');
+    var city    = val('co-city');
+    setRv('rv-co-location', [city, country].filter(Boolean).join(', '));
+
+    var fname = val('first-name');
+    var lname = val('last-name');
+    setRv('rv-name',  [fname, lname].filter(Boolean).join(' '));
+    setRv('rv-title', val('job-title'));
+    setRv('rv-email', val('email'));
+    setRv('rv-phone', val('phone'));
+
+    setRv('rv-verticals', checkedLabels('vertical'));
+    setRv('rv-regions',   checkedLabels('region'));
+    setRv('rv-custsize',  checkedLabels('custsize'));
+
+    var rows = document.getElementById('rv-biz-rows');
+    if (!rows) return;
+    rows.innerHTML = '';
+    function addRow(label, text) {
+      if (!text) return;
+      rows.innerHTML += '<div class="review-row">' +
+        '<span class="review-label">' + label + '</span>' +
+        '<span class="review-value">' + text + '</span>' +
+        '</div>';
+    }
+    var bizTypeEl = document.getElementById('biz-type');
+    var bizType   = bizTypeEl ? (bizTypeEl.value || '').trim() : '';
+    var yibEl     = document.getElementById('years-in-business');
+    var yib       = yibEl ? (yibEl.value || '').trim() : '';
+    var dv        = document.querySelector('input[name="dealval"]:checked');
+    var ar        = document.querySelector('input[name="annualrefs"]:checked');
+    var excEl     = document.getElementById('existing-customer');
+    var epEl      = document.getElementById('existing-partner');
+    addRow('Business type',       bizType);
+    addRow('Years in business',   yib);
+    addRow('Lead generation',     checkedLabels('leadgen'));
+    addRow('Typical deal value',  dv ? dv.value : null);
+    addRow('Annual referrals',    ar ? ar.value : null);
+    addRow('Existing customer',   excEl ? excEl.value : null);
+    addRow('Channel relationship', epEl ? epEl.value : null);
+    addRow('Notes',               val('ref-notes'));
+    if (!rows.innerHTML) {
+      rows.innerHTML = '<div class="review-row"><span class="review-value"><em style="color:var(--wf-muted)">No details provided</em></span></div>';
+    }
+  }
+
+  function submitApplication() {
+    var auth  = document.getElementById('auth-check').checked;
+    var cert  = document.getElementById('cert-check').checked;
+    var terms = document.getElementById('terms-check').checked;
+    if (!auth || !cert || !terms) { alert('Please check all three agreement boxes before submitting.'); return; }
+    window.location.href = 'onboarding-agreement-confirmation.html';
+  }
+
+  function toggleSpec() {
+    var panel = document.getElementById('spec-panel');
+    document.getElementById('spec-toggle').setAttribute('aria-expanded', panel.classList.toggle('open'));
+  }
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

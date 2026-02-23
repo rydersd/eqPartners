@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html class="wireframe">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Training - Equinix Partner Portal</title>
+    <link rel="stylesheet" href="wireframe.css">
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="wf-header">
+        <div class="wf-header-content">
+            <div class="wf-header-left">
+                <div class="wf-logo">EQ</div>
+                <h1>Equinix Partner Portal</h1>
+            </div>
+            <nav class="wf-nav">
+                <a href="#home">Home</a>
+                <a href="#training" class="active">My Training</a>
+                <a href="#courses">Courses</a>
+                <a href="#certifications">Certifications</a>
+                <a href="#deals">Deals</a>
+                <a href="#resources">Resources</a>
+            </nav>
+            <div class="wf-util-icons">
+                <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+                <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+            </div>
+        </div>
+    
+    <a href="rep-notifications.html" class="bell-wrapper" aria-label="Notifications" style="position:relative;color:white;text-decoration:none;margin-left:auto;">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+      <span style="position:absolute;top:-4px;right:-6px;background:var(--wf-red,#8b4555);color:white;font-size:10px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;">7</span>
+    </a>
+</header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+    <!-- VIEW TOGGLE -->
+    <div class="wf-view-toggle">
+        <a href="#" class="wf-toggle-item active" title="Table View">T</a>
+        <a href="rep-my-training.html" class="wf-toggle-item" title="Card View">C</a>
+        <a href="rep-my-training-kanban.html" class="wf-toggle-item" title="Kanban View">K</a>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div class="wf-container">
+
+        <!-- PROGRESS HEADER SECTION -->
+        <section class="wf-section">
+            <h2 class="wf-section-label">Training Progress</h2>
+            
+            <div class="wf-kpi-row">
+                <div class="wf-kpi">
+                    <span class="wf-kpi-label">Required</span>
+                    <span class="wf-kpi-value">4 / 8</span>
+                </div>
+                <div class="wf-kpi">
+                    <span class="wf-kpi-label">Elective</span>
+                    <span class="wf-kpi-value">1 / 3</span>
+                </div>
+            </div>
+
+            <div class="wf-progress-container">
+                <label class="wf-progress-label">Overall Completion</label>
+                <div class="wf-progress-bar">
+                    <div class="wf-progress-fill" style="width: 50%;"></div>
+                </div>
+                <span class="wf-progress-text">50%</span>
+            </div>
+        </section>
+
+        <!-- LEARNING PATH SECTION -->
+        <section class="wf-section">
+            <h2 class="wf-section-label">Learning Path</h2>
+            
+            <div class="wf-path">
+                <div class="wf-path-step completed">
+                    <span class="wf-path-marker">1</span>
+                    <span class="wf-path-label">Our Mission</span>
+                </div>
+                <div class="wf-path-step completed">
+                    <span class="wf-path-marker">2</span>
+                    <span class="wf-path-label">Colocation</span>
+                </div>
+                <div class="wf-path-step completed">
+                    <span class="wf-path-marker">3</span>
+                    <span class="wf-path-label">Eco-System</span>
+                </div>
+                <div class="wf-path-step completed">
+                    <span class="wf-path-marker">4</span>
+                    <span class="wf-path-label">Hybrid MC</span>
+                </div>
+                <div class="wf-path-step in-progress">
+                    <span class="wf-path-marker">5</span>
+                    <span class="wf-path-label">Compliance</span>
+                </div>
+                <div class="wf-path-step expired">
+                    <span class="wf-path-marker">6</span>
+                    <span class="wf-path-label">Security</span>
+                </div>
+                <div class="wf-path-step not-started">
+                    <span class="wf-path-marker">7</span>
+                    <span class="wf-path-label">Interconnection</span>
+                </div>
+                <div class="wf-path-step not-started">
+                    <span class="wf-path-marker">8</span>
+                    <span class="wf-path-label">Net Security</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- TABS SECTION -->
+        <section class="wf-section">
+            <div class="wf-tabs">
+                <button class="wf-tab-button active" onclick="switchTab('required')">Required (8)</button>
+                <button class="wf-tab-button" onclick="switchTab('elective')">Elective (3)</button>
+                <button class="wf-tab-button" onclick="switchTab('completed')">Completed (4)</button>
+                <button class="wf-tab-button" onclick="switchTab('expired')">Expired (1)</button>
+            </div>
+
+            <!-- FILTER BAR -->
+            <div class="wf-filter-bar">
+                <div class="wf-filter-group">
+                    <label for="sort-select">Sort:</label>
+                    <select id="sort-select" class="wf-select">
+                        <option>Course Title (A-Z)</option>
+                        <option>Due Date (Earliest)</option>
+                        <option>Status</option>
+                    </select>
+                </div>
+                <div class="wf-filter-group">
+                    <input type="text" class="wf-search-input" placeholder="Search courses...">
+                </div>
+            </div>
+
+            <!-- REQUIRED TAB -->
+            <div id="required" class="wf-tab-content active">
+                <table class="wf-table">
+                    <thead>
+                        <tr>
+                            <th>Course Title</th>
+                            <th>Course ID</th>
+                            <th>Track</th>
+                            <th>Status</th>
+                            <th>Progress</th>
+                            <th>Duration</th>
+                            <th>Due Date</th>
+                            <th>Score</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Our Mission/Vision/Value Story</td>
+                            <td>BUS-101</td>
+                            <td><span class="wf-badge business">Business</span></td>
+                            <td><span class="wf-badge completed">Completed</span></td>
+                            <td><span class="wf-check">✓</span></td>
+                            <td>45 min</td>
+                            <td>—</td>
+                            <td>92%</td>
+                            <td><a href="#" class="wf-action">View Certificate</a></td>
+                        </tr>
+                        <tr>
+                            <td>Colocation Overview</td>
+                            <td>BUS-201</td>
+                            <td><span class="wf-badge business">Business</span></td>
+                            <td><span class="wf-badge completed">Completed</span></td>
+                            <td><span class="wf-check">✓</span></td>
+                            <td>1.5 hrs</td>
+                            <td>—</td>
+                            <td>88%</td>
+                            <td><a href="#" class="wf-action">View Certificate</a></td>
+                        </tr>
+                        <tr>
+                            <td>Eco-System Partnership</td>
+                            <td>BUS-202</td>
+                            <td><span class="wf-badge business">Business</span></td>
+                            <td><span class="wf-badge completed">Completed</span></td>
+                            <td><span class="wf-check">✓</span></td>
+                            <td>1.5 hrs</td>
+                            <td>—</td>
+                            <td>95%</td>
+                            <td><a href="#" class="wf-action">View Certificate</a></td>
+                        </tr>
+                        <tr>
+                            <td>Hybrid Multicloud Networking</td>
+                            <td>TEC-301</td>
+                            <td><span class="wf-badge technical">Technical</span></td>
+                            <td><span class="wf-badge completed">Completed</span></td>
+                            <td><span class="wf-check">✓</span></td>
+                            <td>2 hrs</td>
+                            <td>—</td>
+                            <td>90%</td>
+                            <td><a href="#" class="wf-action">View Certificate</a></td>
+                        </tr>
+                        <tr>
+                            <td>Compliance & Data Privacy</td>
+                            <td>BUS-110</td>
+                            <td><span class="wf-badge business">Business</span></td>
+                            <td><span class="wf-badge in-progress">In Progress</span></td>
+                            <td>
+                                <div class="wf-progress-inline">
+                                    <div class="wf-progress-bar-small">
+                                        <div class="wf-progress-fill" style="width: 45%;"></div>
+                                    </div>
+                                    <span class="wf-progress-percent">45%</span>
+                                </div>
+                            </td>
+                            <td>1.5 hrs</td>
+                            <td>Mar 15, 2026</td>
+                            <td>—</td>
+                            <td><a href="#" class="wf-action">Resume</a></td>
+                        </tr>
+                        <tr>
+                            <td>Security Fundamentals</td>
+                            <td>TEC-201</td>
+                            <td><span class="wf-badge technical">Technical</span></td>
+                            <td><span class="wf-badge expired">Expired</span></td>
+                            <td><span class="wf-cross">✕</span></td>
+                            <td>2 hrs</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td><a href="#" class="wf-action">Re-enroll</a></td>
+                        </tr>
+                        <tr>
+                            <td>Interconnection Overview</td>
+                            <td>TEC-302</td>
+                            <td><span class="wf-badge technical">Technical</span></td>
+                            <td><span class="wf-badge not-started">Not Started</span></td>
+                            <td>—</td>
+                            <td>2.5 hrs</td>
+                            <td>Apr 30, 2026</td>
+                            <td>—</td>
+                            <td><a href="#" class="wf-action">Start Course</a></td>
+                        </tr>
+                        <tr>
+                            <td>Network Security Advanced</td>
+                            <td>TEC-401</td>
+                            <td><span class="wf-badge technical">Technical</span></td>
+                            <td><span class="wf-badge not-started">Not Started</span></td>
+                            <td>—</td>
+                            <td>4 hrs</td>
+                            <td>Jun 30, 2026</td>
+                            <td>—</td>
+                            <td><a href="#" class="wf-action">Start Course</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- ELECTIVE TAB -->
+            <div id="elective" class="wf-tab-content">
+                <table class="wf-table">
+                    <thead>
+                        <tr>
+                            <th>Course Title</th>
+                            <th>Course ID</th>
+                            <th>Track</th>
+                            <th>Status</th>
+                            <th>Progress</th>
+                            <th>Duration</th>
+                            <th>Due Date</th>
+                            <th>Score</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Network Edge Essentials</td>
+                            <td>TEC-303</td>
+                            <td><span class="wf-badge technical">Technical</span></td>
+                            <td><span class="wf-badge not-started">Not Started</span></td>
+                            <td>—</td>
+                            <td>2.5 hrs</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td><a href="#" class="wf-action">Enroll</a></td>
+                        </tr>
+                        <tr>
+                            <td>Equinix Fabric Technical</td>
+                            <td>TEC-304</td>
+                            <td><span class="wf-badge technical">Technical</span></td>
+                            <td><span class="wf-badge not-started">Not Started</span></td>
+                            <td>—</td>
+                            <td>3 hrs</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td><a href="#" class="wf-action">Enroll</a></td>
+                        </tr>
+                        <tr>
+                            <td>Solution Validation Center</td>
+                            <td>BUS-305</td>
+                            <td><span class="wf-badge business">Business</span></td>
+                            <td><span class="wf-badge not-started">Not Started</span></td>
+                            <td>—</td>
+                            <td>2 hrs</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td><a href="#" class="wf-action">Enroll</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- COMPLETED TAB -->
+            <div id="completed" class="wf-tab-content">
+                <table class="wf-table">
+                    <thead>
+                        <tr>
+                            <th>Course Title</th>
+                            <th>Course ID</th>
+                            <th>Track</th>
+                            <th>Status</th>
+                            <th>Progress</th>
+                            <th>Duration</th>
+                            <th>Due Date</th>
+                            <th>Score</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Our Mission/Vision/Value Story</td>
+                            <td>BUS-101</td>
+                            <td><span class="wf-badge business">Business</span></td>
+                            <td><span class="wf-badge completed">Completed</span></td>
+                            <td><span class="wf-check">✓</span></td>
+                            <td>45 min</td>
+                            <td>—</td>
+                            <td>92%</td>
+                            <td><a href="#" class="wf-action">Download Certificate</a></td>
+                        </tr>
+                        <tr>
+                            <td>Colocation Overview</td>
+                            <td>BUS-201</td>
+                            <td><span class="wf-badge business">Business</span></td>
+                            <td><span class="wf-badge completed">Completed</span></td>
+                            <td><span class="wf-check">✓</span></td>
+                            <td>1.5 hrs</td>
+                            <td>—</td>
+                            <td>88%</td>
+                            <td><a href="#" class="wf-action">Download Certificate</a></td>
+                        </tr>
+                        <tr>
+                            <td>Eco-System Partnership</td>
+                            <td>BUS-202</td>
+                            <td><span class="wf-badge business">Business</span></td>
+                            <td><span class="wf-badge completed">Completed</span></td>
+                            <td><span class="wf-check">✓</span></td>
+                            <td>1.5 hrs</td>
+                            <td>—</td>
+                            <td>95%</td>
+                            <td><a href="#" class="wf-action">Download Certificate</a></td>
+                        </tr>
+                        <tr>
+                            <td>Hybrid Multicloud Networking</td>
+                            <td>TEC-301</td>
+                            <td><span class="wf-badge technical">Technical</span></td>
+                            <td><span class="wf-badge completed">Completed</span></td>
+                            <td><span class="wf-check">✓</span></td>
+                            <td>2 hrs</td>
+                            <td>—</td>
+                            <td>90%</td>
+                            <td><a href="#" class="wf-action">Download Certificate</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- EXPIRED TAB -->
+            <div id="expired" class="wf-tab-content">
+                <table class="wf-table">
+                    <thead>
+                        <tr>
+                            <th>Course Title</th>
+                            <th>Course ID</th>
+                            <th>Track</th>
+                            <th>Status</th>
+                            <th>Progress</th>
+                            <th>Duration</th>
+                            <th>Due Date</th>
+                            <th>Score</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Security Fundamentals</td>
+                            <td>TEC-201</td>
+                            <td><span class="wf-badge technical">Technical</span></td>
+                            <td><span class="wf-badge expired">Expired</span></td>
+                            <td><span class="wf-cross">✕</span></td>
+                            <td>2 hrs</td>
+                            <td>—</td>
+                            <td>—</td>
+                            <td><a href="#" class="wf-action">Re-enroll</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- NEXT BEST STEPS SECTION -->
+        <section class="wf-section">
+            <h2 class="wf-section-label">Recommended Next Steps</h2>
+            
+            <div class="wf-micro-row">
+                <div class="wf-micro-card amber">
+                    <div class="wf-micro-title">Resume Compliance & Data Privacy</div>
+                    <div class="wf-micro-desc">45% complete — pick up at Module 4</div>
+                    <a href="#" class="wf-action">Resume</a>
+                </div>
+                <div class="wf-micro-card red">
+                    <div class="wf-micro-title">Re-enroll in Security Fundamentals</div>
+                    <div class="wf-micro-desc">Expired Jan 15 — re-certification required</div>
+                    <a href="#" class="wf-action">Re-enroll</a>
+                </div>
+                <div class="wf-micro-card blue">
+                    <div class="wf-micro-title">Start Interconnection Overview</div>
+                    <div class="wf-micro-desc">Next in learning path — 2.5 hrs</div>
+                    <a href="#" class="wf-action">Start</a>
+                </div>
+            </div>
+        </section>
+
+        
+<footer class="wf-footer">
+        <p>&copy; 2026 Equinix. Partner Training Portal. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function switchTab(tabName) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.wf-tab-content');
+            contents.forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.wf-tab-button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Show selected tab content
+            const selectedContent = document.getElementById(tabName);
+            if (selectedContent) {
+                selectedContent.classList.add('active');
+            }
+
+            // Mark clicked button as active
+            event.target.classList.add('active');
+        }
+    </script>
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Displays all training courses in a sortable, filterable table view with real-time progress tracking. Partners can manage required and elective coursework while monitoring their overall certification readiness.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>View all training courses in sortable table format</li>
+<li>Quickly scan course details and progress</li>
+<li>Compare courses by completion, difficulty, or date</li>
+<li>Filter to focus on specific course types</li>
+<li>Launch courses from table interface</li>
+<li>Analyze training completion trends</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Training progress summary with required/elective KPIs</li>
+<li>Overall completion percentage and visual progress bar</li>
+<li>Learning path timeline showing completion status of all modules</li>
+<li>Multi-tab interface for Required, Elective, Completed, and Expired courses</li>
+<li>Comprehensive course table with course title, ID, track, status, progress, duration, due date, score, and actions</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>View toggle between table, card, and kanban layouts</li>
+<li>Tab switching to filter courses by status</li>
+<li>Sort dropdown for course title, due date, or status</li>
+<li>Search input to filter courses by keyword</li>
+<li>Action links for Resume, Start Course, Re-enroll, View/Download Certificate</li>
+<li>Inline progress bars for in-progress courses</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Tab-Based Filtering & Visibility</strong>
+<ul>
+<li>Tab switching (All/Required/Elective/Not Started/In Progress/Completed/Expired) toggles visibility of filtered tables without page reload using client-side JavaScript or CSS display toggles</li>
+<li>Each tab applies WHERE clause filter on Partner_Training__c: Tab='Required' filters Is_Required__c=true, Tab='In Progress' filters Status__c='In Progress', etc.</li>
+<li>Tab counts dynamically updated after sort, search, or status changes (e.g., "In Progress (3)" updates to "In Progress (2)" when one course completes)</li>
+</ul></li>
+<li><strong>Sorting & Search Operations</strong>
+<ul>
+<li>Sort dropdown reorders table by selected column (Course Title, Due Date, Status, Completion %); applies ASC or DESC ordering to Partner_Training__c SOQL query</li>
+<li>Search input filters courses by keyword: SOQL WHERE Course.Name LIKE '%[keyword]%' OR Course.Description__c LIKE '%[keyword]%'; table updates dynamically without page reload</li>
+<li>Sort and search persist in URL query parameters or session state for back-button navigation</li>
+</ul></li>
+<li><strong>Progress Calculations & Status Tracking</strong>
+<ul>
+<li>Progress calculations aggregate: Required % = (COUNT(Partner_Training__c WHERE Is_Required__c=true AND Status__c='Completed') / Tier_Course_Requirement__mdt.Required_Count) × 100, Elective % similarly calculated</li>
+<li>Overall progress = (Completed_Count / Total_Enrolled_Count) × 100; capped at 100%</li>
+<li>Course status transitions (Not Started → In Progress → Completed → Expired) automatically update action buttons: Start Course (Not Started), Resume (In Progress), Re-enroll (Expired), View Certificate (Completed)</li>
+</ul></li>
+<li><strong>Urgency & Overdue Detection</strong>
+<ul>
+<li>Due date comparison: IF Partner_Training__c.Due_Date__c < TODAY() AND Status__c='Not Started' THEN highlight row with Overdue badge (red styling)</li>
+<li>Expired detection: IF Certification__c.Expiration_Date__c < TODAY() THEN move course to Expired tab and display "Expired" badge; prevent course start unless re-enrolled</li>
+<li>Overdue courses sorted to top of table for visibility</li>
+</ul></li>
+<li><strong>Action Links & Enrollment Workflows</strong>
+<ul>
+<li>Start Course link creates Partner_Training__c enrollment if not exists; generates JWT SSO token and redirects to SumTotal LMS with Course.SumTotal_Course_ID__c</li>
+<li>Resume link skips enrollment step (record already exists); redirects to LMS with Partner_Training__c.LMS_Module_Index__c to resume from last module</li>
+<li>Re-enroll button creates new Partner_Training__c with Status='Not Started'; original expired record retained for audit trail</li>
+<li>View/Download Certificate link available only when Partner_Training__c.Status='Completed'; fetches Certificate_PDF_URL__c and opens/downloads PDF</li>
+</ul></li>
+<li><strong>Progress Visualization & Updates</strong>
+<ul>
+<li>Inline progress bars displayed in table for In Progress courses; width = (LMS_Module_Index__c / Total_Modules) × 100</li>
+<li>Learning path visual (left sidebar) updates in real-time when course status changes; completed courses marked with checkmarks, current course highlighted</li>
+<li>Table rows highlight with background color when course status transitions (e.g., green highlight when course moved to Completed column)</li>
+</ul></li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Validation &amp; Business Logic</h4>
+<ul>
+<li>Required courses must be completed before certification eligibility</li>
+<li>Expired courses must be re-enrolled within 30 days</li>
+<li>Progress cannot exceed 100%</li>
+<li>Due date must be in future for active courses</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+</body>
+</html>

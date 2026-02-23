@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Persona Research — Equinix PCP</title>
+    <link rel="stylesheet" href="wireframe.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Salesforce Sans", sans-serif;
+            line-height: 1.65;
+            color: var(--wf-ink, #1e2a3a);
+            background-color: var(--wf-canvas, #f5f7fb);
+        }
+
+        .page-header {
+            background: linear-gradient(135deg, var(--wf-ink, #1e2a3a) 0%, #2d4a6e 100%);
+            color: #fff;
+            padding: 2rem 2rem 1.5rem;
+        }
+        .page-header h1 { font-size: 1.75rem; font-weight: 700; margin-bottom: .5rem; }
+        .page-header .subtitle { font-size: .9rem; opacity: .85; }
+        .header-meta { display: flex; gap: 1rem; margin-top: 1rem; flex-wrap: wrap; }
+        .header-pill {
+            background: rgba(255,255,255,.15);
+            padding: .25rem .75rem; border-radius: 4px;
+            font-size: .75rem; font-weight: 600;
+        }
+
+        .container { max-width: 1040px; margin: 0 auto; padding: 2rem 1.5rem; }
+
+        .back-link {
+            display: inline-flex; align-items: center; gap: .375rem;
+            color: var(--wf-accent, #3d6daa); text-decoration: none;
+            font-size: .875rem; font-weight: 500; margin-bottom: 1.5rem;
+        }
+        .back-link:hover { text-decoration: underline; }
+
+        .research-note {
+            background: #fff;
+            border-left: 4px solid var(--wf-amber, #8b7745);
+            padding: 1rem 1.25rem; border-radius: 4px;
+            margin-bottom: 2rem; font-size: .875rem;
+            color: var(--wf-text, #3b4f68);
+        }
+        .research-note strong { color: var(--wf-amber, #8b7745); }
+
+        section {
+            background: #fff; margin-bottom: 2rem;
+            padding: 2rem; border-radius: 8px;
+            box-shadow: 0 1px 4px rgba(0,0,0,.08);
+        }
+        section h2 {
+            font-size: 1.25rem; font-weight: 700;
+            color: var(--wf-ink, #1e2a3a);
+            margin-bottom: 1.5rem; padding-bottom: .75rem;
+            border-bottom: 2px solid var(--wf-surface, #edf1f7);
+            display: flex; align-items: center; gap: .5rem;
+        }
+        .section-badge {
+            font-size: .7rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: .06em; padding: .2rem .55rem; border-radius: 3px;
+            background: var(--wf-surface, #edf1f7);
+            color: var(--wf-muted, #6b7f99);
+        }
+
+        /* ── Persona Card Layout ── */
+        .persona-block {
+            border: 1px solid var(--wf-surface, #edf1f7);
+            border-radius: 8px; margin-bottom: 2.5rem; overflow: hidden;
+        }
+        .persona-block:last-child { margin-bottom: 0; }
+
+        .persona-header {
+            display: flex; align-items: flex-start; gap: 1.5rem;
+            padding: 1.5rem; background: var(--wf-canvas, #f5f7fb);
+            border-bottom: 1px solid var(--wf-surface, #edf1f7);
+        }
+        .persona-avatar {
+            width: 56px; height: 56px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; font-weight: 700; color: #fff; flex-shrink: 0;
+        }
+        .avatar-rep    { background: linear-gradient(135deg, #3d6daa, #2a5090); }
+        .avatar-pm     { background: linear-gradient(135deg, var(--orange, #c75c1a), #a04810); }
+        .avatar-psm    { background: linear-gradient(135deg, #2e7d6f, #1f5c54); }
+        .avatar-euc    { background: linear-gradient(135deg, #5c3d8f, #3e2470); }
+
+        .persona-intro h3 { font-size: 1.1rem; font-weight: 700; color: var(--wf-ink, #1e2a3a); }
+        .persona-intro .persona-role { font-size: .875rem; color: var(--wf-muted, #6b7f99); margin-bottom: .5rem; }
+        .persona-intro p { font-size: .875rem; color: var(--wf-text, #3b4f68); }
+
+        .accuracy-badge {
+            margin-left: auto; flex-shrink: 0;
+            display: flex; flex-direction: column; align-items: center;
+            gap: .25rem;
+        }
+        .accuracy-score {
+            width: 52px; height: 52px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1rem; font-weight: 700; color: #fff;
+        }
+        .score-high   { background: #2e7d6f; }
+        .score-medium { background: var(--wf-amber, #8b7745); }
+        .score-low    { background: #8b4553; }
+        .accuracy-label { font-size: .7rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--wf-muted, #6b7f99); }
+
+        .persona-body { padding: 1.5rem; }
+
+        .persona-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        @media (max-width: 700px) { .persona-grid { grid-template-columns: 1fr; } }
+
+        .data-card {
+            background: var(--wf-canvas, #f5f7fb);
+            border: 1px solid var(--wf-surface, #edf1f7);
+            border-radius: 6px; padding: 1rem;
+        }
+        .data-card h4 {
+            font-size: .75rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: .06em; color: var(--wf-muted, #6b7f99);
+            margin-bottom: .75rem;
+        }
+        .data-card p  { font-size: .875rem; color: var(--wf-text, #3b4f68); }
+        .data-card ul { list-style: none; padding: 0; }
+        .data-card ul li {
+            font-size: .875rem; color: var(--wf-text, #3b4f68);
+            padding: .25rem 0; border-bottom: 1px solid var(--wf-surface, #edf1f7);
+            display: flex; align-items: flex-start; gap: .5rem;
+        }
+        .data-card ul li:last-child { border-bottom: none; }
+        .data-card ul li::before { content: "—"; color: var(--wf-muted, #6b7f99); flex-shrink: 0; font-size: .75rem; margin-top: .15rem; }
+
+        /* Time allocation bar */
+        .time-bar { margin-top: .5rem; }
+        .time-row { display: flex; align-items: center; gap: .75rem; margin-bottom: .5rem; }
+        .time-label { font-size: .8rem; color: var(--wf-text, #3b4f68); width: 130px; flex-shrink: 0; }
+        .time-track { flex: 1; height: 10px; background: var(--wf-surface, #edf1f7); border-radius: 5px; overflow: hidden; }
+        .time-fill { height: 100%; border-radius: 5px; }
+        .fill-blue   { background: var(--wf-accent, #3d6daa); }
+        .fill-orange { background: var(--orange, #c75c1a); }
+        .fill-green  { background: #2e7d6f; }
+        .fill-muted  { background: var(--wf-muted, #6b7f99); }
+        .time-pct { font-size: .8rem; font-weight: 600; color: var(--wf-ink, #1e2a3a); width: 30px; text-align: right; flex-shrink: 0; }
+
+        /* Stat pills */
+        .stat-row { display: flex; gap: .75rem; flex-wrap: wrap; margin-bottom: 1rem; }
+        .stat-pill {
+            background: var(--wf-surface, #edf1f7);
+            padding: .35rem .75rem; border-radius: 4px;
+            font-size: .8rem;
+        }
+        .stat-pill strong { color: var(--wf-ink, #1e2a3a); }
+        .stat-pill span { color: var(--wf-muted, #6b7f99); }
+
+        /* Assessment boxes */
+        .assessment-box {
+            border-radius: 6px; padding: 1rem 1.25rem; margin-top: 1.25rem;
+            font-size: .875rem;
+        }
+        .assess-green { background: #f0faf8; border-left: 4px solid #2e7d6f; }
+        .assess-amber { background: #fdf8ee; border-left: 4px solid var(--wf-amber, #8b7745); }
+        .assess-blue  { background: #f0f5fb; border-left: 4px solid var(--wf-accent, #3d6daa); }
+
+        .assessment-box h4 { font-size: .8rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; margin-bottom: .5rem; }
+        .assess-green h4 { color: #2e7d6f; }
+        .assess-amber h4 { color: var(--wf-amber, #8b7745); }
+        .assess-blue  h4 { color: var(--wf-accent, #3d6daa); }
+        .assessment-box ul { list-style: none; padding: 0; }
+        .assessment-box ul li { padding: .2rem 0; padding-left: 1rem; position: relative; }
+        .assessment-box ul li::before { content: "✓"; position: absolute; left: 0; font-weight: 700; }
+        .assess-green ul li::before { color: #2e7d6f; }
+        .assess-amber ul li::before { content: "△"; color: var(--wf-amber, #8b7745); }
+        .assess-blue  ul li::before { content: "→"; color: var(--wf-accent, #3d6daa); }
+
+        /* Comparison matrix */
+        .matrix-table {
+            width: 100%; border-collapse: collapse;
+            font-size: .825rem; margin-top: 1rem;
+        }
+        .matrix-table th {
+            background: var(--wf-ink, #1e2a3a); color: #fff;
+            padding: .6rem .75rem; text-align: left; font-size: .75rem;
+            font-weight: 600; text-transform: uppercase; letter-spacing: .04em;
+        }
+        .matrix-table td {
+            padding: .6rem .75rem; border-bottom: 1px solid var(--wf-surface, #edf1f7);
+            vertical-align: top; color: var(--wf-text, #3b4f68);
+        }
+        .matrix-table tr:last-child td { border-bottom: none; }
+        .matrix-table tr:nth-child(even) td { background: var(--wf-canvas, #f5f7fb); }
+        .matrix-table td:first-child { font-weight: 600; color: var(--wf-ink, #1e2a3a); }
+
+        .check  { color: #2e7d6f; font-weight: 700; }
+        .revise { color: var(--wf-amber, #8b7745); font-weight: 700; }
+
+        /* Implications section */
+        .implication-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+        }
+        @media (max-width: 700px) { .implication-grid { grid-template-columns: 1fr; } }
+        .implication-card {
+            border: 1px solid var(--wf-surface, #edf1f7);
+            border-radius: 6px; padding: 1rem;
+        }
+        .implication-card h4 { font-size: .8rem; font-weight: 700; margin-bottom: .5rem; color: var(--wf-ink, #1e2a3a); }
+        .implication-card p  { font-size: .825rem; color: var(--wf-text, #3b4f68); }
+        .imp-rep    { border-top: 3px solid var(--wf-accent, #3d6daa); }
+        .imp-pm     { border-top: 3px solid var(--orange, #c75c1a); }
+        .imp-psm    { border-top: 3px solid #2e7d6f; }
+        .imp-cross  { border-top: 3px solid var(--wf-muted, #6b7f99); }
+        .imp-euc    { border-top: 3px solid #5c3d8f; }
+
+        /* Sources */
+        .sources-list { list-style: none; padding: 0; columns: 2; column-gap: 2rem; }
+        @media (max-width: 700px) { .sources-list { columns: 1; } }
+        .sources-list li {
+            font-size: .8rem; padding: .35rem 0;
+            border-bottom: 1px solid var(--wf-surface, #edf1f7);
+            break-inside: avoid;
+        }
+        .sources-list li a { color: var(--wf-accent, #3d6daa); text-decoration: none; }
+        .sources-list li a:hover { text-decoration: underline; }
+        .src-org { font-weight: 600; color: var(--wf-ink, #1e2a3a); margin-right: .35rem; font-size: .75rem; }
+
+        .divider {
+            height: 1px; background: var(--wf-surface, #edf1f7);
+            margin: 1.5rem 0;
+        }
+    </style>
+</head>
+<body>
+
+<header class="page-header" role="banner">
+    <div style="max-width:1040px; margin:0 auto; padding:0 .5rem;">
+        <h1>Persona Research &amp; Accuracy Analysis</h1>
+        <p class="subtitle">Are the PCP wireframe personas realistic? Real job data, survey statistics, and design implications.</p>
+        <div class="header-meta">
+            <span class="header-pill">3 Personas Assessed</span>
+            <span class="header-pill">30+ Sources</span>
+            <span class="header-pill">BLS · CompTIA · Salesforce State of Sales · Glassdoor · LinkedIn</span>
+            <span class="header-pill">Updated Feb 2026</span>
+        </div>
+    </div>
+</header>
+
+<main class="container">
+    <a href="research-best-practices.html" class="back-link">← Partner Program Research</a>
+
+    <div class="research-note" role="note">
+        <strong>Research Methodology:</strong> Personas were assessed against publicly available job posting data, BLS occupational statistics, CompTIA's 2024 State of the Channel (n=1,042 channel company executives), Salesforce State of Sales 7th Edition (n=7,400+ sales professionals), Glassdoor compensation data, and industry analyst publications. Where data was behind a paywall, only publicly accessible summaries and cited statistics were used.
+    </div>
+
+    <div class="research-note" role="alert" style="background:#fffbe6;border-color:#704000;color:#704000;margin-top:.75rem;">
+        <strong>⚠ Proto-personas — not yet research-validated.</strong> These personas are grounded in secondary research (job postings, published surveys, BLS data) but have not been validated through primary user research — no interviews, recruitment screeners, or moderated studies have been conducted. <strong>Treat them as informed hypotheses, not validated portraits.</strong> They should be revisited before making feature prioritization or design decisions that depend heavily on user goals or pain points.
+    </div>
+
+    <!-- ─── SECTION 1: Quick Summary ─── -->
+    <section aria-labelledby="summary-h2">
+        <h2 id="summary-h2">
+            <span aria-hidden="true">📊</span> Accuracy Summary
+            <span class="section-badge">Overview</span>
+        </h2>
+
+        <table class="matrix-table" role="table">
+            <thead>
+                <tr>
+                    <th>Persona</th>
+                    <th>Name / Company</th>
+                    <th>Job Title Accuracy</th>
+                    <th>Pain Points Accuracy</th>
+                    <th>Notable Gaps</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Steve Rogers — Sales Rep</td>
+                    <td>CloudBridge Solutions, mid-market SI</td>
+                    <td><span class="check">✓ Accurate</span></td>
+                    <td><span class="check">✓ Well-documented</span></td>
+                    <td>Add quota/commission specifics; time-split data</td>
+                </tr>
+                <tr>
+                    <td>Jordan Reeves — Portal Admin</td>
+                    <td>CloudBridge Solutions</td>
+                    <td><span class="revise">△ Needs revision</span></td>
+                    <td><span class="check">✓ Core points valid</span></td>
+                    <td>Title too narrow; typically a hybrid Sales Ops role, not dedicated</td>
+                </tr>
+                <tr>
+                    <td>Marcus Chen — PSM</td>
+                    <td>Equinix (vendor-side)</td>
+                    <td><span class="check">✓ Accurate</span></td>
+                    <td><span class="check">✓ Well-documented</span></td>
+                    <td>Add deal dispute/attribution; QBR function; span of control</td>
+                </tr>
+                <tr>
+                    <td>Maria Hill — EUC (IT Director)</td>
+                    <td>Meridian Capital Group (customer)</td>
+                    <td><span style="color:#704000;font-weight:600;">⚠ Draft — not yet researched</span></td>
+                    <td><span style="color:#704000;font-weight:600;">⚠ Hypothetical</span></td>
+                    <td>Needs primary research: EUC portal use, procurement role, SLA visibility needs</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- ─── SECTION 2: Steve Rogers ─── -->
+    <section aria-labelledby="steve-h2">
+        <h2 id="steve-h2">
+            <span aria-hidden="true">💼</span> Persona 1 — Channel Sales Representative
+            <span class="section-badge">Rep Portal User</span>
+        </h2>
+
+        <div class="persona-block">
+            <div class="persona-header">
+                <div class="persona-avatar avatar-rep" aria-hidden="true">SR</div>
+                <div class="persona-intro">
+                    <h3>Steve Rogers</h3>
+                    <p class="persona-role">Account Executive · CloudBridge Solutions · Mid-Market Systems Integrator</p>
+                    <p>Sells Equinix interconnection and colocation solutions to CloudBridge's end customers. Quota-carrying, commission-dependent. Needs fast deal registration and self-service access to collateral during customer conversations.</p>
+                </div>
+                <div class="accuracy-badge" aria-label="Accuracy score: High">
+                    <div class="accuracy-score score-high" aria-hidden="true">High</div>
+                    <span class="accuracy-label">Accuracy</span>
+                </div>
+            </div>
+
+            <div class="persona-body">
+
+                <div class="stat-row" role="list" aria-label="Key statistics">
+                    <div class="stat-pill" role="listitem"><strong>248,000+</strong> <span>channel sales roles on LinkedIn</span></div>
+                    <div class="stat-pill" role="listitem"><strong>$66K–$100K</strong> <span>base salary (BLS tech sales)</span></div>
+                    <div class="stat-pill" role="listitem"><strong>~10% ACV</strong> <span>typical commission on contracts</span></div>
+                    <div class="stat-pill" role="listitem"><strong>Only 28%</strong> <span>of day is actual selling</span></div>
+                    <div class="stat-pill" role="listitem"><strong>91%</strong> <span>of sales teams missed quota last year</span></div>
+                    <div class="stat-pill" role="listitem"><strong>Avg age 47</strong> <span>for sales reps broadly (Zippia)</span></div>
+                </div>
+
+                <div class="persona-grid">
+                    <div class="data-card">
+                        <h4>Real Job Title Variations</h4>
+                        <ul>
+                            <li>Account Executive (AE) — most common at SI/VAR</li>
+                            <li>Channel Sales Representative</li>
+                            <li>Channel Partner Sales Executive</li>
+                            <li>Systems Integrator / VAR Sales Rep</li>
+                            <li>Solutions Consultant</li>
+                            <li>Territory Sales Executive</li>
+                        </ul>
+                    </div>
+
+                    <div class="data-card">
+                        <h4>Top Goals (Survey-Backed)</h4>
+                        <ul>
+                            <li>Hit quota and earn full commission (primary motivator)</li>
+                            <li>Retain and expand existing customer relationships</li>
+                            <li>Grow territory and personal reputation</li>
+                            <li>Build toward Account Manager or Regional Manager role</li>
+                        </ul>
+                    </div>
+
+                    <div class="data-card">
+                        <h4>Top Frustrations — Partner Portals</h4>
+                        <ul>
+                            <li>47% cite portal usability and integration as top barrier (xAmplify)</li>
+                            <li>Fragmented tools (portal + CRM + email + LMS) = 40–55% lower adoption</li>
+                            <li>Admin work consumes 72% of the day — only 28% is selling (Salesforce SoS)</li>
+                            <li>Quota unrealistic: 91% of teams missed last year; 67% don't expect to hit this year</li>
+                            <li>PSM responds faster than portal — so they bypass self-service</li>
+                        </ul>
+                    </div>
+
+                    <div class="data-card">
+                        <h4>Portal Motivation Drivers</h4>
+                        <ul>
+                            <li>Deal registration speed and immediate status visibility</li>
+                            <li>Real-time commission and quota attainment tracking</li>
+                            <li>Mobile-accessible collateral during customer conversations</li>
+                            <li>Gamification — progress toward tier advancement or bonuses</li>
+                            <li>Fewer logins / friction; integrated with existing tools</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="data-card" style="margin-bottom:1.25rem;">
+                    <h4>How Steve Actually Spends His Day</h4>
+                    <p style="margin-bottom:.75rem; font-size:.8rem; color:var(--wf-muted, #6b7f99);">Source: Salesforce State of Sales 7th Edition (n=7,400+ sales professionals)</p>
+                    <div class="time-bar">
+                        <div class="time-row">
+                            <span class="time-label">Selling</span>
+                            <div class="time-track" role="progressbar" aria-valuenow="28" aria-valuemin="0" aria-valuemax="100" aria-label="28%">
+                                <div class="time-fill fill-blue" style="width:28%"></div>
+                            </div>
+                            <span class="time-pct">28%</span>
+                        </div>
+                        <div class="time-row">
+                            <span class="time-label">Data entry / CRM</span>
+                            <div class="time-track" role="progressbar" aria-valuenow="21" aria-valuemin="0" aria-valuemax="100" aria-label="21%">
+                                <div class="time-fill fill-muted" style="width:21%"></div>
+                            </div>
+                            <span class="time-pct">21%</span>
+                        </div>
+                        <div class="time-row">
+                            <span class="time-label">Email</span>
+                            <div class="time-track" role="progressbar" aria-valuenow="17" aria-valuemin="0" aria-valuemax="100" aria-label="17%">
+                                <div class="time-fill fill-muted" style="width:17%"></div>
+                            </div>
+                            <span class="time-pct">17%</span>
+                        </div>
+                        <div class="time-row">
+                            <span class="time-label">Prospecting</span>
+                            <div class="time-track" role="progressbar" aria-valuenow="17" aria-valuemin="0" aria-valuemax="100" aria-label="17%">
+                                <div class="time-fill fill-muted" style="width:17%"></div>
+                            </div>
+                            <span class="time-pct">17%</span>
+                        </div>
+                        <div class="time-row">
+                            <span class="time-label">Admin / other</span>
+                            <div class="time-track" role="progressbar" aria-valuenow="17" aria-valuemin="0" aria-valuemax="100" aria-label="17%">
+                                <div class="time-fill fill-muted" style="width:17%"></div>
+                            </div>
+                            <span class="time-pct">17%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="assessment-box assess-green">
+                    <h4>What's Accurate</h4>
+                    <ul>
+                        <li>Job title "Account Executive" is the most common title at mid-market SIs and VARs</li>
+                        <li>CloudBridge Solutions as a mid-market systems integrator is a completely realistic company type</li>
+                        <li>Quota + commission structure is standard; 50/50 or 60/40 base/variable is industry norm</li>
+                        <li>Pain points — portal friction, admin overload, slow approvals — are strongly backed by survey data</li>
+                        <li>84% of firms satisfied with vendor programs overall (CompTIA 2024), but portal UX is still the #1 barrier to rep adoption</li>
+                    </ul>
+                </div>
+
+                <div class="assessment-box assess-blue" style="margin-top:.75rem;">
+                    <h4>Recommended Enrichments</h4>
+                    <ul>
+                        <li>Show explicit quota attainment widget — this is what actually motivates login</li>
+                        <li>Surface commission tracking on deals (pending approval, approved, paid) in the deal registration view</li>
+                        <li>Reference the 28% selling stat as rationale for minimizing portal admin friction</li>
+                        <li>Add a "Quick Register" flow from mobile — reps are in front of customers</li>
+                        <li>Emphasize deal status transparency: "Will I get credit for this?" is the #1 concern</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── SECTION 3: Jordan Reeves ─── -->
+    <section aria-labelledby="jordan-h2">
+        <h2 id="jordan-h2">
+            <span aria-hidden="true">⚙️</span> Persona 2 — Partner Portal Administrator
+            <span class="section-badge">PM Portal User</span>
+        </h2>
+
+        <div class="persona-block">
+            <div class="persona-header">
+                <div class="persona-avatar avatar-pm" aria-hidden="true">JR</div>
+                <div class="persona-intro">
+                    <h3>Jordan Reeves</h3>
+                    <p class="persona-role">Portal Administrator · CloudBridge Solutions · Mid-Market Systems Integrator</p>
+                    <p>Manages CloudBridge's presence in the Equinix partner program — invites reps, handles deal registration approvals, tracks training completion, and coordinates with Equinix's PSM on program status.</p>
+                </div>
+                <div class="accuracy-badge" aria-label="Accuracy score: Medium — title needs revision">
+                    <div class="accuracy-score score-medium" aria-hidden="true">Med</div>
+                    <span class="accuracy-label">Accuracy</span>
+                </div>
+            </div>
+
+            <div class="persona-body">
+
+                <div class="stat-row" role="list" aria-label="Key statistics">
+                    <div class="stat-pill" role="listitem"><strong>$70K–$110K</strong> <span>Sales/RevOps Manager comp range</span></div>
+                    <div class="stat-pill" role="listitem"><strong>~30–100 users</strong> <span>typical span for this role</span></div>
+                    <div class="stat-pill" role="listitem"><strong>45%</strong> <span>of time is portal/system admin</span></div>
+                    <div class="stat-pill" role="listitem"><strong>Not a dedicated role</strong> <span>at most partner companies</span></div>
+                    <div class="stat-pill" role="listitem"><strong>Hybrid position</strong> <span>usually combined with Sales Ops or RevOps</span></div>
+                </div>
+
+                <div class="persona-grid">
+                    <div class="data-card">
+                        <h4>Who Actually Holds This Role</h4>
+                        <ul>
+                            <li>Sales Operations Manager (most common at mid-market SIs)</li>
+                            <li>Revenue Operations Analyst or Manager</li>
+                            <li>Office Manager / Executive Assistant (at smaller partners, &lt;50 reps)</li>
+                            <li>Director-level Sales Manager (manages reps AND portal admin)</li>
+                            <li>Dedicated "Partner Administrator" is rare — usually 50%+ of a hybrid role</li>
+                        </ul>
+                    </div>
+
+                    <div class="data-card">
+                        <h4>Real Job Titles in Market</h4>
+                        <ul>
+                            <li>Sales Operations Manager</li>
+                            <li>Revenue Operations Manager / Analyst</li>
+                            <li>Partner Operations Manager</li>
+                            <li>Partner Administrator</li>
+                            <li>Channel Coordinator</li>
+                            <li>Alliance Manager</li>
+                            <li>Partner Relationship Coordinator</li>
+                        </ul>
+                    </div>
+
+                    <div class="data-card">
+                        <h4>Top Goals</h4>
+                        <ul>
+                            <li>Keep the portal working and reps actually using it (not email workarounds)</li>
+                            <li>Accurate deal registration and clean data for commission reconciliation</li>
+                            <li>Support reps so they aren't calling with basic questions</li>
+                            <li>Produce portal adoption metrics for their own management</li>
+                        </ul>
+                    </div>
+
+                    <div class="data-card">
+                        <h4>Top Frustrations</h4>
+                        <ul>
+                            <li>Caught between rep complaints about portal UX and vendor mandates for adoption</li>
+                            <li>Difficult to report actual portal usage metrics — portal reporting tools are weak</li>
+                            <li>Deals registered inconsistently; constant data cleanup</li>
+                            <li>Role viewed as overhead, not revenue driver — often undervalued</li>
+                            <li>No clear career path ("next step after portal admin?")</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="data-card" style="margin-bottom:1.25rem;">
+                    <h4>How Jordan Splits Her Time</h4>
+                    <p style="margin-bottom:.75rem; font-size:.8rem; color:var(--wf-muted, #6b7f99);">Synthesized from Oracle Partner Administrator documentation, Crossbeam org chart research, and RevOps role analysis</p>
+                    <div class="time-bar">
+                        <div class="time-row">
+                            <span class="time-label">Portal / system admin</span>
+                            <div class="time-track" role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" aria-label="45%">
+                                <div class="time-fill fill-orange" style="width:45%"></div>
+                            </div>
+                            <span class="time-pct">45%</span>
+                        </div>
+                        <div class="time-row">
+                            <span class="time-label">Relationship / comms</span>
+                            <div class="time-track" role="progressbar" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100" aria-label="35%">
+                                <div class="time-fill fill-orange" style="width:35%; opacity:.7"></div>
+                            </div>
+                            <span class="time-pct">35%</span>
+                        </div>
+                        <div class="time-row">
+                            <span class="time-label">Reporting / analysis</span>
+                            <div class="time-track" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" aria-label="20%">
+                                <div class="time-fill fill-muted" style="width:20%"></div>
+                            </div>
+                            <span class="time-pct">20%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="assessment-box assess-green">
+                    <h4>What's Accurate</h4>
+                    <ul>
+                        <li>The role itself is real — someone at every partner company manages portal access and deal registration</li>
+                        <li>Responsibilities listed in the wireframe (invite reps, assign training, track deals) match documented role requirements</li>
+                        <li>Pain points — being caught between reps and vendor, data quality issues — are consistent with Operations role research</li>
+                        <li>Working at a mid-market SI is realistic; this is where the admin burden is highest and dedicated portal staff least likely</li>
+                    </ul>
+                </div>
+
+                <div class="assessment-box assess-amber" style="margin-top:.75rem;">
+                    <h4>What Needs Revision</h4>
+                    <ul>
+                        <li>"Portal Administrator" as a standalone job title is too narrow — this is almost never a dedicated role at a partner company of CloudBridge's size</li>
+                        <li>More realistic title: "Sales Operations Manager" or "Partner Operations Manager"</li>
+                        <li>The role is likely a 40–60% portion of someone's broader Sales Ops or RevOps responsibilities</li>
+                        <li>Seniority may be slightly underrepresented — this person often holds a Manager-level title and may report to a VP of Sales</li>
+                        <li>Add the frustration of having no good reporting tools for measuring their own program's health</li>
+                    </ul>
+                </div>
+
+                <div class="assessment-box assess-blue" style="margin-top:.75rem;">
+                    <h4>Design Implications</h4>
+                    <ul>
+                        <li>Admin dashboard should lead with adoption metrics (who's logged in, deal reg volume, training %) — this is what Jordan has to report upward</li>
+                        <li>Bulk operations are critical: invite 20 reps at once, bulk assign training, export reports to Excel for leadership decks</li>
+                        <li>Surface data quality indicators: highlight deals with incomplete fields or duplicates so Jordan can fix them proactively</li>
+                        <li>Give Jordan an "executive summary" report she can export and share with her VP without reformatting</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── SECTION 4: Marcus Chen ─── -->
+    <section aria-labelledby="marcus-h2">
+        <h2 id="marcus-h2">
+            <span aria-hidden="true">🤝</span> Persona 3 — Partner Success Manager
+            <span class="section-badge">Vendor-Side User</span>
+        </h2>
+
+        <div class="persona-block">
+            <div class="persona-header">
+                <div class="persona-avatar avatar-psm" aria-hidden="true">MC</div>
+                <div class="persona-intro">
+                    <h3>Marcus Chen</h3>
+                    <p class="persona-role">Partner Success Manager · Equinix · Vendor-Side Channel Team</p>
+                    <p>Manages Equinix's relationships with 5–15 partner companies. Supports deal progression, runs QBRs, drives enablement, tracks training completion, and is the primary escalation point for partner issues. Revenue targets on top of relationship responsibilities.</p>
+                </div>
+                <div class="accuracy-badge" aria-label="Accuracy score: High">
+                    <div class="accuracy-score score-high" aria-hidden="true">High</div>
+                    <span class="accuracy-label">Accuracy</span>
+                </div>
+            </div>
+
+            <div class="persona-body">
+
+                <div class="stat-row" role="list" aria-label="Key statistics">
+                    <div class="stat-pill" role="listitem"><strong>$138K–$231K</strong> <span>CAM/PSM comp range (Glassdoor, Cisco)</span></div>
+                    <div class="stat-pill" role="listitem"><strong>5–15 partners</strong> <span>typical span per PSM</span></div>
+                    <div class="stat-pill" role="listitem"><strong>8–10+ years</strong> <span>experience required (Cisco JD)</span></div>
+                    <div class="stat-pill" role="listitem"><strong>60%</strong> <span>of time: admin, planning, enablement</span></div>
+                    <div class="stat-pill" role="listitem"><strong>QBR</strong> <span>quarterly business review is a core deliverable</span></div>
+                </div>
+
+                <div class="persona-grid">
+                    <div class="data-card">
+                        <h4>Real Job Titles for This Role</h4>
+                        <ul>
+                            <li>Partner Success Manager (PSM) — common at cloud/infrastructure vendors</li>
+                            <li>Channel Account Manager (CAM) — used at Cisco, Palo Alto, others</li>
+                            <li>Partner Sales Manager — used in Equinix job postings directly</li>
+                            <li>Alliance Manager — common at enterprise software vendors</li>
+                            <li>Partner Development Manager</li>
+                            <li>Partner Business Manager</li>
+                        </ul>
+                    </div>
+
+                    <div class="data-card">
+                        <h4>What They're Actually Measured On</h4>
+                        <ul>
+                            <li>Partner-sourced revenue and bookings growth (primary)</li>
+                            <li>Partner portal adoption rate (DAU/MAU)</li>
+                            <li>Training and certification completion (%)</li>
+                            <li>Deal registration volume and pipeline accuracy</li>
+                            <li>Partner retention / churn rate</li>
+                            <li>QBR completion and partner satisfaction score</li>
+                        </ul>
+                    </div>
+
+                    <div class="data-card">
+                        <h4>Top Goals</h4>
+                        <ul>
+                            <li>Partners hitting bookings targets (revenue is the primary metric)</li>
+                            <li>High partner engagement: training, portal usage, deal registration</li>
+                            <li>Scale the model — support more partners without burning out</li>
+                            <li>Accurate deal attribution so program ROI is demonstrable to leadership</li>
+                        </ul>
+                    </div>
+
+                    <div class="data-card">
+                        <h4>Top Frustrations</h4>
+                        <ul>
+                            <li>Deal attribution disputes: two partners register the same deal; requires manual arbitration</li>
+                            <li>Partners gaming the system: registering already-won deals to claim credit</li>
+                            <li>Limited data to prove program ROI to vendor leadership</li>
+                            <li>Portal doesn't integrate with Equinix's internal CRM; double data entry</li>
+                            <li>Disproportionate time on low-revenue partners; hard to prioritize</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="data-card" style="margin-bottom:1.25rem;">
+                    <h4>How Marcus Spends His Time</h4>
+                    <p style="margin-bottom:.75rem; font-size:.8rem; color:var(--wf-muted, #6b7f99);">Source: Impartner PSM definition, SaasPedia Partner Success Manager guide, Equinix PSM job postings</p>
+                    <div class="time-bar">
+                        <div class="time-row">
+                            <span class="time-label">Sales enablement / co-sell</span>
+                            <div class="time-track" role="progressbar" aria-valuenow="33" aria-valuemin="0" aria-valuemax="100" aria-label="33%">
+                                <div class="time-fill fill-green" style="width:33%"></div>
+                            </div>
+                            <span class="time-pct">33%</span>
+                        </div>
+                        <div class="time-row">
+                            <span class="time-label">Relationship / account mgmt</span>
+                            <div class="time-track" role="progressbar" aria-valuenow="28" aria-valuemin="0" aria-valuemax="100" aria-label="28%">
+                                <div class="time-fill fill-green" style="width:28%; opacity:.7"></div>
+                            </div>
+                            <span class="time-pct">28%</span>
+                        </div>
+                        <div class="time-row">
+                            <span class="time-label">GTM prep / enablement content</span>
+                            <div class="time-track" role="progressbar" aria-valuenow="22" aria-valuemin="0" aria-valuemax="100" aria-label="22%">
+                                <div class="time-fill fill-muted" style="width:22%"></div>
+                            </div>
+                            <span class="time-pct">22%</span>
+                        </div>
+                        <div class="time-row">
+                            <span class="time-label">Reporting / performance mgmt</span>
+                            <div class="time-track" role="progressbar" aria-valuenow="17" aria-valuemin="0" aria-valuemax="100" aria-label="17%">
+                                <div class="time-fill fill-muted" style="width:17%; opacity:.7"></div>
+                            </div>
+                            <span class="time-pct">17%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="assessment-box assess-green">
+                    <h4>What's Accurate</h4>
+                    <ul>
+                        <li>Job title PSM is used in real Equinix job postings; role responsibilities align with public postings</li>
+                        <li>Responsibilities (QBR, co-sell, enablement, deal support, onboarding new partners) match documented role requirements</li>
+                        <li>Working at Equinix with 5–15 partners is an accurate span of control for infrastructure PSMs</li>
+                        <li>Pain points around portal data quality and attribution are well-documented across Cisco, AWS, and Equinix-comparable programs</li>
+                        <li>Seniority (senior IC / junior manager, 8–10+ years) is aligned with job posting requirements</li>
+                    </ul>
+                </div>
+
+                <div class="assessment-box assess-blue" style="margin-top:.75rem;">
+                    <h4>Recommended Enrichments</h4>
+                    <ul>
+                        <li>Add deal dispute / conflict resolution as an explicit use case in the portal — not just happy-path deal registration</li>
+                        <li>Include a QBR preparation view: partner performance trend over 4 quarters, exportable PDF summary</li>
+                        <li>Show bulk partner communication tool (announce new promotions, certifications, tier changes to all partners at once)</li>
+                        <li>Add "partner health score" dashboard: training completion + portal activity + pipeline progress per partner</li>
+                        <li>Reference that Marcus carries quota himself — he has personal revenue responsibility, not just an enablement function</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── SECTION 5: Maria Hill ─── -->
+    <section aria-labelledby="maria-h2">
+        <h2 id="maria-h2">
+            <span aria-hidden="true">🏢</span> Persona 4 — End User Customer (EUC)
+            <span class="section-badge">EUC Portal User</span>
+        </h2>
+
+        <div class="persona-block">
+            <div class="persona-header">
+                <div class="persona-avatar avatar-euc" aria-hidden="true">MH</div>
+                <div class="persona-intro">
+                    <h3>Maria Hill</h3>
+                    <p class="persona-role">Director, Network Infrastructure · Meridian Capital Group · Enterprise Customer</p>
+                    <p>Owns infrastructure decisions for a mid-to-large financial services firm. Responsible for colocation, cloud connectivity, and interconnection strategy. Bought into Equinix through CloudBridge and uses the EUC portal to manage active assets, track support tickets, and report SLA performance to internal stakeholders and finance.</p>
+                </div>
+                <div class="accuracy-badge" aria-label="Accuracy score: Draft">
+                    <div class="accuracy-score" style="background:#fffbe6;color:#704000;border:1px solid #704000;font-size:.7rem;padding:4px 8px;border-radius:4px;font-weight:700;">Draft</div>
+                    <span class="accuracy-label">Not yet researched</span>
+                </div>
+            </div>
+
+            <div class="persona-block" style="background:#fffbe6;border:1px solid #704000;border-radius:6px;padding:12px 16px;margin:0 0 20px;">
+                <strong style="font-size:13px;color:#704000;">⚠ This is a proto-persona — draft only.</strong>
+                <p style="font-size:13px;color:#704000;margin:6px 0 0;line-height:1.55;">Maria's goals and pain points are inferred from industry knowledge about IT Directors at financial services firms that use Equinix colocation. No primary research has been conducted. Everything below should be treated as a hypothesis to test — not a validated finding. Do not use to justify design decisions without user research to back it up.</p>
+            </div>
+
+            <div class="persona-body">
+
+                <div class="persona-grid">
+                    <div class="data-card">
+                        <h4>What We Can Reasonably Assume (Secondary Research)</h4>
+                        <ul>
+                            <li><strong>Title range:</strong> IT Director, Director of Network Infrastructure, VP of Technology Operations, Head of Infrastructure — all common at mid-large financial firms</li>
+                            <li><strong>Equinix buying pattern:</strong> Financial services firms are a top Equinix vertical; colocation + Fabric is a common combo for regulated data residency + cloud connectivity needs</li>
+                            <li><strong>Procurement path:</strong> Often buys through a partner/SI for pricing, bundling, and support — not directly from Equinix sales</li>
+                            <li><strong>Internal reporting burden:</strong> IT Directors in regulated industries routinely report infrastructure spend to Finance and C-suite; cost allocation and chargeback are real workflows</li>
+                            <li><strong>SLA accountability:</strong> Financial services SLAs are contractual; any outage or deviation creates internal audit exposure</li>
+                        </ul>
+                    </div>
+
+                    <div class="data-card">
+                        <h4>Hypothetical Pain Points (Unvalidated)</h4>
+                        <ul>
+                            <li>Provisioning status is opaque — relies on emailing CloudBridge rep for updates, no self-service tracking</li>
+                            <li>SLA reports arrive as PDFs in quarterly emails; no real-time view or threshold alerting</li>
+                            <li>Monthly Equinix invoices don't map to internal cost centers — Finance requests manual allocation every month</li>
+                            <li>Support tickets feel like a black box after submission — no status visibility without calling support</li>
+                            <li>Renewing or ordering new services requires a sales cycle through the partner rep, even for straightforward expansions</li>
+                        </ul>
+                        <p style="font-size:12px;color:var(--wf-muted);margin-top:10px;font-style:italic;">These pain points are plausible but not validated. Each one is a candidate research question for a first-round EUC interview script.</p>
+                    </div>
+
+                    <div class="data-card">
+                        <h4>What Needs Primary Research</h4>
+                        <ul>
+                            <li>Does Maria log into the EUC portal at all, or does she delegate this entirely to a NOC or IT ops team member?</li>
+                            <li>What does her self-service tolerance look like — does she want a portal, or does she prefer account-managed service?</li>
+                            <li>How does she track SLA compliance today — portal, email, spreadsheet, third-party monitoring?</li>
+                            <li>Who in her organization actually raises support tickets? Is Maria even the right target for the ticket-tracking workflow?</li>
+                            <li>How important is cost allocation granularity — is this a pain point for her, or does Finance handle it separately?</li>
+                        </ul>
+                    </div>
+
+                    <div class="data-card">
+                        <h4>Design Implications (Tentative)</h4>
+                        <ul>
+                            <li>EUC portal homepage: asset overview with real-time status, open tickets, and a prominent SLA compliance indicator</li>
+                            <li>Provisioning tracker: step-by-step status visible without contacting the rep or Equinix support</li>
+                            <li>Billing: cost-by-site or cost-by-service breakdown, exportable for Finance chargeback</li>
+                            <li>Support: ticket history and real-time status — not just confirmation emails</li>
+                            <li>The right level of self-service vs. rep-assisted is unknown — don't over-invest in self-service order flows until Maria's workflow is validated</li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── SECTION 6: Cross-Persona Implications ─── -->
+    <section aria-labelledby="implications-h2">
+        <h2 id="implications-h2">
+            <span aria-hidden="true">🔍</span> Design Implications from Research
+            <span class="section-badge">For the PCP</span>
+        </h2>
+
+        <div class="implication-grid">
+            <div class="implication-card imp-rep">
+                <h4>For Steve (Rep Portal)</h4>
+                <p>Deal registration is not administrative — it's commission. Every second of friction before a deal is locked costs Steve money. Mobile-first deal reg, instant confirmation, and real-time status tracking are the features that will actually drive portal login. Collateral search during customer calls is the secondary use case.</p>
+            </div>
+            <div class="implication-card imp-pm">
+                <h4>For Jordan (PM Admin Portal)</h4>
+                <p>Jordan needs to prove the program works upward to her VP. Her primary portal use is reporting and bulk operations, not day-to-day selling. The admin dashboard should lead with exportable adoption metrics — and every workflow should have a bulk path (bulk invite, bulk assign training, bulk export).</p>
+            </div>
+            <div class="implication-card imp-psm">
+                <h4>For Marcus (PSM Portal — Equinix-side)</h4>
+                <p>Marcus manages 5–15 partners and needs to see across all of them without drilling into each record. A partner portfolio view — showing health score, pipeline, training completion, and last QBR date — is the primary workflow. Deal dispute resolution needs a structured workflow, not an email chain.</p>
+            </div>
+            <div class="implication-card imp-euc">
+                <h4>For Maria (EUC Portal) — Tentative</h4>
+                <p>Maria's primary need is visibility, not self-service purchasing. A homepage showing asset health, open ticket count, and current SLA compliance — without drilling into sub-pages — is likely the highest-value design target. Cost allocation export is a secondary but recurring workflow. Validate before building; Maria may delegate portal use entirely to NOC or IT ops staff.</p>
+            </div>
+            <div class="implication-card imp-cross">
+                <h4>Why Partners Abandon Portals</h4>
+                <p>CompTIA data: 50% of partners dropped a vendor for poor experience in the last 2 years. xAmplify research: 47% cite usability and integration as the top barrier. Fragmented tools (portal + CRM + email + LMS) reduce adoption 40–55%. The single biggest win is reducing tool-switching — ideally, one place for deals, training, and collateral.</p>
+            </div>
+            <div class="implication-card imp-cross">
+                <h4>Portal Adoption Is Driven by Self-Interest</h4>
+                <p>Steve logs in when he can see his commission status. Jordan logs in when she can see her team's metrics. Marcus logs in when he can see pipeline across his book of business. Adoption is not about making the portal beautiful — it's about making the portal answer the question each persona has in their head when they open it.</p>
+            </div>
+            <div class="implication-card imp-cross">
+                <h4>Jordan's Title Should Be Revised</h4>
+                <p>Calling Jordan a "Portal Administrator" implies a dedicated, narrow role that rarely exists in practice. Renaming to "Sales Operations Manager" or "Partner Operations Manager" better reflects how this responsibility is actually distributed at mid-market SIs — and changes the assumptions designers make about her seniority, access level, and goals.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── SECTION 6: Sources ─── -->
+    <section aria-labelledby="sources-h2">
+        <h2 id="sources-h2">
+            <span aria-hidden="true">📚</span> Sources
+            <span class="section-badge">30 references</span>
+        </h2>
+
+        <ul class="sources-list" role="list">
+            <li><span class="src-org">CompTIA</span><a href="https://connect.comptia.org/content/research/state-of-the-channel" target="_blank" rel="noopener">State of the Channel 2024 (n=1,042 channel execs)</a></li>
+            <li><span class="src-org">Salesforce</span><a href="https://www.salesforce.com/content/dam/web/en_us/www/images/form/pdf/pdf/state-of-sales-report-salesforce.pdf" target="_blank" rel="noopener">State of Sales 7th Edition (n=7,400+ sales pros)</a></li>
+            <li><span class="src-org">BLS</span><a href="https://www.bls.gov/ooh/sales/wholesale-and-manufacturing-sales-representatives.htm" target="_blank" rel="noopener">Wholesale & Manufacturing Sales Reps — Occupational Outlook</a></li>
+            <li><span class="src-org">Zippia</span><a href="https://www.zippia.com/sales-representative-jobs/demographics/" target="_blank" rel="noopener">Sales Rep Demographics (age, gender, education)</a></li>
+            <li><span class="src-org">LinkedIn</span><a href="https://www.linkedin.com/jobs/sales-representative-jobs" target="_blank" rel="noopener">Channel Sales Representative Job Postings (248,000+)</a></li>
+            <li><span class="src-org">Tealhq</span><a href="https://www.tealhq.com/job-titles/channel-sales-manager" target="_blank" rel="noopener">Channel Sales Manager Job Titles Analysis</a></li>
+            <li><span class="src-org">Tealhq</span><a href="https://www.tealhq.com/job-titles/revenue-operations-manager" target="_blank" rel="noopener">Revenue Operations Manager Job Titles Analysis</a></li>
+            <li><span class="src-org">Everstage</span><a href="https://www.everstage.com/sales-compensation/msp-sales-compensation-plan" target="_blank" rel="noopener">MSP Sales Compensation Plan 2025</a></li>
+            <li><span class="src-org">QuotaPath</span><a href="https://www.quotapath.com/blog/sales-teams-miss-quota/" target="_blank" rel="noopener">91% of Sales Teams Missed Quota Analysis</a></li>
+            <li><span class="src-org">QuotaPath</span><a href="https://www.quotapath.com/blog/industry-standard-quota-commission/" target="_blank" rel="noopener">Industry Standard Quota and Commission Research</a></li>
+            <li><span class="src-org">Salesforce</span><a href="https://www.salesforce.com/blog/sales-burnout/" target="_blank" rel="noopener">Sales Admin Overload: Only 28% of Day Is Selling</a></li>
+            <li><span class="src-org">Salesforce</span><a href="https://www.salesforce.com/sales/partner-relationship-management/channel-sales-guide/" target="_blank" rel="noopener">Channel Sales Guide — Partner Relationship Management</a></li>
+            <li><span class="src-org">xAmplify</span><a href="https://xamplify.com/5-strategies-to-boost-portal-and-prm-adoption/" target="_blank" rel="noopener">5 Strategies to Boost Partner Portal Adoption (47% stat)</a></li>
+            <li><span class="src-org">Infoservices</span><a href="https://www.infoservices.com/blogs/salesforce/salesforce-experience-cloud-for-partner-users-challenges-mvp-strategy" target="_blank" rel="noopener">Salesforce Experience Cloud Portal Challenges</a></li>
+            <li><span class="src-org">Workspan</span><a href="https://www.workspan.com/blog/why-your-prm-or-partner-portal-wont-cut-it" target="_blank" rel="noopener">Why Your PRM or Partner Portal Won't Cut It</a></li>
+            <li><span class="src-org">PartnerPortal.io</span><a href="https://partnerportal.io/features/deal-registration" target="_blank" rel="noopener">Deal Registration — What Motivates Rep Engagement</a></li>
+            <li><span class="src-org">Bigtincan</span><a href="https://www.bigtincan.com/resources/6-channel-partner-sales-problems-and-solutions/" target="_blank" rel="noopener">6 Channel Partner Sales Problems and Solutions</a></li>
+            <li><span class="src-org">Crossbeam</span><a href="https://insider.crossbeam.com/entry/a-hiring-managers-guide-to-partnerships-roles-and-job-titles" target="_blank" rel="noopener">Hiring Guide: Partnerships Roles and Job Titles</a></li>
+            <li><span class="src-org">Crossbeam</span><a href="https://insider.crossbeam.com/entry/partnerships-team-org-charts" target="_blank" rel="noopener">Partnerships Team Org Charts</a></li>
+            <li><span class="src-org">Oracle</span><a href="https://docs.oracle.com/en/cloud/saas/sales/oaslm/Partner_Administrator_job_roles.html" target="_blank" rel="noopener">Partner Administrator Job Roles Documentation</a></li>
+            <li><span class="src-org">Workable</span><a href="https://resources.workable.com/partnership-manager-job-description" target="_blank" rel="noopener">Partnership Manager Job Description Template</a></li>
+            <li><span class="src-org">Impartner</span><a href="https://impartner.com/glossary/what-is-partner-success-manager/" target="_blank" rel="noopener">What Is a Partner Success Manager?</a></li>
+            <li><span class="src-org">SaasPedia</span><a href="https://saaspedia.io/partner-success-manager/" target="_blank" rel="noopener">Partner Success Manager Role Guide</a></li>
+            <li><span class="src-org">Impartner</span><a href="https://impartner.com/resources/blog/best-kpis-for-partnerships" target="_blank" rel="noopener">15 Best KPIs for Measuring Partnership Success</a></li>
+            <li><span class="src-org">Kiflo</span><a href="https://www.kiflo.com/blog/13-partner-program-kpis" target="_blank" rel="noopener">13 Strategic Partnership KPIs</a></li>
+            <li><span class="src-org">Cisco (Glassdoor)</span><a href="https://www.glassdoor.com/Salary/Cisco-Partner-Account-Manager-Salaries-E1425_D_KO6,29.htm" target="_blank" rel="noopener">Cisco Partner Account Manager Compensation ($138K–$231K)</a></li>
+            <li><span class="src-org">Cisco Careers</span><a href="https://jobs.cisco.com/jobs/ProjectDetail/Partner-Account-Manager/1429987" target="_blank" rel="noopener">Partner Account Manager Job Posting (8–10 yr requirement)</a></li>
+            <li><span class="src-org">Equinix Built In</span><a href="https://builtin.com/job/partner-sales-manager/6724109" target="_blank" rel="noopener">Equinix Partner Sales Manager Job Posting</a></li>
+            <li><span class="src-org">Equinix Careers</span><a href="https://careers.equinix.com/jobs/partner-sales-manager-sydney-new-south-wales-australia" target="_blank" rel="noopener">Equinix Partner Sales Manager (Sydney) — Full Job Description</a></li>
+            <li><span class="src-org">HopperBlue</span><a href="https://www.hopperblue.com/resources/exploring-todays-challenges-for-channel-sales-leaders-key-insights-from-our-2024-study" target="_blank" rel="noopener">2024 Channel Sales Leaders Challenges Study</a></li>
+            <li><span class="src-org">Channel As Service</span><a href="https://channelasservice.com/reseller-channel-sales-2024-strategies/" target="_blank" rel="noopener">Reseller Channel Sales 2024 Strategies</a></li>
+            <li><span class="src-org">Guidance Solutions</span><a href="https://www.guidance.com/blog/know-your-key-partnership-performance-indicators" target="_blank" rel="noopener">Partnership Performance Indicators for PSMs</a></li>
+        </ul>
+    </section>
+
+</main>
+
+<script src="wf-nav.js"></script>
+</body>
+</html>

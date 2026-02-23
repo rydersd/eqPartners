@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PM Home — Partner Manager · Equinix PCP</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Salesforce Sans, sans-serif;
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .welcome-banner {
+      background: var(--wf-ink, #1e2a3a);
+      color: white;
+      padding: 32px 24px;
+      border-radius: 8px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .welcome-banner h1 {
+      font-size: 28px;
+      font-weight: 300;
+      margin-bottom: 8px;
+    }
+
+    .welcome-banner .company-info {
+      font-size: 14px;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 4px;
+    }
+
+    .company-meta {
+      font-size: 12px;
+      color: rgba(255,255,255,0.7);
+    }
+
+    .banner-right {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .tier-badge-banner {
+      background-color: rgba(255,255,255,0.15);
+      padding: 8px 16px;
+      border-radius: 4px;
+      text-align: center;
+    }
+
+    .tier-badge-text {
+      font-size: 11px;
+      color: rgba(255,255,255,0.7);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .tier-badge-value {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .left-column {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .right-column {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+      padding: 24px;
+    }
+
+    .card h2 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--wf-ink, #1e2a3a);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
+      border-bottom: 1px solid var(--wf-surface, #edf1f7);
+      padding-bottom: 12px;
+    }
+
+    .tier-hero {
+      background: var(--wf-ink, #1e2a3a);
+      border-left: 4px solid var(--wf-accent, #3d6daa);
+    }
+
+    /* ── Tier hero — light overrides on dark card ─────────── */
+    .tier-hero h2 {
+      color: rgba(255,255,255,0.9);
+      border-bottom-color: rgba(255,255,255,0.12);
+    }
+    .tier-hero .tier-label      { color: rgba(255,255,255,0.6); }
+    .tier-hero .tier-badge      { color: #f5d060; } /* gold */
+    .tier-hero .tier-maintained { color: rgba(255,255,255,0.65); }
+    .tier-hero .progress-label  { color: rgba(255,255,255,0.9); }
+    .tier-hero .progress-bar    { background: rgba(255,255,255,0.15); }
+    .tier-hero .progress-fill   { background: #f5d060; }
+    .tier-hero .progress-text   { color: rgba(255,255,255,0.7); }
+    .tier-hero .benefit-box {
+      background: rgba(255,255,255,0.1);
+      border-left-color: rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.9);
+    }
+
+    .tier-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .tier-current {
+      text-align: center;
+    }
+
+    .tier-current .tier-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--wf-muted, #6b7f99);
+      margin-bottom: 8px;
+    }
+
+    .tier-current .tier-badge {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--wf-accent, #3d6daa);
+      margin-bottom: 8px;
+    }
+
+    .progress-section {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--wf-surface, #edf1f7);
+    }
+
+    .progress-label {
+      font-size: 12px;
+      color: var(--wf-ink, #1e2a3a);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .progress-bar {
+      height: 8px;
+      background-color: var(--wf-surface, #edf1f7);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background-color: var(--wf-ink, #1e2a3a);
+      width: 95%;
+      border-radius: 4px;
+    }
+
+    .progress-text {
+      font-size: 12px;
+      color: var(--wf-muted, #6b7f99);
+      margin-bottom: 12px;
+    }
+
+    .benefit-box {
+      background-color: var(--wf-canvas, #f5f7fb);
+      border-left: 3px solid var(--wf-ink, #1e2a3a);
+      padding: 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      color: var(--wf-ink, #1e2a3a);
+      font-weight: 500;
+      line-height: 1.5;
+    }
+
+    .kpi-grid-small {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .kpi-mini-card {
+      background-color: var(--wf-canvas, #f5f7fb);
+      padding: 16px;
+      border-radius: 4px;
+    }
+
+    .kpi-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--wf-muted, #6b7f99);
+      margin-bottom: 6px;
+    }
+
+    .kpi-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 4px;
+    }
+
+    .kpi-detail {
+      font-size: 12px;
+      color: var(--wf-muted, #6b7f99);
+    }
+
+    .trend-arrow {
+      display: inline-block;
+      color: var(--wf-ink, #1e2a3a);
+      font-weight: 700;
+      margin-left: 4px;
+    }
+
+    .trend-arrow.down {
+      color: var(--wf-red, #8b4553);
+    }
+
+    .team-training {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .progress-bar-cluster {
+      flex: 1;
+    }
+
+    .progress-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .progress-row-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+      width: 90px;
+      flex-shrink: 0;
+    }
+
+    .progress-row-bar-bg {
+      flex: 1;
+      height: 20px;
+      background: var(--wf-canvas, #f5f7fb);
+      border-radius: 3px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-row-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #fff;
+      transition: width 0.3s ease;
+    }
+
+    .progress-headline {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 4px;
+    }
+
+    .progress-subtext {
+      font-size: 12px;
+      color: var(--wf-muted, #6b7f99);
+      margin-bottom: 14px;
+    }
+
+    .team-training-legend {
+      flex: 1;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    .team-snapshot-table {
+      margin-top: 12px;
+    }
+
+    .mini-table-header {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 12px;
+      padding: 8px 12px;
+      background-color: var(--wf-canvas, #f5f7fb);
+      border-bottom: 1px solid var(--wf-surface, #edf1f7);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--wf-muted, #6b7f99);
+    }
+
+    .mini-table-row {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 12px;
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--wf-surface, #edf1f7);
+      font-size: 12px;
+      align-items: center;
+    }
+
+    .mini-table-row:last-child {
+      border-bottom: none;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 10px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .status-on-track {
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .status-behind {
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-red, #8b4553);
+    }
+
+    .status-completed {
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .stat-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background-color: var(--wf-canvas, #f5f7fb);
+      border-bottom: 1px solid white;
+    }
+
+    .stat-bar:last-child {
+      border-bottom: none;
+      border-radius: 0 0 4px 4px;
+    }
+
+    .stat-bar:first-child {
+      border-radius: 4px 4px 0 0;
+    }
+
+    .stat-bar-label {
+      font-size: 13px;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .stat-bar-value {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--wf-accent, #3d6daa);
+    }
+
+    .quick-action-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .action-btn {
+      background: white;
+      border: 1px solid var(--wf-surface, #edf1f7);
+      border-radius: 4px;
+      padding: 16px;
+      text-align: center;
+      cursor: pointer;
+      text-decoration: none;
+      color: var(--wf-accent, #3d6daa);
+      font-weight: 600;
+      font-size: 12px;
+      transition: all 0.2s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .action-btn:hover {
+      background-color: var(--wf-canvas, #f5f7fb);
+      border-color: var(--wf-accent, #3d6daa);
+    }
+
+    .action-icon {
+      font-size: 24px;
+    }
+
+    .announcements-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .announcement-item {
+      padding: 12px;
+      border-bottom: 1px solid var(--wf-surface, #edf1f7);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .announcement-item:last-child {
+      border-bottom: none;
+    }
+
+    .announcement-item:hover {
+      background-color: var(--wf-canvas, #f5f7fb);
+    }
+
+    .announcement-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--wf-accent, #3d6daa);
+      margin-bottom: 4px;
+    }
+
+    .announcement-detail {
+      font-size: 12px;
+      color: var(--wf-muted, #6b7f99);
+    }
+
+    .psm-card {
+      background: var(--wf-ink, #1e2a3a);
+      border-left: 4px solid var(--wf-ink, #1e2a3a);
+      padding: 16px;
+      border-radius: 4px;
+    }
+
+    .psm-person {
+      font-weight: 700;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 4px;
+    }
+
+    .psm-title {
+      font-size: 11px;
+      color: var(--wf-muted, #6b7f99);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .psm-message {
+      font-size: 13px;
+      color: var(--wf-ink, #1e2a3a);
+      font-style: italic;
+      line-height: 1.5;
+    }
+
+    .spec-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--wf-ink, #1e2a3a);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+      border-bottom: 1px solid var(--wf-surface, #edf1f7);
+      padding-bottom: 8px;
+    }
+
+    .spec-content {
+      font-size: 12px;
+      color: var(--wf-muted, #6b7f99);
+      line-height: 1.6;
+    }
+
+    .spec-list {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .spec-list li {
+      margin-bottom: 8px;
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .spec-list li:before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--wf-accent, #3d6daa);
+    }
+
+    .view-all-link {
+      display: block;
+      text-align: center;
+      padding: 12px;
+      color: var(--wf-accent, #3d6daa);
+      font-weight: 600;
+      font-size: 12px;
+      cursor: pointer;
+      border-top: 1px solid var(--wf-surface, #edf1f7);
+    }
+
+    .view-all-link:hover {
+      background-color: var(--wf-canvas, #f5f7fb);
+    }
+
+    .notification-badge {
+      background-color: var(--wf-red, #8b4553);
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 10px;
+      margin-left: 4px;
+    }
+
+    @media (max-width: 768px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .tier-content {
+        grid-template-columns: 1fr;
+      }
+
+      .team-training {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .quick-action-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .kpi-grid-small {
+        grid-template-columns: 1fr;
+      }
+
+      .welcome-banner {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .banner-right {
+        width: 100%;
+        margin-top: 16px;
+      }
+</style>
+</head>
+<body>
+<div class="page-context-bar">
+  <div style="max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <nav class="wf-breadcrumb" aria-label="Breadcrumb" style="margin-bottom:0;">
+      <span class="wf-breadcrumb-current">Home</span>
+    </nav>
+    <span class="persona-badge persona-badge--pm">PM</span>
+  </div>
+</div>
+  <header class="wf-header">
+    <div class="wf-header-logo"><svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix"><path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/></svg></div>
+    <div class="wf-header-title">Partner Central</div>
+    <nav class="wf-header-nav">
+      <a href="pm-home-dashboard.html" class="active">Dashboard</a>
+      <a href="pm-team-management.html">Team</a>
+      <a href="pm-deals-revenue.html">Deals</a>
+      <a href="pm-team-training.html">Training</a>
+      <a href="pm-resources.html">Resources</a>
+    </nav>
+    <div class="wf-header-util">
+      <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+      <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+    </div>
+  </header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+  <div class="container">
+    <div class="welcome-banner">
+      <div>
+        <h1>Welcome back, Pepper</h1>
+        <div class="company-info">Stark Industries</div>
+        <div class="company-meta">12 team members | Last login: Today at 9:42 AM</div>
+      </div>
+      <div class="banner-right">
+        <div class="tier-badge-banner">
+          <div class="tier-badge-text">Partner Tier</div>
+          <div class="tier-badge-value">Gold</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dashboard-grid">
+      <div class="left-column">
+        <!-- Tier Progress Hero Card -->
+        <div class="card tier-hero">
+          <h2>Tier Progress</h2>
+          <div class="tier-content">
+            <div class="tier-current">
+              <div class="tier-label">Current Tier</div>
+              <div class="tier-badge">Gold</div>
+              <div class="tier-maintained" style="font-size:12px;margin-top:8px">Maintained</div>
+            </div>
+            <div>
+              <div class="progress-label">95% Complete — Requirements Met</div>
+              <div class="progress-bar">
+                <div class="progress-fill" style="width:95%"></div>
+              </div>
+              <div class="progress-text">Excellent progress! Your team needs 2 more Technical courses to maintain Gold next quarter.</div>
+              <div class="benefit-box">
+                <strong>Gold Tier Benefits:</strong><br>
+                Deal Registration Priority • $75K Annual MDF • Co-Sell Support • Priority 24/7 Support
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 KPI Cards -->
+        <div class="kpi-grid-small">
+          <div class="kpi-mini-card">
+            <div class="kpi-label">Team Completion</div>
+            <div class="kpi-value">95% <span class="trend-arrow">↑</span></div>
+            <div class="kpi-detail">Training on track</div>
+          </div>
+          <div class="kpi-mini-card">
+            <div class="kpi-label">Active Deals</div>
+            <div class="kpi-value">5</div>
+            <div class="kpi-detail">$197K pipeline</div>
+          </div>
+          <div class="kpi-mini-card">
+            <div class="kpi-label">Portfolio MRR</div>
+            <div class="kpi-value">$180K</div>
+            <div class="kpi-detail">Gold tier</div>
+          </div>
+          <div class="kpi-mini-card">
+            <div class="kpi-label">Pending Commission</div>
+            <div class="kpi-value">$27K</div>
+            <div class="kpi-detail">15% Gold rate</div>
+          </div>
+        </div>
+
+        <!-- Active Opportunities Snapshot -->
+        <div class="card">
+          <h2>Active Opportunities</h2>
+          <div style="font-size:12px;color:var(--wf-muted, #6b7f99);margin-bottom:16px">Your team's top deals and Equinix AE assignments</div>
+          <div style="overflow-x:auto">
+            <table style="width:100%;border-collapse:collapse;font-size:13px" role="table" aria-label="Active opportunities summary">
+              <thead>
+                <tr style="background:var(--wf-canvas, #f5f7fb);border-bottom:1px solid var(--wf-surface, #edf1f7)">
+                  <th style="padding:10px 12px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--wf-muted, #6b7f99)">Opportunity</th>
+                  <th style="padding:10px 12px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--wf-muted, #6b7f99)">Your Rep</th>
+                  <th style="padding:10px 12px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--wf-muted, #6b7f99)">Equinix AE</th>
+                  <th style="padding:10px 12px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--wf-muted, #6b7f99)">Amount</th>
+                  <th style="padding:10px 12px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--wf-muted, #6b7f99)">Stage</th>
+                  <th style="padding:10px 12px;text-align:left;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--wf-muted, #6b7f99)">Next Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr style="border-bottom:1px solid var(--wf-surface, #edf1f7)">
+                  <td style="padding:10px 12px;font-weight:600;color:var(--wf-accent, #3d6daa)">S.H.I.E.L.D. Secure Connect</td>
+                  <td style="padding:10px 12px">Tony Stark</td>
+                  <td style="padding:10px 12px;font-weight:500">Marcus Chen</td>
+                  <td style="padding:10px 12px;font-weight:600">$45K MRR</td>
+                  <td style="padding:10px 12px"><span style="display:inline-block;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:600;background:var(--wf-surface, #edf1f7);color:var(--wf-muted, #6b7f99)">Negotiation</span></td>
+                  <td style="padding:10px 12px;font-size:12px;color:var(--wf-muted, #6b7f99)">Close deal this week</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--wf-surface, #edf1f7)">
+                  <td style="padding:10px 12px;font-weight:600;color:var(--wf-accent, #3d6daa)">Global Finance Corp DR</td>
+                  <td style="padding:10px 12px">Sarah Connor</td>
+                  <td style="padding:10px 12px;font-weight:500">Marcus Chen</td>
+                  <td style="padding:10px 12px;font-weight:600">$95K TCV</td>
+                  <td style="padding:10px 12px"><span style="display:inline-block;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:600;background:var(--wf-canvas, #f5f7fb);color:var(--wf-amber, #8b7745)">Proposal</span></td>
+                  <td style="padding:10px 12px;font-size:12px;color:var(--wf-muted, #6b7f99)">Follow up on RFP</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--wf-surface, #edf1f7)">
+                  <td style="padding:10px 12px;font-weight:600;color:var(--wf-accent, #3d6daa)">Hammer Industries Data Hub</td>
+                  <td style="padding:10px 12px">James Rhodes</td>
+                  <td style="padding:10px 12px;font-weight:500">Marcus Chen</td>
+                  <td style="padding:10px 12px;font-weight:600">$22K MRR</td>
+                  <td style="padding:10px 12px"><span style="display:inline-block;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:600;background:var(--wf-canvas, #f5f7fb);color:var(--wf-accent, #3d6daa)">Qualification</span></td>
+                  <td style="padding:10px 12px;font-size:12px;color:var(--wf-red, #8b4553);font-weight:500">🚨 STALLED — Reconnect</td>
+                </tr>
+                <tr style="border-bottom:1px solid var(--wf-surface, #edf1f7)">
+                  <td style="padding:10px 12px;font-weight:600;color:var(--wf-accent, #3d6daa)">Roxxon Energy Colocation</td>
+                  <td style="padding:10px 12px">Happy Hogan</td>
+                  <td style="padding:10px 12px;font-weight:500">Marcus Chen</td>
+                  <td style="padding:10px 12px;font-weight:600">$18K MRR</td>
+                  <td style="padding:10px 12px"><span style="display:inline-block;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:600;background:var(--wf-canvas, #f5f7fb);color:var(--wf-amber, #8b7745)">Proposal</span></td>
+                  <td style="padding:10px 12px;font-size:12px;color:var(--wf-muted, #6b7f99)">Review pricing</td>
+                </tr>
+                <tr>
+                  <td style="padding:10px 12px;font-weight:600;color:var(--wf-accent, #3d6daa)">AIM Technologies Edge</td>
+                  <td style="padding:10px 12px">Clint Barton</td>
+                  <td style="padding:10px 12px;font-weight:500">Marcus Chen</td>
+                  <td style="padding:10px 12px;font-weight:600">$12K MRR</td>
+                  <td style="padding:10px 12px"><span style="display:inline-block;padding:3px 10px;border-radius:10px;font-size:11px;font-weight:600;background:var(--wf-canvas, #f5f7fb);color:var(--wf-muted, #6b7f99)">Submitted</span></td>
+                  <td style="padding:10px 12px;font-size:12px;color:var(--wf-muted, #6b7f99)">Await customer approval</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <a href="pm-opportunities.html" class="view-all-link">View All 8 Opportunities →</a>
+        </div>
+
+        <!-- Team Training Progress with Snapshot -->
+        <div class="card">
+          <h2>Team Training Progress</h2>
+          <div class="team-training">
+            <!-- Progress bar cluster replaces donut — accessible, precise, scannable -->
+            <div style="flex-shrink:0;text-align:center;margin-right:16px;">
+              <div class="progress-headline">95%</div>
+              <div class="progress-subtext">Team Complete</div>
+            </div>
+            <div class="progress-bar-cluster">
+              <div class="progress-row">
+                <span class="progress-row-label">Completed</span>
+                <div class="progress-row-bar-bg" role="progressbar" aria-valuenow="95" aria-valuemin="0" aria-valuemax="100" aria-label="Completed: 95%">
+                  <div class="progress-row-bar-fill" style="width:95%;background:var(--wf-ink, #1e2a3a);">95%</div>
+                </div>
+              </div>
+              <div class="progress-row">
+                <span class="progress-row-label">In Progress</span>
+                <div class="progress-row-bar-bg" role="progressbar" aria-valuenow="3" aria-valuemin="0" aria-valuemax="100" aria-label="In Progress: 3%">
+                  <div class="progress-row-bar-fill" style="width:12%;min-width:32px;background:var(--wf-amber, #8b7745);">3%</div>
+                </div>
+              </div>
+              <div class="progress-row">
+                <span class="progress-row-label">Overdue</span>
+                <div class="progress-row-bar-bg" role="progressbar" aria-valuenow="2" aria-valuemin="0" aria-valuemax="100" aria-label="Overdue: 2%">
+                  <div class="progress-row-bar-fill" style="width:10%;min-width:32px;background:var(--wf-red, #8b4553);">2%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="team-snapshot-table">
+            <div class="mini-table-header">
+              <div>Name</div>
+              <div>Role</div>
+              <div>Completion</div>
+              <div>Status</div>
+            </div>
+            <div class="mini-table-row">
+              <div style="font-weight:600;">Tony Stark</div>
+              <div>Sales Director</div>
+              <div>100%</div>
+              <div><span class="status-badge status-completed">Complete</span></div>
+            </div>
+            <div class="mini-table-row">
+              <div style="font-weight:600;">James Rhodes</div>
+              <div>Sr. PM</div>
+              <div>88%</div>
+              <div><span class="status-badge status-on-track">On Track</span></div>
+            </div>
+            <div class="mini-table-row">
+              <div style="font-weight:600;">Bruce Banner</div>
+              <div>Solutions Engineer</div>
+              <div>83%</div>
+              <div><span class="status-badge status-on-track">On Track</span></div>
+            </div>
+            <div class="mini-table-row">
+              <div style="font-weight:600;">Happy Hogan</div>
+              <div>Account Executive</div>
+              <div>75%</div>
+              <div><span class="status-badge status-on-track">On Track</span></div>
+            </div>
+            <div class="mini-table-row">
+              <div style="font-weight:600;">Clint Barton</div>
+              <div>Account Executive</div>
+              <div>75%</div>
+              <div><span class="status-badge status-on-track">On Track</span></div>
+            </div>
+            <div class="mini-table-row">
+              <div style="font-weight:600;">Natasha Romanoff</div>
+              <div>Solutions Engineer</div>
+              <div>45%</div>
+              <div><span class="status-badge status-on-track">On Track</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Personal Completion Stats -->
+        <div class="card">
+          <h2>Your Training Progress</h2>
+          <div class="personal-stats">
+            <div class="stat-bar">
+              <div class="stat-bar-label">Required Courses</div>
+              <div class="stat-bar-value">5/6 Complete (83%)</div>
+            </div>
+            <div class="stat-bar">
+              <div class="stat-bar-label">Pending Courses</div>
+              <div class="stat-bar-value">1 Due in 7 days</div>
+            </div>
+            <div class="stat-bar">
+              <div class="stat-bar-label">Certifications Earned</div>
+              <div class="stat-bar-value">3 Active</div>
+            </div>
+            <div class="stat-bar">
+              <div class="stat-bar-label">Last Activity</div>
+              <div class="stat-bar-value">2 days ago</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Spec Brief Section -->
+        <div class="spec-section">
+          <div class="spec-title">Salesforce Objects & Fields</div>
+          <div class="spec-content">
+            <strong>Account:</strong> Account ID, Company Name, Billing Address, Partner_Tier__c<br>
+            <strong>Contact:</strong> Contact ID, Name, Email, Phone, Role__c<br>
+            <strong>Partner_Scorecard__c:</strong> Scorecard ID, Account ID, Completion_Percentage__c, Tier_Status__c, Last_Updated__c<br>
+            <strong>Partner_Training__c:</strong> Training ID, Contact ID, Course Name, Completion_Date__c, Status__c<br>
+            <strong>Deal_Registration__c:</strong> Deal ID, Account ID, Amount, Stage, Commission_Rate__c<br>
+            <strong>MDF_Allocation__c:</strong> MDF ID, Account ID, Annual_Budget__c, Spent__c, Remaining__c<br>
+            <strong>Encouragement_Log__c:</strong> Log ID, From_User__c, To_Account__c, Message__c, Created_Date__c
+          </div>
+        </div>
+
+        <div class="spec-section">
+          <div class="spec-title">Validation Rules & Edge Cases</div>
+          <div class="spec-content">
+            <ul class="spec-list">
+              <li>Only users with PM permission set see team data across account</li>
+              <li>Tier benefit preview pulls dynamically from Tier_Benefits__mdt metadata</li>
+              <li>KPIs refresh on page load from cached aggregate query (5-min cache)</li>
+              <li>PSM assignment required; if null, show "Contact PSM for support"</li>
+              <li>Tier progress percentage calculated as: completed_requirements / total_requirements</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="spec-section">
+          <div class="spec-title">Error States</div>
+          <div class="spec-content">
+            <ul class="spec-list">
+              <li>"Team data unavailable — sync in progress. Refresh page in 30 seconds."</li>
+              <li>"No PSM assigned — contact support at partner-support@equinix.com"</li>
+              <li>"Training data stale — last updated [timestamp]"</li>
+              <li>"Commission calculation pending — check back after month-end close"</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="spec-section">
+          <div class="spec-title">Accessibility Notes</div>
+          <div class="spec-content">
+            <ul class="spec-list">
+              <li>Progress bars include aria-valuenow, aria-valuemin, aria-valuemax for "95% team training complete"</li>
+              <li>Progress bars have aria-valuenow, aria-valuemin, aria-valuemax</li>
+              <li>Status badges use color + text (not color alone)</li>
+              <li>Quick action buttons are keyboard accessible (Tab navigation)</li>
+              <li>All interactive elements have visible focus states</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="spec-section">
+          <div class="spec-title">User Flow (Numbered Steps)</div>
+          <div class="spec-content">
+            <ol style="margin-left:20px;line-height:1.8">
+              <li>PM logs in → portal redirects to home dashboard</li>
+              <li>PM sees welcome banner with tier badge (Gold)</li>
+              <li>PM reviews tier progress (95%, "2 courses needed")</li>
+              <li>PM scans team snapshot table (6 top performers visible)</li>
+              <li>PM reads PSM encouragement card from Marcus Chen</li>
+              <li>PM acts on priority: clicks "Manage Team Training" or "Submit MDF Claim"</li>
+              <li>PM navigates to detail page (Team Training or MDF Claims)</li>
+            </ol>
+          </div>
+        </div>
+
+        <div class="spec-section">
+          <div class="spec-title">Related Automations</div>
+          <div class="spec-content">
+            <strong>Flows:</strong> Tier_Status_Update_Flow (runs daily), Team_Completion_Aggregator_Flow (hourly)<br>
+            <strong>Apex Triggers:</strong> TierStatusTrigger (on Partner_Scorecard__c insert/update), CommissionCalculatorTrigger (on Deal__c close)
+          </div>
+        </div>
+      </div>
+
+      <div class="right-column">
+        <!-- Quick Actions -->
+        <div class="card">
+          <h2>Quick Actions</h2>
+          <div class="quick-action-grid">
+            <a href="pm-team-training.html" class="action-btn">
+              <div class="action-icon">👥</div>
+              <div>Manage Team Training</div>
+            </a>
+            <a href="pm-deal-registration.html" class="action-btn">
+              <div class="action-icon">📋</div>
+              <div>Register a Deal</div>
+            </a>
+            <a href="pm-mdf-comarketing.html" class="action-btn">
+              <div class="action-icon">💰</div>
+              <div>Submit MDF Claim</div>
+            </a>
+            <a href="#" class="action-btn">
+              <div class="action-icon">💵</div>
+              <div>View Revenue</div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Announcements -->
+        <div class="card">
+          <h2>Announcements</h2>
+          <div class="announcements-list">
+            <div class="announcement-item" style="background-color:var(--wf-canvas, #f5f7fb);padding:12px;margin:-12px -24px 0 -24px;border-bottom:1px solid var(--wf-surface, #edf1f7)">
+              <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.5px;color:var(--wf-red, #8b4553);font-weight:700;margin-bottom:4px">⚠️ Action Required</div>
+              <div class="announcement-title">Sarah Connor Cert Expired</div>
+              <div class="announcement-detail">Security Fundamentals expired Jan 15 — reassign immediately to maintain deal eligibility</div>
+            </div>
+            <div class="announcement-item">
+              <div class="announcement-title">Quarterly Business Review Scheduled</div>
+              <div class="announcement-detail">Feb 28, 2026 with Marcus Chen | Prepare pipeline and training metrics</div>
+            </div>
+            <div class="announcement-item">
+              <div class="announcement-title">Advanced Security Course Available</div>
+              <div class="announcement-detail">Enroll now to advance Pepper to Platinum. 4 hours | Complete by Mar 15</div>
+            </div>
+          </div>
+          <div class="view-all-link">View All Announcements →</div>
+        </div>
+
+        <!-- PSM Encouragement Card -->
+        <div class="card">
+          <h2>PSM Message</h2>
+          <div class="psm-card">
+            <div class="psm-person">Marcus Chen</div>
+            <div class="psm-title">Partner Success Manager</div>
+            <div class="psm-message">"Your team is doing great! Just 2 courses from maintaining Gold. You're on track for Q2. Keep up the momentum!"</div>
+            <div style="font-size:11px;color:var(--wf-muted, #6b7f99);margin-top:8px">Updated today at 10:30 AM</div>
+          </div>
+        </div>
+
+        <!-- Current Programs — sidebar widget, Day N compact style -->
+        <div class="card" style="border-top: 3px solid #1a7a3c;">
+          <h2 style="display:flex;align-items:center;gap:8px;">Current Programs <a href="pm-org-health.html" style="font-size:11px;font-weight:400;color:var(--wf-accent,#3d6daa);text-decoration:none;margin-left:auto;">All programs →</a></h2>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:var(--wf-surface,#edf1f7);border-radius:4px;border-left:3px solid #1a7a3c;">
+              <div>
+                <div style="font-size:12px;font-weight:600;color:var(--wf-ink,#1e2a3a);">Colocation Reseller</div>
+                <div style="font-size:11px;color:var(--wf-muted,#6b7f99);">Gold tier · Renewal: Dec 2026</div>
+              </div>
+              <span style="font-size:9px;font-weight:700;background:#1a7a3c;color:white;padding:2px 6px;border-radius:10px;">ACTIVE</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:var(--wf-surface,#edf1f7);border-radius:4px;border-left:3px solid #1a7a3c;">
+              <div>
+                <div style="font-size:12px;font-weight:600;color:var(--wf-ink,#1e2a3a);">Equinix Fabric Referral</div>
+                <div style="font-size:11px;color:var(--wf-muted,#6b7f99);">Silver tier · Renewal: Mar 2026 ⚠</div>
+              </div>
+              <span style="font-size:9px;font-weight:700;background:#1a7a3c;color:white;padding:2px 6px;border-radius:10px;">ACTIVE</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:var(--wf-surface,#edf1f7);border-radius:4px;border-left:3px solid var(--wf-amber,#8b7745);">
+              <div>
+                <div style="font-size:12px;font-weight:600;color:var(--wf-ink,#1e2a3a);">Metal Referral</div>
+                <div style="font-size:11px;color:var(--wf-muted,#6b7f99);">Pending PSM review</div>
+              </div>
+              <span style="font-size:9px;font-weight:700;background:var(--wf-amber,#8b7745);color:white;padding:2px 6px;border-radius:10px;">PENDING</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity Feed -->
+        <div class="card">
+          <h2>Team Activity</h2>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <div style="padding:12px;border-bottom:1px solid var(--wf-surface, #edf1f7);font-size:12px;">
+              <div><strong>Tony Stark</strong> completed Advanced Networking</div>
+              <div style="color:var(--wf-muted, #6b7f99);font-size:11px;margin-top:4px">Yesterday at 3:15 PM</div>
+            </div>
+            <div style="padding:12px;border-bottom:1px solid var(--wf-surface, #edf1f7);font-size:12px;">
+              <div><strong>James Rhodes</strong> submitted Deal Reg for Acme Corp</div>
+              <div style="color:var(--wf-muted, #6b7f99);font-size:11px;margin-top:4px">2 days ago</div>
+            </div>
+            <div style="padding:12px;border-bottom:1px solid var(--wf-surface, #edf1f7);font-size:12px;">
+              <div><strong>Natasha Romanoff</strong> earned Security Fundamentals cert</div>
+              <div style="color:var(--wf-muted, #6b7f99);font-size:11px;margin-top:4px">3 days ago</div>
+            </div>
+            <div style="padding:12px;border-bottom:1px solid var(--wf-surface, #edf1f7);font-size:12px;">
+              <div><strong>Clint Barton</strong> started Advanced Security course</div>
+              <div style="color:var(--wf-muted, #6b7f99);font-size:11px;margin-top:4px">4 days ago</div>
+            </div>
+          </div>
+          <div class="view-all-link">View All Activity →</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="wf-footer">
+    &copy; 2026 Equinix Partner Manager Portal · Wireframe specification
+  </footer>
+
+  <!-- WF-SPEC: pm-home-dashboard — Partner Manager Home Dashboard -->
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>The Partner Manager Home Dashboard provides Pepper Potts (COO, Stark Industries) with a personalized landing page showing Gold tier status, $180K portfolio MRR, 5 active deals worth $197K pipeline, 95% team training completion, and quick access to priority workflows. Stark Industries has 9 team members with strong sales leadership (Tony Stark 100%, James Rhodes 88%, Bruce Banner 83%), active co-sell with PSM Marcus Chen, and an alert for Sarah Connor's expired cert.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>See personalized welcome and org status at a glance</li>
+<li>Monitor tier progress and understand required steps for tier maintenance</li>
+<li>Track key metrics: team training %, deals, active opportunities, MDF budget</li>
+<li>View top-priority opportunities and team alerts needing action</li>
+<li>Access most common workflows (assign course, register deal, view training) from one page</li>
+<li>Stay informed of program announcements and deadlines</li>
+<li>Understand team training progress and individual member performance</li>
+</ul>
+<hr class="spec-divider">
+<h3>⚡ Day N — Experience Cloud Design Notes</h3>
+<p style="font-size:12px;color:var(--wf-muted,#6b7f99);margin:0 0 12px 0;">This is the <strong>Day N (returning admin)</strong> experience. The companion page <a href="pm-home-day0.html" style="color:var(--wf-accent,#3d6daa);">pm-home-day0.html</a> covers Day 0 for a new Portal Admin. Key EC differences on Day N:</p>
+<ul>
+<li><strong>Admin Getting Started checklist hidden</strong> — Audience rule: checklist component visible only when <code>Contact.Admin_GS_Complete__c = false</code>. On Day N, all 4 items are done and the component fully hides.</li>
+<li><strong>Welcome banner: "Welcome back"</strong> — Copy condition: if <code>Contact.First_Login__c</code> was more than 7 days ago, greeting is "Welcome back, [Name]." On Day 0: "Welcome to Partner Central, [Name]."</li>
+<li><strong>Pending requests: compact widget, not hero card</strong> — On Day 0, the pending requests card dominates the left column (red border, banner callout). On Day N, it's a compact announcement-style item that appears in the Announcements card only when pending count &gt; 0 (<code>PartnerUserRequest__c WHERE Status='Pending' AND AccountId=User.AccountId</code>).</li>
+<li><strong>Team section shows live data</strong> — Day 0 shows the empty-state team grid. Day N shows the full team training snapshot table (member, completion %, status) and KPI mini-cards (Team Training %, Active Deals, etc.). Same component; empty state is a fallback view when record count = 0.</li>
+<li><strong>Programs: sidebar widget</strong> — On Day 0, programs get a full card to orient the new admin. On Day N, programs move to a compact right-column sidebar widget. Admin already knows their programs at this point; widget stays visible for quick renewal-date monitoring.</li>
+<li><strong>Day N IAG prompts</strong> — Different In-App Guidance library. Day N prompts fire on specific data conditions: "Sarah Connor's cert expired — this blocks her deal eligibility" (fires when team has expired cert), "Fabric Referral renewal is in 30 days — contact your PSM" (fires 30 days before renewal), "Your team is 2 courses from Gold maintenance" (fires when within threshold). All targeted by Audience rules; dismissed once resolved.</li>
+<li><strong>Activity feed is live</strong> — Day N shows Team Activity (training completions, deal registrations, cert awards). Day 0 has no activity data to show (team just joined). Same component; empty state returns default "No activity yet" copy.</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Welcome banner with org name and current tier badge</li>
+<li>Tier Progress card with status, progress bar, and next tier preview</li>
+<li>KPI cards: Team Training %, Active Deals, Pending Approvals, Total MRR</li>
+<li>Active Opportunities table with pipeline stage and close date</li>
+<li>Team Training Progress with org-wide completion rate and member snapshot table</li>
+<li>Personal Training Progress stats</li>
+<li>Quick Actions grid linking to common workflows</li>
+<li>Announcements list with program updates and deadlines</li>
+<li>PSM message card with encouragement and next steps</li>
+<li>Team Activity feed showing recent training, deals, approvals</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Click Tier Progress card to see detailed tier requirements and benefits</li>
+<li>Click Active Opportunities table rows to view opportunity details and links</li>
+<li>Quick Action buttons navigate to respective pages (Assign Course, Register Deal, etc.)</li>
+<li>View All links in announcements and activity feed sections</li>
+<li>Announcement items are clickable to expand and view full content</li>
+<li>Activity feed items link to corresponding training, deal, or approval records</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Access Control & Permissions</strong>
+<ul>
+<li>Role-based access control enforces PM permission set requirement to view team-wide data</li>
+<li>PSM assignment validation with fallback messaging if assignment is missing</li>
+</ul>
+</li>
+<li><strong>Calculation & Aggregation</strong>
+<ul>
+<li>Tier progress calculation engine: completed_requirements / total_requirements with dynamic progress display</li>
+<li>Aggregate KPI queries with 5-minute caching for optimal performance</li>
+</ul>
+</li>
+<li><strong>Data Display & Integration</strong>
+<ul>
+<li>Metadata-driven tier benefits display using Tier_Benefits__mdt lookups for dynamic content</li>
+<li>Real-time activity feed aggregation from training, deal, and opportunity objects with timestamp sorting</li>
+</ul>
+</li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Validation &amp; Business Logic</h4>
+<ul>
+<li>Only users with PM permission set see team data across account</li>
+<li>Tier benefit preview pulls dynamically from Tier_Benefits__mdt metadata</li>
+<li>KPIs refresh on page load from cached aggregate query (5-min cache)</li>
+<li>PSM assignment required; if null, show "Contact PSM for support"</li>
+<li>Tier progress percentage calculated as: completed_requirements / total_requirements</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

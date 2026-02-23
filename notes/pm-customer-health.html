@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Health Overview - Equinix Partner Manager Portal</title>
+    <link rel="stylesheet" href="wireframe.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background-color: var(--wf-canvas, #f5f7fb);
+            color: var(--wf-text, #3b4f68);
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--wf-ink, #1e2a3a);
+            color: white;
+            padding: 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            height: 60px;
+        }
+
+        .header-brand {
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+        }
+
+        .header-brand span {
+            margin-left: 20px;
+            font-size: 13px;
+            color: var(--wf-tint, #dce4ef);
+            font-weight: 400;
+        }
+
+        nav {
+            display: flex;
+            gap: 30px;
+            flex: 1;
+            margin-left: 40px;
+        }
+
+        nav a {
+            color: var(--wf-tint, #dce4ef);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            padding: 20px 0;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            height: 60px;
+        }
+
+        nav a:hover {
+            color: white;
+            border-bottom-color: var(--wf-muted, #6b7f99);
+        }
+
+        nav a.active {
+            color: white;
+            border-bottom-color: var(--wf-muted, #6b7f99);
+        }
+
+        .header-user {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 13px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--wf-muted, #6b7f99);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* Main Content */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        /* Page Title Section */
+        .page-title-section {
+            margin-bottom: 40px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            font-size: 14px;
+            color: var(--wf-muted, #6b7f99);
+        }
+
+        /* KPI Cards */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .kpi-card {
+            background: white;
+            border-radius: 4px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid var(--wf-muted, #6b7f99);
+        }
+
+        .kpi-card.warning {
+            border-left-color: var(--wf-amber, #8b7745);
+        }
+
+        .kpi-card.critical {
+            border-left-color: var(--wf-red, #8b4553);
+        }
+
+        .kpi-label {
+            font-size: 12px;
+            color: var(--wf-muted, #6b7f99);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .kpi-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        .kpi-unit {
+            font-size: 14px;
+            color: var(--wf-muted, #6b7f99);
+            margin-left: 5px;
+        }
+
+        /* Section Heading */
+        .section-heading {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--wf-canvas, #f5f7fb);
+        }
+
+        /* Table */
+        .table-wrapper {
+            background: white;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background-color: var(--wf-canvas, #f5f7fb);
+            border-bottom: 2px solid var(--wf-canvas, #f5f7fb);
+        }
+
+        th {
+            padding: 16px 12px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--wf-muted, #6b7f99);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 16px 12px;
+            border-bottom: 1px solid var(--wf-canvas, #f5f7fb);
+            font-size: 13px;
+        }
+
+        tbody tr:hover {
+            background-color: var(--wf-canvas, #f5f7fb);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .customer-name {
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        .ae-name {
+            color: var(--wf-muted, #6b7f99);
+            font-size: 12px;
+        }
+
+        /* Health Score Badges */
+        .health-score {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+            min-width: 50px;
+        }
+
+        .health-score.excellent {
+            background-color: var(--wf-surface, #edf1f7);
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        .health-score.good {
+            background-color: var(--wf-surface, #edf1f7);
+            color: var(--wf-accent, #3d6daa);
+        }
+
+        .health-score.fair {
+            background-color: var(--wf-surface, #edf1f7);
+            color: var(--wf-amber, #8b7745);
+        }
+
+        .health-score.poor {
+            background-color: var(--wf-surface, #edf1f7);
+            color: var(--wf-red, #8b4553);
+        }
+
+        /* Risk Level Badges */
+        .risk-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+            min-width: 70px;
+        }
+
+        .risk-badge.low {
+            background-color: var(--wf-surface, #edf1f7);
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        .risk-badge.medium {
+            background-color: var(--wf-surface, #edf1f7);
+            color: var(--wf-amber, #8b7745);
+        }
+
+        .risk-badge.high {
+            background-color: var(--wf-surface, #edf1f7);
+            color: var(--wf-red, #8b4553);
+        }
+
+        /* Renewal Alert */
+        .renewal-alert {
+            background-color: var(--wf-surface, #edf1f7);
+            border-left: 4px solid var(--wf-amber, #8b7745);
+            padding: 8px 12px;
+            border-radius: 2px;
+            font-size: 11px;
+            color: var(--wf-amber, #8b7745);
+            font-weight: 500;
+        }
+
+        /* Risk Alerts Section */
+        .alert {
+            background-color: var(--wf-surface, #edf1f7);
+            border-left: 4px solid var(--wf-red, #8b4553);
+            padding: 16px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .alert-icon {
+            font-size: 18px;
+            color: var(--wf-red, #8b4553);
+            margin-top: 2px;
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-title {
+            font-weight: 600;
+            color: var(--wf-red, #8b4553);
+            margin-bottom: 4px;
+        }
+
+        .alert-message {
+            font-size: 13px;
+            color: var(--wf-red, #8b4553);
+        }
+
+        /* Expandable Section */
+        .expandable-section {
+            background: white;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+
+        .expandable-header {
+            padding: 16px;
+            background-color: var(--wf-canvas, #f5f7fb);
+            border-bottom: 2px solid var(--wf-canvas, #f5f7fb);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .expandable-header:hover {
+            background-color: var(--wf-canvas, #f5f7fb);
+        }
+
+        .expandable-header h3 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+            margin: 0;
+        }
+
+        .expand-icon {
+            font-size: 18px;
+            transition: transform 0.3s ease;
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        .expand-icon.active {
+            transform: rotate(180deg);
+        }
+
+        .expandable-content {
+            padding: 24px;
+            display: none;
+        }
+
+        .expandable-content.active {
+            display: block;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--wf-canvas, #f5f7fb);
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            color: var(--wf-muted, #6b7f99);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            font-size: 14px;
+            color: var(--wf-ink, #1e2a3a);
+            font-weight: 500;
+        }
+
+        .contact-list {
+            font-size: 13px;
+        }
+
+        .contact-item {
+            margin-bottom: 8px;
+            color: var(--wf-muted, #6b7f99);
+        }
+
+        .contact-title {
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        /* Revenue Trend */
+        .revenue-chart {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+            height: 60px;
+            margin-top: 8px;
+        }
+
+        .revenue-bar {
+            flex: 1;
+            background-color: var(--wf-muted, #6b7f99);
+            border-radius: 2px;
+            min-height: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        .revenue-bar:hover {
+            background-color: var(--wf-accent, #3d6daa);
+        }
+
+        .boundary-note {
+            background-color: var(--wf-canvas, #f5f7fb);
+            border-left: 4px solid var(--wf-muted, #6b7f99);
+            padding: 12px;
+            margin-top: 16px;
+            font-size: 12px;
+            color: var(--wf-text, #3b4f68);
+            border-radius: 2px;
+        }
+
+        .boundary-note strong {
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        /* Renewal Calendar */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .calendar-item {
+            background: white;
+            padding: 16px;
+            border-radius: 4px;
+            border-left: 4px solid var(--wf-muted, #6b7f99);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+        .calendar-item.urgent {
+            border-left-color: var(--wf-amber, #8b7745);
+            background-color: var(--wf-canvas, #f5f7fb);
+        }
+
+        .calendar-date {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--wf-ink, #1e2a3a);
+            margin-bottom: 4px;
+        }
+
+        .calendar-customer {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+            margin-bottom: 4px;
+        }
+
+        .calendar-mrr {
+            font-size: 12px;
+            color: var(--wf-muted, #6b7f99);
+        }
+
+        /* Methodology */
+        .methodology-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .methodology-item {
+            background: white;
+            padding: 20px;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            text-align: center;
+        }
+
+        .methodology-weight {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--wf-muted, #6b7f99);
+            margin-bottom: 8px;
+        }
+
+        .methodology-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+            margin-bottom: 4px;
+        }
+
+        .methodology-desc {
+            font-size: 12px;
+            color: var(--wf-muted, #6b7f99);
+            line-height: 1.4;
+        }
+
+        /* Spec Section */
+        .spec-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--wf-canvas, #f5f7fb);
+        }
+
+        .spec-subsection {
+            margin-bottom: 20px;
+        }
+
+        .spec-subsection:last-child {
+            margin-bottom: 0;
+        }
+
+        .spec-label {
+            font-size: 12px;
+            color: var(--wf-muted, #6b7f99);
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .spec-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .spec-list li {
+            font-size: 13px;
+            color: var(--wf-text, #3b4f68);
+            padding-left: 20px;
+            position: relative;
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        .spec-list li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--wf-muted, #6b7f99);
+            font-weight: bold;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--wf-ink, #1e2a3a);
+            color: white;
+            padding: 30px 20px;
+            margin-top: 60px;
+            border-top: 1px solid var(--wf-canvas, #f5f7fb);
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .footer-section h4 {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--wf-tint, #dce4ef);
+        }
+
+        .footer-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-section li {
+            margin-bottom: 8px;
+        }
+
+        .footer-section a {
+            color: var(--wf-tint, #dce4ef);
+            text-decoration: none;
+            font-size: 12px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            grid-column: 1 / -1;
+            padding-top: 20px;
+            border-top: 1px solid var(--wf-accent, #3d6daa);
+            font-size: 12px;
+            color: var(--wf-muted, #6b7f99);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-copyright {
+            flex: 1;
+        }
+
+        .footer-legal {
+            display: flex;
+            gap: 20px;
+        }
+
+        .footer-legal a {
+            color: var(--wf-muted, #6b7f99);
+            text-decoration: none;
+            font-size: 11px;
+            transition: color 0.3s ease;
+        }
+
+        .footer-legal a:hover {
+            color: white;
+</style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="wf-header">
+        <div class="wf-header-logo">EQ</div>
+        <div class="wf-header-title">Equinix Partner Manager</div>
+        <nav class="wf-header-nav">
+            <a href="pm-home-dashboard.html">Dashboard</a>
+            <a href="pm-team-management.html">Team</a>
+            <a href="pm-deals-revenue.html">Deals</a>
+            <a href="pm-org-health.html" class="active">Health</a>
+            <a href="pm-resources.html">Resources</a>
+        </nav>
+        <div class="wf-header-util">
+            <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+            <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+        </div>
+    </header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Page Title -->
+        <div class="page-title-section">
+            <h1 class="page-title">Customer Health Overview</h1>
+            <p class="page-subtitle">Aggregated metrics and insights across your customer portfolio to support renewal planning and relationship management</p>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-label">Active Customers</div>
+                <div class="kpi-value">8</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Total MRR</div>
+                <div class="kpi-value">$285<span class="kpi-unit">K</span></div>
+            </div>
+            <div class="kpi-card warning">
+                <div class="kpi-label">Open Cases</div>
+                <div class="kpi-value">7</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Avg Health Score</div>
+                <div class="kpi-value">82<span class="kpi-unit">/100</span></div>
+            </div>
+        </div>
+
+        <!-- Risk Alerts -->
+        <div class="section-heading">Priority Alerts</div>
+        <div class="alert">
+            <div class="alert-icon">⚠️</div>
+            <div class="alert-content">
+                <div class="alert-title">Energy Company - Renewal Approaching (Apr 2026)</div>
+                <div class="alert-message">Health score declining (65/100). Assigned to Jason Liu. Recommend immediate outreach and health check meeting.</div>
+            </div>
+        </div>
+        <div class="alert">
+            <div class="alert-icon">⚠️</div>
+            <div class="alert-content">
+                <div class="alert-title">Finance Plus - Medium Risk Health Score (72/100)</div>
+                <div class="alert-message">2 open cases and moderate engagement levels. Follow up with Kevin O'Brien on account status.</div>
+            </div>
+        </div>
+
+        <!-- Customer Health Table -->
+        <div class="section-heading">Customer Health Dashboard</div>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Customer</th>
+                        <th>Equinix AE</th>
+                        <th>Services</th>
+                        <th>MRR</th>
+                        <th>Open Cases</th>
+                        <th>Health Score</th>
+                        <th>Renewal Date</th>
+                        <th>Risk Level</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="customer-name">Acme Corp</span><br><span class="ae-name">Sarah Mitchell</span></td>
+                        <td>Sarah Mitchell</td>
+                        <td>44</td>
+                        <td>$47.5K</td>
+                        <td>3</td>
+                        <td><span class="health-score excellent">85</span></td>
+                        <td>Dec 2026</td>
+                        <td><span class="risk-badge low">Low</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="customer-name">TechStart</span><br><span class="ae-name">David Park</span></td>
+                        <td>David Park</td>
+                        <td>22</td>
+                        <td>$38.2K</td>
+                        <td>1</td>
+                        <td><span class="health-score excellent">91</span></td>
+                        <td>Mar 2027</td>
+                        <td><span class="risk-badge low">Low</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="customer-name">Global Retail</span><br><span class="ae-name">Rachel Torres</span></td>
+                        <td>Rachel Torres</td>
+                        <td>31</td>
+                        <td>$52.8K</td>
+                        <td>0</td>
+                        <td><span class="health-score excellent">94</span></td>
+                        <td>Jun 2026</td>
+                        <td><span class="risk-badge low">Low</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="customer-name">Finance Plus</span><br><span class="ae-name">Kevin O'Brien</span></td>
+                        <td>Kevin O'Brien</td>
+                        <td>18</td>
+                        <td>$28.1K</td>
+                        <td>2</td>
+                        <td><span class="health-score fair">72</span></td>
+                        <td>Sep 2026</td>
+                        <td><span class="risk-badge medium">Medium</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="customer-name">Medical Systems</span><br><span class="ae-name">Maria Vasquez</span></td>
+                        <td>Maria Vasquez</td>
+                        <td>15</td>
+                        <td>$24.3K</td>
+                        <td>0</td>
+                        <td><span class="health-score excellent">88</span></td>
+                        <td>Nov 2026</td>
+                        <td><span class="risk-badge low">Low</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="customer-name">Energy Company</span><br><span class="ae-name">Jason Liu</span></td>
+                        <td>Jason Liu</td>
+                        <td>8</td>
+                        <td>$31.5K</td>
+                        <td>1</td>
+                        <td><span class="health-score poor">65</span></td>
+                        <td><div class="renewal-alert">⚠️ Apr 2026</div></td>
+                        <td><span class="risk-badge high">High</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="customer-name">CloudNet</span><br><span class="ae-name">Maria Vasquez</span></td>
+                        <td>Maria Vasquez</td>
+                        <td>26</td>
+                        <td>$41.2K</td>
+                        <td>0</td>
+                        <td><span class="health-score excellent">90</span></td>
+                        <td>Aug 2027</td>
+                        <td><span class="risk-badge low">Low</span></td>
+                    </tr>
+                    <tr>
+                        <td><span class="customer-name">Enterprise Solutions</span><br><span class="ae-name">Kevin O'Brien</span></td>
+                        <td>Kevin O'Brien</td>
+                        <td>12</td>
+                        <td>$21.4K</td>
+                        <td>0</td>
+                        <td><span class="health-score good">78</span></td>
+                        <td>Jan 2027</td>
+                        <td><span class="risk-badge medium">Medium</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Expandable Customer Detail -->
+        <div class="section-heading">Customer Details</div>
+        <div class="expandable-section">
+            <div class="expandable-header" onclick="toggleExpand(this)">
+                <h3>Acme Corp - Infrastructure Summary</h3>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="expandable-content">
+                <div class="detail-row">
+                    <div>
+                        <div class="detail-label">Account Health</div>
+                        <div class="detail-value" style="margin-top: 8px;">
+                            <span class="health-score excellent">85/100</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="detail-label">Annual Revenue</div>
+                        <div class="detail-value">$570K MRR</div>
+                    </div>
+                    <div>
+                        <div class="detail-label">Services Deployed</div>
+                        <div class="detail-value">44 Active</div>
+                    </div>
+                </div>
+
+                <div class="detail-row">
+                    <div style="flex: 1;">
+                        <div class="detail-label">Key Contacts</div>
+                        <div class="contact-list" style="margin-top: 8px;">
+                            <div class="contact-item">
+                                <span class="contact-title">Primary Account Owner:</span><br>
+                                CIO - Michael Chen (michael.chen@acmecorp.com)
+                            </div>
+                            <div class="contact-item">
+                                <span class="contact-title">Technical Lead:</span><br>
+                                Infrastructure Manager - David Wong (d.wong@acmecorp.com)
+                            </div>
+                            <div class="contact-item">
+                                <span class="contact-title">Finance:</span><br>
+                                VP Procurement - Jennifer Li (j.li@acmecorp.com)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-row">
+                    <div style="flex: 1;">
+                        <div class="detail-label">Revenue Trend (Last 6 Months)</div>
+                        <div class="revenue-chart">
+                            <div class="revenue-bar" style="height: 35%;"></div>
+                            <div class="revenue-bar" style="height: 42%;"></div>
+                            <div class="revenue-bar" style="height: 48%;"></div>
+                            <div class="revenue-bar" style="height: 55%;"></div>
+                            <div class="revenue-bar" style="height: 62%;"></div>
+                            <div class="revenue-bar" style="height: 100%;"></div>
+                        </div>
+                        <div style="font-size: 11px; color: var(--wf-muted, #6b7f99); margin-top: 8px; display: flex; justify-content: space-between;">
+                            <span>Sep 2025</span>
+                            <span>Feb 2026</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="boundary-note">
+                    <strong>Data Privacy Notice:</strong> This partner view displays aggregated health metrics, contact information, and revenue trends. Operational details such as case content, service configurations, and billing details are restricted to Equinix support teams only.
+                </div>
+            </div>
+        </div>
+
+        <!-- Renewal Calendar -->
+        <div class="section-heading">Renewal Calendar - Next 6 Months</div>
+        <div class="calendar-grid">
+            <div class="calendar-item urgent">
+                <div class="calendar-date">Apr 2026</div>
+                <div class="calendar-customer">Energy Company</div>
+                <div class="calendar-mrr">MRR: $31.5K | Health: 65/100</div>
+            </div>
+            <div class="calendar-item">
+                <div class="calendar-date">Jun 2026</div>
+                <div class="calendar-customer">Global Retail</div>
+                <div class="calendar-mrr">MRR: $52.8K | Health: 94/100</div>
+            </div>
+            <div class="calendar-item">
+                <div class="calendar-date">Sep 2026</div>
+                <div class="calendar-customer">Finance Plus</div>
+                <div class="calendar-mrr">MRR: $28.1K | Health: 72/100</div>
+            </div>
+            <div class="calendar-item">
+                <div class="calendar-date">Nov 2026</div>
+                <div class="calendar-customer">Medical Systems</div>
+                <div class="calendar-mrr">MRR: $24.3K | Health: 88/100</div>
+            </div>
+            <div class="calendar-item">
+                <div class="calendar-date">Dec 2026</div>
+                <div class="calendar-customer">Acme Corp</div>
+                <div class="calendar-mrr">MRR: $47.5K | Health: 85/100</div>
+            </div>
+            <div class="calendar-item">
+                <div class="calendar-date">Jan 2027</div>
+                <div class="calendar-customer">Enterprise Solutions</div>
+                <div class="calendar-mrr">MRR: $21.4K | Health: 78/100</div>
+            </div>
+        </div>
+
+        <!-- Health Score Methodology -->
+        <div class="section-heading">Health Score Methodology</div>
+        <p style="margin-bottom: 20px; font-size: 13px; color: var(--wf-muted, #6b7f99);">The Health Score is a composite metric derived from multiple dimensions of customer engagement and account performance:</p>
+        <div class="methodology-grid">
+            <div class="methodology-item">
+                <div class="methodology-weight">30%</div>
+                <div class="methodology-label">Uptime & Performance</div>
+                <div class="methodology-desc">Service availability and performance metrics</div>
+            </div>
+            <div class="methodology-item">
+                <div class="methodology-weight">25%</div>
+                <div class="methodology-label">Support Cases</div>
+                <div class="methodology-desc">Case volume, resolution time, and trends</div>
+            </div>
+            <div class="methodology-item">
+                <div class="methodology-weight">20%</div>
+                <div class="methodology-label">Revenue Health</div>
+                <div class="methodology-desc">MRR growth, expansion, and forecast</div>
+            </div>
+            <div class="methodology-item">
+                <div class="methodology-weight">15%</div>
+                <div class="methodology-label">Engagement</div>
+                <div class="methodology-desc">Interaction frequency and product adoption</div>
+            </div>
+            <div class="methodology-item">
+                <div class="methodology-weight">10%</div>
+                <div class="methodology-label">Relationship</div>
+                <div class="methodology-desc">Contact stability and satisfaction signals</div>
+            </div>
+        </div>
+
+        <!-- Spec Sections -->
+        <div class="section-heading">System Specification</div>
+
+        <div class="spec-section">
+            <div class="spec-title">Data Objects & Aggregation</div>
+            <div class="spec-subsection">
+                <div class="spec-label">Primary Objects</div>
+                <ul class="spec-list">
+                    <li><strong>Account:</strong> Customer organization entity with partner assignment and MRR baseline</li>
+                    <li><strong>Customer_Health_Score__c:</strong> Calculated health metric updated daily with weighted component scores</li>
+                    <li><strong>ServiceContract:</strong> Service line items linked to Account; displayed as count only</li>
+                    <li><strong>Case:</strong> Support tickets aggregated by status and aging; partner view shows count only, not details</li>
+                    <li><strong>Asset:</strong> Infrastructure resource count per customer; available as inventory total</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="spec-section">
+            <div class="spec-title">Data Access & Validation Rules</div>
+            <div class="spec-subsection">
+                <div class="spec-label">Partner Portal Permissions</div>
+                <ul class="spec-list">
+                    <li>Partners see AGGREGATE metrics only: health score, case count, MRR, service count, renewal dates</li>
+                    <li>Partners do NOT see: detailed case content, service configurations, billing line items, customer usage logs</li>
+                    <li>Partners see contact names/roles but NOT email addresses except for assigned Account Executives</li>
+                    <li>Revenue data limited to MRR overview; detailed billing and pricing are not visible</li>
+                    <li>Boundary enforcement: Data masking applied at API and database query level</li>
+                </ul>
+            </div>
+            <div class="spec-subsection">
+                <div class="spec-label">Interaction Patterns</div>
+                <ul class="spec-list">
+                    <li>Health score updates trigger when component metrics change (daily calculation window)</li>
+                    <li>Expansion triggers: New service deployments, MRR growth, reduced case load</li>
+                    <li>Churn risk triggers: Health score drops, overdue renewals, contact role changes</li>
+                    <li>Portal refresh: Health dashboard updates hourly; renewal calendar displays 6-month forward window</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="spec-section">
+            <div class="spec-title">Design Intent & Bridge Function</div>
+            <p style="font-size: 13px; color: var(--wf-muted, #6b7f99); line-height: 1.6;">
+                This Customer Health Overview page serves as a <strong>bridge between Partner Portal and Customer Portal</strong>. It gives partners enough visibility to manage customer relationships effectively—renewal planning, health trends, engagement signals—while maintaining information security boundaries. Partners can:
+            </p>
+            <ul class="spec-list" style="margin-top: 12px;">
+                <li>Identify at-risk accounts and take proactive renewal action</li>
+                <li>Understand service expansion opportunities based on health trends</li>
+                <li>Coordinate with Equinix Account Executives on joint customer success activities</li>
+                <li>Access aggregated metrics without exposing operational, billing, or sensitive support details</li>
+            </ul>
+            <p style="font-size: 13px; color: var(--wf-muted, #6b7f99); line-height: 1.6; margin-top: 16px;">
+                The boundary between partner view (this page) and operational view (internal systems) is enforced at the data layer to ensure partners never encounter sensitive information even during edge cases or system changes.
+            </p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="wf-footer">
+        &copy; 2026 Equinix Partner Manager Portal · Wireframe specification
+        <div class="footer-container" style="display:none;">
+            <div class="footer-section">
+                <h4>Product</h4>
+                <ul>
+                    <li><a href="#features">Platform Features</a></li>
+                    <li><a href="#pricing">Partner Pricing</a></li>
+                    <li><a href="#services">Professional Services</a></li>
+                    <li><a href="#sla">SLAs & Support</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="#docs">Documentation</a></li>
+                    <li><a href="#api">API Reference</a></li>
+                    <li><a href="#training">Training Center</a></li>
+                    <li><a href="#community">Partner Community</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#contact">Contact Sales</a></li>
+                    <li><a href="#help">Help Center</a></li>
+                    <li><a href="#status">System Status</a></li>
+                    <li><a href="#feedback">Send Feedback</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#about">About Equinix</a></li>
+                    <li><a href="#careers">Careers</a></li>
+                    <li><a href="#investors">Investor Relations</a></li>
+                    <li><a href="#press">Press & News</a></li>
+                </ul>
+            </div>
+            <div class="footer-bottom">
+                <div class="footer-copyright">
+                    © 2026 Equinix, Inc. All rights reserved.
+                </div>
+                <div class="footer-legal">
+                    <a href="#privacy">Privacy Policy</a>
+                    <a href="#terms">Terms of Service</a>
+                    <a href="#security">Security & Compliance</a>
+                </div>
+            </div>
+        </div>
+        </div>
+    </footer>
+
+    <script>
+        function toggleExpand(header) {
+            const content = header.nextElementSibling;
+            const icon = header.querySelector('.expand-icon');
+
+            content.classList.toggle('active');
+            icon.classList.toggle('active');
+        }
+    </script>
+
+  <!-- WF-SPEC: pm-customer-health — Customer Health Overview -->
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>The Customer Health Dashboard provides partners with a unified view of account health across their customer portfolio, enabling proactive renewal planning and risk identification while maintaining strict data security boundaries.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Monitor aggregate health metrics across entire customer portfolio</li>
+<li>Identify at-risk accounts requiring renewal action</li>
+<li>Track customer engagement through health score trends</li>
+<li>Plan renewal conversations with visibility into key contact info</li>
+<li>Understand health methodology and scoring factors</li>
+<li>Maintain data security boundaries (aggregate metrics, no case details)</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>KPI cards: Active Customers, Total MRR, Health distribution</li>
+<li>Priority Alerts section for urgent renewal dates and at-risk customers</li>
+<li>Customer Health Dashboard table with sortable columns</li>
+<li>Expandable customer detail section with health score, revenue, services</li>
+<li>Renewal Calendar grid (next 6 months)</li>
+<li>Health Score Methodology showing 5 weighted calculation factors</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Expandable/collapsible customer detail sections</li>
+<li>Health score badges (Excellent/Good/Fair/Poor color coding)</li>
+<li>Risk level badges showing Low/Medium/High status</li>
+<li>Renewal alerts highlighted in amber for urgent dates</li>
+<li>Revenue trend chart with 6 monthly bars for selected customer</li>
+<li>Data boundary notice explaining partner data visibility restrictions</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Data Integration & Aggregation</strong>
+<ul>
+<li>Salesforce Account/ServiceContract queries for customer list and MRR baseline</li>
+<li>Daily health score calculation aggregating uptime, support cases, revenue, engagement, and relationship factors</li>
+</ul>
+</li>
+<li><strong>Access Control & Data Security</strong>
+<ul>
+<li>Role-based data masking ensures partners see aggregate metrics only—health scores, case counts, MRR, service counts, renewal dates</li>
+<li>Boundary enforcement applied at API and database query level to prevent access to case content, billing details, and customer usage logs</li>
+</ul>
+</li>
+<li><strong>Alerting & Risk Scoring</strong>
+<ul>
+<li>Renewal date alerting triggered within 90-day forward window with visual highlighting</li>
+<li>Risk scoring rule engine flagging health drops, overdue renewals, and contact role changes for priority action</li>
+</ul>
+</li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Validation &amp; Business Logic</h4>
+<ul>
+<li>Partners see AGGREGATE metrics only: health score, case count, MRR, service count, renewal dates</li>
+<li>Partners do NOT see: detailed case content, service configurations, billing line items, customer usage logs</li>
+<li>Partners see contact names/roles but NOT email addresses except for assigned Account Executives</li>
+<li>Revenue data limited to MRR overview; detailed billing and pricing are not visible</li>
+<li>Boundary enforcement: Data masking applied at API and database query level</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+</body>
+</html>

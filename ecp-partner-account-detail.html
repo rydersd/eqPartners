@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S.H.I.E.L.D. Account — Partner · Equinix Customer Portal</title>
+    <link rel="stylesheet" href="wireframe.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+            background-color: var(--wf-canvas, #f5f7fb);
+            color: var(--wf-text, #3b4f68);
+        }
+
+        /* Wireframe Header */
+        header.wf-header {
+            background: var(--wf-ink, #1e2a3a);
+            height: 56px;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            gap: 16px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        header.wf-header .wf-header-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--wf-text, #3b4f68);
+        }
+
+        header.wf-header .wf-header-nav {
+            display: flex;
+            gap: 24px;
+            flex: 1;
+            margin-left: 32px;
+        }
+
+        header.wf-header .wf-header-nav a {
+            color: var(--wf-text, #3b4f68);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            padding: 8px 0;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.2s;
+        }
+
+        header.wf-header .wf-header-nav a:hover {
+            border-bottom-color: var(--wf-accent, var(--wf-muted, #6b7f99));
+        }
+
+        header.wf-header .wf-header-nav a.active {
+            border-bottom-color: var(--wf-accent, var(--wf-muted, #6b7f99));
+        }
+
+        header.wf-header .wf-header-util {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-left: auto;
+        }
+
+        .wf-icon-sm {
+            width: 18px;
+            height: 18px;
+            color: var(--wf-text, #3b4f68);
+        }
+
+        .page-context-bar {
+            background: var(--wf-surface);
+            border-bottom: 1px solid var(--wf-line);
+            padding: 7px 24px;
+        }
+
+        .wf-breadcrumb {
+            font-size: 11px;
+            color: var(--wf-muted);
+        }
+
+        .wf-breadcrumb a {
+            color: var(--wf-accent, var(--wf-muted, #6b7f99));
+            text-decoration: none;
+        }
+
+        .wf-breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .wf-breadcrumb-sep {
+            margin: 0 5px;
+            color: var(--wf-line);
+        }
+
+        .wf-breadcrumb-current {
+            color: var(--wf-text);
+            font-weight: 500;
+        }
+
+        .persona-badge {
+            border: 1.5px solid currentColor;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 2px 7px;
+            border-radius: 3px;
+        }
+
+        .persona-badge.persona-badge--partner {
+            color: var(--wf-accent, var(--wf-muted, #6b7f99));
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+
+        /* Two-column layout */
+        .detail-layout {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 32px;
+        }
+
+        /* Account Header */
+        .account-header {
+            background: var(--wf-surface, #edf1f7);
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+            margin-bottom: 24px;
+        }
+
+        .account-name {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--wf-ink, #1e2a3a);
+            margin-bottom: 4px;
+        }
+
+        .account-fullname {
+            font-size: 12px;
+            color: var(--wf-text, #3b4f68);
+            margin-bottom: 16px;
+        }
+
+        .account-info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 16px;
+        }
+
+        .account-info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .account-label {
+            font-size: 11px;
+            color: var(--wf-text, #3b4f68);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .account-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        /* Content Cards */
+        .card {
+            background: var(--wf-surface, #edf1f7);
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+            margin-bottom: 24px;
+            border-top: 3px solid var(--wf-accent, var(--wf-muted, #6b7f99));
+        }
+
+        .card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--wf-ink, #1e2a3a);
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--wf-line, #b0bdd0);
+        }
+
+        .service-item {
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--wf-line, #b0bdd0);
+        }
+
+        .service-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .service-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+            margin-bottom: 4px;
+        }
+
+        .service-detail {
+            font-size: 12px;
+            color: var(--wf-text, #3b4f68);
+            margin-bottom: 4px;
+        }
+
+        .service-cost {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        /* Order/Activation Card */
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            background: var(--wf-surface, #edf1f7);
+            color: var(--wf-amber, #8b7745);
+            border: 1px solid var(--wf-amber, #8b7745);
+            margin-bottom: 12px;
+        }
+
+        /* Case info */
+        .case-item {
+            background: var(--wf-canvas, #f5f7fb);
+            padding: 12px;
+            border-radius: 4px;
+            border-left: 3px solid var(--wf-accent, var(--wf-muted, #6b7f99));
+        }
+
+        .case-id {
+            font-weight: 600;
+            color: var(--wf-accent, var(--wf-muted, #6b7f99));
+            font-size: 12px;
+        }
+
+        .case-subject {
+            font-size: 13px;
+            color: var(--wf-ink, #1e2a3a);
+            margin: 4px 0;
+        }
+
+        .case-meta {
+            font-size: 11px;
+            color: var(--wf-text, #3b4f68);
+        }
+
+        /* Right Sidebar Cards */
+        .sidebar-card {
+            background: var(--wf-surface, #edf1f7);
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+            margin-bottom: 24px;
+            border: 2px solid var(--wf-accent, var(--wf-muted, #6b7f99));
+        }
+
+        .sidebar-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--wf-ink, #1e2a3a);
+            margin-bottom: 16px;
+        }
+
+        .commission-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--wf-accent, var(--wf-muted, #6b7f99));
+            margin-bottom: 4px;
+        }
+
+        .commission-label {
+            font-size: 11px;
+            color: var(--wf-text, #3b4f68);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+        }
+
+        .sidebar-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--wf-line, #b0bdd0);
+        }
+
+        .sidebar-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .sidebar-label {
+            font-size: 12px;
+            color: var(--wf-text, #3b4f68);
+            font-weight: 600;
+        }
+
+        .sidebar-value {
+            font-size: 13px;
+            color: var(--wf-ink, #1e2a3a);
+            font-weight: 600;
+        }
+
+        /* Footer */
+        footer.wf-footer {
+            background: var(--wf-canvas, #f5f7fb);
+            border-top: 1px solid var(--wf-line, #b0bdd0);
+            padding: 24px;
+            text-align: center;
+            font-size: 12px;
+            color: var(--wf-text, #3b4f68);
+            margin-top: 48px;
+            grid-column: 1 / -1;
+        }
+
+        footer.wf-footer a {
+            color: var(--wf-accent, var(--wf-muted, #6b7f99));
+            text-decoration: none;
+            margin: 0 12px;
+        }
+
+        footer.wf-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Link Styling */
+        a {
+            color: var(--wf-accent, var(--wf-muted, #6b7f99));
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 1200px) {
+            .detail-layout {
+                grid-template-columns: 1fr;
+            }
+            .account-info-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Wireframe Header -->
+    <header class="wf-header">
+      <div class="wf-header-logo"><svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix"><path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/></svg></div>
+      <div class="wf-header-title">Customer Portal<span style="font-size:11px;font-weight:500;color: var(--wf-text);background: var(--wf-tint);border:1px solid var(--wf-line);border-radius:12px;padding:3px 10px;font-weight:600;white-space:nowrap;">James Rhodes &nbsp;&bull;&nbsp; Stark Industries</span>
+        <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+        <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+      </div>
+    </header>
+
+    <div class="page-context-bar">
+      <div style="max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+        <nav class="wf-breadcrumb" aria-label="Breadcrumb" style="margin-bottom:0;">
+          <a href="ecp-partner-dashboard.html">My Accounts</a>
+          <span class="wf-breadcrumb-sep">›</span>
+          <span class="wf-breadcrumb-current">S.H.I.E.L.D.</span>
+        </nav>
+        <span class="persona-badge persona-badge--partner">Partner</span>
+      </div>
+    </div>
+
+    <div class="container">
+        <!-- Account Header -->
+        <div class="account-header">
+            <div class="account-name">S.H.I.E.L.D.</div>
+            <div class="account-fullname">Strategic Homeland Intervention, Enforcement & Logistics Division</div>
+            <div class="account-info-grid">
+                <div class="account-info-item">
+                    <span class="account-label">Primary Contact</span>
+                    <span class="account-value">Maria Hill, Technical Director</span>
+                </div>
+                <div class="account-info-item">
+                    <span class="account-label">Status</span>
+                    <span class="account-value">In Order (⏳)</span>
+                </div>
+                <div class="account-info-item">
+                    <span class="account-label">Deal ID</span>
+                    <span class="account-value">DR-2026-4401</span>
+                </div>
+                <div class="account-info-item">
+                    <span class="account-label">Partner Rep</span>
+                    <span class="account-value">Tony Stark</span>
+                </div>
+            </div>
+            <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--wf-line, #b0bdd0); font-size: 12px; color: var(--wf-text, #3b4f68);">
+                <strong>Expected Activation:</strong> Mar 15, 2026
+            </div>
+        </div>
+
+        <!-- Two-Column Layout -->
+        <div class="detail-layout">
+            <!-- LEFT COLUMN (2/3) -->
+            <div>
+                <!-- Services Overview -->
+                <div class="card">
+                    <div class="card-title">Services Overview</div>
+
+                    <div class="service-item">
+                        <div class="service-name">Equinix Fabric</div>
+                        <div class="service-detail">3 connections (SV5↔NY5↔LD8), 10Gbps</div>
+                        <div class="service-cost">$28,000/mo</div>
+                    </div>
+
+                    <div class="service-item">
+                        <div class="service-name">Network Edge</div>
+                        <div class="service-detail">4 x Virtual Routers (SV5)</div>
+                        <div class="service-cost">$12,000/mo</div>
+                    </div>
+
+                    <div class="service-item">
+                        <div class="service-name">Colocation</div>
+                        <div class="service-detail">2 cabinets (SV5)</div>
+                        <div class="service-cost">$5,000/mo</div>
+                    </div>
+
+                    <div style="margin-top: 16px; padding-top: 16px; border-top: 2px solid var(--wf-line, #b0bdd0);">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="font-weight: 600; color: var(--wf-ink, #1e2a3a);">Total Customer MRR</span>
+                            <span style="font-size: 18px; font-weight: 700; color: var(--wf-ink, #1e2a3a);">$45,000/mo</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-top: 8px; color: var(--wf-text, #3b4f68); font-size: 12px;">
+                            <span>Annual (TCV)</span>
+                            <span>$1,620,000</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Orders & Activation -->
+                <div class="card">
+                    <div class="card-title">Orders & Activation</div>
+
+                    <div class="status-badge">Provisioning</div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                        <div>
+                            <div class="account-label">Order Submitted</div>
+                            <div class="account-value">Feb 14, 2026</div>
+                        </div>
+                        <div>
+                            <div class="account-label">Expected Activation</div>
+                            <div class="account-value">Mar 15, 2026</div>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div>
+                            <div class="account-label">Order Ref</div>
+                            <div class="account-value">ORD-2026-8801</div>
+                        </div>
+                        <div>
+                            <div class="account-label">Days to Activation</div>
+                            <div class="account-value">~25 days</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Open Cases -->
+                <div class="card">
+                    <div class="card-title">Open Cases</div>
+
+                    <div class="case-item">
+                        <div class="case-id">Case #C-2026-0412</div>
+                        <div class="case-subject">Pre-activation connectivity query — SV5 cross-connect routing</div>
+                        <div class="case-meta">Open • Opened Feb 15 2026</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN (1/3) -->
+            <div>
+                <!-- My Commission Card (Prominent) -->
+                <div class="sidebar-card" style="border-color: var(--wf-accent, var(--wf-muted, #6b7f99));">
+                    <div class="sidebar-title">My Commission</div>
+
+                    <div class="commission-value">$6,750</div>
+                    <div class="commission-label">/mo at 15% Gold rate</div>
+
+                    <div class="sidebar-row">
+                        <span class="sidebar-label">Annual Commission</span>
+                        <span class="sidebar-value">$243,000</span>
+                    </div>
+
+                    <div class="sidebar-row">
+                        <span class="sidebar-label">Commission Status</span>
+                        <span class="sidebar-value" style="color: var(--wf-amber, #8b7745);">Pending</span>
+                    </div>
+
+                    <div class="sidebar-row">
+                        <span class="sidebar-label">Activation Date</span>
+                        <span class="sidebar-value">Mar 15, 2026</span>
+                    </div>
+
+                    <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--wf-line, #b0bdd0); font-size: 11px; color: var(--wf-text, #3b4f68);">
+                        <strong>Term:</strong> 36 months<br/>
+                        <strong>Projected Value:</strong> $243,000 over contract term
+                    </div>
+                </div>
+
+                <!-- Deal Summary -->
+                <div class="sidebar-card">
+                    <div class="sidebar-title">Deal Summary</div>
+
+                    <div class="sidebar-row">
+                        <span class="sidebar-label">Deal ID</span>
+                        <span class="sidebar-value">DR-2026-4401</span>
+                    </div>
+
+                    <div class="sidebar-row">
+                        <span class="sidebar-label">Registered</span>
+                        <span class="sidebar-value">Jan 22, 2026</span>
+                    </div>
+
+                    <div class="sidebar-row">
+                        <span class="sidebar-label">Partner Rep</span>
+                        <span class="sidebar-value">Tony Stark</span>
+                    </div>
+
+                    <div class="sidebar-row">
+                        <span class="sidebar-label">Sales Eng.</span>
+                        <span class="sidebar-value">David Kim</span>
+                    </div>
+
+                    <div class="sidebar-row">
+                        <span class="sidebar-label">Customer AE</span>
+                        <span class="sidebar-value">Nick Fury</span>
+                    </div>
+
+                    <div class="sidebar-row">
+                        <span class="sidebar-label">Term</span>
+                        <span class="sidebar-value">36 months</span>
+                    </div>
+
+                    <div class="sidebar-row">
+                        <span class="sidebar-label">Deal Value</span>
+                        <span class="sidebar-value" style="color: var(--wf-ink, #1e2a3a); font-weight: 700; font-size: 16px;">$1,620,000 TCV</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="wf-footer">
+            &copy; 2026 Equinix · Wireframe specification
+        </footer>
+    </div>
+
+<script src="wf-nav.js"></script>
+</body>
+</html>

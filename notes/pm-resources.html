@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resources & Support</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Salesforce Sans, sans-serif;
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .page-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 24px;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
+      color: var(--wf-ink, #1e2a3a);
+      border-bottom: 1px solid var(--wf-surface, #edf1f7);
+      padding-bottom: 12px;
+    }
+
+    .category-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .category-tab {
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-size: 13px;
+      cursor: pointer;
+      background-color: white;
+      border: 1px solid var(--wf-surface, #edf1f7);
+      color: var(--wf-ink, #1e2a3a);
+      transition: all 0.2s;
+    }
+
+    .category-tab.active {
+      background-color: var(--wf-accent, #3d6daa);
+      color: white;
+      border-color: var(--wf-accent, #3d6daa);
+    }
+
+    .category-tab:hover {
+      background-color: var(--wf-canvas, #f5f7fb);
+    }
+
+    .category-tab.active:hover {
+      background-color: var(--wf-accent, #3d6daa);
+    }
+
+    .resource-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .resource-card {
+      background-color: var(--wf-canvas, #f5f7fb);
+      border: 1px solid var(--wf-surface, #edf1f7);
+      border-radius: 4px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: all 0.2s;
+    }
+
+    .resource-card:hover {
+      border-color: var(--wf-accent, #3d6daa);
+      box-shadow: 0 2px 8px rgba(0,112,210,0.1);
+    }
+
+    .resource-icon {
+      font-size: 24px;
+    }
+
+    .resource-name {
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+      font-size: 13px;
+    }
+
+    .resource-type {
+      display: inline-block;
+      background-color: var(--wf-surface, #edf1f7);
+      color: var(--wf-muted, #6b7f99);
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    .resource-updated {
+      font-size: 11px;
+      color: var(--wf-muted, #6b7f99);
+    }
+
+    .resource-link {
+      color: var(--wf-accent, #3d6daa);
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .resource-link:hover {
+      text-decoration: underline;
+    }
+
+    .faq-container {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .faq-item {
+      background-color: var(--wf-canvas, #f5f7fb);
+      border: 1px solid var(--wf-surface, #edf1f7);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .faq-question {
+      padding: 16px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+      user-select: none;
+      transition: background 0.2s;
+    }
+
+    .faq-question:hover {
+      background-color: var(--wf-canvas, #f5f7fb);
+    }
+
+    .faq-toggle {
+      font-size: 14px;
+      color: var(--wf-accent, #3d6daa);
+    }
+
+    .faq-answer {
+      display: none;
+      padding: 16px;
+      padding-top: 0;
+      font-size: 13px;
+      color: var(--wf-muted, #6b7f99);
+      border-top: 1px solid var(--wf-surface, #edf1f7);
+      background-color: white;
+    }
+
+    .faq-answer.active {
+      display: block;
+    }
+
+    .psm-card {
+      background: var(--wf-ink, #1e2a3a);
+      border-left: 4px solid var(--wf-accent, #3d6daa);
+      padding: 16px;
+      border-radius: 4px;
+      margin-bottom: 16px;
+    }
+
+    .psm-name {
+      font-weight: 700;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 4px;
+    }
+
+    .psm-title {
+      font-size: 11px;
+      color: var(--wf-muted, #6b7f99);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .psm-contact {
+      font-size: 12px;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 4px;
+    }
+
+    .psm-contact strong {
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .psm-link {
+      color: var(--wf-accent, #3d6daa);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 12px;
+    }
+
+    .psm-link:hover {
+      text-decoration: underline;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .btn-primary {
+      background-color: var(--wf-accent, #3d6daa);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--wf-accent, #3d6daa);
+    }
+
+    .btn-secondary {
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-ink, #1e2a3a);
+      border: 1px solid var(--wf-surface, #edf1f7);
+      margin-bottom: 8px;
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--wf-tint, #dce4ef);
+    }
+
+    .support-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-input {
+      padding: 8px 12px;
+      border: 1px solid var(--wf-surface, #edf1f7);
+      border-radius: 4px;
+      font-size: 12px;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .form-select {
+      padding: 8px 12px;
+      border: 1px solid var(--wf-surface, #edf1f7);
+      border-radius: 4px;
+      font-size: 12px;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .form-textarea {
+      padding: 8px 12px;
+      border: 1px solid var(--wf-surface, #edf1f7);
+      border-radius: 4px;
+      font-size: 12px;
+      color: var(--wf-ink, #1e2a3a);
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    .event-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .event-item {
+      background-color: var(--wf-canvas, #f5f7fb);
+      border-left: 3px solid var(--wf-accent, #3d6daa);
+      padding: 12px;
+      border-radius: 3px;
+      font-size: 12px;
+    }
+
+    .event-date {
+      font-weight: 700;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 2px;
+    }
+
+    .event-name {
+      color: var(--wf-accent, #3d6daa);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .event-type {
+      font-size: 11px;
+      color: var(--wf-muted, #6b7f99);
+    }
+
+    .event-register {
+      display: inline-block;
+      color: var(--wf-accent, #3d6daa);
+      font-weight: 600;
+      font-size: 11px;
+      margin-top: 4px;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .event-register:hover {
+      text-decoration: underline;
+    }
+
+    .search-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .search-input {
+      flex: 1;
+      padding: 8px 12px;
+      border: 1px solid var(--wf-surface, #edf1f7);
+      border-radius: 4px;
+      font-size: 13px;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    @media (max-width: 768px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .resource-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  
+/* ── 3-Column Record Layout ── */
+.record-layout { display:grid; grid-template-columns:280px 1fr 300px; gap:1rem; padding:1rem 2rem; max-width:1600px; }
+@media (max-width:1200px) { .record-layout { grid-template-columns:1fr; } }
+.left-rail .card, .right-rail .card { margin-bottom:1rem; }
+.center-content .card { margin-bottom:1rem; }
+.card { background:var(--wf-surface,#edf1f7); border:1px solid var(--wf-tint,#dce4ef); border-radius:6px; overflow:hidden; }
+.card-hd { padding:0.75rem 1rem; border-bottom:1px solid var(--wf-tint); display:flex; justify-content:space-between; align-items:center; }
+.card-hd h3 { font-size:13px; font-weight:700; color:var(--wf-ink); margin:0; }
+.card-hd-action { font-size:11px; color:var(--wf-accent); text-decoration:none; font-weight:600; cursor:pointer; }
+.card-bd { padding:1rem; }
+.hl-row { display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:12px; }
+.hl-row:last-child { border-bottom:none; }
+.hl-label { color:var(--wf-muted); }
+.hl-value { font-weight:700; color:var(--wf-ink); }
+.hl-value.warn { color:var(--wf-amber,#8b7745); }
+.rel-item { display:flex; align-items:center; gap:0.625rem; padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:12px; }
+.rel-item:last-child { border-bottom:none; }
+.rel-icon { width:28px; height:28px; border-radius:50%; background:var(--wf-tint); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.rel-icon svg { width:14px; height:14px; color:var(--wf-ink); }
+.rel-info { flex:1; }
+.rel-title { font-size:12px; font-weight:600; color:var(--wf-ink); }
+.rel-sub { font-size:11px; color:var(--wf-muted); }
+.rel-meta { font-size:11px; color:var(--wf-muted); text-align:right; white-space:nowrap; }
+/* Right-rail tabs */
+.rail-tabs { display:flex; border-bottom:1px solid var(--wf-tint); }
+.rail-tab { flex:1; padding:0.5rem; font-size:11px; font-weight:600; text-align:center; color:var(--wf-muted); cursor:pointer; border-bottom:2px solid transparent; background:none; border-top:none; border-left:none; border-right:none; }
+.rail-tab.active { color:var(--wf-accent); border-bottom-color:var(--wf-accent); }
+.rail-tab-content { display:none; }
+.rail-tab-content.active { display:block; }
+/* Activity feed in right rail */
+.feed-sm { padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:11px; }
+.feed-sm:last-child { border-bottom:none; }
+.feed-sm-text { color:var(--wf-text); line-height:1.4; }
+.feed-sm-text strong { color:var(--wf-ink); }
+.feed-sm-time { color:var(--wf-muted); font-size:10px; margin-top:2px; }
+/* Quick action buttons */
+.action-btn { width:100%; padding:0.5rem; border-radius:4px; font-size:12px; font-weight:600; cursor:pointer; margin-bottom:0.375rem; border:1px solid var(--wf-line); text-align:center; }
+.action-btn:last-child { margin-bottom:0; }
+.action-btn-primary { background:var(--wf-accent); color:white; border-color:var(--wf-accent); }
+.action-btn-secondary { background:var(--wf-surface); color:var(--wf-text); }
+</style>
+</head>
+<body>
+  <header class="wf-header">
+    <div class="wf-header-logo">EQ</div>
+    <div class="wf-header-title">Equinix Partner Manager</div>
+    <nav class="wf-header-nav">
+      <a href="pm-home-dashboard.html">Dashboard</a>
+      <a href="pm-team-management.html">Team</a>
+      <a href="pm-deals-revenue.html">Deals</a>
+      <a href="pm-team-training.html">Training</a>
+      <a href="pm-resources.html">Resources</a>
+    </nav>
+    <div class="wf-header-util">
+      <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+      <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+    </div>
+  </header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+
+<!-- ── 3-Column Record Layout ── -->
+<div class="record-layout">
+
+  <!-- ════════ LEFT RAIL — Related Objects ════════ -->
+  <div class="left-rail">
+    <div class="card">
+      <div class="card-hd"><h3>Categories</h3></div>
+      <div class="card-bd">
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"/></svg></div>
+          <div class="rel-info"><div class="rel-title">Getting Started</div><div class="rel-sub">Guides</div></div>
+        </div>
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"/></svg></div>
+          <div class="rel-info"><div class="rel-title">Sales Enablement</div><div class="rel-sub">Tools</div></div>
+        </div>
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"/></svg></div>
+          <div class="rel-info"><div class="rel-title">Support</div><div class="rel-sub">FAQs</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ CENTER — Main Content ════════ -->
+  <div class="center-content">
+  <div class="container">
+    <div class="page-title">Resources & Support</div>
+
+    <div class="main-grid">
+      <div class="main-content">
+        <!-- Resource Library -->
+        <div class="card">
+          <div class="card-title">Partner Program Resources</div>
+
+          <div class="search-bar">
+            <input type="text" class="search-input" placeholder="Search resources...">
+            <button class="btn btn-secondary" style="width:auto;margin:0">🔍</button>
+          </div>
+
+          <div class="category-tabs">
+            <div class="category-tab active" onclick="filterResources(this, 'all')">All</div>
+            <div class="category-tab" onclick="filterResources(this, 'guides')">Guides</div>
+            <div class="category-tab" onclick="filterResources(this, 'playbooks')">Playbooks</div>
+            <div class="category-tab" onclick="filterResources(this, 'technical')">Technical</div>
+            <div class="category-tab" onclick="filterResources(this, 'marketing')">Marketing</div>
+            <div class="category-tab" onclick="filterResources(this, 'policies')">Policies</div>
+          </div>
+
+          <div class="resource-grid">
+            <div class="resource-card">
+              <div class="resource-icon">📘</div>
+              <div class="resource-name">Partner Program Handbook</div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="resource-type">PDF</span>
+              </div>
+              <div class="resource-updated">Updated: Feb 2025</div>
+              <a href="#" class="resource-link">Download →</a>
+            </div>
+
+            <div class="resource-card">
+              <div class="resource-icon">📊</div>
+              <div class="resource-name">Sales Playbook: Enterprise Accounts</div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="resource-type">DOC</span>
+              </div>
+              <div class="resource-updated">Updated: Jan 2025</div>
+              <a href="#" class="resource-link">View →</a>
+            </div>
+
+            <div class="resource-card">
+              <div class="resource-icon">🔧</div>
+              <div class="resource-name">Technical Documentation: Integration APIs</div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="resource-type">LINK</span>
+              </div>
+              <div class="resource-updated">Updated: Feb 2025</div>
+              <a href="#" class="resource-link">Access →</a>
+            </div>
+
+            <div class="resource-card">
+              <div class="resource-icon">🎨</div>
+              <div class="resource-name">Brand Guidelines & Style Guide</div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="resource-type">PDF</span>
+              </div>
+              <div class="resource-updated">Updated: Jan 2025</div>
+              <a href="#" class="resource-link">Download →</a>
+            </div>
+
+            <div class="resource-card">
+              <div class="resource-icon">📋</div>
+              <div class="resource-name">Deal Registration Guide</div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="resource-type">PDF</span>
+              </div>
+              <div class="resource-updated">Updated: Feb 2025</div>
+              <a href="#" class="resource-link">Download →</a>
+            </div>
+
+            <div class="resource-card">
+              <div class="resource-icon">💰</div>
+              <div class="resource-name">MDF Policy & Claim Process</div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="resource-type">DOC</span>
+              </div>
+              <div class="resource-updated">Updated: Feb 2025</div>
+              <a href="#" class="resource-link">View →</a>
+            </div>
+
+            <div class="resource-card">
+              <div class="resource-icon">🎯</div>
+              <div class="resource-name">Sales Playbook: SMB Segment</div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="resource-type">DOC</span>
+              </div>
+              <div class="resource-updated">Updated: Dec 2024</div>
+              <a href="#" class="resource-link">View →</a>
+            </div>
+
+            <div class="resource-card">
+              <div class="resource-icon">🎓</div>
+              <div class="resource-name">Training Videos: Getting Started</div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="resource-type">VIDEO</span>
+              </div>
+              <div class="resource-updated">Updated: Jan 2025</div>
+              <a href="#" class="resource-link">Watch →</a>
+            </div>
+
+            <div class="resource-card">
+              <div class="resource-icon">📱</div>
+              <div class="resource-name">Customer Case Studies</div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="resource-type">LINK</span>
+              </div>
+              <div class="resource-updated">Updated: Feb 2025</div>
+              <a href="#" class="resource-link">Browse →</a>
+            </div>
+
+            <div class="resource-card">
+              <div class="resource-icon">📜</div>
+              <div class="resource-name">Partner Agreement & Terms</div>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <span class="resource-type">PDF</span>
+              </div>
+              <div class="resource-updated">Updated: Jan 2025</div>
+              <a href="#" class="resource-link">View →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="card">
+          <div class="card-title">Frequently Asked Questions</div>
+
+          <div class="faq-container">
+            <div class="faq-item">
+              <div class="faq-question" onclick="toggleFaq(this)">
+                <span>How do I submit a deal registration?</span>
+                <span class="faq-toggle">+</span>
+              </div>
+              <div class="faq-answer">
+                Go to the Deals section and click "Submit New Deal Registration". Fill in the customer details, estimated amount, and expected close date. Your PSM will review within 24 hours. Once approved, the deal is protected from channel conflict.
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <div class="faq-question" onclick="toggleFaq(this)">
+                <span>What's the timeline for MDF claim reimbursement?</span>
+                <span class="faq-toggle">+</span>
+              </div>
+              <div class="faq-answer">
+                Claims are typically processed within 5-7 business days. Once approved, payment is issued on the last business day of the month. You can view the status of all claims in the Marketing & MDF section.
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <div class="faq-question" onclick="toggleFaq(this)">
+                <span>How much MDF do I receive at each tier?</span>
+                <span class="faq-toggle">+</span>
+              </div>
+              <div class="faq-answer">
+                Bronze Tier: $10,000 annually | Silver Tier: $25,000 annually | Gold Tier: $50,000 annually. MDF resets each calendar year and cannot be carried over. Unused MDF does not roll to the following year.
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <div class="faq-question" onclick="toggleFaq(this)">
+                <span>What are the commission rates by tier?</span>
+                <span class="faq-toggle">+</span>
+              </div>
+              <div class="faq-answer">
+                Bronze: 8% of deal value | Silver: 12% of deal value | Gold: 15% of deal value. Commission is calculated when the Opportunity is marked "Closed Won". Accelerator bonuses apply for exceeding quarterly targets.
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <div class="faq-question" onclick="toggleFaq(this)">
+                <span>How do I advance to the next tier?</span>
+                <span class="faq-toggle">+</span>
+              </div>
+              <div class="faq-answer">
+                Complete required training courses, achieve sales targets, and demonstrate customer satisfaction. Check your tier progress on the Home dashboard—it shows exactly which courses and milestones are required for the next tier.
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <div class="faq-question" onclick="toggleFaq(this)">
+                <span>Can I access co-branded marketing assets?</span>
+                <span class="faq-toggle">+</span>
+              </div>
+              <div class="faq-answer">
+                Yes! Visit the Marketing & MDF section to access our Co-Branded Asset Library. Logos, templates, pitch decks, case studies, and webinar slides are available for download without pre-approval.
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <div class="faq-question" onclick="toggleFaq(this)">
+                <span>What training is required for my team?</span>
+                <span class="faq-toggle">+</span>
+              </div>
+              <div class="faq-answer">
+                All team members must complete the 6 required foundational courses: Security Fundamentals, Compliance 101, Cloud Solutions, Advanced Networking, Sales Excellence, and Advanced Security. See the Training page for enrollment details and deadlines.
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <div class="faq-question" onclick="toggleFaq(this)">
+                <span>How are leads shared with partners?</span>
+                <span class="faq-toggle">+</span>
+              </div>
+              <div class="faq-answer">
+                Qualified leads are routed to partners based on geographic territory and product specialization. Lead acceptance goes through your PSM. Your dashboard shows all shared leads and conversion metrics for ROI tracking.
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <div class="faq-question" onclick="toggleFaq(this)">
+                <span>Who is my Partner Success Manager?</span>
+                <span class="faq-toggle">+</span>
+              </div>
+              <div class="faq-answer">
+                Your PSM information is displayed in the Support card on this page. They're your primary point of contact for program questions, training support, deal guidance, and tier advancement. You can reach them directly via email or schedule a call.
+              </div>
+            </div>
+
+            <div class="faq-item">
+              <div class="faq-question" onclick="toggleFaq(this)">
+                <span>How do I request custom marketing assets?</span>
+                <span class="faq-toggle">+</span>
+              </div>
+              <div class="faq-answer">
+                Submit a request through the "Request Custom Asset" button in the Marketing section. Specify your needs, timeline, and budget. Our marketing team will assess feasibility and work with your PSM on execution.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <!-- PSM Contact Card -->
+        <div class="card">
+          <div class="card-title">Your PSM</div>
+          <div class="psm-card">
+            <div class="psm-name">Sarah Chen</div>
+            <div class="psm-title">Partner Success Manager</div>
+            <div class="psm-contact">
+              Email: <a href="mailto:sarah.chen@equinix.com" class="psm-link">sarah.chen@equinix.com</a>
+            </div>
+            <div class="psm-contact">
+              Phone: <a href="tel:+14155551234" class="psm-link">(415) 555-1234</a>
+            </div>
+            <button class="btn btn-primary" style="margin-top:12px" onclick="alert('Booking link opened in new window')">📅 Schedule Call</button>
+          </div>
+        </div>
+
+        <!-- Support Case Form -->
+        <div class="card">
+          <div class="card-title">Submit Support Case</div>
+          <div class="support-form">
+            <div class="form-group">
+              <label class="form-label">Subject</label>
+              <input type="text" class="form-input" placeholder="Brief subject line">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Category</label>
+              <select class="form-select">
+                <option>Select Category...</option>
+                <option>Technical Support</option>
+                <option>Billing Question</option>
+                <option>Program Question</option>
+                <option>Training Support</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Description</label>
+              <textarea class="form-textarea" placeholder="Describe your issue..."></textarea>
+            </div>
+            <button class="btn btn-primary" onclick="alert('Support case submitted! Ticket #5847 created.')">Submit Case</button>
+            <a href="#" style="font-size:12px;color:var(--wf-accent, #3d6daa);text-align:center;text-decoration:none">View My Cases →</a>
+          </div>
+        </div>
+
+        <!-- Upcoming Events -->
+        <div class="card">
+          <div class="card-title">Upcoming Events</div>
+          <div class="event-list">
+            <div class="event-item">
+              <div class="event-date">March 15</div>
+              <div class="event-name">PSM Office Hours</div>
+              <div class="event-type">Q&A Session</div>
+              <a href="#" class="event-register">Register →</a>
+            </div>
+            <div class="event-item">
+              <div class="event-date">March 20-22</div>
+              <div class="event-name">Global Tech Summit</div>
+              <div class="event-type">Virtual Conference</div>
+              <a href="#" class="event-register">Register →</a>
+            </div>
+            <div class="event-item">
+              <div class="event-date">April 10</div>
+              <div class="event-name">Innovation Series Webinar</div>
+              <div class="event-type">Training Webinar</div>
+              <a href="#" class="event-register">Register →</a>
+            </div>
+            <div class="event-item">
+              <div class="event-date">May 5-7</div>
+              <div class="event-name">Digital Transform Expo</div>
+              <div class="event-type">Trade Show</div>
+              <a href="#" class="event-register">Register →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>  </div>
+
+  <!-- ════════ RIGHT RAIL — Activity & Insights ════════ -->
+  <div class="right-rail">
+    <div class="card">
+      <div class="rail-tabs">
+        <button class="rail-tab active" onclick="document.querySelectorAll('.rail-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active');document.querySelectorAll('.rail-tab-content').forEach(c=>c.classList.remove('active'));document.getElementById('tab-activity').classList.add('active');">Activity</button>
+        <button class="rail-tab" onclick="document.querySelectorAll('.rail-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active');document.querySelectorAll('.rail-tab-content').forEach(c=>c.classList.remove('active'));document.getElementById('tab-einstein').classList.add('active');">Einstein</button>
+      </div>
+      <div id="tab-activity" class="rail-tab-content active">
+        <div class="card-bd">
+          <div class="feed-sm"><div class="feed-sm-text">Handbook v2026 published</div><div class="feed-sm-time">This week</div></div>
+          <div class="feed-sm"><div class="feed-sm-text">New FAQ: Commission tiers</div><div class="feed-sm-time">3 days ago</div></div>
+        </div>
+      </div>
+      <div id="tab-einstein" class="rail-tab-content">
+        <div class="card-bd" style="font-size:12px;color:var(--wf-text);line-height:1.5;">
+          <div style="font-size:11px;font-weight:700;color:var(--wf-accent);text-transform:uppercase;letter-spacing:0.03em;margin-bottom:0.5rem;">AI Recommendation</div>
+          Top resource: Partner Handbook. Team frequently searches pricing — bookmark the calculator.
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><h3>Actions</h3></div>
+      <div class="card-bd">
+        <button class="action-btn action-btn-primary">Search Resources</button>
+        <button class="action-btn action-btn-secondary">Contact Support</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+
+  <footer class="wf-footer">
+    &copy; 2026 Equinix Partner Manager Portal · Wireframe specification
+  </footer>
+
+  <script>
+    function filterResources(element, filter) {
+      document.querySelectorAll('.category-tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      element.classList.add('active');
+    }
+
+    function toggleFaq(element) {
+      const answer = element.nextElementSibling;
+      const toggle = element.querySelector('.faq-toggle');
+
+      if (answer.classList.contains('active')) {
+        answer.classList.remove('active');
+        toggle.textContent = '+';
+      } else {
+        // Close all other FAQs
+        document.querySelectorAll('.faq-answer.active').forEach(active => {
+          active.classList.remove('active');
+          active.previousElementSibling.querySelector('.faq-toggle').textContent = '+';
+        });
+
+        answer.classList.add('active');
+        toggle.textContent = '−';
+      }
+    }
+  </script>
+<!-- ── Spec Sidebar (fly-in) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h2>Design Notes</h2>
+    <button class="spec-panel-close" onclick="toggleSpec()" aria-label="Close notes panel">&times;</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Centralized resource library providing partners access to program documentation, sales enablement materials, FAQs, and support contacts. Enables quick discovery and sharing of relevant resources across categories.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Access partner program resources and collateral</li>
+<li>Search for marketing and sales enablement materials</li>
+<li>Find product documentation and training content</li>
+<li>Locate co-sell and positioning resources</li>
+<li>Share resources with partner teams</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Resource library organized by category (Getting Started, Sales Enablement, Support)</li>
+<li>Search bar with keyword search and autocomplete</li>
+<li>Resource cards with title, description, preview thumbnail, and type badge</li>
+<li>Filter options by resource type, program, partner tier, and language</li>
+<li>Recently updated resources list with metadata</li>
+<li>Featured/recommended resources carousel</li>
+<li>Download, preview, and sharing action buttons per resource</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Search resources by keyword across title and description</li>
+<li>Filter by resource type, program, access level, and tier</li>
+<li>Sort results by date added, relevance, or popularity</li>
+<li>Preview resource content before downloading</li>
+<li>Download resource or request access workflow</li>
+<li>Share resource via email or copy link to clipboard</li>
+<li>Add/remove resources from personal favorites library</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Search & Indexing</strong>
+<ul>
+<li>Index Resource__c records in full-text search with title, description, and keywords for fast discovery</li>
+<li>Query and sort recent updates by LastModifiedDate with notification flag for new content</li>
+<li>Support keyword filtering across resource categories and metadata fields</li>
+</ul></li>
+<li><strong>Access Control & Tier Management</strong>
+<ul>
+<li>Apply access control via Resource_Access__c based on user partner tier and program enrollment</li>
+<li>Validate user permissions before displaying tier-specific resources and restricted content</li>
+<li>Track user authentication status for access logging and audit trails</li>
+</ul></li>
+<li><strong>Resource Retrieval & Display</strong>
+<ul>
+<li>Auto-generate resource thumbnails from first document page for preview capabilities</li>
+<li>Retrieve Resource__c records with file URLs, type badges, and metadata for display</li>
+<li>Support custom resource tags and allow users to curate personal collections</li>
+</ul></li>
+<li><strong>Analytics & Tracking</strong>
+<ul>
+<li>Track resource downloads and usage analytics via FileShare audit logs and event tracking</li>
+<li>Monitor resource popularity metrics and generate usage reports per resource and user</li>
+<li>Log file share events for compliance and performance monitoring</li>
+</ul></li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Key Objects</h4>
+<ul>
+<li>Resource__c: Title__c, Description__c, File_URL__c, Resource_Type__c, Partner_Tier__c, Publish_Date__c, Tags__c</li>
+<li>Resource_Access__c: Resource__c, User__c, Access_Level__c, Shared_Date__c</li>
+</ul>
+<h4>Validation &amp; Business Logic</h4>
+<ul>
+<li>Resources require published status before visibility</li>
+<li>Access restricted by partner tier and program enrollment</li>
+<li>File URLs must be validated and active</li>
+<li>Usage tracking requires user login authentication</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+</body>
+</html>

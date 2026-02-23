@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resources & Support - Equinix Partner Portal</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: var(--wf-canvas, #f5f7fb); }
+    .container { max-width: 1400px; margin: 0 auto; padding: 24px; }
+
+    .header { background: white; padding: 24px; border-radius: 8px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .header h2 { margin: 0 0 8px 0; font-size: 22px; font-weight: 600; color: var(--wf-ink, #1e2a3a); }
+    .header p { margin: 0; font-size: 13px; color: var(--wf-muted, #6b7f99); }
+
+    .quick-links { background: var(--wf-accent, #3d6daa); color: white; padding: 24px; border-radius: 8px; margin-bottom: 24px; }
+    .quick-links h3 { margin: 0 0 16px 0; font-size: 14px; font-weight: 600; }
+    .quick-links-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+    @media (max-width: 1200px) {
+      .quick-links-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    .quick-link-btn { display: inline-block; padding: 12px 16px; background: rgba(255,255,255,0.2); color: white; text-decoration: none; border-radius: 4px; font-size: 12px; font-weight: 600; border: 1px solid rgba(255,255,255,0.3); text-align: center; transition: all 0.2s; }
+    .quick-link-btn:hover { background: rgba(255,255,255,0.3); border-color: rgba(255,255,255,0.5); }
+
+    .tabs { display: flex; gap: 0; border-bottom: 2px solid var(--wf-tint, #dce4ef); background: white; margin-bottom: 24px; }
+    .tab { padding: 16px 24px; margin-bottom: -2px; border-bottom: 2px solid transparent; cursor: pointer; font-size: 13px; font-weight: 600; color: var(--wf-muted, #6b7f99); text-decoration: none; }
+    .tab:hover { color: var(--wf-ink, #1e2a3a); }
+    .tab.active { color: var(--wf-accent, #3d6daa); border-bottom-color: var(--wf-accent, #3d6daa); }
+
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .resource-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 32px; }
+    @media (max-width: 1100px) {
+      .resource-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .resource-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); transition: box-shadow 0.2s; }
+    .resource-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+    .resource-icon { font-size: 32px; margin-bottom: 12px; }
+    .resource-title { margin: 0 0 8px 0; font-size: 14px; font-weight: 600; color: var(--wf-ink, #1e2a3a); }
+    .resource-desc { margin: 0 0 12px 0; font-size: 12px; color: var(--wf-muted, #6b7f99); line-height: 1.5; }
+    .resource-meta { display: flex; gap: 12px; margin-bottom: 12px; font-size: 11px; color: var(--wf-muted, #6b7f99); }
+    .resource-meta-item { display: flex; align-items: center; gap: 4px; }
+    .resource-actions { display: flex; gap: 8px; }
+    .btn { display: inline-block; padding: 8px 12px; background: var(--wf-accent, #3d6daa); color: white; text-decoration: none; border-radius: 4px; font-size: 11px; font-weight: 600; border: none; cursor: pointer; transition: background 0.2s; flex: 1; text-align: center; }
+    .btn:hover { background: var(--wf-accent, #3d6daa); }
+    .btn-secondary { background: var(--wf-tint, #dce4ef); color: var(--wf-ink, #1e2a3a); }
+    .btn-secondary:hover { background: var(--wf-line, #b0bdd0); }
+
+    .faq-section { background: white; padding: 24px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 24px; }
+    .faq-section h3 { margin: 0 0 16px 0; font-size: 14px; font-weight: 600; color: var(--wf-ink, #1e2a3a); }
+    .faq-item { border-bottom: 1px solid var(--wf-tint, #dce4ef); padding-bottom: 16px; margin-bottom: 16px; }
+    .faq-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .faq-question { font-size: 13px; font-weight: 600; color: var(--wf-ink, #1e2a3a); cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .faq-toggle { font-size: 16px; transition: transform 0.2s; }
+    .faq-toggle.open { transform: rotate(180deg); }
+    .faq-answer { font-size: 12px; color: var(--wf-muted, #6b7f99); line-height: 1.6; display: none; }
+    .faq-answer.open { display: block; }
+
+    .support-sidebar { background: white; padding: 24px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); position: sticky; top: 24px; }
+    .support-sidebar h3 { margin: 0 0 16px 0; font-size: 14px; font-weight: 600; color: var(--wf-ink, #1e2a3a); border-bottom: 2px solid var(--wf-tint, #dce4ef); padding-bottom: 12px; }
+    .support-item { margin-bottom: 16px; }
+    .support-item:last-child { margin-bottom: 0; }
+    .support-label { font-size: 11px; color: var(--wf-muted, #6b7f99); margin-bottom: 6px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
+    .support-text { font-size: 13px; color: var(--wf-ink, #1e2a3a); margin: 0 0 8px 0; font-weight: 500; }
+    .support-detail { font-size: 12px; color: var(--wf-muted, #6b7f99); margin: 0; }
+    .support-action { display: inline-block; padding: 8px 12px; background: var(--wf-accent, #3d6daa); color: white; text-decoration: none; border-radius: 4px; font-size: 11px; font-weight: 600; margin-top: 8px; }
+    .support-action:hover { background: var(--wf-accent, #3d6daa); }
+
+    .main-grid { display: grid; grid-template-columns: 1fr 280px; gap: 24px; }
+    @media (max-width: 900px) {
+      .main-grid { grid-template-columns: 1fr; }
+      .support-sidebar { position: static; }
+    }
+  
+/* ── 3-Column Record Layout ── */
+.record-layout { display:grid; grid-template-columns:280px 1fr 300px; gap:1rem; padding:1rem 2rem; max-width:1600px; }
+@media (max-width:1200px) { .record-layout { grid-template-columns:1fr; } }
+.left-rail .card, .right-rail .card { margin-bottom:1rem; }
+.center-content .card { margin-bottom:1rem; }
+.card { background:var(--wf-surface,#edf1f7); border:1px solid var(--wf-tint,#dce4ef); border-radius:6px; overflow:hidden; }
+.card-hd { padding:0.75rem 1rem; border-bottom:1px solid var(--wf-tint); display:flex; justify-content:space-between; align-items:center; }
+.card-hd h3 { font-size:13px; font-weight:700; color:var(--wf-ink); margin:0; }
+.card-hd-action { font-size:11px; color:var(--wf-accent); text-decoration:none; font-weight:600; cursor:pointer; }
+.card-bd { padding:1rem; }
+.hl-row { display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:12px; }
+.hl-row:last-child { border-bottom:none; }
+.hl-label { color:var(--wf-muted); }
+.hl-value { font-weight:700; color:var(--wf-ink); }
+.hl-value.warn { color:var(--wf-amber,#8b7745); }
+.rel-item { display:flex; align-items:center; gap:0.625rem; padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:12px; }
+.rel-item:last-child { border-bottom:none; }
+.rel-icon { width:28px; height:28px; border-radius:50%; background:var(--wf-tint); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.rel-icon svg { width:14px; height:14px; color:var(--wf-ink); }
+.rel-info { flex:1; }
+.rel-title { font-size:12px; font-weight:600; color:var(--wf-ink); }
+.rel-sub { font-size:11px; color:var(--wf-muted); }
+.rel-meta { font-size:11px; color:var(--wf-muted); text-align:right; white-space:nowrap; }
+/* Right-rail tabs */
+.rail-tabs { display:flex; border-bottom:1px solid var(--wf-tint); }
+.rail-tab { flex:1; padding:0.5rem; font-size:11px; font-weight:600; text-align:center; color:var(--wf-muted); cursor:pointer; border-bottom:2px solid transparent; background:none; border-top:none; border-left:none; border-right:none; }
+.rail-tab.active { color:var(--wf-accent); border-bottom-color:var(--wf-accent); }
+.rail-tab-content { display:none; }
+.rail-tab-content.active { display:block; }
+/* Activity feed in right rail */
+.feed-sm { padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:11px; }
+.feed-sm:last-child { border-bottom:none; }
+.feed-sm-text { color:var(--wf-text); line-height:1.4; }
+.feed-sm-text strong { color:var(--wf-ink); }
+.feed-sm-time { color:var(--wf-muted); font-size:10px; margin-top:2px; }
+/* Quick action buttons */
+.action-btn { width:100%; padding:0.5rem; border-radius:4px; font-size:12px; font-weight:600; cursor:pointer; margin-bottom:0.375rem; border:1px solid var(--wf-line); text-align:center; }
+.action-btn:last-child { margin-bottom:0; }
+.action-btn-primary { background:var(--wf-accent); color:white; border-color:var(--wf-accent); }
+.action-btn-secondary { background:var(--wf-surface); color:var(--wf-text); }
+</style>
+</head>
+<body>
+  <header style="background:var(--wf-ink, #1e2a3a);height:56px;display:flex;align-items:center;padding:0 24px;gap:16px">
+    <div style="display:flex;align-items:center;gap:8px">
+      <div style="width:32px;height:32px;border-radius:6px;background:var(--wf-accent, #3d6daa);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px">EQ</div>
+      <span style="color:#fff;font-weight:590;font-size:14px">Equinix Partner Portal</span>
+    </div>
+    <nav style="display:flex;align-items:center;height:56px;gap:0;flex:1;padding-left:8px">
+      <a href="rep-home.html" style="padding:0 16px;height:56px;display:flex;align-items:center;font-size:13px;color:rgba(255,255,255,.8);border-bottom:3px solid transparent;text-decoration:none">Home</a>
+      <a href="rep-my-training.html" style="padding:0 16px;height:56px;display:flex;align-items:center;font-size:13px;color:rgba(255,255,255,.8);border-bottom:3px solid transparent;text-decoration:none">My Training</a>
+      <a href="rep-course-catalog.html" style="padding:0 16px;height:56px;display:flex;align-items:center;font-size:13px;color:rgba(255,255,255,.8);border-bottom:3px solid transparent;text-decoration:none">Courses</a>
+      <a href="rep-certifications.html" style="padding:0 16px;height:56px;display:flex;align-items:center;font-size:13px;color:rgba(255,255,255,.8);border-bottom:3px solid transparent;text-decoration:none">Certifications</a>
+      <a href="rep-deals-commission.html" style="padding:0 16px;height:56px;display:flex;align-items:center;font-size:13px;color:rgba(255,255,255,.8);border-bottom:3px solid transparent;text-decoration:none">Deals</a>
+      <a href="rep-resources.html" style="padding:0 16px;height:56px;display:flex;align-items:center;font-size:13px;color:#fff;border-bottom:3px solid #fff;text-decoration:none;font-weight:590">Resources</a>
+    </nav>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.7);font-size:14px;cursor:pointer">🔔</div>
+      <div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.7);font-size:12px;cursor:pointer">SC</div>
+    </div>
+  
+    <a href="rep-notifications.html" class="bell-wrapper" aria-label="Notifications" style="position:relative;color:white;text-decoration:none;margin-left:auto;">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+      <span style="position:absolute;top:-4px;right:-6px;background:var(--wf-red,#8b4555);color:white;font-size:10px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;">7</span>
+    </a>
+</header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+
+<!-- ── 3-Column Record Layout ── -->
+<div class="record-layout">
+
+  <!-- ════════ LEFT RAIL — Related Objects ════════ -->
+  <div class="left-rail">
+    <div class="card">
+      <div class="card-hd"><h3>Categories</h3></div>
+      <div class="card-bd">
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"/></svg></div>
+          <div class="rel-info"><div class="rel-title">Getting Started</div><div class="rel-sub">Guides</div></div>
+        </div>
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"/></svg></div>
+          <div class="rel-info"><div class="rel-title">Sales Enablement</div><div class="rel-sub">Tools</div></div>
+        </div>
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"/></svg></div>
+          <div class="rel-info"><div class="rel-title">Support</div><div class="rel-sub">FAQs</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ CENTER — Main Content ════════ -->
+  <div class="center-content">
+  <div class="container">
+    <div class="header">
+      <h2>Resources & Support</h2>
+      <p>Find sales tools, product information, technical documentation, and program guides.</p>
+    </div>
+
+    <div class="quick-links">
+      <h3>Quick Links</h3>
+      <div class="quick-links-grid">
+        <a href="#" class="quick-link-btn">📋 Price Lists</a>
+        <a href="#" class="quick-link-btn">📊 Product Specs</a>
+        <a href="#" class="quick-link-btn">💰 ROI Calculator</a>
+        <a href="#" class="quick-link-btn">⚔️ Battlecards</a>
+        <a href="#" class="quick-link-btn">🎯 Case Studies</a>
+      </div>
+    </div>
+
+    <div class="main-grid">
+      <div>
+        <div class="tabs">
+          <a href="#" class="tab active" onclick="switchTab(event, 'product')">Product Information</a>
+          <a href="#" class="tab" onclick="switchTab(event, 'sales')">Sales Tools</a>
+          <a href="#" class="tab" onclick="switchTab(event, 'technical')">Technical Docs</a>
+          <a href="#" class="tab" onclick="switchTab(event, 'training')">Training Materials</a>
+          <a href="#" class="tab" onclick="switchTab(event, 'program')">Program Guides</a>
+        </div>
+
+        <!-- Product Information Tab -->
+        <div id="product" class="tab-content active">
+          <div class="resource-grid">
+            <div class="resource-card">
+              <div class="resource-icon">📋</div>
+              <h3 class="resource-title">Product Portfolio Overview</h3>
+              <p class="resource-desc">Complete guide to Equinix's service offerings including colocation, interconnection, and hybrid solutions.</p>
+              <div class="resource-meta">
+                <div class="resource-meta-item">📄 PDF</div>
+                <div class="resource-meta-item">2.4 MB</div>
+                <div class="resource-meta-item">Updated: Feb 2026</div>
+              </div>
+              <div class="resource-actions">
+                <a href="#" class="btn">Download</a>
+              </div>
+            </div>
+
+            <div class="resource-card">
+              <div class="resource-icon">🏢</div>
+              <h3 class="resource-title">Colocation Services Datasheet</h3>
+              <p class="resource-desc">Detailed specifications and features of Equinix colocation services across all regions.</p>
+              <div class="resource-meta">
+                <div class="resource-meta-item">📄 PDF</div>
+                <div class="resource-meta-item">1.8 MB</div>
+                <div class="resource-meta-item">Updated: Jan 2026</div>
+              </div>
+              <div class="resource-actions">
+                <a href="#" class="btn">Download</a>
+              </div>
+            </div>
+
+            <div class="resource-card">
+              <div class="resource-icon">🔗</div>
+              <h3 class="resource-title">Interconnection Technical Specs</h3>
+              <p class="resource-desc">Technical architecture and connection options for Equinix Fabric and standard interconnection services.</p>
+              <div class="resource-meta">
+                <div class="resource-meta-item">📄 PDF</div>
+                <div class="resource-meta-item">3.2 MB</div>
+                <div class="resource-meta-item">Updated: Jan 2026</div>
+              </div>
+              <div class="resource-actions">
+                <a href="#" class="btn">Download</a>
+              </div>
+            </div>
+
+            <div class="resource-card">
+              <div class="resource-icon">☁️</div>
+              <h3 class="resource-title">Hybrid Multicloud Solutions Guide</h3>
+              <p class="resource-desc">Solution architecture for hybrid and multicloud deployments leveraging Equinix services.</p>
+              <div class="resource-meta">
+                <div class="resource-meta-item">📄 PDF</div>
+                <div class="resource-meta-item">2.1 MB</div>
+                <div class="resource-meta-item">Updated: Feb 2026</div>
+              </div>
+              <div class="resource-actions">
+                <a href="#" class="btn">Download</a>
+              </div>
+            </div>
+
+            <div class="resource-card">
+              <div class="resource-icon">🎥</div>
+              <h3 class="resource-title">Product Demo Videos</h3>
+              <p class="resource-desc">Video walkthroughs of key Equinix products and solutions. Great for customer conversations.</p>
+              <div class="resource-meta">
+                <div class="resource-meta-item">Video</div>
+                <div class="resource-meta-item">12 videos</div>
+                <div class="resource-meta-item">15-30 min each</div>
+              </div>
+              <div class="resource-actions">
+                <a href="#" class="btn">View Library</a>
+              </div>
+            </div>
+
+            <div class="resource-card">
+              <div class="resource-icon">🗺️</div>
+              <h3 class="resource-title">Global Data Center Locator</h3>
+              <p class="resource-desc">Interactive map showing all Equinix data center locations with capacity and service details.</p>
+              <div class="resource-meta">
+                <div class="resource-meta-item">Interactive</div>
+                <div class="resource-meta-item">280+ locations</div>
+                <div class="resource-meta-item">Updated: Monthly</div>
+              </div>
+              <div class="resource-actions">
+                <a href="#" class="btn">Launch Tool</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sales Tools Tab -->
+        <div id="sales" class="tab-content" style="display: none;">
+          <div class="resource-grid">
+            <div class="resource-card">
+              <div class="resource-icon">💰</div>
+              <h3 class="resource-title">ROI Calculator</h3>
+              <p class="resource-desc">Interactive tool to calculate customer ROI for Equinix solutions. Great for sales conversations.</p>
+              <div class="resource-meta">
+                <div class="resource-meta-item">Interactive</div>
+                <div class="resource-meta-item">Multiple scenarios</div>
+                <div class="resource-meta-item">Web-based</div>
+              </div>
+              <div class="resource-actions">
+                <a href="#" class="btn">Open Calculator</a>
+              </div>
+            </div>
+
+            <div class="resource-card">
+              <div class="resource-icon">⚔️</div>
+              <h3 class="resource-title">Competitive Battlecards</h3>
+              <p class="resource-desc">Equinix vs. competitors comparison charts and talking points for common objections.</p>
+              <div class="resource-meta">
+                <div class="resource-meta-item">📄 PDF</div>
+                <div class="resource-meta-item">5 cards</div>
+                <div class="resource-meta-item">Updated: Feb 2026</div>
+              </div>
+              <div class="resource-actions">
+                <a href="#" class="btn">Download</a>
+              </div>
+            </div>
+
+            <div class="resource-card">
+              <div class="resource-icon">🎯</div>
+              <h3 class="resource-title">Customer Success Stories</h3>
+              <p class="resource-desc">Real-world case studies and customer testimonials. Perfect for social proof and prospect conversations.</p>
+              <div class="resource-meta">
+                <div class="resource-meta-item">📄 PDF</div>
+                <div class="resource-meta-item">12 case studies</div>
+                <div class="resource-meta-item">Updated: Jan 2026</div>
+              </div>
+              <div class="resource-actions">
+                <a href="#" class="btn">Download</a>
+              </div>
+            </div>
+
+            <div class="resource-card">
+              <div class="resource-icon">📊</div>
+              <h3 class="resource-title">Sales Proposal Templates</h3>
+              <p class="resource-desc">Customizable proposal templates for different solution types and customer segments.</p>
+              <div class="resource-meta">
+                <div class="resource-meta-item">Microsoft Office</div>
+                <div class="resource-meta-item">8 templates</div>
+                <div class="resource-meta-item">Updated: Monthly</div>
+              </div>
+              <div class="resource-actions">
+                <a href="#" class="btn">Download</a>
+              </div>
+            </div>
+
+            <div class="resource-card">
+              <div class="resource-icon">📈</div>
+              <h3 class="resource-title">Pricing Guide</h3>
+              <p class="resource-desc">Current pricing list and discount structure. Requires partner portal access to view.</p>
+              <div class="resource-meta">
+                <div class="resource-meta-item">📄 PDF</div>
+                <div class="resource-meta-item">Partner exclusive</div>
+                <div class="resource-meta-item">Updated: Monthly</div>
+              </div>
+              <div class="resource-actions">
+                <a href="#" class="btn">Download</a>
+              </div>
+            </div>
+
+            <div class="resource-card">
+              <div class="resource-icon">📞</div>
+              <h3 class="resource-title">Sales Support Phone Line</h3>
+              <p class="resource-desc">Reach our sales engineers for technical pre-sales support and deal assistance.</p>
+              <div class="resource-meta">
+                <div class="resource-meta-item">Phone</div>
+                <div class="resource-meta-item">M-F 8am-6pm PT</div>
+                <div class="resource-meta-item">1-888-EQUINIX</div>
+              </div>
+              <div class="resource-actions">
+                <a href="#" class="btn btn-secondary">Call Now</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Technical Docs Tab -->
+        <div id="technical" class="tab-content" style="display: none;">
+          <div class="resource-grid">
+            <div class="resource-card">
+              <div class="resource-icon">🏗️</div>
+              <h3 class="resource-title">Technical Architecture Guide</h3>
+              <p class="resource-desc">Deep dive into Equinix infrastructure, network design, and technical implementation best practices.</p>
+              <div class="resource-meta">
+                <div class="resource-meta-item">📄 PDF</div>
+                <div class="resource-meta-item">45 pages</div>
+                <div class="resource-meta-item">Updated: Dec 2025</div>
+              </div>
+              <div class="resource-actions">
+                <a href="#" class="btn">Download</a>
+              </div>
+            </div>
+
+            <div class="resource-card">
+              <div class="resource-icon">🔌</div>
+              <h3 class="resource-title">API Documentation</h3>
+              <p class="resource-desc">Complete API reference for Equinix services integration and automation.</p>
+              <div class="resource-meta">
+                <div class="resource-meta-item">Web</div>
+                <div class="resource-meta-item">Interactive docs</div>
+                <div class="resource-meta-item">Always current</div>
+              </div>
+              <div class="resource-actions">
+                <a href="#" class="btn">View Docs</a>
+              </div>
+            </div>
+
+            <div class="resource-card">
+              <div class="resource-icon">🛡️</div>
+              <h3 class="resource-title">Security & Compliance</h3>
+              <p class="resource-desc">Information on security certifications, compliance standards, and data protection practices.</p>
+              <div class="resource-meta">
+                <div class="resource-meta-item">📄 PDF</div>
+                <div class="resource-meta-item">Multiple docs</div>
+                <div class="resource-meta-item">Updated: Jan 2026</div>
+              </div>
+              <div class="resource-actions">
+                <a href="#" class="btn">Download</a>
+              </div>
+            </div>
+
+            <div class="resource-card">
+              <div class="resource-icon">📖</div>
+              <h3 class="resource-title">Implementation Guide</h3>
+              <p class="resource-desc">Step-by-step implementation procedures and installation guides for Equinix services.</p>
+              <div class="resource-meta">
+                <div class="resource-meta-item">📄 PDF</div>
+                <div class="resource-meta-item">12 guides</div>
+                <div class="resource-meta-item">Updated: Monthly</div>
+              </div>
+              <div class="resource-actions">
+                <a href="#" class="btn">Download</a>
+              </div>
+            </div>
+
+            <div class="resource-card">
+              <div class="resource-icon">🔧</div>
+              <h3 class="resource-title">Troubleshooting Guide</h3>
+              <p class="resource-desc">Common issues, diagnostics, and resolution procedures for Equinix services.</p>
+              <div class="resource-meta">
+                <div class="resource-meta-item">📄 PDF</div>
+                <div class="resource-meta-item">50+ scenarios</div>
+                <div class="resource-meta-item">Updated: Monthly</div>
+              </div>
+              <div class="resource-actions">
+                <a href="#" class="btn">Download</a>
+              </div>
+            </div>
+
+            <div class="resource-card">
+              <div class="resource-icon">📚</div>
+              <h3 class="resource-title">Knowledge Base</h3>
+              <p class="resource-desc">Searchable knowledge base with technical articles, FAQs, and how-to guides.</p>
+              <div class="resource-meta">
+                <div class="resource-meta-item">Web</div>
+                <div class="resource-meta-item">500+ articles</div>
+                <div class="resource-meta-item">Always current</div>
+              </div>
+              <div class="resource-actions">
+                <a href="#" class="btn">Browse KB</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Training Materials Tab -->
+        <div id="training" class="tab-content" style="display: none;">
+          <div class="resource-grid">
+            <div class="resource-card">
+              <div class="resource-icon">📚</div>
+              <h3 class="resource-title">Sales Enablement Library</h3>
+              <p class="resource-desc">Comprehensive training materials and resources for partner reps and managers.</p>
+              <div class="resource-meta">
+                <div class="resource-meta-item">Multiple formats</div>
+                <div class="resource-meta-item">50+ resources</div>
+                <div class="resource-meta-item">Always available</div>
+              </div>
+              <div class="resource-actions">
+                <a href="#" class="btn">Access Library</a>
+              </div>
+            </div>
+
+            <div class="resource-card">
+              <div class="resource-icon">🎥</div>
+              <h3 class="resource-title">Training Video Series</h3>
+              <p class="resource-desc">On-demand video training covering products, selling techniques, and partner program details.</p>
+              <div class="resource-meta">
+                <div class="resource-meta-item">Video</div>
+                <div class="resource-meta-item">30+ videos</div>
+                <div class="resource-meta-item">Approx 2-5 min each</div>
+              </div>
+              <div class="resource-actions">
+                <a href="#" class="btn">Watch Now</a>
+              </div>
+            </div>
+
+            <div class="resource-card">
+              <div class="resource-icon">🎓</div>
+              <h3 class="resource-title">Partner Certification Program</h3>
+              <p class="resource-desc">Official partner certification training and exams. Required for higher tier achievement.</p>
+              <div class="resource-meta">
+                <div class="resource-meta-item">Interactive</div>
+                <div class="resource-meta-item">3 certification levels</div>
+                <div class="resource-meta-item">Self-paced</div>
+              </div>
+              <div class="resource-actions">
+                <a href="rep-course-catalog.html" class="btn">Start Training</a>
+              </div>
+            </div>
+
+            <div class="resource-card">
+              <div class="resource-icon">📊</div>
+              <h3 class="resource-title">Sales Playbooks</h3>
+              <p class="resource-desc">Proven sales methodologies, pitch decks, and customer conversation guides.</p>
+              <div class="resource-meta">
+                <div class="resource-meta-item">📄 PDF</div>
+                <div class="resource-meta-item">8 playbooks</div>
+                <div class="resource-meta-item">Updated: Quarterly</div>
+              </div>
+              <div class="resource-actions">
+                <a href="#" class="btn">Download</a>
+              </div>
+            </div>
+
+            <div class="resource-card">
+              <div class="resource-icon">🧠</div>
+              <h3 class="resource-title">Product Knowledge Tests</h3>
+              <p class="resource-desc">Self-assessment quizzes to test your product knowledge and identify training gaps.</p>
+              <div class="resource-meta">
+                <div class="resource-meta-item">Interactive</div>
+                <div class="resource-meta-item">10 tests</div>
+                <div class="resource-meta-item">Instant feedback</div>
+              </div>
+              <div class="resource-actions">
+                <a href="#" class="btn">Take Test</a>
+              </div>
+            </div>
+
+            <div class="resource-card">
+              <div class="resource-icon">👥</div>
+              <h3 class="resource-title">Webinar Archive</h3>
+              <p class="resource-desc">Recordings of past partner webinars, training sessions, and Q&A with product teams.</p>
+              <div class="resource-meta">
+                <div class="resource-meta-item">Video</div>
+                <div class="resource-meta-item">25+ recordings</div>
+                <div class="resource-meta-item">30-60 min each</div>
+              </div>
+              <div class="resource-actions">
+                <a href="#" class="btn">View Archive</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Program Guides Tab -->
+        <div id="program" class="tab-content" style="display: none;">
+          <div class="resource-grid">
+            <div class="resource-card">
+              <div class="resource-icon">📋</div>
+              <h3 class="resource-title">Partner Program Terms</h3>
+              <p class="resource-desc">Official partner program agreement, terms and conditions, and legal information.</p>
+              <div class="resource-meta">
+                <div class="resource-meta-item">📄 PDF</div>
+                <div class="resource-meta-item">Legal document</div>
+                <div class="resource-meta-item">Updated: Jan 2026</div>
+              </div>
+              <div class="resource-actions">
+                <a href="#" class="btn">Download</a>
+              </div>
+            </div>
+
+            <div class="resource-card">
+              <div class="resource-icon">🎯</div>
+              <h3 class="resource-title">Tier Requirements Guide</h3>
+              <p class="resource-desc">Detailed breakdown of partner tier qualifications, requirements, and benefits at each level.</p>
+              <div class="resource-meta">
+                <div class="resource-meta-item">📄 PDF</div>
+                <div class="resource-meta-item">Bronze to Gold</div>
+                <div class="resource-meta-item">Updated: Feb 2026</div>
+              </div>
+              <div class="resource-actions">
+                <a href="#" class="btn">Download</a>
+              </div>
+            </div>
+
+            <div class="resource-card">
+              <div class="resource-icon">💼</div>
+              <h3 class="resource-title">Deal Registration Process</h3>
+              <p class="resource-desc">Complete guide to submitting, tracking, and managing deal registrations in the portal.</p>
+              <div class="resource-meta">
+                <div class="resource-meta-item">📄 PDF</div>
+                <div class="resource-meta-item">Step-by-step guide</div>
+                <div class="resource-meta-item">Updated: Jan 2026</div>
+              </div>
+              <div class="resource-actions">
+                <a href="#" class="btn">Download</a>
+              </div>
+            </div>
+
+            <div class="resource-card">
+              <div class="resource-icon">💰</div>
+              <h3 class="resource-title">Commission Structure Guide</h3>
+              <p class="resource-desc">Explanation of commission rates, payment terms, and how earnings are calculated by tier.</p>
+              <div class="resource-meta">
+                <div class="resource-meta-item">📄 PDF</div>
+                <div class="resource-meta-item">All tiers</div>
+                <div class="resource-meta-item">Updated: Quarterly</div>
+              </div>
+              <div class="resource-actions">
+                <a href="#" class="btn">Download</a>
+              </div>
+            </div>
+
+            <div class="resource-card">
+              <div class="resource-icon">🤝</div>
+              <h3 class="resource-title">Co-Marketing Resources</h3>
+              <p class="resource-desc">Logos, brand assets, and co-marketing guidelines for partner use in marketing materials.</p>
+              <div class="resource-meta">
+                <div class="resource-meta-item">Media files</div>
+                <div class="resource-meta-item">100+ assets</div>
+                <div class="resource-meta-item">Updated: Monthly</div>
+              </div>
+              <div class="resource-actions">
+                <a href="#" class="btn">Access Files</a>
+              </div>
+            </div>
+
+            <div class="resource-card">
+              <div class="resource-icon">📅</div>
+              <h3 class="resource-title">Program Calendar & Events</h3>
+              <p class="resource-desc">Upcoming partner events, webinars, and important dates for the partner program.</p>
+              <div class="resource-meta">
+                <div class="resource-meta-item">Calendar</div>
+                <div class="resource-meta-item">Always current</div>
+                <div class="resource-meta-item">Subscribe option</div>
+              </div>
+              <div class="resource-actions">
+                <a href="#" class="btn">View Calendar</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FAQ Section -->
+        <div class="faq-section">
+          <h3>Frequently Asked Questions</h3>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(event)">
+              <span>How do I register a new deal?</span>
+              <span class="faq-toggle">▼</span>
+            </div>
+            <div class="faq-answer">Go to Deals & Commission page and click "Register New Deal". Fill in customer details, product/service, estimated amount, and expected close date. Submit for approval. Equinix PSM will review within 2-3 business days. Once approved, track deal progress through pipeline stages.</div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(event)">
+              <span>What are the commission rates for each tier?</span>
+              <span class="faq-toggle">▼</span>
+            </div>
+            <div class="faq-answer">Commission rates are: Bronze 8%, Silver 12%, Gold 15%. Rates apply to Closed Won deals. Commission is automatically calculated and paid monthly on the 15th following deal closure. Download the Commission Structure Guide for complete details including incentive programs.</div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(event)">
+              <span>How long are certifications valid?</span>
+              <span class="faq-toggle">▼</span>
+            </div>
+            <div class="faq-answer">Most Equinix partner certifications are valid for 2 years from issue date. Some technical certifications may have different validity periods. Check the Certifications page for expiration dates on your active certs. You'll receive renewal reminders 90 days before expiration.</div>
+          </div>
+
+          <div class="faq-item">
+            <div class="faq-question" onclick="toggleFAQ(event)">
+              <span>What training courses are required for Silver tier?</span>
+              <span class="faq-toggle">▼</span>
+            </div>
+            <div class="faq-answer">Silver tier requires 8 courses: 4 business track and 4 technical track. Required courses are: Our Mission/Vision, Colocation Overview, Interconnection Overview, Hybrid Multicloud, plus 4 additional courses from the catalog. See My Training page for complete list and progress tracking.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Support Sidebar -->
+      <div class="support-sidebar">
+        <h3>Need Help?</h3>
+
+        <div class="support-item">
+          <div class="support-label">Your Manager</div>
+          <div class="support-text">Pepper Potts</div>
+          <div class="support-detail">Stark Industries</div>
+          <a href="#" class="support-action">Send Email</a>
+        </div>
+
+        <div class="support-item">
+          <div class="support-label">Training Issues</div>
+          <div class="support-text">LMS Support Team</div>
+          <div class="support-detail">courses-support@equinix.com</div>
+          <a href="#" class="support-action">Contact Support</a>
+        </div>
+
+        <div class="support-item">
+          <div class="support-label">Deal Questions</div>
+          <div class="support-text">Partner Success Mgr</div>
+          <div class="support-detail">partners@equinix.com</div>
+          <a href="#" class="support-action">Contact Support</a>
+        </div>
+
+        <div class="support-item">
+          <div class="support-label">Technical Support</div>
+          <div class="support-text">24/7 Support Line</div>
+          <div class="support-detail">1-888-EQUINIX</div>
+          <a href="#" class="support-action">Call Now</a>
+        </div>
+
+        <div class="support-item">
+          <div class="support-label">General Support</div>
+          <div class="support-text">Submit a Ticket</div>
+          <div class="support-detail">We'll get back to you within 24 hours</div>
+          <a href="#" class="support-action">Create Ticket</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background: white; padding: 16px 24px; border-top: 1px solid var(--wf-tint, #dce4ef); margin-top: 40px; font-size: 12px; color: var(--wf-muted, #6b7f99); text-align: center;">
+    <p style="margin: 0;">Equinix Partner Portal • Resources updated regularly • Last refresh: Today at 2:30 PM</p>
+  </div>
+
+  <script>
+    function switchTab(e, tabName) {
+      e.preventDefault();
+      const contents = document.querySelectorAll('.tab-content');
+      contents.forEach(c => c.classList.remove('active'));
+      document.getElementById(tabName).classList.add('active');
+
+      const tabs = document.querySelectorAll('.tab');
+      tabs.forEach(t => t.classList.remove('active'));
+      e.target.classList.add('active');
+    }
+
+    function toggleFAQ(e) {
+      const question = e.currentTarget;
+      const answer = question.nextElementSibling;
+      const toggle = question.querySelector('.faq-toggle');
+
+      answer.classList.toggle('open');
+      toggle.classList.toggle('open');
+    }
+  </script>  </div>
+
+  <!-- ════════ RIGHT RAIL — Activity & Insights ════════ -->
+  <div class="right-rail">
+    <div class="card">
+      <div class="rail-tabs">
+        <button class="rail-tab active" onclick="document.querySelectorAll('.rail-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active');document.querySelectorAll('.rail-tab-content').forEach(c=>c.classList.remove('active'));document.getElementById('tab-activity').classList.add('active');">Activity</button>
+        <button class="rail-tab" onclick="document.querySelectorAll('.rail-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active');document.querySelectorAll('.rail-tab-content').forEach(c=>c.classList.remove('active'));document.getElementById('tab-einstein').classList.add('active');">Einstein</button>
+      </div>
+      <div id="tab-activity" class="rail-tab-content active">
+        <div class="card-bd">
+          <div class="feed-sm"><div class="feed-sm-text">Handbook updated</div><div class="feed-sm-time">This week</div></div>
+          <div class="feed-sm"><div class="feed-sm-text">New FAQ: Deal extensions</div><div class="feed-sm-time">3 days ago</div></div>
+        </div>
+      </div>
+      <div id="tab-einstein" class="rail-tab-content">
+        <div class="card-bd" style="font-size:12px;color:var(--wf-text);line-height:1.5;">
+          <div style="font-size:11px;font-weight:700;color:var(--wf-accent);text-transform:uppercase;letter-spacing:0.03em;margin-bottom:0.5rem;">AI Recommendation</div>
+          Recommended: Multi-Metro Pricing Guide and Fabric Technical Architecture — updated Q1 2026.
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><h3>Actions</h3></div>
+      <div class="card-bd">
+        <button class="action-btn action-btn-primary">Search Resources</button>
+        <button class="action-btn action-btn-secondary">Contact Support</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Comprehensive resource library providing partners with quick access to sales tools, technical documentation, guides, FAQs, and support contacts. Organized by category with search and filtering to help partners find relevant materials quickly and improve their sales effectiveness.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Access organized resource library across categories</li>
+<li>Download technical specs and product information</li>
+<li>Find answers to frequently asked questions</li>
+<li>Quick access to most recently used resources</li>
+<li>Contact support team for additional assistance</li>
+<li>Discover program documentation and guidelines</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Page title with resource library overview</li>
+<li>Tabbed sections for resource categories: Sales Tools, Technical Specs, Program Guides, FAQs</li>
+<li>Resource cards displaying: thumbnail/icon, title, description, type badge, download link</li>
+<li>Recently Used Resources section showing previous downloads</li>
+<li>AI-recommended resources based on user history</li>
+<li>Frequently Asked Questions expandable list with question-answer pairs</li>
+<li>Support contact information card with team availability</li>
+<li>Actions section with Search and Contact Support buttons</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Tab switching between resource categories without page reload</li>
+<li>Resource card click opens preview or triggers download</li>
+<li>Search input filters resources and FAQs by keyword</li>
+<li>Filter dropdown by topic or product area</li>
+<li>FAQ question click toggles answer visibility</li>
+<li>Contact Support button opens email or chat widget</li>
+<li>Recently Used Resources showing links to frequently accessed items</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Resource Discovery &amp; Filtering</strong>
+<ul>
+<li>Tab switching filters visible resource cards based on category without page reload</li>
+<li>Search operation queries resource metadata (title, description, tags) using full-text indexes</li>
+<li>Resource filtering by product maintains category tab state in localStorage</li>
+</ul></li>
+<li><strong>Content Access &amp; Downloads</strong>
+<ul>
+<li>Resource download links route to file storage systems or external documentation platforms</li>
+<li>Recently used resources populated from user activity logs and audit trails</li>
+<li>Access controls validate user permissions before exposing resource links</li>
+</ul></li>
+<li><strong>Search &amp; Recommendations</strong>
+<ul>
+<li>FAQ search filters question list by text matching using client-side or server-side search</li>
+<li>AI recommendations generated based on user's role and recently accessed resource affinity patterns</li>
+</ul></li>
+<li><strong>Support &amp; Engagement</strong>
+<ul>
+<li>Contact Support button routes to help desk system or initiates chat session with support team</li>
+</ul></li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Validation &amp; Business Logic</h4>
+<ul>
+<li>Resources stored in Content Management System with category and tag metadata</li>
+<li>Recently used resources tracked from download audit logs</li>
+<li>Search indexes resource titles and descriptions for fast lookup</li>
+<li>AI recommendations calculate based on user activity and role-based content affinity</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+</body>
+</html>

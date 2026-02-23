@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POP Review — PSM · Equinix PCP</title>
+    <link rel="stylesheet" href="wireframe.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Salesforce Sans", sans-serif;
+            background-color: var(--wf-canvas, #f5f7fb);
+            color: var(--wf-text, #3b4f68);
+        }
+
+        /* Header */
+        header {
+            background-color: var(--wf-ink, #1e2a3a);
+            color: var(--wf-surface, #edf1f7);
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .logo-icon {
+            font-size: 1.75rem;
+        }
+
+        nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        nav a {
+            color: var(--wf-surface, #edf1f7);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: opacity 0.2s;
+        }
+
+        nav a:hover {
+            opacity: 0.8;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        .breadcrumb {
+            font-size: 0.875rem;
+            color: var(--wf-text, #3b4f68);
+            margin-bottom: 2rem;
+        }
+
+        /* KPI Cards */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .kpi-card {
+            background: var(--wf-surface, #edf1f7);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+        }
+
+        .kpi-label {
+            font-size: 0.75rem;
+            color: var(--wf-text, #3b4f68);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .kpi-value {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--wf-accent, var(--wf-accent, #3d6daa));
+        }
+
+        .kpi-subtext {
+            font-size: 0.875rem;
+            color: var(--wf-text, #3b4f68);
+            margin-top: 0.5rem;
+        }
+
+        /* Card */
+        .card {
+            background: var(--wf-surface, #edf1f7);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+            margin-bottom: 2rem;
+        }
+
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Controls */
+        .controls-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .filter-control {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--wf-line, #b0bdd0);
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 0.875rem;
+            background: var(--wf-surface, #edf1f7);
+            color: var(--wf-text, #3b4f68);
+        }
+
+        /* Table */
+        .table-wrapper {
+            overflow-x: auto;
+            margin-bottom: 2rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+
+        thead {
+            background-color: var(--wf-canvas, #f5f7fb);
+            border-bottom: 2px solid var(--wf-line, #b0bdd0);
+        }
+
+        th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--wf-canvas, #f5f7fb);
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        tbody tr:hover {
+            background-color: var(--wf-canvas, #f5f7fb);
+        }
+
+        tbody tr.selected {
+            background-color: var(--wf-canvas, #f5f7fb);
+            border-left: 4px solid var(--wf-accent, var(--wf-accent, #3d6daa));
+        }
+
+        /* Status Badges */
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background-color: var(--wf-surface, #edf1f7);
+            color: var(--wf-amber, #8b7745);
+        }
+
+        .status-approved {
+            background-color: var(--wf-canvas, #f5f7fb);
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        .status-rejected {
+            background-color: var(--wf-canvas, #f5f7fb);
+            color: var(--wf-red, #8b4553);
+        }
+
+        .status-info {
+            background-color: var(--wf-canvas, #f5f7fb);
+            color: var(--wf-accent, var(--wf-accent, #3d6daa));
+        }
+
+        /* Metrics Comparison */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-item {
+            padding: 1.5rem;
+            background-color: var(--wf-canvas, #f5f7fb);
+            border-radius: 4px;
+        }
+
+        .metric-label {
+            font-weight: 600;
+            color: var(--wf-ink, #1e2a3a);
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .metric-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .metric-value {
+            padding: 0.75rem;
+            background: var(--wf-surface, #edf1f7);
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .metric-header {
+            font-size: 0.75rem;
+            color: var(--wf-text, #3b4f68);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--wf-accent, var(--wf-accent, #3d6daa));
+        }
+
+        .metric-status {
+            font-size: 0.75rem;
+            color: var(--wf-text, #3b4f68);
+            margin-top: 0.5rem;
+        }
+
+        .metric-status.good {
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        .metric-status.bad {
+            color: var(--wf-red, #8b4553);
+        }
+
+        /* Attachments */
+        .attachments-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .attachment-item {
+            padding: 0.75rem;
+            background-color: var(--wf-canvas, #f5f7fb);
+            border-radius: 4px;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .attachment-icon {
+            font-size: 1.25rem;
+        }
+
+        .attachment-info {
+            flex: 1;
+        }
+
+        .attachment-name {
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--wf-ink, #1e2a3a);
+        }
+
+        .attachment-desc {
+            font-size: 0.75rem;
+            color: var(--wf-text, #3b4f68);
+        }
+
+        .attachment-action {
+            color: var(--wf-accent, var(--wf-accent, #3d6daa));
+            text-decoration: none;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        /* Action Buttons */
+        button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background-color: var(--wf-accent, var(--wf-accent, #3d6daa));
+            color: var(--wf-surface, #edf1f7);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--wf-accent, #3d6daa);
+        }
+
+        .btn-secondary {
+            background-color: var(--wf-canvas, #f5f7fb);
+            color: var(--wf-ink, #1e2a3a);
+            border: 1px solid var(--wf-line, #b0bdd0);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--wf-tint, #dce4ef);
+        }
+
+        .btn-danger {
+            background-color: var(--wf-canvas, #f5f7fb);
+            color: var(--wf-red, #8b4553);
+        }
+
+        .btn-danger:hover {
+            background-color: var(--wf-surface, #edf1f7);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        /* Design Brief */
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .metrics-grid,
+            .metric-comparison {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            nav {
+                gap: 1rem;
+                font-size: 0.75rem;
+            }
+        }
+    
+/* ── 3-Column Record Layout ── */
+.record-layout { display:grid; grid-template-columns:280px 1fr 300px; gap:1rem; padding:1rem 2rem; max-width:1600px; }
+@media (max-width:1200px) { .record-layout { grid-template-columns:1fr; } }
+.left-rail .card, .right-rail .card { margin-bottom:1rem; }
+.center-content .card { margin-bottom:1rem; }
+.card { background:var(--wf-surface,#edf1f7); border:1px solid var(--wf-tint,#dce4ef); border-radius:6px; overflow:hidden; }
+.card-hd { padding:0.75rem 1rem; border-bottom:1px solid var(--wf-tint); display:flex; justify-content:space-between; align-items:center; }
+.card-hd h3 { font-size:13px; font-weight:700; color:var(--wf-ink); margin:0; }
+.card-hd-action { font-size:11px; color:var(--wf-accent); text-decoration:none; font-weight:600; cursor:pointer; }
+.card-bd { padding:1rem; }
+.hl-row { display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:12px; }
+.hl-row:last-child { border-bottom:none; }
+.hl-label { color:var(--wf-muted); }
+.hl-value { font-weight:700; color:var(--wf-ink); }
+.hl-value.warn { color:var(--wf-amber,#8b7745); }
+.rel-item { display:flex; align-items:center; gap:0.625rem; padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:12px; }
+.rel-item:last-child { border-bottom:none; }
+.rel-icon { width:28px; height:28px; border-radius:50%; background:var(--wf-tint); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.rel-icon svg { width:14px; height:14px; color:var(--wf-ink); }
+.rel-info { flex:1; }
+.rel-title { font-size:12px; font-weight:600; color:var(--wf-ink); }
+.rel-sub { font-size:11px; color:var(--wf-muted); }
+.rel-meta { font-size:11px; color:var(--wf-muted); text-align:right; white-space:nowrap; }
+/* Right-rail tabs */
+.rail-tabs { display:flex; border-bottom:1px solid var(--wf-tint); }
+.rail-tab { flex:1; padding:0.5rem; font-size:11px; font-weight:600; text-align:center; color:var(--wf-muted); cursor:pointer; border-bottom:2px solid transparent; background:none; border-top:none; border-left:none; border-right:none; }
+.rail-tab.active { color:var(--wf-accent); border-bottom-color:var(--wf-accent); }
+.rail-tab-content { display:none; }
+.rail-tab-content.active { display:block; }
+/* Activity feed in right rail */
+.feed-sm { padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:11px; }
+.feed-sm:last-child { border-bottom:none; }
+.feed-sm-text { color:var(--wf-text); line-height:1.4; }
+.feed-sm-text strong { color:var(--wf-ink); }
+.feed-sm-time { color:var(--wf-muted); font-size:10px; margin-top:2px; }
+/* Quick action buttons */
+.action-btn { width:100%; padding:0.5rem; border-radius:4px; font-size:12px; font-weight:600; cursor:pointer; margin-bottom:0.375rem; border:1px solid var(--wf-line); text-align:center; }
+.action-btn:last-child { margin-bottom:0; }
+.action-btn-primary { background:var(--wf-accent); color:white; border-color:var(--wf-accent); }
+.action-btn-secondary { background:var(--wf-surface); color:var(--wf-text); }
+</style>
+</head>
+<body>
+    <!-- Header --><header class="wf-header">
+  <div class="wf-header-logo"><svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix"><path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/></svg></div>
+  <div class="wf-header-title">SFDC</div>
+  <nav class="wf-header-nav">
+    <a href="#">Dashboard</a>
+    <a href="#" class="active">PSM Portal</a>
+    <a href="#">Partners</a>
+    <a href="#">Deals</a>
+    <a href="#">Programs</a>
+    <a href="#">Reports</a>
+  </nav>
+  <div class="wf-header-util">
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+  </div>
+</header>
+    <div class="page-context-bar">
+  <div style="max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <span style="font-size:12px;color:var(--wf-muted);display:flex;align-items:center;gap:6px;">
+      <svg viewBox="0 0 20 13" style="width:18px;height:11px;fill:var(--wf-muted);" aria-hidden="true"><path d="M8.3 1.7A3.8 3.8 0 0 1 12 0a3.8 3.8 0 0 1 3.5 2.3A2.8 2.8 0 0 1 20 5a2.8 2.8 0 0 1-2.8 2.8H3.2A3.2 3.2 0 0 1 0 4.6 3.2 3.2 0 0 1 3.2 1.4c.18 0 .35.01.52.04A3.8 3.8 0 0 1 8.3 1.7z"/></svg>
+      <strong style="color:var(--wf-text);font-weight:600;">Salesforce Lightning</strong>&ensp;&middot;&ensp;PCP App
+    </span>
+    <span class="persona-badge persona-badge--psm">PSM</span>
+  </div>
+</div>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+
+<!-- ── 3-Column Record Layout ── -->
+<div class="record-layout">
+
+  <!-- ════════ LEFT RAIL — Related Objects ════════ -->
+  <div class="left-rail">
+    <div class="card">
+      <div class="card-hd"><h3>Partner</h3></div>
+      <div class="card-bd">
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0"/></svg></div>
+          <div class="rel-info"><div class="rel-title">Submitting partner</div><div class="rel-sub">PoP review</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><h3>Related MDF</h3></div>
+      <div class="card-bd">
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg></div>
+          <div class="rel-info"><div class="rel-title">MDF-2026-0234</div><div class="rel-sub">$15K campaign</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ CENTER — Main Content ════════ -->
+  <div class="center-content">
+    <!-- Main Content -->
+    <div class="container">
+        <div class="breadcrumb" role="navigation" aria-label="Breadcrumbs">
+            MDF / Proof of Performance / Review Queue
+        </div>
+
+        <h1 class="page-title">Proof of Performance Review</h1>
+
+        <!-- KPI Cards -->
+        <div class="kpi-grid" role="region" aria-label="PoP Metrics">
+            <div class="kpi-card">
+                <div class="kpi-label">Pending Reviews</div>
+                <div class="kpi-value">8</div>
+                <div class="kpi-subtext">Awaiting validation</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Approved This Month</div>
+                <div class="kpi-value">12</div>
+                <div class="kpi-subtext">Ready for reimbursement</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Avg Review Time</div>
+                <div class="kpi-value">2.1 Days</div>
+                <div class="kpi-subtext">From submission to decision</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-label">Total Reimbursed</div>
+                <div class="kpi-value">$145K</div>
+                <div class="kpi-subtext">Paid out this month</div>
+            </div>
+        </div>
+
+        <!-- PoP Submissions Table -->
+        <div class="card">
+            <h2 class="card-title">📋 PoP Submissions</h2>
+
+            <div class="controls-row">
+                <div class="filter-group">
+                    <select class="filter-control" aria-label="Filter by status">
+                        <option>All Status</option>
+                        <option>Pending Review</option>
+                        <option>Approved</option>
+                        <option>Rejected</option>
+                        <option>Needs Info</option>
+                    </select>
+                    <select class="filter-control" aria-label="Filter by month">
+                        <option>February 2024</option>
+                        <option>January 2024</option>
+                        <option>December 2023</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="table-wrapper">
+                <table role="grid" aria-label="Proof of Performance submissions table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Campaign Name</th>
+                            <th scope="col">Partner</th>
+                            <th scope="col">Submitted Date</th>
+                            <th scope="col">MDF Amount</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr onclick="selectRow(this)">
+                            <td><strong>Cloud Migration Webinar Series</strong></td>
+                            <td>TechVision Partners</td>
+                            <td>Feb 12, 2024</td>
+                            <td style="color: var(--wf-accent, var(--wf-accent, #3d6daa)); font-weight: 600;">$18,500</td>
+                            <td><span class="status-badge status-pending">Pending Review</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Enterprise Solutions Workshop</strong></td>
+                            <td>DataFlow Systems</td>
+                            <td>Feb 10, 2024</td>
+                            <td style="color: var(--wf-accent, var(--wf-accent, #3d6daa)); font-weight: 600;">$12,750</td>
+                            <td><span class="status-badge status-approved">Approved</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Digital Transformation Summit</strong></td>
+                            <td>NetConnect Solutions</td>
+                            <td>Feb 8, 2024</td>
+                            <td style="color: var(--wf-accent, var(--wf-accent, #3d6daa)); font-weight: 600;">$25,000</td>
+                            <td><span class="status-badge status-pending">Pending Review</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Marketing Co-Op Campaign Q1</strong></td>
+                            <td>Innovate Tech Partners</td>
+                            <td>Feb 6, 2024</td>
+                            <td style="color: var(--wf-accent, var(--wf-accent, #3d6daa)); font-weight: 600;">$15,250</td>
+                            <td><span class="status-badge status-info">Needs Info</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Product Demo Tour Series</strong></td>
+                            <td>GlobalReach Partners</td>
+                            <td>Feb 4, 2024</td>
+                            <td style="color: var(--wf-accent, var(--wf-accent, #3d6daa)); font-weight: 600;">$9,800</td>
+                            <td><span class="status-badge status-pending">Pending Review</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Industry Conference Sponsorship</strong></td>
+                            <td>Strategic Partnerships LLC</td>
+                            <td>Feb 2, 2024</td>
+                            <td style="color: var(--wf-accent, var(--wf-accent, #3d6daa)); font-weight: 600;">$32,150</td>
+                            <td><span class="status-badge status-approved">Approved</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Metrics Validation Card -->
+        <div class="card">
+            <h2 class="card-title">📊 Metrics Validation (Selected Campaign)</h2>
+
+            <p style="font-size: 0.875rem; color: var(--wf-text, #3b4f68); margin-bottom: 1.5rem;">
+                Cloud Migration Webinar Series | TechVision Partners | Submitted Feb 12, 2024
+            </p>
+
+            <div class="metrics-grid">
+                <div class="metric-item">
+                    <div class="metric-label">Leads Generated</div>
+                    <div class="metric-comparison">
+                        <div class="metric-value">
+                            <div class="metric-header">Planned</div>
+                            <div class="metric-number">200</div>
+                        </div>
+                        <div class="metric-value">
+                            <div class="metric-header">Actual</div>
+                            <div class="metric-number">245</div>
+                            <div class="metric-status good">+22.5% (Exceeded)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="metric-item">
+                    <div class="metric-label">Impressions</div>
+                    <div class="metric-comparison">
+                        <div class="metric-value">
+                            <div class="metric-header">Planned</div>
+                            <div class="metric-number">50K</div>
+                        </div>
+                        <div class="metric-value">
+                            <div class="metric-header">Actual</div>
+                            <div class="metric-number">62K</div>
+                            <div class="metric-status good">+24% (Exceeded)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="metric-item">
+                    <div class="metric-label">Event Attendees</div>
+                    <div class="metric-comparison">
+                        <div class="metric-value">
+                            <div class="metric-header">Planned</div>
+                            <div class="metric-number">100</div>
+                        </div>
+                        <div class="metric-value">
+                            <div class="metric-header">Actual</div>
+                            <div class="metric-number">87</div>
+                            <div class="metric-status bad">-13% (Below Target)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="metric-item">
+                    <div class="metric-label">Cost per Lead</div>
+                    <div class="metric-comparison">
+                        <div class="metric-value">
+                            <div class="metric-header">Target</div>
+                            <div class="metric-number">$92.50</div>
+                        </div>
+                        <div class="metric-value">
+                            <div class="metric-header">Actual</div>
+                            <div class="metric-number">$75.50</div>
+                            <div class="metric-status good">-18% (Better)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- File Attachments Card -->
+        <div class="card">
+            <h2 class="card-title">📎 File Attachments</h2>
+
+            <ul class="attachments-list">
+                <li class="attachment-item">
+                    <div class="attachment-icon">📄</div>
+                    <div class="attachment-info">
+                        <div class="attachment-name">Campaign_Report_Feb2024.pdf</div>
+                        <div class="attachment-desc">Detailed campaign performance report with metrics</div>
+                    </div>
+                    <a href="#" class="attachment-action">View</a>
+                </li>
+                <li class="attachment-item">
+                    <div class="attachment-icon">📊</div>
+                    <div class="attachment-info">
+                        <div class="attachment-name">Analytics_Dashboard_Screenshot.png</div>
+                        <div class="attachment-desc">Traffic and engagement analytics from platform</div>
+                    </div>
+                    <a href="#" class="attachment-action">View</a>
+                </li>
+                <li class="attachment-item">
+                    <div class="attachment-icon">💰</div>
+                    <div class="attachment-info">
+                        <div class="attachment-name">Receipts_and_Invoices.zip</div>
+                        <div class="attachment-desc">All vendor invoices and expense receipts</div>
+                    </div>
+                    <a href="#" class="attachment-action">View</a>
+                </li>
+                <li class="attachment-item">
+                    <div class="attachment-icon">📸</div>
+                    <div class="attachment-info">
+                        <div class="attachment-name">Event_Photos_Album.zip</div>
+                        <div class="attachment-desc">30 photos from webinar event series</div>
+                    </div>
+                    <a href="#" class="attachment-action">View</a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Review Actions Card -->
+        <div class="card">
+            <h2 class="card-title">✅ Review Decision</h2>
+
+            <p style="font-size: 0.875rem; color: var(--wf-text, #3b4f68); margin-bottom: 1.5rem;">
+                Cloud Migration Webinar Series exceeded lead and impression targets while maintaining excellent cost efficiency. Event attendance was 13% below target but overall campaign performance supports approval.
+            </p>
+
+            <div class="action-buttons">
+                <button class="btn-primary" aria-label="Approve this proof of performance submission">
+                    Approve PoP → Trigger Reimbursement
+                </button>
+                <button class="btn-secondary" aria-label="Request additional documentation">
+                    Request Additional Documentation
+                </button>
+                <button class="btn-danger" aria-label="Reject this proof of performance submission">
+                    Reject
+                </button>
+            </div>
+        </div>
+
+        <!-- Review Notes Card -->
+        <div class="card">
+            <h2 class="card-title">📝 Review Notes</h2>
+
+            <textarea style="width: 100%; height: 120px; padding: 0.75rem; border: 1px solid var(--wf-line, #b0bdd0); border-radius: 4px; font-family: inherit; font-size: 0.875rem; resize: none;" aria-label="Add review notes for this PoP submission" placeholder="Add internal review notes..."></textarea>
+        </div>
+    </div>
+
+    
+
+
+    <script>
+        function selectRow(row) {
+            document.querySelectorAll('tbody tr').forEach(r => r.classList.remove('selected'));
+            row.classList.add('selected');
+        }
+    </script>  </div>
+
+  <!-- ════════ RIGHT RAIL — Activity & Insights ════════ -->
+  <div class="right-rail">
+    <div class="card">
+      <div class="rail-tabs">
+        <button class="rail-tab active" onclick="document.querySelectorAll('.rail-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active');document.querySelectorAll('.rail-tab-content').forEach(c=>c.classList.remove('active'));document.getElementById('tab-activity').classList.add('active');">Activity</button>
+        <button class="rail-tab" onclick="document.querySelectorAll('.rail-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active');document.querySelectorAll('.rail-tab-content').forEach(c=>c.classList.remove('active'));document.getElementById('tab-einstein').classList.add('active');">Einstein</button>
+      </div>
+      <div id="tab-activity" class="rail-tab-content active">
+        <div class="card-bd">
+          <div class="feed-sm"><div class="feed-sm-text">PoP submitted</div><div class="feed-sm-time">5 days ago</div></div>
+          <div class="feed-sm"><div class="feed-sm-text">Auto-validation passed</div><div class="feed-sm-time">5 days ago</div></div>
+          <div class="feed-sm"><div class="feed-sm-text">Clarification requested</div><div class="feed-sm-time">Today</div></div>
+        </div>
+      </div>
+      <div id="tab-einstein" class="rail-tab-content">
+        <div class="card-bd" style="font-size:12px;color:var(--wf-text);line-height:1.5;">
+          <div style="font-size:11px;font-weight:700;color:var(--wf-accent);text-transform:uppercase;letter-spacing:0.03em;margin-bottom:0.5rem;">AI Recommendation</div>
+          Receipts total $14,200 vs $15K MDF. 340 leads generated — above benchmark. Recommend approval.
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><h3>Actions</h3></div>
+      <div class="card-bd">
+        <button class="action-btn action-btn-primary">Approve PoP</button>
+        <button class="action-btn action-btn-secondary">Request Revision</button>
+        <button class="action-btn action-btn-secondary">Reject</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+    <footer class="wf-footer">
+      &copy; 2026 Equinix · Partner Sales Manager · Internal Use Only
+    </footer>
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Enables PSMs to systematically review and approve Proof of Performance claims from partners before routing to finance for MDF reimbursement. Validates campaign metrics against planned targets and verifies supporting documentation compliance.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Systematizes PoP review workflow with clear metrics validation and compliance checks</li>
+<li>Compares planned vs actual campaign performance (leads, impressions, attendance, cost per lead) to assess MDF ROI</li>
+<li>Enables document review of supporting evidence (receipts, invoices, event photos, screenshots) for audit compliance</li>
+<li>Tracks review turnaround time (avg 2.1 days) and maintains audit trail of approval decisions</li>
+<li>Routes approved claims to finance for payment processing with reimbursement calculation</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>KPI summary cards: Pending Reviews count, Approved This Month amount, Average Review Time</li>
+<li>PoP Submissions table with Campaign Name, Partner, Submitted Date, Budget, Status columns</li>
+<li>Metrics Validation card for selected campaign: Planned vs Actual comparison for Leads Generated, Impressions, Event Attendees, Cost per Lead with variance indicators</li>
+<li>File Attachments list showing Campaign Report PDF, Analytics Dashboard Screenshot, Receipts/Invoices ZIP, Event Photos ZIP with View links</li>
+<li>Review Decision section with PSM assessment narrative and three action buttons (Approve, Request Documentation, Reject)</li>
+<li>Review Notes textarea for internal documentation of approval rationale</li>
+<li>Activity/Einstein right rail showing submission timeline and AI recommendation on metrics</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Filter dropdowns for Status (All, Pending, Approved, Rejected) and Month selector</li>
+<li>Clickable table rows to select campaign and load detailed metrics validation view</li>
+<li>Approve PoP → Trigger Reimbursement button initiating payment workflow to finance</li>
+<li>Request Additional Documentation button to send info request notification to partner</li>
+<li>Reject button to decline claim with documented reason</li>
+<li>View links on attachment items to open/download supporting documentation</li>
+<li>Activity/Einstein tab toggle in right rail</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>PoP Submission Retrieval &amp; Filtering</strong>
+<ul>
+<li>Queries all MDF_PoP_Submission__c records for current org, filters by Status (Pending, Approved, Rejected) and submission month using picklist dropdowns</li>
+<li>Table displays Campaign Name, Partner Account link, Budget Allocated (MDF), Submitted Amount, Status badge, with row-level click handler</li>
+</ul></li>
+<li><strong>Metrics Validation &amp; Variance Calculation</strong>
+<ul>
+<li>Clicking table row loads Campaign_Metrics__c child records with Planned vs Actual comparison: Leads Generated, Impressions, Event Attendees, Cost per Lead</li>
+<li>Formula calculates variance percentage: ((Actual - Planned) / Planned) * 100; displays red badge if <90%, yellow if 90-99%, green if 100%+ achievement</li>
+</ul></li>
+<li><strong>Supporting Documentation Review</strong>
+<ul>
+<li>ContentDocument query retrieves all attachments linked to MDF_PoP_Submission__c via ContentDocumentLink; displays Campaign_Report_Feb2024.pdf, Analytics_Dashboard_Screenshot.png, Receipts_and_Invoices.zip, Event_Photos_Album.zip with view/download links</li>
+</ul></li>
+<li><strong>Automated Scoring &amp; Review Decision</strong>
+<ul>
+<li>Einstein AI recommendation evaluates Campaign_Metrics__c variance and documentation completeness to return approval confidence score and strategic fit recommendation text</li>
+<li>Displays validation summary and Einstein recommendation in Review Decision section to guide PSM decision</li>
+</ul></li>
+<li><strong>Approval &amp; Payment Routing Actions</strong>
+<ul>
+<li>Approve button creates Reimbursement_Request__c record with submitted amount, sends Salesforce email alert to finance team, and logs approval_timestamp__c + approver__c to audit trail</li>
+<li>Request Documentation action sends email template to Partner contact with specific missing document requirements list and 5-day deadline</li>
+<li>Reject button updates MDF_PoP_Submission__c.Status__c to 'Rejected', captures rejection_reason__c in Review Notes, creates PoP_Review_Notes__c child record, notifies partner and finance via workflow email</li>
+</ul></li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Validation &amp; Business Logic</h4>
+<ul>
+<li>📄 Campaign_Report_Feb2024.pdf Detailed campaign performance report with metrics View</li>
+<li>📊 Analytics_Dashboard_Screenshot.png Traffic and engagement analytics from platform View</li>
+<li>💰 Receipts_and_Invoices.zip All vendor invoices and expense receipts View</li>
+<li>📸 Event_Photos_Album.zip 30 photos from webinar event series View</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

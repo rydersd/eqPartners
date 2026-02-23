@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registration Rules — PSM · Equinix PCP</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Salesforce Sans", sans-serif;
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    /* Header */
+    header {
+      background-color: var(--wf-ink, #1e2a3a);
+      color: var(--wf-surface, #edf1f7);
+      padding: 1rem 2rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .lightning-icon {
+      font-size: 1.5rem;
+    }
+
+    nav {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    nav a {
+      color: var(--wf-surface, #edf1f7);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      transition: background-color 0.2s;
+    }
+
+    nav a:hover {
+      background-color: rgba(255,255,255,0.1);
+    }
+
+    nav a.active {
+      background-color: var(--wf-accent, var(--wf-accent, #3d6daa));
+    }
+
+    /* Main Content */
+    main {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+
+    .page-title {
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 0.5rem;
+    }
+
+    .page-subtitle {
+      font-size: 0.95rem;
+      color: var(--wf-text, #3b4f68);
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background: var(--wf-surface, #edf1f7);
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--wf-canvas, #f5f7fb);
+    }
+
+    .alert {
+      padding: 1rem;
+      border-radius: 6px;
+      border-left: 4px solid;
+      margin-bottom: 1.5rem;
+    }
+
+    .alert-warning {
+      background-color: var(--wf-surface, #edf1f7);
+      border-color: var(--wf-amber, #8b7745);
+      color: var(--wf-amber, #8b7745);
+    }
+
+    .rule-section {
+      padding: 1.5rem 0;
+      border-bottom: 2px solid var(--wf-canvas, #f5f7fb);
+    }
+
+    .rule-section:last-child {
+      border-bottom: none;
+    }
+
+    .rule-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .rule-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 28px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: var(--wf-line, #b0bdd0);
+      transition: 0.3s;
+      border-radius: 28px;
+    }
+
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 22px;
+      width: 22px;
+      left: 3px;
+      bottom: 3px;
+      background-color: var(--wf-surface, #edf1f7);
+      transition: 0.3s;
+      border-radius: 50%;
+    }
+
+    input:checked + .toggle-slider {
+      background-color: var(--wf-accent, var(--wf-accent, #3d6daa));
+    }
+
+    input:checked + .toggle-slider:before {
+      transform: translateX(22px);
+    }
+
+    .rule-description {
+      font-size: 0.9rem;
+      color: var(--wf-text, #3b4f68);
+      line-height: 1.5;
+      margin-bottom: 1rem;
+    }
+
+    .rule-config {
+      background: var(--wf-canvas, #f5f7fb);
+      padding: 1rem;
+      border-radius: 6px;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .config-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .config-label {
+      min-width: 200px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .config-value {
+      font-size: 0.9rem;
+      color: var(--wf-text, #3b4f68);
+    }
+
+    .config-input {
+      padding: 0.5rem 0.75rem;
+      border: 1px solid var(--wf-line, #b0bdd0);
+      border-radius: 4px;
+      font-size: 0.9rem;
+      min-width: 200px;
+    }
+
+    .config-input:focus {
+      outline: none;
+      border-color: var(--wf-accent, var(--wf-accent, #3d6daa));
+      box-shadow: 0 0 0 3px rgba(0,112,210,0.1);
+    }
+
+    .config-unit {
+      font-size: 0.85rem;
+      color: var(--wf-text, #3b4f68);
+      margin-left: 0.5rem;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .status-enabled {
+      background-color: var(--wf-surface, #edf1f7);
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .status-disabled {
+      background-color: var(--wf-surface, #edf1f7);
+      color: var(--wf-text, #3b4f68);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+
+    thead {
+      background-color: var(--wf-canvas, #f5f7fb);
+      border-bottom: 2px solid var(--wf-canvas, #f5f7fb);
+    }
+
+    th {
+      padding: 0.75rem;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--wf-ink, #1e2a3a);
+      text-transform: uppercase;
+    }
+
+    td {
+      padding: 0.75rem;
+      border-bottom: 1px solid var(--wf-canvas, #f5f7fb);
+      font-size: 0.9rem;
+    }
+
+    tr:hover {
+      background-color: var(--wf-canvas, #f5f7fb);
+    }
+
+    .change-detail {
+      background: var(--wf-canvas, #f5f7fb);
+      padding: 0.75rem;
+      border-left: 3px solid var(--wf-accent, var(--wf-accent, #3d6daa));
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-family: monospace;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background-color: var(--wf-accent, var(--wf-accent, #3d6daa));
+      color: var(--wf-surface, #edf1f7);
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: background-color 0.2s;
+      margin-right: 0.5rem;
+    }
+
+    .button:hover {
+      background-color: var(--wf-accent, #3d6daa);
+    }
+
+    .button-secondary {
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-ink, #1e2a3a);
+      border: 1px solid var(--wf-line, #b0bdd0);
+    }
+
+    .button-secondary:hover {
+      background-color: var(--wf-tint, #dce4ef);
+    }
+
+    .button-danger {
+      background-color: var(--wf-red, #8b4553);
+      color: var(--wf-surface, #edf1f7);
+    }
+
+    .button-danger:hover {
+      background-color: var(--wf-red, #8b4553);
+    }
+
+    /* Design Brief */
+    .info-text {
+      font-size: 0.85rem;
+      color: var(--wf-text, #3b4f68);
+      margin-top: 0.5rem;
+      font-style: italic;
+    }
+
+    @media (max-width: 768px) {
+      .rule-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+
+      .config-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .config-input {
+        width: 100%;
+      }
+
+      nav {
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+</style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="wf-header">
+  <div class="wf-header-logo"><svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix"><path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/></svg></div>
+  <div class="wf-header-title">SFDC</div>
+  <nav class="wf-header-nav">
+    <a href="#">Dashboard</a>
+    <a href="#" class="active">PSM Portal</a>
+    <a href="#">Partners</a>
+    <a href="#">Deals</a>
+    <a href="#">Programs</a>
+    <a href="#">Reports</a>
+  </nav>
+  <div class="wf-header-util">
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+  </div>
+</header>
+    <div class="page-context-bar">
+  <div style="max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <span style="font-size:12px;color:var(--wf-muted);display:flex;align-items:center;gap:6px;">
+      <svg viewBox="0 0 20 13" style="width:18px;height:11px;fill:var(--wf-muted);" aria-hidden="true"><path d="M8.3 1.7A3.8 3.8 0 0 1 12 0a3.8 3.8 0 0 1 3.5 2.3A2.8 2.8 0 0 1 20 5a2.8 2.8 0 0 1-2.8 2.8H3.2A3.2 3.2 0 0 1 0 4.6 3.2 3.2 0 0 1 3.2 1.4c.18 0 .35.01.52.04A3.8 3.8 0 0 1 8.3 1.7z"/></svg>
+      <strong style="color:var(--wf-text);font-weight:600;">Salesforce Lightning</strong>&ensp;&middot;&ensp;PCP App
+    </span>
+    <span class="persona-badge persona-badge--psm">PSM</span>
+  </div>
+</div>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+  <!-- Main Content -->
+  <main role="main">
+    <h1 class="page-title">Deal Registration Rules & Policy</h1>
+    <p class="page-subtitle">Configuration & Settings | Last Modified: March 10, 2026</p>
+
+    <!-- Warning Banner -->
+    <div class="alert alert-warning">
+      <strong>Important:</strong> Changes made to these rules will affect all new deal registrations submitted after the change time. Existing deals retain their original rules under the policy version in effect when registered. Use caution when modifying conflict detection and approval thresholds.
+    </div>
+
+    <!-- Configuration Card -->
+    <div class="card">
+      <div class="card-title">Protection Period & Duration</div>
+
+      <div class="rule-section">
+        <div class="rule-header">
+          <div class="rule-title">Deal Protection Period Duration</div>
+          <span class="status-badge status-enabled">Enabled</span>
+        </div>
+        <div class="rule-description">
+          Duration that a registered deal remains under partner exclusivity protection. During this period, other partners cannot register the same customer for the same opportunity type.
+        </div>
+        <div class="rule-config">
+          <div class="config-row">
+            <label class="config-label">Protection Period:</label>
+            <input type="number" class="config-input" value="90" aria-label="Protection period in days">
+            <span class="config-unit">days</span>
+          </div>
+        </div>
+        <div class="info-text">Default: 90 days. Typical range: 60-120 days depending on deal complexity.</div>
+      </div>
+    </div>
+
+    <!-- Auto-Approval Thresholds -->
+    <div class="card">
+      <div class="card-title">Auto-Approval Thresholds</div>
+
+      <div class="rule-section">
+        <div class="rule-header">
+          <div class="rule-title">Auto-Approve Deals by Partner Tier</div>
+          <span class="status-badge status-enabled">Enabled</span>
+        </div>
+        <div class="rule-description">
+          Automatically approve deal registrations from high-performing partners when deal amount is below specified threshold. Reduces approval cycle time for low-risk registrations.
+        </div>
+        <div class="rule-config">
+          <div class="config-row">
+            <label class="config-label">Gold Tier Threshold:</label>
+            <input type="text" class="config-input" value="$50K" aria-label="Gold tier auto-approval threshold">
+          </div>
+          <div class="config-row">
+            <label class="config-label">Silver Tier Threshold:</label>
+            <input type="text" class="config-input" value="$25K" aria-label="Silver tier auto-approval threshold">
+          </div>
+          <div class="config-row">
+            <label class="config-label">Bronze Tier Threshold:</label>
+            <input type="text" class="config-input" value="$10K" aria-label="Bronze tier auto-approval threshold">
+          </div>
+        </div>
+        <div class="info-text">Deals exceeding these amounts require manual review and approval by PSM team.</div>
+      </div>
+    </div>
+
+    <!-- Conflict Detection Rules -->
+    <div class="card">
+      <div class="card-title">Conflict Detection & Territory Rules</div>
+
+      <div class="rule-section">
+        <div class="rule-header">
+          <div class="rule-title">Territory Overlap Detection</div>
+          <label class="toggle-switch" aria-label="Enable territory overlap detection">
+            <input type="checkbox" checked aria-label="Territory overlap detection toggle">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="rule-description">
+          Automatically detects when multiple partners claim the same geographic territory or customer segment. Flags overlapping registrations for conflict resolution.
+        </div>
+        <span class="status-badge status-enabled">Active</span>
+      </div>
+
+      <div class="rule-section">
+        <div class="rule-header">
+          <div class="rule-title">Customer Match Threshold</div>
+          <span class="status-badge status-enabled">Enabled</span>
+        </div>
+        <div class="rule-description">
+          Minimum confidence level required to flag a deal as a potential customer match conflict. Adjusting this threshold changes conflict detection sensitivity.
+        </div>
+        <div class="rule-config">
+          <div class="config-row">
+            <label class="config-label">Confidence Threshold:</label>
+            <input type="text" class="config-input" value="85%" aria-label="Customer match threshold percentage">
+          </div>
+        </div>
+        <div class="info-text">Range: 50-95%. Higher values reduce false positives but may miss legitimate conflicts. Current: 85%</div>
+      </div>
+
+      <div class="rule-section">
+        <div class="rule-header">
+          <div class="rule-title">Partner Exclusivity Check</div>
+          <label class="toggle-switch" aria-label="Enable partner exclusivity check">
+            <input type="checkbox" checked aria-label="Partner exclusivity check toggle">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="rule-description">
+          Enforces exclusivity agreements when partners have contracted exclusive customer relationships. Prevents non-exclusive partners from registering deals in partner's exclusive territories.
+        </div>
+        <span class="status-badge status-enabled">Active</span>
+      </div>
+    </div>
+
+    <!-- Incumbency Rules -->
+    <div class="card">
+      <div class="card-title">Incumbency & Deal Type Priority Rules</div>
+
+      <div class="rule-section">
+        <div class="rule-header">
+          <div class="rule-title">Existing Customer Expansion Priority</div>
+          <label class="toggle-switch" aria-label="Enable existing customer expansion priority">
+            <input type="checkbox" checked aria-label="Existing customer expansion priority toggle">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="rule-description">
+          When existing customer has established vendor relationship, extension/expansion deals receive priority protection. Protects incumbents from poaching during expansion opportunities.
+        </div>
+        <span class="status-badge status-enabled">Active</span>
+      </div>
+
+      <div class="rule-section">
+        <div class="rule-header">
+          <div class="rule-title">Renewal Deal Fast Track</div>
+          <label class="toggle-switch" aria-label="Enable renewal deal fast track">
+            <input type="checkbox" checked aria-label="Renewal deal fast track toggle">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="rule-description">
+          Expedites approval process for customer renewals and contract extensions. Renewal deals bypass standard approval workflow and auto-approve if registered by incumbent partner.
+        </div>
+        <span class="status-badge status-enabled">Active</span>
+      </div>
+
+      <div class="rule-section">
+        <div class="rule-header">
+          <div class="rule-title">New Logo vs Expansion Deal Rules</div>
+          <span class="status-badge status-enabled">Enabled</span>
+        </div>
+        <div class="rule-description">
+          Different protection and approval rules apply based on deal type. New logo (first-time customer) and expansion (existing customer, new use case) get standard protection. Renewals and support contracts get fast-track approval.
+        </div>
+      </div>
+    </div>
+
+    <!-- Audit Trail -->
+    <div class="card">
+      <div class="card-title">Audit Trail - Recent Changes</div>
+      <table aria-label="Configuration Change History">
+        <thead>
+          <tr>
+            <th>Date & Time</th>
+            <th>Changed By</th>
+            <th>Setting Changed</th>
+            <th>Previous Value</th>
+            <th>New Value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>2026-03-10 2:30 PM</td>
+            <td>Michael Rodriguez (PSM Director)</td>
+            <td>Gold Tier Auto-Approval Threshold</td>
+            <td>$45K</td>
+            <td>$50K</td>
+          </tr>
+          <tr>
+            <td>2026-03-08 10:15 AM</td>
+            <td>Emily Watson (Regional Manager)</td>
+            <td>Customer Match Threshold</td>
+            <td>80%</td>
+            <td>85%</td>
+          </tr>
+          <tr>
+            <td>2026-03-05 3:45 PM</td>
+            <td>David Thompson (PSM)</td>
+            <td>Territory Overlap Detection</td>
+            <td>Disabled</td>
+            <td>Enabled</td>
+          </tr>
+          <tr>
+            <td>2026-02-28 9:00 AM</td>
+            <td>Sarah Chen (VP Sales)</td>
+            <td>Protection Period Duration</td>
+            <td>120 days</td>
+            <td>90 days</td>
+          </tr>
+          <tr>
+            <td>2026-02-15 1:20 PM</td>
+            <td>Marcus Brown (Sales Ops)</td>
+            <td>Renewal Deal Fast Track</td>
+            <td>Disabled</td>
+            <td>Enabled</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Action Buttons -->
+    <div style="margin-bottom: 2rem;">
+      <button class="button" aria-label="Save Changes to Configuration">Save Changes</button>
+      <button class="button button-secondary" aria-label="Reset to Default Settings">Reset to Defaults</button>
+      <button class="button button-secondary" aria-label="Export Current Configuration">Export Config</button>
+    </div>
+
+    <!-- Configuration Notes -->
+    <div class="card">
+      <div class="card-title">Configuration Guidelines</div>
+      <div style="line-height: 1.8; font-size: 0.9rem; color: var(--wf-text, #3b4f68);">
+        <p><strong>Protection Period:</strong> Recommended 90 days for standard enterprise deals. Extend to 120 days for high-value infrastructure projects (>$500K). Consider competitive landscape when setting this value.</p>
+
+        <p style="margin-top: 1rem;"><strong>Auto-Approval Thresholds:</strong> Set based on partner tier performance and deal risk profile. Gold partners with strong compliance history can have higher thresholds. Review quarterly and adjust based on deal velocity and approval cycle metrics.</p>
+
+        <p style="margin-top: 1rem;"><strong>Conflict Detection:</strong> Adjust customer match threshold based on false positive rates. Start at 85% and monitor for optimization. Territory overlap detection should remain enabled to prevent channel conflict.</p>
+
+        <p style="margin-top: 1rem;"><strong>Incumbency Rules:</strong> These protect long-standing partner relationships while allowing healthy competition. Fast-track renewals to reduce sales cycle time. Expansion deals should generally follow standard approval process.</p>
+      </div>
+    </div>
+
+    <!-- Design Brief -->
+</main>
+
+
+    <footer class="wf-footer">
+      &copy; 2026 Equinix · Partner Sales Manager · Internal Use Only
+    </footer>
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Deal registration rule configuration interface for PSMs to centrally manage protection periods, auto-approval thresholds, conflict detection, and incumbency rules across all partners. Includes audit trail and impact warnings.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Configure protection period and deal approval thresholds centrally for all partners</li>
+<li>Enable/disable conflict detection and territory overlap scanning</li>
+<li>Set incumbency rules to balance protection with healthy competition</li>
+<li>Track all configuration changes with audit trail for compliance</li>
+<li>Export rules for documentation and disaster recovery</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Impact warning banner explaining rule change effects on pending registrations</li>
+<li>Protection Period Configuration card with days input, explanation, and default/range guidance</li>
+<li>Auto-Approval Thresholds card with tier-based amounts (Gold, Silver, Bronze) and enabled toggles</li>
+<li>Conflict Detection section with Territory Overlap toggle and Customer Match threshold %</li>
+<li>Incumbency Rules section with Existing Customer Expansion and Renewal Fast Track toggles</li>
+<li>Audit Trail table showing recent configuration changes with date, user, and details</li>
+<li>Configuration Guidelines card with best practices for each setting category</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Numeric input fields for Protection Period days and tier-based approval thresholds</li>
+<li>Percentage input field for Customer Match detection threshold</li>
+<li>Toggle switches for Territory Overlap, Partner Exclusivity, Renewal Fast Track</li>
+<li>Save Changes button to persist configuration</li>
+<li>Reset to Defaults button to revert to system baseline</li>
+<li>Export Rules button to download configuration as PDF/CSV</li>
+<li>View Change History link to expand audit trail details</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Rule Configuration Retrieval & Display</strong>
+<ul>
+<li>Query Deal_Registration_Rule__c custom setting records and display current values on form</li>
+<li>Load protection periods, approval thresholds, and customer match settings for editing</li>
+<li>Display configuration guidelines alongside input fields for best practice reference</li>
+</ul></li>
+<li><strong>Configuration Updates & Validation</strong>
+<ul>
+<li>Update field values via form inputs and commit changes via API with validation</li>
+<li>Enforce Protection Period must be between 30-180 days with default 90 days</li>
+<li>Validate Auto-Approval thresholds are positive (typical Gold $50K, Silver $25K, Bronze $10K)</li>
+<li>Verify Customer Match threshold is between 0-100% with typical value 85%</li>
+</ul></li>
+<li><strong>Impact Assessment & Change Tracking</strong>
+<ul>
+<li>Display impact notification showing # of pending DealReg__c records affected by rule changes</li>
+<li>Create Rule_Change_Log__c audit record for each configuration change with Before/After values</li>
+<li>Auto-invalidate cached rule evaluations when configuration changes detected</li>
+<li>Count pending DealReg__c records via SOQL before persisting changes for impact visibility</li>
+</ul></li>
+<li><strong>Reporting & Audit Trail</strong>
+<ul>
+<li>Retrieve Audit Trail from Rule_Change_Log__c sorted by CreatedDate DESC for change history</li>
+<li>Support Export Rules by rendering configuration as formatted PDF document</li>
+<li>Maintain immutable audit trail with field history tracking enabled for compliance</li>
+</ul></li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Validation &amp; Business Logic</h4>
+<ul>
+<li>Protection Period must be between 30-180 days; default 90</li>
+<li>Auto-Approval thresholds must be positive; typical Gold $50K, Silver $25K, Bronze $10K</li>
+<li>Customer Match threshold must be 0-100%; typical 85%</li>
+<li>Rule changes require PSM profile; non-reversible without audit trail</li>
+<li>Warning banner counts pending DealReg__c records via SOQL before persisting changes</li>
+<li>Audit trail immutable once created; field history tracking enabled for compliance</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

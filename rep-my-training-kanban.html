@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html class="wireframe">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kanban View — AE · Equinix PCP Partner Portal</title>
+  <link rel="stylesheet" href="wireframe.css">
+</head>
+<body class="wf-page">
+<div class="page-context-bar">
+  <div style="max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <nav class="wf-breadcrumb" aria-label="Breadcrumb" style="margin-bottom:0;">
+      <a href="rep-home.html">Home</a>
+      <span class="wf-breadcrumb-sep">›</span>
+      <a href="rep-my-training.html">My Training</a>
+      <span class="wf-breadcrumb-sep">›</span>
+      <span class="wf-breadcrumb-current">Kanban View</span>
+    </nav>
+    <span class="persona-badge persona-badge--ae">AE</span>
+  </div>
+</div>
+
+  <!-- HEADER -->
+  <header class="wf-header">
+    <div class="wf-header-content">
+      <div class="wf-logo">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="32" height="32" rx="4" fill="#2c3e50"/>
+          <text x="16" y="22" text-anchor="middle" fill="#ffffff" font-size="18" font-weight="bold" font-family="sans-serif">EQ</text>
+        </svg>
+      </div>
+      <div class="wf-header-title">Partner Central</div>
+      <nav class="wf-nav">
+        <a href="rep-deals-commission.html" class="wf-nav-item">Deals</a>
+        <a href="rep-my-training.html" class="wf-nav-item wf-nav-active">Training</a>
+        <a href="rep-marketing.html" class="wf-nav-item">Marketing</a>
+        <a href="rep-support.html" class="wf-nav-item">Support</a>
+        <a href="rep-resources.html" class="wf-nav-item">Resources</a>
+      </nav>
+      <div class="wf-util-icons">
+        <button class="wf-icon-btn" title="Notifications">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 2C5.58 2 2 5.58 2 10s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8m0 14c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6" fill="#2c3e50"/>
+          </svg>
+        </button>
+        <button class="wf-icon-btn" title="Profile">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 10c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" fill="#2c3e50"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  
+    <a href="rep-notifications.html" class="bell-wrapper" aria-label="Notifications" style="position:relative;color:white;text-decoration:none;margin-left:auto;">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+      <span style="position:absolute;top:-4px;right:-6px;background:var(--wf-red,#8b4555);color:white;font-size:10px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;">7</span>
+    </a>
+</header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+  <!-- VIEW TOGGLE -->
+  <div class="wf-view-toggle">
+    <a href="rep-my-training-table.html" class="wf-view-option" title="Table View">T</a>
+    <a href="rep-my-training.html" class="wf-view-option" title="Card View">C</a>
+    <a href="rep-my-training-kanban.html" class="wf-view-option wf-view-active" title="Kanban View">K</a>
+  </div>
+
+  <!-- CONTAINER -->
+  <div class="wf-container">
+
+    <!-- PROGRESS HEADER -->
+    <section class="wf-section">
+      <h2 class="wf-section-label">Training Progress</h2>
+      <div class="wf-kpi-row">
+        <div class="wf-kpi">
+          <div class="wf-kpi-label">Required</div>
+          <div class="wf-kpi-value">4 of 8</div>
+        </div>
+        <div class="wf-kpi">
+          <div class="wf-kpi-label">Elective</div>
+          <div class="wf-kpi-value">1 of 3</div>
+        </div>
+        <div class="wf-kpi-progress">
+          <div class="wf-kpi-label">Overall Progress</div>
+          <div class="wf-progress-bar">
+            <div class="wf-progress-fill" style="width: 50%;"></div>
+          </div>
+          <div class="wf-kpi-value">50%</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FILTER BAR -->
+    <div class="wf-filter-bar">
+      <div class="wf-filter-group">
+        <span class="wf-filter-label">Show:</span>
+        <a href="#" class="wf-filter-link wf-filter-active">All</a>
+        <a href="#" class="wf-filter-link">Required</a>
+        <a href="#" class="wf-filter-link">Elective</a>
+      </div>
+      <div class="wf-search-box">
+        <input type="text" class="wf-search-input" placeholder="Search courses...">
+      </div>
+    </div>
+
+    <!-- KANBAN BOARD -->
+    <div class="wf-kanban">
+
+      <!-- COLUMN 1: NOT STARTED -->
+      <div class="wf-kanban-col">
+        <div class="wf-kanban-header">Not Started <span class="wf-col-count">(5)</span></div>
+        
+        <div class="wf-card" style="border-left-color: var(--wf-muted);">
+          <div class="wf-card-title">Interconnection Overview</div>
+          <div class="wf-card-meta">
+            <span class="wf-badge wf-badge-technical">Technical</span>
+            <span class="wf-badge wf-badge-required">Required</span>
+          </div>
+          <div class="wf-card-meta">Duration: 2.5 hrs</div>
+          <div class="wf-card-meta">Due: Apr 30, 2026</div>
+          <div class="wf-card-actions">
+            <a href="#" class="wf-action">Start Course</a>
+          </div>
+        </div>
+
+        <div class="wf-card" style="border-left-color: var(--wf-muted);">
+          <div class="wf-card-title">Network Security Advanced</div>
+          <div class="wf-card-meta">
+            <span class="wf-badge wf-badge-technical">Technical</span>
+            <span class="wf-badge wf-badge-required">Required</span>
+          </div>
+          <div class="wf-card-meta">Duration: 4 hrs</div>
+          <div class="wf-card-meta">Due: Jun 30, 2026</div>
+          <div class="wf-card-meta wf-meta-prereq">Prerequisite: Security Fundamentals</div>
+          <div class="wf-card-actions">
+            <a href="#" class="wf-action">Start Course</a>
+          </div>
+        </div>
+
+        <div class="wf-card" style="border-left-color: var(--wf-muted);">
+          <div class="wf-card-title">Network Edge Essentials</div>
+          <div class="wf-card-meta">
+            <span class="wf-badge wf-badge-technical">Technical</span>
+            <span class="wf-badge wf-badge-elective">Elective</span>
+          </div>
+          <div class="wf-card-meta">Duration: 2.5 hrs</div>
+          <div class="wf-card-actions">
+            <a href="#" class="wf-action">Enroll</a>
+          </div>
+        </div>
+
+        <div class="wf-card" style="border-left-color: var(--wf-muted);">
+          <div class="wf-card-title">Equinix Fabric Technical</div>
+          <div class="wf-card-meta">
+            <span class="wf-badge wf-badge-technical">Technical</span>
+            <span class="wf-badge wf-badge-elective">Elective</span>
+          </div>
+          <div class="wf-card-meta">Duration: 3 hrs</div>
+          <div class="wf-card-actions">
+            <a href="#" class="wf-action">Enroll</a>
+          </div>
+        </div>
+
+        <div class="wf-card" style="border-left-color: var(--wf-muted);">
+          <div class="wf-card-title">Solution Validation Center</div>
+          <div class="wf-card-meta">
+            <span class="wf-badge wf-badge-business">Business</span>
+            <span class="wf-badge wf-badge-elective">Elective</span>
+          </div>
+          <div class="wf-card-meta">Duration: 2 hrs</div>
+          <div class="wf-card-actions">
+            <a href="#" class="wf-action">Enroll</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- COLUMN 2: IN PROGRESS -->
+      <div class="wf-kanban-col">
+        <div class="wf-kanban-header">In Progress <span class="wf-col-count">(1)</span></div>
+        
+        <div class="wf-card" style="border-left-color: var(--wf-amber);">
+          <div class="wf-card-title">Compliance & Data Privacy</div>
+          <div class="wf-card-meta">
+            <span class="wf-badge wf-badge-business">Business</span>
+            <span class="wf-badge wf-badge-required">Required</span>
+          </div>
+          <div class="wf-card-meta">Module 3 of 7</div>
+          <div class="wf-card-meta">Due: Mar 15, 2026</div>
+          <div class="wf-progress-bar">
+            <div class="wf-progress-fill" style="width: 45%;"></div>
+          </div>
+          <div class="wf-card-meta wf-progress-text">45% Complete</div>
+          <div class="wf-card-actions">
+            <a href="#" class="wf-action">Resume</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- COLUMN 3: COMPLETED -->
+      <div class="wf-kanban-col">
+        <div class="wf-kanban-header">Completed <span class="wf-col-count">(4)</span></div>
+        
+        <div class="wf-card" style="border-left-color: var(--wf-ink);">
+          <div class="wf-card-title">Our Mission/Vision/Value Story</div>
+          <div class="wf-card-meta">
+            <span class="wf-badge wf-badge-business">Business</span>
+          </div>
+          <div class="wf-card-meta">Score: 92%</div>
+          <div class="wf-card-meta">Completed: Jan 8, 2026</div>
+          <div class="wf-card-actions">
+            <a href="#" class="wf-action">View Certificate</a>
+          </div>
+        </div>
+
+        <div class="wf-card" style="border-left-color: var(--wf-ink);">
+          <div class="wf-card-title">Colocation Overview</div>
+          <div class="wf-card-meta">
+            <span class="wf-badge wf-badge-business">Business</span>
+          </div>
+          <div class="wf-card-meta">Score: 88%</div>
+          <div class="wf-card-meta">Completed: Feb 3, 2026</div>
+          <div class="wf-card-actions">
+            <a href="#" class="wf-action">View Certificate</a>
+          </div>
+        </div>
+
+        <div class="wf-card" style="border-left-color: var(--wf-ink);">
+          <div class="wf-card-title">Eco-System Partnership</div>
+          <div class="wf-card-meta">
+            <span class="wf-badge wf-badge-business">Business</span>
+          </div>
+          <div class="wf-card-meta">Score: 95%</div>
+          <div class="wf-card-meta">Completed: Dec 20, 2025</div>
+          <div class="wf-card-actions">
+            <a href="#" class="wf-action">View Certificate</a>
+          </div>
+        </div>
+
+        <div class="wf-card" style="border-left-color: var(--wf-ink);">
+          <div class="wf-card-title">Hybrid Multicloud Networking</div>
+          <div class="wf-card-meta">
+            <span class="wf-badge wf-badge-technical">Technical</span>
+          </div>
+          <div class="wf-card-meta">Score: 90%</div>
+          <div class="wf-card-meta">Completed: Nov 28, 2025</div>
+          <div class="wf-card-actions">
+            <a href="#" class="wf-action">View Certificate</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- COLUMN 4: EXPIRED -->
+      <div class="wf-kanban-col">
+        <div class="wf-kanban-header">Expired <span class="wf-col-count">(1)</span></div>
+        
+        <div class="wf-card" style="border-left-color: var(--wf-red);">
+          <div class="wf-card-title">Security Fundamentals</div>
+          <div class="wf-card-meta">
+            <span class="wf-badge wf-badge-technical">Technical</span>
+          </div>
+          <div class="wf-card-meta">Expired: Jan 15, 2026</div>
+          <div class="wf-card-actions">
+            <a href="#" class="wf-action">Re-enroll</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RECOMMENDED NEXT STEPS -->
+    <section class="wf-section">
+      <h2 class="wf-section-label">Recommended Next Steps</h2>
+      <div class="wf-micro-row">
+        <div class="wf-micro-card" style="border-left-color: var(--wf-amber);">
+          <div class="wf-micro-title">Resume Compliance</div>
+          <div class="wf-micro-text">Module 4 of 7 awaits — 45% done</div>
+          <a href="#" class="wf-action">Resume</a>
+        </div>
+        <div class="wf-micro-card" style="border-left-color: var(--wf-red);">
+          <div class="wf-micro-title">Re-enroll Security Fundamentals</div>
+          <div class="wf-micro-text">Expired Jan 15 — blocks Network Security Advanced</div>
+          <a href="#" class="wf-action">Re-enroll</a>
+        </div>
+        <div class="wf-micro-card" style="border-left-color: var(--wf-blue);">
+          <div class="wf-micro-title">Start Interconnection Overview</div>
+          <div class="wf-micro-text">Next in learning path — step 7 of 8</div>
+          <a href="#" class="wf-action">Start</a>
+        </div>
+      </div>
+    </section>
+
+    
+<footer class="wf-footer">
+    <div class="wf-footer-content">
+      <p>&copy; 2026 Equinix Partner Portal. All rights reserved.</p>
+      <div class="wf-footer-links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Support</a>
+      </div>
+    </div>
+  </footer>
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Kanban-based training progress dashboard enabling reps to visualize course status across workflow columns (Not Started, In Progress, Completed, Expired) with drag-and-drop status management, progress tracking, and prerequisite enforcement. Sarah Connor (Stark Industries) view shows 4 completed courses, 1 expired cert (Security Fundamentals, requires re-enrollment), 2 in progress, 1 not started.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Visualize training status in workflow format</li>
+<li>Manage course progression across status categories</li>
+<li>Prioritize courses by moving in kanban</li>
+<li>See course distribution across categories</li>
+<li>Track courses through completion lifecycle</li>
+<li>Filter to focus on relevant courses</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Training progress KPI header with required (4/8), elective (1/3), and overall (50%) completion metrics</li>
+<li>Kanban board with four columns: Not Started (5 cards), In Progress (1 card), Completed (4 cards), Expired (1 card)</li>
+<li>Course cards per column displaying title, course type badges (Technical/Business), enrollment category badges (Required/Elective), duration, due date, completion score (for Completed column), prerequisite notes (where applicable)</li>
+<li>Filter bar with "Show: All/Required/Elective" options and course search box</li>
+<li>View toggle links to switch between Table, Card, and Kanban views (with Kanban as active)</li>
+<li>Recommended Next Steps section with 3 priority action cards (Resume, Re-enroll, Start)</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Drag cards between kanban columns to update course status</li>
+<li>Click Start/Resume/Re-enroll/View Certificate action links on cards</li>
+<li>Toggle between Table/Card/Kanban views via view links</li>
+<li>Filter course display by "All/Required/Elective" options</li>
+<li>Search courses by title or keyword in search box</li>
+<li>Collapse/expand kanban columns to manage screen real estate</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Kanban Column Mapping & Population</strong>
+<ul>
+<li>Partner_Training__c.Status__c mapped to 4-column kanban layout: 'Not Started' (new enrollments), 'In Progress' (started but not completed), 'Completed' (finished with Completion_Score__c), 'Expired' (Expiration_Date__c < TODAY() or cert validity period exceeded)</li>
+<li>Columns populated via SOQL queries filtered by Status__c and Contact=logged-in user, sorted by Due_Date__c ASC (most urgent first); real-time updates via Platform Events on Partner_Training__c record changes</li>
+<li>Training cards display: Course Name, Due Date, Status badge, Progress bar (for In Progress), and action buttons (Start, Resume, Re-enroll, View Certificate)</li>
+</ul></li>
+<li><strong>Progress Metrics & KPIs</strong>
+<ul>
+<li>Overall progress percentage calculated as: (Completed count / (Required count + Elective count)) × 100; populated from Partner_Training__c records grouped by Status__c='Completed'</li>
+<li>Required vs. Elective breakdown fetched from Partner_Training__c.Is_Required__c flag; compared against Tier_Course_Requirement__mdt[Account.Partner_Tier__c] to determine KPI target (e.g., "8/10 Required")</li>
+<li>Progress KPI displayed at top of page; details modal shows breakdown by category and completion dates</li>
+</ul></li>
+<li><strong>Prerequisite Enforcement & Validation</strong>
+<ul>
+<li>Prerequisite validation on card load: IF Course.Prerequisite_Course__r exists AND Prerequisite_Training__c WHERE Contact=logged-in user AND Status__c != 'Completed' THEN disable Start button and display "Prerequisite: [Course Name]" note on card</li>
+<li>Start Course button enabled only when all prerequisites are met; clicking launches LMS SSO redirect with Partner_Training__c.__c and Course.SumTotal_Course_ID__c</li>
+</ul></li>
+<li><strong>Drag-and-Drop & Status Updates</strong>
+<ul>
+<li>Drag-and-drop functionality moves cards between kanban columns; on drop, updates Partner_Training__c.Status__c via Apex DML handler</li>
+<li>Column counts and progress KPI recalculated in real-time after status update; updates reflected immediately in UI</li>
+<li>Overdue course detection: IF Partner_Training__c.Due_Date__c < TODAY() THEN show red/urgent styling on card; prevents course start unless admin override applied</li>
+</ul></li>
+<li><strong>Expiration & Re-enrollment Logic</strong>
+<ul>
+<li>Auto-expiration logic: nightly Training_Expiration_Monitor scheduled flow queries Certification__c WHERE Expiration_Date__c < TODAY(); updates linked Partner_Training__c.Status__c='Expired' and sends notification email to Contact</li>
+<li>Re-enroll button creates new Partner_Training__c enrollment with Status='Not Started', Due_Date__c=TODAY()+365 days; original Certification__c retained for audit trail</li>
+<li>Expired certifications moved to Expired column; old cert visible in collapsed details section</li>
+</ul></li>
+<li><strong>Filtering, Search & Recommended Next Steps</strong>
+<ul>
+<li>Filter buttons (All/Required/Elective) apply WHERE clause filter: Partner_Training__c.Is_Required__c=[true|false|all]; kanban refreshes with filtered results</li>
+<li>Search box filters by keyword: SOQL WHERE Course.Name LIKE '%[keyword]%' OR Course.Description__c LIKE '%[keyword]%'; results update in real-time client-side</li>
+<li>Recommended Next Steps section populated from highest-priority Partner_Training__c: In Progress courses with lowest completion %, Expired certs blocking prerequisites, and next required course in learning path</li>
+</ul></li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Salesforce Objects &amp; Automation</h4>
+<ul>
+<li>Partner_Training__c: Status__c (Not Started, In Progress, Completed, Expired), Due_Date__c, Completion_Date__c, Completion_Score__c, LMS_Module_Index__c, Is_Required__c, Course__c lookup, Contact lookup</li>
+<li>Course__c: Name, Duration__c, Is_Required__c, Category__c, Difficulty__c, Prerequisite_Course__r (parent lookup), Valid_Months__c (for auto-expiration calculation)</li>
+<li>Certification__c: Status__c, Issue_Date__c, Expiration_Date__c, Partner_Training__c lookup, Verification_Code__c</li>
+<li>Tier_Course_Requirement__mdt: Partner_Tier__c, Required_Course_Count__c, Elective_Course_Count__c (defines KPI targets per tier)</li>
+<li>Nightly scheduled flow: Training_Expiration_Monitor flow queries Certification__c with Expiration_Date__c < TODAY(), updates linked Partner_Training__c to Status='Expired', and sends notification to Contact</li>
+<li>Kanban column population via Visualforce or LWC component making SOQL queries at page load and on drag-drop completion, subscribing to Partner_Training__c record change events for real-time updates</li>
+<li>Prerequisite validation enforced in Course__c validation rules and frontend logic before allowing course start action</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Partner Application Review — PSM · Equinix PCP</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Salesforce Sans", sans-serif; background: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); }
+
+    /* Header */
+    header { background: var(--wf-ink, #1e2a3a); color: white; padding: 1rem 2rem; }
+    .header-content { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    .logo { font-size: 1.4rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
+    nav { display: flex; gap: 1.5rem; }
+    nav a { color: rgba(255,255,255,0.8); text-decoration: none; font-size: 0.875rem; padding: 0.4rem 0.75rem; border-radius: 4px; }
+    nav a:hover { background: rgba(255,255,255,0.1); }
+    nav a.active { background: var(--wf-accent, #3d6daa); color: white; }
+    .user-pill { font-size: 0.8rem; color: rgba(255,255,255,0.6); display: flex; align-items: center; gap: 8px; }
+
+    /* Breadcrumb bar */
+    .page-context-bar { background: var(--wf-surface, #edf1f7); border-bottom: 1px solid var(--wf-line, #b0bdd0); padding: 7px 24px; }
+    .crumb-row { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
+    .wf-breadcrumb { font-size: 11px; color: var(--wf-muted, #6b7f99); display: flex; align-items: center; gap: 0; }
+    .wf-breadcrumb a { color: var(--wf-accent, #3d6daa); text-decoration: none; }
+    .wf-breadcrumb a:hover { text-decoration: underline; }
+    .wf-breadcrumb-sep { margin: 0 5px; color: var(--wf-line, #b0bdd0); }
+    .wf-breadcrumb-current { color: var(--wf-text, #3b4f68); font-weight: 500; }
+    .persona-badge { display: inline-flex; align-items: center; padding: 2px 7px; border-radius: 3px; font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; border: 1.5px solid var(--wf-ink, #1e2a3a); color: var(--wf-ink, #1e2a3a); }
+
+    /* Main */
+    main { max-width: 1400px; margin: 0 auto; padding: 28px 2rem; }
+    .page-title-row { display: flex; align-items: center; gap: 16px; margin-bottom: 6px; }
+    .page-title { font-size: 1.75rem; font-weight: 700; color: var(--wf-ink, #1e2a3a); }
+    .page-subtitle { font-size: 0.9rem; color: var(--wf-muted, #6b7f99); margin-bottom: 24px; }
+    .status-badge { display: inline-flex; align-items: center; padding: 4px 12px; border-radius: 100px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; }
+    .status-pending { background: transparent; border: 1.5px solid var(--wf-amber, #8b7745); color: var(--wf-amber, #8b7745); }
+    .status-approved { background: transparent; border: 1.5px solid #5a7a45; color: #5a7a45; }
+    .status-review { background: transparent; border: 1.5px solid var(--wf-accent, #3d6daa); color: var(--wf-accent, #3d6daa); }
+
+    /* Cards */
+    .card { background: white; border: 1.5px solid var(--wf-line, #b0bdd0); border-radius: 6px; padding: 20px 24px; margin-bottom: 20px; }
+    .card-heading { font-size: 14px; font-weight: 700; color: var(--wf-ink, #1e2a3a); margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--wf-tint, #dce4ef); text-transform: uppercase; letter-spacing: 0.04em; font-size: 11px; }
+    .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .detail-item .label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--wf-muted, #6b7f99); margin-bottom: 3px; }
+    .detail-item .value { font-size: 14px; color: var(--wf-ink, #1e2a3a); }
+
+    /* Table */
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th { text-align: left; font-size: 11px; font-weight: 700; color: var(--wf-muted, #6b7f99); text-transform: uppercase; letter-spacing: 0.04em; padding: 8px 12px; border-bottom: 2px solid var(--wf-tint, #dce4ef); background: var(--wf-surface, #edf1f7); }
+    td { padding: 10px 12px; border-bottom: 1px solid var(--wf-tint, #dce4ef); color: var(--wf-text, #3b4f68); vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    .status-ok { color: #5a7a45; font-weight: 600; }
+    .status-warn { color: var(--wf-amber, #8b7745); font-weight: 600; }
+    .status-progress { color: var(--wf-muted, #6b7f99); }
+    .action-link { color: var(--wf-accent, #3d6daa); text-decoration: none; cursor: pointer; }
+    .action-link:hover { text-decoration: underline; }
+
+    /* Activity log */
+    .activity-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--wf-tint, #dce4ef); font-size: 13px; }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-time { font-size: 11px; color: var(--wf-muted, #6b7f99); white-space: nowrap; min-width: 140px; }
+    .activity-text { color: var(--wf-text, #3b4f68); line-height: 1.4; }
+
+    /* Action buttons */
+    .action-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+    .btn { padding: 9px 20px; border-radius: 4px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1.5px solid transparent; }
+    .btn-primary { background: var(--wf-accent, #3d6daa); color: white; }
+    .btn-secondary { background: white; color: var(--wf-text, #3b4f68); border-color: var(--wf-line, #b0bdd0); }
+    .btn-danger { background: white; color: var(--wf-red, #8b4553); border-color: var(--wf-red, #8b4553); }
+    .btn-disabled { opacity: 0.45; cursor: not-allowed; }
+    .btn-disabled:hover { background: var(--wf-accent, #3d6daa); }
+
+    /* Info/warn box */
+    .info-box { background: var(--wf-surface, #edf1f7); border: 1.5px solid var(--wf-tint, #dce4ef); border-radius: 6px; padding: 12px 16px; font-size: 13px; color: var(--wf-text, #3b4f68); margin-bottom: 16px; line-height: 1.5; }
+    .warn-text { font-size: 12px; color: var(--wf-amber, #8b7745); margin-bottom: 20px; }
+
+    /* Spec sidebar */
+    .spec-sidebar { position: fixed; right: 0; top: 0; bottom: 0; width: 320px; background: var(--wf-ink, #1e2a3a); color: var(--wf-tint, #dce4ef); padding: 24px 20px; overflow-y: auto; transform: translateX(100%); transition: transform 0.3s; z-index: 200; }
+    .spec-sidebar.open { transform: translateX(0); }
+    .spec-toggle { position: fixed; right: 0; top: 50%; transform: translateY(-50%); background: var(--wf-ink, #1e2a3a); color: white; padding: 12px 8px; border-radius: 4px 0 0 4px; cursor: pointer; font-size: 16px; z-index: 201; border: none; }
+    .spec-sidebar.open ~ .spec-toggle { right: 320px; }
+    .spec-panel-bd h3 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.5); border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; margin: 20px 0 10px; }
+    .spec-panel-bd p, .spec-panel-bd li { font-size: 13px; line-height: 1.6; color: rgba(255,255,255,0.8); }
+    .spec-panel-bd ul { padding-left: 16px; margin: 6px 0; }
+    .spec-panel-bd strong { color: white; font-size: 12px; display: block; margin-top: 10px; }
+    .spec-panel-bd hr { border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 12px 0; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-content">
+    <div class="logo">⚡ Equinix PCP — PSM Portal</div>
+    <nav>
+      <a href="psm-program-dashboard.html">Dashboard</a>
+      <a href="psm-partner-account-list.html" class="active">Partners</a>
+      <a href="psm-deal-registration.html">Deals</a>
+      <a href="psm-contact-training.html">Training</a>
+      <a href="psm-mdf-analytics.html">MDF</a>
+      <a href="psm-reports-analytics.html">Reports</a>
+    </nav>
+    <div class="user-pill">Marcus Chen · PSM · US West</div>
+  </div>
+</header>
+
+<!-- BREADCRUMB BAR -->
+<div class="page-context-bar">
+  <div style="max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <span style="font-size:12px;color:var(--wf-muted);display:flex;align-items:center;gap:6px;">
+      <svg viewBox="0 0 20 13" style="width:18px;height:11px;fill:var(--wf-muted);" aria-hidden="true"><path d="M8.3 1.7A3.8 3.8 0 0 1 12 0a3.8 3.8 0 0 1 3.5 2.3A2.8 2.8 0 0 1 20 5a2.8 2.8 0 0 1-2.8 2.8H3.2A3.2 3.2 0 0 1 0 4.6 3.2 3.2 0 0 1 3.2 1.4c.18 0 .35.01.52.04A3.8 3.8 0 0 1 8.3 1.7z"/></svg>
+      <strong style="color:var(--wf-text);font-weight:600;">Salesforce Lightning</strong>&ensp;&middot;&ensp;PCP App
+    </span>
+    <span class="persona-badge persona-badge--psm">PSM</span>
+  </div>
+</div>
+
+<main>
+  <div class="page-title-row">
+    <h1 class="page-title">Partner Application Review</h1>
+    <span class="status-badge status-pending">⚠ Pending Signature</span>
+  </div>
+  <p class="page-subtitle">Application PCP-APP-2026-0089 · Pym Technologies, Inc. · Submitted Jan 28, 2026 · Auto-assigned to Marcus Chen</p>
+
+  <div class="action-bar">
+    <button class="btn btn-primary btn-disabled" disabled title="Cannot approve until all documents are complete and compliance passed">Approve Application</button>
+    <button class="btn btn-secondary">Request Additional Info</button>
+    <button class="btn btn-secondary">Add Note</button>
+    <button class="btn btn-danger">Decline Application</button>
+  </div>
+  <p class="warn-text">⚠ Approve is disabled: 2 documents awaiting signature, compliance screening in progress.</p>
+
+  <!-- Card 1: Application Overview -->
+  <div class="card">
+    <div class="card-heading">Application Overview</div>
+    <div class="detail-grid">
+      <div class="detail-item">
+        <div class="label">Legal Name</div>
+        <div class="value">Pym Technologies, Inc.</div>
+      </div>
+      <div class="detail-item">
+        <div class="label">Entity Type</div>
+        <div class="value">C-Corporation (Delaware, est. 1963)</div>
+      </div>
+      <div class="detail-item">
+        <div class="label">EIN</div>
+        <div class="value">94-3867245</div>
+      </div>
+      <div class="detail-item">
+        <div class="label">Address</div>
+        <div class="value">1234 Quantum Drive, San Francisco, CA 94107</div>
+      </div>
+      <div class="detail-item">
+        <div class="label">Website</div>
+        <div class="value">www.pymtech.com</div>
+      </div>
+      <div class="detail-item">
+        <div class="label">Revenue</div>
+        <div class="value">$10M – $50M</div>
+      </div>
+      <div class="detail-item">
+        <div class="label">Employees</div>
+        <div class="value">51–200</div>
+      </div>
+      <div class="detail-item">
+        <div class="label">Industry</div>
+        <div class="value">Technology — Quantum Computing & Security</div>
+      </div>
+      <div class="detail-item">
+        <div class="label">Existing Customer</div>
+        <div class="value">No</div>
+      </div>
+      <div class="detail-item">
+        <div class="label">Products of Interest</div>
+        <div class="value">Equinix Fabric, Colocation</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 2: Key Contacts -->
+  <div class="card">
+    <div class="card-heading">Key Contacts</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Role</th>
+          <th>Name</th>
+          <th>Title</th>
+          <th>Email</th>
+          <th>Phone</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="font-weight: 600;">Authorized Signatory</td>
+          <td>Dr. Hank Pym</td>
+          <td>Founder & CEO</td>
+          <td><a href="mailto:hank.pym@pymtech.com" class="action-link">hank.pym@pymtech.com</a></td>
+          <td>+1 (415) 555-0156</td>
+        </tr>
+        <tr>
+          <td style="font-weight: 600;">Partner Manager</td>
+          <td>Hope van Dyne</td>
+          <td>VP, Business Development</td>
+          <td><a href="mailto:hope.vandyne@pymtech.com" class="action-link">hope.vandyne@pymtech.com</a></td>
+          <td>+1 (415) 555-0891</td>
+        </tr>
+        <tr>
+          <td style="font-weight: 600;">Technical Contact</td>
+          <td>Scott Lang</td>
+          <td>Director of IT</td>
+          <td><a href="mailto:scott.lang@pymtech.com" class="action-link">scott.lang@pymtech.com</a></td>
+          <td>+1 (415) 555-0234</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Card 3: Document Checklist -->
+  <div class="card">
+    <div class="card-heading">Document Checklist</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Document</th>
+          <th>Required</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>W-9 (Federal Tax Form)</td>
+          <td>Yes</td>
+          <td><span class="status-warn">⚠ Uploaded — Pending Review</span></td>
+          <td><a href="#" class="action-link">Review</a></td>
+        </tr>
+        <tr>
+          <td>Master Partner Agreement</td>
+          <td>Yes</td>
+          <td><span class="status-warn">⚠ Awaiting Signature (DocuSign sent Jan 28)</span></td>
+          <td><a href="#" class="action-link">Resend</a></td>
+        </tr>
+        <tr>
+          <td>Program Terms & Conditions</td>
+          <td>Yes</td>
+          <td><span class="status-warn">⚠ Awaiting Signature (DocuSign sent Jan 28)</span></td>
+          <td><a href="#" class="action-link">Resend</a></td>
+        </tr>
+        <tr>
+          <td>ACH Bank Verification (Micro-deposits)</td>
+          <td>Yes</td>
+          <td><span class="status-progress">⏳ Pending — Initiating</span></td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>Compliance Screening (OFAC)</td>
+          <td>Yes</td>
+          <td><span class="status-progress">⏳ In Progress</span></td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>Business Registry Validation</td>
+          <td>Yes</td>
+          <td><span class="status-ok">✓ Verified (CA SOS — Active Corp)</span></td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>Domain Verification</td>
+          <td>Yes</td>
+          <td><span class="status-ok">✓ Confirmed (pymtech.com WHOIS matches)</span></td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>Credit Assessment</td>
+          <td>Optional</td>
+          <td>Not Started</td>
+          <td><a href="#" class="action-link">Start</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Card 4: Activity Log -->
+  <div class="card">
+    <div class="card-heading">Activity Log</div>
+    <div class="activity-item">
+      <div class="activity-time">Jan 28, 3:47 PM</div>
+      <div class="activity-text">Application submitted online by Hope van Dyne (hope.vandyne@pymtech.com)</div>
+    </div>
+    <div class="activity-item">
+      <div class="activity-time">Jan 28, 3:47 PM</div>
+      <div class="activity-text">DocuSign envelope sent to hank.pym@pymtech.com (MPA + Program T&C)</div>
+    </div>
+    <div class="activity-item">
+      <div class="activity-time">Jan 28, 3:48 PM</div>
+      <div class="activity-text">OFAC compliance screening automatically initiated</div>
+    </div>
+    <div class="activity-item">
+      <div class="activity-time">Jan 28, 3:48 PM</div>
+      <div class="activity-text">Application auto-assigned to Marcus Chen (PSM, US West) based on applicant territory</div>
+    </div>
+    <div class="activity-item">
+      <div class="activity-time">Jan 28, 3:50 PM</div>
+      <div class="activity-text">W-9 document uploaded by applicant — pending PSM review</div>
+    </div>
+    <div class="activity-item">
+      <div class="activity-time">Jan 28, 4:02 PM</div>
+      <div class="activity-text">Business registry validation completed: CA SOS confirms Active Corporation</div>
+    </div>
+  </div>
+
+</main>
+
+<aside class="spec-sidebar" id="spec-sidebar">
+  <div class="spec-panel-bd">
+    <h3>Purpose</h3>
+    <p>PSM reviews incoming partner organization applications. Validates company identity, monitors compliance screening and document completeness, and either approves, requests additional information, or declines the application.</p>
+
+    <h3>Functionality</h3>
+    <strong>Application Intake</strong>
+    <ul>
+      <li>Applications are automatically assigned to PSM based on applicant's primary address territory (US West → Marcus Chen). Auto-initiates OFAC screening and sends DocuSign MPA + T&C envelope upon submission.</li>
+      <li>PSM receives email notification with application summary and link to this review page.</li>
+    </ul>
+
+    <strong>Document Tracking</strong>
+    <ul>
+      <li>Checklist tracks all required documents with real-time status. PSM can trigger DocuSign resends for unsigned envelopes.</li>
+      <li>W-9 documents are queued for manual PSM review to validate entity name and EIN match the Salesforce record.</li>
+    </ul>
+
+    <strong>Compliance Checks</strong>
+    <ul>
+      <li>OFAC screening, business registry validation, and domain verification run automatically in parallel. Results appear in the document checklist within 24 hours.</li>
+      <li>Approve button is gated: all required docs must be complete and all compliance checks must pass before PSM can approve.</li>
+    </ul>
+
+    <strong>Approval Gate</strong>
+    <ul>
+      <li>On approval: Salesforce Account record is created, portal access provisioned (PM + Technical Contact), SumTotal training accounts activated, welcome email sent to PM, kickoff task created for PSM.</li>
+      <li>Declined applications trigger a notification email to the applicant explaining the reason.</li>
+    </ul>
+
+    <h3>Key Concepts</h3>
+    <ul>
+      <li>Application ID · Auto-territory assignment · Document completeness gate · Compliance screening · Approval triggers</li>
+    </ul>
+  </div>
+</aside>
+<button class="spec-toggle" onclick="document.getElementById('spec-sidebar').classList.toggle('open')" aria-label="Toggle spec panel">≡</button>
+
+<script src="wf-nav.js"></script>
+</body>
+</html>

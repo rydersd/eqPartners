@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Course Catalog — AE · Equinix PCP Partner Portal</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: var(--wf-canvas, #f5f7fb); }
+    .container { max-width: 1400px; margin: 0 auto; padding: 24px; }
+
+    .header-search { background: white; padding: 24px; border-radius: 8px; margin-bottom: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .search-box { display: flex; gap: 8px; }
+    .search-box input { flex: 1; padding: 12px 16px; border: 1px solid var(--wf-tint, #dce4ef); border-radius: 4px; font-size: 13px; }
+    .search-box button { padding: 12px 20px; background: var(--wf-accent, var(--wf-accent, #3d6daa)); color: white; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; }
+    .search-box button:hover { background: var(--wf-ink, #1e2a3a); }
+    .course-count { font-size: 13px; color: var(--wf-text, #3b4f68); margin-top: 12px; }
+
+    .main-grid { display: grid; grid-template-columns: 220px 1fr; gap: 24px; }
+
+    .sidebar { background: white; padding: 20px; border-radius: 8px; height: fit-content; box-shadow: 0 1px 3px rgba(0,0,0,0.1); position: sticky; top: 24px; }
+    .sidebar h3 { margin: 0 0 16px 0; font-size: 14px; font-weight: 600; color: var(--wf-ink, #1e2a3a); }
+    .filter-section { margin-bottom: 20px; }
+    .filter-section:last-child { margin-bottom: 0; }
+    .filter-label { font-size: 12px; font-weight: 600; color: var(--wf-text, #3b4f68); margin-bottom: 8px; display: block; text-transform: uppercase; }
+    .filter-option { margin-bottom: 8px; }
+    .filter-option input[type="checkbox"] { margin-right: 6px; cursor: pointer; }
+    .filter-option label { font-size: 12px; color: var(--wf-text, #3b4f68); cursor: pointer; margin: 0; }
+    .clear-filters { font-size: 12px; color: var(--wf-accent, var(--wf-accent, #3d6daa)); text-decoration: none; cursor: pointer; margin-top: 12px; display: block; font-weight: 500; }
+
+    .content { }
+    .section { margin-bottom: 32px; }
+    .section-title { font-size: 14px; font-weight: 600; color: var(--wf-ink, #1e2a3a); margin: 0 0 16px 0; padding-bottom: 12px; border-bottom: 2px solid var(--wf-line, #b0bdd0); }
+
+    .course-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    @media (max-width: 1200px) {
+      .course-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .course-card { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1); transition: box-shadow 0.2s; }
+    .course-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+    .course-card.featured { border: 2px solid var(--wf-accent, var(--wf-accent, #3d6daa)); }
+    .course-thumb { background: var(--wf-accent, var(--wf-accent, #3d6daa)); height: 120px; display: flex; align-items: center; justify-content: center; color: white; font-size: 40px; position: relative; }
+    .course-thumb.tech { background: var(--wf-accent, var(--wf-accent, #3d6daa)); }
+    .course-thumb.business { background: var(--wf-amber, #8b7745); }
+    .course-status { position: absolute; top: 8px; right: 8px; background: rgba(0,0,0,0.2); color: white; padding: 4px 8px; border-radius: 3px; font-size: 10px; font-weight: 600; }
+    .course-content { padding: 16px; }
+    .course-title { margin: 0 0 8px 0; font-size: 13px; font-weight: 600; color: var(--wf-ink, #1e2a3a); line-height: 1.4; }
+    .course-desc { font-size: 11px; color: var(--wf-text, #3b4f68); margin: 0 0 8px 0; line-height: 1.5; }
+    .course-meta { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
+    .badge { display: inline-block; padding: 3px 8px; border-radius: 3px; font-size: 10px; font-weight: 600; }
+    .badge-biz { background: var(--wf-canvas, #f5f7fb); color: var(--wf-amber, #8b7745); }
+    .badge-tech { background: var(--wf-canvas, #f5f7fb); color: var(--wf-accent, var(--wf-accent, #3d6daa)); }
+    .badge-level { background: var(--wf-surface, #edf1f7); color: var(--wf-accent, var(--wf-accent, #3d6daa)); }
+    .course-meta-text { font-size: 11px; color: var(--wf-text, #3b4f68); margin: 6px 0; }
+    .course-actions { margin-top: 12px; }
+    .btn { display: inline-block; padding: 8px 12px; background: var(--wf-accent, var(--wf-accent, #3d6daa)); color: white; text-decoration: none; border-radius: 4px; font-size: 12px; font-weight: 600; border: none; cursor: pointer; transition: background 0.2s; width: 100%; text-align: center; }
+    .btn:hover { background: var(--wf-ink, #1e2a3a); }
+    .btn-enrolled { background: var(--wf-surface, #edf1f7); color: var(--wf-ink, #1e2a3a); cursor: default; }
+    .btn-enrolled:hover { background: var(--wf-surface, #edf1f7); }
+
+    .spec-item { margin-bottom: 12px; }
+    .spec-label { font-size: 11px; color: var(--wf-text, #3b4f68); margin-bottom: 4px; font-weight: 600; }
+    .spec-value { font-size: 12px; color: var(--wf-ink, #1e2a3a); }
+
+    .validation-section { background: var(--wf-canvas, #f5f7fb); padding: 20px; border-radius: 8px; margin-top: 24px; }
+    .validation-section h4 { margin: 0 0 12px 0; font-size: 12px; font-weight: 600; color: var(--wf-ink, #1e2a3a); text-transform: uppercase; }
+    .validation-section p { margin: 0 0 8px 0; font-size: 12px; color: var(--wf-text, #3b4f68); line-height: 1.6; }
+    .validation-section p:last-child { margin-bottom: 0; }
+
+    .user-flow { background: var(--wf-canvas, #f5f7fb); padding: 20px; border-radius: 8px; margin-top: 24px; }
+    .user-flow h4 { margin: 0 0 16px 0; font-size: 12px; font-weight: 600; color: var(--wf-ink, #1e2a3a); text-transform: uppercase; }
+    .flow-step { display: flex; margin-bottom: 12px; align-items: flex-start; }
+    .flow-number { background: var(--wf-accent, var(--wf-accent, #3d6daa)); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; margin-right: 12px; flex-shrink: 0; }
+    .flow-text { font-size: 12px; color: var(--wf-text, #3b4f68); }
+  
+/* ── 3-Column Record Layout ── */
+.record-layout { display:grid; grid-template-columns:280px 1fr 300px; gap:1rem; padding:1rem 2rem; max-width:1600px; }
+@media (max-width:1200px) { .record-layout { grid-template-columns:1fr; } }
+.left-rail .card, .right-rail .card { margin-bottom:1rem; }
+.center-content .card { margin-bottom:1rem; }
+.card { background:var(--wf-surface,#edf1f7); border:1px solid var(--wf-tint,#dce4ef); border-radius:6px; overflow:hidden; }
+.card-hd { padding:0.75rem 1rem; border-bottom:1px solid var(--wf-tint); display:flex; justify-content:space-between; align-items:center; }
+.card-hd h3 { font-size:13px; font-weight:700; color:var(--wf-ink); margin:0; }
+.card-hd-action { font-size:11px; color:var(--wf-accent); text-decoration:none; font-weight:600; cursor:pointer; }
+.card-bd { padding:1rem; }
+.hl-row { display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:12px; }
+.hl-row:last-child { border-bottom:none; }
+.hl-label { color:var(--wf-muted); }
+.hl-value { font-weight:700; color:var(--wf-ink); }
+.hl-value.warn { color:var(--wf-amber,#8b7745); }
+.rel-item { display:flex; align-items:center; gap:0.625rem; padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:12px; }
+.rel-item:last-child { border-bottom:none; }
+.rel-icon { width:28px; height:28px; border-radius:50%; background:var(--wf-tint); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.rel-icon svg { width:14px; height:14px; color:var(--wf-ink); }
+.rel-info { flex:1; }
+.rel-title { font-size:12px; font-weight:600; color:var(--wf-ink); }
+.rel-sub { font-size:11px; color:var(--wf-muted); }
+.rel-meta { font-size:11px; color:var(--wf-muted); text-align:right; white-space:nowrap; }
+/* Right-rail tabs */
+.rail-tabs { display:flex; border-bottom:1px solid var(--wf-tint); }
+.rail-tab { flex:1; padding:0.5rem; font-size:11px; font-weight:600; text-align:center; color:var(--wf-muted); cursor:pointer; border-bottom:2px solid transparent; background:none; border-top:none; border-left:none; border-right:none; }
+.rail-tab.active { color:var(--wf-accent); border-bottom-color:var(--wf-accent); }
+.rail-tab-content { display:none; }
+.rail-tab-content.active { display:block; }
+/* Activity feed in right rail */
+.feed-sm { padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:11px; }
+.feed-sm:last-child { border-bottom:none; }
+.feed-sm-text { color:var(--wf-text); line-height:1.4; }
+.feed-sm-text strong { color:var(--wf-ink); }
+.feed-sm-time { color:var(--wf-muted); font-size:10px; margin-top:2px; }
+/* Quick action buttons */
+.action-btn { width:100%; padding:0.5rem; border-radius:4px; font-size:12px; font-weight:600; cursor:pointer; margin-bottom:0.375rem; border:1px solid var(--wf-line); text-align:center; }
+.action-btn:last-child { margin-bottom:0; }
+.action-btn-primary { background:var(--wf-accent); color:white; border-color:var(--wf-accent); }
+.action-btn-secondary { background:var(--wf-surface); color:var(--wf-text); }
+</style>
+</head>
+<body>
+<div class="page-context-bar">
+  <div style="max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <nav class="wf-breadcrumb" aria-label="Breadcrumb" style="margin-bottom:0;">
+      <a href="rep-home.html">Home</a>
+      <span class="wf-breadcrumb-sep">›</span>
+      <a href="rep-my-training.html">Training</a>
+      <span class="wf-breadcrumb-sep">›</span>
+      <span class="wf-breadcrumb-current">Course Catalog</span>
+    </nav>
+    <span class="persona-badge persona-badge--ae">AE</span>
+  </div>
+</div>
+  <header class="wf-header">
+    <div class="wf-header-logo"><svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix"><path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/></svg></div>
+    <div class="wf-header-title">Partner Central</div>
+    <nav class="wf-header-nav">
+      <a href="rep-deals-commission.html">Deals</a>
+      <a href="rep-my-training.html" class="active">Training</a>
+      <a href="rep-marketing.html">Marketing</a>
+      <a href="rep-support.html">Support</a>
+      <a href="rep-resources.html">Resources</a>
+    </nav>
+    <div class="wf-header-util">
+      <a href="rep-notifications.html" class="bell-wrapper" aria-label="Notifications" style="position:relative;color:white;text-decoration:none;">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+        <span style="position:absolute;top:-4px;right:-6px;background:var(--wf-red,#8b4555);color:white;font-size:10px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;">7</span>
+      </a>
+      <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+      <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+    </div>
+  </header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+
+<!-- ── 3-Column Record Layout ── -->
+<div class="record-layout">
+
+  <!-- ════════ LEFT RAIL — Related Objects ════════ -->
+  <div class="left-rail">
+    <div class="card">
+      <div class="card-hd"><h3>My Plan</h3></div>
+      <div class="card-bd">
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m9.86-5.632a4.5 4.5 0 00-6.364 0l-4.5 4.5a4.5 4.5 0 001.242 7.244"/></svg></div>
+          <div class="rel-info"><div class="rel-title">Assigned</div><div class="rel-sub">4 remaining</div></div>
+        </div>
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m9.86-5.632a4.5 4.5 0 00-6.364 0l-4.5 4.5a4.5 4.5 0 001.242 7.244"/></svg></div>
+          <div class="rel-info"><div class="rel-title">Completed</div><div class="rel-sub">6 courses</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><h3>Filters</h3></div>
+      <div class="card-bd">
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"/></svg></div>
+          <div class="rel-info"><div class="rel-title">Business</div><div class="rel-sub">12 courses</div></div>
+        </div>
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"/></svg></div>
+          <div class="rel-info"><div class="rel-title">Technical</div><div class="rel-sub">11 courses</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ CENTER — Main Content ════════ -->
+  <div class="center-content">
+  <div class="container">
+    <div class="header-search">
+      <h2 style="margin: 0 0 16px 0; font-size: 22px; color: var(--wf-ink, #1e2a3a);">Course Catalog</h2>
+      <p style="margin: 0 0 16px 0; font-size: 13px; color: var(--wf-muted, #6b7f99);">32 courses available (16 Business • 16 Technical)</p>
+      <div class="search-box">
+        <input type="text" placeholder="Search courses by name, topic, or keyword...">
+        <button>Search</button>
+      </div>
+      <div class="course-count">Displaying 12 of 32 courses based on filters</div>
+    </div>
+
+    <div class="main-grid">
+      <div class="sidebar">
+        <h3>Filters</h3>
+
+        <div class="filter-section">
+          <label class="filter-label">Track</label>
+          <div class="filter-option">
+            <input type="checkbox" id="track-biz" checked>
+            <label for="track-biz">Business (16)</label>
+          </div>
+          <div class="filter-option">
+            <input type="checkbox" id="track-tech" checked>
+            <label for="track-tech">Technical (16)</label>
+          </div>
+        </div>
+
+        <div class="filter-section">
+          <label class="filter-label">Category</label>
+          <div class="filter-option">
+            <input type="checkbox" id="cat-intro" checked>
+            <label for="cat-intro">Introduction (4)</label>
+          </div>
+          <div class="filter-option">
+            <input type="checkbox" id="cat-sales" checked>
+            <label for="cat-sales">Sales (6)</label>
+          </div>
+          <div class="filter-option">
+            <input type="checkbox" id="cat-colocation" checked>
+            <label for="cat-colocation">Colocation (5)</label>
+          </div>
+          <div class="filter-option">
+            <input type="checkbox" id="cat-interconnection" checked>
+            <label for="cat-interconnection">Interconnection (4)</label>
+          </div>
+        </div>
+
+        <div class="filter-section">
+          <label class="filter-label">Level</label>
+          <div class="filter-option">
+            <input type="checkbox" id="level-beginner" checked>
+            <label for="level-beginner">Beginner</label>
+          </div>
+          <div class="filter-option">
+            <input type="checkbox" id="level-intermediate" checked>
+            <label for="level-intermediate">Intermediate</label>
+          </div>
+          <div class="filter-option">
+            <input type="checkbox" id="level-advanced" checked>
+            <label for="level-advanced">Advanced</label>
+          </div>
+        </div>
+
+        <div class="filter-section">
+          <label class="filter-label">Duration</label>
+          <div class="filter-option">
+            <input type="checkbox" id="dur-short" checked>
+            <label for="dur-short">Under 1 hour</label>
+          </div>
+          <div class="filter-option">
+            <input type="checkbox" id="dur-medium" checked>
+            <label for="dur-medium">1-3 hours</label>
+          </div>
+          <div class="filter-option">
+            <input type="checkbox" id="dur-long" checked>
+            <label for="dur-long">3+ hours</label>
+          </div>
+        </div>
+
+        <a href="#" class="clear-filters" onclick="return false;">Clear All Filters</a>
+      </div>
+
+      <div class="content">
+        <div class="section">
+          <h4 class="section-title">Required for Gold Tier</h4>
+          <div class="course-grid">
+            <div class="course-card featured">
+              <div class="course-thumb business">🔒<div class="course-status">Required</div></div>
+              <div class="course-content">
+                <h3 class="course-title">Compliance & Data Privacy</h3>
+                <p class="course-desc">Enterprise-level compliance standards and data protection practices for partners.</p>
+                <div class="course-meta">
+                  <span class="badge badge-biz">BUSINESS</span>
+                  <span class="badge badge-level">Beginner</span>
+                </div>
+                <div class="course-meta-text">Duration: 1.5 hours | In Progress: 45%</div>
+                <div class="course-actions"><button class="btn" style="background: var(--wf-amber, #8b7745);">Resume</button></div>
+              </div>
+            </div>
+
+            <div class="course-card featured">
+              <div class="course-thumb">🔐<div class="course-status">Required</div></div>
+              <div class="course-content">
+                <h3 class="course-title">Security Fundamentals</h3>
+                <p class="course-desc">Core security concepts and partner security obligations in the Equinix ecosystem.</p>
+                <div class="course-meta">
+                  <span class="badge badge-tech">TECHNICAL</span>
+                  <span class="badge badge-level">Beginner</span>
+                </div>
+                <div class="course-meta-text">Duration: 2 hours | Expires: Feb 28, 2026</div>
+                <div class="course-actions"><button class="btn">Start Course</button></div>
+              </div>
+            </div>
+
+            <div class="course-card featured">
+              <div class="course-thumb tech">⚙️<div class="course-status">Required</div></div>
+              <div class="course-content">
+                <h3 class="course-title">Equinix Fabric Technical</h3>
+                <p class="course-desc">Deep technical training on Equinix Fabric architecture, connectivity, and operations.</p>
+                <div class="course-meta">
+                  <span class="badge badge-tech">TECHNICAL</span>
+                  <span class="badge badge-level">Intermediate</span>
+                </div>
+                <div class="course-meta-text">Duration: 3 hours | Not Started</div>
+                <div class="course-actions"><button class="btn">Enroll</button></div>
+              </div>
+            </div>
+
+            <div class="course-card featured">
+              <div class="course-thumb business">🎯<div class="course-status">Required</div></div>
+              <div class="course-content">
+                <h3 class="course-title">Market Positioning & Competition</h3>
+                <p class="course-desc">Equinix market value proposition, competitive positioning, and objection handling.</p>
+                <div class="course-meta">
+                  <span class="badge badge-biz">BUSINESS</span>
+                  <span class="badge badge-level">Intermediate</span>
+                </div>
+                <div class="course-meta-text">Duration: 2 hours | Not Started</div>
+                <div class="course-actions"><button class="btn">Enroll</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <h4 class="section-title">All Courses (12 displayed)</h4>
+          <div class="course-grid">
+            <div class="course-card">
+              <div class="course-thumb business">📖<div class="course-status">Enrolled</div></div>
+              <div class="course-content">
+                <h3 class="course-title">Our Mission/Vision/Value Story</h3>
+                <p class="course-desc">Equinix mission, vision, core values, and partner program overview.</p>
+                <div class="course-meta">
+                  <span class="badge badge-biz">BUSINESS</span>
+                  <span class="badge badge-level">Beginner</span>
+                </div>
+                <div class="course-meta-text">Duration: 45 min | Completed</div>
+                <div class="course-actions"><button class="btn btn-enrolled">✓ Completed</button></div>
+              </div>
+            </div>
+
+            <div class="course-card">
+              <div class="course-thumb business">🏢<div class="course-status">Enrolled</div></div>
+              <div class="course-content">
+                <h3 class="course-title">Colocation Overview</h3>
+                <p class="course-desc">Comprehensive guide to Equinix colocation services, features, and use cases.</p>
+                <div class="course-meta">
+                  <span class="badge badge-biz">BUSINESS</span>
+                  <span class="badge badge-level">Beginner</span>
+                </div>
+                <div class="course-meta-text">Duration: 1.5 hours | Completed</div>
+                <div class="course-actions"><button class="btn btn-enrolled">✓ Completed</button></div>
+              </div>
+            </div>
+
+            <div class="course-card">
+              <div class="course-thumb business">🔗<div class="course-status">Enrolled</div></div>
+              <div class="course-content">
+                <h3 class="course-title">Interconnection Overview</h3>
+                <p class="course-desc">Interconnection services, Equinix Fabric basics, and networking solutions.</p>
+                <div class="course-meta">
+                  <span class="badge badge-biz">BUSINESS</span>
+                  <span class="badge badge-level">Beginner</span>
+                </div>
+                <div class="course-meta-text">Duration: 1.5 hours | Completed</div>
+                <div class="course-actions"><button class="btn btn-enrolled">✓ Completed</button></div>
+              </div>
+            </div>
+
+            <div class="course-card">
+              <div class="course-thumb business">💼<div class="course-status"></div></div>
+              <div class="course-content">
+                <h3 class="course-title">Solution Sales Fundamentals</h3>
+                <p class="course-desc">Sales methodology, customer needs analysis, and solution-selling approach.</p>
+                <div class="course-meta">
+                  <span class="badge badge-biz">BUSINESS</span>
+                  <span class="badge badge-level">Intermediate</span>
+                </div>
+                <div class="course-meta-text">Duration: 2 hours | Not Started</div>
+                <div class="course-actions"><button class="btn">Enroll</button></div>
+              </div>
+            </div>
+
+            <div class="course-card">
+              <div class="course-thumb business">🎯<div class="course-status"></div></div>
+              <div class="course-content">
+                <h3 class="course-title">Product Portfolio & Services</h3>
+                <p class="course-desc">Complete overview of all Equinix products, services, and solution bundles.</p>
+                <div class="course-meta">
+                  <span class="badge badge-biz">BUSINESS</span>
+                  <span class="badge badge-level">Intermediate</span>
+                </div>
+                <div class="course-meta-text">Duration: 2 hours | Not Started</div>
+                <div class="course-actions"><button class="btn">Enroll</button></div>
+              </div>
+            </div>
+
+            <div class="course-card">
+              <div class="course-thumb business">☁️<div class="course-status">In Progress</div></div>
+              <div class="course-content">
+                <h3 class="course-title">Hybrid Multicloud Networking</h3>
+                <p class="course-desc">Hybrid cloud architecture, multicloud strategies, and Equinix solutions.</p>
+                <div class="course-meta">
+                  <span class="badge badge-biz">BUSINESS</span>
+                  <span class="badge badge-level">Intermediate</span>
+                </div>
+                <div class="course-meta-text">Duration: 2 hours | 45% Progress</div>
+                <div class="course-actions"><button class="btn" style="background: var(--wf-amber, #8b7745);">Resume</button></div>
+              </div>
+            </div>
+
+            <div class="course-card">
+              <div class="course-thumb tech">🌐<div class="course-status"></div></div>
+              <div class="course-content">
+                <h3 class="course-title">Network Architecture Basics</h3>
+                <p class="course-desc">Fundamental networking concepts, protocols, and data center network design.</p>
+                <div class="course-meta">
+                  <span class="badge badge-tech">TECHNICAL</span>
+                  <span class="badge badge-level">Beginner</span>
+                </div>
+                <div class="course-meta-text">Duration: 1.5 hours | Not Started</div>
+                <div class="course-actions"><button class="btn">Enroll</button></div>
+              </div>
+            </div>
+
+            <div class="course-card">
+              <div class="course-thumb tech">🔌<div class="course-status"></div></div>
+              <div class="course-content">
+                <h3 class="course-title">Interconnection Technical Deep Dive</h3>
+                <p class="course-desc">Advanced technical training on interconnection architecture and deployment.</p>
+                <div class="course-meta">
+                  <span class="badge badge-tech">TECHNICAL</span>
+                  <span class="badge badge-level">Advanced</span>
+                </div>
+                <div class="course-meta-text">Duration: 3 hours | Not Started</div>
+                <div class="course-actions"><button class="btn">Enroll</button></div>
+              </div>
+            </div>
+
+            <div class="course-card">
+              <div class="course-thumb tech">🏗️<div class="course-status"></div></div>
+              <div class="course-content">
+                <h3 class="course-title">Solution Design Patterns</h3>
+                <p class="course-desc">Solution architecture patterns, design best practices, and technical implementation.</p>
+                <div class="course-meta">
+                  <span class="badge badge-tech">TECHNICAL</span>
+                  <span class="badge badge-level">Advanced</span>
+                </div>
+                <div class="course-meta-text">Duration: 3.5 hours | Not Started</div>
+                <div class="course-actions"><button class="btn">Enroll</button></div>
+              </div>
+            </div>
+
+            <div class="course-card">
+              <div class="course-thumb business">🤝<div class="course-status"></div></div>
+              <div class="course-content">
+                <h3 class="course-title">Partner Program Overview</h3>
+                <p class="course-desc">Partner program structure, tier requirements, benefits, and commission details.</p>
+                <div class="course-meta">
+                  <span class="badge badge-biz">BUSINESS</span>
+                  <span class="badge badge-level">Beginner</span>
+                </div>
+                <div class="course-meta-text">Duration: 1 hour | Not Started</div>
+                <div class="course-actions"><button class="btn">Enroll</button></div>
+              </div>
+            </div>
+
+            <div class="course-card">
+              <div class="course-thumb tech">📊<div class="course-status"></div></div>
+              <div class="course-content">
+                <h3 class="course-title">Analytics & Reporting</h3>
+                <p class="course-desc">Partner portal analytics, reporting dashboards, and performance tracking.</p>
+                <div class="course-meta">
+                  <span class="badge badge-tech">TECHNICAL</span>
+                  <span class="badge badge-level">Intermediate</span>
+                </div>
+                <div class="course-meta-text">Duration: 2 hours | Not Started</div>
+                <div class="course-actions"><button class="btn">Enroll</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="spec-section">
+      <h4>Salesforce Objects & Fields (Course Catalog)</h4>
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; font-size: 11px;">
+        <div class="spec-item">
+          <div class="spec-label">Course__c (Custom Object)</div>
+          <div class="spec-value">Course_Name__c (text), Track__c (Business|Technical), Category__c (Introduction|Sales|Colocation|Interconnection|Scaling|Solution Design), Duration__c (number, hours), Level__c (Beginner|Intermediate|Advanced), Description__c (long text), Prerequisites__c (text, comma-separated), SumTotal_Course_ID__c (external ID), Has_Certification__c (checkbox), Is_Required__c (checkbox)</div>
+        </div>
+        <div class="spec-item">
+          <div class="spec-label">Tier_Course_Requirement__mdt (Custom Metadata)</div>
+          <div class="spec-value">Partner_Tier__c (Bronze|Silver|Gold), Required_Courses__c (multi-select), Elective_Count_Min__c (number), Course__c (lookup), Sequence_Order__c (number), DeveloperName (unique API name)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="validation-section">
+      <h4>Validation Rules & Edge Cases</h4>
+      <p><strong>Enroll creates Partner_Training__c with Status='Not Started'</strong> — Click "Enroll" triggers Salesforce record insert via flow: Partner_Training__c.create(Contact__c=LoggedInUser.Contact, Course__c=[selected], Status__c='Not Started', Enrollment_Date__c=TODAY()). SumTotal_Enrollment_Flow also triggered to sync with LMS.</p>
+      <p><strong>Cannot enroll in course if prerequisite incomplete</strong> — Flow validation: If Course__c.Prerequisites__c is not blank, query Partner_Training__c where Contact=LoggedInUser AND Course__c=[prerequisite] AND Status__c='Completed'. If no result, show error toast: "Complete [prerequisite course name] first".</p>
+      <p><strong>Max 5 concurrent in-progress courses</strong> — Validation rule: COUNT(Partner_Training__c where Contact=LoggedInUser AND Status__c='In Progress') <= 5 OR ERROR "Maximum 5 active courses. Complete one to start another.".</p>
+      <p><strong>Featured "Required" courses highlighted on catalog</strong> — Courses in Tier_Course_Requirement__mdt for logged-in Account.Partner_Tier__c are fetched and displayed in "Required for Your Tier" section at top. Card gets featured class (blue border, prominent styling).</p>
+    </div>
+
+    <div class="user-flow">
+      <h4>User Flow: Browse & Enroll in Course</h4>
+      <div class="flow-step">
+        <div class="flow-number">1</div>
+        <div class="flow-text"><strong>Sarah clicks Courses nav</strong> — Loads catalog with search bar and filters. Page shows "32 courses available" with 12 displayed by default (filtered by her tier).</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-number">2</div>
+        <div class="flow-text"><strong>Filters by Technical track</strong> — Updates sidebar: unchecks Business, keeps Technical checked. Grid refreshes showing only Technical courses (12 results).</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-number">3</div>
+        <div class="flow-text"><strong>Finds & clicks "Enroll" on Security Fundamentals</strong> — Triggers Frontend validation (prerequisites check). System queries: "Has Sarah completed Intro to Security?" No prerequisite found, so button enabled. Click creates Partner_Training__c record.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-number">4</div>
+        <div class="flow-text"><strong>Backend SumTotal_Enrollment_Flow triggers</strong> — Calls SumTotal API with Contact.Id + Course.SumTotal_Course_ID__c. LMS creates enrollment record. Portal shows success toast: "Enrolled in Security Fundamentals".</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-number">5</div>
+        <div class="flow-text"><strong>Sarah navigates to My Training</strong> — Required tab now shows Security Fundamentals course card with Status='Not Started', "Start Course" button. Card appears in grid with others.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-number">6</div>
+        <div class="flow-text"><strong>Sarah clicks "Start Course"</strong> — Portal generates JWT SSO token, redirects to SumTotal LMS. Logs in via SAML, launches Security Fundamentals course modules.</div>
+      </div>
+    </div>
+  </div>  </div>
+
+  <!-- ════════ RIGHT RAIL — Activity & Insights ════════ -->
+  <div class="right-rail">
+    <div class="card">
+      <div class="rail-tabs">
+        <button class="rail-tab active" onclick="document.querySelectorAll('.rail-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active');document.querySelectorAll('.rail-tab-content').forEach(c=>c.classList.remove('active'));document.getElementById('tab-activity').classList.add('active');">Activity</button>
+        <button class="rail-tab" onclick="document.querySelectorAll('.rail-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active');document.querySelectorAll('.rail-tab-content').forEach(c=>c.classList.remove('active'));document.getElementById('tab-einstein').classList.add('active');">Einstein</button>
+      </div>
+      <div id="tab-activity" class="rail-tab-content active">
+        <div class="card-bd">
+          <div class="feed-sm"><div class="feed-sm-text">Enrolled in TEC-302</div><div class="feed-sm-time">Today</div></div>
+          <div class="feed-sm"><div class="feed-sm-text">Completed BUS-201</div><div class="feed-sm-time">3 days ago</div></div>
+          <div class="feed-sm"><div class="feed-sm-text">New: TEC-305</div><div class="feed-sm-time">1 week ago</div></div>
+        </div>
+      </div>
+      <div id="tab-einstein" class="rail-tab-content">
+        <div class="card-bd" style="font-size:12px;color:var(--wf-text);line-height:1.5;">
+          <div style="font-size:11px;font-weight:700;color:var(--wf-accent);text-transform:uppercase;letter-spacing:0.03em;margin-bottom:0.5rem;">AI Recommendation</div>
+          60% through plan. Next: TEC-302 — required for Technical Specialist cert. ~2.5 hours.
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><h3>Actions</h3></div>
+      <div class="card-bd">
+        <button class="action-btn action-btn-primary">Start Next Course</button>
+        <button class="action-btn action-btn-secondary">View Training</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+  <footer class="wf-footer">
+    &copy; 2026 Equinix Partner Portal · Wireframe specification
+  </footer>
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Displays searchable and filterable catalog of training courses organized by track, category, and tier requirements. Shows required courses prominently and tracks enrollment status for each course.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Browse all available training courses</li>
+<li>Discover courses by category or level</li>
+<li>See course status and enrollment eligibility</li>
+<li>Find courses relevant to role or tier</li>
+<li>Compare courses before enrolling</li>
+<li>Enroll in new training quickly</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Section "Required for Gold Tier" with 4 featured required courses</li>
+<li>Section "All Courses" with grid of 12 displayed course cards (32 available)</li>
+<li>Course cards: icon, title, description, track badge (Business/Technical), level badge, duration, status indicator (Not Started/In Progress/Completed/Required)</li>
+<li>Sidebar filters for Track, Category (Intro, Sales, Colocation, Interconnection), Level (Beginner, Intermediate, Advanced), Duration (Under 1hr, 1-3hr, 3+hr)</li>
+<li>Search bar with real-time filtering</li>
+<li>My Plan sidebar showing 4 assigned courses, 6 completed courses</li>
+<li>Activity tab showing recent enrollments and completions</li>
+<li>Einstein AI recommendation tab suggesting next courses</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Search bar with keyword filtering</li>
+<li>Checkbox filters for Track, Category, Level, Duration with course counts</li>
+<li>Clear All Filters link</li>
+<li>Enroll button (creates Partner_Training__c enrollment)</li>
+<li>Resume button for in-progress courses (redirect to SumTotal LMS)</li>
+<li>Completed button (disabled state) for finished courses</li>
+<li>Start Next Course and View Training action buttons in right rail</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Catalog Loading & Display</strong>
+<ul>
+<li>Course__c objects queried with Track__c, Category__c, Level__c, Duration__c, Is_Required__c, Has_Certification__c fields; grid displays by default in 3-column layout (responsive to 2-column on smaller screens)</li>
+<li>Tier_Course_Requirement__mdt custom metadata type determines which courses display in "Required for Your Tier" section based on logged-in Account.Partner_Tier__c (Bronze|Silver|Gold)</li>
+<li>Featured courses with blue borders and prominent styling are pulled from tier requirements and shown first</li>
+</ul></li>
+<li><strong>Enrollment & Validation</strong>
+<ul>
+<li>Enroll button creates Partner_Training__c record with Contact__c=LoggedInUser.Contact, Course__c=[selected], Status__c='Not Started', Enrollment_Date__c=TODAY()</li>
+<li>Frontend validation checks Course__c.Prerequisites__c; if not blank, queries Partner_Training__c WHERE Contact=LoggedInUser AND Course__c=[prerequisite] AND Status__c='Completed'; shows error toast if incomplete: "Complete [course name] first"</li>
+<li>Validation rule enforces max 5 concurrent in-progress courses: COUNT(Partner_Training__c where Contact=LoggedInUser AND Status__c='In Progress') ≤ 5</li>
+</ul></li>
+<li><strong>Status Tracking & User State</strong>
+<ul>
+<li>Course status displayed from Partner_Training__c.Status__c enum (Not Started, In Progress, Completed); status badges update after enrollment or LMS completion syncs</li>
+<li>Enroll/Resume/Completed buttons dynamically rendered based on Partner_Training__c records for logged-in user</li>
+<li>Search and filter sidebar selections persisted in session; filtered course count displayed dynamically</li>
+</ul></li>
+<li><strong>LMS Integration & SSO</strong>
+<ul>
+<li>Start Course/Resume buttons generate JWT SSO token and redirect to SumTotal LMS with Contact.Email + Course.SumTotal_Course_ID__c parameters</li>
+<li>SumTotal_Enrollment_Flow (scheduled) syncs Partner_Training__c.Status__c to LMS after record creation via API callout</li>
+<li>Completion callback from LMS updates Partner_Training__c.Status__c='Completed', Score__c, Completion_Date__c=TODAY()</li>
+</ul></li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Salesforce Objects & Sync</h4>
+<ul>
+<li>Course__c custom object with fields: Course_Name__c, Track__c, Category__c, Duration__c (hours), Level__c, Description__c, Prerequisites__c, SumTotal_Course_ID__c (external ID), Has_Certification__c, Is_Required__c</li>
+<li>Tier_Course_Requirement__mdt custom metadata type defining required courses per Partner_Tier__c (Bronze|Silver|Gold)</li>
+<li>Partner_Training__c object stores enrollments with Enrollment_Date__c, Status__c, Completion_Date__c, Score__c</li>
+<li>SumTotal_Enrollment_Flow (scheduled flow) syncs Partner_Training__c records to SumTotal LMS via API call with Contact.Email + Course.SumTotal_Course_ID__c</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

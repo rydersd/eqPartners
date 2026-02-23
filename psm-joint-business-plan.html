@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Joint Business Plan — PSM · Equinix PCP</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: var(--wf-canvas, #f5f7fb); }
+    .slds-global-header { display: flex; align-items: center; background-color: var(--wf-ink, #1e2a3a); color: var(--wf-surface, #edf1f7); padding: 0 12px; height: 52px; gap: 12px; }
+    .slds-global-header__waffle { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; cursor: pointer; }
+    .slds-global-header__waffle svg { width: 20px; height: 20px; }
+    .slds-global-header__app { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; }
+    .slds-global-header__app-icon { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; background-color: var(--wf-accent, var(--wf-accent, #3d6daa)); color: var(--wf-surface, #edf1f7); border-radius: 4px; font-weight: 700; font-size: 12px; }
+    .slds-global-nav { display: flex; gap: 24px; margin-left: 24px; flex: 1; }
+    .slds-global-nav__item { color: rgba(255, 255, 255, 0.7); text-decoration: none; font-size: 13px; padding: 8px 0; border-bottom: 3px solid transparent; cursor: pointer; transition: all 0.2s; }
+    .slds-global-nav__item:hover { color: var(--wf-surface, #edf1f7); }
+    .slds-global-nav__item.active { color: var(--wf-surface, #edf1f7); border-bottom-color: var(--wf-amber, #8b7745); }
+    .slds-global-header__search { margin-left: auto; margin-right: 16px; }
+    .slds-global-header__search input { padding: 6px 12px; border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 4px; background-color: rgba(255, 255, 255, 0.1); color: var(--wf-surface, #edf1f7); width: 200px; font-size: 13px; }
+    .slds-global-header__search input::placeholder { color: rgba(255, 255, 255, 0.5); }
+    .slds-global-header__actions { display: flex; gap: 12px; align-items: center; }
+    .slds-global-header__action { cursor: pointer; font-size: 18px; opacity: 0.7; transition: opacity 0.2s; }
+    .slds-global-header__action:hover { opacity: 1; }
+    .page-container { padding: 24px; max-width: 1600px; margin: 0 auto; }
+    .slds-design-notes__title { font-size: 18px; font-weight: 700; color: var(--wf-text, #3b4f68); margin-bottom: 12px; display: flex; align-items: center; gap: 12px; }
+    .slds-badge { display: inline-block; padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; }
+    .slds-badge--brand { background-color: var(--wf-accent, var(--wf-accent, #3d6daa)); color: var(--wf-surface, #edf1f7); }
+    .slds-badge--neutral { background-color: var(--wf-surface, #edf1f7); color: var(--wf-text, #3b4f68); }
+    .list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .section-title { font-size: 16px; font-weight: 700; color: var(--wf-text, #3b4f68); margin-bottom: 12px; margin-top: 24px; }
+    .table-wrapper { background: var(--wf-surface, #edf1f7); border-radius: 4px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); overflow: hidden; margin-bottom: 24px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead { background-color: var(--wf-canvas, #f5f7fb); border-bottom: 2px solid var(--wf-line, #b0bdd0); }
+    th { padding: 12px; text-align: left; font-weight: 700; color: var(--wf-text, #3b4f68); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+    td { padding: 12px; border-bottom: 1px solid var(--wf-surface, #edf1f7); color: var(--wf-text, #3b4f68); }
+    tbody tr:hover { background-color: var(--wf-canvas, #f5f7fb); }
+    .badge { display: inline-block; padding: 4px 8px; border-radius: 3px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+    .badge-draft { background-color: var(--wf-surface, #edf1f7); color: var(--wf-muted, #6b7f99); }
+    .badge-active { background-color: var(--wf-surface, #edf1f7); color: var(--wf-ink, #1e2a3a); }
+    .badge-review { background-color: var(--wf-surface, #edf1f7); color: var(--wf-amber, #8b7745); }
+    .badge-completed { background-color: var(--wf-surface, #edf1f7); color: var(--wf-ink, #1e2a3a); }
+    .progress-bar-cell { display: flex; align-items: center; gap: 8px; }
+    .progress-bar { flex: 1; height: 6px; background-color: var(--wf-surface, #edf1f7); border-radius: 3px; overflow: hidden; }
+    .progress-fill { height: 100%; background-color: var(--wf-accent, var(--wf-accent, #3d6daa)); border-radius: 3px; }
+    .btn { padding: 6px 12px; border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .btn-primary { background-color: var(--wf-accent, var(--wf-accent, #3d6daa)); color: var(--wf-surface, #edf1f7); }
+    .btn-primary:hover { background-color: var(--wf-accent, #3d6daa); }
+    .btn-secondary { background-color: var(--wf-surface, #edf1f7); color: var(--wf-text, #3b4f68); }
+    .btn-secondary:hover { background-color: var(--wf-line, #b0bdd0); }
+    .btn-small { padding: 4px 8px; font-size: 11px; }
+    .filter-bar { display: flex; gap: 12px; margin-bottom: 16px; align-items: center; }
+    .filter-control { padding: 6px 12px; border: 1px solid var(--wf-line, #b0bdd0); border-radius: 4px; background: var(--wf-surface, #edf1f7); font-size: 12px; cursor: pointer; }
+    .goal-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 24px; }
+    .goal-card { background: var(--wf-surface, #edf1f7); padding: 16px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); }
+    .goal-title { font-size: 14px; font-weight: 700; color: var(--wf-text, #3b4f68); margin-bottom: 12px; }
+    .goal-metric { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; font-size: 13px; border-bottom: 1px solid var(--wf-surface, #edf1f7); }
+    .goal-metric:last-child { border-bottom: none; }
+    .goal-label { color: var(--wf-muted, #6b7f99); }
+    .goal-value { font-weight: 700; color: var(--wf-accent, var(--wf-accent, #3d6daa)); }
+    .goal-status { display: inline-block; padding: 4px 8px; border-radius: 3px; font-size: 11px; font-weight: 600; white-space: nowrap; margin-top: 8px; }
+    .status-ontrack { background-color: var(--wf-surface, #edf1f7); color: var(--wf-ink, #1e2a3a); }
+    .status-atrisk { background-color: var(--wf-surface, #edf1f7); color: var(--wf-amber, #8b7745); }
+    .status-behind { background-color: var(--wf-surface, #edf1f7); color: var(--wf-red, #8b4553); }
+    .record-header { background: var(--wf-surface, #edf1f7); padding: 16px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); margin-bottom: 24px; }
+    .record-title { font-size: 18px; font-weight: 700; color: var(--wf-text, #3b4f68); margin-bottom: 12px; }
+    .record-meta { display: flex; gap: 24px; font-size: 13px; color: var(--wf-muted, #6b7f99); }
+    .record-meta-item { display: flex; flex-direction: column; }
+    .record-meta-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--wf-muted, #6b7f99); margin-bottom: 4px; }
+    .record-action-buttons { display: flex; gap: 8px; margin-top: 12px; }
+    .jbp-detail-view { background: var(--wf-surface, #edf1f7); padding: 20px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); margin-bottom: 24px; }
+    .narrative-box { background-color: var(--wf-canvas, #f5f7fb); border-left: 4px solid var(--wf-accent, var(--wf-accent, #3d6daa)); padding: 16px; border-radius: 4px; margin-top: 16px; }
+    .narrative-box-title { font-size: 12px; font-weight: 700; color: var(--wf-text, #3b4f68); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+    .narrative-box-content { font-size: 13px; color: var(--wf-muted, #6b7f99); line-height: 1.6; }
+    .footer-pagination { display: flex; justify-content: space-between; align-items: center; padding: 16px; font-size: 12px; color: var(--wf-muted, #6b7f99); border-top: 1px solid var(--wf-surface, #edf1f7); }
+  
+/* ── 3-Column Record Layout ── */
+.record-layout { display:grid; grid-template-columns:280px 1fr 300px; gap:1rem; padding:1rem 2rem; max-width:1600px; }
+@media (max-width:1200px) { .record-layout { grid-template-columns:1fr; } }
+.left-rail .card, .right-rail .card { margin-bottom:1rem; }
+.center-content .card { margin-bottom:1rem; }
+.card { background:var(--wf-surface,#edf1f7); border:1px solid var(--wf-tint,#dce4ef); border-radius:6px; overflow:hidden; }
+.card-hd { padding:0.75rem 1rem; border-bottom:1px solid var(--wf-tint); display:flex; justify-content:space-between; align-items:center; }
+.card-hd h3 { font-size:13px; font-weight:700; color:var(--wf-ink); margin:0; }
+.card-hd-action { font-size:11px; color:var(--wf-accent); text-decoration:none; font-weight:600; cursor:pointer; }
+.card-bd { padding:1rem; }
+.hl-row { display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:12px; }
+.hl-row:last-child { border-bottom:none; }
+.hl-label { color:var(--wf-muted); }
+.hl-value { font-weight:700; color:var(--wf-ink); }
+.hl-value.warn { color:var(--wf-amber,#8b7745); }
+.rel-item { display:flex; align-items:center; gap:0.625rem; padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:12px; }
+.rel-item:last-child { border-bottom:none; }
+.rel-icon { width:28px; height:28px; border-radius:50%; background:var(--wf-tint); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.rel-icon svg { width:14px; height:14px; color:var(--wf-ink); }
+.rel-info { flex:1; }
+.rel-title { font-size:12px; font-weight:600; color:var(--wf-ink); }
+.rel-sub { font-size:11px; color:var(--wf-muted); }
+.rel-meta { font-size:11px; color:var(--wf-muted); text-align:right; white-space:nowrap; }
+/* Right-rail tabs */
+.rail-tabs { display:flex; border-bottom:1px solid var(--wf-tint); }
+.rail-tab { flex:1; padding:0.5rem; font-size:11px; font-weight:600; text-align:center; color:var(--wf-muted); cursor:pointer; border-bottom:2px solid transparent; background:none; border-top:none; border-left:none; border-right:none; }
+.rail-tab.active { color:var(--wf-accent); border-bottom-color:var(--wf-accent); }
+.rail-tab-content { display:none; }
+.rail-tab-content.active { display:block; }
+/* Activity feed in right rail */
+.feed-sm { padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:11px; }
+.feed-sm:last-child { border-bottom:none; }
+.feed-sm-text { color:var(--wf-text); line-height:1.4; }
+.feed-sm-text strong { color:var(--wf-ink); }
+.feed-sm-time { color:var(--wf-muted); font-size:10px; margin-top:2px; }
+/* Quick action buttons */
+.action-btn { width:100%; padding:0.5rem; border-radius:4px; font-size:12px; font-weight:600; cursor:pointer; margin-bottom:0.375rem; border:1px solid var(--wf-line); text-align:center; }
+.action-btn:last-child { margin-bottom:0; }
+.action-btn-primary { background:var(--wf-accent); color:white; border-color:var(--wf-accent); }
+.action-btn-secondary { background:var(--wf-surface); color:var(--wf-text); }
+</style>
+</head>
+<body>
+
+<header class="wf-header">
+  <div class="wf-header-logo"><svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix"><path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/></svg></div>
+  <div class="wf-header-title">SFDC</div>
+  <nav class="wf-header-nav">
+    <a href="#">Dashboard</a>
+    <a href="#" class="active">PSM Portal</a>
+    <a href="#">Partners</a>
+    <a href="#">Deals</a>
+    <a href="#">Programs</a>
+    <a href="#">Reports</a>
+  </nav>
+  <div class="wf-header-util">
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+  </div>
+</header>
+<div class="page-context-bar">
+  <div style="max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <span style="font-size:12px;color:var(--wf-muted);display:flex;align-items:center;gap:6px;">
+      <svg viewBox="0 0 20 13" style="width:18px;height:11px;fill:var(--wf-muted);" aria-hidden="true"><path d="M8.3 1.7A3.8 3.8 0 0 1 12 0a3.8 3.8 0 0 1 3.5 2.3A2.8 2.8 0 0 1 20 5a2.8 2.8 0 0 1-2.8 2.8H3.2A3.2 3.2 0 0 1 0 4.6 3.2 3.2 0 0 1 3.2 1.4c.18 0 .35.01.52.04A3.8 3.8 0 0 1 8.3 1.7z"/></svg>
+      <strong style="color:var(--wf-text);font-weight:600;">Salesforce Lightning</strong>&ensp;&middot;&ensp;PCP App
+    </span>
+    <span class="persona-badge persona-badge--psm">PSM</span>
+  </div>
+</div>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+
+<!-- ── 3-Column Record Layout ── -->
+<div class="record-layout">
+
+  <!-- ════════ LEFT RAIL — Related Objects ════════ -->
+  <div class="left-rail">
+    <div class="card">
+      <div class="card-hd"><h3>Partner</h3></div>
+      <div class="card-bd">
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0"/></svg></div>
+          <div class="rel-info"><div class="rel-title">Partner org</div><div class="rel-sub">JBP co-author</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><h3>Plan Docs</h3></div>
+      <div class="card-bd">
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg></div>
+          <div class="rel-info"><div class="rel-title">JBP Draft</div><div class="rel-sub">v3</div></div>
+        </div>
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg></div>
+          <div class="rel-info"><div class="rel-title">Revenue Model</div><div class="rel-sub">Attached</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ CENTER — Main Content ════════ -->
+  <div class="center-content">
+<div class="page-container">
+
+  
+
+
+  <div class="list-header">
+    <h2 style="margin:0;font-size:16px;font-weight:700">Joint Business Plans</h2>
+    <button class="btn btn-primary">Create New Plan</button>
+  </div>
+
+  <div class="filter-bar">
+    <select class="filter-control">
+      <option>All Statuses</option>
+      <option>Draft</option>
+      <option>Active</option>
+      <option>In Review</option>
+      <option>Completed</option>
+    </select>
+    <select class="filter-control">
+      <option>All Periods</option>
+      <option>Q1 2026</option>
+      <option>Q2 2026</option>
+      <option>Q3 2026</option>
+      <option>FY 2026</option>
+    </select>
+    <select class="filter-control">
+      <option>All Tiers</option>
+      <option>Gold</option>
+      <option>Silver</option>
+      <option>Bronze</option>
+    </select>
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Partner Account</th>
+          <th>Plan Period</th>
+          <th>Status</th>
+          <th>Revenue Target</th>
+          <th>YTD Actual</th>
+          <th>Training Target</th>
+          <th>Last Updated</th>
+          <th>Progress</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Stark Industries</strong></td>
+          <td>FY 2026</td>
+          <td><span class="badge badge-active">Active</span></td>
+          <td>$2,500,000</td>
+          <td>$1,550,000</td>
+          <td>12 Certs</td>
+          <td>2026-02-10</td>
+          <td><div class="progress-bar-cell"><div class="progress-bar"><div class="progress-fill" style="width: 62%"></div></div><span>62%</span></div></td>
+          <td><button class="btn btn-secondary btn-small">View</button></td>
+        </tr>
+        <tr>
+          <td><strong>Wayne Enterprises</strong></td>
+          <td>FY 2026</td>
+          <td><span class="badge badge-active">Active</span></td>
+          <td>$2,800,000</td>
+          <td>$1,400,000</td>
+          <td>18 Certs</td>
+          <td>2026-02-09</td>
+          <td><div class="progress-bar-cell"><div class="progress-bar"><div class="progress-fill" style="width: 50%"></div></div><span>50%</span></div></td>
+          <td><button class="btn btn-secondary btn-small">View</button></td>
+        </tr>
+        <tr>
+          <td><strong>GlobalTech Partners</strong></td>
+          <td>Q1 2026</td>
+          <td><span class="badge badge-review">In Review</span></td>
+          <td>$950,000</td>
+          <td>$588,000</td>
+          <td>8 Certs</td>
+          <td>2026-02-11</td>
+          <td><div class="progress-bar-cell"><div class="progress-bar"><div class="progress-fill" style="width: 62%"></div></div><span>62%</span></div></td>
+          <td><button class="btn btn-secondary btn-small">View</button></td>
+        </tr>
+        <tr>
+          <td><strong>DataStream Inc</strong></td>
+          <td>FY 2026</td>
+          <td><span class="badge badge-draft">Draft</span></td>
+          <td>$1,750,000</td>
+          <td>$525,000</td>
+          <td>15 Certs</td>
+          <td>2026-02-08</td>
+          <td><div class="progress-bar-cell"><div class="progress-bar"><div class="progress-fill" style="width: 30%"></div></div><span>30%</span></div></td>
+          <td><button class="btn btn-secondary btn-small">View</button></td>
+        </tr>
+        <tr>
+          <td><strong>Oscorp</strong></td>
+          <td>Q1 2026</td>
+          <td><span class="badge badge-completed">Completed</span></td>
+          <td>$580,000</td>
+          <td>$580,000</td>
+          <td>6 Certs</td>
+          <td>2026-01-31</td>
+          <td><div class="progress-bar-cell"><div class="progress-bar"><div class="progress-fill" style="width: 100%"></div></div><span>100%</span></div></td>
+          <td><button class="btn btn-secondary btn-small">View</button></td>
+        </tr>
+        <tr>
+          <td><strong>InnovateLabs</strong></td>
+          <td>FY 2026</td>
+          <td><span class="badge badge-active">Active</span></td>
+          <td>$1,400,000</td>
+          <td>$770,000</td>
+          <td>12 Certs</td>
+          <td>2026-02-07</td>
+          <td><div class="progress-bar-cell"><div class="progress-bar"><div class="progress-fill" style="width: 55%"></div></div><span>55%</span></div></td>
+          <td><button class="btn btn-secondary btn-small">View</button></td>
+        </tr>
+        <tr>
+          <td><strong>PrimeConnect</strong></td>
+          <td>FY 2026</td>
+          <td><span class="badge badge-active">Active</span></td>
+          <td>$2,100,000</td>
+          <td>$987,000</td>
+          <td>16 Certs</td>
+          <td>2026-02-10</td>
+          <td><div class="progress-bar-cell"><div class="progress-bar"><div class="progress-fill" style="width: 47%"></div></div><span>47%</span></div></td>
+          <td><button class="btn btn-secondary btn-small">View</button></td>
+        </tr>
+        <tr>
+          <td><strong>ProServices Hub</strong></td>
+          <td>Q2 2026</td>
+          <td><span class="badge badge-draft">Draft</span></td>
+          <td>$1,600,000</td>
+          <td>$0</td>
+          <td>14 Certs</td>
+          <td>2026-02-12</td>
+          <td><div class="progress-bar-cell"><div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div><span>0%</span></div></td>
+          <td><button class="btn btn-secondary btn-small">View</button></td>
+        </tr>
+        <tr>
+          <td><strong>CloudSync Technology</strong></td>
+          <td>FY 2026</td>
+          <td><span class="badge badge-active">Active</span></td>
+          <td>$650,000</td>
+          <td>$325,000</td>
+          <td>10 Certs</td>
+          <td>2026-02-06</td>
+          <td><div class="progress-bar-cell"><div class="progress-bar"><div class="progress-fill" style="width: 50%"></div></div><span>50%</span></div></td>
+          <td><button class="btn btn-secondary btn-small">View</button></td>
+        </tr>
+        <tr>
+          <td><strong>VentureTech Solutions</strong></td>
+          <td>FY 2026</td>
+          <td><span class="badge badge-active">Active</span></td>
+          <td>$920,000</td>
+          <td>$483,000</td>
+          <td>11 Certs</td>
+          <td>2026-02-05</td>
+          <td><div class="progress-bar-cell"><div class="progress-bar"><div class="progress-fill" style="width: 52%"></div></div><span>52%</span></div></td>
+          <td><button class="btn btn-secondary btn-small">View</button></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="footer-pagination">
+      <span>Showing 10 of 42 plans</span>
+      <div><button class="btn btn-secondary btn-small">← Prev</button> <button class="btn btn-secondary btn-small">Next →</button></div>
+    </div>
+  </div>
+
+  <div class="section-title">📄 Expanded View: Stark Industries — FY 2026 Plan</div>
+
+  <div class="record-header">
+    <div class="record-title">FY 2026 Joint Business Plan - Stark Industries</div>
+    <div class="record-meta">
+      <div class="record-meta-item">
+        <div class="record-meta-label">Plan Period</div>
+        <div>FY 2026 (Jan - Dec 2026)</div>
+      </div>
+      <div class="record-meta-item">
+        <div class="record-meta-label">Status</div>
+        <div><span class="badge badge-active">Active</span></div>
+      </div>
+      <div class="record-meta-item">
+        <div class="record-meta-label">Plan Owner</div>
+        <div>Marcus Chen (PSM) + Pepper Potts (PM)</div>
+      </div>
+      <div class="record-meta-item">
+        <div class="record-meta-label">Last Updated</div>
+        <div>2026-02-10 by Marcus Chen</div>
+      </div>
+    </div>
+    <div class="record-action-buttons">
+      <button class="btn btn-primary">Edit Plan</button>
+      <button class="btn btn-secondary">Submit for Review</button>
+      <button class="btn btn-secondary">Schedule Quarterly Review</button>
+      <button class="btn btn-secondary">Export as PDF</button>
+    </div>
+  </div>
+
+  <div class="section-title">Goals & Targets</div>
+
+  <div class="goal-cards">
+    <div class="goal-card">
+      <div class="goal-title">Revenue Goal</div>
+      <div class="goal-metric">
+        <span class="goal-label">FY2026 Target</span>
+        <span class="goal-value">$2,500,000 TCV</span>
+      </div>
+      <div class="goal-metric">
+        <span class="goal-label">YTD Actual (6 mo)</span>
+        <span class="goal-value">$1,550,000</span>
+      </div>
+      <div class="goal-metric">
+        <span class="goal-label">% of Target</span>
+        <span class="goal-value">62.0%</span>
+      </div>
+      <div class="goal-metric">
+        <span class="goal-label">Forecast EOY</span>
+        <span class="goal-value">$2,580,000 ↑</span>
+      </div>
+      <span class="goal-status status-ontrack">ON TRACK</span>
+    </div>
+
+    <div class="goal-card">
+      <div class="goal-title">Training Goal</div>
+      <div class="goal-metric">
+        <span class="goal-label">Target Certifications</span>
+        <span class="goal-value">12 total</span>
+      </div>
+      <div class="goal-metric">
+        <span class="goal-label">Actual Completed</span>
+        <span class="goal-value">11 (92%)</span>
+      </div>
+      <div class="goal-metric">
+        <span class="goal-label">Expired / Pending</span>
+        <span class="goal-value">1 expired, 1 pending</span>
+      </div>
+      <div class="goal-metric">
+        <span class="goal-label">Coverage Status</span>
+        <span class="goal-value">9 of 12 ≥75%</span>
+      </div>
+      <span class="goal-status status-ontrack">YELLOW</span>
+    </div>
+
+    <div class="goal-card">
+      <div class="goal-title">Deal Activity Goal</div>
+      <div class="goal-metric">
+        <span class="goal-label">Active Deals</span>
+        <span class="goal-value">5 deals</span>
+      </div>
+      <div class="goal-metric">
+        <span class="goal-label">Pipeline Value</span>
+        <span class="goal-value">$197,000</span>
+      </div>
+      <div class="goal-metric">
+        <span class="goal-label">MDF Utilization</span>
+        <span class="goal-value">$47K of $75K (63%)</span>
+      </div>
+      <div class="goal-metric">
+        <span class="goal-label">Q2 MDF Plan</span>
+        <span class="goal-value">$28K remaining</span>
+      </div>
+      <span class="goal-status status-ontrack">GREEN</span>
+    </div>
+  </div>
+
+  <div class="section-title">Action Items & Initiatives (8 Rows)</div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Initiative Name</th>
+          <th>Owner</th>
+          <th>Category</th>
+          <th>Status</th>
+          <th>Target Date</th>
+          <th>Progress %</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Q1 Sales Enablement Workshop</strong></td>
+          <td>Sarah Martinez (PSM)</td>
+          <td>Training</td>
+          <td><span class="badge badge-active">In Progress</span></td>
+          <td>2026-03-15</td>
+          <td><div class="progress-bar-cell"><div class="progress-bar"><div class="progress-fill" style="width: 60%"></div></div><span>60%</span></div></td>
+          <td>Scheduled for March; 8 attendees confirmed</td>
+        </tr>
+        <tr>
+          <td><strong>Complete Foundational Training Track (5 Staff)</strong></td>
+          <td>Robert Chang (PM)</td>
+          <td>Training</td>
+          <td><span class="badge badge-active">In Progress</span></td>
+          <td>2026-04-30</td>
+          <td><div class="progress-bar-cell"><div class="progress-bar"><div class="progress-fill" style="width: 60%"></div></div><span>60%</span></div></td>
+          <td>3 of 5 staff completed; 2 on track</td>
+        </tr>
+        <tr>
+          <td><strong>Launch Co-Branded Marketing Campaign</strong></td>
+          <td>Robert Chang (PM)</td>
+          <td>Marketing</td>
+          <td><span class="badge badge-draft">Not Started</span></td>
+          <td>2026-03-01</td>
+          <td><div class="progress-bar-cell"><div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div><span>0%</span></div></td>
+          <td>Awaiting creative approval from Stark brand team</td>
+        </tr>
+        <tr>
+          <td><strong>Execute 2 Regional Partner Events</strong></td>
+          <td>Sarah Martinez (PSM)</td>
+          <td>Marketing</td>
+          <td><span class="badge badge-active">In Progress</span></td>
+          <td>2026-06-30</td>
+          <td><div class="progress-bar-cell"><div class="progress-bar"><div class="progress-fill" style="width: 50%"></div></div><span>50%</span></div></td>
+          <td>Event 1: April 15 confirmed; Event 2 TBD June</td>
+        </tr>
+        <tr>
+          <td><strong>Establish Quarterly Business Review Cadence</strong></td>
+          <td>Sarah Martinez (PSM)</td>
+          <td>Operations</td>
+          <td><span class="badge badge-active">In Progress</span></td>
+          <td>2026-02-28</td>
+          <td><div class="progress-bar-cell"><div class="progress-bar"><div class="progress-fill" style="width: 75%"></div></div><span>75%</span></div></td>
+          <td>Q1 review scheduled 2026-03-20</td>
+        </tr>
+        <tr>
+          <td><strong>Deliver Advanced Colocation Technical Course</strong></td>
+          <td>Robert Chang (PM)</td>
+          <td>Training</td>
+          <td><span class="badge badge-draft">Not Started</span></td>
+          <td>2026-05-15</td>
+          <td><div class="progress-bar-cell"><div class="progress-bar"><div class="progress-fill" style="width: 0%"></div></div><span>0%</span></div></td>
+          <td>Pending trainer availability confirmation</td>
+        </tr>
+        <tr>
+          <td><strong>Conduct Partner Sales Process Training</strong></td>
+          <td>Sarah Martinez (PSM)</td>
+          <td>Sales</td>
+          <td><span class="badge badge-active">In Progress</span></td>
+          <td>2026-04-15</td>
+          <td><div class="progress-bar-cell"><div class="progress-bar"><div class="progress-fill" style="width: 40%"></div></div><span>40%</span></div></td>
+          <td>Agenda finalized; materials 50% complete</td>
+        </tr>
+        <tr>
+          <td><strong>Establish Deal Registration SLA & Process</strong></td>
+          <td>Joint</td>
+          <td>Operations</td>
+          <td><span class="badge badge-active">In Progress</span></td>
+          <td>2026-02-28</td>
+          <td><div class="progress-bar-cell"><div class="progress-bar"><div class="progress-fill" style="width: 85%"></div></div><span>85%</span></div></td>
+          <td>Draft SLA under review; legal review pending</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-title">Quarterly Revenue Targets & Actual</div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Quarter</th>
+          <th>Target Amount</th>
+          <th>Actual Amount</th>
+          <th>Variance ($)</th>
+          <th>Variance %</th>
+          <th>% vs FY Target</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Q1 2026</strong></td>
+          <td>$1,050,000</td>
+          <td>$1,120,000</td>
+          <td><span style="color:var(--wf-ink, #1e2a3a)">+$70,000</span></td>
+          <td><span style="color:var(--wf-ink, #1e2a3a)">+6.7%</span></td>
+          <td>25.0%</td>
+        </tr>
+        <tr>
+          <td><strong>Q2 2026</strong></td>
+          <td>$1,050,000</td>
+          <td>$980,000</td>
+          <td><span style="color:var(--wf-muted, #6b7f99)">-$70,000</span></td>
+          <td><span style="color:var(--wf-muted, #6b7f99)">-6.7%</span></td>
+          <td>23.3%</td>
+        </tr>
+        <tr>
+          <td><strong>Q3 2026</strong></td>
+          <td>$1,100,000</td>
+          <td>—</td>
+          <td>—</td>
+          <td>—</td>
+          <td>TBD</td>
+        </tr>
+        <tr>
+          <td><strong>Q4 2026</strong></td>
+          <td>$1,000,000</td>
+          <td>—</td>
+          <td>—</td>
+          <td>—</td>
+          <td>TBD</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-title">Quarterly Review Notes & Strategic Summary</div>
+
+  <div class="jbp-detail-view">
+    <div style="font-size:13px;color:var(--wf-muted, #6b7f99);line-height:1.6;margin-bottom:16px">
+      <strong>Q1 2026 Review (In Progress — scheduled 2026-03-20):</strong><br>
+      To be completed with full year projection and Q2 tactical adjustments.
+    </div>
+
+    <div style="font-size:13px;color:var(--wf-muted, #6b7f99);line-height:1.6;margin-bottom:16px">
+      <strong>Q4 2025 Review (Completed 2026-01-22):</strong><br>
+      Stark Industries exceeded revenue targets by 7%, completing $1,120K against a $1,050K quarterly goal. Training progress is strong with 16 of 25 certifications completed ahead of schedule. Marketing activities saw strong engagement with average attendance of 85 at both regional events. Deal pipeline for Q1 is healthy with 6 deals registered representing $2.85M pipeline value. Recommend maintaining current engagement cadence and accelerating technical training to support new product launches planned for Q3.
+    </div>
+
+    <div class="narrative-box">
+      <div class="narrative-box-title">FY 2026 Strategic Statement</div>
+      <div class="narrative-box-content">
+        Stark Industries is a strategic Gold Tier partner with strong growth trajectory. FY 2026 plan focuses on deepening technical certifications across their sales and pre-sales team while expanding co-marketing initiatives into new geographic regions. Revenue targets are aggressive but achievable based on Q4 2025 performance and current pipeline. Key success factors include completing foundational training for all team members by Q2 and executing at least one major joint event per quarter. Partnership is well-positioned for accelerated growth if we can maintain engagement and drive certification completion rates. Focus areas: (1) Advanced technical training to support complex solution selling, (2) Joint go-to-market campaigns targeting mid-market accounts, (3) Quarterly business reviews to ensure alignment on strategic initiatives.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+  <!-- SPEC BLOCK -->  </div>
+
+  <!-- ════════ RIGHT RAIL — Activity & Insights ════════ -->
+  <div class="right-rail">
+    <div class="card">
+      <div class="rail-tabs">
+        <button class="rail-tab active" onclick="document.querySelectorAll('.rail-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active');document.querySelectorAll('.rail-tab-content').forEach(c=>c.classList.remove('active'));document.getElementById('tab-activity').classList.add('active');">Activity</button>
+        <button class="rail-tab" onclick="document.querySelectorAll('.rail-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active');document.querySelectorAll('.rail-tab-content').forEach(c=>c.classList.remove('active'));document.getElementById('tab-einstein').classList.add('active');">Einstein</button>
+      </div>
+      <div id="tab-activity" class="rail-tab-content active">
+        <div class="card-bd">
+          <div class="feed-sm"><div class="feed-sm-text">Draft v3 shared</div><div class="feed-sm-time">1 week ago</div></div>
+          <div class="feed-sm"><div class="feed-sm-text">Partner feedback received</div><div class="feed-sm-time">4 days ago</div></div>
+          <div class="feed-sm"><div class="feed-sm-text">Review meeting scheduled</div><div class="feed-sm-time">Today</div></div>
+        </div>
+      </div>
+      <div id="tab-einstein" class="rail-tab-content">
+        <div class="card-bd" style="font-size:12px;color:var(--wf-text);line-height:1.5;">
+          <div style="font-size:11px;font-weight:700;color:var(--wf-accent);text-transform:uppercase;letter-spacing:0.03em;margin-bottom:0.5rem;">AI Recommendation</div>
+          JBP 60% complete. $2.4M target achievable per Q4 trajectory. Finalize GTM section before review.
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><h3>Actions</h3></div>
+      <div class="card-bd">
+        <button class="action-btn action-btn-primary">Edit Plan</button>
+        <button class="action-btn action-btn-secondary">Share Draft</button>
+        <button class="action-btn action-btn-secondary">Schedule Review</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- /SPEC BLOCK -->
+    <footer class="wf-footer">
+      &copy; 2026 Equinix · Partner Sales Manager · Internal Use Only
+    </footer>
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Dashboard for PSM to oversee partner joint business plans, monitor revenue targets and initiative milestones, and approve annual plan submissions with QBR scheduling.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Oversee partner joint business plans</li>
+<li>Review and approve annual JBP initiatives and revenue targets</li>
+<li>Monitor JBP milestone achievement and partner performance</li>
+<li>Align partner plans with internal business objectives</li>
+<li>Track JBP-influenced revenue opportunities</li>
+<li>Support executive business reviews (QBR) with plan metrics</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>JBP dashboard with plan status overview</li>
+<li>Partner list with plan completion status</li>
+<li>Revenue target tracking vs. actual</li>
+<li>Initiative list with owner, target date, status</li>
+<li>Upcoming QBR schedule</li>
+<li>Plan approval workflow queue</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Click partner to view or edit their JBP</li>
+<li>Approve/reject plan submissions with feedback</li>
+<li>Update initiative status and completion</li>
+<li>View revenue target progress chart</li>
+<li>Schedule and manage QBR meetings</li>
+<li>Export plan summaries for executive review</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>JBP Data Retrieval & Display</strong>
+<ul>
+<li>Query all Joint_Business_Plan__c records with related Partner Account lookup and fiscal year filter</li>
+<li>Fetch JBP_Initiative__c child records sorted by status and target date</li>
+<li>Display plan metadata including owner, last updated date, and current approval status</li>
+</ul></li>
+<li><strong>Revenue Tracking & Progress Analytics</strong>
+<ul>
+<li>Calculate YTD revenue variance vs. quarterly targets by comparing JBP_Revenue_Target__c against Deal_Registration__c actuals</li>
+<li>Aggregate deal revenue by quarter and compute % attainment against revenue goal target</li>
+<li>Display forecast EOY revenue using linear projection or deal pipeline velocity model</li>
+</ul></li>
+<li><strong>Approval Workflow & Status Management</strong>
+<ul>
+<li>Route plan submissions to appropriate approver based on plan revenue amount (VP if &gt;$3M, PSM if &lt;$3M)</li>
+<li>Trigger approval workflow rules and update JBP_Status__c field to Submitted, Approved, or Rejected upon PSM decision</li>
+<li>Log approval action with timestamp and approver name for audit trail</li>
+</ul></li>
+<li><strong>Initiative & Goal Tracking</strong>
+<ul>
+<li>Display and update JBP_Initiative__c progress percentages as tasks are completed by owners</li>
+<li>Calculate goal completion metrics (Revenue %, Training Certifications, Marketing Activities, Registered Deals)</li>
+<li>Benchmark actual vs. target metrics and display status indicators (On Track, At Risk, Behind)</li>
+</ul></li>
+<li><strong>Reporting & Export Functionality</strong>
+<ul>
+<li>Generate exportable PDF summary with initiative progress, revenue dashboard, and goal status</li>
+<li>Schedule quarterly QBR meetings by creating Event records linked to JBP and Partner Account</li>
+<li>Archive completed plans and maintain historical view for trending and performance analysis</li>
+</ul></li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Key Objects</h4>
+<ul>
+<li>Joint_Business_Plan__c: Partner_Account__c, Fiscal_Year__c, Plan_Status__c, Revenue_Target__c, YTD_Revenue__c</li>
+<li>JBP_Initiative__c: Plan__c, Initiative_Name__c, Owner__c, Category__c, Status__c, Target_Date__c</li>
+<li>JBP_Revenue_Target__c: Plan__c, Quarter__c, Target_Amount__c, Actual_Amount__c, Variance_Pct__c</li>
+</ul>
+<h4>Validation &amp; Business Logic</h4>
+<ul>
+<li>Revenue target required before plan activation (min $100K)</li>
+<li>All initiatives must have owner and target date before plan submit</li>
+<li>Gold partners require VP sign-off; Silver/Bronze only PSM sign-off</li>
+<li>Plan auto-expires if not renewed within 30 days of fiscal year end</li>
+<li>Cannot create duplicate active plan for same partner + fiscal year</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

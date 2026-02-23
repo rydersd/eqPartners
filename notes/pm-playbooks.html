@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sales Playbooks & Collateral | Equinix Partner Portal</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Salesforce Sans, sans-serif;
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    header {
+      background-color: var(--wf-ink, #1e2a3a);
+      color: white;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .eq-logo {
+      width: 40px;
+      height: 40px;
+      background-color: var(--wf-accent, #3d6daa);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 20px;
+      color: white;
+    }
+
+    .header-title {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    nav {
+      display: flex;
+      gap: 32px;
+      margin-left: 48px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-size: 14px;
+      transition: opacity 0.2s;
+    }
+
+    nav a:hover {
+      opacity: 0.8;
+    }
+
+    nav a.active {
+      border-bottom: 3px solid var(--wf-accent, #3d6daa);
+      padding-bottom: 6px;
+    }
+
+    .header-right {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .notification-bell {
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      background-color: var(--wf-accent, #3d6daa);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 32px 24px;
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 24px;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .search-bar {
+      background: white;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--wf-tint, #dce4ef);
+      border-radius: 4px;
+      font-size: 14px;
+      font-family: inherit;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--wf-accent, #3d6daa);
+      box-shadow: 0 0 0 3px rgba(0, 112, 210, 0.1);
+    }
+
+    .filter-section {
+      background: white;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    }
+
+    .filter-title {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .filter-group {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .filter-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .filter-label {
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .filter-select {
+      padding: 8px 12px;
+      border: 1px solid var(--wf-tint, #dce4ef);
+      border-radius: 4px;
+      font-size: 13px;
+      font-family: inherit;
+      background-color: white;
+    }
+
+    .filter-select:focus {
+      outline: none;
+      border-color: var(--wf-accent, #3d6daa);
+      box-shadow: 0 0 0 3px rgba(0, 112, 210, 0.1);
+    }
+
+    .section {
+      margin-bottom: 40px;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--wf-tint, #dce4ef);
+    }
+
+    .collateral-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .collateral-item {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+      transition: all 0.2s;
+    }
+
+    .collateral-item:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transform: translateY(-2px);
+    }
+
+    .collateral-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .collateral-icon {
+      font-size: 28px;
+      line-height: 1;
+    }
+
+    .collateral-info {
+      flex: 1;
+    }
+
+    .collateral-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 6px;
+    }
+
+    .collateral-type {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-accent, #3d6daa);
+      text-transform: uppercase;
+    }
+
+    .collateral-description {
+      font-size: 13px;
+      color: var(--wf-muted, #6b7f99);
+      margin: 12px 0;
+      line-height: 1.5;
+    }
+
+    .collateral-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 12px;
+      border-top: 1px solid var(--wf-tint, #dce4ef);
+      font-size: 12px;
+      color: var(--wf-muted, #6b7f99);
+    }
+
+    .download-count {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      background-color: var(--wf-accent, #3d6daa);
+      color: white;
+      border: none;
+      border-radius: 3px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn:hover {
+      background-color: var(--wf-accent, #3d6daa);
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 8px;
+      padding: 16px;
+      text-align: center;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+      transition: all 0.2s;
+    }
+
+    .product-card:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .product-icon {
+      font-size: 40px;
+      margin-bottom: 12px;
+    }
+
+    .product-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 12px;
+    }
+
+    .product-actions {
+      display: flex;
+      gap: 8px;
+      flex-direction: column;
+    }
+
+    .product-btn {
+      padding: 8px 12px;
+      background-color: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-accent, #3d6daa);
+      border: 1px solid var(--wf-tint, #dce4ef);
+      border-radius: 3px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: block;
+    }
+
+    .product-btn:hover {
+      background-color: var(--wf-canvas, #f5f7fb);
+    }
+
+    .recently-added {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+    }
+
+    .recently-list {
+      list-style: none;
+    }
+
+    .recently-item {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--wf-tint, #dce4ef);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .recently-item:last-child {
+      border-bottom: none;
+    }
+
+    .recently-info {
+      flex: 1;
+      font-size: 13px;
+    }
+
+    .recently-title {
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 4px;
+    }
+
+    .recently-meta {
+      color: var(--wf-muted, #6b7f99);
+      font-size: 12px;
+    }
+
+    .recently-btn {
+      padding: 6px 12px;
+      background-color: var(--wf-accent, #3d6daa);
+      color: white;
+      border: none;
+      border-radius: 3px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .recently-btn:hover {
+      background-color: var(--wf-accent, #3d6daa);
+    }
+
+    @media (max-width: 1024px) {
+      .collateral-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .filter-group {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      nav {
+        display: none;
+      }
+
+      .collateral-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .product-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .filter-group {
+        grid-template-columns: 1fr;
+      }
+    }
+  
+/* ── 3-Column Record Layout ── */
+.record-layout { display:grid; grid-template-columns:280px 1fr 300px; gap:1rem; padding:1rem 2rem; max-width:1600px; }
+@media (max-width:1200px) { .record-layout { grid-template-columns:1fr; } }
+.left-rail .card, .right-rail .card { margin-bottom:1rem; }
+.center-content .card { margin-bottom:1rem; }
+.card { background:var(--wf-surface,#edf1f7); border:1px solid var(--wf-tint,#dce4ef); border-radius:6px; overflow:hidden; }
+.card-hd { padding:0.75rem 1rem; border-bottom:1px solid var(--wf-tint); display:flex; justify-content:space-between; align-items:center; }
+.card-hd h3 { font-size:13px; font-weight:700; color:var(--wf-ink); margin:0; }
+.card-hd-action { font-size:11px; color:var(--wf-accent); text-decoration:none; font-weight:600; cursor:pointer; }
+.card-bd { padding:1rem; }
+.hl-row { display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:12px; }
+.hl-row:last-child { border-bottom:none; }
+.hl-label { color:var(--wf-muted); }
+.hl-value { font-weight:700; color:var(--wf-ink); }
+.hl-value.warn { color:var(--wf-amber,#8b7745); }
+.rel-item { display:flex; align-items:center; gap:0.625rem; padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:12px; }
+.rel-item:last-child { border-bottom:none; }
+.rel-icon { width:28px; height:28px; border-radius:50%; background:var(--wf-tint); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.rel-icon svg { width:14px; height:14px; color:var(--wf-ink); }
+.rel-info { flex:1; }
+.rel-title { font-size:12px; font-weight:600; color:var(--wf-ink); }
+.rel-sub { font-size:11px; color:var(--wf-muted); }
+.rel-meta { font-size:11px; color:var(--wf-muted); text-align:right; white-space:nowrap; }
+/* Right-rail tabs */
+.rail-tabs { display:flex; border-bottom:1px solid var(--wf-tint); }
+.rail-tab { flex:1; padding:0.5rem; font-size:11px; font-weight:600; text-align:center; color:var(--wf-muted); cursor:pointer; border-bottom:2px solid transparent; background:none; border-top:none; border-left:none; border-right:none; }
+.rail-tab.active { color:var(--wf-accent); border-bottom-color:var(--wf-accent); }
+.rail-tab-content { display:none; }
+.rail-tab-content.active { display:block; }
+/* Activity feed in right rail */
+.feed-sm { padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:11px; }
+.feed-sm:last-child { border-bottom:none; }
+.feed-sm-text { color:var(--wf-text); line-height:1.4; }
+.feed-sm-text strong { color:var(--wf-ink); }
+.feed-sm-time { color:var(--wf-muted); font-size:10px; margin-top:2px; }
+/* Quick action buttons */
+.action-btn { width:100%; padding:0.5rem; border-radius:4px; font-size:12px; font-weight:600; cursor:pointer; margin-bottom:0.375rem; border:1px solid var(--wf-line); text-align:center; }
+.action-btn:last-child { margin-bottom:0; }
+.action-btn-primary { background:var(--wf-accent); color:white; border-color:var(--wf-accent); }
+.action-btn-secondary { background:var(--wf-surface); color:var(--wf-text); }
+</style>
+</head>
+<body>
+  <header class="wf-header">
+    <div class="wf-header-logo">EQ</div>
+    <div class="wf-header-title">Equinix Partner Manager</div>
+    <nav class="wf-header-nav">
+      <a href="pm-home-dashboard.html">Dashboard</a>
+      <a href="pm-team-management.html">Team</a>
+      <a href="pm-deals-revenue.html">Deals</a>
+      <a href="pm-team-training.html">Training</a>
+      <a href="pm-resources.html">Resources</a>
+    </nav>
+    <div class="wf-header-util">
+      <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+      <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+    </div>
+  </header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+
+<!-- ── 3-Column Record Layout ── -->
+<div class="record-layout">
+
+  <!-- ════════ LEFT RAIL — Related Objects ════════ -->
+  <div class="left-rail">
+    <div class="card">
+      <div class="card-hd"><h3>Categories</h3></div>
+      <div class="card-bd">
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"/></svg></div>
+          <div class="rel-info"><div class="rel-title">Sales Motions</div><div class="rel-sub">5</div></div>
+        </div>
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"/></svg></div>
+          <div class="rel-info"><div class="rel-title">Technical Guides</div><div class="rel-sub">4</div></div>
+        </div>
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M2.25 12.75V12A2.25 2.25 0 014.5 9.75h15A2.25 2.25 0 0121.75 12v.75m-8.69-6.44l-2.12-2.12a1.5 1.5 0 00-1.061-.44H4.5A2.25 2.25 0 002.25 6v12a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9a2.25 2.25 0 00-2.25-2.25h-5.379a1.5 1.5 0 01-1.06-.44z"/></svg></div>
+          <div class="rel-info"><div class="rel-title">Objection Handling</div><div class="rel-sub">3</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ CENTER — Main Content ════════ -->
+  <div class="center-content">
+  <div class="container">
+    <h1 class="page-title">Sales Playbooks & Collateral</h1>
+
+    <div class="search-bar">
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Search playbooks, battle cards, templates, datasheets..."
+        aria-label="Search collateral"
+      >
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-title">Filter & Organize</div>
+      <div class="filter-group">
+        <div class="filter-item">
+          <label class="filter-label">Use Case</label>
+          <select class="filter-select" aria-label="Filter by use case">
+            <option value="">All Use Cases</option>
+            <option value="hybrid">Hybrid Cloud</option>
+            <option value="edge">Edge Computing</option>
+            <option value="dr">Disaster Recovery</option>
+            <option value="digital">Digital Transformation</option>
+          </select>
+        </div>
+        <div class="filter-item">
+          <label class="filter-label">Product</label>
+          <select class="filter-select" aria-label="Filter by product">
+            <option value="">All Products</option>
+            <option value="network-edge">Network Edge</option>
+            <option value="equinix-cloud">Equinix Cloud</option>
+            <option value="equinix-fabric">Equinix Fabric</option>
+            <option value="smarts">Smarts Platform</option>
+          </select>
+        </div>
+        <div class="filter-item">
+          <label class="filter-label">Content Type</label>
+          <select class="filter-select" aria-label="Filter by content type">
+            <option value="">All Types</option>
+            <option value="playbook">Playbook</option>
+            <option value="battlecard">Battle Card</option>
+            <option value="diagram">Architecture Diagram</option>
+            <option value="datasheet">Product Datasheet</option>
+            <option value="template">Template</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Hybrid Cloud Solutions</div>
+      <div class="collateral-grid">
+        <div class="collateral-item">
+          <div class="collateral-header">
+            <div class="collateral-icon">📖</div>
+            <div class="collateral-info">
+              <div class="collateral-title">Hybrid Cloud Playbook</div>
+              <span class="collateral-type">Playbook</span>
+            </div>
+          </div>
+          <div class="collateral-description">Complete sales playbook covering hybrid cloud strategies, customer pain points, and solution positioning for multi-cloud environments.</div>
+          <div class="collateral-footer">
+            <div class="download-count">📥 1,247 downloads</div>
+            <button class="btn">Download</button>
+          </div>
+        </div>
+
+        <div class="collateral-item">
+          <div class="collateral-header">
+            <div class="collateral-icon">🎯</div>
+            <div class="collateral-info">
+              <div class="collateral-title">Hybrid Cloud Battle Card</div>
+              <span class="collateral-type">One-Pager</span>
+            </div>
+          </div>
+          <div class="collateral-description">Quick-reference battle card with key talking points, competitive advantages, and common objection handlers for hybrid cloud conversations.</div>
+          <div class="collateral-footer">
+            <div class="download-count">📥 892 downloads</div>
+            <button class="btn">Download</button>
+          </div>
+        </div>
+
+        <div class="collateral-item">
+          <div class="collateral-header">
+            <div class="collateral-icon">🏗️</div>
+            <div class="collateral-info">
+              <div class="collateral-title">Reference Architecture Diagram</div>
+              <span class="collateral-type">Diagram</span>
+            </div>
+          </div>
+          <div class="collateral-description">Visual architecture showing Equinix solutions integrated with customer environments, cloud providers, and edge locations.</div>
+          <div class="collateral-footer">
+            <div class="download-count">📥 2,156 downloads</div>
+            <button class="btn">Download</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Edge Computing Solutions</div>
+      <div class="collateral-grid">
+        <div class="collateral-item">
+          <div class="collateral-header">
+            <div class="collateral-icon">🚀</div>
+            <div class="collateral-info">
+              <div class="collateral-title">Edge Computing Playbook</div>
+              <span class="collateral-type">Playbook</span>
+            </div>
+          </div>
+          <div class="collateral-description">Strategic playbook for edge computing sales, including use cases, deployment scenarios, and Equinix's competitive positioning.</div>
+          <div class="collateral-footer">
+            <div class="download-count">📥 1,654 downloads</div>
+            <button class="btn">Download</button>
+          </div>
+        </div>
+
+        <div class="collateral-item">
+          <div class="collateral-header">
+            <div class="collateral-icon">⚡</div>
+            <div class="collateral-info">
+              <div class="collateral-title">Edge Computing Battle Card</div>
+              <span class="collateral-type">One-Pager</span>
+            </div>
+          </div>
+          <div class="collateral-description">Quick-reference guide with edge computing benefits, latency comparisons, and ROI talking points for customer conversations.</div>
+          <div class="collateral-footer">
+            <div class="download-count">📥 1,423 downloads</div>
+            <button class="btn">Download</button>
+          </div>
+        </div>
+
+        <div class="collateral-item">
+          <div class="collateral-header">
+            <div class="collateral-icon">🗺️</div>
+            <div class="collateral-info">
+              <div class="collateral-title">Global Edge Presence Map</div>
+              <span class="collateral-type">Diagram</span>
+            </div>
+          </div>
+          <div class="collateral-description">Interactive map showing Equinix's global edge locations, data center footprint, and interconnection capabilities worldwide.</div>
+          <div class="collateral-footer">
+            <div class="download-count">📥 3,421 downloads</div>
+            <button class="btn">Download</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Disaster Recovery Solutions</div>
+      <div class="collateral-grid">
+        <div class="collateral-item">
+          <div class="collateral-header">
+            <div class="collateral-icon">🛡️</div>
+            <div class="collateral-info">
+              <div class="collateral-title">Disaster Recovery Playbook</div>
+              <span class="collateral-type">Playbook</span>
+            </div>
+          </div>
+          <div class="collateral-description">Comprehensive playbook on disaster recovery strategies, RTO/RPO requirements, and how Equinix enables resilient deployments.</div>
+          <div class="collateral-footer">
+            <div class="download-count">📥 945 downloads</div>
+            <button class="btn">Download</button>
+          </div>
+        </div>
+
+        <div class="collateral-item">
+          <div class="collateral-header">
+            <div class="collateral-icon">🔄</div>
+            <div class="collateral-info">
+              <div class="collateral-title">DR Solution Comparison</div>
+              <span class="collateral-type">One-Pager</span>
+            </div>
+          </div>
+          <div class="collateral-description">Comparison of on-premise, cloud-only, and hybrid DR solutions highlighting Equinix advantages and cost-benefit analysis.</div>
+          <div class="collateral-footer">
+            <div class="download-count">📥 1,128 downloads</div>
+            <button class="btn">Download</button>
+          </div>
+        </div>
+
+        <div class="collateral-item">
+          <div class="collateral-header">
+            <div class="collateral-icon">📊</div>
+            <div class="collateral-info">
+              <div class="collateral-title">DR ROI Calculator Guide</div>
+              <span class="collateral-type">Guide</span>
+            </div>
+          </div>
+          <div class="collateral-description">Tool and guide to help customers calculate the financial impact and ROI of implementing a comprehensive disaster recovery strategy.</div>
+          <div class="collateral-footer">
+            <div class="download-count">📥 756 downloads</div>
+            <button class="btn">Download</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Product Datasheets</div>
+      <div class="product-grid">
+        <div class="product-card">
+          <div class="product-icon">⚙️</div>
+          <div class="product-name">Network Edge</div>
+          <div class="product-actions">
+            <button class="product-btn">Datasheet</button>
+            <button class="product-btn">Technical Brief</button>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-icon">☁️</div>
+          <div class="product-name">Equinix Cloud</div>
+          <div class="product-actions">
+            <button class="product-btn">Datasheet</button>
+            <button class="product-btn">Integration Guide</button>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-icon">🔗</div>
+          <div class="product-name">Equinix Fabric</div>
+          <div class="product-actions">
+            <button class="product-btn">Datasheet</button>
+            <button class="product-btn">API Reference</button>
+          </div>
+        </div>
+
+        <div class="product-card">
+          <div class="product-icon">📡</div>
+          <div class="product-name">Smarts Platform</div>
+          <div class="product-actions">
+            <button class="product-btn">Datasheet</button>
+            <button class="product-btn">Use Cases</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Proposal Templates & Email Library</div>
+      <div class="collateral-grid">
+        <div class="collateral-item">
+          <div class="collateral-header">
+            <div class="collateral-icon">📝</div>
+            <div class="collateral-info">
+              <div class="collateral-title">Executive Proposal Template</div>
+              <span class="collateral-type">Template</span>
+            </div>
+          </div>
+          <div class="collateral-description">Professional proposal template with sections for executive summary, solution overview, pricing, and next steps.</div>
+          <div class="collateral-footer">
+            <div class="download-count">📥 2,834 downloads</div>
+            <button class="btn">Download</button>
+          </div>
+        </div>
+
+        <div class="collateral-item">
+          <div class="collateral-header">
+            <div class="collateral-icon">🎤</div>
+            <div class="collateral-info">
+              <div class="collateral-title">Pitch Deck Template</div>
+              <span class="collateral-type">Template</span>
+            </div>
+          </div>
+          <div class="collateral-description">Formatted pitch deck with slides for customer challenges, Equinix differentiators, case studies, and call to action.</div>
+          <div class="collateral-footer">
+            <div class="download-count">📥 1,521 downloads</div>
+            <button class="btn">Download</button>
+          </div>
+        </div>
+
+        <div class="collateral-item">
+          <div class="collateral-header">
+            <div class="collateral-icon">📧</div>
+            <div class="collateral-info">
+              <div class="collateral-title">Email Template Library</div>
+              <span class="collateral-type">Template</span>
+            </div>
+          </div>
+          <div class="collateral-description">Collection of 5 customizable email templates: introduction, follow-up, proposal sent, next steps, and check-in messages.</div>
+          <div class="collateral-footer">
+            <div class="download-count">📥 3,156 downloads</div>
+            <button class="btn">Download</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Recently Added</div>
+      <div class="recently-added">
+        <ul class="recently-list">
+          <li class="recently-item">
+            <div class="recently-info">
+              <div class="recently-title">Multi-Cloud Strategy Playbook</div>
+              <div class="recently-meta">Added Jan 18, 2025 • Use Case: Hybrid Cloud</div>
+            </div>
+            <button class="recently-btn">Download</button>
+          </li>
+          <li class="recently-item">
+            <div class="recently-info">
+              <div class="recently-title">Equinix Cloud API Developer Guide</div>
+              <div class="recently-meta">Added Jan 15, 2025 • Product: Equinix Cloud</div>
+            </div>
+            <button class="recently-btn">Download</button>
+          </li>
+          <li class="recently-item">
+            <div class="recently-info">
+              <div class="recently-title">Competitive Win Strategy Guide</div>
+              <div class="recently-meta">Added Jan 12, 2025 • Content: Sales Enablement</div>
+            </div>
+            <button class="recently-btn">Download</button>
+          </li>
+          <li class="recently-item">
+            <div class="recently-info">
+              <div class="recently-title">Customer Success Case Study Pack</div>
+              <div class="recently-meta">Added Jan 8, 2025 • Content: Case Studies</div>
+            </div>
+            <button class="recently-btn">Download</button>
+          </li>
+        </ul>
+      </div>
+    </div>  </div>
+
+  <!-- ════════ RIGHT RAIL — Activity & Insights ════════ -->
+  <div class="right-rail">
+    <div class="card">
+      <div class="rail-tabs">
+        <button class="rail-tab active" onclick="document.querySelectorAll('.rail-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active');document.querySelectorAll('.rail-tab-content').forEach(c=>c.classList.remove('active'));document.getElementById('tab-activity').classList.add('active');">Activity</button>
+        <button class="rail-tab" onclick="document.querySelectorAll('.rail-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active');document.querySelectorAll('.rail-tab-content').forEach(c=>c.classList.remove('active'));document.getElementById('tab-einstein').classList.add('active');">Einstein</button>
+      </div>
+      <div id="tab-activity" class="rail-tab-content active">
+        <div class="card-bd">
+          <div class="feed-sm"><div class="feed-sm-text">Colo playbook updated</div><div class="feed-sm-time">Today</div></div>
+          <div class="feed-sm"><div class="feed-sm-text">New: Network Edge positioning</div><div class="feed-sm-time">1 week ago</div></div>
+          <div class="feed-sm"><div class="feed-sm-text">Feedback submitted</div><div class="feed-sm-time">2 weeks ago</div></div>
+        </div>
+      </div>
+      <div id="tab-einstein" class="rail-tab-content">
+        <div class="card-bd" style="font-size:12px;color:var(--wf-text);line-height:1.5;">
+          <div style="font-size:11px;font-weight:700;color:var(--wf-accent);text-transform:uppercase;letter-spacing:0.03em;margin-bottom:0.5rem;">AI Recommendation</div>
+          Team win rate highest on Colo (68%). Colo playbook correlates with 15% higher close rates.
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><h3>Actions</h3></div>
+      <div class="card-bd">
+        <button class="action-btn action-btn-primary">Create Playbook</button>
+        <button class="action-btn action-btn-secondary">Share Collection</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+  <footer class="wf-footer">
+    &copy; 2026 Equinix Partner Manager Portal · Wireframe specification
+  </footer>
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h2>Design Notes</h2>
+    <button class="spec-panel-close" onclick="toggleSpec()" aria-label="Close notes panel">&times;</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Central repository for partner-facing sales playbooks, battle cards, and marketing collateral organized by use case and product. Enables partners to quickly find relevant sales enablement materials with search and filtering.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Access curated sales and marketing guidance</li>
+<li>Find relevant playbooks for specific customer scenarios</li>
+<li>Equip reps with Equinix-approved messaging and positioning</li>
+<li>Support consistent sales methodology across team</li>
+<li>Provide competitive positioning guidance</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Sales and marketing playbook library organized by use case and product</li>
+<li>Playbook cards with title, description, type badge, and download count</li>
+<li>Sections for Hybrid Cloud, Edge Computing, Disaster Recovery solutions</li>
+<li>Product datasheets and technical resources card grid</li>
+<li>Proposal templates and email library collection</li>
+<li>Recently Added section highlighting new materials</li>
+<li>Search bar and multi-criteria filters (Use Case, Product, Content Type)</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Search playbooks by keyword</li>
+<li>Filter by use case, product, content type</li>
+<li>Download collateral directly from card</li>
+<li>View download count and material metadata</li>
+<li>Browse by category tabs and sections</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Search & Discovery</strong>
+<ul>
+<li>Index and expose Playbook__c records via search and filter criteria for quick access</li>
+<li>Auto-tag playbooks by Use_Case__c and Product__c for filtering and categorization</li>
+</ul>
+</li>
+<li><strong>Sorting & Display</strong>
+<ul>
+<li>Sort Recently Added by CreatedDate descending to highlight newest materials</li>
+<li>Populate download count from File object attach records for usage visibility</li>
+</ul>
+</li>
+<li><strong>Analytics & Tracking</strong>
+<ul>
+<li>Track collateral downloads and usage analytics for performance measurement and optimization</li>
+</ul>
+</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+</body>
+</html>

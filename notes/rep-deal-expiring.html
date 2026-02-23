@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deal Detail: CloudCorp Multi-Region — Equinix Partner Portal</title>
+<link rel="stylesheet" href="wireframe.css">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", Salesforce Sans, sans-serif; background:var(--wf-canvas, #f5f7fb); color:var(--wf-text, #3b4f68); line-height:1.5; }
+
+/* Header */
+header { background:var(--wf-ink, #1e2a3a); color:white; padding:1rem 2rem; display:flex; justify-content:space-between; align-items:center; }
+.header-left { display:flex; align-items:center; gap:1.5rem; }
+.logo { width:40px; height:40px; background:white; border-radius:4px; display:flex; align-items:center; justify-content:center; font-weight:bold; color:var(--wf-ink); font-size:18px; }
+.header-title { border-left:3px solid var(--wf-muted, #6b7f99); padding-left:1rem; font-size:18px; font-weight:600; }
+nav { display:flex; gap:2rem; flex:1; margin-left:2rem; }
+nav a { color:white; text-decoration:none; font-size:14px; font-weight:500; padding-bottom:0.5rem; border-bottom:2px solid transparent; }
+nav a:hover { color:var(--wf-muted); }
+nav a.active { border-bottom-color:var(--wf-muted); color:var(--wf-muted); }
+.header-right { display:flex; align-items:center; gap:1.5rem; }
+.user-avatar { width:36px; height:36px; border-radius:50%; background:var(--wf-muted); display:flex; align-items:center; justify-content:center; color:white; font-weight:600; }
+
+/* Container */
+.container { max-width:1200px; margin:0 auto; padding:2rem; }
+
+/* Breadcrumb */
+.breadcrumb { font-size:13px; color:var(--wf-muted); margin-bottom:1.5rem; }
+.breadcrumb a { color:var(--wf-accent, #3d6daa); text-decoration:none; }
+.breadcrumb a:hover { text-decoration:underline; }
+
+/* Urgency Banner */
+.urgency-banner { background:var(--wf-surface, #edf1f7); border:2px solid var(--wf-amber, #8b7745); border-radius:8px; padding:1.25rem 1.5rem; margin-bottom:2rem; display:flex; align-items:center; gap:1rem; }
+.urgency-icon { width:48px; height:48px; border-radius:50%; background:var(--wf-amber); color:white; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.urgency-icon svg { width:24px; height:24px; }
+.urgency-text { flex:1; }
+.urgency-title { font-size:16px; font-weight:700; color:var(--wf-ink, #1e2a3a); margin-bottom:0.25rem; }
+.urgency-sub { font-size:13px; color:var(--wf-text); }
+.countdown { font-size:32px; font-weight:800; color:var(--wf-amber); text-align:center; line-height:1; flex-shrink:0; margin-right:0.5rem; }
+.countdown-label { font-size:11px; font-weight:600; color:var(--wf-muted); text-transform:uppercase; letter-spacing:0.05em; }
+
+/* Deal Header */
+.deal-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:2rem; gap:2rem; }
+.deal-title-block h1 { font-size:24px; font-weight:700; color:var(--wf-ink); margin-bottom:0.5rem; }
+.deal-meta { display:flex; gap:1.5rem; flex-wrap:wrap; }
+.deal-meta-item { font-size:13px; color:var(--wf-muted); }
+.deal-meta-item strong { color:var(--wf-text); }
+.deal-actions { display:flex; gap:0.75rem; flex-shrink:0; }
+.btn { padding:0.5rem 1.25rem; border-radius:4px; font-size:13px; font-weight:600; border:none; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; gap:0.5rem; }
+.btn-primary { background:var(--wf-accent); color:white; }
+.btn-secondary { background:var(--wf-surface); color:var(--wf-text); border:1px solid var(--wf-line); }
+.btn:hover { opacity:0.9; }
+
+/* Two Column Layout */
+.layout-2col { display:grid; grid-template-columns:2fr 1fr; gap:2rem; margin-bottom:2rem; }
+@media (max-width:900px) { .layout-2col { grid-template-columns:1fr; } }
+
+/* Card */
+.card { background:white; border:1px solid var(--wf-tint, #dce4ef); border-radius:8px; padding:1.5rem; margin-bottom:1.5rem; }
+.card-title { font-size:15px; font-weight:700; color:var(--wf-ink); margin-bottom:1rem; padding-bottom:0.75rem; border-bottom:1px solid var(--wf-tint); }
+
+/* Protection Timeline */
+.timeline-bar { position:relative; height:8px; background:var(--wf-tint); border-radius:4px; margin:1.5rem 0; }
+.timeline-fill { position:absolute; left:0; top:0; height:100%; background:var(--wf-amber); border-radius:4px; }
+.timeline-labels { display:flex; justify-content:space-between; font-size:11px; color:var(--wf-muted); margin-bottom:0.5rem; }
+.timeline-marker { position:absolute; top:-4px; width:16px; height:16px; border-radius:50%; border:2px solid white; box-shadow:0 1px 3px rgba(0,0,0,0.2); }
+
+/* Detail Grid */
+.detail-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+.detail-item { }
+.detail-label { font-size:11px; color:var(--wf-muted); font-weight:600; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.25rem; }
+.detail-value { font-size:14px; color:var(--wf-ink); font-weight:500; }
+.detail-value.amount { font-size:20px; font-weight:700; }
+
+/* Stage Progress */
+.stage-progress { display:flex; gap:0; margin:1.5rem 0; }
+.stage-step { flex:1; text-align:center; position:relative; padding-top:1.75rem; }
+.stage-step::before { content:''; position:absolute; top:8px; left:0; right:0; height:3px; background:var(--wf-tint); }
+.stage-step:first-child::before { left:50%; }
+.stage-step:last-child::before { right:50%; }
+.stage-dot { width:18px; height:18px; border-radius:50%; background:var(--wf-tint); border:2px solid var(--wf-line); position:absolute; top:0; left:50%; transform:translateX(-50%); z-index:1; }
+.stage-step.completed .stage-dot { background:var(--wf-ink); border-color:var(--wf-ink); }
+.stage-step.current .stage-dot { background:var(--wf-amber); border-color:var(--wf-amber); box-shadow:0 0 0 3px var(--wf-surface); }
+.stage-step.completed::before { background:var(--wf-ink); }
+.stage-label { font-size:11px; color:var(--wf-muted); font-weight:500; }
+.stage-step.current .stage-label { color:var(--wf-amber); font-weight:700; }
+.stage-step.completed .stage-label { color:var(--wf-ink); }
+
+/* Next Steps / Guidance */
+.next-steps { list-style:none; counter-reset:step; }
+.next-steps li { counter-increment:step; position:relative; padding:1rem 1rem 1rem 3.5rem; margin-bottom:0.75rem; background:var(--wf-canvas); border:1px solid var(--wf-tint); border-radius:6px; font-size:13px; line-height:1.5; }
+.next-steps li::before { content:counter(step); position:absolute; left:1rem; top:1rem; width:24px; height:24px; border-radius:50%; background:var(--wf-accent); color:white; font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+.step-title { font-weight:600; color:var(--wf-ink); display:block; margin-bottom:0.25rem; }
+.step-desc { color:var(--wf-muted); font-size:12px; }
+.step-action { display:inline-block; margin-top:0.5rem; color:var(--wf-accent); font-weight:600; font-size:12px; text-decoration:none; }
+.step-action:hover { text-decoration:underline; }
+
+/* Activity Log */
+.activity-list { list-style:none; }
+.activity-item { display:flex; gap:1rem; padding:0.75rem 0; border-bottom:1px solid var(--wf-tint); font-size:13px; }
+.activity-item:last-child { border-bottom:none; }
+.activity-date { font-size:11px; color:var(--wf-muted); white-space:nowrap; min-width:80px; }
+.activity-dot { width:8px; height:8px; border-radius:50%; background:var(--wf-line); margin-top:5px; flex-shrink:0; }
+.activity-text { color:var(--wf-text); flex:1; }
+.activity-text strong { color:var(--wf-ink); }
+
+/* Risk Factors */
+.risk-list { list-style:none; }
+.risk-item { display:flex; gap:0.75rem; align-items:flex-start; padding:0.75rem; margin-bottom:0.5rem; border-radius:4px; font-size:13px; }
+.risk-item.high { background:var(--wf-surface); }
+.risk-icon { flex-shrink:0; margin-top:1px; }
+.risk-icon svg { width:16px; height:16px; }
+.risk-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; padding:0.15rem 0.5rem; border-radius:3px; margin-bottom:0.25rem; display:inline-block; }
+.risk-label.high { background:var(--wf-tint); color:var(--wf-red, #8b4553); }
+.risk-label.medium { background:var(--wf-tint); color:var(--wf-amber); }
+.risk-label.low { background:var(--wf-tint); color:var(--wf-ink); }
+
+/* Sidebar Contact */
+.contact-card { display:flex; gap:1rem; align-items:center; padding:0.75rem; background:var(--wf-canvas); border-radius:6px; margin-bottom:0.75rem; }
+.contact-avatar { width:40px; height:40px; border-radius:50%; background:var(--wf-tint); display:flex; align-items:center; justify-content:center; color:var(--wf-muted); font-weight:600; font-size:14px; flex-shrink:0; }
+.contact-info { font-size:13px; }
+.contact-name { font-weight:600; color:var(--wf-ink); }
+.contact-role { font-size:11px; color:var(--wf-muted); }
+
+/* Footer */
+footer { background:var(--wf-surface); border-top:1px solid var(--wf-line); padding:1.5rem 2.5rem; text-align:center; font-size:0.8125rem; color:var(--wf-muted); margin-top:3rem; }
+
+/* ── 3-Column Record Layout ── */
+.record-layout { display:grid; grid-template-columns:280px 1fr 300px; gap:1rem; padding:1rem 2rem; max-width:1600px; }
+@media (max-width:1200px) { .record-layout { grid-template-columns:1fr; } }
+.left-rail .card, .right-rail .card { margin-bottom:1rem; }
+.center-content .card { margin-bottom:1rem; }
+.card { background:var(--wf-surface,#edf1f7); border:1px solid var(--wf-tint,#dce4ef); border-radius:6px; overflow:hidden; }
+.card-hd { padding:0.75rem 1rem; border-bottom:1px solid var(--wf-tint); display:flex; justify-content:space-between; align-items:center; }
+.card-hd h3 { font-size:13px; font-weight:700; color:var(--wf-ink); margin:0; }
+.card-hd-action { font-size:11px; color:var(--wf-accent); text-decoration:none; font-weight:600; cursor:pointer; }
+.card-bd { padding:1rem; }
+.hl-row { display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:12px; }
+.hl-row:last-child { border-bottom:none; }
+.hl-label { color:var(--wf-muted); }
+.hl-value { font-weight:700; color:var(--wf-ink); }
+.hl-value.warn { color:var(--wf-amber,#8b7745); }
+.rel-item { display:flex; align-items:center; gap:0.625rem; padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:12px; }
+.rel-item:last-child { border-bottom:none; }
+.rel-icon { width:28px; height:28px; border-radius:50%; background:var(--wf-tint); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.rel-icon svg { width:14px; height:14px; color:var(--wf-ink); }
+.rel-info { flex:1; }
+.rel-title { font-size:12px; font-weight:600; color:var(--wf-ink); }
+.rel-sub { font-size:11px; color:var(--wf-muted); }
+.rel-meta { font-size:11px; color:var(--wf-muted); text-align:right; white-space:nowrap; }
+/* Right-rail tabs */
+.rail-tabs { display:flex; border-bottom:1px solid var(--wf-tint); }
+.rail-tab { flex:1; padding:0.5rem; font-size:11px; font-weight:600; text-align:center; color:var(--wf-muted); cursor:pointer; border-bottom:2px solid transparent; background:none; border-top:none; border-left:none; border-right:none; }
+.rail-tab.active { color:var(--wf-accent); border-bottom-color:var(--wf-accent); }
+.rail-tab-content { display:none; }
+.rail-tab-content.active { display:block; }
+/* Activity feed in right rail */
+.feed-sm { padding:0.5rem 0; border-bottom:1px solid var(--wf-tint); font-size:11px; }
+.feed-sm:last-child { border-bottom:none; }
+.feed-sm-text { color:var(--wf-text); line-height:1.4; }
+.feed-sm-text strong { color:var(--wf-ink); }
+.feed-sm-time { color:var(--wf-muted); font-size:10px; margin-top:2px; }
+/* Quick action buttons */
+.action-btn { width:100%; padding:0.5rem; border-radius:4px; font-size:12px; font-weight:600; cursor:pointer; margin-bottom:0.375rem; border:1px solid var(--wf-line); text-align:center; }
+.action-btn:last-child { margin-bottom:0; }
+.action-btn-primary { background:var(--wf-accent); color:white; border-color:var(--wf-accent); }
+.action-btn-secondary { background:var(--wf-surface); color:var(--wf-text); }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header role="banner">
+  <div class="header-left">
+    <div class="logo" aria-label="Equinix Logo">EQ</div>
+    <div class="header-title">Equinix Partner Portal</div>
+  </div>
+  <nav role="navigation" aria-label="Main Navigation">
+    <a href="rep-home.html">Home</a>
+    <a href="rep-my-training.html">Training</a>
+    <a href="rep-certifications.html">Certifications</a>
+    <a href="rep-deals-commission.html" class="active">Deals</a>
+    <a href="rep-resources.html">Resources</a>
+  </nav>
+  <div class="header-right">
+    <a href="rep-notifications.html" class="bell-wrapper" aria-label="Notifications" style="position:relative;color:white;text-decoration:none;">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+      <span style="position:absolute;top:-4px;right:-6px;background:var(--wf-red,#8b4555);color:white;font-size:10px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;">7</span>
+    </a>
+    <div class="user-avatar" aria-label="User Profile" role="button" tabindex="0">JD</div>
+  </div>
+</header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+
+<!-- ── 3-Column Record Layout ── -->
+<div class="record-layout">
+
+  <!-- ════════ LEFT RAIL — Related Objects ════════ -->
+  <div class="left-rail">
+    <div class="card">
+      <div class="card-hd"><h3>Deal</h3></div>
+      <div class="card-bd">
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg></div>
+          <div class="rel-info"><div class="rel-title">CloudCorp Inc.</div><div class="rel-sub">DR-2026-0847</div></div>
+        </div>
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg></div>
+          <div class="rel-info"><div class="rel-title">Products</div><div class="rel-sub">Fabric, Network Edge, Colo</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hd"><h3>Customer</h3></div>
+      <div class="card-bd">
+        <div class="rel-item">
+          <div class="rel-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="14" height="14"><path d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0"/></svg></div>
+          <div class="rel-info"><div class="rel-title">David Chen</div><div class="rel-sub">VP Infrastructure</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════ CENTER — Main Content ════════ -->
+  <div class="center-content">
+<div class="container">
+
+  <!-- Breadcrumb -->
+  <div class="breadcrumb" role="navigation" aria-label="Breadcrumb">
+    <a href="rep-pipeline.html">My Pipeline</a> &rsaquo; <a href="rep-pipeline.html">Under Review</a> &rsaquo; CloudCorp Multi-Region
+  </div>
+
+  <!-- Urgency Banner -->
+  <div class="urgency-banner" role="alert" aria-live="polite">
+    <div class="urgency-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 9v4m0 4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"/></svg>
+    </div>
+    <div class="urgency-text">
+      <div class="urgency-title">Deal Protection Expiring Soon</div>
+      <div class="urgency-sub">This deal's protection window closes on <strong>Feb 28, 2026</strong>. After expiration, other partners can register competing deals for this customer. Take action now to secure the deal or request an extension.</div>
+    </div>
+    <div style="text-align:center;">
+      <div class="countdown">12</div>
+      <div class="countdown-label">Days Left</div>
+    </div>
+  </div>
+
+  <!-- Deal Header -->
+  <div class="deal-header">
+    <div class="deal-title-block">
+      <h1>CloudCorp Multi-Region</h1>
+      <div class="deal-meta">
+        <div class="deal-meta-item"><strong>Customer:</strong> CloudCorp Inc.</div>
+        <div class="deal-meta-item"><strong>Deal ID:</strong> DR-2026-0847</div>
+        <div class="deal-meta-item"><strong>Registered:</strong> Jan 5, 2026</div>
+      </div>
+    </div>
+    <div class="deal-actions">
+      <a href="#" class="btn btn-primary">
+        <svg width="14" height="14" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 1v16M1 9h16"/></svg>
+        Request Extension
+      </a>
+      <a href="#" class="btn btn-secondary">
+        <svg width="14" height="14" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 14l4-4 3 3 7-7"/></svg>
+        Log Activity
+      </a>
+      <a href="#" class="btn btn-secondary">
+        <svg width="14" height="14" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l3 3 9-9"/></svg>
+        Convert to Order
+      </a>
+    </div>
+  </div>
+
+  <!-- Stage Progress -->
+  <div class="card">
+    <div class="card-title">Deal Stage Progress</div>
+    <div class="stage-progress" role="progressbar" aria-valuenow="3" aria-valuemin="1" aria-valuemax="6" aria-label="Deal stage: Under Review">
+      <div class="stage-step completed"><div class="stage-dot"></div><div class="stage-label">Registered</div></div>
+      <div class="stage-step completed"><div class="stage-dot"></div><div class="stage-label">Submitted</div></div>
+      <div class="stage-step current"><div class="stage-dot"></div><div class="stage-label">Under Review</div></div>
+      <div class="stage-step"><div class="stage-dot"></div><div class="stage-label">Approved</div></div>
+      <div class="stage-step"><div class="stage-dot"></div><div class="stage-label">Won</div></div>
+      <div class="stage-step"><div class="stage-dot"></div><div class="stage-label">Ordered</div></div>
+    </div>
+  </div>
+
+  <div class="layout-2col">
+    <!-- Left Column -->
+    <div>
+
+      <!-- Recommended Next Steps — THE KEY SECTION -->
+      <div class="card">
+        <div class="card-title">Recommended Next Steps to Move This Deal Forward</div>
+        <ol class="next-steps">
+          <li>
+            <span class="step-title">Schedule a Technical Deep-Dive with CloudCorp</span>
+            <span class="step-desc">Their architect team flagged multi-region latency concerns. A 30-min Equinix Fabric demo focused on their SG1↔TY3 corridor would directly address this. Their VP of Infra (Taylor Liu) is the final sign-off.</span>
+            <a href="#" class="step-action">Schedule Meeting →</a>
+          </li>
+          <li>
+            <span class="step-title">Submit Updated Pricing Proposal</span>
+            <span class="step-desc">CloudCorp requested a 3-year commitment discount. Generate a proposal via the pricing tool with the multi-region bundle (Fabric + Network Edge + Network Edge). Typical discount: 12-18% on 36-month term.</span>
+            <a href="rep-sales-tools.html" class="step-action">Open Pricing Tool →</a>
+          </li>
+          <li>
+            <span class="step-title">Request Deal Extension (if more time needed)</span>
+            <span class="step-desc">If the deal can't close within 12 days, submit an extension request. Extensions grant 30 additional days and require a brief justification and documented customer engagement. PSM Marcus Chen will review.</span>
+            <a href="#" class="step-action">Request Extension →</a>
+          </li>
+          <li>
+            <span class="step-title">Escalate to PSM for Support</span>
+            <span class="step-desc">If CloudCorp has concerns that need executive engagement, loop in your assigned PSM. Marcus can arrange an executive briefing, provide competitive displacement support, or fast-track internal approvals.</span>
+            <a href="#" class="step-action">Contact PSM →</a>
+          </li>
+          <li>
+            <span class="step-title">Prepare for Contract Execution</span>
+            <span class="step-desc">Once pricing is agreed, initiate the contract process. Ensure CloudCorp's legal contact and billing entity details are up to date. Average contract turnaround: 5-7 business days after signature.</span>
+            <a href="#" class="step-action">Pre-fill Contract →</a>
+          </li>
+        </ol>
+      </div>
+
+      <!-- Protection Period Timeline -->
+      <div class="card">
+        <div class="card-title">Protection Period Timeline</div>
+        <div class="timeline-labels">
+          <span>Registered: Jan 5</span>
+          <span>Today: Feb 16</span>
+          <span>Expires: Feb 28</span>
+        </div>
+        <div class="timeline-bar">
+          <div class="timeline-fill" style="width:78%;"></div>
+          <div class="timeline-marker" style="left:78%; background:var(--wf-amber);"></div>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--wf-muted); margin-top:0.5rem;">
+          <span>42 of 54 days elapsed (78%)</span>
+          <span style="color:var(--wf-amber); font-weight:600;">12 days remaining</span>
+        </div>
+        <div style="margin-top:1rem; padding:0.75rem; background:var(--wf-canvas); border-radius:4px; font-size:12px; color:var(--wf-text); line-height:1.6;">
+          <strong>What happens at expiration:</strong> The 54-day protection window closes. Other partners can register competing deals for this customer/product combination. Any active quotes you've submitted remain valid, but you lose exclusive deal registration status.
+        </div>
+      </div>
+
+      <!-- Activity History -->
+      <div class="card">
+        <div class="card-title">Activity History</div>
+        <ul class="activity-list">
+          <li class="activity-item">
+            <span class="activity-date">Feb 14</span>
+            <span class="activity-dot"></span>
+            <span class="activity-text"><strong>Email sent</strong> — Follow-up on pricing proposal to Taylor Liu (VP Infra)</span>
+          </li>
+          <li class="activity-item">
+            <span class="activity-date">Feb 10</span>
+            <span class="activity-dot"></span>
+            <span class="activity-text"><strong>Meeting</strong> — Technical requirements call with CloudCorp architecture team. Discussed multi-region Fabric connectivity, latency SLAs, and Network Edge virtual network options for SG1 and TY3.</span>
+          </li>
+          <li class="activity-item">
+            <span class="activity-date">Feb 5</span>
+            <span class="activity-dot"></span>
+            <span class="activity-text"><strong>Pricing proposal</strong> — Generated 3-year Fabric + Network Edge bundle quote. Sent to CloudCorp procurement.</span>
+          </li>
+          <li class="activity-item">
+            <span class="activity-date">Jan 22</span>
+            <span class="activity-dot"></span>
+            <span class="activity-text"><strong>Deal moved to Under Review</strong> — Equinix conflict check completed. No competing registrations found.</span>
+          </li>
+          <li class="activity-item">
+            <span class="activity-date">Jan 5</span>
+            <span class="activity-dot"></span>
+            <span class="activity-text"><strong>Deal registered</strong> — CloudCorp Multi-Region, $198,500 MRR. Products: Network Edge (SG1, TY3), Equinix Fabric.</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Risk Factors -->
+      <div class="card">
+        <div class="card-title">Risk Factors</div>
+        <ul class="risk-list">
+          <li class="risk-item high">
+            <div class="risk-icon"><svg viewBox="0 0 16 16" fill="none" stroke="var(--wf-red, #8b4553)" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v4m0 2h.01"/></svg></div>
+            <div>
+              <div class="risk-label high">High</div>
+              <div>Protection period expires in 12 days. No signed contract or verbal commitment yet.</div>
+            </div>
+          </li>
+          <li class="risk-item">
+            <div class="risk-icon"><svg viewBox="0 0 16 16" fill="none" stroke="var(--wf-amber, #8b7745)" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 5v4m0 2h.01"/></svg></div>
+            <div>
+              <div class="risk-label medium">Medium</div>
+              <div>Customer mentioned evaluating AWS Outposts as an alternative. Competitive displacement risk.</div>
+            </div>
+          </li>
+          <li class="risk-item">
+            <div class="risk-icon"><svg viewBox="0 0 16 16" fill="none" stroke="var(--wf-muted, #6b7f99)" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M6 8h4"/></svg></div>
+            <div>
+              <div class="risk-label low">Low</div>
+              <div>Budget approved on customer side. Internal procurement timeline aligned with Q1 close.</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Right Column (Sidebar) -->
+    <div>
+
+      <!-- Deal Details -->
+      <div class="card">
+        <div class="card-title">Deal Details</div>
+        <div class="detail-grid">
+          <div class="detail-item">
+            <div class="detail-label">MRR Value</div>
+            <div class="detail-value amount">$198,500</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Contract Term</div>
+            <div class="detail-value">36 months</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Products</div>
+            <div class="detail-value">Fabric, Network Edge</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Locations</div>
+            <div class="detail-value">SG1, TY3</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Deal Type</div>
+            <div class="detail-value">New Business</div>
+          </div>
+          <div class="detail-item">
+            <div class="detail-label">Probability</div>
+            <div class="detail-value">65%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Key Contacts -->
+      <div class="card">
+        <div class="card-title">Key Contacts</div>
+
+        <div style="font-size:11px; font-weight:600; color:var(--wf-muted); text-transform:uppercase; letter-spacing:0.05em; margin-bottom:0.5rem;">Customer</div>
+        <div class="contact-card">
+          <div class="contact-avatar">TL</div>
+          <div class="contact-info">
+            <div class="contact-name">Taylor Liu</div>
+            <div class="contact-role">VP Infrastructure, CloudCorp</div>
+          </div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-avatar">RK</div>
+          <div class="contact-info">
+            <div class="contact-name">Raj Krishnan</div>
+            <div class="contact-role">Lead Architect, CloudCorp</div>
+          </div>
+        </div>
+
+        <div style="font-size:11px; font-weight:600; color:var(--wf-muted); text-transform:uppercase; letter-spacing:0.05em; margin:1rem 0 0.5rem;">Equinix</div>
+        <div class="contact-card">
+          <div class="contact-avatar">MC</div>
+          <div class="contact-info">
+            <div class="contact-name">Marcus Chen</div>
+            <div class="contact-role">Partner Sales Manager (PSM)</div>
+          </div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-avatar">JD</div>
+          <div class="contact-info">
+            <div class="contact-name">Jamie Davis (You)</div>
+            <div class="contact-role">Partner Rep, Apex Solutions</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="card">
+        <div class="card-title">Quick Actions</div>
+        <div style="display:flex; flex-direction:column; gap:0.5rem;">
+          <a href="#" class="btn btn-secondary" style="justify-content:center; width:100%;">
+            <svg width="14" height="14" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="3" width="14" height="12" rx="2"/><path d="M2 7h14"/></svg>
+            Email Customer
+          </a>
+          <a href="#" class="btn btn-secondary" style="justify-content:center; width:100%;">
+            <svg width="14" height="14" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h10v10H4z"/><path d="M8 8h2v2H8z"/></svg>
+            Generate Quote
+          </a>
+          <a href="#" class="btn btn-secondary" style="justify-content:center; width:100%;">
+            <svg width="14" height="14" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 14l4-4 3 3 7-7"/></svg>
+            View Competitor Intel
+          </a>
+          <a href="#" class="btn btn-secondary" style="justify-content:center; width:100%;">
+            <svg width="14" height="14" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="9" cy="9" r="7"/><path d="M9 5v4l3 2"/></svg>
+            Set Reminder
+          </a>
+        </div>
+      </div>
+
+      <!-- Similar Wins -->
+      <div class="card">
+        <div class="card-title">Similar Deals Won Recently</div>
+        <div style="font-size:13px; line-height:1.6;">
+          <div style="padding:0.5rem 0; border-bottom:1px solid var(--wf-tint);">
+            <strong style="color:var(--wf-ink);">TelecomGlobal Network Edge</strong><br>
+            <span style="color:var(--wf-muted); font-size:12px;">Multi-region Network Edge deployment · $325K · Closed in 38 days</span>
+          </div>
+          <div style="padding:0.5rem 0; border-bottom:1px solid var(--wf-tint);">
+            <strong style="color:var(--wf-ink);">DataPlatform Asia-Pac</strong><br>
+            <span style="color:var(--wf-muted); font-size:12px;">Fabric + Network Edge bundle · $210K · Closed in 41 days</span>
+          </div>
+          <div style="padding:0.5rem 0;">
+            <strong style="color:var(--wf-ink);">FinCloud Regional</strong><br>
+            <span style="color:var(--wf-muted); font-size:12px;">Network Edge SG1 deployment · $175K · Closed in 29 days</span>
+          </div>
+        </div>
+        <div style="margin-top:0.75rem; font-size:11px; color:var(--wf-muted); font-style:italic;">Average close time for similar deals: 36 days</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+<footer>
+  &copy; 2026 Equinix Partner Portal. All rights reserved.
+</footer>
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Displays deal detail with urgency highlighting days until protection expiration. Provides guided next steps, risk assessment, deal stage progress, activity log, and quick action buttons for managing time-sensitive partnership revenue deals.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Rep reviews deal health and understands exactly how much time remains before protection expires</li>
+<li>Guided next steps provide a clear action plan to close the deal or extend protection</li>
+<li>Risk factors highlight competitive threats and blockers requiring attention</li>
+<li>One-click escalation to PSM for executive support or fast-track approvals</li>
+<li>Similar wins provide social proof and benchmark timelines for closing</li>
+<li>Activity log ensures full engagement history is documented for PSM review during extension requests</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Breadcrumb navigation (Deals > Pipeline > CloudCorp Multi-Region)</li>
+<li>Urgency banner with countdown timer (bold amber, large type) showing "18 Days Remaining" and expiration date</li>
+<li>Deal title block with MRR amount ($125,000 ARR), deal stage, expected close date</li>
+<li>Deal header action buttons: Request Extension, Convert to Order, Log Activity</li>
+<li>Protection Period Timeline card with visual bar showing elapsed vs. remaining time (e.g., 72% complete)</li>
+<li>Deal Stage Progress with 4-step flow (Discovery → Qualification → Proposal → Close) showing current stage</li>
+<li>2-column layout: main content area + right sidebar</li>
+<li>Next Steps ordered list (1-4) with titles, descriptions, and inline action links</li>
+<li>Risk Factors list with severity badges (High/Medium/Low) and icons</li>
+<li>Activity Log with timeline dots, dates, actor names, event descriptions</li>
+<li>Customer Contacts and Equinix Team contact cards with avatars, names, titles</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Request Extension button — opens modal form for extension justification</li>
+<li>Convert to Order button — initiates opportunity close workflow</li>
+<li>Log Activity button — opens activity logging form (call/email/meeting)</li>
+<li>Numbered next-step action links (e.g., "Schedule Follow-up Meeting", "Open Pricing Tool")</li>
+<li>Contact names/cards clickable (navigate to contact record)</li>
+<li>Breadcrumb links for navigation</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Deal Data Loading & Display</strong>
+<ul>
+<li>Deal record (Opportunity__c) queried with metadata: Name, MRR__c, Amount, StageName, CloseDate, Protection_Start_Date__c, Protection_End_Date__c, Account__c lookup</li>
+<li>Deal header displays title, opportunity owner, account name, stage badge; all populated from Opportunity.__c fields</li>
+<li>Customer Contacts fetched from Account.Contacts SOQL query; Equinix Team members from Opportunity_Team__c with roles (PSM, Account Manager, etc.)</li>
+</ul></li>
+<li><strong>Urgency & Expiration Calculations</strong>
+<ul>
+<li>Countdown timer calculated as DAYS(Protection_End_Date__c, TODAY()); shows remaining days in large amber text</li>
+<li>Urgency banner displayed conditionally: IF countdown <= 30 THEN show amber alert with "Deal expires in X days" message; otherwise hidden</li>
+<li>Protection Timeline percentage calculated: (DAYS(Protection_Start_Date__c, TODAY()) / DAYS(Protection_Start_Date__c, Protection_End_Date__c)) × 100; visual bar fill updated accordingly</li>
+</ul></li>
+<li><strong>Deal Progress & Workflow</strong>
+<ul>
+<li>Deal Stage Progress fetches Opportunity.StageName and maps to 4-step visual flow (Prospecting → Qualification → Proposal → Closed); current stage highlighted in amber</li>
+<li>Next Steps generated from Next_Step__c junction objects linked to Opportunity; ordered by Step_Order__c (max 4 displayed); each includes Title__c, Description__c, ActionLink__c</li>
+<li>Stage transitions calculated by comparing current StageName to historical stage changes; completed stages marked with filled dots</li>
+</ul></li>
+<li><strong>Risk Analysis & Activity Tracking</strong>
+<ul>
+<li>Risk Factors queried from Deal_Risk__c objects WHERE Deal__c=[current opportunity]; categorized and sorted by Severity__c (High|Medium|Low)</li>
+<li>Activity Log populated from ActivityHistory OR custom Event/Task records; displayed chronologically with activity type, date, and summary</li>
+<li>Risk badges colored by severity: High (red), Medium (amber), Low (gray)</li>
+</ul></li>
+<li><strong>Actions & Extensions</strong>
+<ul>
+<li>Request Extension button creates DealExtension__c record with Opportunity__c lookup, Requested_Days__c, Reason__c; triggers Flow that notifies PSM via email/Slack</li>
+<li>Convert to Order button initiates opportunity close workflow; redirects to Order creation form with Opportunity linked</li>
+<li>Log Activity button opens modal/form to create Task/Event records related to Opportunity</li>
+</ul></li>
+</ul>
+<hr class="spec-divider">
+<h3>Technical Details</h3>
+<h4>Salesforce Objects & Integration</h4>
+<ul>
+<li>Opportunity__c object with fields: Name, MRR__c, Amount, StageName, CloseDate, Protection_Start_Date__c, Protection_End_Date__c, Account__c lookup</li>
+<li>Deal_Risk__c custom object with fields: Deal__c (lookup), Risk_Type__c, Severity__c (High|Medium|Low), Description__c, DetectedDate__c</li>
+<li>Next_Step__c custom object (junction) with Deal__c, Step_Order__c, Title__c, Description__c, ActionLink__c URL</li>
+<li>Opportunity_Team__c for PSM and team member assignments</li>
+<li>DealExtension__c custom object captures extension requests with Reason__c, Requested_Days__c, Approval_Status__c</li>
+<li>Flow auto-creates Next_Step__c records on Opportunity creation; updates Status__c when actions completed</li>
+</ul>
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+<script>if(sessionStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Results — AE · Equinix PCP Partner Portal</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); }
+
+    header { background: var(--wf-ink, #1e2a3a); height: 56px; display: flex; align-items: center; padding: 0 24px; gap: 16px; }
+    .logo-box { display: flex; align-items: center; gap: 8px; }
+    .logo { width: 32px; height: 32px; border-radius: 6px; background: var(--wf-accent, #3d6daa); display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 700; font-size: 13px; }
+    .header-title { color: #fff; font-weight: 590; font-size: 14px; }
+    nav { display: flex; align-items: center; height: 56px; gap: 0; flex: 1; padding-left: 8px; }
+    nav a { padding: 0 16px; height: 56px; display: flex; align-items: center; font-size: 13px; color: rgba(255,255,255,.8); border-bottom: 3px solid transparent; text-decoration: none; }
+    nav a:hover { color: #fff; }
+
+    /* Search Bar in Header */
+    .search-header { background: #fff; border-bottom: 1px solid var(--wf-tint, #dce4ef); padding: 16px 24px; }
+    .search-container { max-width: 1400px; margin: 0 auto; display: flex; align-items: center; gap: 12px; }
+    .search-input-wrap { flex: 1; position: relative; }
+    .search-input { width: 100%; padding: 10px 16px 10px 40px; border: 2px solid var(--wf-accent, #3d6daa); border-radius: 6px; font-size: 15px; font-family: inherit; outline: none; }
+    .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--wf-muted, #6b7f99); font-size: 16px; }
+    .search-clear { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); color: var(--wf-muted, #6b7f99); font-size: 18px; cursor: pointer; background: none; border: none; }
+    .search-btn { padding: 10px 20px; background: var(--wf-accent, #3d6daa); color: #fff; border: none; border-radius: 6px; font-size: 14px; font-weight: 600; cursor: pointer; }
+    .search-btn:hover { background: var(--wf-accent, #3d6daa); }
+
+    .container { max-width: 1400px; margin: 0 auto; padding: 24px; }
+
+    /* Results Summary */
+    .results-summary { font-size: 14px; color: var(--wf-muted, #6b7f99); margin-bottom: 20px; }
+    .results-summary strong { color: var(--wf-ink, #1e2a3a); }
+    .results-summary .query { color: var(--wf-accent, #3d6daa); font-weight: 600; }
+
+    /* Tab Navigation */
+    .tabs { display: flex; gap: 0; border-bottom: 2px solid var(--wf-tint, #dce4ef); margin-bottom: 24px; }
+    .tab { padding: 12px 20px; font-size: 13px; font-weight: 600; color: var(--wf-muted, #6b7f99); cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
+    .tab:hover { color: var(--wf-ink, #1e2a3a); }
+    .tab.active { color: var(--wf-accent, #3d6daa); border-bottom-color: var(--wf-accent, #3d6daa); }
+    .tab .count { background: var(--wf-tint, #dce4ef); color: var(--wf-muted, #6b7f99); padding: 2px 8px; border-radius: 10px; font-size: 11px; margin-left: 6px; }
+    .tab.active .count { background: var(--wf-canvas, #f5f7fb); color: var(--wf-accent, #3d6daa); }
+
+    /* Result Cards */
+    .result-section { margin-bottom: 28px; }
+    .section-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--wf-muted, #6b7f99); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--wf-tint, #dce4ef); display: flex; align-items: center; gap: 8px; }
+    .section-icon { width: 20px; height: 20px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #fff; }
+
+    .result-card { background: #fff; padding: 16px 20px; border-radius: 6px; margin-bottom: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); display: flex; gap: 16px; align-items: flex-start; transition: all 0.15s; cursor: pointer; border-left: 3px solid transparent; }
+    .result-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.12); border-left-color: var(--wf-accent, #3d6daa); }
+    .result-icon { width: 36px; height: 36px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+    .result-body { flex: 1; min-width: 0; }
+    .result-title { font-size: 14px; font-weight: 600; color: var(--wf-accent, #3d6daa); margin: 0 0 4px 0; text-decoration: none; }
+    .result-title:hover { text-decoration: underline; }
+    .result-meta { font-size: 12px; color: var(--wf-muted, #6b7f99); margin: 0 0 6px 0; }
+    .result-snippet { font-size: 13px; color: var(--wf-text, #3b4f68); line-height: 1.5; margin: 0; }
+    .result-snippet mark { background: var(--wf-surface, #edf1f7); padding: 1px 2px; border-radius: 2px; }
+    .result-badge { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+    .badge-deal { background: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); }
+    .badge-account { background: var(--wf-canvas, #f5f7fb); color: var(--wf-accent, #3d6daa); }
+    .badge-course { background: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); }
+    .badge-resource { background: var(--wf-canvas, #f5f7fb); color: var(--wf-amber, #8b7745); }
+    .badge-case { background: var(--wf-canvas, #f5f7fb); color: var(--wf-red, #8b4553); }
+    .badge-commission { background: var(--wf-surface, #edf1f7); color: var(--wf-ink, #1e2a3a); }
+    .result-right { display: flex; flex-direction: column; align-items: flex-end; gap: 4px; flex-shrink: 0; }
+    .result-date { font-size: 11px; color: var(--wf-muted, #6b7f99); white-space: nowrap; }
+    .result-amount { font-size: 14px; font-weight: 700; color: var(--wf-muted, #6b7f99); }
+    .result-status { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 4px; }
+    .status-approved { background: var(--wf-surface, #edf1f7); color: var(--wf-ink, #1e2a3a); }
+    .status-pending { background: var(--wf-surface, #edf1f7); color: var(--wf-amber, #8b7745); }
+    .status-active { background: var(--wf-canvas, #f5f7fb); color: var(--wf-accent, #3d6daa); }
+    .status-submitted { background: var(--wf-canvas, #f5f7fb); color: var(--wf-accent, #3d6daa); }
+    .status-won { background: var(--wf-surface, #edf1f7); color: var(--wf-ink, #1e2a3a); }
+
+    /* Sidebar Filters */
+    .layout { display: grid; grid-template-columns: 240px 1fr; gap: 24px; }
+    .sidebar { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); height: fit-content; position: sticky; top: 24px; }
+    .sidebar h3 { margin: 0 0 16px 0; font-size: 13px; font-weight: 700; color: var(--wf-ink, #1e2a3a); }
+    .filter-group { margin-bottom: 20px; }
+    .filter-group:last-child { margin-bottom: 0; }
+    .filter-label { font-size: 11px; font-weight: 600; color: var(--wf-muted, #6b7f99); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+    .filter-option { display: flex; align-items: center; gap: 8px; padding: 6px 0; font-size: 13px; color: var(--wf-ink, #1e2a3a); cursor: pointer; }
+    .filter-option input[type="checkbox"] { margin: 0; }
+    .filter-option .fcount { color: var(--wf-muted, #6b7f99); font-size: 11px; margin-left: auto; }
+
+    /* Recent Searches */
+    .recent-searches { background: #fff; padding: 16px 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); margin-bottom: 20px; }
+    .recent-searches h4 { margin: 0 0 12px 0; font-size: 12px; font-weight: 600; color: var(--wf-muted, #6b7f99); text-transform: uppercase; letter-spacing: 0.5px; }
+    .recent-item { font-size: 13px; color: var(--wf-accent, #3d6daa); padding: 4px 0; cursor: pointer; text-decoration: none; display: block; }
+    .recent-item:hover { text-decoration: underline; }
+    .recent-item::before { content: "🕐 "; font-size: 11px; }
+
+    /* No Results State */
+    .no-results { text-align: center; padding: 48px 24px; }
+    .no-results-icon { font-size: 48px; margin-bottom: 16px; }
+    .no-results h3 { font-size: 18px; color: var(--wf-ink, #1e2a3a); margin: 0 0 8px 0; }
+    .no-results p { font-size: 14px; color: var(--wf-muted, #6b7f99); margin: 0 0 16px 0; }
+
+    /* Spec */
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+</style>
+</head>
+<body>
+<div class="page-context-bar">
+  <div style="max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <nav class="wf-breadcrumb" aria-label="Breadcrumb" style="margin-bottom:0;">
+      <a href="rep-home.html">Home</a>
+      <span class="wf-breadcrumb-sep">›</span>
+      <span class="wf-breadcrumb-current">Search Results</span>
+    </nav>
+    <span class="persona-badge persona-badge--ae">AE</span>
+  </div>
+</div>
+  <header>
+    <div class="logo-box">
+      <div class="logo">EQ</div>
+      <span class="header-title">Equinix Partner Portal</span>
+    </div>
+    <nav>
+      <a href="rep-deals-commission.html">Deals</a>
+      <a href="rep-my-training.html">Training</a>
+      <a href="rep-marketing.html">Marketing</a>
+      <a href="rep-support.html">Support</a>
+      <a href="rep-resources.html">Resources</a>
+    </nav>
+  
+    <a href="rep-notifications.html" class="bell-wrapper" aria-label="Notifications" style="position:relative;color:white;text-decoration:none;margin-left:auto;">
+      <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
+      <span style="position:absolute;top:-4px;right:-6px;background:var(--wf-red,#8b4555);color:white;font-size:10px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;">7</span>
+    </a>
+</header>
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+  <!-- Search Bar -->
+  <div class="search-header">
+    <div class="search-container">
+      <div class="search-input-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" value="Acme" aria-label="Global search" placeholder="Search deals, courses, resources, customers...">
+        <button class="search-clear" aria-label="Clear search">×</button>
+      </div>
+      <button class="search-btn">Search</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Results Summary -->
+    <div class="results-summary">
+      <strong>12 results</strong> for <span class="query">"Acme"</span> across deals, customers, courses, and resources · 0.3s
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs" role="tablist">
+      <div class="tab active" role="tab" aria-selected="true">All Results <span class="count">12</span></div>
+      <div class="tab" role="tab">Deals <span class="count">4</span></div>
+      <div class="tab" role="tab">Customers <span class="count">2</span></div>
+      <div class="tab" role="tab">Courses <span class="count">3</span></div>
+      <div class="tab" role="tab">Resources <span class="count">2</span></div>
+      <div class="tab" role="tab">Commission <span class="count">1</span></div>
+    </div>
+
+    <div class="layout">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="recent-searches">
+          <h4>Recent Searches</h4>
+          <a class="recent-item" href="#">Fabric Cloud Router</a>
+          <a class="recent-item" href="#">commission Q1</a>
+          <a class="recent-item" href="#">Security Fundamentals</a>
+          <a class="recent-item" href="#">Global Finance</a>
+        </div>
+
+        <h3>Refine Results</h3>
+        <div class="filter-group">
+          <div class="filter-label">Object Type</div>
+          <label class="filter-option"><input type="checkbox" checked> Deals <span class="fcount">4</span></label>
+          <label class="filter-option"><input type="checkbox" checked> Accounts <span class="fcount">2</span></label>
+          <label class="filter-option"><input type="checkbox" checked> Courses <span class="fcount">3</span></label>
+          <label class="filter-option"><input type="checkbox" checked> Resources <span class="fcount">2</span></label>
+          <label class="filter-option"><input type="checkbox" checked> Commission <span class="fcount">1</span></label>
+        </div>
+        <div class="filter-group">
+          <div class="filter-label">Date Range</div>
+          <label class="filter-option"><input type="radio" name="date" checked> All Time</label>
+          <label class="filter-option"><input type="radio" name="date"> Last 30 Days</label>
+          <label class="filter-option"><input type="radio" name="date"> Last 90 Days</label>
+          <label class="filter-option"><input type="radio" name="date"> This Year</label>
+        </div>
+        <div class="filter-group">
+          <div class="filter-label">Deal Stage</div>
+          <label class="filter-option"><input type="checkbox"> Submitted <span class="fcount">1</span></label>
+          <label class="filter-option"><input type="checkbox"> Under Review <span class="fcount">1</span></label>
+          <label class="filter-option"><input type="checkbox"> Approved <span class="fcount">1</span></label>
+          <label class="filter-option"><input type="checkbox"> Won <span class="fcount">1</span></label>
+        </div>
+      </aside>
+
+      <!-- Main Results -->
+      <main>
+        <!-- Deals Section -->
+        <div class="result-section">
+          <div class="section-label">
+            <div class="section-icon" style="background:var(--wf-muted, #6b7f99);">💼</div>
+            Deals (4)
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">💼</div>
+            <div class="result-body">
+              <a href="rep-pipeline.html" class="result-title">Acme Corporation - Colocation Expansion</a>
+              <p class="result-meta"><span class="result-badge badge-deal">Deal Registration</span> · Draft · Step 2 of 4</p>
+              <p class="result-snippet"><mark>Acme</mark> Corporation colocation expansion project. Customer looking to add 4 new cabinets in SV5 metro. Est. revenue $125,000. Contact: James Rodriguez, james@<mark>acme</mark>corp.com</p>
+            </div>
+            <div class="result-right">
+              <span class="result-amount">$125,000</span>
+              <span class="result-status status-pending">Draft</span>
+              <span class="result-date">Feb 8, 2026</span>
+            </div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">💼</div>
+            <div class="result-body">
+              <a href="rep-pipeline.html" class="result-title">Acme Corp - Cloud Router Solution</a>
+              <p class="result-meta"><span class="result-badge badge-deal">Deal Registration</span> · Approved · Protection: 45 days</p>
+              <p class="result-snippet"><mark>Acme</mark> Corp cloud router deployment across 3 metros. Fabric interconnection to AWS and Azure. Equinix differentiator: low-latency multi-cloud with single pane management.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-amount">$85,000</span>
+              <span class="result-status status-approved">Approved</span>
+              <span class="result-date">Jan 15, 2026</span>
+            </div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">💼</div>
+            <div class="result-body">
+              <a href="rep-pipeline.html" class="result-title">Acme Cloud Migration</a>
+              <p class="result-meta"><span class="result-badge badge-deal">Deal Registration</span> · Won · Commission Paid</p>
+              <p class="result-snippet"><mark>Acme</mark> Corporation full hybrid cloud migration. 12 cabinets + Fabric connections + Network Edge network edge for dev workloads. Registered by Sarah Connor. Closed Dec 2025.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-amount">$287,500</span>
+              <span class="result-status status-won">Won</span>
+              <span class="result-date">Dec 20, 2025</span>
+            </div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">💼</div>
+            <div class="result-body">
+              <a href="rep-pipeline.html" class="result-title">Acme Interconnection Upgrade</a>
+              <p class="result-meta"><span class="result-badge badge-deal">Deal Registration</span> · Submitted · Pending PSM Review</p>
+              <p class="result-snippet"><mark>Acme</mark> Corporation requesting upgrade from 1G to 10G ports at SV5. Additional Fabric virtual connections to 3 new cloud on-ramps. PSM: Marcus Chen.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-amount">$42,000</span>
+              <span class="result-status status-submitted">Submitted</span>
+              <span class="result-date">Feb 12, 2026</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accounts Section -->
+        <div class="result-section">
+          <div class="section-label">
+            <div class="section-icon" style="background:var(--wf-accent, #3d6daa);">🏢</div>
+            Customers / Accounts (2)
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">🏢</div>
+            <div class="result-body">
+              <a href="#" class="result-title">Acme Corporation</a>
+              <p class="result-meta"><span class="result-badge badge-account">Account</span> · Enterprise · SV5, NY5, CH1</p>
+              <p class="result-snippet"><mark>Acme</mark> Corporation — Fortune 500 manufacturer. 12 active cabinets across 3 metros. Primary contact: James Rodriguez (VP Infrastructure). 4 active deals, $539,500 total pipeline. Customer since 2019.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-date">Active Customer</span>
+            </div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">🏢</div>
+            <div class="result-body">
+              <a href="#" class="result-title">Acme Digital Solutions (subsidiary)</a>
+              <p class="result-meta"><span class="result-badge badge-account">Account</span> · Mid-Market · SV5</p>
+              <p class="result-snippet"><mark>Acme</mark> Digital Solutions — SaaS subsidiary of <mark>Acme</mark> Corporation. 2 cabinets in SV5 metro. Primary contact: Li Wei (CTO). Fabric connection to parent company.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-date">Active Customer</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Courses Section -->
+        <div class="result-section">
+          <div class="section-label">
+            <div class="section-icon" style="background:var(--wf-ink, #1e2a3a);">📚</div>
+            Courses &amp; Training (3)
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">📚</div>
+            <div class="result-body">
+              <a href="rep-course-detail.html" class="result-title">Selling to Enterprise Accounts</a>
+              <p class="result-meta"><span class="result-badge badge-course">Course</span> · Sales · 2.5 hours · Required for Gold</p>
+              <p class="result-snippet">Learn strategies for selling Equinix solutions to large enterprise accounts like <mark>Acme</mark> Corporation. Covers discovery, multi-stakeholder navigation, and ROI positioning for Fortune 500 infrastructure decisions.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-status status-active">Not Started</span>
+            </div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">📚</div>
+            <div class="result-body">
+              <a href="rep-course-detail.html" class="result-title">Colocation Overview</a>
+              <p class="result-meta"><span class="result-badge badge-course">Course</span> · Product · 1.5 hours · Completed ✓</p>
+              <p class="result-snippet">Covers Equinix colocation services, cabinet configurations, and power management. Case study includes an <mark>Acme</mark>-style enterprise deployment across multiple metros.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-status status-approved">Completed</span>
+              <span class="result-date">Feb 3, 2026</span>
+            </div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">📚</div>
+            <div class="result-body">
+              <a href="rep-course-detail.html" class="result-title">Customer Success Stories</a>
+              <p class="result-meta"><span class="result-badge badge-course">Course</span> · Sales Enablement · 45 min · Optional</p>
+              <p class="result-snippet">Reference customer success stories for sales conversations. Includes <mark>Acme</mark> Corporation hybrid cloud case study (12 cabinets, 3 metros, 40% latency reduction).</p>
+            </div>
+            <div class="result-right">
+              <span class="result-status status-active">Not Started</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resources Section -->
+        <div class="result-section">
+          <div class="section-label">
+            <div class="section-icon" style="background:var(--wf-amber, #8b7745);">📄</div>
+            Resources &amp; Documents (2)
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">📄</div>
+            <div class="result-body">
+              <a href="rep-sales-tools.html" class="result-title">Enterprise Colocation Proposal Template</a>
+              <p class="result-meta"><span class="result-badge badge-resource">Template</span> · PPTX · Updated Jan 2026</p>
+              <p class="result-snippet">Proposal template for enterprise colocation deals. Pre-formatted for accounts like <mark>Acme</mark> Corporation. Includes ROI calculator, SLA comparison, and metro availability sections.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-date">Jan 10, 2026</span>
+            </div>
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-canvas, #f5f7fb);">📄</div>
+            <div class="result-body">
+              <a href="rep-sales-tools.html" class="result-title">Competitive Battle Card: Acme Vertical (Manufacturing)</a>
+              <p class="result-meta"><span class="result-badge badge-resource">Battle Card</span> · PDF · Updated Feb 2026</p>
+              <p class="result-snippet">Manufacturing vertical battle card covering AWS, Azure, and on-prem competitors. Tailored for <mark>Acme</mark>-type accounts requiring hybrid multicloud with low-latency interconnection.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-date">Feb 1, 2026</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Commission Section -->
+        <div class="result-section">
+          <div class="section-label">
+            <div class="section-icon" style="background:var(--wf-ink, #1e2a3a);">💰</div>
+            Commission (1)
+          </div>
+
+          <div class="result-card">
+            <div class="result-icon" style="background:var(--wf-surface, #edf1f7);">💰</div>
+            <div class="result-body">
+              <a href="rep-deals-commission.html" class="result-title">Commission: Acme Cloud Migration</a>
+              <p class="result-meta"><span class="result-badge badge-commission">Commission</span> · Gold Tier (15%) · Paid Q4 2025</p>
+              <p class="result-snippet"><mark>Acme</mark> Cloud Migration deal closed $287,500 MRR. Commission rate: 15% (Gold tier). Commission earned: $43,125. Payment status: Paid. Deposited Dec 31, 2025.</p>
+            </div>
+            <div class="result-right">
+              <span class="result-amount">$43,125</span>
+              <span class="result-status status-approved">Paid</span>
+              <span class="result-date">Dec 31, 2025</span>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div style="background: white; padding: 16px 24px; border-top: 1px solid var(--wf-tint, #dce4ef); margin-top: 40px; font-size: 12px; color: var(--wf-muted, #6b7f99); text-align: center;">
+    <p style="margin: 0;">Equinix Partner Portal • Logged in as: Sarah Connor (sc@stark.com) • PM: Pepper Potts | PSM: Marcus Chen • <a href="#" style="color: var(--wf-accent, #3d6daa); text-decoration: none;">Contact Support</a></p>
+  </div>
+
+
+<!-- ── Spec Sidebar (fly-in) ── -->
+
+<!-- ── Spec Panel (fly-in sidebar) ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+<h3>Summary</h3>
+<p>Federated search results showing deals, accounts, courses, resources, and commissions for name-based and account lookups, helping partners quickly locate pipeline information and training resources.</p>
+<hr class="spec-divider">
+<h3>Jobs to Be Done</h3>
+<ul>
+<li>Find deals before registration</li>
+<li>Locate deal status and approval progress</li>
+<li>Search training courses by keyword</li>
+<li>Access sales tools and marketing collateral</li>
+<li>Check commission status and payment info</li>
+<li>Navigate to records and relevant information quickly</li>
+</ul>
+<hr class="spec-divider">
+<h3>Design Specification</h3>
+<h4>Primary Content</h4>
+<ul>
+<li>Global search bar with query display</li>
+<li>Results summary showing count and time</li>
+<li>Object-type tabs</li>
+<li>Federated results grouped by type with result cards</li>
+<li>Recent searches for quick re-access</li>
+<li>Faceted filter sidebar for refinement</li>
+</ul>
+<h4>Interactive Elements</h4>
+<ul>
+<li>Search input with clear button and suggestions</li>
+<li>Switch between object type tabs</li>
+<li>Click results to navigate to records</li>
+<li>Apply filter checkboxes and radio buttons</li>
+<li>Click recent searches to re-run query</li>
+<li>Pagination for large result sets</li>
+</ul>
+<h4>Functionality</h4>
+<ul>
+<li><strong>Multi-Object Search & Querying</strong>
+<ul>
+<li>Salesforce global search simultaneously queries Deal_Registration__c, Account, Course__c, ContentDocument (Knowledge), and Partner_Commission__c objects using a single SOSL query</li>
+<li>Results deduplicated by object ID to prevent duplicate records in same result set</li>
+</ul></li>
+<li><strong>Result Organization & Display</strong>
+<ul>
+<li>Results grouped by object type with color-coded section labels (dealcode #6b7f99, account #3d6daa, courses #1e2a3a, resources #8b7745, commission #1e2a3a)</li>
+<li>Result snippet text uses &lt;mark&gt; HTML elements with yellow background (#edf1f7) to highlight search term matches</li>
+<li>Each result card displays icon, title, metadata, and contextual right-aligned info (amount, status, date)</li>
+</ul></li>
+<li><strong>Dynamic Filtering & Counts</strong>
+<ul>
+<li>Tab counts dynamically update based on search filters applied via sidebar (Object Type, Date Range, Deal Stage)</li>
+<li>Faceted filters AND-combined and update result counts via AJAX without page reload, maintaining search context</li>
+</ul></li>
+<li><strong>Search History & Recent Access</strong>
+<ul>
+<li>Recent searches cached in browser localStorage with 5-item limit and cleared on explicit user action, enabling quick re-access of common queries</li>
+<li>Recent searches sidebar appears above filters for fast navigation to frequently searched items</li>
+</ul></li>
+<li><strong>Accessibility & Navigation</strong>
+<ul>
+<li>Tab order follows logical flow: search input → results summary → tabs → sidebar filters → result cards, supporting keyboard navigation</li>
+</ul></li>
+</ul>
+<hr class="spec-divider">
+</div>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>
