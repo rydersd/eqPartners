@@ -448,9 +448,21 @@
       'onclick="if(typeof toggleSpec===\'function\')toggleSpec();" ' +
       'aria-label="Toggle wireframe notes">&#128203; Design Notes</button>';
 
+    // 4c. Build Copy deep-link button
+    var copyBtn =
+      '<button class="wf-ctx-copy-btn" id="wf-copy-btn" ' +
+      'onclick="wfCopyDeepLink()" ' +
+      'title="Copy deep link to this page/step" ' +
+      'aria-label="Copy deep link">' +
+        '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">' +
+          '<path d="M6.5 9.5a3.5 3.5 0 0 0 5 0l2-2a3.5 3.5 0 0 0-5-5L7 4"/>' +
+          '<path d="M9.5 6.5a3.5 3.5 0 0 0-5 0l-2 2a3.5 3.5 0 0 0 5 5L9 12"/>' +
+        '</svg>' +
+      '</button>';
+
     // 5. Rebuild the context bar
     //    Left:  hamburger · breadcrumbs
-    //    Right: persona chip · Feedback button · Design Notes button
+    //    Right: persona chip · copy link · Feedback button · Design Notes button
     ctxBar.className = 'page-context-bar wf-ctx-bar';
     ctxBar.innerHTML =
       '<div class="wf-ctx-inner">' +
@@ -465,6 +477,7 @@
         '</div>' +
         '<div class="wf-ctx-right">' +
           personaChip +
+          copyBtn +
           notesBtn +
           feedbackBtn +
         '</div>' +
@@ -526,6 +539,31 @@
     // 12. Inject feedback modal (lazy — creates DOM now, opens on button click)
     injectFeedbackModal(file);
   }
+
+  // ── Deep-link copy ───────────────────────────────────────────────
+
+  window.wfCopyDeepLink = function () {
+    var url = window.location.href;
+    var btn = document.getElementById('wf-copy-btn');
+    navigator.clipboard.writeText(url).then(function () {
+      if (!btn) return;
+      btn.classList.add('copied');
+      btn.title = 'Copied!';
+      btn.innerHTML =
+        '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">' +
+          '<polyline points="2 9 6 13 14 4"/>' +
+        '</svg>';
+      setTimeout(function () {
+        btn.classList.remove('copied');
+        btn.title = 'Copy deep link to this page/step';
+        btn.innerHTML =
+          '<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">' +
+            '<path d="M6.5 9.5a3.5 3.5 0 0 0 5 0l2-2a3.5 3.5 0 0 0-5-5L7 4"/>' +
+            '<path d="M9.5 6.5a3.5 3.5 0 0 0-5 0l-2 2a3.5 3.5 0 0 0 5 5L9 12"/>' +
+          '</svg>';
+      }, 1500);
+    });
+  };
 
   // ── Global Controls (called from onclick attributes) ─────────────
 

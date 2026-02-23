@@ -918,6 +918,32 @@ html.wireframe .wf-ctx-notes-btn {
 }
 html.wireframe .wf-ctx-notes-btn:hover { background: var(--wf-tint); }
 
+/* Copy deep-link button */
+html.wireframe .wf-ctx-copy-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  background: var(--wf-white);
+  border: 1px solid var(--wf-line);
+  border-radius: 3px;
+  color: var(--wf-muted);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background .12s, color .12s, border-color .12s;
+}
+html.wireframe .wf-ctx-copy-btn:hover {
+  background: var(--wf-tint);
+  color: var(--wf-ink);
+}
+html.wireframe .wf-ctx-copy-btn.copied {
+  background: var(--wf-tint);
+  border-color: var(--wf-accent);
+  color: var(--wf-accent);
+}
+
 /* Persona badge margin reset when inside context bar (legacy) */
 html.wireframe .wf-ctx-bar .persona-badge { margin-left: 0; }
 
