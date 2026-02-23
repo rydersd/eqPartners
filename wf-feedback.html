@@ -692,24 +692,6 @@ function submitFeedback(e) {
   if (name) localStorage.setItem('pcp-wf-reviewer-name', name);
   if (role) localStorage.setItem('pcp-wf-reviewer-role', role);
 
-  // Email notification → rybooth@equinix.com
-  var reviewerEmail  = sessionStorage.getItem('pcp-wf-reviewer-email') || '';
-  var severityLabel  = severity || 'unset';
-  var reviewerLine   = (name || 'Anonymous') +
-                       (role ? ', ' + role : '') +
-                       (reviewerEmail ? ' <' + reviewerEmail + '>' : '');
-  var mailSubject    = encodeURIComponent('[PCP Feedback] ' + page + ' \u2013 ' + type + ' (' + severityLabel + ')');
-  var mailBody       = encodeURIComponent(
-    'Page: ' + page + '\n' +
-    'Type: ' + type + '\n' +
-    'Severity: ' + severityLabel + '\n' +
-    'Reviewer: ' + reviewerLine + '\n' +
-    '\n' +
-    desc + '\n' +
-    '\n---\nSubmitted: ' + new Date().toLocaleString()
-  );
-  window.open('mailto:rybooth@equinix.com?subject=' + mailSubject + '&body=' + mailBody, '_blank');
-
   // Reset form (keep name/role)
   document.getElementById('f-page').value = '';
   if (typeEl) typeEl.checked = false;
@@ -719,7 +701,35 @@ function submitFeedback(e) {
 
   populatePageFilter();
   renderCards();
-  showToast('Feedback added \u2014 your email client should open to send it.');
+  showToast('Sending\u2026');
+
+  // Email via Formspree → rybooth@equinix.com
+  var reviewerEmail = sessionStorage.getItem('pcp-wf-reviewer-email') || '';
+  fetch('https://formspree.io/f/xpqjoqan', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify({
+      page:        page,
+      type:        type,
+      severity:    severity || 'unset',
+      description: desc,
+      reviewer:    (name || 'Anonymous') + (role ? ', ' + role : ''),
+      email:       reviewerEmail,
+      screenshot:  screenshotData ? 'Yes \u2014 view in feedback dashboard' : 'None'
+    })
+  })
+  .then(function(res) {
+    return res.json().then(function(data) {
+      if (res.ok) {
+        showToast('Feedback sent \u2714');
+      } else {
+        showToast('Saved locally \u2014 email error: ' + (data.error || res.status));
+      }
+    });
+  })
+  .catch(function() {
+    showToast('Saved locally \u2014 check your connection');
+  });
 }
 
 /* ── Render ─────────────────────────────────────────────────────── */
