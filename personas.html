@@ -87,6 +87,7 @@
         .avatar-pm     { background: linear-gradient(135deg, var(--orange, #c75c1a), #a04810); }
         .avatar-psm    { background: linear-gradient(135deg, #2e7d6f, #1f5c54); }
         .avatar-euc    { background: linear-gradient(135deg, #5c3d8f, #3e2470); }
+        .avatar-ppm    { background: linear-gradient(135deg, #b04a2a, #8a3018); }
 
         .persona-intro h3 { font-size: 1.1rem; font-weight: 700; color: var(--wf-ink, #1e2a3a); }
         .persona-intro .persona-role { font-size: .875rem; color: var(--wf-muted, #6b7f99); margin-bottom: .5rem; }
@@ -240,7 +241,7 @@
         <h1>Persona Research &amp; Accuracy Analysis</h1>
         <p class="subtitle">Are the PCP wireframe personas realistic? Real job data, survey statistics, and design implications.</p>
         <div class="header-meta">
-            <span class="header-pill">3 Personas Assessed</span>
+            <span class="header-pill">4 Personas Assessed</span>
             <span class="header-pill">30+ Sources</span>
             <span class="header-pill">BLS · CompTIA · Salesforce State of Sales · Glassdoor · LinkedIn</span>
             <span class="header-pill">Updated Feb 2026</span>
@@ -297,6 +298,13 @@
                     <td><span class="check">✓ Accurate</span></td>
                     <td><span class="check">✓ Well-documented</span></td>
                     <td>Add deal dispute/attribution; QBR function; span of control</td>
+                </tr>
+                <tr>
+                    <td>Alex Rivera — Partner Program Manager</td>
+                    <td>Equinix (vendor-side, program ops)</td>
+                    <td><span class="check">✓ Accurate</span></td>
+                    <td><span class="check">✓ Well-documented</span></td>
+                    <td>New; not yet validated via primary research — secondary sources strong</td>
                 </tr>
                 <tr>
                     <td>Maria Hill — EUC (IT Director)</td>
@@ -735,10 +743,163 @@
         </div>
     </section>
 
-    <!-- ─── SECTION 5: Maria Hill ─── -->
+    <!-- ─── SECTION 5: Alex Rivera (PPM) ─── -->
+    <section aria-labelledby="alex-h2">
+        <h2 id="alex-h2">
+            <span aria-hidden="true">📋</span> Persona 4 — Partner Program Manager
+            <span class="section-badge">Vendor-Side · Program Ops</span>
+        </h2>
+
+        <div class="persona-block">
+            <div class="persona-header">
+                <div class="persona-avatar avatar-ppm" aria-hidden="true">AR</div>
+                <div class="persona-intro">
+                    <h3>Alex Rivera</h3>
+                    <p class="persona-role">Partner Program Manager · Equinix · Channel Partner Operations</p>
+                    <p>Owns the partner application and approval pipeline for Equinix's channel program. Reviews inbound applications against tier criteria, approves or rejects applicants, and manages the onboarding handoff to the PSM team. Also governs tier definitions, manages program policy updates, and monitors program-wide health metrics. Mid-level individual contributor with 7 years in partner operations.</p>
+                </div>
+                <div class="accuracy-badge" aria-label="Accuracy score: High">
+                    <div class="accuracy-score score-high" aria-hidden="true">High</div>
+                    <span class="accuracy-label">Accuracy</span>
+                </div>
+            </div>
+
+            <div class="persona-body">
+
+                <div class="stat-row" role="list" aria-label="Key statistics">
+                    <div class="stat-pill" role="listitem"><strong>$128K–$191K</strong> <span>base salary (Equinix PM range, Glassdoor)</span></div>
+                    <div class="stat-pill" role="listitem"><strong>7 years</strong> <span>typical experience at this level</span></div>
+                    <div class="stat-pill" role="listitem"><strong>3–5 days</strong> <span>target time-to-approval (vs. 8–12 week reality)</span></div>
+                    <div class="stat-pill" role="listitem"><strong>25%+</strong> <span>of week spent stitching data across siloed tools</span></div>
+                    <div class="stat-pill" role="listitem"><strong>Impartner / SF PRM</strong> <span>primary toolset for application management</span></div>
+                </div>
+
+                <div class="persona-grid">
+                    <div class="data-card">
+                        <h4>Real Job Titles for This Role</h4>
+                        <ul>
+                            <li>Partner Program Manager — most common at infra/cloud vendors</li>
+                            <li>Channel Program Manager</li>
+                            <li>Partner Development Manager (at Equinix job postings)</li>
+                            <li>Partner Operations Manager</li>
+                            <li>Strategic Partner Development Manager (senior variant)</li>
+                            <li>Alliance Manager — common at Cisco, Equinix, AWS</li>
+                        </ul>
+                    </div>
+
+                    <div class="data-card">
+                        <h4>How This Role Differs from PSM</h4>
+                        <ul>
+                            <li><strong>PPM</strong>: Owns program structure — criteria, tiers, policy, application review, recruitment strategy across the partner base</li>
+                            <li><strong>PSM</strong>: Owns individual partner relationships — co-sell, QBRs, enablement, deal support for their assigned accounts</li>
+                            <li>PSM is assigned <em>after</em> Alex approves an applicant and triggers onboarding</li>
+                            <li>PPM sees the program from 30,000 ft; PSM works in the trenches with each partner</li>
+                        </ul>
+                    </div>
+
+                    <div class="data-card">
+                        <h4>What Alex Is Measured On</h4>
+                        <ul>
+                            <li>Time-to-approval SLA: days from application to fully onboarded partner</li>
+                            <li>Partner-sourced revenue across the full program</li>
+                            <li>Partner tier progression (% moving up from entry to mid/high tiers)</li>
+                            <li>Partner retention / churn rate year over year</li>
+                            <li>Training completion rates (leading indicator for deal velocity)</li>
+                            <li>Partner NPS from satisfaction surveys</li>
+                        </ul>
+                    </div>
+
+                    <div class="data-card">
+                        <h4>Top Frustrations</h4>
+                        <ul>
+                            <li>Manual review queue: 8–12 week approval cycles damage trust before a partner even goes live</li>
+                            <li>Duplicate records: partners apply under different subsidiary or DBA names; no pre-application D&amp;B lookup means Alex dedupes manually</li>
+                            <li>Opaque criteria: partners don't know what disqualified them; Alex gets escalations from sales ("why isn't this partner live yet?")</li>
+                            <li>Compliance bottlenecks: SOC 2, certifications, or background checks stall applications unpredictably</li>
+                            <li>Data silos: application data in PRM, deal data in Salesforce, financials in a third system — Alex builds spreadsheets just to report to leadership</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="data-card" style="margin-bottom:1.25rem;">
+                    <h4>Partner Application Review — What Alex Actually Does</h4>
+                    <p style="margin-bottom:.75rem; font-size:.8rem; color:var(--wf-muted, #6b7f99);">Reconstructed from Velvet Jobs PPM JD, impact.com partner application docs, and Moxo partner onboarding guide</p>
+                    <ol style="padding-left:1.25rem; font-size:.85rem; line-height:1.9; color:var(--wf-text, #3b4f68);">
+                        <li><strong>Intake:</strong> Application enters queue via partner portal. Alex reviews company profile, declared revenue, target regions, and self-reported certifications.</li>
+                        <li><strong>Tier fit check:</strong> Compares applicant against tier eligibility criteria — revenue thresholds, technical certifications, support SLA commitments, prior vendor experience.</li>
+                        <li><strong>Duplicate check:</strong> Searches for existing records. If a parent company or subsidiary is already enrolled, must decide whether to merge or create a new account.</li>
+                        <li><strong>Diligence (if required):</strong> High-tier applicants may require compliance docs (SOC 2, insurance), references, or a capabilities interview. Alex coordinates with legal and finance.</li>
+                        <li><strong>Decision:</strong> Approve → assign to tier + trigger PSM assignment. Reject → send decline notice with reason. Pend → request more info from applicant.</li>
+                        <li><strong>Onboarding handoff:</strong> Approved partner record handed to PSM team. Alex monitors that onboarding milestones (agreement signed, portal access live, first training completed) are hit on schedule.</li>
+                    </ol>
+                </div>
+
+                <div class="data-card" style="margin-bottom:1.25rem;">
+                    <h4>How Alex Spends the Week</h4>
+                    <p style="margin-bottom:.75rem; font-size:.8rem; color:var(--wf-muted, #6b7f99);">Source: Zippia PPM role analysis, Introw partner enablement KPIs guide, Crossbeam attribution research</p>
+                    <div class="time-bar">
+                        <div class="time-row">
+                            <span class="time-label">Application review &amp; approval queue</span>
+                            <div class="time-track" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" aria-label="30%">
+                                <div class="time-fill fill-green" style="width:30%"></div>
+                            </div>
+                            <span class="time-pct">30%</span>
+                        </div>
+                        <div class="time-row">
+                            <span class="time-label">Program health reporting &amp; data stitching</span>
+                            <div class="time-track" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100" aria-label="25%">
+                                <div class="time-fill fill-muted" style="width:25%"></div>
+                            </div>
+                            <span class="time-pct">25%</span>
+                        </div>
+                        <div class="time-row">
+                            <span class="time-label">Tier policy &amp; program governance</span>
+                            <div class="time-track" role="progressbar" aria-valuenow="22" aria-valuemin="0" aria-valuemax="100" aria-label="22%">
+                                <div class="time-fill fill-green" style="width:22%; opacity:.7"></div>
+                            </div>
+                            <span class="time-pct">22%</span>
+                        </div>
+                        <div class="time-row">
+                            <span class="time-label">Onboarding escalations &amp; partner disputes</span>
+                            <div class="time-track" role="progressbar" aria-valuenow="23" aria-valuemin="0" aria-valuemax="100" aria-label="23%">
+                                <div class="time-fill fill-muted" style="width:23%; opacity:.7"></div>
+                            </div>
+                            <span class="time-pct">23%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="assessment-box assess-green">
+                    <h4>What's Accurate</h4>
+                    <ul>
+                        <li>Job title "Partner Program Manager" is used in real Equinix, Cisco, Dell, and AWS job postings</li>
+                        <li>Role differentiation from PSM is well-documented: PPM owns program structure; PSM owns individual partner success</li>
+                        <li>Application review workflow (intake → tier check → diligence → decision → handoff) is consistent across published partner program management guides</li>
+                        <li>Pain points around manual deduplication, slow approval cycles, and data silos are heavily documented in Moxo, Crossbeam, and Impartner research</li>
+                        <li>Salary range ($128K–$191K at Equinix) is from Glassdoor public data for Program Manager title</li>
+                        <li>Metrics (time-to-approval, tier progression, partner churn, training completion) align with Introw KPI guide and comparable programs</li>
+                    </ul>
+                </div>
+
+                <div class="assessment-box assess-blue" style="margin-top:.75rem;">
+                    <h4>Recommended Enrichments</h4>
+                    <ul>
+                        <li>Add an application review queue view to the PSM portal — Alex needs to see all pending applications with days-in-queue, status, and tier recommendation</li>
+                        <li>Show a duplicate detection prompt: when a new application matches an existing partner name or domain, surface it before Alex has to find it manually</li>
+                        <li>Partner tier dashboard: program-wide view of tier distribution, churn risk, and upcoming tier reviews</li>
+                        <li>Build in a "request more info" workflow — Alex should be able to send a structured request to the applicant without leaving the portal</li>
+                        <li>Surface onboarding milestone tracking: after approval, show PSM assignment, agreement status, and first login date in a single view</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ─── SECTION 7: Maria Hill ─── -->
     <section aria-labelledby="maria-h2">
         <h2 id="maria-h2">
-            <span aria-hidden="true">🏢</span> Persona 4 — End User Customer (EUC)
+            <span aria-hidden="true">🏢</span> Persona 5 — End User Customer (EUC)
             <span class="section-badge">EUC Portal User</span>
         </h2>
 
@@ -814,7 +975,7 @@
         </div>
     </section>
 
-    <!-- ─── SECTION 6: Cross-Persona Implications ─── -->
+    <!-- ─── SECTION 8: Cross-Persona Implications ─── -->
     <section aria-labelledby="implications-h2">
         <h2 id="implications-h2">
             <span aria-hidden="true">🔍</span> Design Implications from Research
@@ -853,7 +1014,7 @@
         </div>
     </section>
 
-    <!-- ─── SECTION 6: Sources ─── -->
+    <!-- ─── SECTION 9: Sources ─── -->
     <section aria-labelledby="sources-h2">
         <h2 id="sources-h2">
             <span aria-hidden="true">📚</span> Sources
