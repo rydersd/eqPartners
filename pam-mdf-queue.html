@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MDF Request Queue — PAM · Equinix PCP</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: var(--wf-canvas,#f5f7fb); }
+    .page-container { padding: 24px; max-width: 1600px; margin: 0 auto; }
+    .page-title { font-size: 20px; font-weight: 700; color: var(--wf-ink,#1e2a3a); }
+    .page-subtitle { font-size: 13px; color: var(--wf-muted,#6b7f99); margin-top: 2px; margin-bottom: 20px; }
+    .jtbd-banner { background: #edf4fb; border-left: 4px solid var(--wf-accent,#3d6daa); padding: 10px 16px; border-radius: 0 4px 4px 0; margin-bottom: 20px; font-size: 13px; color: var(--wf-text,#3b4f68); }
+    .jtbd-banner strong { color: var(--wf-ink,#1e2a3a); }
+    .kpi-row { display: grid; grid-template-columns: repeat(5,1fr); gap: 16px; margin-bottom: 24px; }
+    .kpi-card { background: var(--wf-surface,#edf1f7); padding: 16px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .kpi-label { font-size: 12px; color: var(--wf-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; font-weight: 600; }
+    .kpi-value { font-size: 24px; font-weight: 700; color: var(--wf-accent,#3d6daa); }
+    .kpi-value.warn { color: #856404; }
+    .kpi-trend { font-size: 12px; color: var(--wf-text); margin-top: 4px; }
+    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .section-title { font-size: 15px; font-weight: 700; color: var(--wf-text); margin: 0; }
+    .table-wrapper { background: var(--wf-surface); border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden; margin-bottom: 24px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead { background: var(--wf-canvas); border-bottom: 2px solid var(--wf-line,#b0bdd0); }
+    th { padding: 10px 12px; text-align: left; font-weight: 700; color: var(--wf-text); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+    td { padding: 10px 12px; border-bottom: 1px solid var(--wf-canvas); color: var(--wf-text); vertical-align: middle; }
+    tbody tr:hover { background: #f0f4fa; }
+    .badge { display: inline-block; padding: 3px 8px; border-radius: 3px; font-size: 11px; font-weight: 600; }
+    .badge-gold { background: #fff8e1; color: #8b7745; }
+    .badge-silver { background: #f0f4fa; color: #546e8a; }
+    .badge-bronze { background: #f9ede8; color: #7a3a2a; }
+    .badge-pending { background: #fff3cd; color: #856404; }
+    .badge-urgent { background: #fde8e8; color: #8b4553; }
+    .badge-approved { background: #e8f5e9; color: #2e7d32; }
+    .badge-denied { background: #fde8e8; color: #8b4553; }
+    .badge-info { background: #e8f0fa; color: #1e6fa8; }
+    .btn { padding: 5px 10px; border: none; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer; margin-right: 3px; }
+    .btn-primary { background: var(--wf-accent,#3d6daa); color: #fff; }
+    .btn-danger { background: var(--wf-red,#8b4553); color: #fff; }
+    .btn-secondary { background: var(--wf-surface); color: var(--wf-text); border: 1px solid var(--wf-line,#b0bdd0); }
+    .btn-link { background: none; border: none; color: var(--wf-accent,#3d6daa); font-size: 12px; font-weight: 600; cursor: pointer; text-decoration: underline; padding: 0; }
+    .filter-bar { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+    .filter-control { padding: 5px 10px; border: 1px solid var(--wf-line,#b0bdd0); border-radius: 4px; background: var(--wf-surface); font-size: 12px; }
+    .progress-bar { display: flex; align-items: center; gap: 8px; }
+    .progress-track { width: 70px; height: 6px; background: var(--wf-canvas); border-radius: 3px; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 3px; }
+    .fill-ok { background: #4caf50; }
+    .fill-warn { background: #ffc107; }
+    .fill-over { background: var(--wf-red,#8b4553); }
+    .budget-summary { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 24px; }
+    .budget-card { background: var(--wf-surface); padding: 16px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .budget-tier-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+    .budget-tier-label.gold { color: #8b7745; }
+    .budget-tier-label.silver { color: #546e8a; }
+    .budget-tier-label.bronze { color: #7a3a2a; }
+    .budget-row { display: flex; justify-content: space-between; font-size: 12px; padding: 5px 0; border-bottom: 1px solid var(--wf-canvas); }
+    .budget-row:last-of-type { border-bottom: none; }
+    .footer-pagination { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; font-size: 12px; color: var(--wf-muted); border-top: 1px solid var(--wf-canvas); }
+    .sla-chip { display: inline-block; padding: 2px 7px; border-radius: 10px; font-size: 11px; font-weight: 700; }
+    .chip-red { background: #fde8e8; color: #8b4553; }
+    .chip-yellow { background: #fff3cd; color: #856404; }
+    .chip-green { background: #e8f5e9; color: #2e7d32; }
+  </style>
+</head>
+<body>
+
+<header class="wf-header">
+  <div class="wf-header-logo"><svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix"><path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/></svg></div>
+  <div class="wf-header-title">SFDC</div>
+  <nav class="wf-header-nav">
+    <a href="#">Dashboard</a>
+    <a href="#" class="active">PAM Portal</a>
+    <a href="#">Partners</a>
+    <a href="#">Programs</a>
+    <a href="#">Reports</a>
+  </nav>
+  <div class="wf-header-util">
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+  </div>
+</header>
+
+<div class="page-context-bar">
+  <div style="max-width:1600px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <span style="font-size:12px;color:var(--wf-muted);display:flex;align-items:center;gap:6px;">
+      <svg viewBox="0 0 20 13" style="width:18px;height:11px;fill:var(--wf-muted);" aria-hidden="true"><path d="M8.3 1.7A3.8 3.8 0 0 1 12 0a3.8 3.8 0 0 1 3.5 2.3A2.8 2.8 0 0 1 20 5a2.8 2.8 0 0 1-2.8 2.8H3.2A3.2 3.2 0 0 1 0 4.6 3.2 3.2 0 0 1 3.2 1.4c.18 0 .35.01.52.04A3.8 3.8 0 0 1 8.3 1.7z"/></svg>
+      <strong style="color:var(--wf-text);font-weight:600;">Salesforce Lightning</strong>&ensp;&middot;&ensp;PCP App
+    </span>
+    <span class="persona-badge" style="background:#b04a2a;color:#fff;display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;letter-spacing:0.5px;">PAM</span>
+  </div>
+</div>
+
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+<div class="page-container">
+
+  <div class="page-title">MDF Request Queue</div>
+  <div class="page-subtitle">Alex Rivera · Partner Account Manager · Q1 FY2026 · 14 open requests</div>
+
+  <div class="jtbd-banner">
+    <strong>Job to be done:</strong> When a partner submits an MDF request, I want to validate the business case against program budget and tier allocation — so I can approve or deny with a clear audit trail within the 10-business-day SLA.
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi-card">
+      <div class="kpi-label">Pending Approval</div>
+      <div class="kpi-value">14</div>
+      <div class="kpi-trend">Across all tiers</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">SLA Warning (&lt; 3 days)</div>
+      <div class="kpi-value warn">3</div>
+      <div class="kpi-trend">Require action today</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Total Requested</div>
+      <div class="kpi-value">$218,400</div>
+      <div class="kpi-trend">This queue snapshot</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Remaining Program Budget</div>
+      <div class="kpi-value">$824,500</div>
+      <div class="kpi-trend">FY2026 available balance</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Approved MTD</div>
+      <div class="kpi-value">$146,200</div>
+      <div class="kpi-trend">↑ +22% vs. Feb 2025</div>
+    </div>
+  </div>
+
+  <div style="margin-bottom:20px;">
+    <div style="font-size:13px;font-weight:700;color:var(--wf-text);margin-bottom:10px;">Program Budget — FY2026 by Tier</div>
+    <div class="budget-summary">
+      <div class="budget-card">
+        <div class="budget-tier-label gold">Gold Tier (12 partners)</div>
+        <div class="budget-row"><span style="color:var(--wf-muted);">Total allocated</span><span style="font-weight:700;">$1,440,000</span></div>
+        <div class="budget-row"><span style="color:var(--wf-muted);">Committed (paid + pending)</span><span style="font-weight:700;">$986,400</span></div>
+        <div class="budget-row"><span style="color:var(--wf-muted);">Available balance</span><span style="font-weight:700;color:#4caf50;">$453,600</span></div>
+        <div style="margin-top:8px;">
+          <div class="progress-bar" style="gap:10px;">
+            <div class="progress-track" style="flex:1;height:8px;"><div class="progress-fill fill-warn" style="width:68%;"></div></div>
+            <span style="font-size:11px;font-weight:700;color:#856404;">68% utilized</span>
+          </div>
+        </div>
+      </div>
+      <div class="budget-card">
+        <div class="budget-tier-label silver">Silver Tier (18 partners)</div>
+        <div class="budget-row"><span style="color:var(--wf-muted);">Total allocated</span><span style="font-weight:700;">$1,080,000</span></div>
+        <div class="budget-row"><span style="color:var(--wf-muted);">Committed (paid + pending)</span><span style="font-weight:700;">$714,600</span></div>
+        <div class="budget-row"><span style="color:var(--wf-muted);">Available balance</span><span style="font-weight:700;color:#4caf50;">$365,400</span></div>
+        <div style="margin-top:8px;">
+          <div class="progress-bar" style="gap:10px;">
+            <div class="progress-track" style="flex:1;height:8px;"><div class="progress-fill fill-ok" style="width:66%;"></div></div>
+            <span style="font-size:11px;font-weight:700;color:#4caf50;">66% utilized</span>
+          </div>
+        </div>
+      </div>
+      <div class="budget-card">
+        <div class="budget-tier-label bronze">Bronze Tier (12 partners)</div>
+        <div class="budget-row"><span style="color:var(--wf-muted);">Total allocated</span><span style="font-weight:700;">$300,000</span></div>
+        <div class="budget-row"><span style="color:var(--wf-muted);">Committed (paid + pending)</span><span style="font-weight:700;">$295,100</span></div>
+        <div class="budget-row"><span style="color:var(--wf-muted);">Available balance</span><span style="font-weight:700;color:#856404;">$4,900</span></div>
+        <div style="margin-top:8px;">
+          <div class="progress-bar" style="gap:10px;">
+            <div class="progress-track" style="flex:1;height:8px;"><div class="progress-fill fill-over" style="width:98%;"></div></div>
+            <span style="font-size:11px;font-weight:700;color:#8b4553;">98% — nearly exhausted</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-header">
+    <div class="section-title">Open MDF Requests (14)</div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-secondary" style="font-size:12px;padding:6px 12px;">Export</button>
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <select class="filter-control">
+      <option>All Tiers</option>
+      <option>Gold</option>
+      <option>Silver</option>
+      <option>Bronze</option>
+    </select>
+    <select class="filter-control">
+      <option>All Activity Types</option>
+      <option>Event / Sponsorship</option>
+      <option>Digital Marketing</option>
+      <option>Co-marketing</option>
+      <option>Training</option>
+      <option>Content / Creative</option>
+    </select>
+    <select class="filter-control">
+      <option>Sort: SLA (urgent first)</option>
+      <option>Sort: Amount (highest first)</option>
+      <option>Sort: Date submitted</option>
+    </select>
+    <input type="text" class="filter-control" placeholder="Search partner…" style="width:180px;">
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Partner</th>
+          <th>Tier</th>
+          <th>Activity</th>
+          <th>Type</th>
+          <th>Requested</th>
+          <th>Amount</th>
+          <th>Partner Balance</th>
+          <th>Pre/Post</th>
+          <th>SLA</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><button class="btn-link">CloudBridge Solutions</button></td>
+          <td><span class="badge badge-gold">Gold</span></td>
+          <td>Executive Roundtable — NYC</td>
+          <td>Event / Sponsorship</td>
+          <td>Feb 10, 2026</td>
+          <td style="font-weight:700;">$12,000</td>
+          <td><span style="font-size:12px;">$32,300 avail.</span></td>
+          <td><span class="badge badge-info">Pre-approval</span></td>
+          <td><span class="sla-chip chip-red">2 days</span></td>
+          <td>
+            <button class="btn btn-primary">Approve</button>
+            <button class="btn btn-danger">Deny</button>
+          </td>
+        </tr>
+        <tr>
+          <td><button class="btn-link">CloudBridge Solutions</button></td>
+          <td><span class="badge badge-gold">Gold</span></td>
+          <td>Partner Portal Microsite</td>
+          <td>Digital Marketing</td>
+          <td>Feb 14, 2026</td>
+          <td style="font-weight:700;">$5,500</td>
+          <td><span style="font-size:12px;">$32,300 avail.</span></td>
+          <td><span class="badge badge-info">Pre-approval</span></td>
+          <td><span class="sla-chip chip-red">6 days</span></td>
+          <td>
+            <button class="btn btn-primary">Approve</button>
+            <button class="btn btn-danger">Deny</button>
+          </td>
+        </tr>
+        <tr>
+          <td><button class="btn-link">Meridian Cloud Inc.</button></td>
+          <td><span class="badge badge-gold">Gold</span></td>
+          <td>Q1 Demand Gen — Google Ads</td>
+          <td>Digital Marketing</td>
+          <td>Feb 8, 2026</td>
+          <td style="font-weight:700;">$22,000</td>
+          <td><span style="font-size:12px;">$48,100 avail.</span></td>
+          <td><span class="badge badge-info">Pre-approval</span></td>
+          <td><span class="sla-chip chip-red">2 days</span></td>
+          <td>
+            <button class="btn btn-primary">Approve</button>
+            <button class="btn btn-danger">Deny</button>
+          </td>
+        </tr>
+        <tr>
+          <td><button class="btn-link">InnovateTech Solutions</button></td>
+          <td><span class="badge badge-gold">Gold</span></td>
+          <td>Channel Partner Conference Booth</td>
+          <td>Event / Sponsorship</td>
+          <td>Feb 12, 2026</td>
+          <td style="font-weight:700;">$38,500</td>
+          <td><span style="font-size:12px;">$61,200 avail.</span></td>
+          <td><span class="badge badge-info">Pre-approval</span></td>
+          <td><span class="sla-chip chip-yellow">4 days</span></td>
+          <td>
+            <button class="btn btn-primary">Approve</button>
+            <button class="btn btn-danger">Deny</button>
+          </td>
+        </tr>
+        <tr>
+          <td><button class="btn-link">Horizon Cloud Services</button></td>
+          <td><span class="badge badge-silver">Silver</span></td>
+          <td>Email Nurture Campaign</td>
+          <td>Digital Marketing</td>
+          <td>Feb 10, 2026</td>
+          <td style="font-weight:700;">$9,200</td>
+          <td><span style="font-size:12px;">$28,400 avail.</span></td>
+          <td><span class="badge badge-pending">Post-execution</span></td>
+          <td><span class="sla-chip chip-yellow">4 days</span></td>
+          <td>
+            <button class="btn btn-primary">Approve</button>
+            <button class="btn btn-danger">Deny</button>
+          </td>
+        </tr>
+        <tr>
+          <td><button class="btn-link">Nexus IT Partners</button></td>
+          <td><span class="badge badge-silver">Silver</span></td>
+          <td>Sales Kickoff Sponsorship</td>
+          <td>Event / Sponsorship</td>
+          <td>Feb 13, 2026</td>
+          <td style="font-weight:700;">$14,800</td>
+          <td><span style="font-size:12px;">$21,900 avail.</span></td>
+          <td><span class="badge badge-info">Pre-approval</span></td>
+          <td><span class="sla-chip chip-yellow">5 days</span></td>
+          <td>
+            <button class="btn btn-primary">Approve</button>
+            <button class="btn btn-danger">Deny</button>
+          </td>
+        </tr>
+        <tr>
+          <td><button class="btn-link">BlueSky Networks LLC</button></td>
+          <td><span class="badge badge-silver">Silver</span></td>
+          <td>Co-branded Case Study</td>
+          <td>Content / Creative</td>
+          <td>Feb 13, 2026</td>
+          <td style="font-weight:700;">$4,500</td>
+          <td><span style="font-size:12px;">$33,200 avail.</span></td>
+          <td><span class="badge badge-pending">Post-execution</span></td>
+          <td><span class="sla-chip chip-green">7 days</span></td>
+          <td>
+            <button class="btn btn-primary">Approve</button>
+            <button class="btn btn-danger">Deny</button>
+          </td>
+        </tr>
+        <tr>
+          <td><button class="btn-link">Cascade Technology</button></td>
+          <td><span class="badge badge-silver">Silver</span></td>
+          <td>Webinar Series (2 sessions)</td>
+          <td>Co-marketing</td>
+          <td>Feb 14, 2026</td>
+          <td style="font-weight:700;">$7,600</td>
+          <td><span style="font-size:12px;">$19,700 avail.</span></td>
+          <td><span class="badge badge-pending">Post-execution</span></td>
+          <td><span class="sla-chip chip-green">8 days</span></td>
+          <td>
+            <button class="btn btn-primary">Approve</button>
+            <button class="btn btn-danger">Deny</button>
+          </td>
+        </tr>
+        <tr>
+          <td><button class="btn-link">Summit Digital Partners</button></td>
+          <td><span class="badge badge-bronze">Bronze</span></td>
+          <td>LinkedIn Campaign</td>
+          <td>Digital Marketing</td>
+          <td>Feb 9, 2026</td>
+          <td style="font-weight:700;">$3,800</td>
+          <td><span style="font-size:12px;color:#8b4553;font-weight:700;">$900 avail. ⚠</span></td>
+          <td><span class="badge badge-pending">Post-execution</span></td>
+          <td><span class="sla-chip chip-yellow">5 days</span></td>
+          <td>
+            <button class="btn btn-primary">Approve</button>
+            <button class="btn btn-danger">Deny</button>
+          </td>
+        </tr>
+        <tr>
+          <td><button class="btn-link">DataLink Systems</button></td>
+          <td><span class="badge badge-bronze">Bronze</span></td>
+          <td>Industry Report Sponsorship</td>
+          <td>Content / Creative</td>
+          <td>Feb 11, 2026</td>
+          <td style="font-weight:700;">$2,400</td>
+          <td><span style="font-size:12px;color:#8b4553;font-weight:700;">$1,100 avail. ⚠</span></td>
+          <td><span class="badge badge-pending">Post-execution</span></td>
+          <td><span class="sla-chip chip-yellow">5 days</span></td>
+          <td>
+            <button class="btn btn-primary">Approve</button>
+            <button class="btn btn-danger">Deny</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="footer-pagination">
+      <span>Showing 10 of 14 open requests</span>
+      <span>4 more · <button class="btn-link" style="font-size:12px;">Load all</button></span>
+    </div>
+  </div>
+
+</div>
+
+<aside class="spec-panel" id="spec-panel" aria-hidden="true">
+  <button class="spec-close-btn" onclick="toggleSpec()" aria-label="Close spec panel">✕</button>
+  <h2>pam-mdf-queue.html</h2>
+  <p class="spec-meta">PAM Portal · Alex Rivera · MDF Request Queue</p>
+  <hr class="spec-divider">
+  <h3>Job to Be Done</h3>
+  <p><em>"When a partner submits an MDF request, I want to validate the business case against the program budget and tier allocation — so I can approve or deny with a clear audit trail within the 10-business-day SLA."</em></p>
+  <hr class="spec-divider">
+  <h3>Screen Purpose</h3>
+  <p>Alex's daily queue for reviewing and approving/denying inbound MDF fund requests. Partners submit requests through the partner portal; they land here for PAM review. The program budget summary cards at top prevent over-allocation — especially for Bronze tier, which shows near-exhaustion.</p>
+  <hr class="spec-divider">
+  <h3>Key Design Decisions</h3>
+  <ul>
+    <li><strong>Budget summary by tier at top</strong> — prevents approval errors. If Bronze budget is 98% committed, Alex should not approve new Bronze requests without escalation</li>
+    <li><strong>Pre-approval vs. post-execution shown per request</strong> — Gold partners can request pre-approval (money before execution); Silver/Bronze are post-execution only. This changes the approval logic and when Alex validates proof</li>
+    <li><strong>Partner balance shown inline</strong> — Alex should never approve a request that exceeds the partner's remaining allocation; showing balance in the row catches this instantly</li>
+    <li><strong>SLA countdown chips</strong> — color-coded (red &lt;3 days, yellow 3–7, green 7+) so the queue naturally sorts itself visually</li>
+    <li><strong>Approve and Deny as separate action buttons</strong> — not a dropdown, because the wrong selection has real financial consequences and should require a deliberate tap</li>
+  </ul>
+  <hr class="spec-divider">
+  <h3>Business Logic</h3>
+  <ul>
+    <li>SLA: 10 business days from partner submission date</li>
+    <li>Approval prerequisite: requested amount ≤ partner's remaining MDF balance</li>
+    <li>Bronze tier: post-execution only (no pre-approval); amounts over $5K require proof of execution attachment</li>
+    <li>Approval triggers notification to partner portal; Approved_Date__c and Approver__c fields logged</li>
+    <li>Denial requires comment before submission (shown in modal, not in queue view)</li>
+  </ul>
+  <hr class="spec-divider">
+  <h3>Linked JTBD Workflow</h3>
+  <p>See <a href="workflows-jtbd.html#pam-jtbd-3">workflows-jtbd.html → PAM Job 3</a> for the MDF request review workflow.</p>
+  <h3>Navigation</h3>
+  <ul>
+    <li>Partner name → <code>pam-partner-financial.html</code></li>
+    <li>Approve → inline modal (confirm + optional comment)</li>
+    <li>Deny → inline modal (comment required)</li>
+    <li>Related: <code>pam-mdf-claims.html</code>, <code>pam-partner-financial.html</code></li>
+  </ul>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

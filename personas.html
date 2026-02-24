@@ -250,7 +250,10 @@
 </header>
 
 <main class="container">
-    <a href="research-best-practices.html" class="back-link">← Partner Program Research</a>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+        <a href="research-best-practices.html" class="back-link" style="margin-bottom:0;">← Partner Program Research</a>
+        <a href="workflows-jtbd.html" style="display:inline-flex;align-items:center;gap:.375rem;color:#0d6efd;text-decoration:none;font-size:.875rem;font-weight:700;background:#f0f5ff;padding:.4rem .9rem;border-radius:5px;border:1px solid #c7d9f9;">Jobs to Be Done Workflows →</a>
+    </div>
 
     <div class="research-note" role="note">
         <strong>Research Methodology:</strong> Personas were assessed against publicly available job posting data, BLS occupational statistics, CompTIA's 2024 State of the Channel (n=1,042 channel company executives), Salesforce State of Sales 7th Edition (n=7,400+ sales professionals), Glassdoor compensation data, and industry analyst publications. Where data was behind a paywall, only publicly accessible summaries and cited statistics were used.
@@ -297,14 +300,14 @@
                     <td>Equinix (vendor-side, post-approval)</td>
                     <td><span class="check">✓ Accurate</span></td>
                     <td><span class="check">✓ Well-documented</span></td>
-                    <td>PSM portfolio, partner detail, QBR prep, deal co-sell</td>
+                    <td><a href="psm-portfolio.html" style="color:#2e7d6f;">psm-portfolio</a>, <a href="psm-deal-cosell.html" style="color:#2e7d6f;">psm-deal-cosell</a>, <a href="psm-deal-dispute.html" style="color:#2e7d6f;">psm-deal-dispute</a>, <a href="psm-qbr-prep.html" style="color:#2e7d6f;">psm-qbr-prep</a>, <a href="psm-partner-comms.html" style="color:#2e7d6f;">psm-partner-comms</a></td>
                 </tr>
                 <tr>
                     <td>Alex Rivera — Partner Account Manager (PAM)</td>
                     <td>Equinix (vendor-side, business review &amp; financial oversight)</td>
                     <td><span class="check">✓ Accurate</span></td>
                     <td><span class="check">✓ Well-documented</span></td>
-                    <td>Application review queue, MDF approval, tier dashboard, financial reporting</td>
+                    <td><a href="pam-application-queue.html" style="color:#b04a2a;">pam-application-queue</a>, <a href="pam-partner-financial.html" style="color:#b04a2a;">pam-partner-financial</a>, <a href="pam-tier-dashboard.html" style="color:#b04a2a;">pam-tier-dashboard</a>, <a href="pam-mdf-queue.html" style="color:#b04a2a;">pam-mdf-queue</a>, <a href="pam-mdf-claims.html" style="color:#b04a2a;">pam-mdf-claims</a>, <a href="pam-program-report.html" style="color:#b04a2a;">pam-program-report</a></td>
                 </tr>
                 <tr>
                     <td>Maria Hill — EUC (IT Director)</td>
@@ -350,6 +353,15 @@
                         <li><strong>training-lms.html</strong> — certification courses; required for tier advancement</li>
                         <li><strong>onboarding-wizard.html</strong> — pre-loaded as a team member when Jordan sets up the org (role: AE / Deal Reg User)</li>
                     </ul>
+                </div>
+
+                <div class="data-card" style="margin-bottom:1.25rem;border-left:3px solid #198754;background:#f0fdf4;">
+                    <h4 style="color:#166534;">Jobs to Be Done — <a href="workflows-jtbd.html#ae" style="color:#198754;text-decoration:none;font-weight:700;">View Full Workflows →</a></h4>
+                    <ul>
+                        <li><a href="workflows-jtbd.html#ae-jtbd-1" style="color:#198754;font-weight:600;text-decoration:none;">Job 1: Deal Registration</a> — Protect a qualified deal and secure partner-sourced attribution before Equinix direct finds the prospect.</li>
+                        <li><a href="workflows-jtbd.html#ae-jtbd-2" style="color:#198754;font-weight:600;text-decoration:none;">Job 2: MDF Campaign</a> — Access co-marketing funds, get fast approval, run the activity, and receive reimbursement without chasing anyone.</li>
+                    </ul>
+                    <p style="font-size:.8rem;margin-top:.75rem;color:#3b4f68;font-style:italic;">Each job links to the detailed workflow and the wireframe screens that implement it.</p>
                 </div>
 
                 <div class="stat-row" role="list" aria-label="Key statistics">
@@ -510,6 +522,15 @@
                     </ul>
                 </div>
 
+                <div class="data-card" style="margin-bottom:1.25rem;border-left:3px solid #6f42c1;background:#f5f3ff;">
+                    <h4 style="color:#4c1d95;">Jobs to Be Done — <a href="workflows-jtbd.html#admin" style="color:#6f42c1;text-decoration:none;font-weight:700;">View Full Workflows →</a></h4>
+                    <ul>
+                        <li><a href="workflows-jtbd.html#admin-jtbd-2" style="color:#6f42c1;font-weight:600;text-decoration:none;">Job 1: Onboarding</a> — Complete CloudBridge's program application cleanly and completely in one session, with no stalls due to missing documents.</li>
+                        <li><a href="workflows-jtbd.html#admin-jtbd-1" style="color:#6f42c1;font-weight:600;text-decoration:none;">Job 2: Compliance Maintenance</a> — Keep certifications, insurance, and user accounts current so CloudBridge is never flagged as non-compliant due to an admin delay.</li>
+                    </ul>
+                    <p style="font-size:.8rem;margin-top:.75rem;color:#3b4f68;font-style:italic;">Each job links to the detailed workflow and the wireframe screens that implement it.</p>
+                </div>
+
                 <div class="stat-row" role="list" aria-label="Key statistics">
                     <div class="stat-pill" role="listitem"><strong>$70K–$110K</strong> <span>Sales/RevOps Manager comp range</span></div>
                     <div class="stat-pill" role="listitem"><strong>~30–100 users</strong> <span>typical span for this role</span></div>
@@ -655,13 +676,24 @@
                     <h4>Screens Marcus Appears On</h4>
                     <ul>
                         <li><strong>onboarding-welcome.html</strong> — his card appears as the assigned PSM contact ("Your Partner Success Manager") once Alex approves and triggers the handoff</li>
-                        <li><strong>psm-portfolio.html</strong> — Marcus's primary view: all assigned partners, health scores, pipeline, training completion, last QBR date in a single portfolio grid</li>
-                        <li><strong>partner-detail.html</strong> — individual partner record: deal pipeline, co-sell opportunities, training progress, QBR history, contact list</li>
-                        <li><strong>deal-cosell.html</strong> — collaborative deal view shared between Marcus and the partner AE; deal status, comments, next steps</li>
-                        <li><strong>deal-dispute.html</strong> — deal conflict resolution workflow when two partners register the same opportunity</li>
-                        <li><strong>qbr-prep.html</strong> — quarterly business review builder: 4-quarter trend, partner health score, exportable PDF summary</li>
-                        <li><strong>partner-comms.html</strong> — broadcast tool for sending enablement updates, promotions, or tier change notices to assigned partners</li>
+                        <li><strong><a href="psm-portfolio.html" style="color:#2e7d6f;">psm-portfolio.html</a></strong> — Marcus's primary view: all assigned partners, health scores, pipeline, training completion, last QBR date in a single portfolio grid</li>
+                        <li><strong><a href="psm-deal-cosell.html" style="color:#2e7d6f;">psm-deal-cosell.html</a></strong> — collaborative deal view shared between Marcus and the partner AE; deal status, comments, next steps</li>
+                        <li><strong><a href="psm-deal-dispute.html" style="color:#2e7d6f;">psm-deal-dispute.html</a></strong> — deal attribution dispute resolution: evidence review, precedent, PSM recommendation workflow</li>
+                        <li><strong><a href="psm-qbr-prep.html" style="color:#2e7d6f;">psm-qbr-prep.html</a></strong> — quarterly business review builder: section readiness checklist, KPIs, asks, agenda builder, exportable PDF deck</li>
+                        <li><strong><a href="psm-partner-comms.html" style="color:#2e7d6f;">psm-partner-comms.html</a></strong> — broadcast and individual communication tool with audience segmentation, merge fields, and open tracking</li>
                     </ul>
+                </div>
+
+                <div class="data-card" style="margin-bottom:1.25rem;border-left:3px solid #0d6efd;background:#f0f5ff;">
+                    <h4 style="color:#0d4b9e;">Jobs to Be Done — <a href="workflows-jtbd.html#psm" style="color:#0d6efd;text-decoration:none;font-weight:700;">View Full Workflows →</a></h4>
+                    <ul>
+                        <li><a href="workflows-jtbd.html#psm-jtbd-1" style="color:#0d6efd;font-weight:600;text-decoration:none;">Job 1: Portfolio Triage</a> — Start each week knowing exactly which partners need attention, without spending the first hour assembling the picture.</li>
+                        <li><a href="workflows-jtbd.html#psm-jtbd-2" style="color:#0d6efd;font-weight:600;text-decoration:none;">Job 2: Deal Dispute Resolution</a> — Assess attribution disputes fairly and close them before the 21-day escalation window closes.</li>
+                        <li><a href="workflows-jtbd.html#psm-jtbd-3" style="color:#0d6efd;font-weight:600;text-decoration:none;">Job 3: Co-sell Collaboration</a> — Stay actively engaged on partner-registered deals to coordinate resources and accelerate close.</li>
+                        <li><a href="workflows-jtbd.html#psm-jtbd-4" style="color:#0d6efd;font-weight:600;text-decoration:none;">Job 4: QBR Preparation</a> — Build a data-driven QBR brief that leads to specific partner commitments, not a data dump.</li>
+                        <li><a href="workflows-jtbd.html#psm-jtbd-5" style="color:#0d6efd;font-weight:600;text-decoration:none;">Job 5: Partner Communications</a> — Send targeted, logged communications without leaving the portal or managing partner outreach from a personal inbox.</li>
+                    </ul>
+                    <p style="font-size:.8rem;margin-top:.75rem;color:#3b4f68;font-style:italic;">Each job links to the detailed workflow and the wireframe screens that implement it.</p>
                 </div>
 
                 <div class="stat-row" role="list" aria-label="Key statistics">
@@ -806,16 +838,26 @@
                 <div class="data-card" style="margin-bottom:1.25rem;border-left:3px solid #b04a2a;">
                     <h4>Screens Alex Appears On</h4>
                     <ul>
-                        <li><strong>application-review-queue.html</strong> — primary daily view; inbound applications ranked by days-in-queue, with tier recommendation and risk flags</li>
-                        <li><strong>application-detail.html</strong> — individual application review: company profile, revenue claims, certifications, duplicate detection, compliance status, approve / decline / request-info actions</li>
-                        <li><strong>onboarding-apply-wizard.html</strong> — partner-side application form; Alex reviews its output</li>
-                        <li><strong>onboarding-apply-referral.html</strong> — referral path application; Alex reviews these too</li>
-                        <li><strong>mdf-queue.html</strong> — MDF fund requests: partner submits, Alex reviews business case, approves or denies against program budget</li>
-                        <li><strong>mdf-claim-review.html</strong> — claim reconciliation: partner submits proof-of-spend; Alex verifies against approved activity and releases reimbursement</li>
-                        <li><strong>tier-dashboard.html</strong> — program-wide view of tier distribution; partners approaching tier upgrade or demotion thresholds; upcoming tier review calendar</li>
-                        <li><strong>partner-financial-detail.html</strong> — per-partner financial view: MDF allocated vs. utilized, rebates earned, revenue vs. tier threshold, compliance doc status</li>
-                        <li><strong>program-reporting.html</strong> — executive-level financial summary: partner-sourced revenue, MDF spend efficiency, tier progression, churn risk</li>
+                        <li><strong><a href="pam-application-queue.html" style="color:#b04a2a;">pam-application-queue.html</a></strong> — primary daily view; inbound applications ranked by days-in-queue, with tier recommendation, risk flags, and compliance dot matrix</li>
+                        <li><strong><a href="pam-partner-financial.html" style="color:#b04a2a;">pam-partner-financial.html</a></strong> — per-partner financial view: MDF allocated vs. utilized, rebates earned, revenue vs. tier threshold, compliance doc status</li>
+                        <li><strong><a href="pam-tier-dashboard.html" style="color:#b04a2a;">pam-tier-dashboard.html</a></strong> — program-wide tier distribution; partners approaching upgrade or demotion thresholds; tier movement trends</li>
+                        <li><strong><a href="pam-mdf-queue.html" style="color:#b04a2a;">pam-mdf-queue.html</a></strong> — MDF fund request approval queue; SLA countdown, tier budget utilization, approve / deny actions</li>
+                        <li><strong><a href="pam-mdf-claims.html" style="color:#b04a2a;">pam-mdf-claims.html</a></strong> — proof-of-spend claim review: verify activity, check ROI evidence, run compliance checklist, release reimbursement</li>
+                        <li><strong><a href="pam-program-report.html" style="color:#b04a2a;">pam-program-report.html</a></strong> — executive financial summary: partner-sourced ARR, MDF ROI by activity type, tier distribution, churn risk, exportable PDF</li>
+                        <li><strong>onboarding-apply-wizard.html</strong> — partner-side application form; Alex reviews its output and makes the tier decision</li>
                     </ul>
+                </div>
+
+                <div class="data-card" style="margin-bottom:1.25rem;border-left:3px solid #b04a2a;background:#fdf3ef;">
+                    <h4 style="color:#8a3018;">Jobs to Be Done — <a href="workflows-jtbd.html#pam" style="color:#b04a2a;text-decoration:none;font-weight:700;">View Full Workflows →</a></h4>
+                    <ul>
+                        <li><a href="workflows-jtbd.html#pam-jtbd-1" style="color:#b04a2a;font-weight:600;text-decoration:none;">Job 1: Application Review</a> — Evaluate and decision partner applications within the 30-day SLA, without letting the queue stall.</li>
+                        <li><a href="workflows-jtbd.html#pam-jtbd-2" style="color:#b04a2a;font-weight:600;text-decoration:none;">Job 2: Tier Management</a> — Monitor the full program's tier health and intervene before partners miss thresholds — not after the review date passes.</li>
+                        <li><a href="workflows-jtbd.html#pam-jtbd-3" style="color:#b04a2a;font-weight:600;text-decoration:none;">Job 3: MDF Approval</a> — Review fund requests, check tier budget availability, and approve or deny within SLA so partners can execute campaigns on time.</li>
+                        <li><a href="workflows-jtbd.html#pam-jtbd-4" style="color:#b04a2a;font-weight:600;text-decoration:none;">Job 4: Claim Reimbursement</a> — Verify proof-of-spend documentation and process reimbursements quickly so partners trust the program pays out reliably.</li>
+                        <li><a href="workflows-jtbd.html#pam-jtbd-5" style="color:#b04a2a;font-weight:600;text-decoration:none;">Job 5: Program Reporting</a> — Build the quarterly program health report for Channel leadership with a single view of ARR, MDF ROI, and risk flags.</li>
+                    </ul>
+                    <p style="font-size:.8rem;margin-top:.75rem;color:#3b4f68;font-style:italic;">Each job links to the detailed workflow and the wireframe screens that implement it.</p>
                 </div>
 
                 <div class="stat-row" role="list" aria-label="Key statistics">

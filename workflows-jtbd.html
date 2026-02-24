@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jobs to Be Done — Partner Connect Portal</title>
+<link rel="stylesheet" href="wireframe.css">
+<style>
+.jtbd-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 20px 60px;
+}
+.jtbd-intro {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 24px 28px;
+  margin-bottom: 36px;
+  border-left: 5px solid #0d6efd;
+}
+.jtbd-intro h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #212529;
+  margin: 0 0 8px 0;
+}
+.jtbd-intro p {
+  font-size: 14px;
+  color: #495057;
+  margin: 0 0 8px 0;
+  line-height: 1.6;
+}
+.jtbd-intro p:last-child { margin-bottom: 0; }
+.persona-section {
+  margin-bottom: 48px;
+}
+.persona-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #e9ecef;
+}
+.persona-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 18px;
+  color: #fff;
+  flex-shrink: 0;
+}
+.persona-avatar.pam { background: #b04a2a; }
+.persona-avatar.psm { background: #0d6efd; }
+.persona-avatar.ae { background: #198754; }
+.persona-avatar.admin { background: #6f42c1; }
+.persona-info h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #212529;
+  margin: 0 0 3px 0;
+}
+.persona-info .persona-role {
+  font-size: 13px;
+  color: #6c757d;
+}
+.persona-badge-inline {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 12px;
+  letter-spacing: 0.5px;
+  margin-left: auto;
+}
+.badge-pam { background: #b04a2a; color: #fff; }
+.badge-psm { background: #0d6efd; color: #fff; }
+.badge-ae { background: #198754; color: #fff; }
+.badge-admin { background: #6f42c1; color: #fff; }
+.jtbd-item {
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.jtbd-item-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 20px;
+  background: #fff;
+}
+.jtbd-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.jtbd-num.pam { background: #b04a2a; }
+.jtbd-num.psm { background: #0d6efd; }
+.jtbd-num.ae { background: #198754; }
+.jtbd-num.admin { background: #6f42c1; }
+.jtbd-content { flex: 1; }
+.jtbd-content .jtbd-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #212529;
+  margin: 0 0 6px 0;
+}
+.jtbd-statement {
+  font-size: 13px;
+  color: #495057;
+  line-height: 1.6;
+  margin-bottom: 10px;
+  background: #f8f9fa;
+  border-radius: 5px;
+  padding: 10px 12px;
+  font-style: italic;
+}
+.jtbd-statement .when { color: #6c757d; }
+.jtbd-statement .want { color: #0d4b9e; font-weight: 600; }
+.jtbd-statement .outcome { color: #065f46; font-weight: 600; }
+.jtbd-body {
+  padding: 0 20px 18px 62px;
+  background: #fff;
+}
+.jtbd-body h4 {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #6c757d;
+  margin: 12px 0 6px 0;
+}
+.jtbd-body ul {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 13px;
+  color: #495057;
+  line-height: 1.7;
+}
+.jtbd-body ul li { margin-bottom: 2px; }
+.screen-links {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+.screen-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 4px;
+  text-decoration: none;
+  border: 1px solid;
+}
+.screen-link.pam { background: #fdf3ef; color: #b04a2a; border-color: #e8b9a8; }
+.screen-link.pam:hover { background: #b04a2a; color: #fff; }
+.screen-link.psm { background: #f0f5ff; color: #0d6efd; border-color: #c7d9f9; }
+.screen-link.psm:hover { background: #0d6efd; color: #fff; }
+.screen-link.ae { background: #f0fdf4; color: #198754; border-color: #a7f3d0; }
+.screen-link.ae:hover { background: #198754; color: #fff; }
+.screen-link.admin { background: #f5f3ff; color: #6f42c1; border-color: #d8d0f5; }
+.screen-link.admin:hover { background: #6f42c1; color: #fff; }
+.divider {
+  height: 1px;
+  background: #e9ecef;
+  margin: 32px 0;
+}
+.page-nav {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  background: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 36px;
+}
+.page-nav .nav-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-right: 4px;
+  align-self: center;
+}
+.page-nav a {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 4px;
+  text-decoration: none;
+  border: 1px solid #dee2e6;
+  color: #495057;
+}
+.page-nav a:hover { background: #f8f9fa; }
+.page-nav a.pam-link { background: #fdf3ef; color: #b04a2a; border-color: #e8b9a8; }
+.page-nav a.psm-link { background: #f0f5ff; color: #0d6efd; border-color: #c7d9f9; }
+.page-nav a.ae-link { background: #f0fdf4; color: #198754; border-color: #a7f3d0; }
+.page-nav a.admin-link { background: #f5f3ff; color: #6f42c1; border-color: #d8d0f5; }
+</style>
+</head>
+<body>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+
+<header class="wf-header">
+  <div class="wf-header-logo">
+    <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="4" fill="#e2231a"/><path d="M8 8h6v16H8zm10 0h6v7h-6zm0 9h6v7h-6z" fill="#fff"/></svg>
+  </div>
+  <div class="wf-header-title">Partner Connect Portal</div>
+  <nav class="wf-header-nav">
+    <a href="personas.html">Personas</a>
+    <a href="#" class="active">Workflows</a>
+    <a href="sitemap-pcp-v2.html">Sitemap</a>
+  </nav>
+  <div class="wf-header-util">
+    <span style="font-size:12px;color:#6c757d;">Design Reference</span>
+  </div>
+</header>
+
+<div class="jtbd-page">
+
+  <div style="margin-bottom:24px;">
+    <h1 style="font-size:24px;font-weight:700;color:#212529;margin:0 0 6px 0;">Jobs to Be Done</h1>
+    <p style="font-size:14px;color:#6c757d;margin:0;">How each persona uses the Partner Connect Portal — framed as the jobs they're trying to accomplish.</p>
+  </div>
+
+  <!-- Jump nav -->
+  <div class="page-nav">
+    <span class="nav-label">Jump to:</span>
+    <a href="#pam" class="pam-link">PAM — Alex Rivera</a>
+    <a href="#psm" class="psm-link">PSM — Marcus Chen</a>
+    <a href="#ae" class="ae-link">Sales Rep — Steve Rogers</a>
+    <a href="#admin" class="admin-link">Portal Admin — Jordan Reeves</a>
+    <a href="personas.html" style="margin-left:auto;">← Back to Personas</a>
+  </div>
+
+  <div class="jtbd-intro">
+    <h2>Why Jobs to Be Done?</h2>
+    <p>Each screen in this portal exists to help a specific person accomplish a specific job. Jobs to Be Done (JTBD) framing keeps design decisions grounded in real goals rather than features. Each job has the structure: <em>"When [situation] → I want to [motivation] → so I can [outcome]."</em></p>
+    <p>The links below connect each job to the wireframe screens that implement it. Use this page as a navigation layer between persona intent and portal execution.</p>
+  </div>
+
+  <!-- ===== PAM ===== -->
+  <div class="persona-section" id="pam">
+    <div class="persona-header">
+      <div class="persona-avatar pam">AR</div>
+      <div class="persona-info">
+        <h2>Alex Rivera</h2>
+        <div class="persona-role">Partner Account Manager (PAM) &bull; Equinix Channel Programs</div>
+      </div>
+      <span class="persona-badge-inline badge-pam">PAM</span>
+    </div>
+    <p style="font-size:14px;color:#6c757d;margin:0 0 20px 0;">Alex owns the business relationship between Equinix and its partner ecosystem. The job is the financial and compliance gatekeeper: reviewing applications, managing MDF funds, enforcing tier rules, and reporting program health to leadership. Every decision Alex makes affects which partners are in the program and what resources they receive.</p>
+
+    <!-- PAM Job 1 -->
+    <div class="jtbd-item" id="pam-jtbd-1">
+      <div class="jtbd-item-header">
+        <div class="jtbd-num pam">1</div>
+        <div class="jtbd-content">
+          <div class="jtbd-title">Application Review — Evaluate and decision partner applications within SLA</div>
+          <div class="jtbd-statement">
+            <span class="when">When a new partner application arrives in the queue,</span> <span class="want">I want to assess the company's fit, financial standing, and tier recommendation quickly,</span> <span class="outcome">so I can make a tier decision within the 30-day SLA and avoid letting applications stall.</span>
+          </div>
+        </div>
+      </div>
+      <div class="jtbd-body">
+        <h4>What Alex needs to do this job</h4>
+        <ul>
+          <li>See all open applications sorted by days-in-queue with SLA status at a glance</li>
+          <li>Spot compliance gaps (missing W-9, insurance lapse) without opening each record</li>
+          <li>Understand the tier recommendation (Bronze/Silver/Gold) with supporting rationale</li>
+          <li>Identify risk flags: resubmissions, international applications requiring extra review, overdue items</li>
+          <li>Approve, deny, or request more information in a single click from the queue</li>
+        </ul>
+        <h4>Screens</h4>
+        <div class="screen-links">
+          <a class="screen-link pam" href="pam-application-queue.html">→ pam-application-queue</a>
+          <a class="screen-link pam" href="pam-partner-financial.html">→ pam-partner-financial (per-partner detail)</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAM Job 2 -->
+    <div class="jtbd-item" id="pam-jtbd-2">
+      <div class="jtbd-item-header">
+        <div class="jtbd-num pam">2</div>
+        <div class="jtbd-content">
+          <div class="jtbd-title">Tier Management — Monitor tier health and intervene before partners miss thresholds</div>
+          <div class="jtbd-statement">
+            <span class="when">When managing the partner program at-scale,</span> <span class="want">I want a program-wide view of which partners are at risk of demotion and which are candidates for upgrade,</span> <span class="outcome">so I can intervene early enough to matter — not after the tier review date has passed.</span>
+          </div>
+        </div>
+      </div>
+      <div class="jtbd-body">
+        <h4>What Alex needs to do this job</h4>
+        <ul>
+          <li>See all 42 partners' tier status, revenue gaps, and days-to-review in one view</li>
+          <li>Drill into any partner's full financial record: MDF spend, rebates, revenue trajectory</li>
+          <li>Identify partners who are on a demotion path so Marcus (PSM) can be looped in early</li>
+          <li>Surface upgrade candidates who are close to the next tier threshold</li>
+          <li>See insurance and certification compliance status per partner to catch renewal gaps</li>
+        </ul>
+        <h4>Screens</h4>
+        <div class="screen-links">
+          <a class="screen-link pam" href="pam-tier-dashboard.html">→ pam-tier-dashboard</a>
+          <a class="screen-link pam" href="pam-partner-financial.html">→ pam-partner-financial</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAM Job 3 -->
+    <div class="jtbd-item" id="pam-jtbd-3">
+      <div class="jtbd-item-header">
+        <div class="jtbd-num pam">3</div>
+        <div class="jtbd-content">
+          <div class="jtbd-title">MDF Approval — Review and approve MDF fund requests efficiently</div>
+          <div class="jtbd-statement">
+            <span class="when">When a partner submits an MDF fund request,</span> <span class="want">I want to validate the business case, check tier budget availability, and approve or deny within the SLA,</span> <span class="outcome">so partners can execute their campaigns on time and program budget is allocated to high-ROI activities.</span>
+          </div>
+        </div>
+      </div>
+      <div class="jtbd-body">
+        <h4>What Alex needs to do this job</h4>
+        <ul>
+          <li>See all pending MDF requests in one queue with SLA countdown and tier budget utilization</li>
+          <li>Understand the requested activity type and whether it qualifies under program rules</li>
+          <li>Check the partner's remaining tier budget before approving — prevent overruns</li>
+          <li>Spot budget exhaustion warnings (Bronze tier at 98% in the current period)</li>
+          <li>Distinguish pre-approval from post-approval claim requests in the queue</li>
+        </ul>
+        <h4>Screens</h4>
+        <div class="screen-links">
+          <a class="screen-link pam" href="pam-mdf-queue.html">→ pam-mdf-queue</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAM Job 4 -->
+    <div class="jtbd-item" id="pam-jtbd-4">
+      <div class="jtbd-item-header">
+        <div class="jtbd-num pam">4</div>
+        <div class="jtbd-content">
+          <div class="jtbd-title">Claim Reimbursement — Verify proof of spend and process MDF reimbursements</div>
+          <div class="jtbd-statement">
+            <span class="when">When a partner submits proof-of-spend documentation for a completed MDF campaign,</span> <span class="want">I want to verify that the activity matches the approved scope, the claim is within budget, and the documentation is complete,</span> <span class="outcome">so I can process the reimbursement quickly and partners trust the program pays out on time.</span>
+          </div>
+        </div>
+      </div>
+      <div class="jtbd-body">
+        <h4>What Alex needs to do this job</h4>
+        <ul>
+          <li>See the claimed amount vs approved amount alongside the proof documents in one view</li>
+          <li>Verify that claimed activity matches the approved scope (e.g., LinkedIn Ads were what was approved)</li>
+          <li>Review ROI evidence: leads generated, pipeline attributed, cost per MQL</li>
+          <li>Run through a compliance checklist: claim ≤ approved, activity within date window, within 90-day claim window</li>
+          <li>View the partner's full MDF history to understand patterns (over-claiming, late submissions)</li>
+        </ul>
+        <h4>Screens</h4>
+        <div class="screen-links">
+          <a class="screen-link pam" href="pam-mdf-claims.html">→ pam-mdf-claims</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PAM Job 5 -->
+    <div class="jtbd-item" id="pam-jtbd-5">
+      <div class="jtbd-item-header">
+        <div class="jtbd-num pam">5</div>
+        <div class="jtbd-content">
+          <div class="jtbd-title">Program Reporting — Build the quarterly program health report for leadership</div>
+          <div class="jtbd-statement">
+            <span class="when">When building the quarterly program performance report for Channel leadership,</span> <span class="want">I want to aggregate partner-sourced ARR, MDF ROI, tier distribution, and risk flags into a single executive view,</span> <span class="outcome">so I can demonstrate the program's value and flag any investments or interventions needed in the next quarter.</span>
+          </div>
+        </div>
+      </div>
+      <div class="jtbd-body">
+        <h4>What Alex needs to do this job</h4>
+        <ul>
+          <li>See total partner-sourced ARR, total MDF invested, and blended ROI in one view</li>
+          <li>Break down performance by tier: which tier is generating the most value per dollar invested?</li>
+          <li>Identify the top-performing partners and flag the 6 at churn risk</li>
+          <li>Show ARR trajectory quarter-over-quarter with a Q2 forecast</li>
+          <li>Export the report as a PDF to share with the Channel VP before the leadership review</li>
+        </ul>
+        <h4>Screens</h4>
+        <div class="screen-links">
+          <a class="screen-link pam" href="pam-program-report.html">→ pam-program-report</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ===== PSM ===== -->
+  <div class="persona-section" id="psm">
+    <div class="persona-header">
+      <div class="persona-avatar psm">MC</div>
+      <div class="persona-info">
+        <h2>Marcus Chen</h2>
+        <div class="persona-role">Partner Success Manager (PSM) &bull; Equinix Channel Sales</div>
+      </div>
+      <span class="persona-badge-inline badge-psm">PSM</span>
+    </div>
+    <p style="font-size:14px;color:#6c757d;margin:0 0 20px 0;">Marcus owns the post-approval partner relationship. Where Alex manages the program's business rules, Marcus manages the day-to-day relationship: co-selling alongside partners, resolving disputes, running QBRs, and making sure each partner in his portfolio of 8 is on track to grow. Marcus is the human face of the Equinix partner program.</p>
+
+    <!-- PSM Job 1 -->
+    <div class="jtbd-item" id="psm-jtbd-1">
+      <div class="jtbd-item-header">
+        <div class="jtbd-num psm">1</div>
+        <div class="jtbd-content">
+          <div class="jtbd-title">Portfolio Triage — Start each week knowing exactly which partners need attention</div>
+          <div class="jtbd-statement">
+            <span class="when">When I start my week,</span> <span class="want">I want a single view of all 8 partners with health scores, pipeline status, and urgent actions surfaced in priority order,</span> <span class="outcome">so I can spend my first 15 minutes on the right things instead of assembling the picture from scratch.</span>
+          </div>
+        </div>
+      </div>
+      <div class="jtbd-body">
+        <h4>What Marcus needs to do this job</h4>
+        <ul>
+          <li>See all 8 partners at a glance with color-coded health (green/yellow/red)</li>
+          <li>Understand the 3 most urgent priority actions for the week without digging into individual records</li>
+          <li>Spot open deal disputes, overdue QBRs, and partners with no pipeline activity</li>
+          <li>Navigate directly from a partner card into the relevant action (dispute view, QBR prep, comms)</li>
+          <li>See which partners are upgrade candidates and which are at risk of demotion</li>
+        </ul>
+        <h4>Screens</h4>
+        <div class="screen-links">
+          <a class="screen-link psm" href="psm-portfolio.html">→ psm-portfolio</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PSM Job 2 -->
+    <div class="jtbd-item" id="psm-jtbd-2">
+      <div class="jtbd-item-header">
+        <div class="jtbd-num psm">2</div>
+        <div class="jtbd-content">
+          <div class="jtbd-title">Deal Dispute Resolution — Assess attribution disputes fairly and close them before they escalate</div>
+          <div class="jtbd-statement">
+            <span class="when">When a deal dispute surfaces between a partner and Equinix direct sales,</span> <span class="want">I want to review the evidence from both sides, assess the timeline against program rules, and submit a clear recommendation,</span> <span class="outcome">so I can protect partner trust in the program and close the case before the 21-day escalation deadline.</span>
+          </div>
+        </div>
+      </div>
+      <div class="jtbd-body">
+        <h4>What Marcus needs to do this job</h4>
+        <ul>
+          <li>See the full dispute timeline: who logged the deal first, when deal registration happened, what evidence each party submitted</li>
+          <li>Understand the financial stake: deal value, attribution bonus, and downstream MDF ROI impact</li>
+          <li>Review program rules (§4.2 deal registration controls attribution) with the evidence side by side</li>
+          <li>See precedent from similar resolved cases to anchor the recommendation</li>
+          <li>File a recommendation (uphold partner, co-source split, or escalate) with a written rationale</li>
+        </ul>
+        <h4>Screens</h4>
+        <div class="screen-links">
+          <a class="screen-link psm" href="psm-deal-dispute.html">→ psm-deal-dispute</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PSM Job 3 -->
+    <div class="jtbd-item" id="psm-jtbd-3">
+      <div class="jtbd-item-header">
+        <div class="jtbd-num psm">3</div>
+        <div class="jtbd-content">
+          <div class="jtbd-title">Co-sell Collaboration — Stay actively engaged on partner-registered deals to accelerate close</div>
+          <div class="jtbd-statement">
+            <span class="when">When a partner registers a deal and needs Equinix's help to win it,</span> <span class="want">I want to co-sell alongside them by coordinating internal resources, tracking next steps on both sides, and keeping the deal moving through each stage,</span> <span class="outcome">so the partner closes faster and attributes the win to the relationship with Equinix.</span>
+          </div>
+        </div>
+      </div>
+      <div class="jtbd-body">
+        <h4>What Marcus needs to do this job</h4>
+        <ul>
+          <li>See the deal stage, close date, and attribution status at the top without scrolling</li>
+          <li>Track separate next actions for Equinix and the partner — both are accountable</li>
+          <li>Log activity and coordinate SA engagement, Deal Desk requests, and Exec Sponsor involvement</li>
+          <li>See all other open deals for the same partner to manage capacity and prioritization</li>
+          <li>Access co-sell resources (battle cards, reference architectures, pricing tools) in context</li>
+        </ul>
+        <h4>Screens</h4>
+        <div class="screen-links">
+          <a class="screen-link psm" href="psm-deal-cosell.html">→ psm-deal-cosell</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PSM Job 4 -->
+    <div class="jtbd-item" id="psm-jtbd-4">
+      <div class="jtbd-item-header">
+        <div class="jtbd-num psm">4</div>
+        <div class="jtbd-content">
+          <div class="jtbd-title">QBR Preparation — Build a data-driven QBR brief that leads to specific partner commitments</div>
+          <div class="jtbd-statement">
+            <span class="when">When a partner QBR is approaching,</span> <span class="want">I want to compile performance data, surface risks, and define concrete asks ahead of the call,</span> <span class="outcome">so I walk in with a narrative — not a spreadsheet — and leave with specific commitments from the partner.</span>
+          </div>
+        </div>
+      </div>
+      <div class="jtbd-body">
+        <h4>What Marcus needs to do this job</h4>
+        <ul>
+          <li>See a readiness checklist for all QBR sections — which are complete, which still need data</li>
+          <li>Auto-populate metrics from SFDC: ARR delta, pipeline by stage, MDF utilization vs benchmark</li>
+          <li>Review the training and certification gap so the ask is specific ("enroll second staff by Mar 15")</li>
+          <li>Define asks by type: commitment, feedback, or risk conversation — so the agenda has clear purpose</li>
+          <li>Export a professional QBR deck without needing to work outside the portal</li>
+        </ul>
+        <h4>Screens</h4>
+        <div class="screen-links">
+          <a class="screen-link psm" href="psm-qbr-prep.html">→ psm-qbr-prep</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- PSM Job 5 -->
+    <div class="jtbd-item" id="psm-jtbd-5">
+      <div class="jtbd-item-header">
+        <div class="jtbd-num psm">5</div>
+        <div class="jtbd-content">
+          <div class="jtbd-title">Partner Communications — Send targeted, logged communications to the right partners without leaving the portal</div>
+          <div class="jtbd-statement">
+            <span class="when">When I need to reach one or more of my 8 partners — a broadcast update, an individual alert, or a deadline reminder,</span> <span class="want">I want to compose, target, and send messages with merge fields from inside the portal,</span> <span class="outcome">so every communication is logged to the partner record and I'm not managing partner outreach from my personal inbox.</span>
+          </div>
+        </div>
+      </div>
+      <div class="jtbd-body">
+        <h4>What Marcus needs to do this job</h4>
+        <ul>
+          <li>Segment recipients by tier, health score, or MDF utilization — not by manually picking contacts</li>
+          <li>Use templates with merge fields so messages are personalized but scalable</li>
+          <li>See open/engagement tracking so he knows which partners aren't reading communications</li>
+          <li>Schedule messages ahead of deadlines (e.g., MDF expiry warning 5 days before cutoff)</li>
+          <li>Access sent history per partner so he can see the full communication trail before a call</li>
+        </ul>
+        <h4>Screens</h4>
+        <div class="screen-links">
+          <a class="screen-link psm" href="psm-partner-comms.html">→ psm-partner-comms</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ===== AE ===== -->
+  <div class="persona-section" id="ae">
+    <div class="persona-header">
+      <div class="persona-avatar ae">SR</div>
+      <div class="persona-info">
+        <h2>Steve Rogers</h2>
+        <div class="persona-role">Sales Rep / Account Executive &bull; CloudBridge Solutions (Partner)</div>
+      </div>
+      <span class="persona-badge-inline badge-ae">AE</span>
+    </div>
+    <p style="font-size:14px;color:#6c757d;margin:0 0 20px 0;">Steve is the partner-side AE at CloudBridge Solutions. His job is to find and close deals that include Equinix infrastructure, and to use the PCP to register those deals, access MDF funds, and engage Equinix support when he needs it. The portal should make Steve faster — not create process overhead.</p>
+
+    <div class="jtbd-item" id="ae-jtbd-1">
+      <div class="jtbd-item-header">
+        <div class="jtbd-num ae">1</div>
+        <div class="jtbd-content">
+          <div class="jtbd-title">Deal Registration — Protect your deal and get partner-sourced attribution</div>
+          <div class="jtbd-statement">
+            <span class="when">When I qualify a prospect who needs Equinix infrastructure,</span> <span class="want">I want to register the deal in the portal quickly and get confirmation before Equinix direct finds them,</span> <span class="outcome">so I have protected attribution and the deal reg bonus when it closes.</span>
+          </div>
+        </div>
+      </div>
+      <div class="jtbd-body">
+        <h4>Screens</h4>
+        <div class="screen-links">
+          <a class="screen-link ae" href="psm-deal-cosell.html">→ psm-deal-cosell (co-sell view)</a>
+        </div>
+        <p style="font-size:12px;color:#6c757d;margin:8px 0 0 0;">Note: Steve's deal registration entry point is a separate partner-facing screen (not yet wired). The co-sell view shows what the deal looks like after registration from Marcus's perspective.</p>
+      </div>
+    </div>
+
+    <div class="jtbd-item" id="ae-jtbd-2">
+      <div class="jtbd-item-header">
+        <div class="jtbd-num ae">2</div>
+        <div class="jtbd-content">
+          <div class="jtbd-title">MDF Campaign — Access and spend MDF funds to generate pipeline</div>
+          <div class="jtbd-statement">
+            <span class="when">When planning a demand gen campaign with Equinix co-branding,</span> <span class="want">I want to submit an MDF request, get fast approval, run the activity, and submit proof-of-spend without chasing anyone,</span> <span class="outcome">so the campaign happens on the timeline I planned and I get reimbursed within the pay period.</span>
+          </div>
+        </div>
+      </div>
+      <div class="jtbd-body">
+        <h4>Screens</h4>
+        <div class="screen-links">
+          <a class="screen-link ae" href="pam-mdf-queue.html">→ pam-mdf-queue (Alex's approval view)</a>
+          <a class="screen-link ae" href="pam-mdf-claims.html">→ pam-mdf-claims (Alex's claim view)</a>
+        </div>
+        <p style="font-size:12px;color:#6c757d;margin:8px 0 0 0;">Note: Steve's MDF request submission and claim entry points are partner-facing screens (not yet wired). The PAM screens show what his submissions look like from Alex's perspective.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ===== Admin ===== -->
+  <div class="persona-section" id="admin">
+    <div class="persona-header">
+      <div class="persona-avatar admin">JR</div>
+      <div class="persona-info">
+        <h2>Jordan Reeves</h2>
+        <div class="persona-role">Sales Operations Manager &bull; CloudBridge Solutions (Partner)</div>
+      </div>
+      <span class="persona-badge-inline badge-admin">Admin</span>
+    </div>
+    <p style="font-size:14px;color:#6c757d;margin:0 0 20px 0;">Jordan manages CloudBridge's back-office relationship with the Equinix partner program: keeping certifications current, managing user access, submitting compliance documents, and making sure the portal doesn't create work for Steve. Jordan's job is administrative but high-stakes — a lapsed insurance cert or missed training deadline can trigger a tier review.</p>
+
+    <div class="jtbd-item" id="admin-jtbd-1">
+      <div class="jtbd-item-header">
+        <div class="jtbd-num admin">1</div>
+        <div class="jtbd-content">
+          <div class="jtbd-title">Compliance Maintenance — Keep all certifications, documents, and user accounts current</div>
+          <div class="jtbd-statement">
+            <span class="when">When a certification is expiring, a compliance document needs renewal, or a staff member joins or leaves,</span> <span class="want">I want to update the portal record without waiting for someone at Equinix to process it manually,</span> <span class="outcome">so CloudBridge is never flagged as non-compliant due to an admin lag.</span>
+          </div>
+        </div>
+      </div>
+      <div class="jtbd-body">
+        <h4>Screens</h4>
+        <div class="screen-links">
+          <a class="screen-link admin" href="pam-partner-financial.html">→ pam-partner-financial (compliance section)</a>
+        </div>
+        <p style="font-size:12px;color:#6c757d;margin:8px 0 0 0;">Note: Jordan's self-service compliance update screens are partner-facing (not yet wired). The PAM view shows the compliance status Jordan's uploads flow into.</p>
+      </div>
+    </div>
+
+    <div class="jtbd-item" id="admin-jtbd-2">
+      <div class="jtbd-item-header">
+        <div class="jtbd-num admin">2</div>
+        <div class="jtbd-content">
+          <div class="jtbd-title">Onboarding — Get CloudBridge's application into the program cleanly and completely</div>
+          <div class="jtbd-statement">
+            <span class="when">When applying to the Equinix partner program (or re-tiering),</span> <span class="want">I want to complete the application in one session with clear guidance on what's required at each tier,</span> <span class="outcome">so the application doesn't stall due to missing documents and CloudBridge gets a decision within the SLA.</span>
+          </div>
+        </div>
+      </div>
+      <div class="jtbd-body">
+        <h4>Screens</h4>
+        <div class="screen-links">
+          <a class="screen-link admin" href="onboarding-welcome.html">→ onboarding-welcome</a>
+          <a class="screen-link admin" href="onboarding-apply-wizard.html">→ onboarding-apply-wizard</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// No auth toggle on this page — it's a design reference doc
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

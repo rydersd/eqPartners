@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QBR Prep — CloudBridge Solutions | PSM Portal</title>
+<link rel="stylesheet" href="wireframe.css">
+<style>
+.two-col-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 20px;
+  align-items: start;
+}
+.card {
+  background: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 18px;
+  margin-bottom: 16px;
+}
+.card h3 {
+  font-size: 13px;
+  font-weight: 700;
+  color: #495057;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin: 0 0 14px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e9ecef;
+}
+.qbr-header-bar {
+  background: #f0f5ff;
+  border: 1px solid #c7d9f9;
+  border-radius: 6px;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.qbr-header-bar .qbr-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1e3a5f;
+}
+.qbr-header-bar .qbr-meta {
+  font-size: 12px;
+  color: #6c757d;
+}
+.qbr-due-chip {
+  margin-left: auto;
+  background: #ffc107;
+  color: #212529;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 12px;
+  letter-spacing: 0.5px;
+}
+.section-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #f1f3f5;
+}
+.section-row:last-child { border-bottom: none; }
+.section-num {
+  width: 24px;
+  height: 24px;
+  background: #0d6efd;
+  color: #fff;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.section-num.done { background: #198754; }
+.section-num.warn { background: #ffc107; color: #212529; }
+.section-body { flex: 1; }
+.section-body .section-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #212529;
+  margin-bottom: 3px;
+}
+.section-body .section-desc {
+  font-size: 12px;
+  color: #6c757d;
+  line-height: 1.5;
+}
+.section-status {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 9px;
+  border-radius: 10px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.status-ready { background: #d1fae5; color: #065f46; }
+.status-draft { background: #fff3cd; color: #92400e; }
+.status-missing { background: #fee2e2; color: #991b1b; }
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.stat-cell {
+  background: #f8f9fa;
+  border-radius: 5px;
+  padding: 10px 12px;
+  text-align: center;
+}
+.stat-cell .stat-val {
+  font-size: 20px;
+  font-weight: 700;
+  color: #212529;
+  line-height: 1.2;
+}
+.stat-cell .stat-val.green { color: #198754; }
+.stat-cell .stat-val.orange { color: #e07b00; }
+.stat-cell .stat-val.red { color: #dc3545; }
+.stat-cell .stat-label {
+  font-size: 11px;
+  color: #6c757d;
+  margin-top: 3px;
+}
+.stat-cell .stat-delta {
+  font-size: 11px;
+  font-weight: 600;
+  margin-top: 2px;
+}
+.stat-cell .stat-delta.up { color: #198754; }
+.stat-cell .stat-delta.down { color: #dc3545; }
+.deal-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.deal-table th { background: #f8f9fa; padding: 7px 10px; font-weight: 600; color: #6c757d; text-align: left; border-bottom: 1px solid #dee2e6; }
+.deal-table td { padding: 8px 10px; border-bottom: 1px solid #f1f3f5; color: #212529; }
+.deal-table tr:last-child td { border-bottom: none; }
+.stage-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 10px;
+}
+.stage-3 { background: #dbeafe; color: #1d4ed8; }
+.stage-4 { background: #ede9fe; color: #5b21b6; }
+.stage-5 { background: #fef3c7; color: #92400e; }
+.training-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid #f1f3f5;
+  font-size: 13px;
+}
+.training-item:last-child { border-bottom: none; }
+.training-check { font-size: 16px; width: 20px; text-align: center; }
+.progress-mini {
+  width: 80px;
+  height: 6px;
+  background: #e9ecef;
+  border-radius: 3px;
+  margin-left: auto;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.progress-mini-fill {
+  height: 100%;
+  border-radius: 3px;
+}
+.ask-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f1f3f5;
+  font-size: 13px;
+}
+.ask-item:last-child { border-bottom: none; }
+.ask-item input[type="checkbox"] { margin-top: 2px; flex-shrink: 0; }
+.ask-item .ask-text { flex: 1; color: #212529; }
+.ask-item .ask-type {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+.ask-type.commitment { background: #dbeafe; color: #1d4ed8; }
+.ask-type.feedback { background: #f0fdf4; color: #166534; }
+.ask-type.risk { background: #fee2e2; color: #991b1b; }
+.notes-area {
+  width: 100%;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 13px;
+  color: #6c757d;
+  resize: vertical;
+  min-height: 75px;
+  box-sizing: border-box;
+  font-family: inherit;
+  margin-bottom: 12px;
+}
+.btn {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.btn-primary { background: #0d6efd; color: #fff; }
+.btn-outline { background: #fff; color: #495057; border: 1px solid #dee2e6; }
+.btn-success { background: #198754; color: #fff; }
+.btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.agenda-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid #f1f3f5;
+  font-size: 13px;
+}
+.agenda-row:last-child { border-bottom: none; }
+.agenda-time { width: 55px; font-size: 12px; color: #6c757d; flex-shrink: 0; }
+.agenda-topic { flex: 1; font-weight: 500; color: #212529; }
+.agenda-owner { font-size: 11px; color: #6c757d; }
+.jtbd-banner {
+  background: #f0f5ff;
+  border-left: 4px solid #0d6efd;
+  padding: 10px 16px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: #1e3a5f;
+  border-radius: 0 4px 4px 0;
+}
+.jtbd-banner strong { color: #0d4b9e; }
+</style>
+</head>
+<body>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+
+<header class="wf-header">
+  <div class="wf-header-logo">
+    <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="4" fill="#e2231a"/><path d="M8 8h6v16H8zm10 0h6v7h-6zm0 9h6v7h-6z" fill="#fff"/></svg>
+  </div>
+  <div class="wf-header-title">SFDC</div>
+  <nav class="wf-header-nav">
+    <a href="#">Dashboard</a>
+    <a href="psm-portfolio.html" class="active">PSM Portal</a>
+    <a href="#">Partners</a>
+    <a href="#">Deals</a>
+    <a href="#">Reports</a>
+  </nav>
+  <div class="wf-header-util">
+    <span class="wf-avatar">MC</span>
+    <span style="font-size:12px;color:#6c757d;">Marcus Chen</span>
+  </div>
+</header>
+
+<div class="page-context-bar">
+  <span class="persona-badge persona-badge--psm">PSM</span>
+  <span style="font-size:12px;color:#6c757d;margin-left:8px;">Marcus Chen &rsaquo; PSM Portal &rsaquo; QBR Prep &rsaquo; CloudBridge Solutions</span>
+  <span style="margin-left:auto;font-size:11px;color:#6c757d;">Salesforce Lightning &bull; PSM Portal v2.4</span>
+</div>
+
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false">Notes</button>
+</div>
+
+<div class="page-container">
+
+  <div class="page-title-row" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+    <div>
+      <h1 class="page-title" style="margin:0 0 4px 0;">QBR Prep — CloudBridge Solutions</h1>
+      <div style="font-size:13px;color:#6c757d;">Q1 2026 Quarterly Business Review &bull; Scheduled Feb 28, 2026 at 10:00 AM PT</div>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <span class="qbr-due-chip">⏰ Due in 5 days</span>
+      <button class="btn btn-outline" style="font-size:12px;">Preview Deck</button>
+      <button class="btn btn-primary" style="font-size:12px;">Export QBR Deck</button>
+    </div>
+  </div>
+
+  <div class="jtbd-banner">
+    <strong>When a QBR is approaching</strong> → I want to compile a data-driven briefing that surfaces wins, risks, and asks → <strong>so I can walk in prepared and leave with partner commitments.</strong>
+  </div>
+
+  <!-- QBR Header bar -->
+  <div class="qbr-header-bar">
+    <div>
+      <div class="qbr-title">CloudBridge Solutions</div>
+      <div class="qbr-meta">Gold Tier &bull; Partner since Q2 2023 &bull; PSM: Marcus Chen &bull; Partner Lead: Steve Rogers</div>
+    </div>
+    <div style="border-left:1px solid #c7d9f9;padding-left:20px;">
+      <div style="font-size:12px;color:#6c757d;">Health Score</div>
+      <div style="font-size:22px;font-weight:700;color:#e07b00;line-height:1.2;">68</div>
+      <div style="font-size:11px;color:#6c757d;">Needs Attention</div>
+    </div>
+    <div style="border-left:1px solid #c7d9f9;padding-left:20px;">
+      <div style="font-size:12px;color:#6c757d;">ARR</div>
+      <div style="font-size:22px;font-weight:700;color:#212529;line-height:1.2;">$1.58M</div>
+      <div style="font-size:11px;color:#dc3545;">$220K below Gold min</div>
+    </div>
+    <div style="border-left:1px solid #c7d9f9;padding-left:20px;">
+      <div style="font-size:12px;color:#6c757d;">MDF Utilized</div>
+      <div style="font-size:22px;font-weight:700;color:#e07b00;line-height:1.2;">58%</div>
+      <div style="font-size:11px;color:#6c757d;">$69.5K of $120K</div>
+    </div>
+    <div style="border-left:1px solid #c7d9f9;padding-left:20px;">
+      <div style="font-size:12px;color:#6c757d;">QBR Attendees</div>
+      <div style="font-size:13px;font-weight:600;color:#212529;line-height:1.6;">Steve Rogers (VP Sales)</div>
+      <div style="font-size:11px;color:#6c757d;">+ 2 CloudBridge ops leads</div>
+    </div>
+  </div>
+
+  <div class="two-col-layout">
+    <!-- LEFT: Prep content -->
+    <div>
+
+      <!-- QBR Section Checklist -->
+      <div class="card">
+        <h3>QBR Sections — Readiness</h3>
+        <div class="section-row">
+          <div class="section-num done">✓</div>
+          <div class="section-body">
+            <div class="section-title">1. Executive Summary</div>
+            <div class="section-desc">1-slide partnership health overview: ARR, pipeline, health score, and YoY comparison. Auto-generated from SFDC data.</div>
+          </div>
+          <span class="section-status status-ready">Ready</span>
+        </div>
+        <div class="section-row">
+          <div class="section-num done">✓</div>
+          <div class="section-body">
+            <div class="section-title">2. Revenue Performance</div>
+            <div class="section-desc">Q1 2026 partner-sourced ARR vs Gold minimum ($1.58M vs $1.8M). Trend chart Q3 2025–Q1 2026. Tier review date: Mar 31.</div>
+          </div>
+          <span class="section-status status-ready">Ready</span>
+        </div>
+        <div class="section-row">
+          <div class="section-num done">✓</div>
+          <div class="section-body">
+            <div class="section-title">3. Pipeline Review</div>
+            <div class="section-desc">4 open deals ($985K total), stage breakdown, Acme Financial Services spotlight ($285K, Stage 3, close Apr 30). Win rate vs benchmark.</div>
+          </div>
+          <span class="section-status status-ready">Ready</span>
+        </div>
+        <div class="section-row">
+          <div class="section-num warn">!</div>
+          <div class="section-body">
+            <div class="section-title">4. MDF Utilization & ROI</div>
+            <div class="section-desc">58% utilized vs 85% Gold benchmark. $50.5K unspent at risk if not committed by Mar 15. ROI analysis: $310K pipeline per LinkedIn campaign. Need to add Q2 MDF plan from Steve.</div>
+          </div>
+          <span class="section-status status-draft">Draft</span>
+        </div>
+        <div class="section-row">
+          <div class="section-num warn">!</div>
+          <div class="section-body">
+            <div class="section-title">5. Training & Certification</div>
+            <div class="section-desc">2 of 3 required Gold certifications complete. Third cert (Network Edge Specialist) in progress — 1 staff member enrolled. On track for Q2 completion.</div>
+          </div>
+          <span class="section-status status-draft">Draft</span>
+        </div>
+        <div class="section-row">
+          <div class="section-num" style="background:#dc3545;">✗</div>
+          <div class="section-body">
+            <div class="section-title">6. Q2 Joint Business Plan</div>
+            <div class="section-desc">Revenue targets, planned campaigns, deal registration goals, and co-sell commitments for Q2. Not yet drafted — needs input from Steve Rogers before the call.</div>
+          </div>
+          <span class="section-status status-missing">Missing</span>
+        </div>
+        <div class="section-row">
+          <div class="section-num done">✓</div>
+          <div class="section-body">
+            <div class="section-title">7. Asks & Next Steps</div>
+            <div class="section-desc">3 commitments prepared: MDF Q2 plan submission, Network Edge cert enrollment, Acme deal co-sell resource request.</div>
+          </div>
+          <span class="section-status status-ready">Ready</span>
+        </div>
+      </div>
+
+      <!-- Key Metrics to Present -->
+      <div class="card">
+        <h3>Key Metrics — Q1 2026</h3>
+        <div class="stat-row">
+          <div class="stat-cell">
+            <div class="stat-val orange">$1.58M</div>
+            <div class="stat-label">Partner-Sourced ARR</div>
+            <div class="stat-delta up">▲ +$180K vs Q4</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-val green">$985K</div>
+            <div class="stat-label">Open Pipeline</div>
+            <div class="stat-delta up">▲ +$320K vs Q4</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-val orange">4</div>
+            <div class="stat-label">Active Deals</div>
+            <div class="stat-delta" style="color:#6c757d;">— same as Q4</div>
+          </div>
+        </div>
+        <div class="stat-row">
+          <div class="stat-cell">
+            <div class="stat-val orange">58%</div>
+            <div class="stat-label">MDF Utilized</div>
+            <div class="stat-delta down">▼ vs 85% Gold avg</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-val green">2/3</div>
+            <div class="stat-label">Certs Complete</div>
+            <div class="stat-delta up">▲ +1 this quarter</div>
+          </div>
+          <div class="stat-cell">
+            <div class="stat-val red">68</div>
+            <div class="stat-label">Health Score</div>
+            <div class="stat-delta down">▼ −4 pts vs Q4</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Open Deals Summary -->
+      <div class="card">
+        <h3>Open Deals at QBR Date</h3>
+        <table class="deal-table">
+          <thead>
+            <tr>
+              <th>Account</th>
+              <th>Value</th>
+              <th>Stage</th>
+              <th>Close</th>
+              <th>Co-sell</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Acme Financial Services</strong></td>
+              <td>$285K</td>
+              <td><span class="stage-badge stage-3">Technical Review</span></td>
+              <td>Apr 30</td>
+              <td>✅ Active</td>
+            </tr>
+            <tr>
+              <td>Harbor Health Systems</td>
+              <td>$310K</td>
+              <td><span class="stage-badge stage-4">Proposal</span></td>
+              <td>May 15</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td>Brightfield Capital</td>
+              <td>$240K</td>
+              <td><span class="stage-badge stage-3">Technical Review</span></td>
+              <td>Jun 1</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td>Lakefront Media Group</td>
+              <td>$150K</td>
+              <td><span class="stage-badge stage-5">Negotiation</span></td>
+              <td>Mar 10</td>
+              <td>—</td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="background:#f8f9fa;border-radius:4px;padding:10px 12px;margin-top:12px;font-size:12px;color:#6c757d;">
+          Lakefront Media Group (negotiation) is the most likely near-term close. If it closes before QBR, it will push ARR to $1.73M — still $70K below Gold minimum.
+        </div>
+      </div>
+
+      <!-- Training -->
+      <div class="card">
+        <h3>Training & Certification Status</h3>
+        <div class="training-item">
+          <span class="training-check">✅</span>
+          <div style="flex:1;font-size:13px;"><strong>Equinix Partner Foundations</strong><div style="font-size:11px;color:#6c757d;">3 of 3 staff certified — completed Q3 2025</div></div>
+          <div class="progress-mini"><div class="progress-mini-fill" style="width:100%;background:#198754;"></div></div>
+        </div>
+        <div class="training-item">
+          <span class="training-check">✅</span>
+          <div style="flex:1;font-size:13px;"><strong>IBX Colocation Specialist</strong><div style="font-size:11px;color:#6c757d;">2 of 2 required staff certified — completed Q4 2025</div></div>
+          <div class="progress-mini"><div class="progress-mini-fill" style="width:100%;background:#198754;"></div></div>
+        </div>
+        <div class="training-item">
+          <span class="training-check">⏳</span>
+          <div style="flex:1;font-size:13px;"><strong>Network Edge Specialist</strong> <span style="font-size:11px;color:#e07b00;font-weight:600;">(Required for Gold renewal)</span><div style="font-size:11px;color:#6c757d;">1 of 2 required staff enrolled — estimated completion Apr 2026</div></div>
+          <div class="progress-mini"><div class="progress-mini-fill" style="width:50%;background:#ffc107;"></div></div>
+        </div>
+        <div style="background:#fff3cd;border-radius:4px;padding:10px 12px;margin-top:10px;font-size:12px;color:#92400e;">
+          <strong>QBR ask:</strong> Request Steve Rogers enroll a second staff member in Network Edge Specialist training by Mar 15 to meet Gold tier certification requirement before Mar 31 review.
+        </div>
+      </div>
+
+      <!-- Proposed Asks -->
+      <div class="card">
+        <h3>Proposed Asks for This QBR</h3>
+        <div class="ask-item">
+          <input type="checkbox" checked>
+          <div class="ask-text"><strong>Submit Q2 MDF plan by Mar 7</strong> — $50.5K unspent must be committed to qualifying activities or returned. Steve to submit 2 campaign briefs for pre-approval.</div>
+          <span class="ask-type commitment">Commitment</span>
+        </div>
+        <div class="ask-item">
+          <input type="checkbox" checked>
+          <div class="ask-text"><strong>Enroll second staff in Network Edge cert by Mar 15</strong> — Required for Gold certification compliance before Mar 31 tier review.</div>
+          <span class="ask-type commitment">Commitment</span>
+        </div>
+        <div class="ask-item">
+          <input type="checkbox" checked>
+          <div class="ask-text"><strong>Assign Equinix SA to Acme Financial deal</strong> — Technical Review stage requires SA engagement. Marcus to request Deal Desk resource after QBR.</div>
+          <span class="ask-type commitment">Commitment</span>
+        </div>
+        <div class="ask-item">
+          <input type="checkbox">
+          <div class="ask-text"><strong>Feedback on deal registration experience</strong> — Was the portal registration flow clear? Any friction points in getting deal confirmed? (Informs portal UX improvements.)</div>
+          <span class="ask-type feedback">Feedback</span>
+        </div>
+        <div class="ask-item">
+          <input type="checkbox">
+          <div class="ask-text"><strong>Discuss Gold tier continuity plan</strong> — Revenue gap is $220K with 5 weeks to tier review. What's the realistic close scenario for Lakefront or Acme to close the gap?</div>
+          <span class="ask-type risk">Risk</span>
+        </div>
+      </div>
+
+      <!-- Proposed Agenda -->
+      <div class="card">
+        <h3>Proposed Agenda — 60 Minutes</h3>
+        <div class="agenda-row">
+          <div class="agenda-time">0:00–0:05</div>
+          <div class="agenda-topic">Welcome & housekeeping</div>
+          <div class="agenda-owner">Marcus</div>
+        </div>
+        <div class="agenda-row">
+          <div class="agenda-time">0:05–0:15</div>
+          <div class="agenda-topic">Q1 Performance Review — ARR, pipeline, MDF ROI</div>
+          <div class="agenda-owner">Marcus</div>
+        </div>
+        <div class="agenda-row">
+          <div class="agenda-time">0:15–0:25</div>
+          <div class="agenda-topic">Deal pipeline deep dive — Acme Financial, Lakefront close</div>
+          <div class="agenda-owner">Steve Rogers</div>
+        </div>
+        <div class="agenda-row">
+          <div class="agenda-time">0:25–0:35</div>
+          <div class="agenda-topic">MDF utilization & Q2 plan discussion</div>
+          <div class="agenda-owner">Both</div>
+        </div>
+        <div class="agenda-row">
+          <div class="agenda-time">0:35–0:45</div>
+          <div class="agenda-topic">Training status, cert gap, Gold tier continuity risk</div>
+          <div class="agenda-owner">Marcus</div>
+        </div>
+        <div class="agenda-row">
+          <div class="agenda-time">0:45–0:55</div>
+          <div class="agenda-topic">Q2 Joint Business Plan — targets, commitments, co-sell</div>
+          <div class="agenda-owner">Both</div>
+        </div>
+        <div class="agenda-row">
+          <div class="agenda-time">0:55–1:00</div>
+          <div class="agenda-topic">Action items review & close</div>
+          <div class="agenda-owner">Marcus</div>
+        </div>
+      </div>
+
+      <!-- Notes & Final prep -->
+      <div class="card">
+        <h3>Marcus's Prep Notes</h3>
+        <textarea class="notes-area" placeholder="Add pre-call notes here… (e.g., 'Steve mentioned in last call that budget for Q2 campaigns is tight — lead with MDF expiration risk. He's proud of the Acme deal, acknowledge it up front. Don't open with the tier gap — earn the conversation first.')"></textarea>
+        <div class="btn-row">
+          <button class="btn btn-success">Mark Prep Complete</button>
+          <button class="btn btn-primary">Export QBR Deck</button>
+          <button class="btn btn-outline">Schedule Follow-up</button>
+          <button class="btn btn-outline">View Last QBR (Nov 2025)</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT: Sidebar -->
+    <div>
+
+      <!-- Partner Quick Stats -->
+      <div class="card">
+        <h3>CloudBridge at a Glance</h3>
+        <div style="font-size:12px;color:#6c757d;line-height:1.9;">
+          <div><strong>Tier:</strong> Gold (since Q2 2023)</div>
+          <div><strong>ARR:</strong> $1.58M (Gold min: $1.8M)</div>
+          <div><strong>Tier Review:</strong> Mar 31, 2026</div>
+          <div><strong>Revenue Gap:</strong> <span style="color:#dc3545;font-weight:600;">−$220K</span></div>
+          <div><strong>MDF Allocated:</strong> $120K FY2026</div>
+          <div><strong>MDF Utilized:</strong> $69.5K (58%)</div>
+          <div><strong>MDF Remaining:</strong> $50.5K</div>
+          <div><strong>Certifications:</strong> 2 of 3 complete</div>
+          <div><strong>Last QBR:</strong> Nov 19, 2025</div>
+          <div><strong>Partner Lead:</strong> Steve Rogers (VP Sales)</div>
+        </div>
+      </div>
+
+      <!-- Risk Flags -->
+      <div class="card">
+        <h3>Risk Flags to Address</h3>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="background:#fee2e2;border-radius:5px;padding:10px 12px;font-size:12px;color:#991b1b;">
+            <strong>🔴 Revenue gap — $220K below Gold min.</strong> With 5 weeks to tier review, need Lakefront ($150K) or Acme pipeline movement.
+          </div>
+          <div style="background:#fff3cd;border-radius:5px;padding:10px 12px;font-size:12px;color:#92400e;">
+            <strong>🟡 MDF underutilization — 58% vs 85% benchmark.</strong> $50.5K at risk of expiry Mar 15. Needs Q2 campaign plan.
+          </div>
+          <div style="background:#fff3cd;border-radius:5px;padding:10px 12px;font-size:12px;color:#92400e;">
+            <strong>🟡 Network Edge cert incomplete.</strong> Required for Gold renewal. One staff enrolled; second not yet registered.
+          </div>
+          <div style="background:#f0fdf4;border-radius:5px;padding:10px 12px;font-size:12px;color:#166534;">
+            <strong>🟢 Acme Financial deal on track.</strong> Stage 3, co-sell engaged. Positive signal.
+          </div>
+        </div>
+      </div>
+
+      <!-- Prep Completion -->
+      <div class="card">
+        <h3>Prep Progress</h3>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+          <div style="flex:1;height:10px;background:#e9ecef;border-radius:5px;overflow:hidden;">
+            <div style="width:71%;height:100%;background:#0d6efd;border-radius:5px;"></div>
+          </div>
+          <span style="font-size:13px;font-weight:700;color:#0d6efd;">5/7</span>
+        </div>
+        <div style="font-size:12px;color:#6c757d;line-height:1.8;">
+          <div>✅ Executive Summary</div>
+          <div>✅ Revenue Performance</div>
+          <div>✅ Pipeline Review</div>
+          <div>⚠️ MDF Section — needs Q2 plan</div>
+          <div>⚠️ Training Section — draft only</div>
+          <div>❌ Q2 Joint Business Plan — missing</div>
+          <div>✅ Asks & Next Steps</div>
+        </div>
+      </div>
+
+      <!-- QBR History -->
+      <div class="card">
+        <h3>QBR History</h3>
+        <div style="font-size:12px;color:#6c757d;">
+          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f1f3f5;">
+            <span>Nov 19, 2025 (Q4)</span>
+            <span style="color:#198754;font-weight:600;">3 of 4 asks met</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f1f3f5;">
+            <span>Aug 14, 2025 (Q3)</span>
+            <span style="color:#198754;font-weight:600;">4 of 4 asks met</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f1f3f5;">
+            <span>May 8, 2025 (Q2)</span>
+            <span style="color:#e07b00;font-weight:600;">2 of 4 asks met</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;padding:6px 0;">
+            <span>Feb 12, 2025 (Q1)</span>
+            <span style="color:#198754;font-weight:600;">3 of 3 asks met</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<aside class="spec-panel" id="spec-panel">
+  <div class="spec-panel-header">
+    <strong>Screen Notes</strong>
+    <button class="spec-panel-close" onclick="toggleSpec()" aria-label="Close notes">✕</button>
+  </div>
+  <div class="spec-panel-body">
+    <h4>Screen</h4>
+    <p><strong>psm-qbr-prep.html</strong> — QBR preparation builder for PSM Marcus Chen. Subject: CloudBridge Solutions, Q1 2026 QBR scheduled Feb 28, 2026. Partner is Gold-tier, health score 68/100, $220K below Gold ARR minimum.</p>
+
+    <h4>Job to Be Done</h4>
+    <p><em>"When a partner QBR is approaching, I want to compile a data-driven briefing that surfaces wins, risks, and asks, so I can walk into the call prepared and leave with specific partner commitments."</em></p>
+    <p>→ See full workflow: <a href="workflows-jtbd.html#psm-jtbd-4" target="_blank">PSM Job 4: QBR Preparation</a></p>
+
+    <h4>Business Logic</h4>
+    <ul>
+      <li>QBR sections have readiness states: Ready (green), Draft (yellow), Missing (red). Dashboard does not allow "Export QBR Deck" until all required sections are at least Draft.</li>
+      <li>Asks are categorized: Commitment (requires partner action), Feedback (informs portal/program), Risk (surfaces a threat to tier or relationship).</li>
+      <li>MDF Q2 plan deadline is Mar 15. Unspent MDF expires unless committed to approved activities.</li>
+      <li>Network Edge cert is required for Gold tier renewal at Mar 31 review. Missing = demotion risk.</li>
+      <li>QBR notes are PSM-private and do not appear in the exported deck.</li>
+    </ul>
+
+    <h4>Key Components</h4>
+    <ul>
+      <li><strong>Section readiness checklist:</strong> 7 QBR sections with traffic-light status. Section 6 (Q2 Joint Business Plan) is the only missing item — critical path.</li>
+      <li><strong>Metrics grid:</strong> 6 KPIs with delta vs prior quarter. Orange/red highlights surface risks at a glance.</li>
+      <li><strong>Open deals table:</strong> All 4 CloudBridge deals visible. Lakefront is nearest close — relevant to Gold ARR gap narrative.</li>
+      <li><strong>Training status:</strong> Three certs with progress bars. Amber state on Network Edge is the key renewal risk.</li>
+      <li><strong>Proposed asks:</strong> Checkboxes pre-populated. PSM can add or remove before finalizing the deck.</li>
+      <li><strong>Agenda builder:</strong> 7-slot 60-minute agenda with owner column. Owner is either Marcus or Steve or Both.</li>
+    </ul>
+
+    <h4>Data Story Continuity</h4>
+    <ul>
+      <li>CloudBridge: $1.58M ARR, $120K MDF, 58% utilization, health 68. Same figures as pam-partner-financial.html and psm-portfolio.html.</li>
+      <li>Acme Financial deal: $285K, Stage 3 (Technical Review), Apr 30 close. Same deal shown in psm-deal-cosell.html.</li>
+      <li>Steve Rogers is CloudBridge's VP Sales and partner contact. Same role across all screens.</li>
+    </ul>
+
+    <h4>Navigation</h4>
+    <ul>
+      <li>Back: PSM Portal → psm-portfolio.html</li>
+      <li>Export QBR Deck → generates PDF (out-of-scope)</li>
+      <li>View Last QBR (Nov 2025) → archived QBR record (out-of-scope)</li>
+      <li>Schedule Follow-up → creates SFDC task (out-of-scope)</li>
+    </ul>
+  </div>
+</aside>
+
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MDF Claim Review — PAM · Equinix PCP</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: var(--wf-canvas,#f5f7fb); }
+    .page-container { padding: 24px; max-width: 1400px; margin: 0 auto; }
+    .page-title { font-size: 20px; font-weight: 700; color: var(--wf-ink,#1e2a3a); }
+    .page-subtitle { font-size: 13px; color: var(--wf-muted); margin-top: 2px; margin-bottom: 20px; }
+    .breadcrumb { font-size: 12px; color: var(--wf-muted); margin-bottom: 8px; }
+    .breadcrumb a { color: var(--wf-accent,#3d6daa); text-decoration: none; }
+    .jtbd-banner { background: #edf4fb; border-left: 4px solid var(--wf-accent,#3d6daa); padding: 10px 16px; border-radius: 0 4px 4px 0; margin-bottom: 20px; font-size: 13px; color: var(--wf-text); }
+    .jtbd-banner strong { color: var(--wf-ink); }
+    .kpi-row { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 24px; }
+    .kpi-card { background: var(--wf-surface); padding: 16px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .kpi-label { font-size: 12px; color: var(--wf-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; font-weight: 600; }
+    .kpi-value { font-size: 24px; font-weight: 700; color: var(--wf-accent,#3d6daa); }
+    .kpi-value.warn { color: #856404; }
+    .kpi-trend { font-size: 12px; color: var(--wf-text); margin-top: 4px; }
+    .two-col { display: grid; grid-template-columns: 1fr 360px; gap: 20px; }
+    .card { background: var(--wf-surface); border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 18px; margin-bottom: 16px; }
+    .card-title { font-size: 14px; font-weight: 700; color: var(--wf-ink); margin-bottom: 14px; }
+    .detail-row { display: flex; justify-content: space-between; align-items: baseline; padding: 8px 0; border-bottom: 1px solid var(--wf-canvas); font-size: 13px; }
+    .detail-row:last-child { border-bottom: none; }
+    .detail-label { color: var(--wf-muted); }
+    .detail-value { font-weight: 600; color: var(--wf-text); }
+    .detail-value.large { font-size: 17px; font-weight: 700; color: var(--wf-accent); }
+    .detail-value.warn { color: #856404; }
+    .detail-value.ok { color: #2e7d32; }
+    .badge { display: inline-block; padding: 3px 8px; border-radius: 3px; font-size: 11px; font-weight: 600; }
+    .badge-gold { background: #fff8e1; color: #8b7745; }
+    .badge-submitted { background: #e8f0fa; color: #1e6fa8; }
+    .badge-pre { background: #e8f0fa; color: #1e6fa8; }
+    .badge-post { background: #f0f4fa; color: #546e8a; }
+    .section-title { font-size: 14px; font-weight: 700; color: var(--wf-ink); margin-bottom: 12px; margin-top: 20px; }
+    .proof-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: var(--wf-canvas); border-radius: 4px; margin-bottom: 8px; font-size: 13px; }
+    .proof-name { font-weight: 600; color: var(--wf-text); }
+    .proof-meta { font-size: 11px; color: var(--wf-muted); margin-top: 2px; }
+    .proof-check { font-size: 12px; font-weight: 700; }
+    .proof-check.ok { color: #2e7d32; }
+    .proof-check.missing { color: #8b4553; }
+    .verification-checklist { list-style: none; padding: 0; margin: 0; }
+    .verification-checklist li { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--wf-canvas); font-size: 13px; }
+    .verification-checklist li:last-child { border-bottom: none; }
+    .check-input { width: 16px; height: 16px; flex-shrink: 0; }
+    .check-label { color: var(--wf-text); }
+    .check-note { font-size: 11px; color: var(--wf-muted); margin-top: 2px; }
+    .btn { padding: 8px 16px; border: none; border-radius: 4px; font-size: 13px; font-weight: 600; cursor: pointer; }
+    .btn-primary { background: var(--wf-accent,#3d6daa); color: #fff; }
+    .btn-danger { background: var(--wf-red,#8b4553); color: #fff; }
+    .btn-secondary { background: var(--wf-surface); color: var(--wf-text); border: 1px solid var(--wf-line,#b0bdd0); }
+    .action-bar { display: flex; gap: 10px; padding-top: 16px; border-top: 1px solid var(--wf-canvas); }
+    .roi-block { background: #edf4fb; border-radius: 4px; padding: 14px; margin-top: 14px; }
+    .roi-row { display: flex; justify-content: space-between; font-size: 12px; padding: 5px 0; }
+    .roi-val { font-weight: 700; color: var(--wf-accent); }
+    .table-wrapper { background: var(--wf-surface); border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden; margin-bottom: 24px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead { background: var(--wf-canvas); border-bottom: 2px solid var(--wf-line,#b0bdd0); }
+    th { padding: 10px 12px; text-align: left; font-weight: 700; color: var(--wf-text); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+    td { padding: 10px 12px; border-bottom: 1px solid var(--wf-canvas); color: var(--wf-text); }
+    .filter-bar { display: flex; gap: 10px; margin-bottom: 14px; }
+    .filter-control { padding: 5px 10px; border: 1px solid var(--wf-line,#b0bdd0); border-radius: 4px; background: var(--wf-surface); font-size: 12px; }
+    .btn-link { background: none; border: none; color: var(--wf-accent); font-size: 12px; font-weight: 600; cursor: pointer; text-decoration: underline; padding: 0; }
+    .badge-paid { background: #e8f5e9; color: #2e7d32; }
+    .badge-denied { background: #fde8e8; color: #8b4553; }
+    .badge-pending { background: #fff3cd; color: #856404; }
+  </style>
+</head>
+<body>
+
+<header class="wf-header">
+  <div class="wf-header-logo"><svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix"><path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/></svg></div>
+  <div class="wf-header-title">SFDC</div>
+  <nav class="wf-header-nav">
+    <a href="#">Dashboard</a>
+    <a href="#" class="active">PAM Portal</a>
+    <a href="#">Partners</a>
+    <a href="#">Programs</a>
+    <a href="#">Reports</a>
+  </nav>
+  <div class="wf-header-util">
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+  </div>
+</header>
+
+<div class="page-context-bar">
+  <div style="max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <span style="font-size:12px;color:var(--wf-muted);display:flex;align-items:center;gap:6px;">
+      <svg viewBox="0 0 20 13" style="width:18px;height:11px;fill:var(--wf-muted);" aria-hidden="true"><path d="M8.3 1.7A3.8 3.8 0 0 1 12 0a3.8 3.8 0 0 1 3.5 2.3A2.8 2.8 0 0 1 20 5a2.8 2.8 0 0 1-2.8 2.8H3.2A3.2 3.2 0 0 1 0 4.6 3.2 3.2 0 0 1 3.2 1.4c.18 0 .35.01.52.04A3.8 3.8 0 0 1 8.3 1.7z"/></svg>
+      <strong style="color:var(--wf-text);font-weight:600;">Salesforce Lightning</strong>&ensp;&middot;&ensp;PCP App
+    </span>
+    <span class="persona-badge" style="background:#b04a2a;color:#fff;display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;letter-spacing:0.5px;">PAM</span>
+  </div>
+</div>
+
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+<div class="page-container">
+
+  <div class="breadcrumb"><a href="pam-mdf-queue.html">MDF Request Queue</a> / <a href="pam-partner-financial.html">CloudBridge Solutions</a> / Claim Review</div>
+  <div class="page-title">MDF Claim Review</div>
+  <div class="page-subtitle">Q1 Lead Generation — LinkedIn · CloudBridge Solutions · Submitted Feb 14, 2026</div>
+
+  <div class="jtbd-banner">
+    <strong>Job to be done:</strong> When a partner submits proof-of-spend for an approved MDF activity, I want to verify the claim against the original approval — so I can release reimbursement accurately and maintain a clean audit trail.
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi-card">
+      <div class="kpi-label">Approved Amount</div>
+      <div class="kpi-value">$12,000</div>
+      <div class="kpi-trend">Approved Jan 28, 2026</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Amount Claimed</div>
+      <div class="kpi-value warn">$11,840</div>
+      <div class="kpi-trend">1.3% under approved</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Claim SLA</div>
+      <div class="kpi-value warn">8 days</div>
+      <div class="kpi-trend">Target: 30-day review</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Proof Docs</div>
+      <div class="kpi-value" style="color:#2e7d32;">3 / 3</div>
+      <div class="kpi-trend">All required docs submitted</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+
+    <!-- Left: claim detail + verification -->
+    <div>
+      <div class="card">
+        <div class="card-title">Claim Details</div>
+        <div class="detail-row"><span class="detail-label">Partner</span><span class="detail-value">CloudBridge Solutions</span></div>
+        <div class="detail-row"><span class="detail-label">Tier</span><span class="detail-value"><span class="badge badge-gold">Gold</span></span></div>
+        <div class="detail-row"><span class="detail-label">Activity</span><span class="detail-value">Q1 Lead Generation — LinkedIn Ads</span></div>
+        <div class="detail-row"><span class="detail-label">Activity Type</span><span class="detail-value">Digital Marketing</span></div>
+        <div class="detail-row"><span class="detail-label">Approval Type</span><span class="detail-value"><span class="badge badge-pre">Pre-approval</span></span></div>
+        <div class="detail-row"><span class="detail-label">Activity Period</span><span class="detail-value">Jan 15 – Feb 12, 2026</span></div>
+        <div class="detail-row"><span class="detail-label">Claim Submitted</span><span class="detail-value">Feb 14, 2026</span></div>
+        <div class="detail-row"><span class="detail-label">Submitted By</span><span class="detail-value">Steve Rogers (CloudBridge)</span></div>
+        <div class="detail-row"><span class="detail-label">Approved Amount</span><span class="detail-value large">$12,000</span></div>
+        <div class="detail-row"><span class="detail-label">Amount Claimed</span><span class="detail-value large warn">$11,840</span></div>
+        <div class="detail-row" style="background:#f0f7ff;border-radius:4px;padding:8px 10px;margin-top:6px;">
+          <span class="detail-label">Discrepancy</span>
+          <span style="font-weight:700;color:#2e7d32;font-size:13px;">-$160 (under claim — payout = $11,840)</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Proof of Execution — Submitted Documents</div>
+
+        <div class="proof-item">
+          <div>
+            <div class="proof-name">LinkedIn Campaign Report · Jan–Feb 2026.pdf</div>
+            <div class="proof-meta">2.4 MB · Uploaded Feb 14, 2026 · Impressions: 148K, Clicks: 2,340, Leads: 87</div>
+          </div>
+          <span class="proof-check ok">✓ Verified</span>
+        </div>
+        <div class="proof-item">
+          <div>
+            <div class="proof-name">Vendor Invoice — LinkedIn Ads Q1.pdf</div>
+            <div class="proof-meta">840 KB · Uploaded Feb 14, 2026 · Invoice total: $11,840</div>
+          </div>
+          <span class="proof-check ok">✓ Verified</span>
+        </div>
+        <div class="proof-item">
+          <div>
+            <div class="proof-name">Bank Payment Confirmation · Feb 13.png</div>
+            <div class="proof-meta">190 KB · Uploaded Feb 14, 2026 · Payment ref: LI-2026-Q1-CB</div>
+          </div>
+          <span class="proof-check ok">✓ Verified</span>
+        </div>
+
+        <div class="roi-block">
+          <div style="font-size:12px;font-weight:700;color:var(--wf-text);margin-bottom:8px;">Reported Activity Outcomes</div>
+          <div class="roi-row"><span style="color:var(--wf-muted);">Leads generated</span><span class="roi-val">87 MQLs</span></div>
+          <div class="roi-row"><span style="color:var(--wf-muted);">Pipeline created</span><span class="roi-val">$310,000</span></div>
+          <div class="roi-row"><span style="color:var(--wf-muted);">Cost per lead</span><span class="roi-val">$136</span></div>
+          <div class="roi-row"><span style="color:var(--wf-muted);">Estimated ROI</span><span class="roi-val">~26x</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">PAM Verification Checklist</div>
+        <ul class="verification-checklist">
+          <li>
+            <input type="checkbox" class="check-input" checked id="v1" aria-label="Claimed amount does not exceed approved amount">
+            <label for="v1" class="check-label">
+              Claimed amount ≤ approved amount
+              <div class="check-note">$11,840 claimed vs $12,000 approved — within limit</div>
+            </label>
+          </li>
+          <li>
+            <input type="checkbox" class="check-input" checked id="v2" aria-label="Activity matches approved activity type">
+            <label for="v2" class="check-label">
+              Activity matches approved scope
+              <div class="check-note">LinkedIn Ads — Digital Marketing (approved type)</div>
+            </label>
+          </li>
+          <li>
+            <input type="checkbox" class="check-input" checked id="v3" aria-label="Proof of spend attached and verified">
+            <label for="v3" class="check-label">
+              Proof of spend attached
+              <div class="check-note">Invoice + payment confirmation on file</div>
+            </label>
+          </li>
+          <li>
+            <input type="checkbox" class="check-input" checked id="v4" aria-label="Activity completed within approved period">
+            <label for="v4" class="check-label">
+              Activity completed within approved period
+              <div class="check-note">Jan 15 – Feb 12 is within Jan 28 approval window</div>
+            </label>
+          </li>
+          <li>
+            <input type="checkbox" class="check-input" checked id="v5" aria-label="Claim submitted within 90-day window">
+            <label for="v5" class="check-label">
+              Claim submitted within 90-day window
+              <div class="check-note">Feb 14 submission, activity ended Feb 12 — 2 days (well within 90)</div>
+            </label>
+          </li>
+        </ul>
+
+        <div class="action-bar">
+          <button class="btn btn-primary">Release Reimbursement — $11,840</button>
+          <button class="btn btn-danger">Reject Claim</button>
+          <button class="btn btn-secondary">Request More Info</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right rail: history + related claims -->
+    <div>
+      <div class="card">
+        <div class="card-title">CloudBridge MDF History — FY2026</div>
+        <div class="detail-row"><span class="detail-label">Annual allocation</span><span class="detail-value">$120,000</span></div>
+        <div class="detail-row"><span class="detail-label">Paid to date</span><span class="detail-value ok">$69,500</span></div>
+        <div class="detail-row"><span class="detail-label">Pending claims</span><span class="detail-value warn">$18,200</span></div>
+        <div class="detail-row"><span class="detail-label">Remaining balance</span><span class="detail-value">$32,300</span></div>
+        <div style="margin-top:10px;font-size:11px;color:var(--wf-muted);">After this claim: $32,460 remaining</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Other Open Claims — CloudBridge</div>
+        <div class="proof-item" style="background:#fff;border:1px solid var(--wf-line,#b0bdd0);">
+          <div>
+            <div class="proof-name" style="font-size:12px;">Sales Enablement Workshop</div>
+            <div class="proof-meta">$3,800 · Submitted Feb 14 · Pending</div>
+          </div>
+          <button class="btn btn-secondary" style="font-size:11px;padding:3px 8px;">Review</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Audit Log — This Claim</div>
+        <div style="font-size:12px;color:var(--wf-text);">
+          <div style="padding:6px 0;border-bottom:1px solid var(--wf-canvas);">
+            <span style="color:var(--wf-muted);">Feb 14, 2026 9:02 AM</span><br>
+            Claim submitted by Steve Rogers
+          </div>
+          <div style="padding:6px 0;border-bottom:1px solid var(--wf-canvas);">
+            <span style="color:var(--wf-muted);">Feb 14, 2026 9:15 AM</span><br>
+            3 proof documents uploaded
+          </div>
+          <div style="padding:6px 0;border-bottom:1px solid var(--wf-canvas);">
+            <span style="color:var(--wf-muted);">Feb 16, 2026 10:41 AM</span><br>
+            Claim opened by A. Rivera (PAM)
+          </div>
+          <div style="padding:6px 0;color:var(--wf-muted);">
+            Pending PAM action…
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title" style="margin-bottom:8px;">PAM Notes (optional)</div>
+        <textarea style="width:100%;height:80px;border:1px solid var(--wf-line,#b0bdd0);border-radius:4px;font-size:12px;padding:8px;resize:vertical;background:var(--wf-canvas);color:var(--wf-text);font-family:inherit;box-sizing:border-box;" placeholder="Add internal note before releasing or rejecting…" aria-label="PAM internal notes for this claim"></textarea>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="margin-top:8px;">
+    <div style="font-size:14px;font-weight:700;color:var(--wf-ink);margin-bottom:12px;">Recently Processed Claims</div>
+    <div class="filter-bar">
+      <select class="filter-control">
+        <option>All Statuses</option>
+        <option>Paid</option>
+        <option>Denied</option>
+        <option>Pending</option>
+      </select>
+      <select class="filter-control">
+        <option>All Partners</option>
+        <option>CloudBridge Solutions</option>
+        <option>Meridian Cloud Inc.</option>
+      </select>
+    </div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Partner</th>
+            <th>Activity</th>
+            <th>Approved</th>
+            <th>Claimed</th>
+            <th>Processed</th>
+            <th>Status</th>
+            <th>ROI</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>CloudBridge Solutions</td>
+            <td>Joint Webinar Series</td>
+            <td>$8,200</td>
+            <td>$8,200</td>
+            <td>Feb 6, 2026</td>
+            <td><span class="badge badge-paid">Paid</span></td>
+            <td>2.9x</td>
+          </tr>
+          <tr>
+            <td>CloudBridge Solutions</td>
+            <td>Q4 Demand Gen Campaign</td>
+            <td>$18,000</td>
+            <td>$17,800</td>
+            <td>Jan 12, 2026</td>
+            <td><span class="badge badge-paid">Paid</span></td>
+            <td>3.6x</td>
+          </tr>
+          <tr>
+            <td>Meridian Cloud Inc.</td>
+            <td>Partner Summit Sponsorship</td>
+            <td>$15,000</td>
+            <td>$14,200</td>
+            <td>Feb 3, 2026</td>
+            <td><span class="badge badge-paid">Paid</span></td>
+            <td>3.1x</td>
+          </tr>
+          <tr>
+            <td>Nexus IT Partners</td>
+            <td>Email Campaign — EMEA</td>
+            <td>$6,000</td>
+            <td>$5,900</td>
+            <td>Feb 2, 2026</td>
+            <td><span class="badge badge-paid">Paid</span></td>
+            <td>2.2x</td>
+          </tr>
+          <tr>
+            <td>Summit Digital Partners</td>
+            <td>Social Media Ads — Unverified</td>
+            <td>$3,200</td>
+            <td>$3,200</td>
+            <td>Jan 29, 2026</td>
+            <td><span class="badge badge-denied">Denied</span></td>
+            <td>—</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<aside class="spec-panel" id="spec-panel" aria-hidden="true">
+  <button class="spec-close-btn" onclick="toggleSpec()" aria-label="Close spec panel">✕</button>
+  <h2>pam-mdf-claims.html</h2>
+  <p class="spec-meta">PAM Portal · Alex Rivera · MDF Claim Review</p>
+  <hr class="spec-divider">
+  <h3>Job to Be Done</h3>
+  <p><em>"When a partner submits proof-of-spend for an approved MDF activity, I want to verify the claim against the original approval — so I can release reimbursement accurately and maintain a clean audit trail."</em></p>
+  <hr class="spec-divider">
+  <h3>Screen Purpose</h3>
+  <p>The single-claim review screen. Alex arrives here from the MDF Queue after selecting a submitted claim. She works through the checklist, reviews proof docs, and releases or rejects the reimbursement. The audit log at right captures every action automatically.</p>
+  <hr class="spec-divider">
+  <h3>Key Design Decisions</h3>
+  <ul>
+    <li><strong>Verification checklist as the primary affordance</strong> — Alex needs a structured review process, not just a form; the checklist makes the audit trail explicit and prevents skipping steps</li>
+    <li><strong>Claimed vs. approved discrepancy calculated and displayed</strong> — under-claims (partner spent less) auto-adjust payout to claimed amount; over-claims block approval</li>
+    <li><strong>Proof documents shown inline</strong> — Alex can verify invoice amounts directly without downloading files; the proof item component shows filename, size, date, and key metadata</li>
+    <li><strong>ROI outcomes surfaced from partner-submitted data</strong> — Alex is judged on MDF program ROI; seeing the numbers in the claim record makes the program's value visible</li>
+    <li><strong>Partner balance shown in right rail</strong> — ensures Alex always knows the financial context of the partner while processing a specific claim</li>
+    <li><strong>PAM notes field</strong> — optional but important; any rejection should include a reason that routes back to the partner</li>
+  </ul>
+  <hr class="spec-divider">
+  <h3>Business Logic</h3>
+  <ul>
+    <li>Payout amount = MIN(Approved_Amount__c, Claimed_Amount__c)</li>
+    <li>Over-claims (Claimed &gt; Approved) must be flagged and cannot be released without PAM override</li>
+    <li>Proof required when Approved_Amount__c &gt; $5K (all tiers) or when Approval_Type = Pre-approval (all amounts)</li>
+    <li>Releasing reimbursement: updates MDF_Allocation__c.Spent_Amount__c, creates Reimbursement_Payment__c record</li>
+    <li>Rejected claims: sets Status = Rejected, logs rejection_reason, notifies partner portal</li>
+    <li>Audit trail: every open, checklist tick, and decision logged to Claim_Audit_Log__c</li>
+  </ul>
+  <hr class="spec-divider">
+  <h3>Linked JTBD Workflow</h3>
+  <p>See <a href="workflows-jtbd.html#pam-jtbd-4">workflows-jtbd.html → PAM Job 4</a> for the full claim-to-reimbursement workflow.</p>
+  <h3>Navigation</h3>
+  <ul>
+    <li>Breadcrumb → <code>pam-mdf-queue.html</code> or <code>pam-partner-financial.html</code></li>
+    <li>"Release Reimbursement" → confirmation modal, then updates financial record</li>
+    <li>"Review" on other open claims → loads that claim in same view</li>
+  </ul>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

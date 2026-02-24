@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deal Dispute — Vertex Networks | PSM Portal</title>
+<link rel="stylesheet" href="wireframe.css">
+<style>
+.dispute-header-bar {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 6px;
+  padding: 12px 18px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.dispute-header-bar .dispute-icon {
+  font-size: 22px;
+}
+.dispute-header-bar .dispute-meta strong {
+  display: block;
+  font-size: 15px;
+  color: #212529;
+}
+.dispute-header-bar .dispute-meta span {
+  font-size: 12px;
+  color: #6c757d;
+}
+.dispute-status-chip {
+  margin-left: auto;
+  background: #ffc107;
+  color: #212529;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 12px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.dispute-status-chip.escalated {
+  background: #dc3545;
+  color: #fff;
+}
+.two-col-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 20px;
+  align-items: start;
+}
+.card {
+  background: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 18px;
+  margin-bottom: 16px;
+}
+.card h3 {
+  font-size: 13px;
+  font-weight: 700;
+  color: #495057;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin: 0 0 14px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e9ecef;
+}
+.party-row {
+  display: grid;
+  grid-template-columns: 1fr 40px 1fr;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+.party-box {
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 12px 14px;
+}
+.party-box.claimant {
+  border-color: #0d6efd;
+  background: #f0f5ff;
+}
+.party-box.respondent {
+  border-color: #6c757d;
+  background: #f8f9fa;
+}
+.party-box .party-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #6c757d;
+  margin-bottom: 4px;
+}
+.party-box .party-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #212529;
+  margin-bottom: 2px;
+}
+.party-box .party-claim {
+  font-size: 12px;
+  color: #495057;
+}
+.vs-badge {
+  text-align: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #adb5bd;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+.deal-detail-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.detail-cell {
+  background: #f8f9fa;
+  border-radius: 4px;
+  padding: 10px 12px;
+}
+.detail-cell .detail-label {
+  font-size: 10px;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 2px;
+}
+.detail-cell .detail-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: #212529;
+}
+.detail-cell .detail-value.green { color: #198754; }
+.detail-cell .detail-value.orange { color: #e07b00; }
+.timeline-item {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f1f3f5;
+}
+.timeline-item:last-child { border-bottom: none; }
+.timeline-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #dee2e6;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+.timeline-dot.active { background: #0d6efd; }
+.timeline-dot.warning { background: #ffc107; }
+.timeline-dot.danger { background: #dc3545; }
+.timeline-date {
+  font-size: 11px;
+  color: #6c757d;
+  width: 70px;
+  flex-shrink: 0;
+}
+.timeline-text {
+  font-size: 13px;
+  color: #212529;
+}
+.timeline-text span {
+  display: block;
+  font-size: 11px;
+  color: #6c757d;
+  margin-top: 2px;
+}
+.evidence-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid #f1f3f5;
+  font-size: 13px;
+}
+.evidence-row:last-child { border-bottom: none; }
+.evidence-row .ev-icon { font-size: 16px; width: 22px; text-align: center; }
+.evidence-row .ev-party {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 10px;
+  margin-left: auto;
+}
+.ev-party.claimant { background: #dbeafe; color: #1d4ed8; }
+.ev-party.respondent { background: #f1f3f5; color: #495057; }
+.resolution-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.resolution-option {
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 12px 14px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: border-color 0.15s;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.resolution-option input[type="radio"] { margin-top: 2px; flex-shrink: 0; }
+.resolution-option:hover { border-color: #0d6efd; }
+.resolution-option .res-title {
+  font-weight: 600;
+  color: #212529;
+  display: block;
+  margin-bottom: 2px;
+}
+.resolution-option .res-desc {
+  font-size: 12px;
+  color: #6c757d;
+  display: block;
+}
+.notes-area {
+  width: 100%;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 13px;
+  color: #6c757d;
+  resize: vertical;
+  min-height: 80px;
+  box-sizing: border-box;
+  font-family: inherit;
+  margin-bottom: 12px;
+}
+.btn-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.btn {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.btn-primary { background: #0d6efd; color: #fff; }
+.btn-danger { background: #dc3545; color: #fff; }
+.btn-outline { background: #fff; color: #495057; border: 1px solid #dee2e6; }
+.btn-warning { background: #ffc107; color: #212529; }
+.sla-bar {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+}
+.sla-bar .sla-label {
+  font-size: 11px;
+  color: #6c757d;
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+}
+.sla-bar .sla-track {
+  height: 8px;
+  background: #e9ecef;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.sla-bar .sla-fill {
+  height: 100%;
+  border-radius: 4px;
+  background: #dc3545;
+}
+.sla-bar .sla-note {
+  font-size: 11px;
+  color: #dc3545;
+  font-weight: 600;
+  margin-top: 5px;
+}
+.audit-item {
+  font-size: 12px;
+  color: #6c757d;
+  padding: 6px 0;
+  border-bottom: 1px solid #f1f3f5;
+  display: flex;
+  gap: 8px;
+}
+.audit-item:last-child { border-bottom: none; }
+.audit-item .audit-time { color: #adb5bd; flex-shrink: 0; width: 55px; }
+.similar-dispute {
+  font-size: 12px;
+  padding: 8px 0;
+  border-bottom: 1px solid #f1f3f5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.similar-dispute:last-child { border-bottom: none; }
+.sim-outcome {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+.sim-outcome.upheld { background: #d1fae5; color: #065f46; }
+.sim-outcome.split { background: #fff3cd; color: #92400e; }
+.jtbd-banner {
+  background: #f0f5ff;
+  border-left: 4px solid #0d6efd;
+  padding: 10px 16px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: #1e3a5f;
+  border-radius: 0 4px 4px 0;
+}
+.jtbd-banner strong { color: #0d4b9e; }
+</style>
+</head>
+<body>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+
+<header class="wf-header">
+  <div class="wf-header-logo">
+    <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="4" fill="#e2231a"/><path d="M8 8h6v16H8zm10 0h6v7h-6zm0 9h6v7h-6z" fill="#fff"/></svg>
+  </div>
+  <div class="wf-header-title">SFDC</div>
+  <nav class="wf-header-nav">
+    <a href="#">Dashboard</a>
+    <a href="psm-portfolio.html">PSM Portal</a>
+    <a href="#">Partners</a>
+    <a href="#" class="active">Deals</a>
+    <a href="#">Reports</a>
+  </nav>
+  <div class="wf-header-util">
+    <span class="wf-avatar">MC</span>
+    <span style="font-size:12px;color:#6c757d;">Marcus Chen</span>
+  </div>
+</header>
+
+<div class="page-context-bar">
+  <span class="persona-badge persona-badge--psm">PSM</span>
+  <span style="font-size:12px;color:#6c757d;margin-left:8px;">Marcus Chen &rsaquo; Partner Deals &rsaquo; Dispute Resolution</span>
+  <span style="margin-left:auto;font-size:11px;color:#6c757d;">Salesforce Lightning &bull; PSM Portal v2.4</span>
+</div>
+
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false">Notes</button>
+</div>
+
+<div class="page-container">
+
+  <div class="page-title-row" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+    <div>
+      <h1 class="page-title" style="margin:0 0 4px 0;">Deal Attribution Dispute</h1>
+      <div style="font-size:13px;color:#6c757d;">Case #DSP-2026-0047 &bull; Opened Feb 10, 2026 &bull; Day 14 of 21-day resolution window</div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;">
+      <span style="font-size:12px;color:#6c757d;">Assigned PSM:</span>
+      <span style="font-weight:600;font-size:13px;">Marcus Chen</span>
+      <span class="dispute-status-chip">Open — Pending PSM Review</span>
+    </div>
+  </div>
+
+  <div class="jtbd-banner">
+    <strong>When a deal dispute surfaces</strong> → I want to assess the evidence quickly and facilitate a fair resolution → <strong>so I can protect partner trust and keep the program running cleanly.</strong>
+  </div>
+
+  <!-- SLA Warning -->
+  <div class="sla-bar">
+    <div class="sla-label">
+      <span>Resolution SLA Progress (21-day window)</span>
+      <span style="font-weight:700;color:#dc3545;">14 of 21 days used — 7 days remaining</span>
+    </div>
+    <div class="sla-track"><div class="sla-fill" style="width:67%;"></div></div>
+    <div class="sla-note">⚠ Escalation to Channel Ops Director triggered automatically if unresolved by Feb 17, 2026.</div>
+  </div>
+
+  <div class="two-col-layout">
+    <!-- LEFT: Main dispute content -->
+    <div>
+
+      <!-- Parties -->
+      <div class="card">
+        <h3>Parties in Dispute</h3>
+        <div class="party-row">
+          <div class="party-box claimant">
+            <div class="party-label">Claimant (deal registered)</div>
+            <div class="party-name">Vertex Networks</div>
+            <div class="party-claim">Claims 100% partner-sourced attribution for the Pinnacle Logistics deal. Registered Jan 28, 2026 via the partner portal.</div>
+          </div>
+          <div class="vs-badge">VS</div>
+          <div class="party-box respondent">
+            <div class="party-label">Respondent (counter-claim)</div>
+            <div class="party-name">Equinix Direct Sales</div>
+            <div class="party-claim">AE Sarah Park claims deal was in active pipeline since Jan 15, 2026. Requests co-sourced 50/50 split, citing prior qualification call.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Deal at Stake -->
+      <div class="card">
+        <h3>Deal at Stake — Pinnacle Logistics</h3>
+        <div class="deal-detail-grid">
+          <div class="detail-cell">
+            <div class="detail-label">Deal Value</div>
+            <div class="detail-value green">$128,000 ARR</div>
+          </div>
+          <div class="detail-cell">
+            <div class="detail-label">Product</div>
+            <div class="detail-value">IBX Colocation — NY4</div>
+          </div>
+          <div class="detail-cell">
+            <div class="detail-label">Expected Close</div>
+            <div class="detail-value">Mar 28, 2026</div>
+          </div>
+          <div class="detail-cell">
+            <div class="detail-label">Stage</div>
+            <div class="detail-value orange">Proposal (Stage 3)</div>
+          </div>
+          <div class="detail-cell">
+            <div class="detail-label">Vertex Deal Reg Date</div>
+            <div class="detail-value">Jan 28, 2026 at 9:14 AM</div>
+          </div>
+          <div class="detail-cell">
+            <div class="detail-label">Equinix CRM Entry</div>
+            <div class="detail-value orange">Jan 15, 2026 (no deal reg)</div>
+          </div>
+        </div>
+        <div style="background:#f8f9fa;border-radius:4px;padding:10px 12px;font-size:13px;color:#495057;">
+          <strong>Attribution impact:</strong> Full partner-sourced = $6,400 deal reg bonus + 100% MDF ROI credit to Vertex. Co-sourced 50/50 = $3,200 bonus + 50% MDF credit. Resolution sets precedent for 3 similar in-flight disputes.
+        </div>
+      </div>
+
+      <!-- Dispute Timeline -->
+      <div class="card">
+        <h3>Dispute Timeline</h3>
+        <div class="timeline-item">
+          <div class="timeline-dot active"></div>
+          <div class="timeline-date">Jan 15</div>
+          <div class="timeline-text">Equinix AE (Sarah Park) logs Pinnacle Logistics in SFDC as a self-sourced lead.<span>No deal registration filed. No partner notified.</span></div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot active"></div>
+          <div class="timeline-date">Jan 23</div>
+          <div class="timeline-text">Vertex Networks rep (Dan Howell) holds discovery call with Pinnacle Logistics CTO.<span>Meeting logged in Vertex's partner portal activity tracker.</span></div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot active"></div>
+          <div class="timeline-date">Jan 28</div>
+          <div class="timeline-text">Vertex registers the deal via PCP portal at 9:14 AM. System-generated confirmation email sent.<span>Deal registration timestamp is authoritative per program rules §4.2.</span></div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot warning"></div>
+          <div class="timeline-date">Feb 3</div>
+          <div class="timeline-text">Sarah Park contacts Channel Ops: "Pinnacle was in my pipeline before Vertex registered." Dispute case opened.<span>Case #DSP-2026-0047 created. Assigned to Marcus Chen (PSM).</span></div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot warning"></div>
+          <div class="timeline-date">Feb 10</div>
+          <div class="timeline-text">Marcus requests evidence from both parties. Deadline: Feb 14.<span>Vertex submitted 3 documents. Equinix submitted 1 document.</span></div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-dot danger"></div>
+          <div class="timeline-date">Feb 17 ⚠</div>
+          <div class="timeline-text" style="color:#dc3545;font-weight:600;">Auto-escalation deadline if unresolved. Case escalates to Channel Ops Director.<span style="color:#dc3545;">Today is Day 14. PSM review and recommendation due today.</span></div>
+        </div>
+      </div>
+
+      <!-- Evidence Review -->
+      <div class="card">
+        <h3>Evidence Submitted</h3>
+        <div class="evidence-row">
+          <div class="ev-icon">📄</div>
+          <div style="flex:1;">
+            <div style="font-weight:600;font-size:13px;">Vertex Portal Activity Log — Jan 23, 2026</div>
+            <div style="font-size:12px;color:#6c757d;">Timestamped discovery call + follow-up email to Pinnacle CTO. Submitted Feb 10.</div>
+          </div>
+          <span class="ev-party claimant">Vertex</span>
+        </div>
+        <div class="evidence-row">
+          <div class="ev-icon">📧</div>
+          <div style="flex:1;">
+            <div style="font-weight:600;font-size:13px;">Email thread — Dan Howell & Pinnacle CTO</div>
+            <div style="font-size:12px;color:#6c757d;">3-message thread establishing Vertex as the introducing party. Submitted Feb 10.</div>
+          </div>
+          <span class="ev-party claimant">Vertex</span>
+        </div>
+        <div class="evidence-row">
+          <div class="ev-icon">🏷</div>
+          <div style="flex:1;">
+            <div style="font-weight:600;font-size:13px;">PCP Deal Registration Confirmation #DR-10283</div>
+            <div style="font-size:12px;color:#6c757d;">System-issued confirmation for Pinnacle Logistics, Jan 28 9:14 AM. Submitted Feb 10.</div>
+          </div>
+          <span class="ev-party claimant">Vertex</span>
+        </div>
+        <div class="evidence-row">
+          <div class="ev-icon">📊</div>
+          <div style="flex:1;">
+            <div style="font-weight:600;font-size:13px;">SFDC Opportunity Record — created Jan 15</div>
+            <div style="font-size:12px;color:#6c757d;">Shows Pinnacle Logistics in Sarah Park's pipeline 13 days before deal registration. Submitted Feb 11.</div>
+          </div>
+          <span class="ev-party respondent">Equinix</span>
+        </div>
+        <div style="background:#f0f5ff;border-radius:4px;padding:10px 12px;margin-top:10px;font-size:13px;color:#1e3a5f;">
+          <strong>PSM Assessment:</strong> Program rules §4.2 state deal registration timestamp controls attribution when CRM entry lacks a formal deal reg. Vertex's portal activity and email evidence predate Equinix's first formal customer contact. Evidence favors Vertex full attribution.
+        </div>
+      </div>
+
+      <!-- Resolution -->
+      <div class="card">
+        <h3>PSM Recommendation</h3>
+        <div class="resolution-options">
+          <label class="resolution-option">
+            <input type="radio" name="resolution" checked>
+            <div>
+              <span class="res-title">✅ Uphold Vertex Networks — Full Partner-Sourced Attribution</span>
+              <span class="res-desc">Award 100% partner-sourced credit to Vertex per deal registration rules §4.2. Deal reg bonus: $6,400. Educate Equinix AE on pre-registration requirements.</span>
+            </div>
+          </label>
+          <label class="resolution-option">
+            <input type="radio" name="resolution">
+            <div>
+              <span class="res-title">⚖️ Co-sourced Split — 50/50 Attribution</span>
+              <span class="res-desc">Award 50% to each party. Applicable only if Equinix can demonstrate prior qualifying conversation before Vertex's Jan 23 discovery call. Evidence currently insufficient.</span>
+            </div>
+          </label>
+          <label class="resolution-option">
+            <input type="radio" name="resolution">
+            <div>
+              <span class="res-title">🔼 Escalate to Channel Ops Director</span>
+              <span class="res-desc">Refer case upward without PSM recommendation. Use only if evidence is genuinely inconclusive. Not recommended given current evidence strength.</span>
+            </div>
+          </label>
+        </div>
+        <textarea class="notes-area" placeholder="Add PSM reasoning notes before submitting recommendation… (e.g., 'Vertex evidence is clear. Equinix SFDC entry lacked deal reg. Recommend full attribution to Vertex per §4.2. Suggest AE training on deal reg process.')"></textarea>
+        <div class="btn-row">
+          <button class="btn btn-primary">Submit PSM Recommendation</button>
+          <button class="btn btn-outline">Save Draft</button>
+          <button class="btn btn-warning">Request More Evidence</button>
+          <button class="btn btn-danger">Escalate Now</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT: Sidebar -->
+    <div>
+
+      <!-- Partner Health Snapshot -->
+      <div class="card">
+        <h3>Vertex Networks</h3>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+          <div style="width:42px;height:42px;background:#fef3c7;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;color:#92400e;">38</div>
+          <div>
+            <div style="font-size:12px;font-weight:700;color:#dc3545;">At Risk — Low Health</div>
+            <div style="font-size:11px;color:#6c757d;">Silver Tier &bull; $310K ARR</div>
+          </div>
+        </div>
+        <div style="font-size:12px;color:#6c757d;line-height:1.6;">
+          <div><strong>PSM:</strong> Marcus Chen</div>
+          <div><strong>PAM:</strong> Alex Rivera</div>
+          <div><strong>Partner Contact:</strong> Dan Howell</div>
+          <div><strong>Last QBR:</strong> Nov 2025</div>
+          <div><strong>Open Deals:</strong> 2 (incl. this dispute)</div>
+        </div>
+        <div style="margin-top:10px;padding-top:10px;border-top:1px solid #e9ecef;font-size:12px;color:#6c757d;">
+          <strong style="color:#dc3545;">Risk note:</strong> Dispute outcome affects partner satisfaction. Vertex has indicated they may reduce activity if attribution is not resolved fairly.
+        </div>
+      </div>
+
+      <!-- Precedent / Similar Disputes -->
+      <div class="card">
+        <h3>Similar Resolved Cases</h3>
+        <div class="similar-dispute">
+          <div>
+            <div style="font-size:12px;font-weight:600;">DSP-2025-0031</div>
+            <div style="font-size:11px;color:#6c757d;">BlueSky vs Equinix Direct — Q3 2025</div>
+          </div>
+          <span class="sim-outcome upheld">Partner Upheld</span>
+        </div>
+        <div class="similar-dispute">
+          <div>
+            <div style="font-size:12px;font-weight:600;">DSP-2025-0019</div>
+            <div style="font-size:11px;color:#6c757d;">Nexus IT vs Equinix Direct — Q2 2025</div>
+          </div>
+          <span class="sim-outcome upheld">Partner Upheld</span>
+        </div>
+        <div class="similar-dispute">
+          <div>
+            <div style="font-size:12px;font-weight:600;">DSP-2025-0008</div>
+            <div style="font-size:11px;color:#6c757d;">Cascade vs Equinix Direct — Q1 2025</div>
+          </div>
+          <span class="sim-outcome split">Co-sourced Split</span>
+        </div>
+        <div style="font-size:11px;color:#6c757d;margin-top:8px;padding-top:8px;border-top:1px solid #e9ecef;">Program precedent: 2 of 3 similar cases upheld in partner's favor when deal reg timestamp predates Equinix CRM entry.</div>
+      </div>
+
+      <!-- Audit Log -->
+      <div class="card">
+        <h3>Case Audit Log</h3>
+        <div class="audit-item"><div class="audit-time">Feb 11</div><div>Equinix submitted SFDC opportunity record</div></div>
+        <div class="audit-item"><div class="audit-time">Feb 10</div><div>Vertex submitted 3 evidence documents</div></div>
+        <div class="audit-item"><div class="audit-time">Feb 10</div><div>Marcus Chen sent evidence request to both parties</div></div>
+        <div class="audit-item"><div class="audit-time">Feb 3</div><div>Case opened by Channel Ops, assigned to Marcus Chen</div></div>
+        <div class="audit-item"><div class="audit-time">Jan 28</div><div>Deal registration #DR-10283 confirmed for Vertex</div></div>
+        <div class="audit-item"><div class="audit-time">Jan 15</div><div>Equinix AE logged Pinnacle in SFDC pipeline</div></div>
+      </div>
+
+      <!-- Notification Preview -->
+      <div class="card">
+        <h3>Notification Preview</h3>
+        <div style="font-size:12px;color:#6c757d;background:#f8f9fa;border-radius:4px;padding:10px;line-height:1.7;">
+          On resolution, both parties will be notified automatically. Vertex will receive deal bonus payout info. Equinix AE will receive a program rules reminder.<br><br>
+          <strong>Preview — Vertex notification:</strong><br>
+          "Case #DSP-2026-0047 has been resolved in your favor. Pinnacle Logistics has been attributed as partner-sourced. Your deal registration bonus of $6,400 will be processed within 5 business days."
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<aside class="spec-panel" id="spec-panel">
+  <div class="spec-panel-header">
+    <strong>Screen Notes</strong>
+    <button class="spec-panel-close" onclick="toggleSpec()" aria-label="Close notes">✕</button>
+  </div>
+  <div class="spec-panel-body">
+    <h4>Screen</h4>
+    <p><strong>psm-deal-dispute.html</strong> — Deal attribution dispute resolution view for PSM Marcus Chen. Dispute between Vertex Networks (partner-sourced claim) and Equinix Direct Sales (co-source counter-claim) for the Pinnacle Logistics deal ($128K ARR).</p>
+
+    <h4>Job to Be Done</h4>
+    <p><em>"When a deal dispute surfaces between a partner and direct sales, I want to assess the evidence quickly and facilitate a fair resolution, so I can protect the partner's trust in the program and close the case before it escalates."</em></p>
+    <p>→ See full workflow: <a href="workflows-jtbd.html#psm-jtbd-2" target="_blank">PSM Job 2: Deal Dispute Resolution</a></p>
+
+    <h4>Business Logic</h4>
+    <ul>
+      <li>21-day resolution SLA. Auto-escalates to Channel Ops Director on day 21 if unresolved.</li>
+      <li>Program rules §4.2: Deal registration timestamp controls attribution when Equinix CRM entry lacks a formal deal reg.</li>
+      <li>PSM files a recommendation (not a final ruling). Channel Ops approves or overrides.</li>
+      <li>Co-sourced splits are available only when both parties can demonstrate qualifying contact within the same 30-day window.</li>
+      <li>Resolution outcome triggers automated notifications to both parties and updates SFDC attribution field.</li>
+    </ul>
+
+    <h4>Key Components</h4>
+    <ul>
+      <li><strong>SLA bar:</strong> Red fill at 67% (14/21 days). Auto-escalation date is explicit.</li>
+      <li><strong>Parties panel:</strong> Claimant (Vertex, blue) vs Respondent (Equinix AE, gray). Visual separation reinforces neutrality framing.</li>
+      <li><strong>Evidence list:</strong> Tagged by submitting party. PSM assessment block summarizes the key finding.</li>
+      <li><strong>Resolution radio group:</strong> Three options — uphold partner, co-source split, escalate. First option pre-selected based on evidence assessment.</li>
+      <li><strong>Similar cases:</strong> Precedent from prior disputes. 2 of 3 upheld partner. Provides normative anchor for Marcus's recommendation.</li>
+    </ul>
+
+    <h4>Data Story</h4>
+    <ul>
+      <li>Vertex Networks: Silver tier, $310K ARR, health 38/100 (flagged at risk). Also shown in psm-portfolio.html as Priority Action #1.</li>
+      <li>Deal: Pinnacle Logistics, $128K ARR, IBX Colocation NY4, Stage 3 Proposal.</li>
+      <li>PSM recommendation: Uphold Vertex. Evidence supports partner-sourced attribution under §4.2.</li>
+    </ul>
+
+    <h4>Navigation</h4>
+    <ul>
+      <li>Back breadcrumb: Partner Deals → psm-portfolio.html (via deal list)</li>
+      <li>Escalate button: Sends to Channel Ops Director (out-of-scope screen)</li>
+      <li>Submit recommendation → Triggers notification workflow, returns to portfolio</li>
+    </ul>
+  </div>
+</aside>
+
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

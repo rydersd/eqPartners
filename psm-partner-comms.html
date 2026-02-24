@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Partner Communications | PSM Portal</title>
+<link rel="stylesheet" href="wireframe.css">
+<style>
+.two-col-layout {
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 20px;
+  align-items: start;
+}
+.card {
+  background: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 18px;
+  margin-bottom: 16px;
+}
+.card h3 {
+  font-size: 13px;
+  font-weight: 700;
+  color: #495057;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin: 0 0 14px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #e9ecef;
+}
+.compose-toolbar {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  padding: 8px 10px;
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px 4px 0 0;
+  border-bottom: none;
+  flex-wrap: wrap;
+}
+.compose-toolbar button {
+  padding: 4px 10px;
+  font-size: 12px;
+  border: 1px solid #dee2e6;
+  background: #fff;
+  border-radius: 3px;
+  cursor: pointer;
+  color: #495057;
+}
+.compose-toolbar .toolbar-sep {
+  width: 1px;
+  height: 20px;
+  background: #dee2e6;
+}
+.compose-field {
+  width: 100%;
+  border: 1px solid #dee2e6;
+  border-top: none;
+  padding: 10px 12px;
+  font-size: 13px;
+  color: #212529;
+  box-sizing: border-box;
+  font-family: inherit;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.compose-field label {
+  font-size: 12px;
+  color: #6c757d;
+  font-weight: 600;
+  width: 55px;
+  flex-shrink: 0;
+}
+.compose-field input, .compose-field select {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 13px;
+  color: #212529;
+  font-family: inherit;
+  background: transparent;
+}
+.audience-chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 10px 12px;
+  border: 1px solid #dee2e6;
+  border-top: none;
+  background: #fff;
+}
+.audience-chip {
+  background: #dbeafe;
+  color: #1d4ed8;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.audience-chip .chip-remove {
+  color: #6c757d;
+  cursor: pointer;
+  font-size: 10px;
+}
+.audience-chip.add-chip {
+  background: #f8f9fa;
+  color: #6c757d;
+  border: 1px dashed #adb5bd;
+}
+.compose-body {
+  width: 100%;
+  border: 1px solid #dee2e6;
+  border-top: none;
+  padding: 12px;
+  font-size: 13px;
+  color: #6c757d;
+  resize: vertical;
+  min-height: 200px;
+  box-sizing: border-box;
+  font-family: inherit;
+  border-radius: 0 0 4px 4px;
+}
+.compose-footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+.btn {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.btn-primary { background: #0d6efd; color: #fff; }
+.btn-outline { background: #fff; color: #495057; border: 1px solid #dee2e6; }
+.btn-success { background: #198754; color: #fff; }
+.btn-sm { padding: 5px 12px; font-size: 12px; }
+.recipient-count {
+  margin-left: auto;
+  font-size: 12px;
+  color: #6c757d;
+}
+.template-card {
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+.template-card:hover { border-color: #0d6efd; }
+.template-card.active { border-color: #0d6efd; background: #f0f5ff; }
+.template-card .tmpl-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #212529;
+  margin-bottom: 3px;
+}
+.template-card .tmpl-desc {
+  font-size: 12px;
+  color: #6c757d;
+}
+.tmpl-tag {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 10px;
+  float: right;
+}
+.tmpl-tag.broadcast { background: #ede9fe; color: #5b21b6; }
+.tmpl-tag.individual { background: #dbeafe; color: #1d4ed8; }
+.tmpl-tag.alert { background: #fee2e2; color: #991b1b; }
+.sent-item {
+  padding: 10px 0;
+  border-bottom: 1px solid #f1f3f5;
+  font-size: 13px;
+}
+.sent-item:last-child { border-bottom: none; }
+.sent-item .sent-subject {
+  font-weight: 600;
+  color: #212529;
+  margin-bottom: 2px;
+}
+.sent-item .sent-meta {
+  font-size: 11px;
+  color: #6c757d;
+  display: flex;
+  gap: 12px;
+}
+.sent-item .sent-stats {
+  font-size: 11px;
+  color: #198754;
+  margin-top: 2px;
+}
+.audience-builder {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.audience-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.audience-option input[type="checkbox"] { flex-shrink: 0; }
+.audience-option .ao-label { flex: 1; }
+.audience-option .ao-count {
+  font-size: 12px;
+  font-weight: 600;
+  color: #0d6efd;
+}
+.audience-option.selected { background: #f0f5ff; border-color: #0d6efd; }
+.filter-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+.filter-row select {
+  font-size: 12px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 5px 10px;
+  color: #495057;
+  background: #fff;
+}
+.jtbd-banner {
+  background: #f0f5ff;
+  border-left: 4px solid #0d6efd;
+  padding: 10px 16px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: #1e3a5f;
+  border-radius: 0 4px 4px 0;
+}
+.jtbd-banner strong { color: #0d4b9e; }
+.tab-bar {
+  display: flex;
+  gap: 0;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #dee2e6;
+}
+.tab-bar .tab {
+  padding: 8px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #6c757d;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+}
+.tab-bar .tab.active { color: #0d6efd; border-bottom-color: #0d6efd; }
+</style>
+</head>
+<body>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+
+<header class="wf-header">
+  <div class="wf-header-logo">
+    <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="4" fill="#e2231a"/><path d="M8 8h6v16H8zm10 0h6v7h-6zm0 9h6v7h-6z" fill="#fff"/></svg>
+  </div>
+  <div class="wf-header-title">SFDC</div>
+  <nav class="wf-header-nav">
+    <a href="#">Dashboard</a>
+    <a href="psm-portfolio.html" class="active">PSM Portal</a>
+    <a href="#">Partners</a>
+    <a href="#">Deals</a>
+    <a href="#">Reports</a>
+  </nav>
+  <div class="wf-header-util">
+    <span class="wf-avatar">MC</span>
+    <span style="font-size:12px;color:#6c757d;">Marcus Chen</span>
+  </div>
+</header>
+
+<div class="page-context-bar">
+  <span class="persona-badge persona-badge--psm">PSM</span>
+  <span style="font-size:12px;color:#6c757d;margin-left:8px;">Marcus Chen &rsaquo; PSM Portal &rsaquo; Partner Communications</span>
+  <span style="margin-left:auto;font-size:11px;color:#6c757d;">Salesforce Lightning &bull; PSM Portal v2.4</span>
+</div>
+
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false">Notes</button>
+</div>
+
+<div class="page-container">
+
+  <div class="page-title-row" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+    <div>
+      <h1 class="page-title" style="margin:0 0 4px 0;">Partner Communications</h1>
+      <div style="font-size:13px;color:#6c757d;">Send updates, alerts, or individual outreach to your 8 assigned partners.</div>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-outline btn-sm">View Sent History</button>
+      <button class="btn btn-primary btn-sm">+ New Message</button>
+    </div>
+  </div>
+
+  <div class="jtbd-banner">
+    <strong>When I need to reach one or more partners</strong> → I want to send targeted, logged communications without leaving the portal → <strong>so partners get relevant info fast and every message is traceable in the partner record.</strong>
+  </div>
+
+  <div class="tab-bar">
+    <div class="tab active">Compose</div>
+    <div class="tab">Sent (12)</div>
+    <div class="tab">Templates</div>
+    <div class="tab">Scheduled (2)</div>
+  </div>
+
+  <div class="two-col-layout">
+    <!-- LEFT: Compose + Sent -->
+    <div>
+
+      <!-- Compose -->
+      <div class="card">
+        <h3>Compose Message</h3>
+
+        <!-- Audience Segment Builder -->
+        <div style="margin-bottom:14px;">
+          <div style="font-size:12px;font-weight:600;color:#6c757d;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.4px;">Audience</div>
+          <div class="audience-builder">
+            <label class="audience-option selected">
+              <input type="checkbox" checked>
+              <div class="ao-label"><strong>Gold tier partners</strong><div style="font-size:11px;color:#6c757d;">InnovateTech, Meridian, CloudBridge</div></div>
+              <div class="ao-count">3</div>
+            </label>
+            <label class="audience-option">
+              <input type="checkbox">
+              <div class="ao-label"><strong>Silver tier partners</strong><div style="font-size:11px;color:#6c757d;">Horizon, BlueSky, Nexus, Vertex, Cascade</div></div>
+              <div class="ao-count">5</div>
+            </label>
+            <label class="audience-option">
+              <input type="checkbox">
+              <div class="ao-label"><strong>Bronze tier partners</strong><div style="font-size:11px;color:#6c757d;">DataLink, TerraCloud, Summit</div></div>
+              <div class="ao-count">0 of 3 (filtered out)</div>
+            </label>
+            <label class="audience-option">
+              <input type="checkbox">
+              <div class="ao-label"><strong>At-risk health score (&lt;60)</strong><div style="font-size:11px;color:#6c757d;">Meridian (41), Vertex (38), TerraCloud (28)</div></div>
+              <div class="ao-count">3</div>
+            </label>
+            <label class="audience-option">
+              <input type="checkbox">
+              <div class="ao-label"><strong>MDF under-utilized (&lt;50%)</strong><div style="font-size:11px;color:#6c757d;">Partners not yet activating FY2026 MDF</div></div>
+              <div class="ao-count">2</div>
+            </label>
+          </div>
+          <div style="font-size:12px;color:#6c757d;">Or send to an individual partner:</div>
+          <div class="filter-row" style="margin-top:8px;margin-bottom:0;">
+            <select>
+              <option>— Select individual partner —</option>
+              <option>CloudBridge Solutions</option>
+              <option>Meridian Cloud Inc.</option>
+              <option>InnovateTech Solutions</option>
+              <option>Horizon Cloud Services</option>
+              <option>BlueSky Networks LLC</option>
+              <option>Nexus IT Partners</option>
+              <option>Vertex Networks</option>
+              <option>DataLink Systems</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Recipient preview -->
+        <div style="margin-bottom:14px;">
+          <div style="font-size:12px;font-weight:600;color:#6c757d;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.4px;">Recipients (3 partners · 6 contacts)</div>
+          <div class="audience-chips">
+            <span class="audience-chip">CloudBridge — Steve Rogers <span class="chip-remove">✕</span></span>
+            <span class="audience-chip">InnovateTech — Lisa Park <span class="chip-remove">✕</span></span>
+            <span class="audience-chip">Meridian — Brian Torres <span class="chip-remove">✕</span></span>
+            <span class="audience-chip add-chip">+ Add recipient</span>
+          </div>
+        </div>
+
+        <!-- Compose fields -->
+        <div class="compose-toolbar">
+          <button>B</button>
+          <button><em>I</em></button>
+          <button>Link</button>
+          <div class="toolbar-sep"></div>
+          <button>Merge field ▾</button>
+          <button>Attach</button>
+          <div class="toolbar-sep"></div>
+          <select style="font-size:12px;border:1px solid #dee2e6;padding:3px 6px;border-radius:3px;color:#495057;">
+            <option>Template: None</option>
+            <option>MDF Reminder — Upcoming Expiry</option>
+            <option>QBR Invite</option>
+            <option>Tier Review Notice</option>
+            <option>Co-sell Opportunity Alert</option>
+            <option>Training Enrollment Reminder</option>
+          </select>
+        </div>
+        <div class="compose-field">
+          <label>Subject</label>
+          <input type="text" value="Q1 2026 MDF Utilization Reminder — Action Required by Mar 15">
+        </div>
+        <div class="compose-field">
+          <label>From</label>
+          <input type="text" value="Marcus Chen (PSM) — marcus.chen@equinix.com">
+        </div>
+        <textarea class="compose-body">Hi {{partner_first_name}},
+
+I'm reaching out as your dedicated Partner Success Manager to share a quick heads-up on your Q1 MDF status.
+
+As of today, you have {{mdf_remaining}} in unspent FY2026 MDF funds. Per program policy, unspent MDF must be committed to an approved activity by March 15, 2026 or it will expire.
+
+Here's where you stand:
+
+  • MDF Allocated: {{mdf_allocated}}
+  • MDF Utilized: {{mdf_utilized}} ({{mdf_pct}})
+  • MDF Remaining: {{mdf_remaining}}
+  • Commitment Deadline: March 15, 2026
+
+To activate your remaining funds, log into the Partner Connect Portal and submit a new MDF request for an upcoming Q2 campaign (event sponsorship, digital ads, co-branded content, etc.).
+
+I'm happy to jump on a quick call this week to help you identify the right activity and pre-approve the request before the deadline. Reply here or schedule time directly: calendly.com/marcus-chen-equinix.
+
+Best,
+Marcus Chen
+Partner Success Manager — Equinix</textarea>
+
+        <div class="compose-footer">
+          <button class="btn btn-primary">Send Now</button>
+          <button class="btn btn-outline">Schedule Send</button>
+          <button class="btn btn-outline">Save as Draft</button>
+          <button class="btn btn-outline">Preview</button>
+          <span class="recipient-count">Will send to 3 partners (6 contacts)</span>
+        </div>
+      </div>
+
+      <!-- Sent History Preview -->
+      <div class="card">
+        <h3>Recent Sent Messages</h3>
+        <div class="sent-item">
+          <div class="sent-subject">CloudBridge QBR Invite — Feb 28, 2026 at 10:00 AM PT</div>
+          <div class="sent-meta">
+            <span>Feb 18, 2026</span>
+            <span>1 partner &bull; 2 contacts</span>
+            <span>Individual</span>
+          </div>
+          <div class="sent-stats">✅ Opened by Steve Rogers (10:42 AM)</div>
+        </div>
+        <div class="sent-item">
+          <div class="sent-subject">FY2026 MDF Program Launch — New Eligible Activities & Limits</div>
+          <div class="sent-meta">
+            <span>Jan 8, 2026</span>
+            <span>8 partners &bull; 16 contacts</span>
+            <span>Broadcast</span>
+          </div>
+          <div class="sent-stats">✅ 6 of 8 partners opened &bull; 1 unsubscribed from broadcasts</div>
+        </div>
+        <div class="sent-item">
+          <div class="sent-subject">Vertex Networks — Deal Dispute Case #DSP-2026-0047 Opened</div>
+          <div class="sent-meta">
+            <span>Feb 3, 2026</span>
+            <span>Vertex Networks &bull; Dan Howell</span>
+            <span>Individual</span>
+          </div>
+          <div class="sent-stats">✅ Opened by Dan Howell (Feb 3, 3:14 PM)</div>
+        </div>
+        <div class="sent-item">
+          <div class="sent-subject">TerraCloud Partners — Training Enrollment Required by Jan 31</div>
+          <div class="sent-meta">
+            <span>Jan 3, 2026</span>
+            <span>TerraCloud Partners &bull; Kim Zhao</span>
+            <span>Individual — Urgent</span>
+          </div>
+          <div class="sent-stats" style="color:#e07b00;">⚠ Opened but no action taken. Follow-up overdue.</div>
+        </div>
+        <div class="sent-item">
+          <div class="sent-subject">Q4 2025 Program Performance Summary — All Partners</div>
+          <div class="sent-meta">
+            <span>Dec 18, 2025</span>
+            <span>8 partners &bull; 16 contacts</span>
+            <span>Broadcast</span>
+          </div>
+          <div class="sent-stats">✅ 7 of 8 partners opened</div>
+        </div>
+        <div style="text-align:center;margin-top:10px;">
+          <button class="btn btn-outline btn-sm">View Full Sent History →</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT: Templates + Segment stats -->
+    <div>
+
+      <!-- Message Templates -->
+      <div class="card">
+        <h3>Message Templates</h3>
+        <div class="template-card active">
+          <span class="tmpl-tag broadcast">Broadcast</span>
+          <div class="tmpl-name">MDF Reminder — Upcoming Expiry</div>
+          <div class="tmpl-desc">Remind partners of unspent MDF balance before the commitment deadline. Uses merge fields.</div>
+        </div>
+        <div class="template-card">
+          <span class="tmpl-tag individual">Individual</span>
+          <div class="tmpl-name">QBR Invite</div>
+          <div class="tmpl-desc">Invite a single partner to their upcoming QBR with agenda preview and calendar link.</div>
+        </div>
+        <div class="template-card">
+          <span class="tmpl-tag alert">Alert</span>
+          <div class="tmpl-name">Tier Review Notice</div>
+          <div class="tmpl-desc">Notify a partner their current ARR is below tier threshold. Includes gap, deadline, and recovery suggestions.</div>
+        </div>
+        <div class="template-card">
+          <span class="tmpl-tag broadcast">Broadcast</span>
+          <div class="tmpl-name">Co-sell Opportunity Alert</div>
+          <div class="tmpl-desc">Alert partners to a net-new opportunity in their vertical that Equinix is generating leads for.</div>
+        </div>
+        <div class="template-card">
+          <span class="tmpl-tag individual">Individual</span>
+          <div class="tmpl-name">Training Enrollment Reminder</div>
+          <div class="tmpl-desc">Prompt partners with incomplete certification requirements to enroll before renewal deadline.</div>
+        </div>
+        <div class="template-card">
+          <span class="tmpl-tag broadcast">Broadcast</span>
+          <div class="tmpl-name">Program Update — Program-Wide</div>
+          <div class="tmpl-desc">Announce changes to tier thresholds, MDF rules, or portal features. Sent to all 8 partners.</div>
+        </div>
+        <button class="btn btn-outline btn-sm" style="width:100%;text-align:center;margin-top:4px;">+ Create New Template</button>
+      </div>
+
+      <!-- Engagement Stats -->
+      <div class="card">
+        <h3>Comms Engagement — Q1 2026</h3>
+        <div style="font-size:12px;color:#6c757d;line-height:1.9;">
+          <div style="display:flex;justify-content:space-between;"><span>Messages sent this quarter</span><strong>14</strong></div>
+          <div style="display:flex;justify-content:space-between;"><span>Avg open rate</span><strong style="color:#198754;">78%</strong></div>
+          <div style="display:flex;justify-content:space-between;"><span>Partners with no opens (last 30d)</span><strong style="color:#dc3545;">1</strong></div>
+          <div style="display:flex;justify-content:space-between;"><span>Broadcast sends</span><strong>4</strong></div>
+          <div style="display:flex;justify-content:space-between;"><span>Individual sends</span><strong>10</strong></div>
+          <div style="display:flex;justify-content:space-between;"><span>Scheduled (pending)</span><strong>2</strong></div>
+        </div>
+        <div style="background:#fee2e2;border-radius:4px;padding:10px 12px;margin-top:10px;font-size:12px;color:#991b1b;">
+          <strong>⚠ TerraCloud Partners</strong> has not opened any PSM communication in 45 days. Consider a phone call before next automated message.
+        </div>
+      </div>
+
+      <!-- Scheduled Messages -->
+      <div class="card">
+        <h3>Scheduled Messages</h3>
+        <div style="padding:8px 0;border-bottom:1px solid #f1f3f5;font-size:12px;color:#6c757d;">
+          <div style="font-weight:600;color:#212529;margin-bottom:2px;">Gold Tier Renewal Reminder</div>
+          <div>Sends Feb 28, 2026 &bull; 3 Gold partners</div>
+          <div>8 contacts &bull; Tier Review template</div>
+        </div>
+        <div style="padding:8px 0;font-size:12px;color:#6c757d;">
+          <div style="font-weight:600;color:#212529;margin-bottom:2px;">March MDF Expiry Final Warning</div>
+          <div>Sends Mar 10, 2026 &bull; Low-utilization partners</div>
+          <div>4 contacts &bull; MDF Reminder template</div>
+        </div>
+      </div>
+
+      <!-- Compliance note -->
+      <div class="card" style="background:#f8f9fa;border-color:#dee2e6;">
+        <h3>Communication Guidelines</h3>
+        <div style="font-size:12px;color:#6c757d;line-height:1.7;">
+          <p style="margin:0 0 8px;">All messages sent here are logged to the partner's SFDC record and are visible to Channel Ops.</p>
+          <p style="margin:0 0 8px;">Merge fields pull live data: <code style="font-size:11px;background:#e9ecef;padding:1px 4px;border-radius:2px;">{{mdf_remaining}}</code>, <code style="font-size:11px;background:#e9ecef;padding:1px 4px;border-radius:2px;">{{partner_first_name}}</code>, etc.</p>
+          <p style="margin:0;">Do not send tier demotion notices without Channel Ops approval. Use the Tier Review Notice template which routes through the correct workflow.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<aside class="spec-panel" id="spec-panel">
+  <div class="spec-panel-header">
+    <strong>Screen Notes</strong>
+    <button class="spec-panel-close" onclick="toggleSpec()" aria-label="Close notes">✕</button>
+  </div>
+  <div class="spec-panel-body">
+    <h4>Screen</h4>
+    <p><strong>psm-partner-comms.html</strong> — Partner communications hub for PSM Marcus Chen. Compose view is active by default, pre-populated with a draft MDF reminder targeted at Gold-tier partners (CloudBridge, InnovateTech, Meridian).</p>
+
+    <h4>Job to Be Done</h4>
+    <p><em>"When I need to reach one or more partners, I want to send targeted, logged communications without leaving the portal, so that partners get relevant information fast and every message is traceable in the partner record."</em></p>
+    <p>→ See full workflow: <a href="workflows-jtbd.html#psm-jtbd-5" target="_blank">PSM Job 5: Partner Communications</a></p>
+
+    <h4>Business Logic</h4>
+    <ul>
+      <li>Audience segment builder allows broadcast (all of tier, health filter, MDF filter) or individual. A partner can be removed from a broadcast via the chip remove button.</li>
+      <li>All sent messages are logged to each partner's SFDC record. Open tracking is native via SFDC email integration.</li>
+      <li>Merge fields pull live data from SFDC at send time, not at draft time.</li>
+      <li>Tier demotion notices require Channel Ops approval before send. The template routes correctly; manual drafts do not.</li>
+      <li>Partners who opt out of broadcasts still receive individual PSM messages (transactional).</li>
+    </ul>
+
+    <h4>Key Components</h4>
+    <ul>
+      <li><strong>Audience segment builder:</strong> 5 filter options (tier × 3, health at-risk, MDF under-utilized) plus individual dropdown. Selected audiences show partner names + contact count inline.</li>
+      <li><strong>Recipient chips:</strong> Preview of who will receive the message. Individual chips are removable.</li>
+      <li><strong>Template selector:</strong> In toolbar dropdown — applies template body + subject on select. 6 pre-built templates.</li>
+      <li><strong>Merge fields:</strong> Variables shown with <code>{{handlebars}}</code> syntax. Merge field button in toolbar opens a picker.</li>
+      <li><strong>Compose body:</strong> Pre-populated with MDF reminder draft targeting Gold partners. Realistic placeholder copy.</li>
+      <li><strong>Sent history:</strong> 5 most recent messages with open tracking status. TerraCloud's unopened message flagged in amber.</li>
+      <li><strong>Tabs:</strong> Compose / Sent / Templates / Scheduled. Only Compose tab is wired; others are navigation stubs.</li>
+    </ul>
+
+    <h4>Data Story Continuity</h4>
+    <ul>
+      <li>Sent items reference real events from other screens: CloudBridge QBR (Feb 28), Vertex dispute (DSP-2026-0047), TerraCloud training warning.</li>
+      <li>TerraCloud engagement alert (no opens in 45 days) ties back to their critical status in psm-portfolio.html (health 28, zero training started).</li>
+      <li>8 assigned partners match Marcus's portfolio in psm-portfolio.html.</li>
+    </ul>
+
+    <h4>Navigation</h4>
+    <ul>
+      <li>Back: PSM Portal → psm-portfolio.html</li>
+      <li>Send Now → sends email via SFDC, logs to partner record</li>
+      <li>Schedule Send → scheduled queue (shown in Scheduled tab)</li>
+      <li>View Full Sent History → Sent tab</li>
+    </ul>
+  </div>
+</aside>
+
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

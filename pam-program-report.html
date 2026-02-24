@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Program Report — PAM · Equinix PCP</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: var(--wf-canvas,#f5f7fb); }
+    .page-container { padding: 24px; max-width: 1600px; margin: 0 auto; }
+    .page-title { font-size: 20px; font-weight: 700; color: var(--wf-ink,#1e2a3a); }
+    .page-subtitle { font-size: 13px; color: var(--wf-muted); margin-top: 2px; margin-bottom: 20px; }
+    .jtbd-banner { background: #edf4fb; border-left: 4px solid var(--wf-accent,#3d6daa); padding: 10px 16px; border-radius: 0 4px 4px 0; margin-bottom: 20px; font-size: 13px; color: var(--wf-text); }
+    .jtbd-banner strong { color: var(--wf-ink); }
+    .kpi-row { display: grid; grid-template-columns: repeat(6,1fr); gap: 14px; margin-bottom: 24px; }
+    .kpi-card { background: var(--wf-surface); padding: 14px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .kpi-label { font-size: 11px; color: var(--wf-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 7px; font-weight: 600; }
+    .kpi-value { font-size: 22px; font-weight: 700; color: var(--wf-accent,#3d6daa); }
+    .kpi-value.up { color: #2e7d32; }
+    .kpi-value.warn { color: #856404; }
+    .kpi-trend { font-size: 11px; color: var(--wf-text); margin-top: 3px; }
+    .three-col { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; margin-bottom: 24px; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-bottom: 24px; }
+    .card { background: var(--wf-surface); border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 18px; }
+    .card-title { font-size: 14px; font-weight: 700; color: var(--wf-ink); margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; }
+    .card-title span { font-size: 11px; font-weight: 400; color: var(--wf-muted); }
+    .stat-row { display: flex; justify-content: space-between; align-items: baseline; padding: 7px 0; border-bottom: 1px solid var(--wf-canvas); font-size: 13px; }
+    .stat-row:last-child { border-bottom: none; }
+    .stat-label { color: var(--wf-muted); }
+    .stat-value { font-weight: 700; color: var(--wf-text); }
+    .stat-value.accent { color: var(--wf-accent); }
+    .stat-value.up { color: #2e7d32; }
+    .stat-value.warn { color: #856404; }
+    .progress-section { margin-bottom: 12px; }
+    .progress-label { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; }
+    .progress-track { height: 8px; background: var(--wf-canvas); border-radius: 4px; overflow: hidden; }
+    .progress-fill { height: 100%; border-radius: 4px; }
+    .fill-gold { background: #8b7745; }
+    .fill-silver { background: #546e8a; }
+    .fill-bronze { background: #7a3a2a; }
+    .fill-blue { background: var(--wf-accent,#3d6daa); }
+    .fill-green { background: #4caf50; }
+    .fill-warn { background: #ffc107; }
+    .bar-chart { display: flex; align-items: flex-end; gap: 10px; height: 120px; padding-bottom: 4px; }
+    .bar-group { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+    .bar-wrapper { display: flex; gap: 3px; align-items: flex-end; }
+    .bar { border-radius: 3px 3px 0 0; width: 18px; }
+    .bar-label-x { font-size: 10px; color: var(--wf-muted); text-align: center; }
+    .bar-val-y { font-size: 10px; font-weight: 700; color: var(--wf-text); }
+    .table-wrapper { background: var(--wf-surface); border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden; margin-bottom: 20px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead { background: var(--wf-canvas); border-bottom: 2px solid var(--wf-line,#b0bdd0); }
+    th { padding: 10px 12px; text-align: left; font-weight: 700; color: var(--wf-text); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+    td { padding: 10px 12px; border-bottom: 1px solid var(--wf-canvas); color: var(--wf-text); }
+    tbody tr:hover { background: #f0f4fa; }
+    .badge { display: inline-block; padding: 3px 8px; border-radius: 3px; font-size: 11px; font-weight: 600; }
+    .badge-gold { background: #fff8e1; color: #8b7745; }
+    .badge-silver { background: #f0f4fa; color: #546e8a; }
+    .badge-bronze { background: #f9ede8; color: #7a3a2a; }
+    .badge-up { background: #e8f5e9; color: #2e7d32; }
+    .badge-at-risk { background: #fde8e8; color: #8b4553; }
+    .badge-stable { background: var(--wf-canvas); color: var(--wf-muted); }
+    .btn { padding: 6px 14px; border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; }
+    .btn-primary { background: var(--wf-accent,#3d6daa); color: #fff; }
+    .btn-secondary { background: var(--wf-surface); color: var(--wf-text); border: 1px solid var(--wf-line,#b0bdd0); }
+    .btn-link { background: none; border: none; color: var(--wf-accent,#3d6daa); font-size: 12px; font-weight: 600; cursor: pointer; text-decoration: underline; padding: 0; }
+    .header-actions { display: flex; gap: 10px; margin-bottom: 16px; justify-content: flex-end; }
+    .filter-bar { display: flex; gap: 10px; margin-bottom: 12px; }
+    .filter-control { padding: 5px 10px; border: 1px solid var(--wf-line,#b0bdd0); border-radius: 4px; background: var(--wf-surface); font-size: 12px; }
+    .section-title { font-size: 15px; font-weight: 700; color: var(--wf-text); margin-bottom: 12px; margin-top: 24px; }
+    .legend { display: flex; gap: 16px; margin-top: 10px; font-size: 11px; flex-wrap: wrap; }
+    .legend-item { display: flex; align-items: center; gap: 5px; color: var(--wf-muted); }
+    .legend-dot { width: 10px; height: 10px; border-radius: 2px; }
+  </style>
+</head>
+<body>
+
+<header class="wf-header">
+  <div class="wf-header-logo"><svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix"><path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/></svg></div>
+  <div class="wf-header-title">SFDC</div>
+  <nav class="wf-header-nav">
+    <a href="#">Dashboard</a>
+    <a href="#">PAM Portal</a>
+    <a href="#">Partners</a>
+    <a href="#">Programs</a>
+    <a href="#" class="active">Reports</a>
+  </nav>
+  <div class="wf-header-util">
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+  </div>
+</header>
+
+<div class="page-context-bar">
+  <div style="max-width:1600px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <span style="font-size:12px;color:var(--wf-muted);display:flex;align-items:center;gap:6px;">
+      <svg viewBox="0 0 20 13" style="width:18px;height:11px;fill:var(--wf-muted);" aria-hidden="true"><path d="M8.3 1.7A3.8 3.8 0 0 1 12 0a3.8 3.8 0 0 1 3.5 2.3A2.8 2.8 0 0 1 20 5a2.8 2.8 0 0 1-2.8 2.8H3.2A3.2 3.2 0 0 1 0 4.6 3.2 3.2 0 0 1 3.2 1.4c.18 0 .35.01.52.04A3.8 3.8 0 0 1 8.3 1.7z"/></svg>
+      <strong style="color:var(--wf-text);font-weight:600;">Salesforce Lightning</strong>&ensp;&middot;&ensp;PCP App
+    </span>
+    <span class="persona-badge" style="background:#b04a2a;color:#fff;display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;letter-spacing:0.5px;">PAM</span>
+  </div>
+</div>
+
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+<div class="page-container">
+
+  <div class="page-title">Partner Program Report</div>
+  <div class="page-subtitle">Alex Rivera · PAM · FY2026 Q1 Executive Summary · 42 active partners</div>
+
+  <div class="jtbd-banner">
+    <strong>Job to be done:</strong> When building the quarterly program report, I want a single view of MDF efficiency, partner-sourced revenue, and tier health — so I can defend program spend to leadership and surface which investments are actually driving results.
+  </div>
+
+  <div class="header-actions">
+    <button class="btn btn-secondary">Filter by Tier</button>
+    <button class="btn btn-secondary">Filter by Region</button>
+    <button class="btn btn-primary">Export PDF Report</button>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi-card">
+      <div class="kpi-label">Partner-Sourced ARR</div>
+      <div class="kpi-value up">$48.2M</div>
+      <div class="kpi-trend">↑ +11% vs Q1 2025</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Total MDF Invested</div>
+      <div class="kpi-value">$1.38M</div>
+      <div class="kpi-trend">FY2026 paid to date</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Program ROI</div>
+      <div class="kpi-value up">34.9x</div>
+      <div class="kpi-trend">↑ +6.2x vs FY2025</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Avg MDF Utilization</div>
+      <div class="kpi-value warn">67%</div>
+      <div class="kpi-trend">Target: 85% EOY</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">New Partners Q1</div>
+      <div class="kpi-value">4</div>
+      <div class="kpi-trend">↑ +2 vs Q4 2025</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Churn Risk</div>
+      <div class="kpi-value warn">6</div>
+      <div class="kpi-trend">Partners at demotion risk</div>
+    </div>
+  </div>
+
+  <div class="three-col">
+    <div class="card">
+      <div class="card-title">MDF Spend by Tier <span>FY2026</span></div>
+      <div class="progress-section">
+        <div class="progress-label"><span>Gold (12 partners)</span><span style="font-weight:700;color:#8b7745;">$986K / $1.44M</span></div>
+        <div class="progress-track"><div class="progress-fill fill-gold" style="width:68%;"></div></div>
+      </div>
+      <div class="progress-section">
+        <div class="progress-label"><span>Silver (18 partners)</span><span style="font-weight:700;color:#546e8a;">$715K / $1.08M</span></div>
+        <div class="progress-track"><div class="progress-fill fill-silver" style="width:66%;"></div></div>
+      </div>
+      <div class="progress-section">
+        <div class="progress-label"><span>Bronze (12 partners)</span><span style="font-weight:700;color:#7a3a2a;">$295K / $300K</span></div>
+        <div class="progress-track"><div class="progress-fill fill-bronze" style="width:98%;"></div></div>
+      </div>
+      <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--wf-canvas);font-size:12px;">
+        <div style="display:flex;justify-content:space-between;"><span style="color:var(--wf-muted);">Total invested (all tiers)</span><span style="font-weight:700;">$1,996K</span></div>
+        <div style="display:flex;justify-content:space-between;margin-top:4px;"><span style="color:var(--wf-muted);">Total allocated FY2026</span><span style="font-weight:700;">$2,820K</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Partner-Sourced Revenue by Tier <span>FY2026</span></div>
+      <div class="stat-row"><span class="stat-label">Gold (12 partners)</span><span class="stat-value accent">$31.4M</span></div>
+      <div class="stat-row"><span class="stat-label">Silver (18 partners)</span><span class="stat-value accent">$12.8M</span></div>
+      <div class="stat-row"><span class="stat-label">Bronze (12 partners)</span><span class="stat-value accent">$4.0M</span></div>
+      <div class="stat-row" style="border-top:2px solid var(--wf-line);margin-top:4px;padding-top:8px;"><span style="font-weight:700;color:var(--wf-ink);">Total</span><span style="font-weight:700;font-size:16px;color:var(--wf-accent);">$48.2M</span></div>
+      <div style="margin-top:12px;font-size:12px;">
+        <div style="display:flex;justify-content:space-between;"><span style="color:var(--wf-muted);">Cost per $1 of ARR (Gold)</span><span style="font-weight:700;color:#2e7d32;">$0.031</span></div>
+        <div style="display:flex;justify-content:space-between;margin-top:4px;"><span style="color:var(--wf-muted);">Cost per $1 of ARR (Silver)</span><span style="font-weight:700;color:#2e7d32;">$0.056</span></div>
+        <div style="display:flex;justify-content:space-between;margin-top:4px;"><span style="color:var(--wf-muted);">Cost per $1 of ARR (Bronze)</span><span style="font-weight:700;color:#856404;">$0.074</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">MDF ROI by Activity Type <span>FY2026 avg.</span></div>
+      <div class="stat-row"><span class="stat-label">Event / Sponsorship</span><span class="stat-value up">4.8x</span></div>
+      <div class="stat-row"><span class="stat-label">Digital Marketing</span><span class="stat-value up">3.9x</span></div>
+      <div class="stat-row"><span class="stat-label">Co-marketing</span><span class="stat-value">3.4x</span></div>
+      <div class="stat-row"><span class="stat-label">Training / Enablement</span><span class="stat-value warn">2.1x</span></div>
+      <div class="stat-row"><span class="stat-label">Content / Creative</span><span class="stat-value warn">1.8x</span></div>
+      <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--wf-canvas);font-size:12px;color:var(--wf-muted);">
+        ROI = pipeline created / MDF spent per activity. Training ROI underrepresents long-term value (cert attainment typically adds $40K+ ARR per partner within 12 months).
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Partner-Sourced ARR — Monthly Trend <span>Jan 2025 – Jan 2026</span></div>
+      <div class="bar-chart" aria-label="Monthly partner-sourced ARR trend bar chart">
+        <div class="bar-group">
+          <div class="bar-wrapper"><div class="bar" style="height:58px;background:var(--wf-accent,#3d6daa);" title="$36.4M"></div></div>
+          <div class="bar-val-y">$36M</div>
+          <div class="bar-label-x">Q2<br>2025</div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-wrapper"><div class="bar" style="height:66px;background:var(--wf-accent,#3d6daa);" title="$39.8M"></div></div>
+          <div class="bar-val-y">$40M</div>
+          <div class="bar-label-x">Q3<br>2025</div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-wrapper"><div class="bar" style="height:76px;background:var(--wf-accent,#3d6daa);" title="$43.4M"></div></div>
+          <div class="bar-val-y">$43M</div>
+          <div class="bar-label-x">Q4<br>2025</div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-wrapper"><div class="bar" style="height:90px;background:#4caf50;" title="$48.2M"></div></div>
+          <div class="bar-val-y" style="color:#2e7d32;">$48M</div>
+          <div class="bar-label-x">Q1<br>2026</div>
+        </div>
+        <div class="bar-group">
+          <div class="bar-wrapper"><div class="bar" style="height:60px;background:#e0e8f0;border:1px dashed #b0bdd0;" title="Forecast"></div></div>
+          <div class="bar-val-y" style="color:var(--wf-muted);">~$50M</div>
+          <div class="bar-label-x">Q2<br>2026</div>
+        </div>
+      </div>
+      <div style="margin-top:14px;font-size:11px;color:var(--wf-muted);">Chart represents quarterly partner-sourced ARR. Q2 2026 is Q1 forecast based on current pipeline.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Tier Movement Summary <span>FY2026 YTD</span></div>
+      <div class="stat-row"><span class="stat-label">Tier upgrades</span><span class="stat-value up">5 ↑</span></div>
+      <div class="stat-row"><span class="stat-label">Tier demotions</span><span class="stat-value warn">1 ↓</span></div>
+      <div class="stat-row"><span class="stat-label">New partner admissions</span><span class="stat-value">4</span></div>
+      <div class="stat-row"><span class="stat-label">Program exits (churn)</span><span class="stat-value warn">2</span></div>
+      <div class="stat-row"><span class="stat-label">Net program growth</span><span class="stat-value up">+4 partners</span></div>
+      <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--wf-canvas);">
+        <div style="font-size:12px;font-weight:700;color:var(--wf-text);margin-bottom:8px;">Open Reviews — Q1</div>
+        <div class="stat-row"><span class="stat-label">Reviews due by Mar 31</span><span class="stat-value warn">9</span></div>
+        <div class="stat-row"><span class="stat-label">At risk of demotion</span><span class="stat-value warn">6</span></div>
+        <div class="stat-row"><span class="stat-label">Upgrade eligible</span><span class="stat-value up">4</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">Top Partners by Revenue — FY2026</div>
+  <div class="filter-bar">
+    <select class="filter-control">
+      <option>All Tiers</option>
+      <option>Gold</option>
+      <option>Silver</option>
+      <option>Bronze</option>
+    </select>
+    <select class="filter-control">
+      <option>Sort: Revenue (highest)</option>
+      <option>Sort: MDF ROI</option>
+      <option>Sort: Tier Risk</option>
+    </select>
+  </div>
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Partner</th>
+          <th>Tier</th>
+          <th>FY2026 ARR</th>
+          <th>MDF Invested</th>
+          <th>MDF ROI</th>
+          <th>Utilization</th>
+          <th>Tier Status</th>
+          <th>Next Review</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><button class="btn-link">Meridian Cloud Inc.</button></td>
+          <td><span class="badge badge-gold">Gold</span></td>
+          <td style="font-weight:700;">$5.6M</td>
+          <td>$98,400</td>
+          <td style="color:#2e7d32;font-weight:700;">56.9x</td>
+          <td>82%</td>
+          <td><span class="badge badge-at-risk">At Risk</span></td>
+          <td>Mar 31, 2026</td>
+        </tr>
+        <tr>
+          <td><button class="btn-link">InnovateTech Solutions</button></td>
+          <td><span class="badge badge-gold">Gold</span></td>
+          <td style="font-weight:700;">$4.9M</td>
+          <td>$88,100</td>
+          <td style="color:#2e7d32;font-weight:700;">55.6x</td>
+          <td>73%</td>
+          <td><span class="badge badge-stable">Stable</span></td>
+          <td>Jun 30, 2026</td>
+        </tr>
+        <tr>
+          <td><button class="btn-link">CloudBridge Solutions</button></td>
+          <td><span class="badge badge-gold">Gold</span></td>
+          <td style="font-weight:700;">$1.6M</td>
+          <td>$69,500</td>
+          <td style="color:#2e7d32;font-weight:700;">23x</td>
+          <td>58%</td>
+          <td><span class="badge badge-at-risk">At Risk</span></td>
+          <td>Mar 31, 2026</td>
+        </tr>
+        <tr>
+          <td><button class="btn-link">Horizon Cloud Services</button></td>
+          <td><span class="badge badge-silver">Silver</span></td>
+          <td style="font-weight:700;">$915K</td>
+          <td>$31,600</td>
+          <td style="color:#2e7d32;font-weight:700;">28.9x</td>
+          <td>53%</td>
+          <td><span class="badge badge-up">Upgrade Path</span></td>
+          <td>Jun 30, 2026</td>
+        </tr>
+        <tr>
+          <td><button class="btn-link">BlueSky Networks LLC</button></td>
+          <td><span class="badge badge-silver">Silver</span></td>
+          <td style="font-weight:700;">$870K</td>
+          <td>$26,800</td>
+          <td style="color:#2e7d32;font-weight:700;">32.5x</td>
+          <td>45%</td>
+          <td><span class="badge badge-up">Upgrade Path</span></td>
+          <td>Jun 30, 2026</td>
+        </tr>
+        <tr>
+          <td><button class="btn-link">Nexus IT Partners</button></td>
+          <td><span class="badge badge-silver">Silver</span></td>
+          <td style="font-weight:700;">$505K</td>
+          <td>$38,100</td>
+          <td style="color:#856404;font-weight:700;">13.3x</td>
+          <td>63%</td>
+          <td><span class="badge badge-at-risk">At Risk</span></td>
+          <td>Mar 31, 2026</td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="display:flex;justify-content:space-between;padding:10px 12px;font-size:12px;color:var(--wf-muted);border-top:1px solid var(--wf-canvas);">
+      <span>Showing top 6 of 42 partners · Sorted by ARR</span>
+      <button class="btn-link" style="font-size:12px;">View all partners →</button>
+    </div>
+  </div>
+
+</div>
+
+<aside class="spec-panel" id="spec-panel" aria-hidden="true">
+  <button class="spec-close-btn" onclick="toggleSpec()" aria-label="Close spec panel">✕</button>
+  <h2>pam-program-report.html</h2>
+  <p class="spec-meta">PAM Portal · Alex Rivera · Executive Program Report</p>
+  <hr class="spec-divider">
+  <h3>Job to Be Done</h3>
+  <p><em>"When building the quarterly program report, I want a single view of MDF efficiency, partner-sourced revenue, and tier health — so I can defend program spend to leadership and surface which investments are actually driving results."</em></p>
+  <hr class="spec-divider">
+  <h3>Screen Purpose</h3>
+  <p>Alex's executive-facing reporting screen. The audience is partly Alex herself (she uses this to monitor program health) and partly Equinix leadership (she exports this as a PDF for quarterly business reviews). The data needs to answer: Is the MDF program worth the investment? Which tiers and activity types are delivering?</p>
+  <hr class="spec-divider">
+  <h3>Key Design Decisions</h3>
+  <ul>
+    <li><strong>ROI as the headline metric</strong> — 34.9x program ROI is the number leadership cares most about; it leads the KPI row</li>
+    <li><strong>Cost per $1 of ARR by tier</strong> — this is the efficiency metric that shows Gold partners are cheaper to generate revenue from (more scale per MDF dollar), which justifies the Gold-tier allocation model</li>
+    <li><strong>Activity type ROI table</strong> — helps Alex optimize future allocations; Training looks weak on ROI but the spec note explains the lag effect</li>
+    <li><strong>Export to PDF button</strong> — this report is primarily built for executive presentation; PDF export is a primary CTA</li>
+    <li><strong>Tier movement summary paired with open reviews</strong> — connects program dynamics (who's moving up/down) with the near-term action list (who needs attention this quarter)</li>
+  </ul>
+  <hr class="spec-divider">
+  <h3>Data Model</h3>
+  <ul>
+    <li>Partner-Sourced ARR: sum of Opportunities with Stage = Closed Won, Partner_Account__c populated, Close_Date__c in current fiscal year</li>
+    <li>Program ROI: total partner-sourced ARR / total MDF paid; also broken out by tier and activity type</li>
+    <li>MDF utilization = Spent / Allocated per tier (aggregated from MDF_Allocation__c)</li>
+    <li>Tier movement: count of Tier_Change_History__c records by type (Upgrade/Demotion) and fiscal quarter</li>
+  </ul>
+  <hr class="spec-divider">
+  <h3>Linked JTBD Workflow</h3>
+  <p>See <a href="workflows-jtbd.html#pam-jtbd-5">workflows-jtbd.html → PAM Job 5</a> for the quarterly reporting workflow.</p>
+  <h3>Navigation</h3>
+  <ul>
+    <li>Partner name → <code>pam-partner-financial.html</code></li>
+    <li>"View all partners" → full partner list with sort/filter</li>
+    <li>Export PDF → generates snapshot PDF for leadership presentation</li>
+    <li>Related: <code>pam-tier-dashboard.html</code>, <code>pam-mdf-queue.html</code></li>
+  </ul>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

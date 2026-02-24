@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Co-sell Collaboration — PSM · Equinix PCP</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: var(--wf-canvas,#f5f7fb); }
+    .page-container { padding: 24px; max-width: 1400px; margin: 0 auto; }
+    .page-title { font-size: 20px; font-weight: 700; color: var(--wf-ink,#1e2a3a); }
+    .page-subtitle { font-size: 13px; color: var(--wf-muted); margin-top: 2px; margin-bottom: 20px; }
+    .breadcrumb { font-size: 12px; color: var(--wf-muted); margin-bottom: 8px; }
+    .breadcrumb a { color: var(--wf-accent,#3d6daa); text-decoration: none; }
+    .jtbd-banner { background: #edf4fb; border-left: 4px solid var(--wf-accent,#3d6daa); padding: 10px 16px; border-radius: 0 4px 4px 0; margin-bottom: 20px; font-size: 13px; color: var(--wf-text); }
+    .jtbd-banner strong { color: var(--wf-ink); }
+    .two-col { display: grid; grid-template-columns: 1fr 340px; gap: 20px; }
+    .card { background: var(--wf-surface); border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 18px; margin-bottom: 16px; }
+    .card-title { font-size: 14px; font-weight: 700; color: var(--wf-ink); margin-bottom: 14px; }
+    .detail-row { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--wf-canvas); font-size: 13px; }
+    .detail-row:last-child { border-bottom: none; }
+    .detail-label { color: var(--wf-muted); }
+    .detail-value { font-weight: 600; color: var(--wf-text); }
+    .stage-bar { display: flex; gap: 0; margin-bottom: 20px; }
+    .stage-step { flex: 1; text-align: center; padding: 10px 4px 8px; font-size: 11px; font-weight: 600; border-bottom: 3px solid var(--wf-canvas); color: var(--wf-muted); position: relative; }
+    .stage-step.done { border-bottom-color: var(--wf-accent,#3d6daa); color: var(--wf-accent,#3d6daa); }
+    .stage-step.active { border-bottom-color: var(--wf-amber,#8b7745); color: var(--wf-ink); font-weight: 700; background: #fffdf0; }
+    .stage-num { display: block; font-size: 16px; margin-bottom: 3px; }
+    .stage-label { display: block; font-size: 10px; }
+    .badge { display: inline-block; padding: 3px 8px; border-radius: 3px; font-size: 11px; font-weight: 600; }
+    .badge-gold { background: #fff8e1; color: #8b7745; }
+    .badge-open { background: #e8f0fa; color: #1e6fa8; }
+    .badge-reg { background: #e8f5e9; color: #2e7d32; }
+    .badge-pending { background: #fff3cd; color: #856404; }
+    .btn { padding: 7px 14px; border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; margin-right: 6px; }
+    .btn-primary { background: var(--wf-accent,#3d6daa); color: #fff; }
+    .btn-secondary { background: var(--wf-surface); color: var(--wf-text); border: 1px solid var(--wf-line,#b0bdd0); }
+    .btn-link { background: none; border: none; color: var(--wf-accent,#3d6daa); font-size: 12px; font-weight: 600; cursor: pointer; text-decoration: underline; padding: 0; }
+    .activity-feed { list-style: none; padding: 0; margin: 0; }
+    .activity-item { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--wf-canvas); font-size: 13px; }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-icon { width: 28px; height: 28px; border-radius: 50%; background: var(--wf-canvas); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+    .activity-body { flex: 1; }
+    .activity-who { font-weight: 600; color: var(--wf-ink); }
+    .activity-text { color: var(--wf-text); }
+    .activity-time { font-size: 11px; color: var(--wf-muted); margin-top: 2px; }
+    .table-wrapper { background: var(--wf-surface); border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden; margin-bottom: 16px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead { background: var(--wf-canvas); border-bottom: 2px solid var(--wf-line,#b0bdd0); }
+    th { padding: 9px 12px; text-align: left; font-weight: 700; color: var(--wf-text); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+    td { padding: 9px 12px; border-bottom: 1px solid var(--wf-canvas); color: var(--wf-text); }
+    .next-step { background: #edf4fb; border-radius: 4px; padding: 12px; margin-bottom: 12px; font-size: 13px; }
+    .next-step-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--wf-muted); margin-bottom: 5px; }
+    .next-step-action { font-weight: 600; color: var(--wf-ink); }
+    .next-step-owner { font-size: 12px; color: var(--wf-muted); margin-top: 3px; }
+    textarea { width: 100%; height: 70px; border: 1px solid var(--wf-line,#b0bdd0); border-radius: 4px; font-size: 12px; padding: 8px; resize: vertical; background: var(--wf-canvas); color: var(--wf-text); font-family: inherit; box-sizing: border-box; }
+  </style>
+</head>
+<body>
+
+<header class="wf-header">
+  <div class="wf-header-logo"><svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix"><path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/></svg></div>
+  <div class="wf-header-title">SFDC</div>
+  <nav class="wf-header-nav">
+    <a href="#">Dashboard</a>
+    <a href="#">PSM Portal</a>
+    <a href="#">Partners</a>
+    <a href="#" class="active">Deals</a>
+    <a href="#">Reports</a>
+  </nav>
+  <div class="wf-header-util">
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+  </div>
+</header>
+
+<div class="page-context-bar">
+  <div style="max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <span style="font-size:12px;color:var(--wf-muted);display:flex;align-items:center;gap:6px;">
+      <svg viewBox="0 0 20 13" style="width:18px;height:11px;fill:var(--wf-muted);" aria-hidden="true"><path d="M8.3 1.7A3.8 3.8 0 0 1 12 0a3.8 3.8 0 0 1 3.5 2.3A2.8 2.8 0 0 1 20 5a2.8 2.8 0 0 1-2.8 2.8H3.2A3.2 3.2 0 0 1 0 4.6 3.2 3.2 0 0 1 3.2 1.4c.18 0 .35.01.52.04A3.8 3.8 0 0 1 8.3 1.7z"/></svg>
+      <strong style="color:var(--wf-text);font-weight:600;">Salesforce Lightning</strong>&ensp;&middot;&ensp;PCP App
+    </span>
+    <span class="persona-badge persona-badge--psm">PSM</span>
+  </div>
+</div>
+
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+<div class="page-container">
+
+  <div class="breadcrumb"><a href="psm-portfolio.html">Portfolio</a> / <a href="#">CloudBridge Solutions</a> / Co-sell</div>
+  <div class="page-title">Co-sell Collaboration</div>
+  <div class="page-subtitle">Acme Financial Services — Network Modernization · CloudBridge Solutions · Marcus Chen, PSM</div>
+
+  <div class="jtbd-banner">
+    <strong>Job to be done:</strong> When a partner registers a deal, I want to co-sell alongside them — providing Equinix technical resources, deal support, and executive access — so the deal closes faster and Equinix gets accurate attribution.
+  </div>
+
+  <div class="stage-bar" role="list" aria-label="Deal stage progress">
+    <div class="stage-step done" role="listitem"><span class="stage-num">✓</span><span class="stage-label">Deal Registered</span></div>
+    <div class="stage-step done" role="listitem"><span class="stage-num">✓</span><span class="stage-label">Discovery</span></div>
+    <div class="stage-step active" role="listitem"><span class="stage-num">3</span><span class="stage-label">Technical Review</span></div>
+    <div class="stage-step" role="listitem"><span class="stage-num">4</span><span class="stage-label">Proposal</span></div>
+    <div class="stage-step" role="listitem"><span class="stage-num">5</span><span class="stage-label">Negotiation</span></div>
+    <div class="stage-step" role="listitem"><span class="stage-num">6</span><span class="stage-label">Closed Won</span></div>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <div class="card">
+        <div class="card-title">Deal Overview</div>
+        <div class="detail-row"><span class="detail-label">Opportunity</span><span class="detail-value">Acme Financial Services — Network Modernization</span></div>
+        <div class="detail-row"><span class="detail-label">Partner</span><span class="detail-value">CloudBridge Solutions (Steve Rogers, AE)</span></div>
+        <div class="detail-row"><span class="detail-label">End Customer</span><span class="detail-value">Acme Financial Services, NYC HQ</span></div>
+        <div class="detail-row"><span class="detail-label">Deal Value (ARR)</span><span class="detail-value" style="color:var(--wf-accent);font-size:16px;font-weight:700;">$285,000</span></div>
+        <div class="detail-row"><span class="detail-label">Close Date (Est.)</span><span class="detail-value">Apr 30, 2026</span></div>
+        <div class="detail-row"><span class="detail-label">Stage</span><span class="detail-value"><span class="badge badge-open">Technical Review</span></span></div>
+        <div class="detail-row"><span class="detail-label">Deal Registration</span><span class="detail-value"><span class="badge badge-reg">Registered & Protected</span></span></div>
+        <div class="detail-row"><span class="detail-label">Equinix Products</span><span class="detail-value">Equinix Metal · Fabric · Network Edge</span></div>
+        <div class="detail-row"><span class="detail-label">Attribution</span><span class="detail-value">Partner-Sourced (100%)</span></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Next Steps</div>
+        <div class="next-step">
+          <div class="next-step-label">Equinix Action — Due Feb 20</div>
+          <div class="next-step-action">Complete technical architecture review for Acme's NYC deployment requirements</div>
+          <div class="next-step-owner">Owner: Marcus Chen + Solutions Architect (J. Tanaka)</div>
+        </div>
+        <div class="next-step" style="background:#f9ede8;border:none;">
+          <div class="next-step-label">Partner Action — Due Feb 18</div>
+          <div class="next-step-action">Steve Rogers to confirm Acme's budget authority contact for next meeting</div>
+          <div class="next-step-owner">Owner: Steve Rogers (CloudBridge)</div>
+        </div>
+        <div style="margin-top:12px;">
+          <div style="font-size:12px;font-weight:700;color:var(--wf-text);margin-bottom:6px;">Log New Activity</div>
+          <textarea placeholder="Record call notes, next steps, or escalation details…" aria-label="Activity log entry"></textarea>
+          <div style="display:flex;gap:8px;margin-top:8px;">
+            <button class="btn btn-primary">Log Activity</button>
+            <button class="btn btn-secondary">Schedule Meeting</button>
+            <button class="btn btn-secondary">Escalate</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Co-sell Resources Engaged</div>
+        <div class="table-wrapper" style="box-shadow:none;">
+          <table>
+            <thead>
+              <tr>
+                <th>Resource</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Jun Tanaka</td>
+                <td>Solutions Architect</td>
+                <td><span class="badge badge-reg">Engaged</span></td>
+                <td><button class="btn btn-secondary" style="font-size:11px;padding:3px 7px;">Message</button></td>
+              </tr>
+              <tr>
+                <td>Priya Nair</td>
+                <td>Deal Desk</td>
+                <td><span class="badge badge-pending">Requested</span></td>
+                <td><button class="btn btn-secondary" style="font-size:11px;padding:3px 7px;">Follow up</button></td>
+              </tr>
+              <tr>
+                <td>—</td>
+                <td>Executive Sponsor</td>
+                <td><span style="font-size:11px;color:var(--wf-muted);">Not engaged</span></td>
+                <td><button class="btn btn-primary" style="font-size:11px;padding:3px 7px;">Request</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <div class="card-title">Deal Activity Feed</div>
+        <ul class="activity-feed">
+          <li class="activity-item">
+            <div class="activity-icon">📞</div>
+            <div class="activity-body">
+              <div><span class="activity-who">Marcus Chen</span> <span class="activity-text">logged call with Acme CTO — strong interest in Metal deployment. Budget confirmed at $280–300K.</span></div>
+              <div class="activity-time">Feb 14, 2026 · 11:22 AM</div>
+            </div>
+          </li>
+          <li class="activity-item">
+            <div class="activity-icon">📄</div>
+            <div class="activity-body">
+              <div><span class="activity-who">Jun Tanaka</span> <span class="activity-text">uploaded technical architecture draft for NYC deployment.</span></div>
+              <div class="activity-time">Feb 13, 2026 · 3:47 PM</div>
+            </div>
+          </li>
+          <li class="activity-item">
+            <div class="activity-icon">📧</div>
+            <div class="activity-body">
+              <div><span class="activity-who">Steve Rogers</span> <span class="activity-text">forwarded Acme's security questionnaire. Requires completion before legal review.</span></div>
+              <div class="activity-time">Feb 12, 2026 · 9:15 AM</div>
+            </div>
+          </li>
+          <li class="activity-item">
+            <div class="activity-icon">🏷️</div>
+            <div class="activity-body">
+              <div><span class="activity-who">Portal System</span> <span class="activity-text">deal stage advanced from Discovery to Technical Review.</span></div>
+              <div class="activity-time">Feb 11, 2026 · 2:30 PM</div>
+            </div>
+          </li>
+          <li class="activity-item">
+            <div class="activity-icon">✅</div>
+            <div class="activity-body">
+              <div><span class="activity-who">Marcus Chen</span> <span class="activity-text">deal registration confirmed and protection granted. CloudBridge is sole registered partner.</span></div>
+              <div class="activity-time">Jan 28, 2026 · 10:00 AM</div>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Other Open Deals — CloudBridge</div>
+        <div style="font-size:13px;">
+          <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--wf-canvas);"><button class="btn-link">Beacon Insurance — Colocation</button><span style="font-size:12px;font-weight:700;">$120K</span></div>
+          <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--wf-canvas);"><button class="btn-link">Redstone Pharma — IX Migration</button><span style="font-size:12px;font-weight:700;">$95K</span></div>
+          <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--wf-canvas);"><button class="btn-link">Summit Retail — Fabric Express</button><span style="font-size:12px;font-weight:700;">$68K</span></div>
+          <div style="padding-top:8px;font-size:12px;color:var(--wf-muted);">Total open pipeline: $1.2M (including this deal)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<aside class="spec-panel" id="spec-panel" aria-hidden="true">
+  <button class="spec-close-btn" onclick="toggleSpec()" aria-label="Close spec panel">✕</button>
+  <h2>psm-deal-cosell.html</h2>
+  <p class="spec-meta">PSM Portal · Marcus Chen · Co-sell Collaboration</p>
+  <hr class="spec-divider">
+  <h3>Job to Be Done</h3>
+  <p><em>"When a partner registers a deal, I want to co-sell alongside them — providing Equinix technical resources, deal support, and executive access — so the deal closes faster and Equinix gets accurate attribution."</em></p>
+  <hr class="spec-divider">
+  <h3>Key Design Decisions</h3>
+  <ul>
+    <li><strong>Stage bar at the top</strong> — Marcus's deal conversations with partners always start with "where are we?" The visual pipeline stage answer that before anything else is said</li>
+    <li><strong>Split next steps: Equinix vs. Partner</strong> — co-sell fails when action ownership is unclear; showing Equinix actions and partner actions separately forces accountability</li>
+    <li><strong>Co-sell resources table</strong> — SAs, Deal Desk, and Executive Sponsor each have a status; Marcus needs to know if resources he requested are actually engaged</li>
+    <li><strong>Activity feed</strong> — shared log between Marcus and Steve Rogers; both parties can see what's been done so no "I thought you were handling it" gaps</li>
+    <li><strong>Attribution locked on registration</strong> — shows "Partner-Sourced (100%)" prominently because attribution disputes start when this isn't clearly documented</li>
+  </ul>
+  <hr class="spec-divider">
+  <h3>Linked JTBD Workflow</h3>
+  <p>See <a href="workflows-jtbd.html#psm-jtbd-3">workflows-jtbd.html → PSM Job 3</a> for the co-sell workflow.</p>
+  <h3>Navigation</h3>
+  <ul>
+    <li>Breadcrumb → <code>psm-portfolio.html</code></li>
+    <li>Stage bar → clicking stages navigates to that stage's detail</li>
+    <li>Related: <code>psm-deal-dispute.html</code>, <code>psm-portfolio.html</code></li>
+  </ul>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

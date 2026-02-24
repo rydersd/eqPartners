@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Partner Portfolio — PSM · Equinix PCP</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: var(--wf-canvas,#f5f7fb); }
+    .page-container { padding: 24px; max-width: 1600px; margin: 0 auto; }
+    .page-title { font-size: 20px; font-weight: 700; color: var(--wf-ink,#1e2a3a); }
+    .page-subtitle { font-size: 13px; color: var(--wf-muted); margin-top: 2px; margin-bottom: 20px; }
+    .jtbd-banner { background: #edf4fb; border-left: 4px solid var(--wf-accent,#3d6daa); padding: 10px 16px; border-radius: 0 4px 4px 0; margin-bottom: 20px; font-size: 13px; color: var(--wf-text); }
+    .jtbd-banner strong { color: var(--wf-ink); }
+    .kpi-row { display: grid; grid-template-columns: repeat(5,1fr); gap: 16px; margin-bottom: 24px; }
+    .kpi-card { background: var(--wf-surface); padding: 16px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .kpi-label { font-size: 12px; color: var(--wf-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; font-weight: 600; }
+    .kpi-value { font-size: 24px; font-weight: 700; color: var(--wf-accent,#3d6daa); }
+    .kpi-value.warn { color: #856404; }
+    .kpi-trend { font-size: 12px; color: var(--wf-text); margin-top: 4px; }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .partner-card { background: var(--wf-surface); border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 16px; border-left: 4px solid transparent; }
+    .partner-card.health-green { border-left-color: #4caf50; }
+    .partner-card.health-yellow { border-left-color: #ffc107; }
+    .partner-card.health-red { border-left-color: #8b4553; }
+    .pc-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+    .pc-name { font-weight: 700; font-size: 14px; color: var(--wf-ink); }
+    .pc-type { font-size: 11px; color: var(--wf-muted); margin-top: 2px; }
+    .pc-health { display: flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; }
+    .health-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot-green { background: #4caf50; }
+    .dot-yellow { background: #ffc107; }
+    .dot-red { background: #8b4553; }
+    .pc-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+    .pc-metric { font-size: 12px; }
+    .pc-metric-label { color: var(--wf-muted); font-size: 11px; }
+    .pc-metric-value { font-weight: 700; color: var(--wf-text); }
+    .pc-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; }
+    .chip { display: inline-block; padding: 2px 7px; border-radius: 10px; font-size: 10px; font-weight: 600; }
+    .chip-action { background: #fde8e8; color: #8b4553; }
+    .chip-qbr { background: #fff3cd; color: #856404; }
+    .chip-deal { background: #e8f0fa; color: #1e6fa8; }
+    .chip-training { background: #f0f4fa; color: #546e8a; }
+    .chip-cert { background: #e8f5e9; color: #2e7d32; }
+    .pc-actions { display: flex; gap: 6px; }
+    .btn { padding: 5px 10px; border: none; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer; }
+    .btn-primary { background: var(--wf-accent,#3d6daa); color: #fff; }
+    .btn-secondary { background: var(--wf-surface); color: var(--wf-text); border: 1px solid var(--wf-line,#b0bdd0); }
+    .badge { display: inline-block; padding: 2px 7px; border-radius: 3px; font-size: 11px; font-weight: 600; }
+    .badge-gold { background: #fff8e1; color: #8b7745; }
+    .badge-silver { background: #f0f4fa; color: #546e8a; }
+    .badge-bronze { background: #f9ede8; color: #7a3a2a; }
+    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .section-title { font-size: 15px; font-weight: 700; color: var(--wf-text); margin: 0; }
+    .filter-bar { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+    .filter-control { padding: 5px 10px; border: 1px solid var(--wf-line,#b0bdd0); border-radius: 4px; background: var(--wf-surface); font-size: 12px; }
+    .view-toggle { display: flex; border: 1px solid var(--wf-line,#b0bdd0); border-radius: 4px; overflow: hidden; }
+    .view-btn { padding: 5px 10px; font-size: 12px; font-weight: 600; cursor: pointer; background: var(--wf-surface); color: var(--wf-muted); border: none; }
+    .view-btn.active { background: var(--wf-accent,#3d6daa); color: #fff; }
+    .priority-section { margin-bottom: 20px; background: #fff8f0; border: 1px solid #f0c080; border-radius: 4px; padding: 14px; }
+    .priority-title { font-size: 13px; font-weight: 700; color: #7a4a00; margin-bottom: 10px; }
+    .priority-list { list-style: none; padding: 0; margin: 0; }
+    .priority-list li { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid #f0d8b0; font-size: 13px; color: var(--wf-text); }
+    .priority-list li:last-child { border-bottom: none; }
+    .priority-num { font-weight: 700; color: #7a4a00; min-width: 20px; }
+    .btn-link { background: none; border: none; color: var(--wf-accent,#3d6daa); font-size: 12px; font-weight: 600; cursor: pointer; text-decoration: underline; padding: 0; }
+  </style>
+</head>
+<body>
+
+<header class="wf-header">
+  <div class="wf-header-logo"><svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix"><path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/></svg></div>
+  <div class="wf-header-title">SFDC</div>
+  <nav class="wf-header-nav">
+    <a href="#">Dashboard</a>
+    <a href="#" class="active">PSM Portal</a>
+    <a href="#">Partners</a>
+    <a href="#">Deals</a>
+    <a href="#">Reports</a>
+  </nav>
+  <div class="wf-header-util">
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+  </div>
+</header>
+
+<div class="page-context-bar">
+  <div style="max-width:1600px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <span style="font-size:12px;color:var(--wf-muted);display:flex;align-items:center;gap:6px;">
+      <svg viewBox="0 0 20 13" style="width:18px;height:11px;fill:var(--wf-muted);" aria-hidden="true"><path d="M8.3 1.7A3.8 3.8 0 0 1 12 0a3.8 3.8 0 0 1 3.5 2.3A2.8 2.8 0 0 1 20 5a2.8 2.8 0 0 1-2.8 2.8H3.2A3.2 3.2 0 0 1 0 4.6 3.2 3.2 0 0 1 3.2 1.4c.18 0 .35.01.52.04A3.8 3.8 0 0 1 8.3 1.7z"/></svg>
+      <strong style="color:var(--wf-text);font-weight:600;">Salesforce Lightning</strong>&ensp;&middot;&ensp;PCP App
+    </span>
+    <span class="persona-badge persona-badge--psm">PSM</span>
+  </div>
+</div>
+
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+<div class="page-container">
+
+  <div class="page-title">Partner Portfolio</div>
+  <div class="page-subtitle">Marcus Chen · Partner Success Manager · 8 assigned partners · Q1 FY2026</div>
+
+  <div class="jtbd-banner">
+    <strong>Job to be done:</strong> When I start my week, I want a single view of every partner's health score, pipeline status, training gaps, and upcoming QBR date — so I know exactly where to focus my time before I open a single email.
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi-card">
+      <div class="kpi-label">Active Partners</div>
+      <div class="kpi-value">8</div>
+      <div class="kpi-trend">My portfolio</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Need Attention</div>
+      <div class="kpi-value warn">3</div>
+      <div class="kpi-trend">Health score &lt; 60</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Active Pipeline</div>
+      <div class="kpi-value">$4.8M</div>
+      <div class="kpi-trend">Across all partners</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">QBRs Due (30 days)</div>
+      <div class="kpi-value warn">2</div>
+      <div class="kpi-trend">CloudBridge + Meridian</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Open Deal Disputes</div>
+      <div class="kpi-value warn">1</div>
+      <div class="kpi-trend">Requires resolution</div>
+    </div>
+  </div>
+
+  <div class="priority-section">
+    <div class="priority-title">⚡ Priority Actions This Week</div>
+    <ul class="priority-list">
+      <li><span class="priority-num">1</span><button class="btn-link">Vertex Networks — deal dispute</button> has been open 14 days. Escalation risk if unresolved by Friday.</li>
+      <li><span class="priority-num">2</span><button class="btn-link">CloudBridge Solutions QBR prep</button> is due Feb 28. Steve Rogers needs the pre-read deck by Monday.</li>
+      <li><span class="priority-num">3</span><button class="btn-link">TerraCloud Partners</button> has a training completion gap — 0 of 3 required modules done. Certification blocks deal registration.</li>
+    </ul>
+  </div>
+
+  <div class="section-header">
+    <div class="section-title">Portfolio View</div>
+    <div style="display:flex;gap:10px;align-items:center;">
+      <div class="view-toggle">
+        <button class="view-btn active">Cards</button>
+        <button class="view-btn">List</button>
+      </div>
+      <select class="filter-control">
+        <option>All Health</option>
+        <option>Healthy (≥ 75)</option>
+        <option>At Risk (40–74)</option>
+        <option>Critical (&lt; 40)</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="card-grid">
+
+    <!-- CloudBridge Solutions — Healthy -->
+    <div class="partner-card health-yellow">
+      <div class="pc-header">
+        <div>
+          <div class="pc-name">CloudBridge Solutions</div>
+          <div class="pc-type">SI / Reseller · <span class="badge badge-gold">Gold</span></div>
+        </div>
+        <div class="pc-health"><span class="health-dot dot-yellow"></span><span style="color:#856404;">68 / 100</span></div>
+      </div>
+      <div class="pc-metrics">
+        <div class="pc-metric"><div class="pc-metric-label">Pipeline</div><div class="pc-metric-value">$1.2M</div></div>
+        <div class="pc-metric"><div class="pc-metric-label">Deals (open)</div><div class="pc-metric-value">4</div></div>
+        <div class="pc-metric"><div class="pc-metric-label">Training</div><div class="pc-metric-value">3 / 4</div></div>
+        <div class="pc-metric"><div class="pc-metric-label">QBR Due</div><div class="pc-metric-value" style="color:#856404;">Feb 28</div></div>
+      </div>
+      <div class="pc-chips">
+        <span class="chip chip-qbr">QBR Feb 28</span>
+        <span class="chip chip-deal">4 active deals</span>
+      </div>
+      <div class="pc-actions">
+        <button class="btn btn-primary">Open Partner</button>
+        <button class="btn btn-secondary">QBR Prep</button>
+      </div>
+    </div>
+
+    <!-- Meridian Cloud Inc. — Needs Attention -->
+    <div class="partner-card health-red">
+      <div class="pc-header">
+        <div>
+          <div class="pc-name">Meridian Cloud Inc.</div>
+          <div class="pc-type">MSP · <span class="badge badge-gold">Gold</span></div>
+        </div>
+        <div class="pc-health"><span class="health-dot dot-red"></span><span style="color:#8b4553;">41 / 100</span></div>
+      </div>
+      <div class="pc-metrics">
+        <div class="pc-metric"><div class="pc-metric-label">Pipeline</div><div class="pc-metric-value">$880K</div></div>
+        <div class="pc-metric"><div class="pc-metric-label">Deals (open)</div><div class="pc-metric-value">2</div></div>
+        <div class="pc-metric"><div class="pc-metric-label">Training</div><div class="pc-metric-value" style="color:#8b4553;">1 / 4</div></div>
+        <div class="pc-metric"><div class="pc-metric-label">QBR Due</div><div class="pc-metric-value" style="color:#8b4553;">Mar 15</div></div>
+      </div>
+      <div class="pc-chips">
+        <span class="chip chip-action">Training gap</span>
+        <span class="chip chip-qbr">QBR Mar 15</span>
+      </div>
+      <div class="pc-actions">
+        <button class="btn btn-primary">Open Partner</button>
+        <button class="btn btn-secondary">Send Nudge</button>
+      </div>
+    </div>
+
+    <!-- InnovateTech Solutions — Healthy -->
+    <div class="partner-card health-green">
+      <div class="pc-header">
+        <div>
+          <div class="pc-name">InnovateTech Solutions</div>
+          <div class="pc-type">SI / Reseller · <span class="badge badge-gold">Gold</span></div>
+        </div>
+        <div class="pc-health"><span class="health-dot dot-green"></span><span style="color:#2e7d32;">84 / 100</span></div>
+      </div>
+      <div class="pc-metrics">
+        <div class="pc-metric"><div class="pc-metric-label">Pipeline</div><div class="pc-metric-value">$1.6M</div></div>
+        <div class="pc-metric"><div class="pc-metric-label">Deals (open)</div><div class="pc-metric-value">6</div></div>
+        <div class="pc-metric"><div class="pc-metric-label">Training</div><div class="pc-metric-value" style="color:#2e7d32;">4 / 4</div></div>
+        <div class="pc-metric"><div class="pc-metric-label">QBR Due</div><div class="pc-metric-value">May 1</div></div>
+      </div>
+      <div class="pc-chips">
+        <span class="chip chip-cert">All certs complete</span>
+        <span class="chip chip-deal">6 active deals</span>
+      </div>
+      <div class="pc-actions">
+        <button class="btn btn-primary">Open Partner</button>
+        <button class="btn btn-secondary">Co-sell</button>
+      </div>
+    </div>
+
+    <!-- Horizon Cloud Services — Healthy -->
+    <div class="partner-card health-green">
+      <div class="pc-header">
+        <div>
+          <div class="pc-name">Horizon Cloud Services</div>
+          <div class="pc-type">MSP · <span class="badge badge-silver">Silver</span></div>
+        </div>
+        <div class="pc-health"><span class="health-dot dot-green"></span><span style="color:#2e7d32;">78 / 100</span></div>
+      </div>
+      <div class="pc-metrics">
+        <div class="pc-metric"><div class="pc-metric-label">Pipeline</div><div class="pc-metric-value">$620K</div></div>
+        <div class="pc-metric"><div class="pc-metric-label">Deals (open)</div><div class="pc-metric-value">3</div></div>
+        <div class="pc-metric"><div class="pc-metric-label">Training</div><div class="pc-metric-value" style="color:#2e7d32;">3 / 3</div></div>
+        <div class="pc-metric"><div class="pc-metric-label">QBR Due</div><div class="pc-metric-value">Apr 10</div></div>
+      </div>
+      <div class="pc-chips">
+        <span class="chip chip-deal">3 active deals</span>
+        <span class="chip chip-cert">Silver certs done</span>
+      </div>
+      <div class="pc-actions">
+        <button class="btn btn-primary">Open Partner</button>
+        <button class="btn btn-secondary">Co-sell</button>
+      </div>
+    </div>
+
+    <!-- Nexus IT Partners — At Risk -->
+    <div class="partner-card health-yellow">
+      <div class="pc-header">
+        <div>
+          <div class="pc-name">Nexus IT Partners</div>
+          <div class="pc-type">SI / Reseller · <span class="badge badge-silver">Silver</span></div>
+        </div>
+        <div class="pc-health"><span class="health-dot dot-yellow"></span><span style="color:#856404;">55 / 100</span></div>
+      </div>
+      <div class="pc-metrics">
+        <div class="pc-metric"><div class="pc-metric-label">Pipeline</div><div class="pc-metric-value">$290K</div></div>
+        <div class="pc-metric"><div class="pc-metric-label">Deals (open)</div><div class="pc-metric-value">1</div></div>
+        <div class="pc-metric"><div class="pc-metric-label">Training</div><div class="pc-metric-value" style="color:#856404;">2 / 3</div></div>
+        <div class="pc-metric"><div class="pc-metric-label">QBR Due</div><div class="pc-metric-value">Apr 30</div></div>
+      </div>
+      <div class="pc-chips">
+        <span class="chip chip-training">1 cert pending</span>
+      </div>
+      <div class="pc-actions">
+        <button class="btn btn-primary">Open Partner</button>
+        <button class="btn btn-secondary">Send Nudge</button>
+      </div>
+    </div>
+
+    <!-- Vertex Networks — Dispute -->
+    <div class="partner-card health-red">
+      <div class="pc-header">
+        <div>
+          <div class="pc-name">Vertex Networks</div>
+          <div class="pc-type">SI / Reseller · <span class="badge badge-silver">Silver</span></div>
+        </div>
+        <div class="pc-health"><span class="health-dot dot-red"></span><span style="color:#8b4553;">38 / 100</span></div>
+      </div>
+      <div class="pc-metrics">
+        <div class="pc-metric"><div class="pc-metric-label">Pipeline</div><div class="pc-metric-value">$140K</div></div>
+        <div class="pc-metric"><div class="pc-metric-label">Deals (open)</div><div class="pc-metric-value">1</div></div>
+        <div class="pc-metric"><div class="pc-metric-label">Training</div><div class="pc-metric-value">2 / 3</div></div>
+        <div class="pc-metric"><div class="pc-metric-label">QBR Due</div><div class="pc-metric-value">May 15</div></div>
+      </div>
+      <div class="pc-chips">
+        <span class="chip chip-action">Deal dispute open 14d</span>
+      </div>
+      <div class="pc-actions">
+        <button class="btn btn-primary">Resolve Dispute</button>
+        <button class="btn btn-secondary">View</button>
+      </div>
+    </div>
+
+    <!-- TerraCloud Partners — Critical -->
+    <div class="partner-card health-red">
+      <div class="pc-header">
+        <div>
+          <div class="pc-name">TerraCloud Partners</div>
+          <div class="pc-type">MSP · <span class="badge badge-bronze">Bronze</span></div>
+        </div>
+        <div class="pc-health"><span class="health-dot dot-red"></span><span style="color:#8b4553;">28 / 100</span></div>
+      </div>
+      <div class="pc-metrics">
+        <div class="pc-metric"><div class="pc-metric-label">Pipeline</div><div class="pc-metric-value">$60K</div></div>
+        <div class="pc-metric"><div class="pc-metric-label">Deals (open)</div><div class="pc-metric-value">0</div></div>
+        <div class="pc-metric"><div class="pc-metric-label">Training</div><div class="pc-metric-value" style="color:#8b4553;">0 / 3</div></div>
+        <div class="pc-metric"><div class="pc-metric-label">QBR Due</div><div class="pc-metric-value">Jun 1</div></div>
+      </div>
+      <div class="pc-chips">
+        <span class="chip chip-action">No training started</span>
+        <span class="chip chip-action">No active deals</span>
+      </div>
+      <div class="pc-actions">
+        <button class="btn btn-primary">Enroll in Training</button>
+        <button class="btn btn-secondary">Log Outreach</button>
+      </div>
+    </div>
+
+    <!-- DataLink Systems — Good -->
+    <div class="partner-card health-green">
+      <div class="pc-header">
+        <div>
+          <div class="pc-name">DataLink Systems</div>
+          <div class="pc-type">Technology Partner · <span class="badge badge-bronze">Bronze</span></div>
+        </div>
+        <div class="pc-health"><span class="health-dot dot-green"></span><span style="color:#2e7d32;">71 / 100</span></div>
+      </div>
+      <div class="pc-metrics">
+        <div class="pc-metric"><div class="pc-metric-label">Pipeline</div><div class="pc-metric-value">$80K</div></div>
+        <div class="pc-metric"><div class="pc-metric-label">Deals (open)</div><div class="pc-metric-value">1</div></div>
+        <div class="pc-metric"><div class="pc-metric-label">Training</div><div class="pc-metric-value" style="color:#2e7d32;">2 / 2</div></div>
+        <div class="pc-metric"><div class="pc-metric-label">QBR Due</div><div class="pc-metric-value">Jun 1</div></div>
+      </div>
+      <div class="pc-chips">
+        <span class="chip chip-cert">Certs complete</span>
+        <span class="chip chip-deal">1 active deal</span>
+      </div>
+      <div class="pc-actions">
+        <button class="btn btn-primary">Open Partner</button>
+        <button class="btn btn-secondary">Co-sell</button>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<aside class="spec-panel" id="spec-panel" aria-hidden="true">
+  <button class="spec-close-btn" onclick="toggleSpec()" aria-label="Close spec panel">✕</button>
+  <h2>psm-portfolio.html</h2>
+  <p class="spec-meta">PSM Portal · Marcus Chen · Partner Portfolio</p>
+  <hr class="spec-divider">
+  <h3>Job to Be Done</h3>
+  <p><em>"When I start my week, I want a single view of every partner's health score, pipeline status, training gaps, and upcoming QBR date — so I know exactly where to focus my time before I open a single email."</em></p>
+  <hr class="spec-divider">
+  <h3>Screen Purpose</h3>
+  <p>Marcus's home base. The portfolio card view gives him a fast gestalt read on all 8 assigned partners: who's healthy, who needs intervention, and what specific actions are required. The priority section removes any ambiguity about what to do first.</p>
+  <hr class="spec-divider">
+  <h3>Key Design Decisions</h3>
+  <ul>
+    <li><strong>Color-coded left border on cards</strong> — green/yellow/red at a glance, without reading any numbers. Most of Marcus's morning review is visual triage</li>
+    <li><strong>Health score visible in header</strong> — composite score (pipeline, training, engagement, deal activity) gives Marcus a single metric for stakeholder conversations: "CloudBridge is at 68 — I need another 12 points before the QBR"</li>
+    <li><strong>Priority Actions section</strong> — distills the portfolio into the 3 things that must happen this week. This is the first thing Marcus reads</li>
+    <li><strong>4-metric grid per card</strong> — pipeline, deal count, training progress, and QBR date are the four recurring questions Marcus answers in every check-in with leadership</li>
+    <li><strong>Context-sensitive actions</strong> — TerraCloud shows "Enroll in Training" because training = 0/3. Vertex shows "Resolve Dispute" because there's an open dispute. Cards show the right action for the partner's situation</li>
+  </ul>
+  <hr class="spec-divider">
+  <h3>Health Score Components</h3>
+  <ul>
+    <li>Pipeline coverage: 30 pts (active pipeline vs. quarterly quota)</li>
+    <li>Training completion: 25 pts (completed modules / required modules)</li>
+    <li>Engagement: 20 pts (QBR recency, portal logins, deal registrations last 30 days)</li>
+    <li>Deal activity: 25 pts (active deals, recent wins, deal registration frequency)</li>
+  </ul>
+  <hr class="spec-divider">
+  <h3>Linked JTBD Workflow</h3>
+  <p>See <a href="workflows-jtbd.html#psm-jtbd-1">workflows-jtbd.html → PSM Job 1</a> for the portfolio triage workflow.</p>
+  <h3>Navigation</h3>
+  <ul>
+    <li>"Open Partner" → <code>partner-detail.html</code> (PSM view)</li>
+    <li>"QBR Prep" → <code>psm-qbr-prep.html</code></li>
+    <li>"Resolve Dispute" → <code>psm-deal-dispute.html</code></li>
+    <li>"Co-sell" → <code>psm-deal-cosell.html</code></li>
+    <li>Related: <code>psm-partner-comms.html</code></li>
+  </ul>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

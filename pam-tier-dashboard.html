@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tier Dashboard — PAM · Equinix PCP</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background: var(--wf-canvas,#f5f7fb); }
+    .page-container { padding: 24px; max-width: 1600px; margin: 0 auto; }
+    .page-title { font-size: 20px; font-weight: 700; color: var(--wf-ink,#1e2a3a); }
+    .page-subtitle { font-size: 13px; color: var(--wf-muted,#6b7f99); margin-top: 2px; margin-bottom: 20px; }
+    .jtbd-banner { background: #edf4fb; border-left: 4px solid var(--wf-accent,#3d6daa); padding: 10px 16px; border-radius: 0 4px 4px 0; margin-bottom: 20px; font-size: 13px; color: var(--wf-text,#3b4f68); }
+    .jtbd-banner strong { color: var(--wf-ink,#1e2a3a); }
+    .kpi-row { display: grid; grid-template-columns: repeat(5,1fr); gap: 16px; margin-bottom: 24px; }
+    .kpi-card { background: var(--wf-surface,#edf1f7); padding: 16px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .kpi-label { font-size: 12px; color: var(--wf-muted,#6b7f99); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; font-weight: 600; }
+    .kpi-value { font-size: 24px; font-weight: 700; color: var(--wf-accent,#3d6daa); }
+    .kpi-value.warn { color: #856404; }
+    .kpi-value.danger { color: var(--wf-red,#8b4553); }
+    .kpi-trend { font-size: 12px; color: var(--wf-text,#3b4f68); margin-top: 4px; }
+    .two-col { display: grid; grid-template-columns: 380px 1fr; gap: 20px; margin-bottom: 24px; }
+    .card { background: var(--wf-surface,#edf1f7); border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 18px; }
+    .card-title { font-size: 14px; font-weight: 700; color: var(--wf-ink,#1e2a3a); margin-bottom: 16px; }
+    .tier-summary-row { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--wf-canvas,#f5f7fb); }
+    .tier-summary-row:last-child { border-bottom: none; }
+    .tier-dot { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
+    .dot-gold { background: #8b7745; }
+    .dot-silver { background: #546e8a; }
+    .dot-bronze { background: #7a3a2a; }
+    .tier-name { font-weight: 700; font-size: 14px; color: var(--wf-ink,#1e2a3a); width: 60px; }
+    .tier-count { font-size: 22px; font-weight: 700; color: var(--wf-text,#3b4f68); width: 40px; text-align: right; }
+    .tier-bar-track { flex: 1; height: 10px; background: var(--wf-canvas,#f5f7fb); border-radius: 5px; overflow: hidden; }
+    .tier-bar-fill { height: 100%; border-radius: 5px; }
+    .bar-gold { background: #8b7745; }
+    .bar-silver { background: #546e8a; }
+    .bar-bronze { background: #7a3a2a; }
+    .tier-pct { font-size: 12px; color: var(--wf-muted); width: 35px; text-align: right; }
+    .tier-rev { font-size: 12px; font-weight: 700; color: var(--wf-text); width: 80px; text-align: right; }
+    .badge { display: inline-block; padding: 3px 8px; border-radius: 3px; font-size: 11px; font-weight: 600; }
+    .badge-gold { background: #fff8e1; color: #8b7745; }
+    .badge-silver { background: #f0f4fa; color: #546e8a; }
+    .badge-bronze { background: #f9ede8; color: #7a3a2a; }
+    .badge-up { background: #e8f5e9; color: #2e7d32; }
+    .badge-down { background: #fde8e8; color: #8b4553; }
+    .badge-stable { background: var(--wf-canvas,#f5f7fb); color: var(--wf-muted,#6b7f99); }
+    .badge-urgent { background: #fde8e8; color: #8b4553; }
+    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; margin-top: 24px; }
+    .section-title { font-size: 15px; font-weight: 700; color: var(--wf-text,#3b4f68); margin: 0; }
+    .table-wrapper { background: var(--wf-surface,#edf1f7); border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden; margin-bottom: 20px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead { background: var(--wf-canvas,#f5f7fb); border-bottom: 2px solid var(--wf-line,#b0bdd0); }
+    th { padding: 10px 12px; text-align: left; font-weight: 700; color: var(--wf-text); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+    td { padding: 10px 12px; border-bottom: 1px solid var(--wf-canvas,#f5f7fb); color: var(--wf-text); vertical-align: middle; }
+    tbody tr:hover { background: #f0f4fa; }
+    tbody tr.at-risk { background: #fffdf0; }
+    .gap-cell { font-size: 12px; }
+    .gap-danger { color: var(--wf-red,#8b4553); font-weight: 700; }
+    .gap-warn { color: #856404; font-weight: 700; }
+    .gap-ok { color: #2e7d32; font-weight: 600; }
+    .mini-progress { display: flex; align-items: center; gap: 8px; }
+    .mini-track { width: 80px; height: 6px; background: var(--wf-canvas,#f5f7fb); border-radius: 3px; overflow: hidden; }
+    .mini-fill { height: 100%; border-radius: 3px; }
+    .fill-ok { background: #4caf50; }
+    .fill-warn { background: #ffc107; }
+    .fill-danger { background: var(--wf-red,#8b4553); }
+    .btn { padding: 5px 10px; border: none; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer; margin-right: 3px; }
+    .btn-primary { background: var(--wf-accent,#3d6daa); color: #fff; }
+    .btn-secondary { background: var(--wf-surface,#edf1f7); color: var(--wf-text); border: 1px solid var(--wf-line,#b0bdd0); }
+    .btn-link { background: none; border: none; color: var(--wf-accent,#3d6daa); font-size: 12px; font-weight: 600; cursor: pointer; text-decoration: underline; padding: 0; }
+    .filter-bar { display: flex; gap: 10px; margin-bottom: 14px; }
+    .filter-control { padding: 5px 10px; border: 1px solid var(--wf-line,#b0bdd0); border-radius: 4px; background: var(--wf-surface,#edf1f7); font-size: 12px; }
+    .days-chip { display: inline-block; padding: 2px 7px; border-radius: 10px; font-size: 11px; font-weight: 700; }
+    .chip-red { background: #fde8e8; color: #8b4553; }
+    .chip-yellow { background: #fff3cd; color: #856404; }
+    .chip-green { background: #e8f5e9; color: #2e7d32; }
+    /* chart placeholder */
+    .bar-chart-placeholder { display: flex; align-items: flex-end; justify-content: space-around; height: 140px; gap: 12px; padding: 0 12px 0; }
+    .bar-col { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+    .bar-rect { width: 100%; border-radius: 3px 3px 0 0; }
+    .bar-label { font-size: 10px; color: var(--wf-muted); text-align: center; }
+    .bar-val { font-size: 11px; font-weight: 700; color: var(--wf-text); }
+  </style>
+</head>
+<body>
+
+<header class="wf-header">
+  <div class="wf-header-logo"><svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix"><path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/></svg></div>
+  <div class="wf-header-title">SFDC</div>
+  <nav class="wf-header-nav">
+    <a href="#">Dashboard</a>
+    <a href="#" class="active">PAM Portal</a>
+    <a href="#">Partners</a>
+    <a href="#">Programs</a>
+    <a href="#">Reports</a>
+  </nav>
+  <div class="wf-header-util">
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+  </div>
+</header>
+
+<div class="page-context-bar">
+  <div style="max-width:1600px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <span style="font-size:12px;color:var(--wf-muted);display:flex;align-items:center;gap:6px;">
+      <svg viewBox="0 0 20 13" style="width:18px;height:11px;fill:var(--wf-muted);" aria-hidden="true"><path d="M8.3 1.7A3.8 3.8 0 0 1 12 0a3.8 3.8 0 0 1 3.5 2.3A2.8 2.8 0 0 1 20 5a2.8 2.8 0 0 1-2.8 2.8H3.2A3.2 3.2 0 0 1 0 4.6 3.2 3.2 0 0 1 3.2 1.4c.18 0 .35.01.52.04A3.8 3.8 0 0 1 8.3 1.7z"/></svg>
+      <strong style="color:var(--wf-text);font-weight:600;">Salesforce Lightning</strong>&ensp;&middot;&ensp;PCP App
+    </span>
+    <span class="persona-badge" style="background:#b04a2a;color:#fff;display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;letter-spacing:0.5px;">PAM</span>
+  </div>
+</div>
+
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+<div class="page-container">
+
+  <div class="page-title">Tier Distribution Dashboard</div>
+  <div class="page-subtitle">Alex Rivera · Partner Account Manager · Q1 FY2026 · 42 active partners</div>
+
+  <div class="jtbd-banner">
+    <strong>Job to be done:</strong> When managing the partner program, I want a program-wide view of tier health, at-risk partners, and upcoming review windows — so I can intervene before demotions happen and surface upgrade candidates proactively.
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi-card">
+      <div class="kpi-label">Active Partners</div>
+      <div class="kpi-value">42</div>
+      <div class="kpi-trend">↑ +4 QoQ</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">At Risk of Demotion</div>
+      <div class="kpi-value danger">6</div>
+      <div class="kpi-trend">Review within 60 days</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Upgrade Candidates</div>
+      <div class="kpi-value" style="color:#2e7d32;">4</div>
+      <div class="kpi-trend">Within 10% of threshold</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Reviews Due Q1</div>
+      <div class="kpi-value warn">9</div>
+      <div class="kpi-trend">By March 31, 2026</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Total Program ARR</div>
+      <div class="kpi-value">$48.2M</div>
+      <div class="kpi-trend">↑ +11% vs Q1 2025</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+
+    <!-- Tier distribution summary -->
+    <div>
+      <div class="card">
+        <div class="card-title">Tier Distribution — 42 Partners</div>
+        <div class="tier-summary-row">
+          <span class="tier-dot dot-gold"></span>
+          <span class="tier-name">Gold</span>
+          <span class="tier-count">12</span>
+          <div class="tier-bar-track"><div class="tier-bar-fill bar-gold" style="width:86%;"></div></div>
+          <span class="tier-pct">29%</span>
+          <span class="tier-rev">$31.4M</span>
+        </div>
+        <div class="tier-summary-row">
+          <span class="tier-dot dot-silver"></span>
+          <span class="tier-name">Silver</span>
+          <span class="tier-count">18</span>
+          <div class="tier-bar-track"><div class="tier-bar-fill bar-silver" style="width:100%;"></div></div>
+          <span class="tier-pct">43%</span>
+          <span class="tier-rev">$12.8M</span>
+        </div>
+        <div class="tier-summary-row">
+          <span class="tier-dot dot-bronze"></span>
+          <span class="tier-name">Bronze</span>
+          <span class="tier-count">12</span>
+          <div class="tier-bar-track"><div class="tier-bar-fill bar-bronze" style="width:86%;"></div></div>
+          <span class="tier-pct">29%</span>
+          <span class="tier-rev">$4.0M</span>
+        </div>
+        <div style="margin-top:14px;font-size:11px;color:var(--wf-muted);display:flex;justify-content:flex-end;">Revenue column = FY2026 Equinix ARR attributed</div>
+      </div>
+
+      <div class="card" style="margin-top:16px;">
+        <div class="card-title">Tier Movement — FY2026</div>
+        <div class="bar-chart-placeholder" aria-label="Tier movement chart: upgrades and demotions by quarter">
+          <div class="bar-col">
+            <div class="bar-val">+3</div>
+            <div class="bar-rect" style="height:65px;background:#4caf50;"></div>
+            <div class="bar-label">Q4 2025<br>Upgrades</div>
+          </div>
+          <div class="bar-col">
+            <div class="bar-val">-1</div>
+            <div class="bar-rect" style="height:20px;background:#8b4553;"></div>
+            <div class="bar-label">Q4 2025<br>Demotions</div>
+          </div>
+          <div class="bar-col">
+            <div class="bar-val">+2</div>
+            <div class="bar-rect" style="height:44px;background:#4caf50;"></div>
+            <div class="bar-label">Q1 2026<br>Upgrades</div>
+          </div>
+          <div class="bar-col">
+            <div class="bar-val">0</div>
+            <div class="bar-rect" style="height:5px;background:#b0bdd0;"></div>
+            <div class="bar-label">Q1 2026<br>Demotions</div>
+          </div>
+          <div class="bar-col">
+            <div class="bar-val">—</div>
+            <div class="bar-rect" style="height:5px;background:#e0e8f0;border:1px dashed #b0bdd0;"></div>
+            <div class="bar-label">Q2 2026<br>Forecast</div>
+          </div>
+        </div>
+        <div style="margin-top:10px;font-size:11px;color:var(--wf-muted);text-align:center;">Chart: tier movement events per quarter (upgrades vs. demotions)</div>
+      </div>
+    </div>
+
+    <!-- At-risk and upgrade candidates table -->
+    <div>
+      <div class="card">
+        <div class="card-title" style="display:flex;justify-content:space-between;align-items:center;">
+          <span>Partners Approaching Tier Boundary</span>
+          <span style="font-size:11px;font-weight:400;color:var(--wf-muted);">Q1 FY2026 · Review by Mar 31</span>
+        </div>
+
+        <div style="font-size:12px;font-weight:700;color:var(--wf-muted);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:8px;margin-top:4px;">⬇ At Risk of Demotion (6)</div>
+
+        <div class="table-wrapper" style="box-shadow:none;margin-bottom:16px;">
+          <table>
+            <thead>
+              <tr>
+                <th>Partner</th>
+                <th>Current Tier</th>
+                <th>Revenue Gap</th>
+                <th>MDF Util.</th>
+                <th>Review In</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="at-risk">
+                <td><button class="btn-link">CloudBridge Solutions</button></td>
+                <td><span class="badge badge-gold">Gold</span></td>
+                <td><span class="gap-danger">-$220K</span></td>
+                <td>
+                  <div class="mini-progress">
+                    <div class="mini-track"><div class="mini-fill fill-warn" style="width:58%;"></div></div>
+                    <span style="font-size:11px;">58%</span>
+                  </div>
+                </td>
+                <td><span class="days-chip chip-yellow">36 days</span></td>
+                <td><button class="btn btn-primary">Intervene</button></td>
+              </tr>
+              <tr class="at-risk">
+                <td><button class="btn-link">Meridian Cloud Inc.</button></td>
+                <td><span class="badge badge-gold">Gold</span></td>
+                <td><span class="gap-danger">-$380K</span></td>
+                <td>
+                  <div class="mini-progress">
+                    <div class="mini-track"><div class="mini-fill fill-danger" style="width:41%;"></div></div>
+                    <span style="font-size:11px;">41%</span>
+                  </div>
+                </td>
+                <td><span class="days-chip chip-red">36 days</span></td>
+                <td><button class="btn btn-primary">Intervene</button></td>
+              </tr>
+              <tr>
+                <td><button class="btn-link">Nexus IT Partners</button></td>
+                <td><span class="badge badge-silver">Silver</span></td>
+                <td><span class="gap-warn">-$95K</span></td>
+                <td>
+                  <div class="mini-progress">
+                    <div class="mini-track"><div class="mini-fill fill-warn" style="width:62%;"></div></div>
+                    <span style="font-size:11px;">62%</span>
+                  </div>
+                </td>
+                <td><span class="days-chip chip-yellow">44 days</span></td>
+                <td><button class="btn btn-secondary">Review</button></td>
+              </tr>
+              <tr>
+                <td><button class="btn-link">Vertex Networks</button></td>
+                <td><span class="badge badge-silver">Silver</span></td>
+                <td><span class="gap-warn">-$110K</span></td>
+                <td>
+                  <div class="mini-progress">
+                    <div class="mini-track"><div class="mini-fill fill-warn" style="width:55%;"></div></div>
+                    <span style="font-size:11px;">55%</span>
+                  </div>
+                </td>
+                <td><span class="days-chip chip-yellow">36 days</span></td>
+                <td><button class="btn btn-secondary">Review</button></td>
+              </tr>
+              <tr>
+                <td><button class="btn-link">DataLink Systems</button></td>
+                <td><span class="badge badge-bronze">Bronze</span></td>
+                <td><span class="gap-warn">-$42K</span></td>
+                <td>
+                  <div class="mini-progress">
+                    <div class="mini-track"><div class="mini-fill fill-warn" style="width:50%;"></div></div>
+                    <span style="font-size:11px;">50%</span>
+                  </div>
+                </td>
+                <td><span class="days-chip chip-yellow">51 days</span></td>
+                <td><button class="btn btn-secondary">Review</button></td>
+              </tr>
+              <tr>
+                <td><button class="btn-link">TerraCloud Partners</button></td>
+                <td><span class="badge badge-bronze">Bronze</span></td>
+                <td><span class="gap-warn">-$28K</span></td>
+                <td>
+                  <div class="mini-progress">
+                    <div class="mini-track"><div class="mini-fill fill-danger" style="width:35%;"></div></div>
+                    <span style="font-size:11px;">35%</span>
+                  </div>
+                </td>
+                <td><span class="days-chip chip-yellow">58 days</span></td>
+                <td><button class="btn btn-secondary">Review</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div style="font-size:12px;font-weight:700;color:var(--wf-muted);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:8px;">⬆ Upgrade Candidates (4)</div>
+
+        <div class="table-wrapper" style="box-shadow:none;margin-bottom:0;">
+          <table>
+            <thead>
+              <tr>
+                <th>Partner</th>
+                <th>Current Tier</th>
+                <th>Gap to Upgrade</th>
+                <th>Revenue</th>
+                <th>Trajectory</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><button class="btn-link">Horizon Cloud Services</button></td>
+                <td><span class="badge badge-silver">Silver</span></td>
+                <td><span class="gap-ok">+$85K needed</span></td>
+                <td>$915K YTD</td>
+                <td><span style="color:#2e7d32;font-weight:600;">↑ On track</span></td>
+                <td><button class="btn btn-secondary">Notify</button></td>
+              </tr>
+              <tr>
+                <td><button class="btn-link">BlueSky Networks LLC</button></td>
+                <td><span class="badge badge-silver">Silver</span></td>
+                <td><span class="gap-ok">+$130K needed</span></td>
+                <td>$870K YTD</td>
+                <td><span style="color:#2e7d32;font-weight:600;">↑ On track</span></td>
+                <td><button class="btn btn-secondary">Notify</button></td>
+              </tr>
+              <tr>
+                <td><button class="btn-link">Summit Digital Partners</button></td>
+                <td><span class="badge badge-bronze">Bronze</span></td>
+                <td><span class="gap-ok">+$48K needed</span></td>
+                <td>$452K YTD</td>
+                <td><span style="color:#856404;font-weight:600;">→ Marginal</span></td>
+                <td><button class="btn btn-secondary">Notify</button></td>
+              </tr>
+              <tr>
+                <td><button class="btn-link">Cascade Technology</button></td>
+                <td><span class="badge badge-bronze">Bronze</span></td>
+                <td><span class="gap-ok">+$62K needed</span></td>
+                <td>$438K YTD</td>
+                <td><span style="color:#856404;font-weight:600;">→ Marginal</span></td>
+                <td><button class="btn btn-secondary">Notify</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<aside class="spec-panel" id="spec-panel" aria-hidden="true">
+  <button class="spec-close-btn" onclick="toggleSpec()" aria-label="Close spec panel">✕</button>
+  <h2>pam-tier-dashboard.html</h2>
+  <p class="spec-meta">PAM Portal · Alex Rivera · Tier Distribution Dashboard</p>
+  <hr class="spec-divider">
+  <h3>Job to Be Done</h3>
+  <p><em>"When managing the partner program, I want a program-wide view of tier health so I can intervene before demotions happen and surface upgrade candidates proactively — not reactively after the review date."</em></p>
+  <hr class="spec-divider">
+  <h3>Screen Purpose</h3>
+  <p>Program-level oversight for Alex. While partner-financial.html shows one partner at a time, this screen shows all 42 partners as a portfolio — who's at risk, who's eligible to upgrade, and how the tier mix is shifting quarter over quarter.</p>
+  <hr class="spec-divider">
+  <h3>Key Design Decisions</h3>
+  <ul>
+    <li><strong>Two separate tables: at-risk vs. upgrade</strong> — mixing them creates action confusion. Demotion risk and upgrade opportunity call for completely different interventions (MDF push vs. recognition/incentive)</li>
+    <li><strong>Revenue gap shown as dollar amount, not percentage</strong> — Alex needs to know whether a gap is closeable in the remaining window, and $220K reads faster than "88% of threshold"</li>
+    <li><strong>MDF utilization shown inline</strong> — low MDF utilization + revenue gap is the diagnostic signal for intervention; showing both together confirms the pattern</li>
+    <li><strong>"Intervene" vs. "Review" button distinction</strong> — red-chip partners with &lt;45 days show "Intervene" (higher urgency framing); others show "Review" (routine check)</li>
+    <li><strong>Bar chart for tier movement history</strong> — upgrades/demotions over time is a strategic metric Alex reports to leadership; the chart provides context the KPI tiles don't</li>
+  </ul>
+  <hr class="spec-divider">
+  <h3>Data Model</h3>
+  <ul>
+    <li><code>Account</code>: Partner_Tier__c, Tier_Review_Date__c, Partner_Type__c, PAM__c</li>
+    <li><code>Partner_Revenue__c</code>: Total_ARR__c rolled up from closed-won Opportunities with Partner_Account__c set</li>
+    <li><code>Tier_Threshold__mdt</code>: Tier__c, Min_ARR__c, Min_Certs__c — configurable tier boundaries</li>
+    <li><code>MDF_Allocation__c</code>: Utilization_Pct__c (formula: Spent / Allocated)</li>
+    <li><code>Tier_Change_History__c</code>: Account__c, Previous_Tier__c, New_Tier__c, Change_Date__c, Change_Type__c (Upgrade/Demotion)</li>
+  </ul>
+  <h3>Business Logic</h3>
+  <ul>
+    <li>At-risk threshold: Revenue_Gap__c &gt; 0 AND Tier_Review_Date__c ≤ TODAY() + 60</li>
+    <li>Upgrade candidate: Revenue_Gap_To_Next__c &lt; (10% of next tier threshold) AND trajectory = positive</li>
+    <li>MDF utilization warning: Utilization_Pct__c &lt; 60% within 90 days of fiscal year end</li>
+    <li>"Intervene" CTA fires when review is ≤ 45 days; "Review" when 46–90 days</li>
+  </ul>
+  <h3>Linked JTBD Workflow</h3>
+  <p>See <a href="workflows-jtbd.html#pam-jtbd-2">workflows-jtbd.html → PAM Job 2</a> for the tier intervention workflow.</p>
+  <h3>Navigation</h3>
+  <ul>
+    <li>Partner name → <code>pam-partner-financial.html</code></li>
+    <li>"Intervene" → opens MDF allocation modal or links to <code>pam-mdf-queue.html</code></li>
+    <li>Related: <code>pam-program-report.html</code>, <code>pam-partner-financial.html</code></li>
+  </ul>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

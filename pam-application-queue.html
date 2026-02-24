@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Application Review Queue — PAM · Equinix PCP</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: var(--wf-canvas, #f5f7fb); }
+    .slds-global-header { display: flex; align-items: center; background-color: var(--wf-ink, #1e2a3a); color: var(--wf-surface, #edf1f7); padding: 0 12px; height: 52px; gap: 12px; }
+    .slds-global-header__app-icon { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; background-color: var(--wf-accent, #3d6daa); color: var(--wf-surface, #edf1f7); border-radius: 4px; font-weight: 700; font-size: 12px; }
+    .slds-global-nav { display: flex; gap: 24px; margin-left: 24px; flex: 1; }
+    .slds-global-nav__item { color: rgba(255,255,255,0.7); text-decoration: none; font-size: 13px; padding: 8px 0; border-bottom: 3px solid transparent; cursor: pointer; }
+    .slds-global-nav__item.active { color: #fff; border-bottom-color: var(--wf-amber, #8b7745); }
+    .slds-global-header__search { margin-left: auto; margin-right: 16px; }
+    .slds-global-header__search input { padding: 6px 12px; border: 1px solid rgba(255,255,255,0.3); border-radius: 4px; background: rgba(255,255,255,0.1); color: #fff; width: 200px; font-size: 13px; }
+    .slds-global-header__search input::placeholder { color: rgba(255,255,255,0.5); }
+    .wf-header-util { display: flex; gap: 12px; align-items: center; opacity: 0.7; font-size: 18px; }
+    .page-container { padding: 24px; max-width: 1600px; margin: 0 auto; }
+    .kpi-row { display: grid; grid-template-columns: repeat(5,1fr); gap: 16px; margin-bottom: 24px; }
+    .kpi-card { background: var(--wf-surface,#edf1f7); padding: 16px; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .kpi-label { font-size: 12px; color: var(--wf-muted,#6b7f99); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; font-weight: 600; }
+    .kpi-value { font-size: 24px; font-weight: 700; color: var(--wf-accent,#3d6daa); }
+    .kpi-trend { font-size: 12px; color: var(--wf-text,#3b4f68); margin-top: 4px; }
+    .kpi-value.urgent { color: var(--wf-red,#8b4553); }
+    .section-title { font-size: 16px; font-weight: 700; color: var(--wf-text,#3b4f68); margin-bottom: 12px; margin-top: 8px; display: flex; align-items: center; gap: 10px; }
+    .table-wrapper { background: var(--wf-surface,#edf1f7); border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); overflow: hidden; margin-bottom: 24px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead { background: var(--wf-canvas,#f5f7fb); border-bottom: 2px solid var(--wf-line,#b0bdd0); }
+    th { padding: 10px 12px; text-align: left; font-weight: 700; color: var(--wf-text,#3b4f68); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; }
+    td { padding: 10px 12px; border-bottom: 1px solid var(--wf-canvas,#f5f7fb); color: var(--wf-text,#3b4f68); vertical-align: middle; }
+    tbody tr:hover { background: #f0f4fa; }
+    tbody tr.overdue { background: #fdf2f2; }
+    .badge { display: inline-block; padding: 3px 8px; border-radius: 3px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+    .badge-gold { background: #fff8e1; color: #8b7745; }
+    .badge-silver { background: #f0f4fa; color: #546e8a; }
+    .badge-bronze { background: #f9ede8; color: #8b4553; }
+    .badge-new { background: #e8f4fd; color: #1e6fa8; }
+    .badge-review { background: #fff3cd; color: #856404; }
+    .badge-overdue { background: #fde8e8; color: #8b4553; }
+    .badge-approved { background: #e8f5e9; color: #2e7d32; }
+    .risk-flag { display: inline-flex; align-items: center; gap: 4px; padding: 2px 7px; border-radius: 3px; font-size: 11px; font-weight: 600; }
+    .risk-high { background: #fde8e8; color: #8b4553; }
+    .risk-med { background: #fff3cd; color: #856404; }
+    .risk-low { background: #e8f5e9; color: #2e7d32; }
+    .days-badge { font-weight: 700; font-size: 13px; }
+    .days-overdue { color: var(--wf-red,#8b4553); }
+    .days-warn { color: #856404; }
+    .days-ok { color: var(--wf-muted,#6b7f99); }
+    .tier-rec { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; }
+    .tier-rec::before { content: '→'; opacity: 0.5; }
+    .btn { padding: 6px 12px; border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; margin-right: 4px; }
+    .btn-primary { background: var(--wf-accent,#3d6daa); color: #fff; }
+    .btn-secondary { background: var(--wf-surface,#edf1f7); color: var(--wf-text,#3b4f68); border: 1px solid var(--wf-line,#b0bdd0); }
+    .btn-link { background: none; border: none; color: var(--wf-accent,#3d6daa); font-size: 12px; font-weight: 600; cursor: pointer; text-decoration: underline; padding: 0; }
+    .filter-bar { display: flex; gap: 10px; margin-bottom: 14px; align-items: center; flex-wrap: wrap; }
+    .filter-control { padding: 6px 10px; border: 1px solid var(--wf-line,#b0bdd0); border-radius: 4px; background: var(--wf-surface,#edf1f7); font-size: 12px; cursor: pointer; }
+    .header-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+    .header-actions { display: flex; gap: 8px; }
+    .sla-bar { display: flex; align-items: center; gap: 8px; }
+    .sla-track { width: 60px; height: 5px; background: var(--wf-canvas,#f5f7fb); border-radius: 3px; overflow: hidden; }
+    .sla-fill { height: 100%; border-radius: 3px; }
+    .sla-fill.warn { background: #856404; }
+    .sla-fill.ok { background: var(--wf-accent,#3d6daa); }
+    .sla-fill.over { background: var(--wf-red,#8b4553); }
+    .compliance-dots { display: flex; gap: 4px; }
+    .dot { width: 9px; height: 9px; border-radius: 50%; }
+    .dot-ok { background: #4caf50; }
+    .dot-missing { background: var(--wf-red,#8b4553); }
+    .dot-pending { background: #ffc107; }
+    .page-title { font-size: 20px; font-weight: 700; color: var(--wf-ink,#1e2a3a); }
+    .page-subtitle { font-size: 13px; color: var(--wf-muted,#6b7f99); margin-top: 2px; margin-bottom: 20px; }
+    .jtbd-banner { background: #edf4fb; border-left: 4px solid var(--wf-accent,#3d6daa); padding: 10px 16px; border-radius: 0 4px 4px 0; margin-bottom: 20px; font-size: 13px; color: var(--wf-text,#3b4f68); }
+    .jtbd-banner strong { color: var(--wf-ink,#1e2a3a); }
+    .footer-pagination { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; font-size: 12px; color: var(--wf-muted,#6b7f99); border-top: 1px solid var(--wf-canvas,#f5f7fb); }
+  </style>
+</head>
+<body>
+
+<header class="wf-header">
+  <div class="wf-header-logo"><svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix"><path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/></svg></div>
+  <div class="wf-header-title">SFDC</div>
+  <nav class="wf-header-nav">
+    <a href="#">Dashboard</a>
+    <a href="#" class="active">PAM Portal</a>
+    <a href="#">Partners</a>
+    <a href="#">Programs</a>
+    <a href="#">Reports</a>
+  </nav>
+  <div class="wf-header-util">
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+  </div>
+</header>
+
+<div class="page-context-bar">
+  <div style="max-width:1600px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <span style="font-size:12px;color:var(--wf-muted);display:flex;align-items:center;gap:6px;">
+      <svg viewBox="0 0 20 13" style="width:18px;height:11px;fill:var(--wf-muted);" aria-hidden="true"><path d="M8.3 1.7A3.8 3.8 0 0 1 12 0a3.8 3.8 0 0 1 3.5 2.3A2.8 2.8 0 0 1 20 5a2.8 2.8 0 0 1-2.8 2.8H3.2A3.2 3.2 0 0 1 0 4.6 3.2 3.2 0 0 1 3.2 1.4c.18 0 .35.01.52.04A3.8 3.8 0 0 1 8.3 1.7z"/></svg>
+      <strong style="color:var(--wf-text);font-weight:600;">Salesforce Lightning</strong>&ensp;&middot;&ensp;PCP App
+    </span>
+    <span class="persona-badge" style="background:#b04a2a;color:#fff;display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:700;letter-spacing:0.5px;">PAM</span>
+  </div>
+</div>
+
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+<div class="page-container">
+
+  <div class="page-title">Application Review Queue</div>
+  <div class="page-subtitle">Alex Rivera · Partner Account Manager · Q1 FY2026 — 11 applications in queue</div>
+
+  <div class="jtbd-banner">
+    <strong>Job to be done:</strong> When a new partner application arrives, I want to assess fit and financial risk quickly, so I can make a tier decision within the 30-day SLA.
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi-card">
+      <div class="kpi-label">In Queue</div>
+      <div class="kpi-value">11</div>
+      <div class="kpi-trend">↑ +3 this week</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">SLA Overdue</div>
+      <div class="kpi-value urgent">3</div>
+      <div class="kpi-trend">Require action today</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Avg Days in Queue</div>
+      <div class="kpi-value">18</div>
+      <div class="kpi-trend">SLA target: 30 days</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Approved MTD</div>
+      <div class="kpi-value">7</div>
+      <div class="kpi-trend">↑ +2 vs. prior month</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Rejection Rate</div>
+      <div class="kpi-value">14%</div>
+      <div class="kpi-trend">↓ -4pp vs. Q4</div>
+    </div>
+  </div>
+
+  <div class="header-row">
+    <div class="section-title" style="margin:0;">Open Applications</div>
+    <div class="header-actions">
+      <button class="btn btn-secondary">Export CSV</button>
+      <button class="btn btn-primary">Bulk Assign</button>
+    </div>
+  </div>
+
+  <div class="filter-bar">
+    <select class="filter-control">
+      <option>All Statuses</option>
+      <option>New — Pending Review</option>
+      <option>In Review</option>
+      <option>SLA Warning</option>
+      <option>Overdue</option>
+    </select>
+    <select class="filter-control">
+      <option>All Tier Recommendations</option>
+      <option>Gold</option>
+      <option>Silver</option>
+      <option>Bronze</option>
+    </select>
+    <select class="filter-control">
+      <option>All Regions</option>
+      <option>North America</option>
+      <option>EMEA</option>
+      <option>APAC</option>
+    </select>
+    <select class="filter-control">
+      <option>All Partner Types</option>
+      <option>SI / Reseller</option>
+      <option>MSP</option>
+      <option>Technology Partner</option>
+      <option>Referral</option>
+    </select>
+    <input type="text" class="filter-control" placeholder="Search company name…" style="width:180px;">
+  </div>
+
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th>Company</th>
+          <th>Type</th>
+          <th>Region</th>
+          <th>Submitted</th>
+          <th>Days in Queue</th>
+          <th>SLA Status</th>
+          <th>Tier Rec.</th>
+          <th>Risk Flag</th>
+          <th>Compliance Docs</th>
+          <th>Assigned To</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="overdue">
+          <td><button class="btn-link">Quantum Consulting Group</button><br><span style="font-size:11px;color:var(--wf-muted);">DUNS: 04-921-8831</span></td>
+          <td>SI / Reseller</td>
+          <td>North America</td>
+          <td>Dec 15, 2025</td>
+          <td><span class="days-badge days-overdue">60 days</span></td>
+          <td><span class="badge badge-overdue">⚠ Overdue</span></td>
+          <td><span class="tier-rec badge-silver">Silver</span></td>
+          <td><span class="risk-flag risk-high">High — missing W-9</span></td>
+          <td><div class="compliance-dots"><span class="dot dot-ok" title="NDA signed"></span><span class="dot dot-missing" title="W-9 not filed"></span><span class="dot dot-missing" title="Insurance cert missing"></span><span class="dot dot-ok" title="Credit check passed"></span></div></td>
+          <td>A. Rivera</td>
+          <td><button class="btn btn-primary" style="font-size:11px;padding:4px 8px;">Review</button></td>
+        </tr>
+        <tr class="overdue">
+          <td><button class="btn-link">InnovateTech Solutions</button><br><span style="font-size:11px;color:var(--wf-muted);">DUNS: 07-445-2210</span></td>
+          <td>MSP</td>
+          <td>EMEA</td>
+          <td>Jan 2, 2026</td>
+          <td><span class="days-badge days-overdue">45 days</span></td>
+          <td><span class="badge badge-overdue">⚠ Overdue</span></td>
+          <td><span class="tier-rec badge-gold">Gold</span></td>
+          <td><span class="risk-flag risk-med">Med — credit review pending</span></td>
+          <td><div class="compliance-dots"><span class="dot dot-ok" title="NDA signed"></span><span class="dot dot-ok" title="W-9 filed"></span><span class="dot dot-ok" title="Insurance cert on file"></span><span class="dot dot-pending" title="Credit check in progress"></span></div></td>
+          <td>A. Rivera</td>
+          <td><button class="btn btn-primary" style="font-size:11px;padding:4px 8px;">Review</button></td>
+        </tr>
+        <tr class="overdue">
+          <td><button class="btn-link">PeakNet Communications</button><br><span style="font-size:11px;color:var(--wf-muted);">DUNS: 11-003-5561</span></td>
+          <td>Technology Partner</td>
+          <td>APAC</td>
+          <td>Jan 9, 2026</td>
+          <td><span class="days-badge days-overdue">38 days</span></td>
+          <td><span class="badge badge-overdue">⚠ Overdue</span></td>
+          <td><span class="tier-rec badge-bronze">Bronze</span></td>
+          <td><span class="risk-flag risk-high">High — no Equinix revenue history</span></td>
+          <td><div class="compliance-dots"><span class="dot dot-ok" title="NDA signed"></span><span class="dot dot-missing" title="W-9 not filed"></span><span class="dot dot-ok" title="Insurance cert on file"></span><span class="dot dot-missing" title="Credit check not initiated"></span></div></td>
+          <td>T. Walsh</td>
+          <td><button class="btn btn-primary" style="font-size:11px;padding:4px 8px;">Review</button></td>
+        </tr>
+        <tr>
+          <td><button class="btn-link">Summit Digital Partners</button><br><span style="font-size:11px;color:var(--wf-muted);">DUNS: 09-771-4480</span></td>
+          <td>SI / Reseller</td>
+          <td>North America</td>
+          <td>Jan 21, 2026</td>
+          <td><span class="days-badge days-warn">26 days</span></td>
+          <td><span class="badge badge-review">⏱ SLA Warning</span></td>
+          <td><span class="tier-rec badge-silver">Silver</span></td>
+          <td><span class="risk-flag risk-med">Med — revenue unverified</span></td>
+          <td><div class="compliance-dots"><span class="dot dot-ok"></span><span class="dot dot-ok"></span><span class="dot dot-pending"></span><span class="dot dot-ok"></span></div></td>
+          <td>A. Rivera</td>
+          <td><button class="btn btn-primary" style="font-size:11px;padding:4px 8px;">Review</button></td>
+        </tr>
+        <tr>
+          <td><button class="btn-link">Horizon Cloud Services</button><br><span style="font-size:11px;color:var(--wf-muted);">DUNS: 02-884-9920</span></td>
+          <td>MSP</td>
+          <td>North America</td>
+          <td>Jan 24, 2026</td>
+          <td><span class="days-badge days-warn">23 days</span></td>
+          <td><span class="badge badge-review">⏱ SLA Warning</span></td>
+          <td><span class="tier-rec badge-gold">Gold</span></td>
+          <td><span class="risk-flag risk-low">Low</span></td>
+          <td><div class="compliance-dots"><span class="dot dot-ok"></span><span class="dot dot-ok"></span><span class="dot dot-ok"></span><span class="dot dot-ok"></span></div></td>
+          <td>A. Rivera</td>
+          <td><button class="btn btn-primary" style="font-size:11px;padding:4px 8px;">Review</button></td>
+        </tr>
+        <tr>
+          <td><button class="btn-link">BlueSky Networks LLC</button><br><span style="font-size:11px;color:var(--wf-muted);">DUNS: 05-192-3374</span></td>
+          <td>Referral</td>
+          <td>North America</td>
+          <td>Feb 1, 2026</td>
+          <td><span class="days-badge days-ok">15 days</span></td>
+          <td><span class="badge badge-new">● In Review</span></td>
+          <td><span class="tier-rec badge-bronze">Bronze</span></td>
+          <td><span class="risk-flag risk-low">Low</span></td>
+          <td><div class="compliance-dots"><span class="dot dot-ok"></span><span class="dot dot-ok"></span><span class="dot dot-ok"></span><span class="dot dot-pending"></span></div></td>
+          <td>T. Walsh</td>
+          <td><button class="btn btn-primary" style="font-size:11px;padding:4px 8px;">Review</button></td>
+        </tr>
+        <tr>
+          <td><button class="btn-link">Cascade Technology Group</button><br><span style="font-size:11px;color:var(--wf-muted);">DUNS: 08-337-0015</span></td>
+          <td>SI / Reseller</td>
+          <td>EMEA</td>
+          <td>Feb 3, 2026</td>
+          <td><span class="days-badge days-ok">13 days</span></td>
+          <td><span class="badge badge-new">● In Review</span></td>
+          <td><span class="tier-rec badge-silver">Silver</span></td>
+          <td><span class="risk-flag risk-low">Low</span></td>
+          <td><div class="compliance-dots"><span class="dot dot-ok"></span><span class="dot dot-ok"></span><span class="dot dot-ok"></span><span class="dot dot-ok"></span></div></td>
+          <td>A. Rivera</td>
+          <td><button class="btn btn-primary" style="font-size:11px;padding:4px 8px;">Review</button></td>
+        </tr>
+        <tr>
+          <td><button class="btn-link">Meridian Pacific Consulting</button><br><span style="font-size:11px;color:var(--wf-muted);">DUNS: 03-665-8802</span></td>
+          <td>Technology Partner</td>
+          <td>APAC</td>
+          <td>Feb 8, 2026</td>
+          <td><span class="days-badge days-ok">8 days</span></td>
+          <td><span class="badge badge-new">● New</span></td>
+          <td><span class="tier-rec badge-gold">Gold</span></td>
+          <td><span class="risk-flag risk-low">Low</span></td>
+          <td><div class="compliance-dots"><span class="dot dot-ok"></span><span class="dot dot-pending"></span><span class="dot dot-ok"></span><span class="dot dot-ok"></span></div></td>
+          <td>Unassigned</td>
+          <td><button class="btn btn-primary" style="font-size:11px;padding:4px 8px;">Assign</button></td>
+        </tr>
+        <tr>
+          <td><button class="btn-link">Granite Ridge Solutions</button><br><span style="font-size:11px;color:var(--wf-muted);">DUNS: 10-449-7731</span></td>
+          <td>MSP</td>
+          <td>North America</td>
+          <td>Feb 10, 2026</td>
+          <td><span class="days-badge days-ok">6 days</span></td>
+          <td><span class="badge badge-new">● New</span></td>
+          <td><span class="tier-rec badge-silver">Silver</span></td>
+          <td><span class="risk-flag risk-low">Low</span></td>
+          <td><div class="compliance-dots"><span class="dot dot-ok"></span><span class="dot dot-ok"></span><span class="dot dot-pending"></span><span class="dot dot-ok"></span></div></td>
+          <td>Unassigned</td>
+          <td><button class="btn btn-primary" style="font-size:11px;padding:4px 8px;">Assign</button></td>
+        </tr>
+        <tr>
+          <td><button class="btn-link">Vortex Cloud Inc.</button><br><span style="font-size:11px;color:var(--wf-muted);">DUNS: 06-228-4419</span></td>
+          <td>SI / Reseller</td>
+          <td>EMEA</td>
+          <td>Feb 14, 2026</td>
+          <td><span class="days-badge days-ok">2 days</span></td>
+          <td><span class="badge badge-new">● New</span></td>
+          <td><span class="tier-rec badge-bronze">Bronze</span></td>
+          <td><span class="risk-flag risk-low">Low</span></td>
+          <td><div class="compliance-dots"><span class="dot dot-pending"></span><span class="dot dot-pending"></span><span class="dot dot-pending"></span><span class="dot dot-pending"></span></div></td>
+          <td>Unassigned</td>
+          <td><button class="btn btn-primary" style="font-size:11px;padding:4px 8px;">Assign</button></td>
+        </tr>
+        <tr>
+          <td><button class="btn-link">Apex Data Systems</button><br><span style="font-size:11px;color:var(--wf-muted);">DUNS: 01-887-5543</span></td>
+          <td>Referral</td>
+          <td>North America</td>
+          <td>Feb 16, 2026</td>
+          <td><span class="days-badge days-ok">New</span></td>
+          <td><span class="badge badge-new">● New</span></td>
+          <td><span class="tier-rec badge-bronze">Bronze</span></td>
+          <td><span class="risk-flag risk-low">Pending</span></td>
+          <td><div class="compliance-dots"><span class="dot dot-pending"></span><span class="dot dot-pending"></span><span class="dot dot-pending"></span><span class="dot dot-pending"></span></div></td>
+          <td>Unassigned</td>
+          <td><button class="btn btn-primary" style="font-size:11px;padding:4px 8px;">Assign</button></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="footer-pagination">
+      <span>Showing 11 of 11 open applications</span>
+      <span>Last refreshed: 9:14 AM · Feb 16, 2026</span>
+    </div>
+  </div>
+
+  <div style="background:var(--wf-surface);padding:16px;border-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,0.1);font-size:12px;">
+    <div style="font-weight:700;color:var(--wf-text);margin-bottom:8px;">Compliance Legend</div>
+    <div style="display:flex;gap:20px;flex-wrap:wrap;">
+      <span style="display:flex;align-items:center;gap:6px;"><span class="dot dot-ok" style="display:inline-block;"></span> On file / verified</span>
+      <span style="display:flex;align-items:center;gap:6px;"><span class="dot dot-pending" style="display:inline-block;"></span> In progress / awaiting partner</span>
+      <span style="display:flex;align-items:center;gap:6px;"><span class="dot dot-missing" style="display:inline-block;"></span> Missing — blocks approval</span>
+    </div>
+    <div style="margin-top:8px;color:var(--wf-muted);">Dot order: NDA · W-9 · Insurance Certificate · Credit Check</div>
+  </div>
+
+</div>
+
+<aside class="spec-panel" id="spec-panel" aria-hidden="true">
+  <button class="spec-close-btn" onclick="toggleSpec()" aria-label="Close spec panel">✕</button>
+  <h2>pam-application-queue.html</h2>
+  <p class="spec-meta">PAM Portal · Alex Rivera · Application Review Queue</p>
+  <hr class="spec-divider">
+  <h3>Job to Be Done</h3>
+  <p><em>"When a new partner application arrives, I want to assess fit and financial risk quickly, so I can make a tier decision within the 30-day SLA — and never let an overdue item stay unresolved."</em></p>
+  <hr class="spec-divider">
+  <h3>Screen Purpose</h3>
+  <p>Alex's primary daily view. Shows all open partner applications ranked by urgency (days-in-queue), with tier recommendations, compliance gaps, and risk flags surfaced in the table so she can triage without clicking into each record.</p>
+  <hr class="spec-divider">
+  <h3>Key Design Decisions</h3>
+  <ul>
+    <li><strong>Overdue rows highlighted in red</strong> — row-level color coding means Alex spots SLA breaches at a glance without reading the status column</li>
+    <li><strong>Compliance dots pattern</strong> — four fixed-position dots (NDA / W-9 / Insurance / Credit) give a scannable compliance fingerprint per application; a single missing dot flags a blocker</li>
+    <li><strong>Tier recommendation shown, not decided</strong> — the queue shows the auto-scored recommendation; Alex reviews and confirms in the detail screen</li>
+    <li><strong>Days-in-queue as primary sort</strong> — default sort is by urgency, not submission date, because recency is irrelevant if an older application is at risk</li>
+    <li><strong>D&amp;B DUNS shown</strong> — surfaces the canonical org ID so Alex can verify against D&amp;B lookup; prevents duplicate-record approvals</li>
+  </ul>
+  <hr class="spec-divider">
+  <h3>Data Model</h3>
+  <ul>
+    <li><code>Partner_Application__c</code>: Company_Name__c, DUNS__c, Partner_Type__c, Region__c, Submitted_Date__c, Status__c, Days_In_Queue__c (formula), Tier_Recommendation__c, Risk_Flag__c, Assigned_PAM__c</li>
+    <li><code>Compliance_Checklist__c</code>: Application__c, NDA_Status__c, W9_Status__c, Insurance_Status__c, Credit_Check_Status__c</li>
+  </ul>
+  <h3>Business Logic</h3>
+  <ul>
+    <li>SLA target: 30 days from submission. Days_In_Queue__c = TODAY() − Submitted_Date__c</li>
+    <li>Status = Overdue when Days_In_Queue__c &gt; 30 and Status ≠ Approved/Rejected</li>
+    <li>SLA Warning fires at 20 days (≥ 2/3 of window elapsed)</li>
+    <li>Unassigned applications cannot progress past "New" status; PAM assignment is required</li>
+    <li>Tier recommendation auto-scores from: Equinix revenue history, partner type, region, certification level</li>
+  </ul>
+  <h3>Navigation</h3>
+  <ul>
+    <li>Row → <code>pam-application-detail.html</code> (full application review)</li>
+    <li>"Assign" button → inline assignment modal (no page nav)</li>
+    <li>"Bulk Assign" → selects rows and opens assignment fly-out</li>
+    <li>Related screens: <code>pam-tier-dashboard.html</code>, <code>pam-partner-financial.html</code></li>
+  </ul>
+  <h3>Linked JTBD Workflow</h3>
+  <p>See <a href="workflows-jtbd.html#pam-jtbd-1">workflows-jtbd.html → PAM Job 1</a> for the full review-to-approval workflow.</p>
+</aside>
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  if(!p||!b)return;
+  var isOpen=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',isOpen);
+}
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>
