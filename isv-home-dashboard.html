@@ -199,7 +199,7 @@
   <span class="role-badge">ISV Partner</span>
   <div class="wf-header-right">
     <span>NovaSpark Networks</span>
-    <span>Validated ISV</span>
+    <span title="Design hypothesis — ISV tier name not confirmed by Equinix documentation">Validated ISV †</span>
     <span>Maya Patel ▾</span>
   </div>
 </header>
@@ -237,7 +237,7 @@
         <div class="wb-title">NovaSpark Networks</div>
         <div class="wb-subtitle">ISV Partner · SD-WAN Automation · Equinix Fabric + Network Edge</div>
         <div class="wb-pills">
-          <span class="wb-pill">Validated ISV</span>
+          <span class="wb-pill" title="Design hypothesis — tier name not confirmed by Equinix documentation">Validated ISV †</span>
           <span class="wb-pill">Fabric API v3</span>
           <span class="wb-pill">Network Edge</span>
           <span class="wb-pill">Co-Sell Enabled</span>
@@ -506,7 +506,7 @@
       <div class="sidebar-title">ISV Program Status</div>
       <div class="info-row">
         <span class="info-key">Tier</span>
-        <span class="info-val">Validated ISV</span>
+        <span class="info-val" title="Design hypothesis — not confirmed by Equinix documentation">Validated ISV †</span>
       </div>
       <div class="info-row">
         <span class="info-key">Member since</span>
@@ -531,8 +531,11 @@
     </div>
 
     <!-- Tier progression -->
-    <div class="sidebar-card">
-      <div class="sidebar-title">Tier: Validated → Premier ISV</div>
+    <div class="sidebar-card" style="border-color:#f59e0b; border-left:3px solid #f59e0b;">
+      <div class="sidebar-title">Tier: Validated → Premier ISV †</div>
+      <div style="background:#fffbe6; border:1px solid #ffe58f; border-radius:4px; padding:7px 9px; font-size:11px; color:#78350f; margin-bottom:12px; line-height:1.5;">
+        ⚠ <strong>Design hypothesis.</strong> Equinix does not publish an ISV tier track with these names. Structure is modeled on Salesforce/Microsoft ISV programs — not confirmed Equinix documentation. <button onclick="toggleSpec()" style="background:none;border:none;padding:0;color:#78350f;font-size:11px;cursor:pointer;text-decoration:underline;font-weight:600;">See spec for detail.</button>
+      </div>
       <div style="font-size:12px; color:#555; margin-bottom:10px;">3 of 5 requirements met</div>
       <div class="req-list">
         <div class="req-item">
@@ -604,13 +607,23 @@
     <li><strong>Certification as a recurring deadline:</strong> ISV integrations have annual or semi-annual recertification requirements tied to API version support. The warning KPI card (38 days to renewal) and the sidebar cert link make this visible before it's a crisis.</li>
   </ul>
 
-  <h3>ISV tier model (simplified)</h3>
+  <h3>⚠ What's real vs. hypothetical in this screen</h3>
+  <p style="background:#1e3a1e; border:1px solid #4ade80; border-radius:4px; padding:8px 10px; margin-bottom:10px; color:#86efac;"><strong style="color:#bbf7d0;">✅ Real and documented:</strong></p>
   <ul>
-    <li><strong>Enrolled ISV:</strong> Onboarded, sandbox access, 0–1 live integrations</li>
-    <li><strong>Validated ISV:</strong> 2+ live integrations, marketplace published, API uptime ≥99.9% (NovaSpark is here)</li>
-    <li><strong>Premier ISV:</strong> Validated + Featured listing + $1M co-sell pipeline. Unlocks Innovation Partner Fund (co-marketing budget) and dedicated TAM hours</li>
+    <li><strong>Equinix Marketplace listing mechanics</strong> — ISVs publish technical listings, manage media assets, and receive inbound inquiries. Source: <a href="https://docs.equinix.com/marketplace/" target="_blank">docs.equinix.com/marketplace/</a></li>
+    <li><strong>Equinix Fabric and Network Edge APIs</strong> — ISVs build integrations against these APIs with a documented certification and sandbox process. Source: <a href="https://developer.equinix.com/catalog/fabric" target="_blank">developer.equinix.com/catalog/fabric</a></li>
+    <li><strong>Co-sell motion with Equinix field team</strong> — ISVs participate as technology partners and collaborate on joint sales opportunities. Confirmed in general terms via partner program materials.</li>
+    <li><strong>Technical Alliance Manager (TAM) role</strong> — Equinix assigns TAMs to ISV partners. Title and function confirmed via public job postings.</li>
+    <li><strong>NVF recertification requirement</strong> — Network function virtualization certification is a real Equinix program requirement for Network Edge integrations.</li>
   </ul>
-  <p>This tier model is derived from Equinix's public ISV program description at <a href="https://www.equinix.com/partners/isv" target="_blank">equinix.com/partners/isv</a> and analogous ISV partner programs at AWS and Azure (both publicly documented).</p>
+  <p style="background:#3a1a1a; border:1px solid #f87171; border-radius:4px; padding:8px 10px; margin:10px 0; color:#fca5a5;"><strong style="color:#fecaca;">⚠ Design hypotheses — NOT confirmed Equinix structures:</strong></p>
+  <ul>
+    <li><strong>"Enrolled / Validated ISV / Premier ISV" tier names</strong> — These names were invented for this wireframe, modeled on Salesforce ISV and Microsoft ISV Success Program tier structures. Equinix does not publish a separately branded ISV tier track with these names. ISVs participate through Equinix's Technology Partner track, which is not documented publicly with this tier hierarchy.</li>
+    <li><strong>Specific tier thresholds</strong> (2+ live integrations, API uptime ≥99.9%, $1M co-sell pipeline) — Plausible estimates based on analogous ISV programs. Not sourced from any Equinix documentation.</li>
+    <li><strong>Innovation Partner Fund (IPF)</strong> — Co-marketing development funds tied to a "Featured tier" are modeled on AWS ISV Accelerate and similar programs. Equinix may have equivalent programs under different branding; this was not confirmed.</li>
+    <li><strong>Marketplace listing completeness score (72%)</strong> — Numeric completeness scoring is a design hypothesis. Equinix Marketplace docs describe required fields but do not publish a percentage-based completeness metric publicly.</li>
+  </ul>
+  <p style="color:#aaa; font-style:italic; margin-top:8px;">† markers in the UI flag hypothetical tier language. Before this screen influences real program design, validate the ISV tier model against Equinix's actual partner program documentation or an internal Equinix partner team contact.</p>
 
   <h3>Stub screens introduced</h3>
   <ul>
@@ -634,9 +647,10 @@
 
   <h3>Sources</h3>
   <ul>
-    <li>Equinix ISV program overview: <a href="https://www.equinix.com/partners/isv" target="_blank">equinix.com/partners/isv</a> (public)</li>
-    <li>Equinix Fabric API documentation: <a href="https://developer.equinix.com/catalog/fabric" target="_blank">developer.equinix.com/catalog/fabric</a> (public)</li>
-    <li>ISV partner portal best practices: AWS ISV Accelerate program documentation (public); Microsoft ISV Success Program (public)</li>
+    <li>Equinix ISV program landing page: <a href="https://www.equinix.com/partners/isv" target="_blank">equinix.com/partners/isv</a> (public) — <em>note: page was inaccessible during validation; does not confirm tier names used in this wireframe</em></li>
+    <li>Equinix Marketplace documentation: <a href="https://docs.equinix.com/marketplace/" target="_blank">docs.equinix.com/marketplace/</a> (public, verified)</li>
+    <li>Equinix Fabric API documentation: <a href="https://developer.equinix.com/catalog/fabric" target="_blank">developer.equinix.com/catalog/fabric</a> (public, verified)</li>
+    <li>Tier model analogues (not Equinix): Salesforce ISV partner tiers (AppExchange program); Microsoft ISV Success Program — these inspired the Enrolled/Validated/Premier hierarchy, which is a <strong>design hypothesis</strong>, not a documented Equinix structure</li>
     <li>Marketplace listing conversion — "demo video improves conversion 3×": Partnerplace 2024 ISV channel survey (publicly accessible summary)</li>
   </ul>
 </aside>
