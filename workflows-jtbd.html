@@ -226,13 +226,24 @@
   <nav class="wf-header-nav">
     <a href="personas.html">Personas</a>
     <a href="#" class="active">Workflows</a>
-    <a href="sitemap-pcp-v2.html">Sitemap</a>
+    <a href="ia-spine-v0.1.html">IA Spine</a>
+    <a href="page-list.html">All Screens</a>
   </nav>
   <div class="wf-header-util">
     <span style="font-size:12px;color:#6c757d;">Design Reference</span>
   </div>
 </header>
 
+<div class="page-context-bar">
+  <span style="font-size:12px;color:#6c757d;">Design Reference &rsaquo; Jobs to Be Done Workflows</span>
+  <span style="margin-left:auto;font-size:11px;color:#6c757d;">Partner Connect Portal &bull; v2.4</span>
+</div>
+
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false">Notes</button>
+</div>
+
+<div class="page-container">
 <div class="jtbd-page">
 
   <div style="margin-bottom:24px;">
@@ -663,10 +674,51 @@
     </div>
   </div>
 
-</div>
+</div><!-- /.jtbd-page -->
+</div><!-- /.page-container -->
+
+<!-- ── Spec panel ──────────────────────────────────────────────────────────── -->
+<aside class="spec-panel" id="spec-panel">
+  <div class="spec-panel-header">
+    <strong>Design Notes</strong>
+    <button class="spec-panel-close" onclick="toggleSpec()" aria-label="Close notes">✕</button>
+  </div>
+  <div class="spec-panel-body">
+
+    <div class="spec-section">
+      <div class="spec-section-title">What this page is</div>
+      <p>This is a design reference document — not a portal screen. It maps the Jobs to Be Done for each persona and links them to the wireframe screens that implement each job.</p>
+    </div>
+
+    <div class="spec-section">
+      <div class="spec-section-title">JTBD ID stability</div>
+      <p>Each job has an anchor ID (e.g. <code>#pam-jtbd-1</code>, <code>#psm-jtbd-3</code>). These IDs are referenced from <a href="personas.html">personas.html</a> and <a href="ia-spine-v0.1.html">ia-spine-v0.1.html</a>. Do not renumber without updating those links.</p>
+    </div>
+
+    <div class="spec-section">
+      <div class="spec-section-title">Screen links</div>
+      <p>All screen links open the corresponding wireframe. If a screen is not yet wired, the link is noted as "(not yet wired)" in the screen links section.</p>
+    </div>
+
+    <div class="spec-section">
+      <div class="spec-section-title">Related pages</div>
+      <p>
+        <a href="personas.html">personas.html</a> — full persona cards with JTBD data<br>
+        <a href="ia-spine-v0.1.html">ia-spine-v0.1.html</a> — IA Spine with canonical objects and handoff seams
+      </p>
+    </div>
+
+  </div>
+</aside>
 
 <script>
-// No auth toggle on this page — it's a design reference doc
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  var open=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',open);
+  b.textContent=open?'Close Notes':'Notes';
+}
 </script>
 <script src="wf-nav.js"></script>
 </body>
