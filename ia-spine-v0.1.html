@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IA Spine v0.1 — Partner Connect Portal</title>
+<link rel="stylesheet" href="wireframe.css">
+<style>
+/* ── Page layout ─────────────────────────────────────────────────────────── */
+.spine-page {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 28px 20px 72px;
+}
+
+/* ── Title block ──────────────────────────────────────────────────────────── */
+.spine-title-block {
+  border-bottom: 3px solid #1e3a5f;
+  padding-bottom: 18px;
+  margin-bottom: 32px;
+}
+.spine-title-block h1 {
+  font-size: 26px;
+  font-weight: 800;
+  color: #1e3a5f;
+  margin: 0 0 4px 0;
+  letter-spacing: -0.3px;
+}
+.spine-subtitle {
+  font-size: 14px;
+  color: #4b5563;
+  margin: 0 0 8px 0;
+}
+.spine-meta {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.spine-meta-item {
+  font-size: 12px;
+  color: #6b7280;
+}
+.spine-meta-item strong { color: #374151; }
+.draft-chip {
+  display: inline-block;
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+  color: #92400e;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 10px;
+  border-radius: 12px;
+  letter-spacing: 0.5px;
+}
+
+/* ── Jump nav ──────────────────────────────────────────────────────────────── */
+.spine-jump-nav {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+}
+.jump-link {
+  display: inline-block;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #1e3a5f;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 14px;
+  border-radius: 20px;
+  text-decoration: none;
+  transition: background 0.15s;
+}
+.jump-link:hover { background: #dbeafe; border-color: #93c5fd; }
+.jump-link.external { color: #6b7280; font-weight: 400; }
+
+/* ── Legend chips ─────────────────────────────────────────────────────────── */
+.spine-legend {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  margin-bottom: 28px;
+  padding: 10px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #374151;
+}
+.legend-item { display: flex; align-items: center; gap: 6px; }
+.legend-chip {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.4px;
+}
+.chip-a { background: #fef9c3; color: #854d0e; border: 1px solid #fde047; }
+.chip-q { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
+
+/* ── Section blocks ──────────────────────────────────────────────────────── */
+.spine-section {
+  margin-bottom: 40px;
+}
+.spine-section-heading {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e2e8f0;
+}
+.section-num {
+  font-size: 13px;
+  font-weight: 700;
+  color: #9ca3af;
+  min-width: 20px;
+}
+.section-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #1e3a5f;
+  margin: 0;
+}
+
+/* ── Bullet list ─────────────────────────────────────────────────────────── */
+.spine-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.spine-list li {
+  display: flex;
+  gap: 10px;
+  font-size: 13px;
+  color: #374151;
+  line-height: 1.65;
+  padding: 7px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+.spine-list li:last-child { border-bottom: none; }
+.spine-list li::before {
+  content: "–";
+  color: #9ca3af;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.spine-list .tag-a {
+  display: inline;
+  background: #fef9c3;
+  color: #854d0e;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 0 5px;
+  border-radius: 3px;
+  margin-right: 3px;
+}
+.spine-list .tag-q {
+  display: inline;
+  background: #dbeafe;
+  color: #1e40af;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 0 5px;
+  border-radius: 3px;
+  margin-right: 3px;
+}
+
+/* ── Shared table styles ─────────────────────────────────────────────────── */
+.spine-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+  margin-bottom: 4px;
+}
+.spine-table th {
+  background: #1e3a5f;
+  color: #fff;
+  font-weight: 600;
+  font-size: 11.5px;
+  text-align: left;
+  padding: 8px 11px;
+  border: 1px solid #1e3a5f;
+  white-space: nowrap;
+}
+.spine-table td {
+  padding: 8px 11px;
+  border: 1px solid #e2e8f0;
+  vertical-align: top;
+  line-height: 1.5;
+  color: #1f2937;
+}
+.spine-table tr:nth-child(even) td { background: #f0f4f8; }
+.spine-table tr:nth-child(odd) td { background: #fff; }
+
+/* in-cell annotation tags */
+.tag-a-inline {
+  display: inline-block;
+  background: #fef9c3;
+  color: #854d0e;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 0 5px;
+  border-radius: 3px;
+  margin-right: 3px;
+  vertical-align: baseline;
+}
+.tag-q-inline {
+  display: inline-block;
+  background: #dbeafe;
+  color: #1e40af;
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 0 5px;
+  border-radius: 3px;
+  margin-right: 3px;
+  vertical-align: baseline;
+}
+.actor-chip {
+  display: inline-block;
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 1px 7px;
+  border-radius: 10px;
+  margin-right: 2px;
+  white-space: nowrap;
+}
+.chip-pam  { background: #fdf3ef; color: #b04a2a; border: 1px solid #f4c5b2; }
+.chip-psm  { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+.chip-ae   { background: #f0fdf4; color: #166534; border: 1px solid #86efac; }
+.chip-admin{ background: #f5f3ff; color: #6d28d9; border: 1px solid #c4b5fd; }
+
+/* ── Sub-section label ───────────────────────────────────────────────────── */
+.spine-sub-heading {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1e3a5f;
+  margin: 18px 0 8px 0;
+  padding-left: 10px;
+  border-left: 3px solid #93c5fd;
+}
+
+/* ── Decision log ────────────────────────────────────────────────────────── */
+.decision-log-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1e3a5f;
+  margin: 20px 0 8px 0;
+}
+
+/* ── Closing note ────────────────────────────────────────────────────────── */
+.spine-closing-note {
+  background: #f8fafc;
+  border-top: 2px solid #e2e8f0;
+  padding: 14px 18px;
+  font-size: 12.5px;
+  color: #6b7280;
+  font-style: italic;
+  margin-top: 16px;
+  border-radius: 0 0 6px 6px;
+}
+
+/* ── Back link ───────────────────────────────────────────────────────────── */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  color: #6b7280;
+  text-decoration: none;
+  margin-bottom: 20px;
+}
+.back-link:hover { color: #1e3a5f; }
+</style>
+</head>
+<body>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+
+<header class="wf-header">
+  <div class="wf-header-logo">
+    <svg width="28" height="28" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="4" fill="#e2231a"/><path d="M8 8h6v16H8zm10 0h6v7h-6zm0 9h6v7h-6z" fill="#fff"/></svg>
+  </div>
+  <div class="wf-header-title">PCP Design</div>
+  <nav class="wf-header-nav">
+    <a href="personas.html">Personas</a>
+    <a href="workflows-jtbd.html">JTBDs</a>
+    <a href="#" class="active">IA Spine</a>
+    <a href="#">Sitemap</a>
+    <a href="#">Screens</a>
+  </nav>
+  <div class="wf-header-util">
+    <span class="wf-avatar" style="background:#1e3a5f;">IA</span>
+    <span style="font-size:12px;color:#6c757d;">IA Lead</span>
+  </div>
+</header>
+
+<div class="page-context-bar">
+  <span class="persona-badge" style="background:#1e3a5f;color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:12px;letter-spacing:0.5px;">IA</span>
+  <span style="font-size:12px;color:#6c757d;margin-left:8px;">Design Reference &rsaquo; IA Spine v0.1</span>
+  <span style="margin-left:auto;font-size:11px;color:#6c757d;">Partner Connect Portal &bull; v2.4</span>
+</div>
+
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false">Notes</button>
+</div>
+
+<div class="page-container">
+<div class="spine-page">
+
+  <a href="workflows-jtbd.html" class="back-link">← JTBD Workflows</a>
+
+  <!-- Title block -->
+  <div class="spine-title-block">
+    <h1>IA Spine <span style="font-weight:400;color:#6b7280;font-size:20px;">v0.1</span></h1>
+    <p class="spine-subtitle">Partner + AE Lead-to-Cash &nbsp;·&nbsp; Salesforce Lightning (internal) + Experience Cloud (partner portal)</p>
+    <div class="spine-meta">
+      <span class="draft-chip">DRAFT</span>
+      <span class="spine-meta-item"><strong>Date:</strong> 2026-02-24</span>
+      <span class="spine-meta-item"><strong>Author:</strong> IA Lead</span>
+      <span class="spine-meta-item"><strong>Personas:</strong> Alex Rivera (PAM) · Marcus Chen (PSM) · Steve Rogers (AE) · Jordan Reeves (Admin)</span>
+    </div>
+  </div>
+
+  <!-- Jump nav -->
+  <div class="spine-jump-nav">
+    <a href="#s1" class="jump-link">1 · Purpose</a>
+    <a href="#s2" class="jump-link">2 · JTBDs</a>
+    <a href="#s3" class="jump-link">3 · Canonical Objects</a>
+    <a href="#s4" class="jump-link">4 · Handoff Seams</a>
+    <a href="#s5" class="jump-link">5 · Navigation</a>
+    <a href="#s6" class="jump-link">6 · Governance</a>
+    <a href="workflows-jtbd.html" class="jump-link external">↗ JTBD Workflows</a>
+    <a href="personas.html" class="jump-link external">↗ Personas</a>
+  </div>
+
+  <!-- Legend -->
+  <div class="spine-legend">
+    <strong style="color:#1e3a5f;font-size:12px;">Key:</strong>
+    <span class="legend-item"><span class="legend-chip chip-a">[A]</span> Assumption — not yet validated. Do not implement until resolved.</span>
+    <span class="legend-item"><span class="legend-chip chip-q">[?]</span> Open question — requires a decision from Channel Ops or CRM team.</span>
+  </div>
+
+  <!-- ── Section 1: Purpose & Principles ──────────────────────────────────── -->
+  <div class="spine-section" id="s1">
+    <div class="spine-section-heading">
+      <span class="section-num">1</span>
+      <h2 class="section-title">Purpose &amp; Principles</h2>
+    </div>
+    <ul class="spine-list">
+      <li>This Spine defines the <strong>stable backbone</strong> of the experience — not a full sitemap or spec. Use it to align stakeholders, onboard designers, and arbitrate scope disputes.</li>
+      <li><span class="actor-chip chip-pam">PAM · Alex</span> owns financial gates and tier enforcement. <span class="actor-chip chip-psm">PSM · Marcus</span> owns partner health and co-sell relationships. Never merge their queues into a single review surface.</li>
+      <li>Experience Cloud is the <strong>partner-facing surface</strong>. Lightning is the <strong>internal surface</strong>. Data flows one direction: Experience Cloud → Lightning. Approvals flow back.</li>
+      <li>Before adding a screen, check <a href="#s4" style="color:#1e3a5f;font-weight:600;">Section 4 (Handoff Seams)</a>. Most "missing features" are seam problems, not nav problems.</li>
+      <li><span class="tag-a">[A]</span> = Assumption not yet validated. <span class="tag-q">[?]</span> = Open question requiring a decision. Do not implement either without resolution.</li>
+    </ul>
+  </div>
+
+  <!-- ── Section 2: Critical JTBDs ────────────────────────────────────────── -->
+  <div class="spine-section" id="s2">
+    <div class="spine-section-heading">
+      <span class="section-num">2</span>
+      <h2 class="section-title">Critical Jobs-To-Be-Done — Top 5</h2>
+    </div>
+    <p style="font-size:12.5px;color:#6b7280;margin:0 0 12px 0;font-style:italic;">When [situation] → I want to [motivation] → so I can [outcome].</p>
+    <table class="spine-table" aria-label="Critical JTBDs">
+      <thead>
+        <tr>
+          <th style="width:110px;">Actor</th>
+          <th style="width:60px;">ID</th>
+          <th style="width:160px;">Trigger</th>
+          <th style="width:190px;">Desired Outcome</th>
+          <th style="width:160px;">Touchpoint</th>
+          <th>Friction / Open Qs</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="actor-chip chip-pam">PAM · Alex</span></td>
+          <td><strong>PAM-1</strong></td>
+          <td>New application arrives</td>
+          <td>Decide in &lt;48 h before SLA expires</td>
+          <td>Application Queue <em>(Lightning)</em></td>
+          <td><span class="tag-q-inline">[?]</span>Who sets the 48 h SLA — Channel Ops or PAM?</td>
+        </tr>
+        <tr>
+          <td><span class="actor-chip chip-psm">PSM · Marcus</span></td>
+          <td><strong>PSM-1</strong></td>
+          <td>Partner health score drops</td>
+          <td>Identify root cause, create action item</td>
+          <td>PSM Portfolio <em>(Lightning)</em></td>
+          <td><span class="tag-a-inline">[A]</span>Health score algorithm not yet specified.</td>
+        </tr>
+        <tr>
+          <td><span class="actor-chip chip-ae">AE · Steve</span></td>
+          <td><strong>AE-1</strong></td>
+          <td>Net-new opportunity identified</td>
+          <td>Lock deal protection in &lt;24 h</td>
+          <td>Deals <em>(Experience Cloud)</em></td>
+          <td><span class="tag-q-inline">[?]</span>Duplicate detection across Experience Cloud + CRM?</td>
+        </tr>
+        <tr>
+          <td><span class="actor-chip chip-ae">AE · Steve</span></td>
+          <td><strong>AE-2</strong></td>
+          <td>Planning a co-marketing activity</td>
+          <td>Submit, get approved, then claim reimbursement</td>
+          <td>MDF &amp; Campaigns <em>(Exp Cloud)</em></td>
+          <td><span class="tag-q-inline">[?]</span>Pre-approval vs post-activity claim — one form or two?</td>
+        </tr>
+        <tr>
+          <td><span class="actor-chip chip-psm">PSM · Marcus</span></td>
+          <td><strong>PSM-4</strong></td>
+          <td>QBR is 2 weeks out</td>
+          <td>Pull KPIs + pipeline without manual data assembly</td>
+          <td>QBR Prep <em>(Lightning)</em></td>
+          <td><span class="tag-a-inline">[A]</span>Real-time KPI sync from Lightning dashboards not confirmed.</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:11.5px;color:#9ca3af;margin:6px 0 0 0;">Full JTBD detail: <a href="workflows-jtbd.html" style="color:#1e3a5f;">workflows-jtbd.html</a></p>
+  </div>
+
+  <!-- ── Section 3: Canonical Objects ─────────────────────────────────────── -->
+  <div class="spine-section" id="s3">
+    <div class="spine-section-heading">
+      <span class="section-num">3</span>
+      <h2 class="section-title">Canonical Objects &amp; Systems of Record</h2>
+    </div>
+    <table class="spine-table" aria-label="Canonical objects and systems of record">
+      <thead>
+        <tr>
+          <th style="width:145px;">Object</th>
+          <th style="width:130px;">SOR</th>
+          <th style="width:90px;">Owner</th>
+          <th style="width:165px;">Key Relationships</th>
+          <th>Do-Not-Duplicate Rule</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Partner Account</strong></td>
+          <td>Salesforce CRM</td>
+          <td><span class="actor-chip chip-pam">PAM</span></td>
+          <td>→ Profile · Contacts · Opps</td>
+          <td>One record per legal entity. D&amp;B lookup enforced at onboarding.</td>
+        </tr>
+        <tr>
+          <td><strong>Deal Registration</strong></td>
+          <td>Exp Cloud → Lightning</td>
+          <td><span class="actor-chip chip-ae">AE</span> <span class="actor-chip chip-psm">PSM</span> <span class="actor-chip chip-pam">PAM</span></td>
+          <td>→ Opportunity (on approval)</td>
+          <td>Do not create an Opportunity until the deal reg is approved.</td>
+        </tr>
+        <tr>
+          <td><strong>Opportunity</strong></td>
+          <td>Salesforce CRM</td>
+          <td><span class="actor-chip chip-ae">AE</span> <span class="actor-chip chip-psm">PSM</span></td>
+          <td>← Deal Registration (source)</td>
+          <td>Opportunity is downstream of Deal Registration. Never upstream.</td>
+        </tr>
+        <tr>
+          <td><strong>MDF Request</strong></td>
+          <td>Exp Cloud → Lightning</td>
+          <td><span class="actor-chip chip-ae">AE</span> <span class="actor-chip chip-pam">PAM</span></td>
+          <td>→ MDF Claim (post-event)</td>
+          <td>One request per activity. Do not bundle multiple campaigns.</td>
+        </tr>
+        <tr>
+          <td><strong>MDF Claim</strong></td>
+          <td>Experience Cloud</td>
+          <td><span class="actor-chip chip-ae">AE</span> <span class="actor-chip chip-pam">PAM</span></td>
+          <td>← MDF Request (parent)</td>
+          <td>Claim must reference an approved MDF Request. No orphan claims.</td>
+        </tr>
+        <tr>
+          <td><strong>Partner Profile</strong></td>
+          <td>Experience Cloud</td>
+          <td><span class="actor-chip chip-admin">Admin · Jordan</span></td>
+          <td>→ Partner Account · → Tier</td>
+          <td>Profile lives in Experience Cloud. Do not replicate in a separate DB.</td>
+        </tr>
+        <tr>
+          <td><strong>Tier Requirements</strong></td>
+          <td>Program governance doc</td>
+          <td>Channel Ops / <span class="actor-chip chip-pam">PAM</span></td>
+          <td>→ Partner Account (tier) · → MDF entitlement</td>
+          <td><span class="tag-a-inline">[A]</span>Thresholds defined externally. Not editable within the portal.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── Section 4: Handoff Seams ──────────────────────────────────────────── -->
+  <div class="spine-section" id="s4">
+    <div class="spine-section-heading">
+      <span class="section-num">4</span>
+      <h2 class="section-title">Handoff Seams</h2>
+    </div>
+    <table class="spine-table" aria-label="Handoff seams">
+      <thead>
+        <tr>
+          <th style="width:175px;">Seam</th>
+          <th style="width:120px;">Upstream</th>
+          <th style="width:130px;">Downstream</th>
+          <th style="width:175px;">Handoff Artifact</th>
+          <th>Failure Mode / Validation Q</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Application → Approval</strong></td>
+          <td><span class="actor-chip chip-ae">Partner (AE)</span></td>
+          <td><span class="actor-chip chip-pam">PAM</span></td>
+          <td>Application record</td>
+          <td><span class="tag-q-inline">[?]</span>What triggers PAM notification — email, queue, or both?</td>
+        </tr>
+        <tr>
+          <td><strong>Approval → PSM Assignment</strong></td>
+          <td><span class="actor-chip chip-pam">PAM</span></td>
+          <td><span class="actor-chip chip-psm">PSM</span></td>
+          <td>Approved Partner Account</td>
+          <td><span class="tag-q-inline">[?]</span>Auto round-robin assignment or manual by PAM?</td>
+        </tr>
+        <tr>
+          <td><strong>Deal Reg → Opp Link</strong></td>
+          <td><span class="actor-chip chip-ae">AE (Exp Cloud)</span></td>
+          <td><span class="actor-chip chip-psm">PSM</span> / CRM</td>
+          <td>Approved Deal Reg → Opportunity</td>
+          <td><span class="tag-a-inline">[A]</span>Assumes auto-Opportunity creation on approval. Not confirmed.</td>
+        </tr>
+        <tr>
+          <td><strong>MDF Request → Approval</strong></td>
+          <td><span class="actor-chip chip-ae">AE</span></td>
+          <td><span class="actor-chip chip-pam">PAM</span></td>
+          <td>MDF Request record</td>
+          <td><span class="tag-q-inline">[?]</span>Is there a system-enforced deadline before the campaign date?</td>
+        </tr>
+        <tr>
+          <td><strong>MDF Claim → Reimbursement</strong></td>
+          <td><span class="actor-chip chip-ae">AE</span> → <span class="actor-chip chip-pam">PAM</span></td>
+          <td>Finance</td>
+          <td>MDF Claim + receipts</td>
+          <td><span class="tag-a-inline">[A]</span>Finance system integration not yet scoped.</td>
+        </tr>
+        <tr>
+          <td><strong>Deal Dispute → Resolution</strong></td>
+          <td><span class="actor-chip chip-psm">PSM</span></td>
+          <td>Channel Ops (escalation)</td>
+          <td>Dispute case record</td>
+          <td><span class="tag-q-inline">[?]</span>Who owns the Channel Ops escalation queue in Lightning?</td>
+        </tr>
+        <tr>
+          <td><strong>QBR → Action Items</strong></td>
+          <td><span class="actor-chip chip-psm">PSM</span></td>
+          <td><span class="actor-chip chip-ae">AE (partner side)</span></td>
+          <td>QBR summary + committed asks</td>
+          <td><span class="tag-q-inline">[?]</span>Action items in Lightning tasks, Experience Cloud, or both?</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── Section 5: Minimum Viable Navigation ─────────────────────────────── -->
+  <div class="spine-section" id="s5">
+    <div class="spine-section-heading">
+      <span class="section-num">5</span>
+      <h2 class="section-title">Minimum Viable Navigation</h2>
+    </div>
+
+    <p class="spine-sub-heading">Partner Portal — Experience Cloud</p>
+    <table class="spine-table" aria-label="Partner portal navigation">
+      <thead>
+        <tr>
+          <th style="width:190px;">Nav Item</th>
+          <th style="width:150px;">Primary Actor</th>
+          <th>JTBD Served</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Home / Dashboard</strong></td>
+          <td><span class="actor-chip chip-ae">AE</span> <span class="actor-chip chip-admin">Admin</span></td>
+          <td>Deal status at a glance; renewal alerts; MDF utilization summary</td>
+        </tr>
+        <tr>
+          <td><strong>Deals</strong></td>
+          <td><span class="actor-chip chip-ae">AE · Steve</span></td>
+          <td><a href="workflows-jtbd.html#ae-jtbd-1" style="color:#1e3a5f;font-weight:600;">AE-1</a> — Deal registration, status tracking, and co-sell visibility</td>
+        </tr>
+        <tr>
+          <td><strong>MDF &amp; Campaigns</strong></td>
+          <td><span class="actor-chip chip-ae">AE · Steve</span></td>
+          <td><a href="workflows-jtbd.html#ae-jtbd-2" style="color:#1e3a5f;font-weight:600;">AE-2</a> — MDF request submission, approval status, and claim filing</td>
+        </tr>
+        <tr>
+          <td><strong>Training &amp; Certifications</strong></td>
+          <td><span class="actor-chip chip-ae">AE</span> <span class="actor-chip chip-admin">Admin</span></td>
+          <td>Cert progress and requirements for tier renewal (linked to Tier Requirements object)</td>
+        </tr>
+        <tr>
+          <td><strong>Team &amp; Settings</strong></td>
+          <td><span class="actor-chip chip-admin">Admin · Jordan</span></td>
+          <td><a href="workflows-jtbd.html#admin-jtbd-1" style="color:#1e3a5f;font-weight:600;">Admin-1</a> — User provisioning, role management, and partner profile</td>
+        </tr>
+        <tr>
+          <td><strong>Resources</strong></td>
+          <td><span class="actor-chip chip-ae">AE</span></td>
+          <td>Product collateral, co-sell plays, program guides, tier benefits</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="spine-sub-heading" style="margin-top:20px;">Internal Lightning App</p>
+    <table class="spine-table" aria-label="Internal Lightning app navigation">
+      <thead>
+        <tr>
+          <th style="width:190px;">Nav Item</th>
+          <th style="width:150px;">Primary Actor</th>
+          <th>JTBD Served</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Application Queue</strong></td>
+          <td><span class="actor-chip chip-pam">PAM · Alex</span></td>
+          <td><a href="workflows-jtbd.html#pam-jtbd-1" style="color:#1e3a5f;font-weight:600;">PAM-1</a> — Application review; approve, defer, or reject with SLA tracking</td>
+        </tr>
+        <tr>
+          <td><strong>Partner Accounts</strong></td>
+          <td><span class="actor-chip chip-pam">PAM · Alex</span></td>
+          <td><a href="workflows-jtbd.html#pam-jtbd-2" style="color:#1e3a5f;font-weight:600;">PAM-2</a> — Tier management, financial view, and entitlement enforcement</td>
+        </tr>
+        <tr>
+          <td><strong>PSM Portfolio</strong></td>
+          <td><span class="actor-chip chip-psm">PSM · Marcus</span></td>
+          <td><a href="workflows-jtbd.html#psm-jtbd-1" style="color:#1e3a5f;font-weight:600;">PSM-1</a> — Portfolio triage; health scores, at-risk partners, action items</td>
+        </tr>
+        <tr>
+          <td><strong>Deals &amp; Co-sell</strong></td>
+          <td><span class="actor-chip chip-psm">PSM · Marcus</span></td>
+          <td><a href="workflows-jtbd.html#psm-jtbd-2" style="color:#1e3a5f;font-weight:600;">PSM-2</a>, <a href="workflows-jtbd.html#psm-jtbd-3" style="color:#1e3a5f;font-weight:600;">PSM-3</a> — Deal dispute resolution and co-sell collaboration</td>
+        </tr>
+        <tr>
+          <td><strong>MDF Management</strong></td>
+          <td><span class="actor-chip chip-pam">PAM · Alex</span></td>
+          <td><a href="workflows-jtbd.html#pam-jtbd-3" style="color:#1e3a5f;font-weight:600;">PAM-3</a>, <a href="workflows-jtbd.html#pam-jtbd-4" style="color:#1e3a5f;font-weight:600;">PAM-4</a> — MDF request approval and claim reimbursement</td>
+        </tr>
+        <tr>
+          <td><strong>Program Reports</strong></td>
+          <td><span class="actor-chip chip-pam">PAM</span> <span class="actor-chip chip-psm">PSM</span></td>
+          <td><a href="workflows-jtbd.html#pam-jtbd-5" style="color:#1e3a5f;font-weight:600;">PAM-5</a>, <a href="workflows-jtbd.html#psm-jtbd-4" style="color:#1e3a5f;font-weight:600;">PSM-4</a> — Program reporting and QBR preparation</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ── Section 6: Governance ──────────────────────────────────────────────── -->
+  <div class="spine-section" id="s6">
+    <div class="spine-section-heading">
+      <span class="section-num">6</span>
+      <h2 class="section-title">Governance &amp; Evolution Rules</h2>
+    </div>
+    <ul class="spine-list">
+      <li><strong>Version format:</strong> vX.Y — Increment X for structural changes (new seam, new canonical object). Increment Y for clarifications or assumption resolution.</li>
+      <li><strong>Change trigger:</strong> Any new screen proposal must identify which JTBD it serves and which seam it belongs to. If neither, escalate to IA lead before design begins.</li>
+      <li><strong>Decision log:</strong> Record each structural decision as <code style="font-size:11.5px;background:#f1f5f9;padding:1px 5px;border-radius:3px;">[DATE] [DECISION] [OWNER] [RATIONALE]</code>. Append below — do not edit prior entries.</li>
+      <li><strong>Assumption resolution:</strong> When an <span class="tag-a">[A]</span> is validated or invalidated, update this document and increment the minor version. Same when a <span class="tag-q">[?]</span> is answered.</li>
+      <li><strong>Retirement rule:</strong> A nav item or canonical object is removed only when zero JTBDs reference it. Confirm in writing before removing from the Spine.</li>
+    </ul>
+
+    <p class="decision-log-label">Decision Log</p>
+    <table class="spine-table" aria-label="Decision log">
+      <thead>
+        <tr>
+          <th style="width:100px;">Date</th>
+          <th style="width:230px;">Decision</th>
+          <th style="width:110px;">Owner</th>
+          <th>Rationale</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>2026-02-24</td>
+          <td>Search-before-create enforced at onboarding</td>
+          <td>IA Lead</td>
+          <td>Prevents duplicate Partner Account records; D&amp;B as canonical source of company identity</td>
+        </tr>
+        <tr>
+          <td>2026-02-24</td>
+          <td>PAM and PSM queues kept separate — no merged review view</td>
+          <td>IA Lead</td>
+          <td>Different decision types, different SLAs, different escalation paths; merging creates accountability gaps</td>
+        </tr>
+        <tr>
+          <td style="color:#9ca3af;">—</td>
+          <td style="color:#9ca3af;font-style:italic;">Append decisions here</td>
+          <td style="color:#9ca3af;">—</td>
+          <td style="color:#9ca3af;">—</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="spine-closing-note">
+      Next step: Walk through open <span class="tag-q">[?]</span> questions with Channel Ops and CRM team leads. Target resolution by end of sprint 1.
+    </div>
+  </div>
+
+</div><!-- /.spine-page -->
+</div><!-- /.page-container -->
+
+<!-- ── Spec panel ──────────────────────────────────────────────────────────── -->
+<aside class="spec-panel" id="spec-panel">
+  <div class="spec-panel-header">
+    <strong>Design Notes</strong>
+    <button class="spec-panel-close" onclick="toggleSpec()" aria-label="Close notes">✕</button>
+  </div>
+  <div class="spec-panel-body">
+
+    <div class="spec-section">
+      <div class="spec-section-title">What this page is</div>
+      <p>The IA Spine is the design-team source of truth for the Lead-to-Cash experience. It is not a sitemap or a spec — it is the backbone that keeps both documents coherent.</p>
+      <p>Audience: IA Lead, UX Designers, Product Managers, CRM Architects. Not intended for partners or AEs.</p>
+    </div>
+
+    <div class="spec-section">
+      <div class="spec-section-title">JTBD references</div>
+      <p>JTBDs in Section 2 use IDs (PAM-1, PSM-4, etc.) that anchor to <a href="workflows-jtbd.html">workflows-jtbd.html</a>. These IDs must remain stable — do not renumber without updating all downstream links.</p>
+    </div>
+
+    <div class="spec-section">
+      <div class="spec-section-title">Canonical objects — key rule</div>
+      <p>Every object in Section 3 has exactly one System of Record. If a team proposes storing the same data in two places, this table is the first place to look to resolve the dispute.</p>
+    </div>
+
+    <div class="spec-section">
+      <div class="spec-section-title">Open questions ([?])</div>
+      <ul style="font-size:12.5px;color:#495057;padding-left:18px;margin:0;">
+        <li style="margin-bottom:6px;">SLA ownership: Channel Ops or PAM? (Application → Approval seam)</li>
+        <li style="margin-bottom:6px;">PSM assignment: auto round-robin or manual?</li>
+        <li style="margin-bottom:6px;">Deal reg duplicate detection: cross-system logic TBD</li>
+        <li style="margin-bottom:6px;">MDF form: single pre/post form or two separate forms?</li>
+        <li style="margin-bottom:6px;">Channel Ops queue: does it exist in Lightning today?</li>
+        <li>QBR action items: Lightning tasks vs Experience Cloud vs both?</li>
+      </ul>
+    </div>
+
+    <div class="spec-section">
+      <div class="spec-section-title">Version history</div>
+      <p><strong>v0.1</strong> — 2026-02-24 — Initial spine. 5 JTBDs, 7 canonical objects, 7 handoff seams, 12 nav items (6 + 6). Two decisions logged.</p>
+    </div>
+
+    <div class="spec-section">
+      <div class="spec-section-title">Related screens</div>
+      <p>All screens referenced in Sections 2 and 5 are linked from <a href="workflows-jtbd.html">workflows-jtbd.html</a> and <a href="personas.html">personas.html</a>.</p>
+    </div>
+
+  </div>
+</aside>
+
+<script>
+function toggleSpec(){
+  var p=document.getElementById('spec-panel');
+  var b=document.getElementById('spec-toggle');
+  var open=p.classList.toggle('open');
+  b.setAttribute('aria-expanded',open);
+  b.textContent=open?'Close Notes':'Notes';
+}
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>
