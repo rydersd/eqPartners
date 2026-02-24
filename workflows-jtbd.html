@@ -80,6 +80,11 @@
 .badge-psm { background: #0d6efd; color: #fff; }
 .badge-ae { background: #198754; color: #fff; }
 .badge-admin { background: #6f42c1; color: #fff; }
+.badge-ref { background: #0f766e; color: #fff; }
+.badge-exec { background: #7c3aed; color: #fff; }
+.badge-cmm { background: #b45309; color: #fff; }
+.badge-isv { background: #0369a1; color: #fff; }
+.badge-dd { background: #374151; color: #fff; }
 .jtbd-item {
   border: 1px solid #dee2e6;
   border-radius: 8px;
@@ -110,6 +115,11 @@
 .jtbd-num.psm { background: #0d6efd; }
 .jtbd-num.ae { background: #198754; }
 .jtbd-num.admin { background: #6f42c1; }
+.jtbd-num.ref { background: #0f766e; }
+.jtbd-num.exec { background: #7c3aed; }
+.jtbd-num.cmm { background: #b45309; }
+.jtbd-num.isv { background: #0369a1; }
+.jtbd-num.dd { background: #374151; }
 .jtbd-content { flex: 1; }
 .jtbd-content .jtbd-title {
   font-size: 15px;
@@ -175,6 +185,21 @@
 .screen-link.ae:hover { background: #198754; color: #fff; }
 .screen-link.admin { background: #f5f3ff; color: #6f42c1; border-color: #d8d0f5; }
 .screen-link.admin:hover { background: #6f42c1; color: #fff; }
+.screen-link.ref { background: #f0fdfb; color: #0f766e; border-color: #99f6e4; }
+.screen-link.ref:hover { background: #0f766e; color: #fff; }
+.screen-link.exec { background: #faf5ff; color: #7c3aed; border-color: #d8b4fe; }
+.screen-link.exec:hover { background: #7c3aed; color: #fff; }
+.screen-link.cmm { background: #fffbeb; color: #b45309; border-color: #fcd34d; }
+.screen-link.cmm:hover { background: #b45309; color: #fff; }
+.screen-link.isv { background: #eff6ff; color: #0369a1; border-color: #bfdbfe; }
+.screen-link.isv:hover { background: #0369a1; color: #fff; }
+.screen-link.dd { background: #f9fafb; color: #374151; border-color: #d1d5db; }
+.screen-link.dd:hover { background: #374151; color: #fff; }
+.persona-avatar.ref { background: #0f766e; }
+.persona-avatar.exec { background: #7c3aed; }
+.persona-avatar.cmm { background: #b45309; }
+.persona-avatar.isv { background: #0369a1; }
+.persona-avatar.dd { background: #374151; }
 .divider {
   height: 1px;
   background: #e9ecef;
@@ -213,6 +238,11 @@
 .page-nav a.psm-link { background: #f0f5ff; color: #0d6efd; border-color: #c7d9f9; }
 .page-nav a.ae-link { background: #f0fdf4; color: #198754; border-color: #a7f3d0; }
 .page-nav a.admin-link { background: #f5f3ff; color: #6f42c1; border-color: #d8d0f5; }
+.page-nav a.ref-link { background: #f0fdfb; color: #0f766e; border-color: #99f6e4; }
+.page-nav a.exec-link { background: #faf5ff; color: #7c3aed; border-color: #d8b4fe; }
+.page-nav a.cmm-link { background: #fffbeb; color: #b45309; border-color: #fcd34d; }
+.page-nav a.isv-link { background: #eff6ff; color: #0369a1; border-color: #bfdbfe; }
+.page-nav a.dd-link { background: #f9fafb; color: #374151; border-color: #d1d5db; }
 </style>
 </head>
 <body>
@@ -258,6 +288,12 @@
     <a href="#psm" class="psm-link">PSM — Marcus Chen</a>
     <a href="#ae" class="ae-link">Sales Rep — Steve Rogers</a>
     <a href="#admin" class="admin-link">Portal Admin — Jordan Reeves</a>
+    <a href="#tier-demotion" class="pam-link">Tier Demotion Flow</a>
+    <a href="#referral" class="ref-link">Referral — Jamie Torres</a>
+    <a href="#partner-exec" class="exec-link">Partner Exec — Diane Reeves</a>
+    <a href="#cmm" class="cmm-link">CMM — Priya Nair</a>
+    <a href="#isv" class="isv-link">ISV — Maya Patel</a>
+    <a href="#deal-desk" class="dd-link">Deal Desk — Rachel Kim</a>
     <a href="personas.html" style="margin-left:auto;">← Back to Personas</a>
   </div>
 
@@ -622,6 +658,27 @@
         </div>
       </div>
     </div>
+
+    <div class="jtbd-item" id="mdf-3">
+      <div class="jtbd-item-header">
+        <div class="jtbd-num ae">3</div>
+        <div class="jtbd-content">
+          <div class="jtbd-title">MDF-3 — Dispute a rejected co-marketing claim</div>
+          <div class="jtbd-statement">
+            <span class="when">When my PAM rejects a POP claim I believe is valid,</span> <span class="want">I want to formally dispute the decision with my supporting evidence and get a second review,</span> <span class="outcome">so I'm not writing off reimbursement that I'm entitled to, and the program maintains trust that decisions are fair.</span>
+          </div>
+        </div>
+      </div>
+      <div class="jtbd-body">
+        <h4>Screens</h4>
+        <div class="screen-links">
+          <a class="screen-link ae" href="pm-pop-submission.html">→ pm-pop-submission (original POP submission)</a>
+          <a class="screen-link ae" href="pm-mdf-dispute.html">→ pm-mdf-dispute (Steve disputes the rejection)</a>
+          <a class="screen-link pam" href="pam-mdf-claims.html">→ pam-mdf-claims (Alex sees the dispute, reviews)</a>
+          <a class="screen-link cmm" href="cmm-mdf-oversight.html">→ cmm-mdf-oversight (Priya escalation if PAM denies again)</a>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="divider"></div>
@@ -672,6 +729,245 @@
         <div class="screen-links">
           <a class="screen-link admin" href="onboarding-welcome.html">→ onboarding-welcome</a>
           <a class="screen-link admin" href="onboarding-apply-wizard.html">→ onboarding-apply-wizard</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ===== Tier Demotion Flow (PAM + Partner) ===== -->
+  <div class="persona-section" id="tier-demotion">
+    <div class="persona-header">
+      <div class="persona-avatar pam">AR</div>
+      <div class="persona-info">
+        <h2>Tier Demotion &amp; Appeal Flow</h2>
+        <div class="persona-role">Alex Rivera (PAM) initiates · Jordan Reeves (Partner Admin) responds</div>
+      </div>
+      <span class="persona-badge-inline badge-pam">PAM + Partner</span>
+    </div>
+    <p style="font-size:14px;color:#6c757d;margin:0 0 20px 0;">When a partner misses tier requirements, the PAM needs to initiate demotion with proper governance and give the partner a fair chance to appeal. Both sides have distinct surfaces for this flow.</p>
+
+    <div class="jtbd-item" id="tier-1">
+      <div class="jtbd-item-header">
+        <div class="jtbd-num pam">T1</div>
+        <div class="jtbd-content">
+          <div class="jtbd-title">Tier-1 (PAM) — Initiate partner tier demotion with governance gates</div>
+          <div class="jtbd-statement">
+            <span class="when">When a partner has missed requirements for a full quarter,</span> <span class="want">I want to initiate the demotion process with a clear requirements scorecard, a two-step action (warn first / demote), and a required confirmation before it takes effect,</span> <span class="outcome">so the partner has fair warning, I'm protected from contract disputes, and the decision is traceable to PSM consultation and regional approval.</span>
+          </div>
+        </div>
+      </div>
+      <div class="jtbd-body">
+        <h4>Screens</h4>
+        <div class="screen-links">
+          <a class="screen-link pam" href="pam-home-dashboard.html">→ pam-home-dashboard (at-risk partner panel)</a>
+          <a class="screen-link pam" href="pam-tier-demotion.html">→ pam-tier-demotion (PAM initiates demotion)</a>
+          <a class="screen-link ae" href="pm-tier-appeal.html">→ pm-tier-appeal (partner sees notice, submits appeal)</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="jtbd-item" id="tier-2">
+      <div class="jtbd-item-header">
+        <div class="jtbd-num admin">T2</div>
+        <div class="jtbd-content">
+          <div class="jtbd-title">Tier-2 (Partner) — Dispute a tier demotion with evidence</div>
+          <div class="jtbd-statement">
+            <span class="when">When I receive a demotion notice I believe is based on incomplete data,</span> <span class="want">I want to submit a formal appeal with supporting evidence within the 30-day window while retaining my current tier during review,</span> <span class="outcome">so I don't lose deal protections and discounts based on an attribution error I can prove.</span>
+          </div>
+        </div>
+      </div>
+      <div class="jtbd-body">
+        <h4>Screens</h4>
+        <div class="screen-links">
+          <a class="screen-link ae" href="pm-tier-appeal.html">→ pm-tier-appeal (partner appeal form with 30-day countdown)</a>
+          <a class="screen-link pam" href="pam-tier-demotion.html">→ pam-tier-demotion (PAM side — receives and reviews appeal)</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ===== Referral Partner — Jamie Torres ===== -->
+  <div class="persona-section" id="referral">
+    <div class="persona-header">
+      <div class="persona-avatar ref">JT</div>
+      <div class="persona-info">
+        <h2>Jamie Torres</h2>
+        <div class="persona-role">Lead Referral Partner &bull; Meridian Consulting Group</div>
+      </div>
+      <span class="persona-badge-inline badge-ref">Referral</span>
+    </div>
+    <p style="font-size:14px;color:#6c757d;margin:0 0 20px 0;">Jamie submits warm leads to Equinix without reselling. No deal registration, no MDF, no tier system. Jamie's value to Equinix is pure pipeline introduction — and Jamie's value from Equinix is a transparent commission check. The surface is deliberately lightweight.</p>
+
+    <div class="jtbd-item" id="referral-1">
+      <div class="jtbd-item-header">
+        <div class="jtbd-num ref">1</div>
+        <div class="jtbd-content">
+          <div class="jtbd-title">Referral-1 — Submit a warm lead and track it to commission</div>
+          <div class="jtbd-statement">
+            <span class="when">When a client of mine is a strong fit for Equinix colocation or interconnection,</span> <span class="want">I want to introduce them quickly, see exactly what stage the lead is in, and know when I'll get paid,</span> <span class="outcome">so I keep referring without worrying that leads disappear or commissions get lost in the process.</span>
+          </div>
+        </div>
+      </div>
+      <div class="jtbd-body">
+        <h4>Screens</h4>
+        <div class="screen-links">
+          <a class="screen-link ref" href="onboarding-apply-referral.html">→ onboarding-apply-referral (Jamie's onboarding)</a>
+          <a class="screen-link ref" href="ref-home.html">→ ref-home (post-onboarding home, quick-submit, commission tracker)</a>
+          <a class="screen-link ref" href="ref-submit.html">→ ref-submit (stub — full lead submission form)</a>
+          <a class="screen-link ref" href="ref-commissions.html">→ ref-commissions (stub — full commission history)</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ===== Partner Exec — Diane Reeves ===== -->
+  <div class="persona-section" id="partner-exec">
+    <div class="persona-header">
+      <div class="persona-avatar exec">DR</div>
+      <div class="persona-info">
+        <h2>Diane Reeves</h2>
+        <div class="persona-role">VP Sales &bull; CloudBridge Solutions (Partner)</div>
+      </div>
+      <span class="persona-badge-inline badge-exec">Exec</span>
+    </div>
+    <p style="font-size:14px;color:#6c757d;margin:0 0 20px 0;">Diane is read-only. She doesn't register deals or submit MDF requests — she needs a pre-QBR snapshot of CloudBridge's full partner relationship: tier standing, pipeline health, MDF utilization, and certification status. Jordan provisions her exec access via pm-role-permissions.html.</p>
+
+    <div class="jtbd-item" id="exec-1">
+      <div class="jtbd-item-header">
+        <div class="jtbd-num exec">1</div>
+        <div class="jtbd-content">
+          <div class="jtbd-title">Exec-1 — Get a pre-QBR rollup of the full Equinix partnership</div>
+          <div class="jtbd-statement">
+            <span class="when">Before a quarterly business review with Equinix,</span> <span class="want">I want a single-screen view of our tier attainment, ARR contribution, pipeline, MDF utilization, and relationship health — without having to ask my ops team to pull a deck,</span> <span class="outcome">so I walk into the QBR informed and can have a strategic conversation rather than a data reconciliation.</span>
+          </div>
+        </div>
+      </div>
+      <div class="jtbd-body">
+        <h4>Screens</h4>
+        <div class="screen-links">
+          <a class="screen-link exec" href="pm-exec-dashboard.html">→ pm-exec-dashboard (Diane's read-only rollup)</a>
+          <a class="screen-link admin" href="pm-role-permissions.html">→ pm-role-permissions (Jordan provisions exec access)</a>
+          <a class="screen-link psm" href="psm-health-scorecard.html">→ psm-health-scorecard (PSM view Diane's score links to)</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ===== Channel Marketing Manager — Priya Nair ===== -->
+  <div class="persona-section" id="cmm">
+    <div class="persona-header">
+      <div class="persona-avatar cmm">PN</div>
+      <div class="persona-info">
+        <h2>Priya Nair</h2>
+        <div class="persona-role">Channel Marketing Manager &bull; Equinix</div>
+      </div>
+      <span class="persona-badge-inline badge-cmm">CMM</span>
+    </div>
+    <p style="font-size:14px;color:#6c757d;margin:0 0 20px 0;">Priya sets MDF budgets by tier, designs co-marketing programs, and monitors ROI. She sits above PAMs in the MDF chain — PAMs approve individual requests within the budget Priya allocates. When partners underutilize, Priya investigates and reallocates. When partners over-claim or submit ineligible activities, they land in her oversight queue.</p>
+
+    <div class="jtbd-item" id="cmm-1">
+      <div class="jtbd-item-header">
+        <div class="jtbd-num cmm">1</div>
+        <div class="jtbd-content">
+          <div class="jtbd-title">CMM-1 — Allocate MDF budgets and monitor program-wide utilization</div>
+          <div class="jtbd-statement">
+            <span class="when">At the start of each fiscal quarter,</span> <span class="want">I want to set per-tier MDF allocations, track utilization in real-time, and flag underutilizing partners before budget expires,</span> <span class="outcome">so MDF spend converts to measurable pipeline ROI rather than expiring unspent or being used on low-value activities.</span>
+          </div>
+        </div>
+      </div>
+      <div class="jtbd-body">
+        <h4>Screens</h4>
+        <div class="screen-links">
+          <a class="screen-link cmm" href="cmm-home-dashboard.html">→ cmm-home-dashboard (Priya's budget + utilization overview)</a>
+          <a class="screen-link cmm" href="cmm-budget-allocation.html">→ cmm-budget-allocation (stub — tier-level budget setter)</a>
+          <a class="screen-link cmm" href="cmm-campaign-calendar.html">→ cmm-campaign-calendar (stub — co-marketing event calendar)</a>
+          <a class="screen-link cmm" href="cmm-mdf-oversight.html">→ cmm-mdf-oversight (stub — escalated/flagged claims queue)</a>
+          <a class="screen-link pam" href="pam-mdf-queue.html">→ pam-mdf-queue (PAM approves within Priya's budget envelope)</a>
+          <a class="screen-link ae" href="pm-mdf-dispute.html">→ pm-mdf-dispute (partner escalates rejected claim to Priya)</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ===== ISV Partner — Maya Patel ===== -->
+  <div class="persona-section" id="isv">
+    <div class="persona-header">
+      <div class="persona-avatar isv">MP</div>
+      <div class="persona-info">
+        <h2>Maya Patel</h2>
+        <div class="persona-role">ISV Integrations Lead &bull; NovaSpark Networks</div>
+      </div>
+      <span class="persona-badge-inline badge-isv">ISV</span>
+    </div>
+    <p style="font-size:14px;color:#6c757d;margin:0 0 20px 0;">Maya's motion is co-build, not co-sell. NovaSpark integrates their SD-WAN software with Equinix Fabric and Network Edge APIs. Their success metrics are integrations live, API health, marketplace discoverability, and co-sell pipeline with the Equinix field team. No deal registration, MDF, or tier points — this is an entirely different program motion from the reseller surface.</p>
+
+    <div class="jtbd-item" id="isv-1">
+      <div class="jtbd-item-header">
+        <div class="jtbd-num isv">1</div>
+        <div class="jtbd-content">
+          <div class="jtbd-title">ISV-1 — Manage integrations, track API health, and grow co-sell pipeline post-onboarding</div>
+          <div class="jtbd-statement">
+            <span class="when">After getting a live integration certified,</span> <span class="want">I want a single view of my integration health, marketplace listing completeness, and co-sell opportunities with the Equinix field,</span> <span class="outcome">so I can advance from Validated to Premier ISV tier and unlock co-marketing budget and dedicated TAM hours.</span>
+          </div>
+        </div>
+      </div>
+      <div class="jtbd-body">
+        <h4>Screens</h4>
+        <div class="screen-links">
+          <a class="screen-link isv" href="onboarding-apply-wizard.html">→ onboarding-apply-wizard (ISV path — onboarding entry)</a>
+          <a class="screen-link isv" href="isv-home-dashboard.html">→ isv-home-dashboard (Maya's post-onboarding home)</a>
+          <a class="screen-link isv" href="isv-integrations.html">→ isv-integrations (stub — integration detail + API test results)</a>
+          <a class="screen-link isv" href="isv-marketplace.html">→ isv-marketplace (stub — listing editor, completeness tracker)</a>
+          <a class="screen-link isv" href="isv-co-sell.html">→ isv-co-sell (stub — TAM-managed co-sell pipeline)</a>
+          <a class="screen-link isv" href="isv-support.html">→ isv-support (stub — developer support + sandbox)</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ===== Deal Desk — Rachel Kim ===== -->
+  <div class="persona-section" id="deal-desk">
+    <div class="persona-header">
+      <div class="persona-avatar dd">RK</div>
+      <div class="persona-info">
+        <h2>Rachel Kim</h2>
+        <div class="persona-role">Deal Desk Analyst &bull; Equinix (Internal)</div>
+      </div>
+      <span class="persona-badge-inline badge-dd">Deal Desk</span>
+    </div>
+    <p style="font-size:14px;color:#6c757d;margin:0 0 20px 0;">Rachel processes special pricing exceptions that PAMs escalate when a deal requires discounts above standard caps, non-standard contract terms, compensation overrides, or deal timeline extensions. She sits between the PAM layer and Finance/VP approval, operating under strict time-bound SLAs on urgent deals.</p>
+
+    <div class="jtbd-item" id="dd-1">
+      <div class="jtbd-item-header">
+        <div class="jtbd-num dd">1</div>
+        <div class="jtbd-content">
+          <div class="jtbd-title">DD-1 — Review and resolve partner deal exception requests within SLA</div>
+          <div class="jtbd-statement">
+            <span class="when">When a PAM escalates a deal that needs a pricing exception, non-standard terms, or discount over cap,</span> <span class="want">I want to see the PAM's justification, the deal value, and the competitive context in one place and make a fast, traceable decision,</span> <span class="outcome">so competitive deals don't stall waiting for internal approvals and every decision has an audit trail.</span>
+          </div>
+        </div>
+      </div>
+      <div class="jtbd-body">
+        <h4>Screens</h4>
+        <div class="screen-links">
+          <a class="screen-link pam" href="pam-home-dashboard.html">→ pam-home-dashboard (PAM submits exception from deal view)</a>
+          <a class="screen-link dd" href="dealdesk-queue.html">→ dealdesk-queue (Rachel's prioritized exception review queue)</a>
+          <a class="screen-link dd" href="dealdesk-approved.html">→ dealdesk-approved (stub — approved request archive)</a>
+          <a class="screen-link dd" href="dealdesk-denied.html">→ dealdesk-denied (stub — denied request archive)</a>
+          <a class="screen-link dd" href="dealdesk-analytics.html">→ dealdesk-analytics (stub — approval rates, cycle time)</a>
+          <a class="screen-link ae" href="pm-deal-registration.html">→ pm-deal-registration (partner sees updated deal terms if approved)</a>
         </div>
       </div>
     </div>

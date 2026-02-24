@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Deal Desk Queue — Equinix Partner Connect</title>
+  <style>
+    /* ── Reset & base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f4f5f7; color: #1a1a2e; font-size: 14px; line-height: 1.5; }
+    a { color: #0052cc; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    a:focus-visible { outline: 3px solid #0052cc; outline-offset: 2px; border-radius: 2px; }
+
+    /* ── Auth gate ── */
+    .auth-gate { background: #f0f4ff; border: 1px solid #c2dbf7; padding: 6px 14px; font-size: 12px; color: #1565c0; text-align: center; }
+
+    /* ── Header ── */
+    .wf-header { background: #1a1a2e; color: #fff; padding: 10px 20px; display: flex; align-items: center; gap: 12px; }
+    .wf-logo { font-weight: 700; font-size: 15px; letter-spacing: .5px; }
+    .wf-logo span { color: #00adef; }
+    .role-badge { font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 20px; letter-spacing: .5px; background: #374151; color: #e5e7eb; }
+    .wf-header-right { margin-left: auto; display: flex; align-items: center; gap: 14px; font-size: 12px; color: #aab; }
+
+    /* ── Page context bar ── */
+    .page-context-bar { background: #fff; border-bottom: 1px solid #dde1e7; padding: 8px 20px; display: flex; align-items: center; gap: 8px; font-size: 12px; color: #666; }
+    .ctx-badge { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 3px; background: #374151; color: #e5e7eb; letter-spacing: .5px; }
+    .ctx-sep { color: #ccc; }
+    .spec-tab-anchor { margin-left: auto; font-size: 12px; color: #0052cc; cursor: pointer; background: none; border: none; padding: 0; }
+    .spec-tab-anchor:hover { text-decoration: underline; }
+    .spec-tab-anchor:focus-visible { outline: 3px solid #0052cc; outline-offset: 2px; border-radius: 2px; }
+
+    /* ── JTBD banner ── */
+    .jtbd-banner { background: #fffbe6; border-bottom: 1px solid #ffe58f; padding: 7px 20px; font-size: 12px; color: #614700; display: flex; align-items: center; gap: 8px; }
+    .jtbd-banner strong { font-weight: 600; }
+    .jtbd-banner a { color: #614700; font-weight: 600; text-decoration: underline; }
+
+    /* ── Nav ── */
+    .wf-nav { background: #fff; border-bottom: 2px solid #e2e6ea; padding: 0 20px; display: flex; gap: 0; }
+    .wf-nav a { display: block; padding: 11px 16px; font-size: 13px; font-weight: 500; color: #444; border-bottom: 3px solid transparent; margin-bottom: -2px; }
+    .wf-nav a.active { color: #374151; border-bottom-color: #374151; }
+    .wf-nav a:hover:not(.active) { color: #1a1a2e; background: #f7f8fa; }
+
+    /* ── Page layout ── */
+    .page-container { max-width: 1200px; margin: 24px auto; padding: 0 20px; }
+
+    /* ── Toolbar ── */
+    .queue-toolbar { background: #fff; border: 1px solid #dde1e7; border-radius: 8px; padding: 14px 18px; margin-bottom: 16px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .toolbar-filters { display: flex; gap: 8px; flex: 1; flex-wrap: wrap; }
+    .filter-group { display: flex; align-items: center; gap: 6px; }
+    .filter-group label { font-size: 12px; font-weight: 600; color: #555; white-space: nowrap; }
+    select.filter-select { border: 1px solid #ccc; border-radius: 4px; padding: 5px 8px; font-size: 12px; color: #1a1a2e; background: #fff; font-family: inherit; cursor: pointer; }
+    select.filter-select:focus { outline: 3px solid #0052cc; border-color: #0052cc; }
+    .search-input { border: 1px solid #ccc; border-radius: 4px; padding: 5px 10px; font-size: 12px; font-family: inherit; width: 200px; }
+    .search-input:focus { outline: 3px solid #0052cc; border-color: #0052cc; }
+    .toolbar-right { display: flex; gap: 8px; align-items: center; }
+    .btn-sm { display: inline-flex; align-items: center; gap: 5px; padding: 6px 12px; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid #ccc; background: #fff; font-family: inherit; color: #333; }
+    .btn-sm:hover { background: #f5f5f5; }
+    .btn-sm:focus-visible { outline: 3px solid #0052cc; }
+    .btn-sm.primary { background: #374151; color: #fff; border-color: #374151; }
+    .btn-sm.primary:hover { background: #1f2937; }
+
+    /* ── KPI strip ── */
+    .kpi-strip { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 16px; }
+    .kpi-mini { background: #fff; border: 1px solid #dde1e7; border-radius: 7px; padding: 12px 14px; }
+    .kpi-mini.urgent { border-left: 3px solid #c0392b; }
+    .kpi-mini.warn { border-left: 3px solid #f59e0b; }
+    .kpi-mini-label { font-size: 11px; color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: .4px; margin-bottom: 4px; }
+    .kpi-mini-val { font-size: 20px; font-weight: 800; color: #1a1a2e; }
+    .kpi-mini-sub { font-size: 11px; color: #888; margin-top: 2px; }
+    .kpi-mini-sub.red { color: #c0392b; font-weight: 600; }
+    .kpi-mini-sub.amber { color: #b45309; font-weight: 600; }
+
+    /* ── Tab row ── */
+    .tab-row { display: flex; gap: 0; border-bottom: 2px solid #e2e6ea; margin-bottom: 0; }
+    .tab { padding: 9px 18px; font-size: 13px; font-weight: 500; color: #666; border-bottom: 3px solid transparent; margin-bottom: -2px; cursor: pointer; background: none; border-top: none; border-left: none; border-right: none; font-family: inherit; }
+    .tab.active { color: #374151; border-bottom-color: #374151; font-weight: 700; }
+    .tab:hover:not(.active) { color: #1a1a2e; }
+    .tab .tab-count { display: inline-block; margin-left: 6px; background: #e9ecef; color: #333; font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 10px; }
+    .tab.active .tab-count { background: #374151; color: #fff; }
+    .tab.urgent-tab .tab-count { background: #c0392b; color: #fff; }
+
+    /* ── Queue table ── */
+    .queue-table-wrap { background: #fff; border: 1px solid #dde1e7; border-top: none; border-radius: 0 0 8px 8px; overflow: hidden; }
+    .queue-table { width: 100%; border-collapse: collapse; }
+    .queue-table thead { background: #f7f8fa; }
+    .queue-table th { text-align: left; font-size: 11px; font-weight: 700; color: #666; text-transform: uppercase; letter-spacing: .5px; padding: 10px 14px; border-bottom: 1px solid #e2e6ea; white-space: nowrap; cursor: pointer; }
+    .queue-table th:hover { color: #1a1a2e; }
+    .queue-table th .sort-icon { font-size: 10px; color: #aaa; margin-left: 3px; }
+    .queue-table td { padding: 12px 14px; border-bottom: 1px solid #f5f5f5; vertical-align: middle; font-size: 13px; }
+    .queue-table tr:last-child td { border-bottom: none; }
+    .queue-table tr:hover td { background: #f9fafb; }
+    .queue-table tr.urgent-row td { background: #fff9f9; }
+    .queue-table tr.urgent-row:hover td { background: #fff0f0; }
+
+    /* ── Request ID link ── */
+    .req-id { font-weight: 700; color: #0052cc; font-size: 12px; white-space: nowrap; }
+    .req-partner { font-size: 13px; font-weight: 600; color: #1a1a2e; }
+    .req-opp { font-size: 11px; color: #666; margin-top: 2px; }
+    .req-amount { font-size: 14px; font-weight: 700; color: #1a1a2e; white-space: nowrap; }
+    .req-discount { font-size: 12px; color: #c0392b; font-weight: 600; white-space: nowrap; }
+    .req-discount.approved { color: #2e7d32; }
+
+    /* ── Priority pills ── */
+    .pill { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 10px; white-space: nowrap; }
+    .pill-urgent { background: #fde8e8; color: #c0392b; }
+    .pill-high { background: #fff3e0; color: #b45309; }
+    .pill-standard { background: #e8f5e9; color: #2e7d32; }
+    .pill-pending { background: #e8f4fd; color: #1565c0; }
+    .pill-approved { background: #e8f5e9; color: #2e7d32; }
+    .pill-denied { background: #fde8e8; color: #c0392b; }
+    .pill-more-info { background: #f3e8ff; color: #7c3aed; }
+
+    /* ── Exception type tag ── */
+    .exc-tag { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 3px; background: #e9ecef; color: #555; letter-spacing: .3px; margin-bottom: 2px; white-space: nowrap; }
+
+    /* ── Age indicator ── */
+    .age-cell { white-space: nowrap; }
+    .age-ok { color: #555; }
+    .age-warn { color: #b45309; font-weight: 600; }
+    .age-urgent { color: #c0392b; font-weight: 700; }
+
+    /* ── Action buttons ── */
+    .action-btns { display: flex; gap: 6px; white-space: nowrap; }
+    .action-btn { padding: 5px 10px; font-size: 11px; font-weight: 600; border-radius: 4px; cursor: pointer; border: 1px solid; font-family: inherit; }
+    .action-btn.review { background: #374151; color: #fff; border-color: #374151; }
+    .action-btn.review:hover { background: #1f2937; }
+    .action-btn.approve { background: #e8f5e9; color: #2e7d32; border-color: #a5d6a7; }
+    .action-btn.approve:hover { background: #c8e6c9; }
+    .action-btn.deny { background: #fde8e8; color: #c0392b; border-color: #ef9a9a; }
+    .action-btn.deny:hover { background: #ffcdd2; }
+    .action-btn:focus-visible { outline: 3px solid #0052cc; outline-offset: 2px; }
+
+    /* ── Detail drawer ── */
+    .detail-drawer { background: #f0f4ff; border: 1.5px solid #c2dbf7; border-radius: 7px; padding: 16px 18px; margin: 0; display: none; }
+    .detail-drawer.open { display: block; }
+    .dd-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+    .dd-label { font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: .4px; margin-bottom: 3px; }
+    .dd-value { font-size: 13px; color: #1a1a2e; font-weight: 500; }
+    .dd-note { font-size: 12px; color: #333; background: #fff; border: 1px solid #c2dbf7; border-radius: 5px; padding: 8px 10px; margin-top: 10px; line-height: 1.5; }
+    .dd-actions { display: flex; gap: 8px; margin-top: 12px; align-items: center; flex-wrap: wrap; }
+    .dd-action-note { font-size: 11px; color: #555; margin-left: auto; }
+    .dd-close { background: none; border: none; font-size: 16px; color: #666; cursor: pointer; margin-left: auto; padding: 0; line-height: 1; }
+    .dd-close:focus-visible { outline: 3px solid #0052cc; }
+    .dd-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .dd-title { font-size: 14px; font-weight: 700; color: #1a1a2e; flex: 1; }
+    .dd-row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 12px; }
+    .input-sm { width: 100%; border: 1px solid #c2dbf7; border-radius: 4px; padding: 6px 8px; font-size: 12px; font-family: inherit; background: #fff; }
+    .input-sm:focus { outline: 3px solid #0052cc; border-color: #0052cc; }
+    textarea.input-sm { resize: vertical; min-height: 60px; }
+
+    /* ── History feed ── */
+    .history-feed { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
+    .hist-item { font-size: 12px; color: #555; display: flex; gap: 8px; }
+    .hist-time { color: #888; white-space: nowrap; flex-shrink: 0; }
+    .hist-text { color: #333; }
+    .hist-text strong { color: #1a1a2e; }
+
+    /* ── Empty state ── */
+    .empty-state { text-align: center; padding: 40px 20px; color: #888; }
+    .empty-state .empty-icon { font-size: 36px; margin-bottom: 10px; }
+    .empty-state p { font-size: 13px; }
+
+    /* ── Pagination ── */
+    .pagination { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: #fafafa; border-top: 1px solid #e2e6ea; font-size: 12px; color: #666; }
+    .page-btns { display: flex; gap: 4px; }
+    .page-btn { padding: 4px 10px; border: 1px solid #ccc; border-radius: 4px; background: #fff; font-size: 12px; cursor: pointer; font-family: inherit; }
+    .page-btn.active { background: #374151; color: #fff; border-color: #374151; font-weight: 700; }
+    .page-btn:hover:not(.active) { background: #f0f0f0; }
+    .page-btn:focus-visible { outline: 3px solid #0052cc; }
+
+    /* ── Spec panel ── */
+    .spec-panel { background: #1a1a2e; color: #e0e0e0; border-radius: 8px; padding: 22px; margin: 24px auto; max-width: 1200px; font-size: 13px; line-height: 1.7; display: none; }
+    .spec-panel.visible { display: block; }
+    .spec-panel h2 { font-size: 16px; color: #fff; margin-bottom: 14px; }
+    .spec-panel h3 { font-size: 13px; color: #adf; margin: 16px 0 6px; font-weight: 600; }
+    .spec-panel p, .spec-panel li { color: #ccc; }
+    .spec-panel ul { padding-left: 18px; }
+    .spec-panel li { margin-bottom: 5px; }
+    .spec-panel .tag { display: inline-block; background: #333; color: #adf; font-size: 11px; padding: 2px 7px; border-radius: 3px; margin: 2px; }
+    .spec-panel a { color: #7ec8e3; }
+    .spec-panel .screen-link { color: #ffd; font-style: italic; }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .kpi-strip { grid-template-columns: repeat(3, 1fr); }
+      .queue-table td:nth-child(5), .queue-table th:nth-child(5) { display: none; }
+    }
+    @media (max-width: 600px) {
+      .kpi-strip { grid-template-columns: 1fr 1fr; }
+      .dd-grid, .dd-row { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Auth gate -->
+<div class="auth-gate" role="banner">
+  🔒 Wireframe — authenticated as <strong>Rachel Kim</strong> · Deal Desk Analyst · Equinix Internal · <a href="#">Switch persona</a>
+</div>
+
+<!-- Header -->
+<header class="wf-header">
+  <div class="wf-logo">Equinix <span>Partner Connect</span> <span style="font-size:12px;color:#888;font-weight:400;">— Internal</span></div>
+  <span class="role-badge">Deal Desk</span>
+  <div class="wf-header-right">
+    <span>Equinix Inc.</span>
+    <span>Americas Region</span>
+    <span>Rachel Kim ▾</span>
+  </div>
+</header>
+
+<!-- Page context bar -->
+<div class="page-context-bar">
+  <span class="ctx-badge">DD</span>
+  <span class="ctx-sep">›</span>
+  <span>Deal Desk Queue</span>
+  <span class="ctx-sep">·</span>
+  <span style="color:#c0392b;font-weight:600;">3 urgent</span>
+  <button class="spec-tab-anchor" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">⚙ Spec &amp; rationale</button>
+</div>
+
+<!-- JTBD banner -->
+<div class="jtbd-banner" role="note">
+  <strong>JTBD:</strong> DD-1 — Review and resolve partner deal exception requests within SLA ·
+  <a href="workflows-jtbd.html#dd-1">View full workflow →</a>
+</div>
+
+<!-- Nav -->
+<nav class="wf-nav" aria-label="Deal Desk navigation">
+  <a href="dealdesk-queue.html" class="active">Queue</a>
+  <a href="dealdesk-approved.html">Approved</a>
+  <a href="dealdesk-denied.html">Denied</a>
+  <a href="dealdesk-analytics.html">Analytics</a>
+  <a href="dealdesk-guidelines.html">Guidelines</a>
+</nav>
+
+<div class="page-container" role="main">
+
+  <!-- KPI strip -->
+  <div class="kpi-strip" role="region" aria-label="Queue summary">
+    <div class="kpi-mini urgent">
+      <div class="kpi-mini-label">Urgent (&lt;4h SLA)</div>
+      <div class="kpi-mini-val">3</div>
+      <div class="kpi-mini-sub red">Action required now</div>
+    </div>
+    <div class="kpi-mini warn">
+      <div class="kpi-mini-label">High Priority</div>
+      <div class="kpi-mini-val">7</div>
+      <div class="kpi-mini-sub amber">Due today</div>
+    </div>
+    <div class="kpi-mini">
+      <div class="kpi-mini-label">Standard Queue</div>
+      <div class="kpi-mini-val">14</div>
+      <div class="kpi-mini-sub">Avg 2.4d remaining</div>
+    </div>
+    <div class="kpi-mini">
+      <div class="kpi-mini-label">Avg Decision Time</div>
+      <div class="kpi-mini-val">1.8d</div>
+      <div class="kpi-mini-sub">Target: &lt;2d · ✓ On track</div>
+    </div>
+    <div class="kpi-mini">
+      <div class="kpi-mini-label">Approval Rate (MTD)</div>
+      <div class="kpi-mini-val">62%</div>
+      <div class="kpi-mini-sub">28 approved · 17 denied</div>
+    </div>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="queue-toolbar" role="search" aria-label="Queue filters">
+    <div class="toolbar-filters">
+      <div class="filter-group">
+        <label for="f-priority">Priority</label>
+        <select id="f-priority" class="filter-select">
+          <option>All</option>
+          <option>Urgent</option>
+          <option>High</option>
+          <option>Standard</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="f-type">Exception type</label>
+        <select id="f-type" class="filter-select">
+          <option>All types</option>
+          <option>Special Pricing</option>
+          <option>Non-Standard Terms</option>
+          <option>Over-Cap Discount</option>
+          <option>Comp Override</option>
+          <option>Deal Extension</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="f-pam">PAM</label>
+        <select id="f-pam" class="filter-select">
+          <option>All PAMs</option>
+          <option>Alex Rivera</option>
+          <option>Sandra Wu</option>
+          <option>James Okonkwo</option>
+          <option>Tara Singh</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label for="f-region">Region</label>
+        <select id="f-region" class="filter-select">
+          <option>Americas</option>
+          <option>EMEA</option>
+          <option>APJ</option>
+          <option>Global</option>
+        </select>
+      </div>
+      <input type="search" class="search-input" id="f-search" placeholder="Search partner, opp, or ID…" aria-label="Search queue" />
+    </div>
+    <div class="toolbar-right">
+      <button class="btn-sm" aria-label="Export queue to CSV">⬇ Export</button>
+      <button class="btn-sm primary" aria-label="View my assigned requests">My Queue (5)</button>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tab-row" role="tablist" aria-label="Queue filter tabs">
+    <button class="tab active" role="tab" aria-selected="true" aria-controls="tab-pending" id="tab-pending-btn">Pending <span class="tab-count">24</span></button>
+    <button class="tab urgent-tab" role="tab" aria-selected="false" aria-controls="tab-urgent" id="tab-urgent-btn">Urgent <span class="tab-count">3</span></button>
+    <button class="tab" role="tab" aria-selected="false" aria-controls="tab-moreinfo" id="tab-mi-btn">More Info Needed <span class="tab-count">6</span></button>
+    <button class="tab" role="tab" aria-selected="false" aria-controls="tab-escalated" id="tab-esc-btn">Escalated <span class="tab-count">2</span></button>
+  </div>
+
+  <!-- Queue table -->
+  <div class="queue-table-wrap" id="tab-pending" role="tabpanel" aria-labelledby="tab-pending-btn">
+    <table class="queue-table" aria-label="Deal Desk request queue">
+      <thead>
+        <tr>
+          <th scope="col">Request <span class="sort-icon" aria-hidden="true">↕</span></th>
+          <th scope="col">Partner / Opportunity</th>
+          <th scope="col">Exception type</th>
+          <th scope="col">Deal value / Discount</th>
+          <th scope="col">Priority <span class="sort-icon" aria-hidden="true">↕</span></th>
+          <th scope="col">Age <span class="sort-icon" aria-hidden="true">↕</span></th>
+          <th scope="col">PAM</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        <!-- Urgent row 1 -->
+        <tr class="urgent-row" aria-label="Urgent: DD-2026-0312">
+          <td>
+            <div class="req-id"><a href="#" onclick="toggleDrawer('d1'); return false;" aria-expanded="false" aria-controls="drawer-d1">DD-2026-0312</a></div>
+            <div style="font-size:10px;color:#c0392b;font-weight:600;margin-top:2px;">⚠ Expires in 1h 22m</div>
+          </td>
+          <td>
+            <div class="req-partner">GlobalNet Partners</div>
+            <div class="req-opp">OPP-45821 · Multinational colocation expansion · ASH, SV, AM3</div>
+          </td>
+          <td><span class="exc-tag">Special Pricing</span><span class="exc-tag" style="margin-left:3px;">Over-Cap</span></td>
+          <td>
+            <div class="req-amount">$2.4M ARR</div>
+            <div class="req-discount">38% req. (cap: 32%)</div>
+          </td>
+          <td><span class="pill pill-urgent">🔴 Urgent</span></td>
+          <td><span class="age-urgent age-cell">2d 21h</span></td>
+          <td>Alex Rivera</td>
+          <td>
+            <div class="action-btns">
+              <button class="action-btn review" onclick="toggleDrawer('d1')" aria-expanded="false" aria-controls="drawer-d1">Review</button>
+            </div>
+          </td>
+        </tr>
+        <!-- Inline drawer d1 -->
+        <tr id="drawer-d1" aria-label="Detail for DD-2026-0312">
+          <td colspan="8" style="padding:0;">
+            <div class="detail-drawer" id="drawer-d1-content">
+              <div class="dd-header">
+                <div class="dd-title">DD-2026-0312 — GlobalNet Partners · Special Pricing + Over-Cap Request</div>
+                <button class="dd-close" onclick="closeDrawer('d1')" aria-label="Close detail panel">✕</button>
+              </div>
+              <div class="dd-grid">
+                <div><div class="dd-label">Requested discount</div><div class="dd-value" style="color:#c0392b;font-weight:700;">38% (cap: 32%)</div></div>
+                <div><div class="dd-label">Deal ARR</div><div class="dd-value">$2,400,000</div></div>
+                <div><div class="dd-label">Contract term</div><div class="dd-value">48 months</div></div>
+                <div><div class="dd-label">Datacenters</div><div class="dd-value">Ashburn, Silicon Valley, Amsterdam</div></div>
+                <div><div class="dd-label">Competitive pressure</div><div class="dd-value">Yes — CyrusOne competing at 35%</div></div>
+                <div><div class="dd-label">Previous discounts</div><div class="dd-value">30% avg (last 2 deals)</div></div>
+              </div>
+              <div class="dd-note">
+                <strong>PAM Justification (Alex Rivera):</strong> GlobalNet is consolidating their entire North American and EMEA colocation footprint. This deal, if won, locks in $2.4M ARR over 4 years and eliminates 3 competing vendors. CyrusOne has quoted 35%. We need to close within 48h or the customer commits to their shortlist. The 38% discount is 6 points over cap but represents $9.6M total contract value. Revenue impact of losing this deal: full $2.4M ARR.
+              </div>
+              <div style="margin-top:12px;">
+                <div class="dd-label" style="margin-bottom:6px;">Deal Desk response</div>
+                <div class="dd-row">
+                  <div style="grid-column:span 2;">
+                    <label for="dd-approved-disc" style="font-size:11px;font-weight:600;color:#555;display:block;margin-bottom:3px;">Approved discount %</label>
+                    <input type="text" id="dd-approved-disc" class="input-sm" placeholder="e.g. 35%" />
+                  </div>
+                  <div style="grid-column:span 2;">
+                    <label for="dd-conditions" style="font-size:11px;font-weight:600;color:#555;display:block;margin-bottom:3px;">Conditions (if any)</label>
+                    <input type="text" id="dd-conditions" class="input-sm" placeholder="e.g. 4-yr term lock, no early exit" />
+                  </div>
+                  <div style="grid-column:span 2;">
+                    <label for="dd-decision-note" style="font-size:11px;font-weight:600;color:#555;display:block;margin-bottom:3px;">Decision rationale</label>
+                    <input type="text" id="dd-decision-note" class="input-sm" placeholder="Brief rationale for the record" />
+                  </div>
+                </div>
+              </div>
+              <div class="dd-actions">
+                <button class="action-btn approve" aria-label="Approve this exception request">✓ Approve</button>
+                <button class="action-btn" style="background:#fff3e0;color:#b45309;border-color:#fcd34d;" aria-label="Request more information">? More Info</button>
+                <button class="action-btn deny" aria-label="Deny this exception request">✕ Deny</button>
+                <button class="action-btn" style="background:#f3e8ff;color:#7c3aed;border-color:#d8b4fe;" aria-label="Escalate to regional VP">↑ Escalate</button>
+                <span class="dd-action-note">PAM notified on decision · SLA expires in 1h 22m</span>
+              </div>
+              <div class="history-feed" aria-label="Request history">
+                <div class="hist-item"><span class="hist-time">Feb 22 4:12p</span><span class="hist-text"><strong>Alex Rivera</strong> submitted request</span></div>
+                <div class="hist-item"><span class="hist-time">Feb 22 4:45p</span><span class="hist-text"><strong>Rachel Kim</strong> assigned as reviewer</span></div>
+                <div class="hist-item"><span class="hist-time">Feb 23 9:00a</span><span class="hist-text">SLA reminder sent — 4h remaining</span></div>
+              </div>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Urgent row 2 -->
+        <tr class="urgent-row" aria-label="Urgent: DD-2026-0309">
+          <td>
+            <div class="req-id"><a href="#" onclick="return false;">DD-2026-0309</a></div>
+            <div style="font-size:10px;color:#c0392b;font-weight:600;margin-top:2px;">⚠ Expires in 3h 05m</div>
+          </td>
+          <td>
+            <div class="req-partner">Meridian Cloud Services</div>
+            <div class="req-opp">OPP-44390 · AWS connectivity bundle · LD5, DA1</div>
+          </td>
+          <td><span class="exc-tag">Comp Override</span></td>
+          <td>
+            <div class="req-amount">$680K ARR</div>
+            <div class="req-discount">Comp neutrality req.</div>
+          </td>
+          <td><span class="pill pill-urgent">🔴 Urgent</span></td>
+          <td><span class="age-urgent age-cell">2d 14h</span></td>
+          <td>Sandra Wu</td>
+          <td>
+            <div class="action-btns">
+              <button class="action-btn review" onclick="return false;">Review</button>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Urgent row 3 -->
+        <tr class="urgent-row" aria-label="Urgent: DD-2026-0305">
+          <td>
+            <div class="req-id"><a href="#" onclick="return false;">DD-2026-0305</a></div>
+            <div style="font-size:10px;color:#c0392b;font-weight:600;margin-top:2px;">⚠ Expires in 3h 48m</div>
+          </td>
+          <td>
+            <div class="req-partner">TerraCloud Partners</div>
+            <div class="req-opp">OPP-43107 · Enterprise renewal + expansion · NY5</div>
+          </td>
+          <td><span class="exc-tag">Deal Extension</span><span class="exc-tag" style="margin-left:3px;">Non-Std Terms</span></td>
+          <td>
+            <div class="req-amount">$1.1M ARR</div>
+            <div class="req-discount">+60-day extension req.</div>
+          </td>
+          <td><span class="pill pill-urgent">🔴 Urgent</span></td>
+          <td><span class="age-urgent age-cell">2d 09h</span></td>
+          <td>Alex Rivera</td>
+          <td>
+            <div class="action-btns">
+              <button class="action-btn review" onclick="return false;">Review</button>
+            </div>
+          </td>
+        </tr>
+
+        <!-- High priority row -->
+        <tr aria-label="High priority: DD-2026-0301">
+          <td><div class="req-id"><a href="#" onclick="return false;">DD-2026-0301</a></div></td>
+          <td>
+            <div class="req-partner">NovaTech SI</div>
+            <div class="req-opp">OPP-42844 · Government vertical pricing · DC3, DC5</div>
+          </td>
+          <td><span class="exc-tag">Special Pricing</span></td>
+          <td>
+            <div class="req-amount">$1.9M ARR</div>
+            <div class="req-discount">29% req. (cap: 32%) ✓</div>
+          </td>
+          <td><span class="pill pill-high">🟡 High</span></td>
+          <td><span class="age-warn age-cell">1d 11h</span></td>
+          <td>James Okonkwo</td>
+          <td>
+            <div class="action-btns">
+              <button class="action-btn review" onclick="return false;">Review</button>
+              <button class="action-btn approve" onclick="return false;">✓</button>
+            </div>
+          </td>
+        </tr>
+
+        <!-- High priority row 2 -->
+        <tr aria-label="High priority: DD-2026-0298">
+          <td><div class="req-id"><a href="#" onclick="return false;">DD-2026-0298</a></div></td>
+          <td>
+            <div class="req-partner">Apex Networking</div>
+            <div class="req-opp">OPP-42201 · SD-WAN + colocation bundle · SV1, SV5</div>
+          </td>
+          <td><span class="exc-tag">Over-Cap Discount</span></td>
+          <td>
+            <div class="req-amount">$520K ARR</div>
+            <div class="req-discount">36% req. (cap: 32%)</div>
+          </td>
+          <td><span class="pill pill-high">🟡 High</span></td>
+          <td><span class="age-warn age-cell">1d 4h</span></td>
+          <td>Tara Singh</td>
+          <td>
+            <div class="action-btns">
+              <button class="action-btn review" onclick="return false;">Review</button>
+            </div>
+          </td>
+        </tr>
+
+        <!-- Standard rows -->
+        <tr aria-label="Standard: DD-2026-0294">
+          <td><div class="req-id"><a href="#" onclick="return false;">DD-2026-0294</a></div></td>
+          <td>
+            <div class="req-partner">CloudBridge Solutions</div>
+            <div class="req-opp">OPP-41992 · Multi-region Edge deployment · CH2, FR5, SP1</div>
+          </td>
+          <td><span class="exc-tag">Non-Standard Terms</span></td>
+          <td>
+            <div class="req-amount">$740K ARR</div>
+            <div class="req-discount">Custom SLA req.</div>
+          </td>
+          <td><span class="pill pill-standard">🟢 Standard</span></td>
+          <td><span class="age-ok age-cell">14h</span></td>
+          <td>Alex Rivera</td>
+          <td>
+            <div class="action-btns">
+              <button class="action-btn review" onclick="return false;">Review</button>
+            </div>
+          </td>
+        </tr>
+
+        <tr aria-label="Standard: DD-2026-0291">
+          <td><div class="req-id"><a href="#" onclick="return false;">DD-2026-0291</a></div></td>
+          <td>
+            <div class="req-partner">Synergy Infrastructure</div>
+            <div class="req-opp">OPP-41540 · Healthcare compliance colocation · DA2</div>
+          </td>
+          <td><span class="exc-tag">Special Pricing</span></td>
+          <td>
+            <div class="req-amount">$310K ARR</div>
+            <div class="req-discount">28% req. (cap: 32%) ✓</div>
+          </td>
+          <td><span class="pill pill-standard">🟢 Standard</span></td>
+          <td><span class="age-ok age-cell">8h</span></td>
+          <td>Sandra Wu</td>
+          <td>
+            <div class="action-btns">
+              <button class="action-btn review" onclick="return false;">Review</button>
+              <button class="action-btn approve" onclick="return false;">✓</button>
+            </div>
+          </td>
+        </tr>
+
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div class="pagination" aria-label="Queue pagination">
+      <span>Showing 7 of 24 requests · Sorted by priority, then age</span>
+      <div class="page-btns" role="navigation" aria-label="Page navigation">
+        <button class="page-btn active" aria-label="Page 1, current" aria-current="page">1</button>
+        <button class="page-btn" aria-label="Page 2">2</button>
+        <button class="page-btn" aria-label="Page 3">3</button>
+        <button class="page-btn" aria-label="Next page">›</button>
+      </div>
+    </div>
+  </div><!-- /queue-table-wrap -->
+
+</div><!-- /page-container -->
+
+<!-- Spec panel -->
+<aside class="spec-panel" id="spec-panel" role="complementary" aria-label="Wireframe specification">
+  <h2>⚙ Wireframe Spec — dealdesk-queue.html</h2>
+
+  <h3>Persona</h3>
+  <p><strong>Rachel Kim</strong> — Deal Desk Analyst, Equinix. <span class="tag">Internal</span> <span class="tag">Operations</span></p>
+  <p>Rachel processes special pricing exception requests that PAMs submit when a deal requires discounts above the standard cap, non-standard contract terms, compensation overrides, or deal timeline extensions. She sits between the PAM layer and Finance/VP approval, and her decisions directly affect whether deals can be priced to close against competition.</p>
+
+  <h3>Why Deal Desk was a blind spot</h3>
+  <p>The existing wireframe set showed PAMs requesting deal exceptions (via a stub link) and partners seeing their deal status. But no screen existed for the person who actually reviews and approves exceptions. This created a logical gap: where do exception requests go? Who sees them? What information do they need to decide?</p>
+
+  <h3>Design decisions</h3>
+  <ul>
+    <li><strong>SLA countdown on urgent items:</strong> Deal Desk operates under strict time-bound SLAs — a PAM submitting a 4-hour urgent request needs a decision before the customer closes. Visible countdowns on urgent rows create genuine urgency without requiring Rachel to open every record to find what's on fire.</li>
+    <li><strong>Inline detail drawer (no page navigation):</strong> Deal Desk analysts review 15-25 requests per day. Opening a new page per request breaks flow. The inline drawer exposes the PAM's justification, key figures, and a decision form without leaving the queue — analogous to Gmail's conversation expand pattern.</li>
+    <li><strong>Approve/More Info/Deny/Escalate as a set:</strong> "More Info" is a real fourth state — Rachel often needs competitive pricing data or historical discount context before she can approve or deny. Surfacing this as a first-class button prevents the workaround of emailing PAMs outside the system.</li>
+    <li><strong>Over-cap flag at a glance:</strong> Discount vs. cap shown in the table (e.g., "38% req. (cap: 32%)") lets Rachel instantly triage whether a request requires an override or is within standard bounds. Within-cap requests can be approved in a single click without opening the drawer.</li>
+    <li><strong>Approval rate KPI:</strong> A 62% approval rate visible to the analyst contextualizes the queue. If the rate trends too high (rubber-stamp behavior) or too low (blocking deals), it surfaces in the KPI strip for management review.</li>
+    <li><strong>Regional scope in nav:</strong> The header shows "Americas Region" — Deal Desk is typically regionalized. Rachel should not see EMEA/APJ requests unless she's cross-regional.</li>
+    <li><strong>Gray/charcoal role badge and ctx-badge:</strong> Deal Desk is internal ops — neutral gray distinguishes it from Equinix-facing roles (PSM blue, PAM rust, CMM amber) and partner-facing roles (red, teal, purple). It signals "behind the scenes."</li>
+  </ul>
+
+  <h3>Exception types handled</h3>
+  <ul>
+    <li><strong>Special Pricing:</strong> Non-standard product/bundle pricing. Requires VP Finance sign-off over a threshold.</li>
+    <li><strong>Over-Cap Discount:</strong> Requested discount exceeds tier cap (e.g., Gold tier cap is 32%; partner needs 38%).</li>
+    <li><strong>Non-Standard Terms:</strong> Custom SLA, payment terms, early exit clauses, or non-standard data residency requirements.</li>
+    <li><strong>Comp Override:</strong> Adjusts how partner rep compensation is calculated — common when a deal crosses fiscal quarters or involves a restructured territory.</li>
+    <li><strong>Deal Extension:</strong> Pushes the deal's close date in Salesforce — required when a procurement delay is not the partner's fault.</li>
+  </ul>
+
+  <h3>Stub screens introduced</h3>
+  <ul>
+    <li><span class="screen-link">dealdesk-approved.html</span> — approved request archive</li>
+    <li><span class="screen-link">dealdesk-denied.html</span> — denied request archive with rationale history</li>
+    <li><span class="screen-link">dealdesk-analytics.html</span> — approval rates, avg decision time, exception type breakdown</li>
+    <li><span class="screen-link">dealdesk-guidelines.html</span> — current discount caps, term policies, escalation thresholds</li>
+  </ul>
+
+  <h3>Upstream and downstream connections</h3>
+  <ul>
+    <li>Upstream: <span class="screen-link">pam-deal-exceptions.html</span> (stub) — PAM submits the exception request here</li>
+    <li>Upstream: <span class="screen-link">psm-deal-register.html</span> — deal context visible in the drawer</li>
+    <li>Downstream: <span class="screen-link">pam-home-dashboard.html</span> — PAM sees decision notification in their activity feed</li>
+    <li>Downstream: <span class="screen-link">pm-deal-registration.html</span> — partner sees updated deal terms if approved</li>
+  </ul>
+
+  <h3>Accessibility notes</h3>
+  <ul>
+    <li>Queue table uses <code>scope="col"</code> on all headers for screen reader column association.</li>
+    <li>Tabs use proper <code>role="tablist"</code>, <code>role="tab"</code>, <code>aria-selected</code>, and <code>aria-controls</code>.</li>
+    <li>Inline drawer expand/collapse buttons carry <code>aria-expanded</code> state updates via JS.</li>
+    <li>Countdown timers are text-based (not CSS-only) for screen reader compatibility.</li>
+    <li>Priority is conveyed by both color chip and text label — not color alone.</li>
+  </ul>
+
+  <h3>Sources</h3>
+  <ul>
+    <li>Deal Desk role definition: Equinix public careers listings for "Deal Desk Analyst" and "Revenue Operations" (equinix.com/careers, publicly accessible)</li>
+    <li>Exception handling patterns: Salesforce CPQ Deal Desk best practices (Salesforce Help documentation, publicly accessible at help.salesforce.com)</li>
+    <li>SLA structures for pricing exceptions: Gartner "Channel Partner Program Design" (subscription — listed as further reading only, not cited as evidence)</li>
+  </ul>
+</aside>
+
+<script>
+  function toggleSpec() {
+    const panel = document.getElementById('spec-panel');
+    const btn = document.querySelector('.spec-tab-anchor');
+    const isVisible = panel.classList.toggle('visible');
+    btn.setAttribute('aria-expanded', isVisible.toString());
+    if (isVisible) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function toggleDrawer(id) {
+    const drawer = document.getElementById('drawer-' + id + '-content');
+    const tr = document.getElementById('drawer-' + id);
+    if (!drawer) return;
+    const isOpen = drawer.classList.toggle('open');
+    // Update aria-expanded on all triggers for this drawer
+    document.querySelectorAll('[aria-controls="drawer-' + id + '"]').forEach(el => {
+      el.setAttribute('aria-expanded', isOpen.toString());
+    });
+    if (isOpen) {
+      tr.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }
+
+  function closeDrawer(id) {
+    const drawer = document.getElementById('drawer-' + id + '-content');
+    if (drawer) drawer.classList.remove('open');
+    document.querySelectorAll('[aria-controls="drawer-' + id + '"]').forEach(el => {
+      el.setAttribute('aria-expanded', 'false');
+    });
+  }
+</script>
+
+</body>
+</html>

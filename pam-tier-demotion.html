@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tier Demotion — PAM · Equinix PCP</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Salesforce Sans,sans-serif; background:var(--wf-canvas,#f5f7fb); color:var(--wf-ink,#1e2a3a); }
+
+    header { background:var(--wf-ink,#1e2a3a); color:#fff; padding:14px 24px; display:flex; justify-content:space-between; align-items:center; }
+    .header-left { display:flex; align-items:center; gap:16px; }
+    .eq-logo { width:38px; height:38px; background:#3d6daa; border-radius:4px; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:18px; color:#fff; }
+    .role-badge { background:#b04a2a; color:#fff; font-size:10px; font-weight:700; letter-spacing:.8px; padding:2px 7px; border-radius:3px; text-transform:uppercase; }
+    .header-title { font-size:16px; font-weight:600; }
+    nav { display:flex; gap:28px; margin-left:40px; }
+    nav a { color:rgba(255,255,255,.8); text-decoration:none; font-size:13px; padding-bottom:4px; }
+    nav a.active { color:#fff; border-bottom:2px solid #fca5a5; font-weight:600; }
+    .user-avatar { width:34px; height:34px; background:#b04a2a; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; color:#fff; }
+
+    .page-context-bar { background:#fff; border-bottom:1px solid #dde2eb; padding:8px 24px; display:flex; align-items:center; gap:8px; font-size:12px; color:#6b7f99; }
+    .ctx-badge { background:#b04a2a; color:#fff; font-size:10px; font-weight:700; padding:2px 6px; border-radius:3px; }
+    .ctx-sep { color:#b0b8c5; }
+    .spec-tab-anchor { background:#fff; border-bottom:1px solid #dde2eb; padding:0 24px; display:flex; }
+    .spec-tab-btn { background:none; border:none; border-bottom:2px solid transparent; font-size:12px; color:#6b7f99; padding:6px 10px; cursor:pointer; font-weight:500; }
+
+    .page-container { max-width:900px; margin:0 auto; padding:24px; }
+
+    /* Alert banner */
+    .alert-banner { background:#fef2f2; border:1px solid #fecaca; border-left:4px solid #dc2626; border-radius:6px; padding:14px 18px; margin-bottom:20px; display:flex; align-items:flex-start; gap:12px; }
+    .alert-icon { font-size:20px; line-height:1; flex-shrink:0; }
+    .alert-title { font-size:14px; font-weight:700; color:#991b1b; margin-bottom:4px; }
+    .alert-body { font-size:12.5px; color:#7f1d1d; line-height:1.5; }
+
+    .card { background:#fff; border:1px solid #dde2eb; border-radius:6px; margin-bottom:16px; overflow:hidden; }
+    .card-title { font-size:13px; font-weight:600; color:#1e2a3a; padding:14px 16px; border-bottom:1px solid #eef1f6; background:#fff; }
+
+    /* Requirements table */
+    .req-header { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; padding:8px 16px; background:#f8fafc; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:#8898aa; border-bottom:1px solid #eef1f6; }
+    .req-row { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; padding:11px 16px; font-size:12.5px; border-bottom:1px solid #eef1f6; align-items:center; }
+    .req-row:last-child { border-bottom:none; }
+    .req-fail { color:#dc2626; font-weight:700; }
+    .req-pass { color:#16a34a; font-weight:700; }
+    .chip { display:inline-block; font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:10px; }
+    .chip-fail { background:#fee2e2; color:#991b1b; }
+    .chip-pass { background:#d1fae5; color:#065f46; }
+    .chip-warn { background:#fef3c7; color:#92400e; }
+
+    /* Impact table */
+    .impact-grid { display:grid; grid-template-columns:1fr 1fr; gap:0; }
+    .impact-col { padding:16px; }
+    .impact-col + .impact-col { border-left:1px solid #eef1f6; }
+    .impact-col h4 { font-size:12px; font-weight:700; color:#1e2a3a; margin-bottom:10px; text-transform:uppercase; letter-spacing:.4px; }
+    .impact-item { font-size:12.5px; color:#374151; padding:6px 0; border-bottom:1px solid #f3f4f6; display:flex; gap:8px; }
+    .impact-item:last-child { border-bottom:none; }
+    .impact-neg { color:#dc2626; flex-shrink:0; }
+    .impact-ok { color:#6b7280; flex-shrink:0; }
+
+    /* Action form */
+    .form-section { padding:16px; }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
+    .form-field label { display:block; font-size:11px; font-weight:600; color:#6b7f99; text-transform:uppercase; letter-spacing:.4px; margin-bottom:4px; }
+    .form-field input, .form-field select, .form-field textarea {
+      width:100%; padding:8px 10px; border:1px solid #dde2eb; border-radius:4px; font-size:13px; color:#1e2a3a;
+    }
+    .form-field textarea { height:80px; resize:vertical; }
+    .form-field.full { grid-column:1 / -1; }
+    .btn-danger { background:#dc2626; color:#fff; border:none; padding:10px 24px; border-radius:5px; font-size:13px; font-weight:600; cursor:pointer; }
+    .btn-danger:hover { background:#b91c1c; }
+    .btn-secondary { background:#f8fafc; color:#1e2a3a; border:1px solid #dde2eb; padding:10px 24px; border-radius:5px; font-size:13px; font-weight:600; cursor:pointer; }
+    .btn-warn { background:#f59e0b; color:#fff; border:none; padding:10px 24px; border-radius:5px; font-size:13px; font-weight:600; cursor:pointer; }
+
+    .confirm-checkbox { display:flex; align-items:flex-start; gap:10px; padding:14px 16px; background:#fef2f2; border-top:1px solid #fecaca; font-size:12.5px; color:#7f1d1d; }
+    .confirm-checkbox input { margin-top:2px; flex-shrink:0; }
+
+    /* Spec panel */
+    .spec-panel { display:none; position:fixed; top:0; right:0; width:420px; height:100vh; background:#fff; border-left:2px solid #dc2626; box-shadow:-4px 0 16px rgba(0,0,0,.08); overflow-y:auto; padding:24px; z-index:1000; font-size:12.5px; line-height:1.6; color:#374151; }
+    .spec-panel h2 { font-size:14px; font-weight:700; color:#1e2a3a; margin-bottom:16px; }
+    .spec-panel h3 { font-size:12px; font-weight:700; color:#1e2a3a; margin:16px 0 6px; text-transform:uppercase; letter-spacing:.5px; }
+    .spec-panel p { margin-bottom:8px; }
+    .spec-panel ul { margin:4px 0 8px 16px; }
+    .spec-panel li { margin-bottom:4px; }
+    .spec-panel a { color:#b04a2a; }
+    .spec-close { float:right; background:none; border:none; font-size:18px; cursor:pointer; color:#6b7f99; }
+    .spec-divider { border:none; border-top:1px solid #eef1f6; margin:14px 0; }
+  </style>
+</head>
+<body>
+
+<header role="banner">
+  <div class="header-left">
+    <div class="eq-logo" aria-hidden="true">EQ</div>
+    <span class="role-badge">PAM</span>
+    <span class="header-title">Partner Connect Portal — Internal</span>
+    <nav aria-label="Primary navigation">
+      <a href="pam-home-dashboard.html">Dashboard</a>
+      <a href="pam-application-queue.html">Applications</a>
+      <a href="pam-tier-dashboard.html">Tiers</a>
+      <a href="pam-mdf-queue.html">MDF</a>
+      <a href="pam-program-report.html">Reports</a>
+    </nav>
+  </div>
+  <div style="display:flex;gap:18px;align-items:center;">
+    <span style="font-size:13px;color:rgba(255,255,255,.7);">Equinix Internal</span>
+    <div class="user-avatar" title="Alex Rivera">AR</div>
+  </div>
+</header>
+
+<div class="page-context-bar" aria-label="Page context">
+  <span class="ctx-badge">PAM</span>
+  <span class="ctx-sep">›</span>
+  <span>Alex Rivera</span>
+  <span class="ctx-sep">›</span>
+  <a href="pam-tier-dashboard.html" style="color:#3d6daa;text-decoration:none;">Tier Management</a>
+  <span class="ctx-sep">›</span>
+  <strong>Initiate Tier Demotion — TerraCloud Partners</strong>
+  <span style="margin-left:auto;font-size:11px;">Salesforce Lightning</span>
+</div>
+
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false">Notes</button>
+</div>
+
+<div class="page-container" role="main">
+
+  <!-- Alert -->
+  <div class="alert-banner" role="alert">
+    <div class="alert-icon">⚠️</div>
+    <div>
+      <div class="alert-title">TerraCloud Partners — Gold Tier At Risk</div>
+      <div class="alert-body">TerraCloud has failed to meet 2 of 5 Gold tier requirements at the end of Q1 FY2026. Initiating demotion will move them to Silver tier effective April 1, 2026. This action will notify TerraCloud's primary contact and reduce their MDF entitlement from $75,000/quarter to $25,000/quarter. A 30-day appeal window will open on notification.</div>
+    </div>
+  </div>
+
+  <!-- Requirement scorecard -->
+  <div class="card" role="region" aria-label="Tier requirement scorecard">
+    <div class="card-title">Gold Tier Requirements — Q1 FY2026 Review</div>
+    <div class="req-header" role="row">
+      <div>Requirement</div>
+      <div>Required</div>
+      <div>Actual</div>
+      <div>Status</div>
+    </div>
+    <div class="req-row">
+      <div>Partner-sourced ARR (TTM)</div>
+      <div>$2,000,000</div>
+      <div class="req-fail">$1,210,000</div>
+      <div><span class="chip chip-fail">Missed</span></div>
+    </div>
+    <div class="req-row">
+      <div>MDF utilization rate</div>
+      <div>80%</div>
+      <div class="req-fail">52%</div>
+      <div><span class="chip chip-fail">Missed</span></div>
+    </div>
+    <div class="req-row">
+      <div>Certified AEs</div>
+      <div>4</div>
+      <div class="req-pass">4</div>
+      <div><span class="chip chip-pass">Met</span></div>
+    </div>
+    <div class="req-row">
+      <div>Certified SEs</div>
+      <div>2</div>
+      <div class="req-pass">2</div>
+      <div><span class="chip chip-pass">Met</span></div>
+    </div>
+    <div class="req-row">
+      <div>QBR attendance (FY2025)</div>
+      <div>4 of 4</div>
+      <div class="req-pass">4 of 4</div>
+      <div><span class="chip chip-pass">Met</span></div>
+    </div>
+    <div style="padding:10px 16px;font-size:11px;color:#6b7f99;background:#f8fafc;border-top:1px solid #eef1f6;">
+      TerraCloud received a written warning on Jan 15, 2026 (90 days before tier review). They were informed of the ARR and MDF shortfall at that time.
+    </div>
+  </div>
+
+  <!-- Impact summary -->
+  <div class="card" role="region" aria-label="Demotion impact">
+    <div class="card-title">Demotion Impact — Gold → Silver</div>
+    <div class="impact-grid">
+      <div class="impact-col">
+        <h4>Immediate Effects (Apr 1)</h4>
+        <div class="impact-item"><span class="impact-neg">↓</span>MDF reduced: $75K → $25K/quarter</div>
+        <div class="impact-item"><span class="impact-neg">↓</span>Deal protection window: 90d → 60d</div>
+        <div class="impact-item"><span class="impact-neg">↓</span>Dedicated PSM: loses dedicated PSM, moves to pooled</div>
+        <div class="impact-item"><span class="impact-neg">↓</span>Equinix World Tour access: partner booth → attendee only</div>
+        <div class="impact-item"><span class="impact-neg">↓</span>Co-marketing templates: Gold library access removed</div>
+      </div>
+      <div class="impact-col">
+        <h4>Unchanged</h4>
+        <div class="impact-item"><span class="impact-ok">→</span>Existing deal registrations protected through expiry</div>
+        <div class="impact-item"><span class="impact-ok">→</span>Certifications remain valid</div>
+        <div class="impact-item"><span class="impact-ok">→</span>Pending MDF claims processed at Gold rate</div>
+        <div class="impact-item"><span class="impact-ok">→</span>Portal access continues at Silver level</div>
+        <div class="impact-item"><span class="impact-ok">→</span>Re-qualification for Gold eligible next quarter</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Action form -->
+  <div class="card" role="region" aria-label="Demotion action form">
+    <div class="card-title">Initiate Demotion — Required Fields</div>
+    <div class="form-section">
+      <div class="form-row">
+        <div class="form-field">
+          <label>New Tier</label>
+          <select>
+            <option selected>Silver (recommended)</option>
+            <option>Bronze</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label>Effective Date</label>
+          <input type="date" value="2026-04-01">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-field">
+          <label>Notify Contact</label>
+          <input type="text" value="Jordan Reeves (Admin) — jordan@terracloud.com">
+        </div>
+        <div class="form-field">
+          <label>CC</label>
+          <input type="text" placeholder="Additional contacts...">
+        </div>
+      </div>
+      <div class="form-row" style="grid-template-columns:1fr;">
+        <div class="form-field full">
+          <label>Notification Message to Partner (editable)</label>
+          <textarea>Dear Jordan,
+
+Following our tier review on March 31, 2026, TerraCloud Partners has not met the Gold tier requirements for FY2026 Q1. Specifically, partner-sourced ARR ($1.21M vs. $2M required) and MDF utilization (52% vs. 80% required) were below the threshold.
+
+Effective April 1, 2026, TerraCloud will transition to the Silver tier. Your existing deal registrations remain protected, and any pending MDF claims will be processed at the Gold rate.
+
+You have 30 days to submit an appeal if you believe this assessment is incorrect. Please use the appeal form in your Partner Connect Portal or contact me directly.
+
+Alex Rivera | Partner Account Manager
+Equinix</textarea>
+        </div>
+      </div>
+      <div class="form-row" style="grid-template-columns:1fr;">
+        <div class="form-field full">
+          <label>Internal Notes (not sent to partner)</label>
+          <textarea placeholder="Reason for demotion, context for escalation team, any special considerations..."></textarea>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;padding-top:4px;">
+        <button class="btn-warn" type="button">Send Warning First (no demotion yet)</button>
+        <button class="btn-secondary" type="button">Save Draft</button>
+      </div>
+    </div>
+    <div class="confirm-checkbox" role="group">
+      <input type="checkbox" id="confirm-demotion" aria-label="Confirm demotion">
+      <label for="confirm-demotion">I confirm that TerraCloud Partners has been notified of the at-risk status, the 90-day cure period has elapsed, and this demotion has been reviewed with the PSM (Marcus Chen) and approved by the regional PAM lead.</label>
+    </div>
+    <div style="padding:14px 16px;display:flex;gap:10px;border-top:1px solid #eef1f6;">
+      <button class="btn-danger" type="button">Initiate Demotion</button>
+      <a href="pam-tier-dashboard.html" class="btn-secondary" style="text-decoration:none;display:inline-flex;align-items:center;">Cancel</a>
+    </div>
+  </div>
+
+</div><!-- /page-container -->
+
+<!-- ── Spec panel ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design specifications">
+  <button class="spec-close" onclick="toggleSpec()" aria-label="Close design notes">✕</button>
+  <h2>Design Notes — pam-tier-demotion.html</h2>
+
+  <h3>Purpose</h3>
+  <p>Closes the gap identified in the at-risk panel on <a href="pam-home-dashboard.html">pam-home-dashboard.html</a>. Alex flagged TerraCloud as at-risk; this is the screen where she actually pulls the trigger on demotion. Previously, the wireframe had no downstream flow from "at-risk."</p>
+
+  <h3>Design Decisions</h3>
+  <h4>Two-step action</h4>
+  <p>Alex can send a warning first (without demoting) or initiate the full demotion. Most programs have a cure period — the warning option reflects that. Forcing a demotion without the warning step would likely violate partner contract terms.</p>
+
+  <h4>Checkbox confirmation gate</h4>
+  <p>The confirmation checkbox requires Alex to affirm that Marcus has been consulted and a regional lead has approved. This prevents unilateral PAM demotions without cross-functional review — a real governance risk in partner programs.</p>
+
+  <h4>Impact summary split: immediate vs. unchanged</h4>
+  <p>Partners need to know what changes <em>immediately</em> and what stays the same. Showing "existing deal registrations protected through expiry" under "unchanged" reduces panic calls from the partner's AE.</p>
+
+  <h3>Partner-Facing Counterpart</h3>
+  <p>When Alex initiates this demotion, Jordan Reeves at TerraCloud sees <a href="pm-tier-appeal.html">pm-tier-appeal.html</a> — the appeal screen. The 30-day window is stated both in the notification message and surfaced in Jordan's portal.</p>
+
+  <h3>Gaps / Open Questions</h3>
+  <ul>
+    <li>[A] 30-day appeal window is an assumption — confirm with Equinix legal/program team</li>
+    <li>[?] Does the PSM (Marcus) receive a notification when Alex initiates demotion?</li>
+    <li>[?] Can demotion be reversed within the 30-day window if the partner submits additional evidence?</li>
+    <li>[?] Is there a "grace period" where the partner still gets Gold benefits while the appeal is pending?</li>
+  </ul>
+
+  <h3>Related Screens</h3>
+  <ul>
+    <li><a href="pam-home-dashboard.html">pam-home-dashboard.html</a> — at-risk panel that links here</li>
+    <li><a href="pam-tier-dashboard.html">pam-tier-dashboard.html</a> — full tier management view</li>
+    <li><a href="pm-tier-appeal.html">pm-tier-appeal.html</a> — partner-facing appeal screen</li>
+  </ul>
+
+  <h3>Version</h3>
+  <p>v0.1 — Feb 24 2026</p>
+</aside>
+
+<script src="wf-nav.js"></script>
+<script>
+  function toggleSpec() {
+    const panel = document.getElementById('spec-panel');
+    const btn   = document.getElementById('spec-toggle');
+    const open  = panel.style.display === 'block';
+    panel.style.display = open ? 'none' : 'block';
+    btn.setAttribute('aria-expanded', String(!open));
+  }
+</script>
+</body>
+</html>

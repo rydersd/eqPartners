@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tier Appeal — PM · Equinix PCP</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Salesforce Sans,sans-serif; background:var(--wf-canvas,#f5f7fb); color:var(--wf-ink,#1e2a3a); }
+
+    header { background:var(--wf-ink,#1e2a3a); color:#fff; padding:14px 24px; display:flex; justify-content:space-between; align-items:center; }
+    .header-left { display:flex; align-items:center; gap:16px; }
+    .eq-logo { width:38px; height:38px; background:#3d6daa; border-radius:4px; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:18px; color:#fff; }
+    .role-badge { background:#c0392b; color:#fff; font-size:10px; font-weight:700; letter-spacing:.8px; padding:2px 7px; border-radius:3px; text-transform:uppercase; }
+    .header-title { font-size:16px; font-weight:600; }
+    nav { display:flex; gap:28px; margin-left:40px; }
+    nav a { color:rgba(255,255,255,.8); text-decoration:none; font-size:13px; padding-bottom:4px; }
+    nav a.active { color:#fff; border-bottom:2px solid #fca5a5; font-weight:600; }
+    .user-avatar { width:34px; height:34px; background:#c0392b; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; color:#fff; }
+
+    .page-context-bar { background:#fff; border-bottom:1px solid #dde2eb; padding:8px 24px; display:flex; align-items:center; gap:8px; font-size:12px; color:#6b7f99; }
+    .ctx-badge { background:#c0392b; color:#fff; font-size:10px; font-weight:700; padding:2px 6px; border-radius:3px; }
+    .ctx-sep { color:#b0b8c5; }
+    .spec-tab-anchor { background:#fff; border-bottom:1px solid #dde2eb; padding:0 24px; display:flex; }
+    .spec-tab-btn { background:none; border:none; border-bottom:2px solid transparent; font-size:12px; color:#6b7f99; padding:6px 10px; cursor:pointer; font-weight:500; }
+
+    .page-container { max-width:860px; margin:0 auto; padding:24px; }
+
+    /* Demotion notice */
+    .demotion-notice { background:#fef2f2; border:1px solid #fecaca; border-left:4px solid #dc2626; border-radius:6px; padding:16px 20px; margin-bottom:20px; }
+    .dn-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px; }
+    .dn-title { font-size:15px; font-weight:700; color:#991b1b; }
+    .dn-countdown { text-align:right; }
+    .dn-days { font-size:28px; font-weight:700; color:#dc2626; }
+    .dn-days-label { font-size:10px; color:#6b7f99; text-transform:uppercase; }
+    .dn-body { font-size:12.5px; color:#7f1d1d; line-height:1.6; }
+    .dn-meta { margin-top:10px; font-size:11px; color:#9ca3af; }
+
+    .card { background:#fff; border:1px solid #dde2eb; border-radius:6px; margin-bottom:16px; overflow:hidden; }
+    .card-title { font-size:13px; font-weight:600; color:#1e2a3a; padding:14px 16px; border-bottom:1px solid #eef1f6; }
+
+    /* Requirements */
+    .req-row { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; padding:10px 16px; font-size:12.5px; border-bottom:1px solid #eef1f6; align-items:center; }
+    .req-row:last-child { border-bottom:none; }
+    .req-header { display:grid; grid-template-columns:2fr 1fr 1fr 1fr; padding:8px 16px; background:#f8fafc; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:#8898aa; border-bottom:1px solid #eef1f6; }
+    .req-fail { color:#dc2626; font-weight:700; }
+    .req-pass { color:#16a34a; font-weight:700; }
+    .chip { display:inline-block; font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:10px; }
+    .chip-fail { background:#fee2e2; color:#991b1b; }
+    .chip-pass { background:#d1fae5; color:#065f46; }
+
+    /* Appeal form */
+    .form-section { padding:16px; }
+    .form-field { margin-bottom:14px; }
+    .form-field label { display:block; font-size:11px; font-weight:600; color:#6b7f99; text-transform:uppercase; letter-spacing:.4px; margin-bottom:5px; }
+    .form-field select, .form-field textarea, .form-field input {
+      width:100%; padding:8px 10px; border:1px solid #dde2eb; border-radius:4px; font-size:13px; color:#1e2a3a;
+    }
+    .form-field textarea { height:100px; resize:vertical; }
+    .field-hint { font-size:11px; color:#9ca3af; margin-top:4px; }
+
+    .upload-area { border:2px dashed #dde2eb; border-radius:6px; padding:20px; text-align:center; font-size:13px; color:#6b7f99; cursor:pointer; background:#f8fafc; }
+    .upload-area:hover { border-color:#3d6daa; background:#eff6ff; }
+
+    .btn-primary { background:#1e2a3a; color:#fff; border:none; padding:10px 24px; border-radius:5px; font-size:13px; font-weight:600; cursor:pointer; }
+    .btn-secondary { background:#f8fafc; color:#1e2a3a; border:1px solid #dde2eb; padding:10px 24px; border-radius:5px; font-size:13px; font-weight:600; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; }
+
+    /* What happens next */
+    .timeline { padding:16px; }
+    .tl-step { display:flex; gap:14px; padding-bottom:16px; }
+    .tl-step:last-child { padding-bottom:0; }
+    .tl-dot { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:#fff; flex-shrink:0; }
+    .tl-dot.active { background:#3d6daa; }
+    .tl-dot.pending { background:#d1d5db; }
+    .tl-dot.won { background:#22c55e; }
+    .tl-content h4 { font-size:12.5px; font-weight:700; color:#1e2a3a; margin-bottom:2px; }
+    .tl-content p { font-size:12px; color:#6b7f99; }
+
+    /* Spec panel */
+    .spec-panel { display:none; position:fixed; top:0; right:0; width:420px; height:100vh; background:#fff; border-left:2px solid #c0392b; box-shadow:-4px 0 16px rgba(0,0,0,.08); overflow-y:auto; padding:24px; z-index:1000; font-size:12.5px; line-height:1.6; color:#374151; }
+    .spec-panel h2 { font-size:14px; font-weight:700; color:#1e2a3a; margin-bottom:16px; }
+    .spec-panel h3 { font-size:12px; font-weight:700; color:#1e2a3a; margin:16px 0 6px; text-transform:uppercase; letter-spacing:.5px; }
+    .spec-panel p { margin-bottom:8px; }
+    .spec-panel ul { margin:4px 0 8px 16px; }
+    .spec-panel li { margin-bottom:4px; }
+    .spec-panel a { color:#c0392b; }
+    .spec-close { float:right; background:none; border:none; font-size:18px; cursor:pointer; color:#6b7f99; }
+    .spec-divider { border:none; border-top:1px solid #eef1f6; margin:14px 0; }
+  </style>
+</head>
+<body>
+
+<header role="banner">
+  <div class="header-left">
+    <div class="eq-logo" aria-hidden="true">EQ</div>
+    <span class="role-badge">Partner</span>
+    <span class="header-title">Partner Connect Portal</span>
+    <nav aria-label="Primary navigation">
+      <a href="pm-home-dashboard.html">Dashboard</a>
+      <a href="pm-tier-appeal.html" class="active" aria-current="page">Tier Appeal</a>
+      <a href="pm-deals-revenue.html">Deals</a>
+      <a href="pm-mdf-balance.html">MDF</a>
+      <a href="pm-support-center.html">Support</a>
+    </nav>
+  </div>
+  <div style="display:flex;gap:18px;align-items:center;">
+    <span style="font-size:13px;color:rgba(255,255,255,.7);">TerraCloud Partners</span>
+    <div class="user-avatar" title="Jordan Reeves, Admin">JR</div>
+  </div>
+</header>
+
+<div class="page-context-bar" aria-label="Page context">
+  <span class="ctx-badge">PM</span>
+  <span class="ctx-sep">›</span>
+  <span>Jordan Reeves</span>
+  <span class="ctx-sep">›</span>
+  <strong>Tier Demotion Notice &amp; Appeal</strong>
+  <span style="margin-left:auto;font-size:11px;">Experience Cloud &bull; Action Required</span>
+</div>
+
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false">Notes</button>
+</div>
+
+<div class="page-container" role="main">
+
+  <!-- Demotion notice -->
+  <div class="demotion-notice" role="alert" aria-live="assertive">
+    <div class="dn-header">
+      <div>
+        <div class="dn-title">⚠ Tier Demotion Notice — Gold → Silver</div>
+      </div>
+      <div class="dn-countdown" aria-label="22 days remaining in appeal window">
+        <div class="dn-days">22</div>
+        <div class="dn-days-label">Days to appeal</div>
+      </div>
+    </div>
+    <div class="dn-body">
+      TerraCloud Partners did not meet the Gold tier requirements at the end of Q1 FY2026. Effective <strong>April 1, 2026</strong>, your tier will change from <strong>Gold</strong> to <strong>Silver</strong>. Your MDF entitlement will reduce from $75,000 to $25,000 per quarter.
+      <br><br>
+      If you believe this assessment is incorrect, you may submit an appeal below. Your existing deal registrations and pending MDF claims are unaffected during the appeal period.
+    </div>
+    <div class="dn-meta">Notification sent Mar 9, 2026 &bull; PAM: Alex Rivera (alex.rivera@equinix.com) &bull; Appeal deadline: Apr 8, 2026</div>
+  </div>
+
+  <!-- What Equinix measured -->
+  <div class="card" role="region" aria-label="Requirements Equinix measured">
+    <div class="card-title">What Equinix Measured — Q1 FY2026</div>
+    <div class="req-header" role="row">
+      <div>Requirement</div>
+      <div>Required (Gold)</div>
+      <div>Recorded by Equinix</div>
+      <div>Result</div>
+    </div>
+    <div class="req-row">
+      <div>Partner-sourced ARR (TTM)</div>
+      <div>$2,000,000</div>
+      <div class="req-fail">$1,210,000</div>
+      <div><span class="chip chip-fail">Not Met</span></div>
+    </div>
+    <div class="req-row">
+      <div>MDF utilization rate</div>
+      <div>80%</div>
+      <div class="req-fail">52%</div>
+      <div><span class="chip chip-fail">Not Met</span></div>
+    </div>
+    <div class="req-row">
+      <div>Certified AEs on team</div>
+      <div>4</div>
+      <div class="req-pass">4</div>
+      <div><span class="chip chip-pass">Met</span></div>
+    </div>
+    <div class="req-row">
+      <div>Certified SEs on team</div>
+      <div>2</div>
+      <div class="req-pass">2</div>
+      <div><span class="chip chip-pass">Met</span></div>
+    </div>
+    <div class="req-row">
+      <div>QBR attendance (FY2025)</div>
+      <div>4 of 4</div>
+      <div class="req-pass">4 of 4</div>
+      <div><span class="chip chip-pass">Met</span></div>
+    </div>
+    <div style="padding:10px 16px;font-size:11px;color:#6b7f99;background:#f8fafc;border-top:1px solid #eef1f6;">
+      Believe these numbers are incorrect? Provide evidence below. Closed-won deal data is sourced from Salesforce. MDF utilization is calculated from approved claims, not submitted requests.
+    </div>
+  </div>
+
+  <!-- Appeal form -->
+  <div class="card" role="region" aria-label="Submit an appeal">
+    <div class="card-title">Submit an Appeal</div>
+    <div class="form-section">
+      <div class="form-field">
+        <label>Appeal basis</label>
+        <select>
+          <option>— Select the primary reason —</option>
+          <option>Closed-won deals are missing from Equinix records</option>
+          <option>Attribution dispute — deals attributed to a different partner</option>
+          <option>MDF claims were incorrectly rejected</option>
+          <option>Extenuating business circumstances (acquisition, restructure, etc.)</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Description</label>
+        <textarea placeholder="Describe your appeal. Be specific: include deal IDs, dates, amounts, and any context that Equinix may not have captured. The clearer your appeal, the faster we can resolve it."></textarea>
+        <div class="field-hint">Your PAM (Alex Rivera) will review your appeal within 5 business days.</div>
+      </div>
+      <div class="form-field">
+        <label>Supporting documentation (optional)</label>
+        <div class="upload-area" role="button" tabindex="0" aria-label="Upload supporting files">
+          📎 Drag files here or click to upload<br>
+          <span style="font-size:11px;color:#9ca3af;">Accepted: PDF, Excel, CSV, PNG — max 10MB each</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:4px;">
+        <button class="btn-primary" type="button">Submit Appeal</button>
+        <a href="pm-home-dashboard.html" class="btn-secondary">Not now</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- What happens next -->
+  <div class="card" role="region" aria-label="Appeal process timeline">
+    <div class="card-title">What Happens Next</div>
+    <div class="timeline">
+      <div class="tl-step">
+        <div class="tl-dot active">1</div>
+        <div class="tl-content">
+          <h4>You submit your appeal (today)</h4>
+          <p>Your PAM (Alex Rivera) is notified immediately. Your tier remains Gold while the appeal is under review.</p>
+        </div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-dot pending">2</div>
+        <div class="tl-content">
+          <h4>PAM reviews — within 5 business days</h4>
+          <p>Alex reviews your evidence against Salesforce records. She may request additional documentation.</p>
+        </div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-dot pending">3</div>
+        <div class="tl-content">
+          <h4>Decision communicated</h4>
+          <p>You'll receive an email and a notification in this portal. If appeal is upheld, no tier change occurs. If denied, Silver tier takes effect on the original date.</p>
+        </div>
+      </div>
+      <div class="tl-step">
+        <div class="tl-dot won">✓</div>
+        <div class="tl-content">
+          <h4>Re-qualify for Gold any quarter</h4>
+          <p>If you're demoted to Silver, you can re-qualify for Gold by meeting all requirements at any subsequent quarterly review. There's no waiting period.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /page-container -->
+
+<!-- ── Spec panel ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design specifications">
+  <button class="spec-close" onclick="toggleSpec()" aria-label="Close design notes">✕</button>
+  <h2>Design Notes — pm-tier-appeal.html</h2>
+
+  <h3>Purpose</h3>
+  <p>The partner-facing counterpart to <a href="pam-tier-demotion.html">pam-tier-demotion.html</a>. When Alex initiates a demotion, Jordan (TerraCloud's Admin) lands here — either via email link or via a notification in the portal. This is where the partner sees exactly what Equinix measured, why they're being demoted, and how to contest it.</p>
+
+  <h3>Design Decisions</h3>
+  <h4>Countdown clock</h4>
+  <p>The 22-day countdown creates appropriate urgency without panic. Partners who don't see this screen until day 20 can still act. Partners who see it on day 1 know they have time to gather evidence properly.</p>
+
+  <h4>Tier stays Gold during appeal</h4>
+  <p>This is stated explicitly in the demotion notice and in step 1 of the timeline. This prevents the support ticket cascade of "we need to know if we should still use Gold-tier MDF while the appeal is pending." Answer: yes, you can.</p>
+
+  <h4>Appeal basis dropdown</h4>
+  <p>Attribution dispute is the most common legitimate appeal reason — a deal that closed through the partner gets credited to an Equinix direct AE. Without this option prominently listed, partners write angry open-text appeals that are hard to route. The dropdown routes them to the right review workflow on the PAM side.</p>
+
+  <h4>Re-qualification timeline</h4>
+  <p>The "re-qualify any quarter" point reduces churn. Partners who know demotion isn't permanent are less likely to exit the program after one bad quarter.</p>
+
+  <h3>Gaps / Open Questions</h3>
+  <ul>
+    <li>[A] "Tier stays Gold during appeal" — needs legal/program confirmation. Some programs freeze tier during appeal rather than maintaining current tier.</li>
+    <li>[?] Is there an escalation path beyond the PAM if Jordan disagrees with Alex's appeal decision? (Recommend: yes — regional PAM lead or ombudsman)</li>
+    <li>[?] Can Jordan see the specific Salesforce records Equinix used to calculate ARR, or only the totals?</li>
+  </ul>
+
+  <h3>Related Screens</h3>
+  <ul>
+    <li><a href="pam-tier-demotion.html">pam-tier-demotion.html</a> — PAM's side of this flow</li>
+    <li><a href="pam-tier-dashboard.html">pam-tier-dashboard.html</a> — tier management overview</li>
+    <li><a href="pam-home-dashboard.html">pam-home-dashboard.html</a> — at-risk panel that initiated the flow</li>
+    <li><a href="pm-home-dashboard.html">pm-home-dashboard.html</a> — partner portal home</li>
+  </ul>
+
+  <h3>Version</h3>
+  <p>v0.1 — Feb 24 2026</p>
+</aside>
+
+<script src="wf-nav.js"></script>
+<script>
+  function toggleSpec() {
+    const panel = document.getElementById('spec-panel');
+    const btn   = document.getElementById('spec-toggle');
+    const open  = panel.style.display === 'block';
+    panel.style.display = open ? 'none' : 'block';
+    btn.setAttribute('aria-expanded', String(!open));
+  }
+</script>
+</body>
+</html>

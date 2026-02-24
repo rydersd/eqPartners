@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MDF Claim Dispute — Equinix Partner Connect</title>
+  <style>
+    /* ── Reset & base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f4f5f7; color: #1a1a2e; font-size: 14px; line-height: 1.5; }
+    a { color: #0052cc; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    a:focus-visible { outline: 3px solid #0052cc; outline-offset: 2px; border-radius: 2px; }
+
+    /* ── Auth gate ── */
+    .auth-gate { background: #fff3cd; border: 1px solid #ffc107; padding: 6px 14px; font-size: 12px; color: #856404; text-align: center; }
+
+    /* ── Header ── */
+    .wf-header { background: #1a1a2e; color: #fff; padding: 10px 20px; display: flex; align-items: center; gap: 12px; }
+    .wf-logo { font-weight: 700; font-size: 15px; letter-spacing: .5px; }
+    .wf-logo span { color: #00adef; }
+    .role-badge { font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 20px; letter-spacing: .5px; background: #c0392b; color: #fff; }
+    .wf-header-right { margin-left: auto; display: flex; align-items: center; gap: 14px; font-size: 12px; color: #aab; }
+    .wf-header-right span { cursor: default; }
+
+    /* ── Page context bar ── */
+    .page-context-bar { background: #fff; border-bottom: 1px solid #dde1e7; padding: 8px 20px; display: flex; align-items: center; gap: 8px; font-size: 12px; color: #666; }
+    .ctx-badge { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 3px; background: #c0392b; color: #fff; letter-spacing: .5px; }
+    .ctx-sep { color: #ccc; }
+    .spec-tab-anchor { margin-left: auto; font-size: 12px; color: #0052cc; cursor: pointer; background: none; border: none; padding: 0; }
+    .spec-tab-anchor:hover { text-decoration: underline; }
+    .spec-tab-anchor:focus-visible { outline: 3px solid #0052cc; outline-offset: 2px; border-radius: 2px; }
+
+    /* ── JTBD banner ── */
+    .jtbd-banner { background: #fffbe6; border-bottom: 1px solid #ffe58f; padding: 7px 20px; font-size: 12px; color: #614700; display: flex; align-items: center; gap: 8px; }
+    .jtbd-banner strong { font-weight: 600; }
+    .jtbd-banner a { color: #614700; font-weight: 600; text-decoration: underline; }
+
+    /* ── Nav ── */
+    .wf-nav { background: #fff; border-bottom: 2px solid #e2e6ea; padding: 0 20px; display: flex; gap: 0; }
+    .wf-nav a { display: block; padding: 11px 16px; font-size: 13px; font-weight: 500; color: #444; border-bottom: 3px solid transparent; margin-bottom: -2px; }
+    .wf-nav a.active { color: #c0392b; border-bottom-color: #c0392b; }
+    .wf-nav a:hover:not(.active) { color: #1a1a2e; background: #f7f8fa; }
+
+    /* ── Page container ── */
+    .page-container { max-width: 1100px; margin: 24px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 300px; gap: 20px; }
+
+    /* ── Rejection notice ── */
+    .rejection-notice { background: #fff2f2; border: 1.5px solid #c0392b; border-radius: 8px; padding: 18px 20px; margin-bottom: 20px; display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: start; }
+    .rn-left { }
+    .rn-label { font-size: 11px; font-weight: 700; color: #c0392b; letter-spacing: .8px; text-transform: uppercase; margin-bottom: 4px; }
+    .rn-title { font-size: 17px; font-weight: 700; color: #1a1a2e; margin-bottom: 6px; }
+    .rn-meta { font-size: 12px; color: #666; display: flex; gap: 16px; flex-wrap: wrap; }
+    .rn-meta span { }
+    .rn-meta strong { color: #1a1a2e; font-weight: 600; }
+    .rn-right { text-align: right; }
+    .rn-amount { font-size: 24px; font-weight: 800; color: #c0392b; }
+    .rn-amount-label { font-size: 11px; color: #888; }
+    .rn-reason-box { background: #fff; border: 1px solid #f0b0b0; border-radius: 6px; padding: 12px 14px; margin-top: 12px; }
+    .rn-reason-label { font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: .6px; margin-bottom: 4px; }
+    .rn-reason-text { font-size: 13px; color: #333; }
+    .rn-pam-note { font-size: 12px; color: #555; margin-top: 6px; font-style: italic; }
+
+    /* ── Section card ── */
+    .section-card { background: #fff; border: 1px solid #dde1e7; border-radius: 8px; padding: 18px 20px; margin-bottom: 16px; }
+    .section-title { font-size: 13px; font-weight: 700; color: #1a1a2e; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; gap: 8px; }
+    .section-title .badge { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 3px; }
+    .badge-submitted { background: #e8f4fd; color: #1565c0; }
+    .badge-rejected { background: #fde8e8; color: #c0392b; }
+    .badge-disputed { background: #fff8e1; color: #b45309; }
+
+    /* ── Claim detail table ── */
+    .detail-table { width: 100%; border-collapse: collapse; }
+    .detail-table th { text-align: left; font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: .5px; padding: 0 0 8px; border-bottom: 1px solid #eee; }
+    .detail-table td { padding: 10px 0; border-bottom: 1px solid #f5f5f5; font-size: 13px; color: #333; vertical-align: top; }
+    .detail-table tr:last-child td { border-bottom: none; }
+    .detail-table .label-col { font-weight: 600; color: #555; width: 180px; }
+    .pill { display: inline-block; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px; }
+    .pill-rejected { background: #fde8e8; color: #c0392b; }
+    .pill-approved { background: #e8f5e9; color: #2e7d32; }
+    .pill-partial { background: #fff8e1; color: #b45309; }
+
+    /* ── Docs list ── */
+    .doc-list { display: flex; flex-direction: column; gap: 8px; }
+    .doc-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; background: #f7f8fa; border: 1px solid #e5e7eb; border-radius: 6px; }
+    .doc-icon { font-size: 16px; }
+    .doc-info { flex: 1; }
+    .doc-name { font-size: 13px; font-weight: 500; color: #1a1a2e; }
+    .doc-meta { font-size: 11px; color: #888; }
+    .doc-status { font-size: 11px; font-weight: 700; }
+    .doc-status.ok { color: #2e7d32; }
+    .doc-status.flagged { color: #c0392b; }
+
+    /* ── Dispute form ── */
+    .form-row { margin-bottom: 16px; }
+    .form-label { display: block; font-size: 12px; font-weight: 600; color: #333; margin-bottom: 5px; }
+    .form-label .req { color: #c0392b; margin-left: 2px; }
+    .form-label .hint { font-weight: 400; color: #888; font-size: 11px; margin-left: 6px; }
+    select, input[type="text"], textarea { width: 100%; border: 1px solid #ccc; border-radius: 5px; padding: 8px 10px; font-size: 13px; font-family: inherit; color: #1a1a2e; background: #fff; }
+    select:focus, input[type="text"]:focus, textarea:focus { outline: 3px solid #0052cc; outline-offset: 0; border-color: #0052cc; }
+    textarea { resize: vertical; min-height: 100px; }
+    .char-count { font-size: 11px; color: #888; text-align: right; margin-top: 3px; }
+    .form-sublabel { font-size: 11px; color: #666; margin-top: 4px; }
+
+    /* ── Upload zone ── */
+    .upload-zone { border: 2px dashed #bbb; border-radius: 8px; padding: 22px; text-align: center; background: #fafafa; cursor: pointer; transition: border-color .2s, background .2s; }
+    .upload-zone:hover, .upload-zone:focus-within { border-color: #0052cc; background: #f0f4ff; }
+    .upload-zone .upload-icon { font-size: 28px; margin-bottom: 6px; color: #888; }
+    .upload-zone p { font-size: 13px; color: #555; }
+    .upload-zone .upload-types { font-size: 11px; color: #888; margin-top: 4px; }
+    .upload-zone input[type="file"] { position: absolute; opacity: 0; width: 0; height: 0; }
+
+    /* ── Timeline ── */
+    .timeline { display: flex; flex-direction: column; gap: 0; }
+    .tl-step { display: flex; gap: 12px; }
+    .tl-left { display: flex; flex-direction: column; align-items: center; }
+    .tl-dot { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+    .tl-dot.active { background: #c0392b; color: #fff; }
+    .tl-dot.pending { background: #e9ecef; color: #888; border: 2px solid #ccc; }
+    .tl-dot.done { background: #e8f5e9; color: #2e7d32; border: 2px solid #a5d6a7; }
+    .tl-line { width: 2px; flex: 1; background: #e2e6ea; min-height: 20px; margin: 3px 0; }
+    .tl-content { padding: 0 0 20px 4px; }
+    .tl-label { font-size: 13px; font-weight: 600; color: #1a1a2e; }
+    .tl-sub { font-size: 12px; color: #666; margin-top: 2px; }
+    .tl-step:last-child .tl-line { display: none; }
+
+    /* ── Actions ── */
+    .action-bar { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 4px; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 18px; border-radius: 5px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; font-family: inherit; transition: opacity .15s; }
+    .btn:focus-visible { outline: 3px solid #0052cc; outline-offset: 2px; }
+    .btn-primary { background: #c0392b; color: #fff; }
+    .btn-primary:hover { opacity: .88; }
+    .btn-secondary { background: #fff; color: #333; border: 1px solid #ccc; }
+    .btn-secondary:hover { background: #f5f5f5; }
+    .btn-ghost { background: none; color: #0052cc; border: none; padding: 9px 4px; font-size: 13px; font-weight: 500; cursor: pointer; font-family: inherit; }
+    .btn-ghost:hover { text-decoration: underline; }
+    .action-note { font-size: 11px; color: #888; margin-left: auto; }
+
+    /* ── Sidebar ── */
+    .sidebar { display: flex; flex-direction: column; gap: 16px; }
+    .sidebar-card { background: #fff; border: 1px solid #dde1e7; border-radius: 8px; padding: 16px; }
+    .sidebar-title { font-size: 12px; font-weight: 700; color: #555; text-transform: uppercase; letter-spacing: .6px; margin-bottom: 12px; }
+    .info-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 7px 0; border-bottom: 1px solid #f5f5f5; font-size: 12px; gap: 8px; }
+    .info-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .info-key { color: #777; }
+    .info-val { font-weight: 600; color: #1a1a2e; text-align: right; }
+    .info-val.warn { color: #c0392b; }
+    .info-val a { color: #0052cc; font-weight: 500; }
+
+    /* ── Quick links ── */
+    .quick-links { display: flex; flex-direction: column; gap: 6px; }
+    .quick-link { display: flex; align-items: center; gap: 7px; font-size: 12px; color: #0052cc; padding: 7px 8px; border-radius: 5px; background: #f7f8fa; border: 1px solid #e5e7eb; }
+    .quick-link:hover { background: #e8f4fd; border-color: #c2dbf7; }
+    .quick-link .ql-icon { font-size: 14px; }
+
+    /* ── Precedent / context ── */
+    .precedent-note { background: #f0f4ff; border: 1px solid #c2dbf7; border-radius: 6px; padding: 12px 14px; font-size: 12px; color: #1565c0; margin-bottom: 0; }
+    .precedent-note strong { font-weight: 700; }
+
+    /* ── Spec panel ── */
+    .spec-panel { background: #1a1a2e; color: #e0e0e0; border-radius: 8px; padding: 22px; margin: 24px auto; max-width: 1100px; font-size: 13px; line-height: 1.7; display: none; }
+    .spec-panel.visible { display: block; }
+    .spec-panel h2 { font-size: 16px; color: #fff; margin-bottom: 14px; }
+    .spec-panel h3 { font-size: 13px; color: #adf; margin: 16px 0 6px; font-weight: 600; }
+    .spec-panel p, .spec-panel li { color: #ccc; }
+    .spec-panel ul { padding-left: 18px; }
+    .spec-panel li { margin-bottom: 5px; }
+    .spec-panel .tag { display: inline-block; background: #333; color: #adf; font-size: 11px; padding: 2px 7px; border-radius: 3px; margin: 2px; }
+    .spec-panel a { color: #7ec8e3; }
+    .spec-panel .screen-link { color: #ffd; font-style: italic; }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .page-container { grid-template-columns: 1fr; }
+      .sidebar { order: -1; }
+      .rejection-notice { grid-template-columns: 1fr; }
+      .rn-right { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Auth gate -->
+<div class="auth-gate" role="banner">
+  🔒 Wireframe — authenticated as <strong>Steve Rogers</strong> · CloudBridge Solutions · Partner (AE) · <a href="#">Switch persona</a>
+</div>
+
+<!-- Header -->
+<header class="wf-header">
+  <div class="wf-logo">Equinix <span>Partner Connect</span></div>
+  <span class="role-badge">Partner</span>
+  <div class="wf-header-right">
+    <span>CloudBridge Solutions</span>
+    <span>Gold Tier</span>
+    <span>Steve Rogers ▾</span>
+  </div>
+</header>
+
+<!-- Page context bar -->
+<div class="page-context-bar">
+  <span class="ctx-badge">PM</span>
+  <span class="ctx-sep">›</span>
+  <a href="pm-mdf-balance.html">MDF & Co-Marketing</a>
+  <span class="ctx-sep">›</span>
+  <a href="pm-pop-submission.html">MDF Claims</a>
+  <span class="ctx-sep">›</span>
+  <span>Dispute Claim #MDF-2026-0147</span>
+  <button class="spec-tab-anchor" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">⚙ Spec &amp; rationale</button>
+</div>
+
+<!-- JTBD banner -->
+<div class="jtbd-banner" role="note">
+  <strong>JTBD:</strong> MDF-3 — Dispute a rejected co-marketing claim ·
+  <a href="workflows-jtbd.html#mdf-3">View full workflow →</a>
+</div>
+
+<!-- Nav -->
+<nav class="wf-nav" aria-label="Partner portal navigation">
+  <a href="pm-home-dashboard.html">Home</a>
+  <a href="pm-deal-registration.html">Deals</a>
+  <a href="pm-mdf-balance.html" class="active">MDF</a>
+  <a href="pm-leads.html">Leads</a>
+  <a href="pm-training.html">Training</a>
+  <a href="pm-resources.html">Resources</a>
+</nav>
+
+<!-- Main content -->
+<div class="page-container" role="main">
+  <div class="main-content">
+
+    <!-- Rejection notice -->
+    <div class="rejection-notice" role="alert" aria-label="Claim rejected">
+      <div class="rn-left">
+        <div class="rn-label">⚠ Claim Rejected — Action Required</div>
+        <div class="rn-title">AWS re:Invent 2025 — Co-Sponsorship</div>
+        <div class="rn-meta">
+          <span><strong>Claim ID:</strong> MDF-2026-0147</span>
+          <span><strong>Submitted:</strong> Jan 14, 2026</span>
+          <span><strong>Rejected:</strong> Jan 29, 2026</span>
+          <span><strong>Reviewed by:</strong> Alex Rivera (PAM)</span>
+        </div>
+        <div class="rn-reason-box" aria-label="Rejection reason">
+          <div class="rn-reason-label">Rejection reason</div>
+          <div class="rn-reason-text">Insufficient documentation — vendor invoice does not itemize Equinix-eligible spend separately from general event costs. POP requirement: line-item breakdown showing Equinix co-branding portion only.</div>
+          <div class="rn-pam-note">"The invoice shows $18,000 total, but we can only reimburse the co-branded session and booth costs. Need a line-item split before I can approve." — Alex Rivera, Jan 29</div>
+        </div>
+      </div>
+      <div class="rn-right">
+        <div class="rn-amount">$8,500</div>
+        <div class="rn-amount-label">Claim amount</div>
+      </div>
+    </div>
+
+    <!-- Submitted claim detail -->
+    <div class="section-card">
+      <div class="section-title">
+        Submitted Claim Details
+        <span class="badge badge-submitted">Original Submission</span>
+      </div>
+      <table class="detail-table" aria-label="Claim details">
+        <thead>
+          <tr>
+            <th class="label-col">Field</th>
+            <th>Submitted value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="label-col">Activity type</td>
+            <td>Industry Conference — Co-Sponsorship</td>
+          </tr>
+          <tr>
+            <td class="label-col">Event name</td>
+            <td>AWS re:Invent 2025, Las Vegas NV, Nov 30 – Dec 6 2025</td>
+          </tr>
+          <tr>
+            <td class="label-col">Equinix product(s) promoted</td>
+            <td>Equinix Fabric, Network Edge, Metal</td>
+          </tr>
+          <tr>
+            <td class="label-col">Amount claimed</td>
+            <td>$8,500 (of $18,000 total event spend)</td>
+          </tr>
+          <tr>
+            <td class="label-col">Pre-approval reference</td>
+            <td>MDF-PA-2025-0891 · <a href="#">View approval →</a></td>
+          </tr>
+          <tr>
+            <td class="label-col">Status</td>
+            <td><span class="pill pill-rejected">Rejected</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Submitted documents -->
+    <div class="section-card">
+      <div class="section-title">
+        Proof of Performance Documents
+        <span class="badge badge-submitted">3 files submitted</span>
+      </div>
+      <div class="doc-list">
+        <div class="doc-item">
+          <div class="doc-icon">📄</div>
+          <div class="doc-info">
+            <div class="doc-name">CloudBridge_reInvent2025_Invoice.pdf</div>
+            <div class="doc-meta">Uploaded Jan 14, 2026 · 1.2 MB · Vendor invoice</div>
+          </div>
+          <div class="doc-status flagged">⚠ Flagged — not itemized</div>
+        </div>
+        <div class="doc-item">
+          <div class="doc-icon">🖼</div>
+          <div class="doc-info">
+            <div class="doc-name">CloudBridge_Equinix_Booth_Photos.zip</div>
+            <div class="doc-meta">Uploaded Jan 14, 2026 · 8.4 MB · Event photos</div>
+          </div>
+          <div class="doc-status ok">✓ Accepted</div>
+        </div>
+        <div class="doc-item">
+          <div class="doc-icon">📊</div>
+          <div class="doc-info">
+            <div class="doc-name">reInvent2025_LeadList_CloudBridge.xlsx</div>
+            <div class="doc-meta">Uploaded Jan 14, 2026 · 340 KB · Lead/attendance list</div>
+          </div>
+          <div class="doc-status ok">✓ Accepted</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dispute form -->
+    <div class="section-card">
+      <div class="section-title">
+        Submit Dispute
+        <span class="badge badge-disputed">In Progress</span>
+      </div>
+
+      <form aria-label="MDF claim dispute form" novalidate>
+
+        <!-- Dispute basis -->
+        <div class="form-row">
+          <label for="dispute-basis" class="form-label">
+            Dispute basis <span class="req" aria-label="required">*</span>
+          </label>
+          <select id="dispute-basis" required aria-required="true">
+            <option value="" disabled selected>Select the primary reason for disputing...</option>
+            <option value="docs-sufficient">I believe my documentation meets the POP requirements</option>
+            <option value="new-docs">I have additional documentation that wasn't included</option>
+            <option value="guideline-misread">I believe the rejection misapplied the MDF guidelines</option>
+            <option value="pre-approval-mismatch">The rejection conflicts with the pre-approval I received</option>
+            <option value="partial-approval">I'm requesting partial approval for the itemized portion</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <!-- Preferred resolution -->
+        <div class="form-row">
+          <label for="resolution-type" class="form-label">
+            Requested resolution <span class="req" aria-label="required">*</span>
+          </label>
+          <select id="resolution-type" required aria-required="true">
+            <option value="" disabled selected>What outcome are you seeking?</option>
+            <option value="full-approval">Full approval of $8,500</option>
+            <option value="partial">Partial approval — approve itemized Equinix spend only (~$5,200)</option>
+            <option value="pam-call">Schedule a call with my PAM to resolve documentation</option>
+            <option value="escalate">Escalate to Channel Marketing for guideline clarification</option>
+          </select>
+          <div class="form-sublabel">Partial approval requests will be routed to your PAM for line-item review.</div>
+        </div>
+
+        <!-- Description -->
+        <div class="form-row">
+          <label for="dispute-desc" class="form-label">
+            Dispute description <span class="req" aria-label="required">*</span>
+            <span class="hint">Explain why you believe the claim should be approved.</span>
+          </label>
+          <textarea id="dispute-desc" rows="5" maxlength="1500" placeholder="Describe your dispute in detail. Reference specific MDF guidelines if applicable, and explain what your documentation demonstrates..." required aria-required="true"></textarea>
+          <div class="char-count" aria-live="polite" aria-atomic="true">0 / 1,500 characters</div>
+        </div>
+
+        <!-- Additional evidence -->
+        <div class="form-row">
+          <label class="form-label">
+            Additional supporting documents
+            <span class="hint">Optional — upload any new or supplementary evidence</span>
+          </label>
+          <div class="upload-zone" role="button" tabindex="0" aria-label="Upload additional documents — drag and drop or click to browse">
+            <input type="file" multiple accept=".pdf,.xlsx,.xls,.png,.jpg,.jpeg,.csv" aria-label="File upload input" />
+            <div class="upload-icon" aria-hidden="true">📎</div>
+            <p>Drag files here, or click to browse</p>
+            <div class="upload-types">PDF, Excel, PNG, JPG, CSV · Max 25 MB per file</div>
+          </div>
+          <div class="form-sublabel" style="margin-top:8px;">
+            <strong>Suggested additions:</strong> itemized invoice from vendor, signed co-branding agreement, event program excerpt showing Equinix branding, post-event attendance summary.
+          </div>
+        </div>
+
+        <!-- PAM comm note -->
+        <div class="form-row">
+          <label for="pam-note" class="form-label">
+            Note to PAM
+            <span class="hint">Optional — shown only to Alex Rivera</span>
+          </label>
+          <textarea id="pam-note" rows="3" maxlength="500" placeholder="Any context that would help Alex review this dispute quickly..."></textarea>
+        </div>
+
+        <!-- Action bar -->
+        <div class="action-bar">
+          <button type="submit" class="btn btn-primary" aria-label="Submit dispute for review">Submit Dispute</button>
+          <button type="button" class="btn btn-secondary">Save Draft</button>
+          <button type="button" class="btn-ghost">Cancel</button>
+          <span class="action-note">Alex Rivera will be notified · Response expected within 5 business days</span>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- What happens next -->
+    <div class="section-card">
+      <div class="section-title">What Happens After You Submit</div>
+      <div class="timeline" role="list" aria-label="Dispute resolution process">
+        <div class="tl-step" role="listitem">
+          <div class="tl-left" aria-hidden="true">
+            <div class="tl-dot active">1</div>
+            <div class="tl-line"></div>
+          </div>
+          <div class="tl-content">
+            <div class="tl-label">Dispute submitted</div>
+            <div class="tl-sub">You'll receive a confirmation email. Claim status updates to "Under Dispute" — the original rejection is paused.</div>
+          </div>
+        </div>
+        <div class="tl-step" role="listitem">
+          <div class="tl-left" aria-hidden="true">
+            <div class="tl-dot pending">2</div>
+            <div class="tl-line"></div>
+          </div>
+          <div class="tl-content">
+            <div class="tl-label">PAM review <span style="font-weight:400;color:#888;">· within 5 business days</span></div>
+            <div class="tl-sub">Alex Rivera reviews your dispute and additional documents. PAM may request a short call to clarify documentation requirements.</div>
+          </div>
+        </div>
+        <div class="tl-step" role="listitem">
+          <div class="tl-left" aria-hidden="true">
+            <div class="tl-dot pending">3</div>
+            <div class="tl-line"></div>
+          </div>
+          <div class="tl-content">
+            <div class="tl-label">Decision — approve, partially approve, or deny</div>
+            <div class="tl-sub">If denied again, you may escalate to Channel Marketing (Priya Nair) for a final program-level review. Escalations are limited to one per claim.</div>
+          </div>
+        </div>
+        <div class="tl-step" role="listitem">
+          <div class="tl-left" aria-hidden="true">
+            <div class="tl-dot done">✓</div>
+          </div>
+          <div class="tl-content">
+            <div class="tl-label">Approved — reimbursement issued</div>
+            <div class="tl-sub">Approved amount processed net-30. Partially approved claims are paid at the itemized rate with a note explaining the adjustment.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main-content -->
+
+  <!-- Sidebar -->
+  <aside class="sidebar" aria-label="Claim summary and resources">
+
+    <!-- Claim summary -->
+    <div class="sidebar-card">
+      <div class="sidebar-title">Claim Summary</div>
+      <div class="info-row">
+        <span class="info-key">Claim ID</span>
+        <span class="info-val">MDF-2026-0147</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">Activity</span>
+        <span class="info-val">AWS re:Invent 2025</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">Pre-approval</span>
+        <span class="info-val"><a href="#">MDF-PA-0891</a></span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">Amount claimed</span>
+        <span class="info-val">$8,500</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">Status</span>
+        <span class="info-val warn">Rejected</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">Q1 MDF remaining</span>
+        <span class="info-val">$11,750</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">Your PAM</span>
+        <span class="info-val"><a href="pam-profile.html">Alex Rivera</a></span>
+      </div>
+    </div>
+
+    <!-- Precedent note -->
+    <div class="sidebar-card">
+      <div class="sidebar-title">Guideline Reference</div>
+      <div class="precedent-note">
+        <strong>MDF POP Requirement 3.2:</strong> Invoices for co-sponsored events must itemize Equinix-eligible spend as a separate line item or include a signed cost allocation agreement from the event vendor.
+      </div>
+      <div style="margin-top:12px; font-size:12px; color:#555; line-height:1.6;">
+        If your vendor cannot issue a revised invoice, a signed letter from the event organizer confirming Equinix's allocated portion is accepted as an alternative.
+      </div>
+      <div style="margin-top:10px;">
+        <a href="pm-resources.html#mdf-guidelines" class="quick-link" style="display:inline-flex;margin:0;">📋 Full MDF Guidelines →</a>
+      </div>
+    </div>
+
+    <!-- Quick links -->
+    <div class="sidebar-card">
+      <div class="sidebar-title">Related Screens</div>
+      <div class="quick-links">
+        <a href="pm-pop-submission.html" class="quick-link">
+          <span class="ql-icon">📤</span> Original POP submission
+        </a>
+        <a href="pm-mdf-balance.html" class="quick-link">
+          <span class="ql-icon">💰</span> MDF balance &amp; history
+        </a>
+        <a href="pm-mdf-request.html" class="quick-link">
+          <span class="ql-icon">📝</span> Submit new MDF request
+        </a>
+        <a href="pam-mdf-claims.html" class="quick-link">
+          <span class="ql-icon">🔑</span> PAM claims view (Alex)
+        </a>
+        <a href="cmm-mdf-oversight.html" class="quick-link">
+          <span class="ql-icon">📊</span> CMM escalation (Priya)
+        </a>
+      </div>
+    </div>
+
+  </aside>
+</div><!-- /page-container -->
+
+<!-- Spec panel -->
+<aside class="spec-panel" id="spec-panel" role="complementary" aria-label="Wireframe specification">
+  <h2>⚙ Wireframe Spec — pm-mdf-dispute.html</h2>
+
+  <h3>Persona</h3>
+  <p><strong>Steve Rogers</strong> — AE, CloudBridge Solutions. <span class="tag">Partner</span> <span class="tag">PM role</span></p>
+  <p>Steve submitted a POP for AWS re:Invent co-sponsorship in January. His PAM (Alex Rivera) rejected it citing an un-itemized invoice. Steve believes the documentation is clear enough — or can be supplemented — and wants to dispute rather than abandon the $8,500 claim.</p>
+
+  <h3>Why this screen exists</h3>
+  <p>In the prior wireframe set, Steve could submit a POP via <span class="screen-link">pm-pop-submission.html</span> and Alex could reject it via <span class="screen-link">pam-mdf-claims.html</span>. But there was no screen for what Steve sees after rejection — the claim disappeared from his view with no recourse. This is the dispute entry point, analogous to <span class="screen-link">pm-tier-appeal.html</span> in the tier demotion flow.</p>
+
+  <h3>Design decisions</h3>
+  <ul>
+    <li><strong>Rejection reason surfaced prominently:</strong> The PAM's note is quoted verbatim at the top. Steve should understand exactly what failed before filling out a dispute form — not discover it buried in a detail table.</li>
+    <li><strong>Document status per file:</strong> Each POP file is marked accepted or flagged individually. This tells Steve which asset caused the rejection without ambiguity.</li>
+    <li><strong>"Partial approval" as a resolution option:</strong> Real-world partner oracles indicate that many MDF disputes settle on a lower approved amount. Offering partial approval as an explicit option reduces round-trip negotiation and anchors the conversation constructively.</li>
+    <li><strong>Suggested additions callout:</strong> Tells Steve what supplementary docs would likely fix the rejection (signed co-branding agreement, itemized line). This is an education moment built into the flow rather than requiring Steve to go read guidelines separately.</li>
+    <li><strong>Guideline reference in sidebar:</strong> Cites the specific MDF requirement (3.2) that triggered the rejection and offers the alternative (vendor letter). Reduces follow-up support tickets.</li>
+    <li><strong>Escalation path visible in timeline:</strong> If PAM denies again, Steve can escalate to Priya (CMM). This path is disclosed up front so Steve knows his options before committing to the dispute. One escalation per claim prevents abuse.</li>
+    <li><strong>Claim paused on submission:</strong> The timeline states the original rejection is paused once a dispute is submitted. This matters — Steve should not fear that a clock is running against him during the review period.</li>
+  </ul>
+
+  <h3>Counterpart screens</h3>
+  <ul>
+    <li><span class="screen-link">pam-mdf-claims.html</span> — Alex's screen where the rejection originated; dispute routes back here</li>
+    <li><span class="screen-link">pm-pop-submission.html</span> — original POP upload; Steve's starting point</li>
+    <li><span class="screen-link">cmm-mdf-oversight.html</span> — Priya's escalation queue if PAM denies again</li>
+    <li><span class="screen-link">pm-tier-appeal.html</span> — structural analogue (partner appeals an adverse Equinix decision)</li>
+  </ul>
+
+  <h3>MDF chain context</h3>
+  <p>This screen closes the loop on the full MDF lifecycle: Priya sets budget → Steve checks balance → Steve requests → Alex approves → Steve executes → Steve submits POP → Alex reviews → <strong>Steve disputes rejection (this screen)</strong> → Alex or Priya decides → reimbursement issued.</p>
+
+  <h3>Accessibility notes</h3>
+  <ul>
+    <li>Rejection notice uses <code>role="alert"</code> and <code>aria-label</code> for screen reader announcement.</li>
+    <li>Upload zone is keyboard-focusable with <code>role="button"</code> and <code>tabindex="0"</code>.</li>
+    <li>Timeline uses <code>role="list"</code> / <code>role="listitem"</code> and decorative dots are <code>aria-hidden</code>.</li>
+    <li>Character count is <code>aria-live="polite"</code> to announce dynamically without interrupting flow.</li>
+    <li>All required fields have <code>aria-required="true"</code> and visible <code>*</code> markers.</li>
+  </ul>
+
+  <h3>Sources</h3>
+  <ul>
+    <li>Equinix Partner Program MDF guidelines framework — derived from public Equinix Partner Program documentation at <a href="https://www.equinix.com/partners/partner-program" target="_blank">equinix.com/partners</a></li>
+    <li>MDF dispute UX patterns — Partner Path "2024 State of Partner Programs" (publicly accessible summary at <a href="https://partnerpath.net" target="_blank">partnerpath.net</a>)</li>
+    <li>Partial approval as dispute resolution: Salesforce Partner Community forum threads (publicly visible, no login required for indexed threads)</li>
+  </ul>
+</aside>
+
+<script>
+  function toggleSpec() {
+    const panel = document.getElementById('spec-panel');
+    const btn = document.querySelector('.spec-tab-anchor');
+    const isVisible = panel.classList.toggle('visible');
+    btn.setAttribute('aria-expanded', isVisible.toString());
+    if (isVisible) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // Character count for dispute description
+  const textarea = document.getElementById('dispute-desc');
+  const charCount = document.querySelector('.char-count');
+  if (textarea && charCount) {
+    textarea.addEventListener('input', () => {
+      charCount.textContent = `${textarea.value.length.toLocaleString()} / 1,500 characters`;
+    });
+  }
+
+  // Upload zone keyboard activation
+  document.querySelectorAll('.upload-zone').forEach(zone => {
+    zone.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        zone.querySelector('input[type="file"]')?.click();
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Referrals — Lead Referral Partner · Equinix PCP</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Salesforce Sans,sans-serif; background:var(--wf-canvas,#f5f7fb); color:var(--wf-ink,#1e2a3a); }
+
+    header { background:var(--wf-ink,#1e2a3a); color:#fff; padding:14px 24px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 1px 3px rgba(0,0,0,.12); }
+    .header-left { display:flex; align-items:center; gap:16px; }
+    .eq-logo { width:38px; height:38px; background:#3d6daa; border-radius:4px; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:18px; color:#fff; }
+    .role-badge { background:#0f766e; color:#fff; font-size:10px; font-weight:700; letter-spacing:.8px; padding:2px 7px; border-radius:3px; text-transform:uppercase; }
+    .header-title { font-size:16px; font-weight:600; }
+    nav { display:flex; gap:28px; margin-left:40px; }
+    nav a { color:rgba(255,255,255,.8); text-decoration:none; font-size:13px; padding-bottom:4px; }
+    nav a:hover { color:#fff; }
+    nav a.active { color:#fff; border-bottom:2px solid #5eead4; font-weight:600; }
+    .header-right { display:flex; gap:18px; align-items:center; }
+    .user-avatar { width:34px; height:34px; background:#0f766e; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; color:#fff; cursor:pointer; }
+
+    .page-context-bar { background:#fff; border-bottom:1px solid #dde2eb; padding:8px 24px; display:flex; align-items:center; gap:8px; font-size:12px; color:#6b7f99; }
+    .ctx-badge { background:#0f766e; color:#fff; font-size:10px; font-weight:700; padding:2px 6px; border-radius:3px; }
+    .ctx-sep { color:#b0b8c5; }
+    .spec-tab-anchor { background:#fff; border-bottom:1px solid #dde2eb; padding:0 24px; display:flex; }
+    .spec-tab-btn { background:none; border:none; border-bottom:2px solid transparent; font-size:12px; color:#6b7f99; padding:6px 10px; cursor:pointer; font-weight:500; }
+    .spec-tab-btn:hover { color:#1e2a3a; }
+
+    .page-container { display:flex; }
+    .main-content { flex:1; padding:24px; max-width:calc(100% - 260px); }
+    .sidebar { width:260px; min-width:260px; padding:24px 16px 24px 0; }
+
+    /* Welcome banner */
+    .welcome-banner {
+      background:linear-gradient(135deg,#0f766e 0%,#0d9488 100%);
+      color:#fff; border-radius:8px; padding:24px 28px; margin-bottom:20px;
+      display:flex; justify-content:space-between; align-items:center;
+    }
+    .wb-left h1 { font-size:22px; font-weight:300; margin-bottom:4px; }
+    .wb-left p { font-size:13px; color:rgba(255,255,255,.8); }
+    .wb-stat { text-align:center; }
+    .wb-stat-val { font-size:28px; font-weight:700; }
+    .wb-stat-label { font-size:11px; color:rgba(255,255,255,.75); margin-top:2px; }
+
+    /* KPI row */
+    .kpi-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:20px; }
+    .kpi-card { background:#fff; border:1px solid #dde2eb; border-radius:6px; padding:16px; border-top:3px solid transparent; }
+    .kpi-card.teal { border-top-color:#0d9488; }
+    .kpi-card.ok { border-top-color:#22c55e; }
+    .kpi-card.warn { border-top-color:#f59e0b; }
+    .kpi-card.neutral { border-top-color:#3d6daa; }
+    .kpi-label { font-size:11px; font-weight:600; color:#6b7f99; text-transform:uppercase; letter-spacing:.5px; margin-bottom:6px; }
+    .kpi-value { font-size:26px; font-weight:700; color:#1e2a3a; line-height:1; margin-bottom:4px; }
+    .kpi-sub { font-size:11px; color:#6b7f99; }
+    .kpi-sub.ok { color:#16a34a; }
+
+    /* Tables */
+    .card { background:#fff; border:1px solid #dde2eb; border-radius:6px; margin-bottom:18px; overflow:hidden; }
+    .card-title { font-size:13px; font-weight:600; color:#1e2a3a; padding:14px 16px; border-bottom:1px solid #eef1f6; display:flex; justify-content:space-between; align-items:center; }
+    .table-header { display:grid; padding:8px 16px; background:#f8fafc; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:#8898aa; border-bottom:1px solid #eef1f6; }
+    .table-row { display:grid; padding:11px 16px; font-size:12.5px; border-bottom:1px solid #eef1f6; align-items:center; }
+    .table-row:last-child { border-bottom:none; }
+    .table-row:hover { background:#f8fafc; }
+    .th-referrals { grid-template-columns:1.4fr 1.6fr .9fr .8fr .8fr .9fr; }
+    .th-commissions { grid-template-columns:1.4fr 1.4fr .8fr .8fr .7fr; }
+
+    .link-id { color:#0d9488; font-weight:600; text-decoration:none; cursor:pointer; }
+    .link-id:hover { text-decoration:underline; }
+
+    .chip { display:inline-block; font-size:10.5px; font-weight:700; padding:2px 8px; border-radius:10px; letter-spacing:.3px; }
+    .chip-new { background:#f0fdf4; color:#065f46; }
+    .chip-working { background:#dbeafe; color:#1e40af; }
+    .chip-won { background:#d1fae5; color:#065f46; border:1px solid #6ee7b7; }
+    .chip-lost { background:#fee2e2; color:#991b1b; }
+    .chip-pending { background:#fef3c7; color:#92400e; }
+    .chip-paid { background:#f0fdf4; color:#15803d; border:1px solid #bbf7d0; }
+    .chip-stale { background:#f3f4f6; color:#6b7280; }
+
+    /* Submit referral form card */
+    .form-card { background:#fff; border:1px solid #dde2eb; border-radius:6px; padding:20px; margin-bottom:18px; }
+    .form-card h3 { font-size:13px; font-weight:700; color:#1e2a3a; margin-bottom:14px; }
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }
+    .form-field label { display:block; font-size:11px; font-weight:600; color:#6b7f99; text-transform:uppercase; letter-spacing:.4px; margin-bottom:4px; }
+    .form-field input, .form-field select, .form-field textarea {
+      width:100%; padding:8px 10px; border:1px solid #dde2eb; border-radius:4px;
+      font-size:13px; color:#1e2a3a; background:#fff;
+    }
+    .form-field textarea { height:64px; resize:vertical; }
+    .btn-primary { background:#0f766e; color:#fff; border:none; padding:10px 20px; border-radius:5px; font-size:13px; font-weight:600; cursor:pointer; }
+    .btn-primary:hover { background:#0d9488; }
+    .btn-secondary { background:#f8fafc; color:#1e2a3a; border:1px solid #dde2eb; padding:10px 20px; border-radius:5px; font-size:13px; font-weight:600; cursor:pointer; }
+
+    /* JTBD banner */
+    .jtbd-banner { background:#f0fdfa; border:1px solid #99f6e4; border-radius:6px; padding:10px 14px; margin-bottom:18px; font-size:12px; color:#0f766e; }
+    .jtbd-banner strong { display:block; margin-bottom:4px; }
+    .jtbd-banner a { color:#0d9488; font-weight:600; text-decoration:none; }
+    .jtbd-banner a:hover { text-decoration:underline; }
+
+    /* Sidebar */
+    .sidebar-card { background:#fff; border:1px solid #dde2eb; border-radius:6px; padding:14px 16px; margin-bottom:14px; }
+    .sidebar-card h4 { font-size:12px; font-weight:700; color:#1e2a3a; margin-bottom:10px; }
+    .rule-item { padding:7px 0; border-bottom:1px solid #eef1f6; font-size:12px; color:#374151; }
+    .rule-item:last-child { border-bottom:none; }
+    .rule-item strong { display:block; color:#1e2a3a; margin-bottom:1px; }
+    .rule-sub { font-size:11px; color:#6b7f99; }
+    .progress-row { display:flex; align-items:center; gap:8px; font-size:11.5px; margin-bottom:6px; }
+    .progress-label { width:90px; color:#374151; flex-shrink:0; }
+    .progress-track { flex:1; height:6px; background:#e2e8f0; border-radius:3px; overflow:hidden; }
+    .progress-fill { height:100%; background:#0d9488; border-radius:3px; }
+
+    /* Spec panel */
+    .spec-panel { display:none; position:fixed; top:0; right:0; width:420px; height:100vh; background:#fff; border-left:2px solid #0d9488; box-shadow:-4px 0 16px rgba(0,0,0,.08); overflow-y:auto; padding:24px; z-index:1000; font-size:12.5px; line-height:1.6; color:#374151; }
+    .spec-panel h2 { font-size:14px; font-weight:700; color:#1e2a3a; margin-bottom:16px; }
+    .spec-panel h3 { font-size:12px; font-weight:700; color:#1e2a3a; margin:16px 0 6px; text-transform:uppercase; letter-spacing:.5px; }
+    .spec-panel h4 { font-size:12px; font-weight:700; color:#1e2a3a; margin:10px 0 4px; }
+    .spec-panel p { margin-bottom:8px; }
+    .spec-panel ul { margin:4px 0 8px 16px; }
+    .spec-panel li { margin-bottom:4px; }
+    .spec-panel a { color:#0d9488; }
+    .spec-close { float:right; background:none; border:none; font-size:18px; cursor:pointer; color:#6b7f99; }
+    .spec-divider { border:none; border-top:1px solid #eef1f6; margin:14px 0; }
+    .further-reading { background:#f8fafc; border:1px solid #eef1f6; border-radius:4px; padding:10px 12px; margin-top:8px; font-size:11.5px; }
+    .further-reading strong { display:block; font-size:10.5px; text-transform:uppercase; letter-spacing:.5px; color:#9ca3af; margin-bottom:6px; }
+  </style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<header role="banner">
+  <div class="header-left">
+    <div class="eq-logo" aria-hidden="true">EQ</div>
+    <span class="role-badge">Referral</span>
+    <span class="header-title">Partner Connect Portal</span>
+    <nav aria-label="Primary navigation">
+      <a href="ref-home.html" class="active" aria-current="page">My Referrals</a>
+      <a href="ref-submit.html">Submit a Lead</a>
+      <a href="ref-commissions.html">Commissions</a>
+      <a href="pm-resources.html">Resources</a>
+      <a href="pm-profile.html">Profile</a>
+    </nav>
+  </div>
+  <div class="header-right">
+    <span style="font-size:13px;color:rgba(255,255,255,.7);">Meridian Consulting Group</span>
+    <div class="user-avatar" title="Jamie Torres">JT</div>
+  </div>
+</header>
+
+<!-- ── Context bar ── -->
+<div class="page-context-bar" aria-label="Page context">
+  <span class="ctx-badge">REF</span>
+  <span class="ctx-sep">›</span>
+  <span>Jamie Torres</span>
+  <span class="ctx-sep">›</span>
+  <strong>My Referrals Dashboard</strong>
+  <span style="margin-left:auto;font-size:11px;">Experience Cloud &bull; Referral Partner App</span>
+</div>
+
+<div class="spec-tab-anchor" role="tablist">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" role="tab">Notes</button>
+</div>
+
+<!-- ── Page container ── -->
+<div class="page-container">
+<div class="main-content" role="main">
+
+  <!-- JTBD banner -->
+  <div class="jtbd-banner" role="note">
+    <strong>Jobs to Be Done</strong>
+    Serves <a href="workflows-jtbd.html">Referral-1</a>: Jamie submits warm leads to Equinix and tracks whether they convert — without needing reseller contracts, deal registration, or MDF access.
+  </div>
+
+  <!-- Welcome banner -->
+  <div class="welcome-banner" role="region" aria-label="Account summary">
+    <div class="wb-left">
+      <h1>Welcome back, Jamie.</h1>
+      <p>Meridian Consulting Group &bull; Lead Referral Partner &bull; Active since Jan 2025</p>
+    </div>
+    <div style="display:flex;gap:36px;">
+      <div class="wb-stat">
+        <div class="wb-stat-val">11</div>
+        <div class="wb-stat-label">Referrals submitted</div>
+      </div>
+      <div class="wb-stat">
+        <div class="wb-stat-val">3</div>
+        <div class="wb-stat-label">Closed won</div>
+      </div>
+      <div class="wb-stat">
+        <div class="wb-stat-val">$18,400</div>
+        <div class="wb-stat-label">Commissions earned</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPI row -->
+  <div class="kpi-grid" role="list" aria-label="Referral summary">
+    <div class="kpi-card teal" role="listitem">
+      <div class="kpi-label">Active Referrals</div>
+      <div class="kpi-value">5</div>
+      <div class="kpi-sub">3 in qualification, 2 in evaluation</div>
+    </div>
+    <div class="kpi-card ok" role="listitem">
+      <div class="kpi-label">Closed Won (YTD)</div>
+      <div class="kpi-value">3</div>
+      <div class="kpi-sub ok">27% conversion rate</div>
+    </div>
+    <div class="kpi-card warn" role="listitem">
+      <div class="kpi-label">Pending Commission</div>
+      <div class="kpi-value">$6,200</div>
+      <div class="kpi-sub">2 deals pending payment processing</div>
+    </div>
+    <div class="kpi-card neutral" role="listitem">
+      <div class="kpi-label">Avg Time to Close</div>
+      <div class="kpi-value">74d</div>
+      <div class="kpi-sub">From submission to won</div>
+    </div>
+  </div>
+
+  <!-- Quick submit form -->
+  <div class="form-card" role="region" aria-label="Submit a new referral">
+    <h3>Submit a New Lead</h3>
+    <div class="form-row">
+      <div class="form-field">
+        <label for="company-name">Company Name</label>
+        <input type="text" id="company-name" placeholder="e.g. Acme Corporation">
+      </div>
+      <div class="form-field">
+        <label for="contact-name">Primary Contact</label>
+        <input type="text" id="contact-name" placeholder="Name and title">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-field">
+        <label for="contact-email">Contact Email</label>
+        <input type="email" id="contact-email" placeholder="email@company.com">
+      </div>
+      <div class="form-field">
+        <label for="service-interest">Service Interest</label>
+        <select id="service-interest">
+          <option>— select —</option>
+          <option>Colocation</option>
+          <option>Equinix Fabric / Interconnection</option>
+          <option>Metal (Bare Metal)</option>
+          <option>Network Edge</option>
+          <option>Multiple / Unsure</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row" style="grid-template-columns:1fr;">
+      <div class="form-field">
+        <label for="context">Context &amp; Warm-Up Notes</label>
+        <textarea id="context" placeholder="What problem are they trying to solve? How do you know them? What's the timeline?"></textarea>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <button class="btn-primary" type="button">Submit Lead</button>
+      <button class="btn-secondary" type="button">Save Draft</button>
+    </div>
+  </div>
+
+  <!-- Active referrals table -->
+  <div class="card" role="region" aria-label="Active referrals">
+    <div class="card-title">
+      <span>Active Referrals</span>
+      <span style="font-size:11px;color:#6b7f99;font-weight:400;">Updated daily by Equinix team</span>
+    </div>
+    <div class="table-header th-referrals" role="row">
+      <div>Company</div>
+      <div>Contact</div>
+      <div>Service</div>
+      <div>Submitted</div>
+      <div>Stage</div>
+      <div>Equinix Owner</div>
+    </div>
+
+    <div class="table-row th-referrals" role="row">
+      <div><a class="link-id" href="#">Northgate Financial</a></div>
+      <div>D. Patel, VP IT</div>
+      <div>Fabric</div>
+      <div>Feb 10, 2026</div>
+      <div><span class="chip chip-working">In Evaluation</span></div>
+      <div>Sarah Mitchell</div>
+    </div>
+    <div class="table-row th-referrals" role="row">
+      <div><a class="link-id" href="#">SkyEdge Logistics</a></div>
+      <div>R. Kim, CTO</div>
+      <div>Colocation</div>
+      <div>Feb 3, 2026</div>
+      <div><span class="chip chip-working">In Evaluation</span></div>
+      <div>Sarah Mitchell</div>
+    </div>
+    <div class="table-row th-referrals" role="row">
+      <div><a class="link-id" href="#">Apex Digital</a></div>
+      <div>T. Walsh, Dir Infra</div>
+      <div>Metal</div>
+      <div>Jan 22, 2026</div>
+      <div><span class="chip chip-new">Qualifying</span></div>
+      <div>Unassigned</div>
+    </div>
+    <div class="table-row th-referrals" role="row">
+      <div><a class="link-id" href="#">Clearwater Health</a></div>
+      <div>J. Osei, VP Eng</div>
+      <div>Colocation</div>
+      <div>Jan 15, 2026</div>
+      <div><span class="chip chip-new">Qualifying</span></div>
+      <div>Unassigned</div>
+    </div>
+    <div class="table-row th-referrals" role="row">
+      <div><a class="link-id" href="#">PrecisionMed Group</a></div>
+      <div>M. Santos, CIO</div>
+      <div>Fabric</div>
+      <div>Jan 8, 2026</div>
+      <div><span class="chip chip-new">Qualifying</span></div>
+      <div>T. Brooks (SE)</div>
+    </div>
+  </div>
+
+  <!-- Commission history -->
+  <div class="card" role="region" aria-label="Commission history">
+    <div class="card-title">Commission History</div>
+    <div class="table-header th-commissions" role="row">
+      <div>Company</div>
+      <div>Service</div>
+      <div>Deal Value</div>
+      <div>Commission</div>
+      <div>Status</div>
+    </div>
+    <div class="table-row th-commissions" role="row">
+      <div>CloudBridge Solutions</div>
+      <div>Colocation — SV5</div>
+      <div>$420,000 ARR</div>
+      <div>$8,400</div>
+      <div><span class="chip chip-paid">Paid Jan 15</span></div>
+    </div>
+    <div class="table-row th-commissions" role="row">
+      <div>DataLink Corp</div>
+      <div>Fabric</div>
+      <div>$180,000 ARR</div>
+      <div>$3,600</div>
+      <div><span class="chip chip-paid">Paid Nov 22</span></div>
+    </div>
+    <div class="table-row th-commissions" role="row">
+      <div>TerraCloud Partners</div>
+      <div>Colocation — NY4</div>
+      <div>$310,000 ARR</div>
+      <div>$6,200</div>
+      <div><span class="chip chip-pending">Processing</span></div>
+    </div>
+    <div class="table-row th-commissions" role="row">
+      <div>InnovateTech GmbH</div>
+      <div>Network Edge</div>
+      <div>—</div>
+      <div>—</div>
+      <div><span class="chip chip-lost">Lost</span></div>
+    </div>
+    <div class="table-row th-commissions" role="row">
+      <div>Pacific Rim Systems</div>
+      <div>Colocation</div>
+      <div>—</div>
+      <div>—</div>
+      <div><span class="chip chip-stale">Stale — 90d</span></div>
+    </div>
+  </div>
+
+</div><!-- /main-content -->
+
+<!-- ── Sidebar ── -->
+<aside class="sidebar" aria-label="Program info and resources">
+  <div class="sidebar-card">
+    <h4>Referral Program Terms</h4>
+    <div class="rule-item">
+      <strong>Commission rate</strong>
+      <div class="rule-sub">2% of first-year ARR on closed-won deals you referred.</div>
+    </div>
+    <div class="rule-item">
+      <strong>Protection window</strong>
+      <div class="rule-sub">90 days from submission. If the lead goes stale, you can resubmit with new context.</div>
+    </div>
+    <div class="rule-item">
+      <strong>Payment timing</strong>
+      <div class="rule-sub">Net-30 after customer invoice payment clears.</div>
+    </div>
+    <div class="rule-item">
+      <strong>What you provide</strong>
+      <div class="rule-sub">Warm introduction only. Equinix runs the sales motion — you're not required to join calls.</div>
+    </div>
+    <div class="rule-item">
+      <strong>Exclusions</strong>
+      <div class="rule-sub">Existing Equinix customers and prospects already in active Equinix pipeline are ineligible.</div>
+    </div>
+  </div>
+
+  <div class="sidebar-card">
+    <h4>Your Conversion Rate</h4>
+    <div style="font-size:24px;font-weight:700;color:#0d9488;margin-bottom:4px;">27%</div>
+    <div style="font-size:11px;color:#6b7f99;margin-bottom:12px;">Program average: 22%</div>
+    <div class="progress-row">
+      <span class="progress-label">Colocation</span>
+      <div class="progress-track"><div class="progress-fill" style="width:40%;"></div></div>
+      <span style="font-size:11px;color:#374151;width:28px;">40%</span>
+    </div>
+    <div class="progress-row">
+      <span class="progress-label">Fabric</span>
+      <div class="progress-track"><div class="progress-fill" style="width:25%;"></div></div>
+      <span style="font-size:11px;color:#374151;width:28px;">25%</span>
+    </div>
+    <div class="progress-row">
+      <span class="progress-label">Metal</span>
+      <div class="progress-track"><div class="progress-fill" style="width:0%;background:#e2e8f0;"></div></div>
+      <span style="font-size:11px;color:#6b7f99;width:28px;">0%</span>
+    </div>
+  </div>
+
+  <div class="sidebar-card">
+    <h4>Resources</h4>
+    <a href="pm-resources.html" style="display:block;font-size:12px;color:#0d9488;font-weight:600;text-decoration:none;padding:6px 0;border-bottom:1px solid #eef1f6;">Equinix Product Overview →</a>
+    <a href="pm-asset-library.html" style="display:block;font-size:12px;color:#0d9488;font-weight:600;text-decoration:none;padding:6px 0;border-bottom:1px solid #eef1f6;">Pitch Decks &amp; One-Pagers →</a>
+    <a href="pm-support-center.html" style="display:block;font-size:12px;color:#0d9488;font-weight:600;text-decoration:none;padding:6px 0;">Contact Partner Support →</a>
+  </div>
+</aside>
+</div><!-- /page-container -->
+
+<!-- ── Spec panel ── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design specifications">
+  <button class="spec-close" onclick="toggleSpec()" aria-label="Close design notes">✕</button>
+  <h2>Design Notes — ref-home.html</h2>
+
+  <h3>Purpose</h3>
+  <p>This is the post-onboarding home for a Lead Referral partner — a persona that previously had no surface after completing <a href="onboarding-apply-referral.html">onboarding-apply-referral.html</a>. They are not a reseller (no deal registration, no MDF, no tier). Their entire relationship with Equinix is: send warm leads, track them, collect commission.</p>
+
+  <h3>Key Differences from Reseller (pm-) Surface</h3>
+  <ul>
+    <li>No deal registration (they submit a "lead," not a "deal")</li>
+    <li>No MDF access (referral partners don't receive co-marketing funds)</li>
+    <li>No tier/badge system (flat referral structure)</li>
+    <li>No training requirements (though resources are available)</li>
+    <li>Visibility is limited — Jamie can see stage (Qualifying / In Evaluation / Won) but not deal details or pricing</li>
+    <li>Equinix AE owns the sales motion; Jamie provides the warm intro and stays out of the process</li>
+  </ul>
+
+  <h3>New Persona: Jamie Torres</h3>
+  <p>Meridian Consulting Group — a management consulting firm. Not a tech reseller; a business consultant whose clients sometimes need colocation or interconnection infrastructure. Jamie refers those conversations to Equinix rather than trying to resell the product, in exchange for a 2% commission on first-year ARR.</p>
+  <p>This persona type is common in professional services (consulting, legal, accounting) adjacent to enterprise IT decisions. Per <a href="https://www.channeltivity.com/blog/checklist-for-buying-a-channel-partner-portal-software-solution/" target="_blank">Channeltivity's 2025 PRM guide</a>, referral partners are among the fastest-growing partner types and the most underserved by portal UX.</p>
+
+  <h3>Jobs to Be Done</h3>
+  <ul>
+    <li><strong>Referral-1:</strong> Submit a warm lead quickly without navigating a complex deal registration form</li>
+    <li><strong>Referral-2:</strong> Know whether a submitted lead has been picked up by Equinix and what stage it's in</li>
+    <li><strong>Referral-3:</strong> Track commissions owed and paid without calling Equinix finance</li>
+  </ul>
+
+  <h3>Design Decisions</h3>
+  <h4>Quick submit form on the homepage</h4>
+  <p>The most important action is submitting a lead. Burying it behind a nav link would replicate the UX failure of most partner portals. The form is right on the home screen — short, focused, no unnecessary fields.</p>
+
+  <h4>Stage visibility without deal detail</h4>
+  <p>Jamie can see "In Evaluation" but not the deal size, pricing, or correspondence. This is intentional — the customer relationship is between Equinix and the prospect; referral partners are not co-sellers. The pipeline table shows enough to answer "did anyone pick this up?" without leaking confidential deal information.</p>
+
+  <h4>90-day stale marker</h4>
+  <p>Pacific Rim Systems shows "Stale — 90d". This matters because the referral protection window is 90 days. After that, Jamie can resubmit with updated context. Without this indicator, the lead just disappears and Jamie doesn't know if it's dead or still in play.</p>
+
+  <h3>Gaps / Open Questions</h3>
+  <ul>
+    <li>[?] Does Jamie receive email notifications when a lead changes stage? (Recommend: yes — reduces inbound status inquiries)</li>
+    <li>[?] Can Jamie attach a brief or intro email when submitting a lead?</li>
+    <li>[A] Commission rate (2%) and protection window (90 days) are assumptions — confirm with Equinix program team</li>
+    <li>[?] Are referral partners able to upgrade to reseller status through the portal, or does that require a new application?</li>
+    <li>Stub screens: <code>ref-submit.html</code> (dedicated lead submission), <code>ref-commissions.html</code> (full commission history + payment details)</li>
+  </ul>
+
+  <h3>Related Screens</h3>
+  <ul>
+    <li><a href="onboarding-apply-referral.html">onboarding-apply-referral.html</a> — where referral partners come from</li>
+    <li><a href="pm-resources.html">pm-resources.html</a> — shared with reseller surface</li>
+    <li><a href="psm-partner-account-list.html">psm-partner-account-list.html</a> — Marcus can see referral partners here</li>
+  </ul>
+
+  <hr class="spec-divider">
+  <div class="further-reading">
+    <strong>Further Reading</strong>
+    <p>Channeltivity (2025): "Partner Portal Buying Guide" — referral UX section. Publicly accessible at channeltivity.com.</p>
+    <p>Partnerplace (2024): "IT Channel Partner Types — VAR, MSP, ISV, SI." Includes referral partner patterns. Publicly accessible.</p>
+  </div>
+
+  <h3>Version</h3>
+  <p>v0.1 — initial wireframe, Feb 24 2026</p>
+</aside>
+
+<script src="wf-nav.js"></script>
+<script>
+  function toggleSpec() {
+    const panel = document.getElementById('spec-panel');
+    const btn   = document.getElementById('spec-toggle');
+    const open  = panel.style.display === 'block';
+    panel.style.display = open ? 'none' : 'block';
+    btn.setAttribute('aria-expanded', String(!open));
+  }
+</script>
+</body>
+</html>

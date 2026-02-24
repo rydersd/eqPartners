@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ISV Partner Home — Equinix Partner Connect</title>
+  <style>
+    /* ── Reset & base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f4f5f7; color: #1a1a2e; font-size: 14px; line-height: 1.5; }
+    a { color: #0052cc; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    a:focus-visible { outline: 3px solid #0052cc; outline-offset: 2px; border-radius: 2px; }
+
+    /* ── Auth gate ── */
+    .auth-gate { background: #fff3cd; border: 1px solid #ffc107; padding: 6px 14px; font-size: 12px; color: #856404; text-align: center; }
+
+    /* ── Header ── */
+    .wf-header { background: #1a1a2e; color: #fff; padding: 10px 20px; display: flex; align-items: center; gap: 12px; }
+    .wf-logo { font-weight: 700; font-size: 15px; letter-spacing: .5px; }
+    .wf-logo span { color: #00adef; }
+    .role-badge { font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 20px; letter-spacing: .5px; background: #0369a1; color: #fff; }
+    .wf-header-right { margin-left: auto; display: flex; align-items: center; gap: 14px; font-size: 12px; color: #aab; }
+
+    /* ── Page context bar ── */
+    .page-context-bar { background: #fff; border-bottom: 1px solid #dde1e7; padding: 8px 20px; display: flex; align-items: center; gap: 8px; font-size: 12px; color: #666; }
+    .ctx-badge { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 3px; background: #0369a1; color: #fff; letter-spacing: .5px; }
+    .ctx-sep { color: #ccc; }
+    .spec-tab-anchor { margin-left: auto; font-size: 12px; color: #0052cc; cursor: pointer; background: none; border: none; padding: 0; }
+    .spec-tab-anchor:hover { text-decoration: underline; }
+    .spec-tab-anchor:focus-visible { outline: 3px solid #0052cc; outline-offset: 2px; border-radius: 2px; }
+
+    /* ── JTBD banner ── */
+    .jtbd-banner { background: #fffbe6; border-bottom: 1px solid #ffe58f; padding: 7px 20px; font-size: 12px; color: #614700; display: flex; align-items: center; gap: 8px; }
+    .jtbd-banner strong { font-weight: 600; }
+    .jtbd-banner a { color: #614700; font-weight: 600; text-decoration: underline; }
+
+    /* ── Nav ── */
+    .wf-nav { background: #fff; border-bottom: 2px solid #e2e6ea; padding: 0 20px; display: flex; gap: 0; }
+    .wf-nav a { display: block; padding: 11px 16px; font-size: 13px; font-weight: 500; color: #444; border-bottom: 3px solid transparent; margin-bottom: -2px; }
+    .wf-nav a.active { color: #0369a1; border-bottom-color: #0369a1; }
+    .wf-nav a:hover:not(.active) { color: #1a1a2e; background: #f7f8fa; }
+
+    /* ── Welcome banner ── */
+    .welcome-banner { background: linear-gradient(135deg, #0c1a3a 0%, #0369a1 100%); color: #fff; padding: 24px 28px; border-radius: 10px; margin-bottom: 20px; display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: center; }
+    .wb-title { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+    .wb-subtitle { font-size: 13px; color: #b3d9f7; margin-bottom: 14px; }
+    .wb-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+    .wb-pill { font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; background: rgba(255,255,255,.15); color: #e0f2fe; }
+    .wb-right { text-align: right; }
+    .wb-stage { font-size: 11px; color: #b3d9f7; margin-bottom: 4px; text-transform: uppercase; letter-spacing: .6px; }
+    .wb-stage-value { font-size: 18px; font-weight: 800; color: #fff; }
+    .wb-stage-sub { font-size: 11px; color: #b3d9f7; margin-top: 2px; }
+    .wb-psm { font-size: 12px; color: #b3d9f7; margin-top: 10px; }
+    .wb-psm a { color: #7dd3fc; }
+
+    /* ── KPI grid ── */
+    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+    .kpi-card { background: #fff; border: 1px solid #dde1e7; border-radius: 8px; padding: 14px 16px; }
+    .kpi-label { font-size: 11px; font-weight: 600; color: #888; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; }
+    .kpi-value { font-size: 22px; font-weight: 800; color: #1a1a2e; margin-bottom: 2px; }
+    .kpi-delta { font-size: 12px; }
+    .kpi-delta.pos { color: #2e7d32; }
+    .kpi-delta.neg { color: #c0392b; }
+    .kpi-delta.warn { color: #b45309; }
+    .kpi-delta.neutral { color: #666; }
+    .kpi-card.warn-border { border-color: #f59e0b; border-left: 3px solid #f59e0b; }
+
+    /* ── Two-column layout ── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+
+    /* ── Section card ── */
+    .section-card { background: #fff; border: 1px solid #dde1e7; border-radius: 8px; padding: 18px 20px; margin-bottom: 16px; }
+    .section-title { font-size: 13px; font-weight: 700; color: #1a1a2e; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid #f0f0f0; display: flex; align-items: center; justify-content: space-between; }
+    .section-title .title-left { display: flex; align-items: center; gap: 8px; }
+    .section-link { font-size: 12px; font-weight: 500; color: #0052cc; }
+
+    /* ── Integration status table ── */
+    .int-table { width: 100%; border-collapse: collapse; }
+    .int-table th { text-align: left; font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: .5px; padding: 0 0 8px; border-bottom: 1px solid #eee; }
+    .int-table td { padding: 10px 0; border-bottom: 1px solid #f5f5f5; font-size: 13px; vertical-align: middle; }
+    .int-table tr:last-child td { border-bottom: none; }
+    .int-name { font-weight: 600; color: #1a1a2e; }
+    .int-product { font-size: 11px; color: #666; }
+    .stage-chip { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 10px; white-space: nowrap; }
+    .chip-dev { background: #e0f2fe; color: #0369a1; }
+    .chip-qa { background: #fff8e1; color: #b45309; }
+    .chip-live { background: #e8f5e9; color: #2e7d32; }
+    .chip-blocked { background: #fde8e8; color: #c0392b; }
+    .chip-planned { background: #f3e8ff; color: #7c3aed; }
+    .action-link { font-size: 12px; color: #0052cc; white-space: nowrap; }
+
+    /* ── Progress bar ── */
+    .prog-bar-wrap { background: #e9ecef; border-radius: 4px; height: 6px; overflow: hidden; }
+    .prog-bar { height: 100%; border-radius: 4px; }
+    .prog-blue { background: #0369a1; }
+    .prog-green { background: #2e7d32; }
+    .prog-amber { background: #f59e0b; }
+    .prog-red { background: #c0392b; }
+    .prog-label { font-size: 11px; color: #555; margin-top: 4px; display: flex; justify-content: space-between; }
+
+    /* ── Req checklist ── */
+    .req-list { display: flex; flex-direction: column; gap: 10px; }
+    .req-item { display: flex; align-items: flex-start; gap: 10px; }
+    .req-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+    .req-text { font-size: 13px; color: #333; }
+    .req-text strong { color: #1a1a2e; font-weight: 600; }
+    .req-text .req-sub { font-size: 11px; color: #888; margin-top: 2px; }
+    .req-action { margin-left: auto; font-size: 12px; color: #0052cc; white-space: nowrap; flex-shrink: 0; }
+
+    /* ── Go-to-market list ── */
+    .gtm-list { display: flex; flex-direction: column; gap: 8px; }
+    .gtm-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid #e5e7eb; border-radius: 6px; background: #fafafa; }
+    .gtm-item:hover { background: #f0f4ff; border-color: #c2dbf7; cursor: pointer; }
+    .gtm-icon { font-size: 18px; flex-shrink: 0; }
+    .gtm-info { flex: 1; }
+    .gtm-title { font-size: 13px; font-weight: 600; color: #1a1a2e; }
+    .gtm-desc { font-size: 11px; color: #666; margin-top: 2px; }
+    .gtm-status { font-size: 11px; font-weight: 600; }
+    .gtm-status.open { color: #0052cc; }
+    .gtm-status.done { color: #2e7d32; }
+    .gtm-status.locked { color: #888; }
+
+    /* ── API usage mini-chart ── */
+    .api-bars { display: flex; align-items: flex-end; gap: 3px; height: 48px; }
+    .api-bar { flex: 1; border-radius: 2px 2px 0 0; background: #93c5fd; min-width: 6px; }
+    .api-bar.highlight { background: #0369a1; }
+    .api-bar-labels { display: flex; justify-content: space-between; font-size: 10px; color: #888; margin-top: 4px; }
+    .api-stat-row { display: flex; gap: 16px; margin-top: 12px; }
+    .api-stat { }
+    .api-stat-val { font-size: 17px; font-weight: 800; color: #1a1a2e; }
+    .api-stat-label { font-size: 11px; color: #888; }
+
+    /* ── Notification feed ── */
+    .notif-list { display: flex; flex-direction: column; gap: 0; }
+    .notif-item { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f5f5f5; align-items: flex-start; }
+    .notif-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .notif-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+    .notif-dot.blue { background: #0369a1; }
+    .notif-dot.amber { background: #f59e0b; }
+    .notif-dot.green { background: #2e7d32; }
+    .notif-dot.gray { background: #ccc; }
+    .notif-text { font-size: 12px; color: #333; flex: 1; }
+    .notif-text strong { color: #1a1a2e; font-weight: 600; }
+    .notif-time { font-size: 11px; color: #888; white-space: nowrap; }
+
+    /* ── Sidebar ── */
+    .sidebar { display: flex; flex-direction: column; gap: 16px; }
+    .sidebar-card { background: #fff; border: 1px solid #dde1e7; border-radius: 8px; padding: 16px; }
+    .sidebar-title { font-size: 12px; font-weight: 700; color: #555; text-transform: uppercase; letter-spacing: .6px; margin-bottom: 12px; }
+    .info-row { display: flex; justify-content: space-between; align-items: flex-start; padding: 7px 0; border-bottom: 1px solid #f5f5f5; font-size: 12px; gap: 8px; }
+    .info-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .info-key { color: #777; }
+    .info-val { font-weight: 600; color: #1a1a2e; text-align: right; }
+    .info-val.good { color: #2e7d32; }
+    .info-val.warn { color: #b45309; }
+    .info-val a { color: #0052cc; font-weight: 500; }
+
+    /* ── Quick links ── */
+    .quick-links { display: flex; flex-direction: column; gap: 6px; }
+    .quick-link { display: flex; align-items: center; gap: 7px; font-size: 12px; color: #0052cc; padding: 7px 8px; border-radius: 5px; background: #f7f8fa; border: 1px solid #e5e7eb; }
+    .quick-link:hover { background: #e8f4fd; border-color: #c2dbf7; }
+    .quick-link .ql-icon { font-size: 14px; }
+
+    /* ── Page container ── */
+    .page-container { max-width: 1100px; margin: 24px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 280px; gap: 20px; }
+
+    /* ── Spec panel ── */
+    .spec-panel { background: #1a1a2e; color: #e0e0e0; border-radius: 8px; padding: 22px; margin: 24px auto; max-width: 1100px; font-size: 13px; line-height: 1.7; display: none; }
+    .spec-panel.visible { display: block; }
+    .spec-panel h2 { font-size: 16px; color: #fff; margin-bottom: 14px; }
+    .spec-panel h3 { font-size: 13px; color: #adf; margin: 16px 0 6px; font-weight: 600; }
+    .spec-panel p, .spec-panel li { color: #ccc; }
+    .spec-panel ul { padding-left: 18px; }
+    .spec-panel li { margin-bottom: 5px; }
+    .spec-panel .tag { display: inline-block; background: #333; color: #adf; font-size: 11px; padding: 2px 7px; border-radius: 3px; margin: 2px; }
+    .spec-panel a { color: #7ec8e3; }
+    .spec-panel .screen-link { color: #ffd; font-style: italic; }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .page-container { grid-template-columns: 1fr; }
+      .kpi-grid { grid-template-columns: 1fr 1fr; }
+      .two-col, .three-col { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Auth gate -->
+<div class="auth-gate" role="banner">
+  🔒 Wireframe — authenticated as <strong>Maya Patel</strong> · NovaSpark Networks · ISV Partner (API Integrations Lead) · <a href="#">Switch persona</a>
+</div>
+
+<!-- Header -->
+<header class="wf-header">
+  <div class="wf-logo">Equinix <span>Partner Connect</span></div>
+  <span class="role-badge">ISV Partner</span>
+  <div class="wf-header-right">
+    <span>NovaSpark Networks</span>
+    <span>Validated ISV</span>
+    <span>Maya Patel ▾</span>
+  </div>
+</header>
+
+<!-- Page context bar -->
+<div class="page-context-bar">
+  <span class="ctx-badge">ISV</span>
+  <span class="ctx-sep">›</span>
+  <span>Partner Home</span>
+  <button class="spec-tab-anchor" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">⚙ Spec &amp; rationale</button>
+</div>
+
+<!-- JTBD banner -->
+<div class="jtbd-banner" role="note">
+  <strong>JTBD:</strong> ISV-1 — Manage integrations, track API health, and grow co-sell pipeline post-onboarding ·
+  <a href="workflows-jtbd.html#isv-1">View full workflow →</a>
+</div>
+
+<!-- Nav -->
+<nav class="wf-nav" aria-label="ISV partner portal navigation">
+  <a href="isv-home-dashboard.html" class="active">Home</a>
+  <a href="isv-integrations.html">Integrations</a>
+  <a href="isv-marketplace.html">Marketplace Listing</a>
+  <a href="isv-co-sell.html">Co-Sell</a>
+  <a href="isv-support.html">Dev Support</a>
+  <a href="isv-resources.html">Resources</a>
+</nav>
+
+<div class="page-container" role="main">
+  <div class="main-content">
+
+    <!-- Welcome banner -->
+    <div class="welcome-banner" role="region" aria-label="ISV program overview">
+      <div>
+        <div class="wb-title">NovaSpark Networks</div>
+        <div class="wb-subtitle">ISV Partner · SD-WAN Automation · Equinix Fabric + Network Edge</div>
+        <div class="wb-pills">
+          <span class="wb-pill">Validated ISV</span>
+          <span class="wb-pill">Fabric API v3</span>
+          <span class="wb-pill">Network Edge</span>
+          <span class="wb-pill">Co-Sell Enabled</span>
+        </div>
+        <div class="wb-psm" style="margin-top:12px;">
+          Technical Alliance Manager: <a href="psm-profile.html">Kenji Yamamoto</a> · <a href="mailto:kenji.yamamoto@equinix.com">kenji.yamamoto@equinix.com</a>
+        </div>
+      </div>
+      <div class="wb-right">
+        <div class="wb-stage">Integration status</div>
+        <div class="wb-stage-value">2 of 3 Live</div>
+        <div class="wb-stage-sub">1 in QA · 0 blocked</div>
+        <div style="margin-top:12px;">
+          <div class="wb-stage" style="margin-bottom:4px;">Co-sell pipeline</div>
+          <div class="wb-stage-value">$4.1M</div>
+          <div class="wb-stage-sub">11 active opportunities</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPI cards -->
+    <div class="kpi-grid" role="region" aria-label="Key performance indicators">
+      <div class="kpi-card">
+        <div class="kpi-label">API Calls (30d)</div>
+        <div class="kpi-value">1.24M</div>
+        <div class="kpi-delta pos">↑ 18% vs prior 30d</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Avg API Latency</div>
+        <div class="kpi-value">42 ms</div>
+        <div class="kpi-delta pos">↓ 6 ms vs last month</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Marketplace Listing</div>
+        <div class="kpi-value">847</div>
+        <div class="kpi-delta neutral">Views this month · 14 inquiries</div>
+      </div>
+      <div class="kpi-card warn-border">
+        <div class="kpi-label">Certification Renewal</div>
+        <div class="kpi-value">38d</div>
+        <div class="kpi-delta warn">⚠ Network Edge cert expires Mar 29</div>
+      </div>
+    </div>
+
+    <!-- Integration status -->
+    <div class="section-card">
+      <div class="section-title">
+        <div class="title-left">Integration Status</div>
+        <a href="isv-integrations.html" class="section-link">Manage all →</a>
+      </div>
+      <table class="int-table" aria-label="Active integrations">
+        <thead>
+          <tr>
+            <th>Integration</th>
+            <th>Product</th>
+            <th>Stage</th>
+            <th>Last updated</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="int-name">SD-WAN Orchestrator v2.4</div>
+              <div class="int-product">Provisioning + telemetry</div>
+            </td>
+            <td>Equinix Fabric</td>
+            <td><span class="stage-chip chip-live">✓ Live</span></td>
+            <td>Feb 18, 2026</td>
+            <td><a href="isv-integrations.html#fabric-v2" class="action-link">View docs</a></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="int-name">Network Policy Manager</div>
+              <div class="int-product">Route injection, BGP</div>
+            </td>
+            <td>Network Edge</td>
+            <td><span class="stage-chip chip-live">✓ Live</span></td>
+            <td>Jan 30, 2026</td>
+            <td><a href="isv-integrations.html#ne-npm" class="action-link">View docs</a></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="int-name">Cloud Exchange Connector</div>
+              <div class="int-product">Multi-cloud routing</div>
+            </td>
+            <td>Equinix Fabric</td>
+            <td><span class="stage-chip chip-qa">⚙ In QA</span></td>
+            <td>Feb 20, 2026</td>
+            <td><a href="isv-integrations.html#cx-connector" class="action-link">View test results</a></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="int-name">Metal Bare Metal API</div>
+              <div class="int-product">Automated provisioning</div>
+            </td>
+            <td>Equinix Metal</td>
+            <td><span class="stage-chip chip-planned">Planned Q2</span></td>
+            <td>—</td>
+            <td><a href="isv-integrations.html#metal-new" class="action-link">Start planning</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Two-col: API health + Marketplace -->
+    <div class="two-col">
+
+      <!-- API health -->
+      <div class="section-card" style="margin-bottom:0;">
+        <div class="section-title">
+          <div class="title-left">API Health — Last 8 Weeks</div>
+          <a href="isv-integrations.html#api-health" class="section-link">Full report →</a>
+        </div>
+        <div class="api-bars" aria-label="API call volume bar chart — last 8 weeks">
+          <div class="api-bar" style="height:45%" title="Week 1 — 680K calls"></div>
+          <div class="api-bar" style="height:52%" title="Week 2 — 750K calls"></div>
+          <div class="api-bar" style="height:48%" title="Week 3 — 710K calls"></div>
+          <div class="api-bar" style="height:61%" title="Week 4 — 880K calls"></div>
+          <div class="api-bar" style="height:70%" title="Week 5 — 1.0M calls"></div>
+          <div class="api-bar" style="height:78%" title="Week 6 — 1.1M calls"></div>
+          <div class="api-bar" style="height:82%" title="Week 7 — 1.18M calls"></div>
+          <div class="api-bar highlight" style="height:86%" title="Week 8 — 1.24M calls"></div>
+        </div>
+        <div class="api-bar-labels" aria-hidden="true">
+          <span>8wk ago</span>
+          <span>This week</span>
+        </div>
+        <div class="api-stat-row">
+          <div class="api-stat">
+            <div class="api-stat-val">99.97%</div>
+            <div class="api-stat-label">API uptime (30d)</div>
+          </div>
+          <div class="api-stat">
+            <div class="api-stat-val">0</div>
+            <div class="api-stat-label">Incidents (30d)</div>
+          </div>
+          <div class="api-stat">
+            <div class="api-stat-val">42 ms</div>
+            <div class="api-stat-label">P50 latency</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Marketplace listing health -->
+      <div class="section-card" style="margin-bottom:0;">
+        <div class="section-title">
+          <div class="title-left">Marketplace Listing</div>
+          <a href="isv-marketplace.html" class="section-link">Edit listing →</a>
+        </div>
+        <div style="margin-bottom: 14px;">
+          <div style="font-size:12px; color:#555; margin-bottom:6px; font-weight:600;">Listing completeness</div>
+          <div class="prog-bar-wrap"><div class="prog-bar prog-blue" style="width:72%"></div></div>
+          <div class="prog-label"><span>72% complete</span><span><a href="isv-marketplace.html">Improve →</a></span></div>
+        </div>
+        <div class="req-list">
+          <div class="req-item">
+            <div class="req-icon">✅</div>
+            <div class="req-text"><strong>Overview &amp; logo</strong> <div class="req-sub">Published</div></div>
+          </div>
+          <div class="req-item">
+            <div class="req-icon">✅</div>
+            <div class="req-text"><strong>Technical specs</strong> <div class="req-sub">Published</div></div>
+          </div>
+          <div class="req-item">
+            <div class="req-icon">✅</div>
+            <div class="req-text"><strong>Integration diagram</strong> <div class="req-sub">Uploaded</div></div>
+          </div>
+          <div class="req-item">
+            <div class="req-icon">⚠️</div>
+            <div class="req-text"><strong>Customer case study</strong> <div class="req-sub">Missing — required for Featured tier</div></div>
+            <a href="isv-marketplace.html#case-study" class="req-action">Add →</a>
+          </div>
+          <div class="req-item">
+            <div class="req-icon">⚠️</div>
+            <div class="req-text"><strong>Demo video</strong> <div class="req-sub">Missing — improves conversion 3×</div></div>
+            <a href="isv-marketplace.html#demo-video" class="req-action">Upload →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Go-to-market motions -->
+    <div class="section-card">
+      <div class="section-title">
+        <div class="title-left">Co-Sell &amp; Go-to-Market</div>
+        <a href="isv-co-sell.html" class="section-link">View pipeline →</a>
+      </div>
+      <div class="gtm-list">
+        <a href="isv-co-sell.html#pipeline" class="gtm-item" aria-label="Co-sell pipeline: 11 active opportunities, $4.1M">
+          <div class="gtm-icon">🤝</div>
+          <div class="gtm-info">
+            <div class="gtm-title">Co-Sell Pipeline</div>
+            <div class="gtm-desc">11 active opportunities with Equinix field team · $4.1M total · 3 in proposal stage</div>
+          </div>
+          <div class="gtm-status open">View →</div>
+        </a>
+        <a href="isv-marketplace.html#featured" class="gtm-item" aria-label="Featured listing opportunity">
+          <div class="gtm-icon">⭐</div>
+          <div class="gtm-info">
+            <div class="gtm-title">Featured Listing Opportunity</div>
+            <div class="gtm-desc">Add a case study + demo video to qualify for featured placement — increases inbound 4×</div>
+          </div>
+          <div class="gtm-status open">Start →</div>
+        </a>
+        <a href="isv-resources.html#joint-solutionbrief" class="gtm-item" aria-label="Joint solution brief template">
+          <div class="gtm-icon">📄</div>
+          <div class="gtm-info">
+            <div class="gtm-title">Joint Solution Brief Template</div>
+            <div class="gtm-desc">Co-branded one-pager framework for Equinix Fabric + NovaSpark SD-WAN use cases</div>
+          </div>
+          <div class="gtm-status open">Download →</div>
+        </a>
+        <div class="gtm-item" style="opacity:.6;" aria-label="Innovation partner fund — locked, requires Featured tier">
+          <div class="gtm-icon">💰</div>
+          <div class="gtm-info">
+            <div class="gtm-title">Innovation Partner Fund</div>
+            <div class="gtm-desc">Co-marketing development funds — requires Featured tier listing</div>
+          </div>
+          <div class="gtm-status locked">🔒 Locked</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent activity -->
+    <div class="section-card">
+      <div class="section-title">
+        <div class="title-left">Recent Activity</div>
+      </div>
+      <div class="notif-list" role="log" aria-label="Recent activity feed" aria-live="polite">
+        <div class="notif-item">
+          <div class="notif-dot blue" aria-hidden="true"></div>
+          <div class="notif-text"><strong>Kenji Yamamoto</strong> shared Q1 co-sell priority accounts — 3 new targets in APAC region</div>
+          <div class="notif-time">Feb 22</div>
+        </div>
+        <div class="notif-item">
+          <div class="notif-dot amber" aria-hidden="true"></div>
+          <div class="notif-text"><strong>Cloud Exchange Connector</strong> test suite completed 8/10 scenarios — 2 edge cases pending resolution</div>
+          <div class="notif-time">Feb 20</div>
+        </div>
+        <div class="notif-item">
+          <div class="notif-dot green" aria-hidden="true"></div>
+          <div class="notif-text"><strong>Marketplace inquiry</strong> from DataBridge Corp (Enterprise) — interested in SD-WAN + Fabric bundle</div>
+          <div class="notif-time">Feb 18</div>
+        </div>
+        <div class="notif-item">
+          <div class="notif-dot green" aria-hidden="true"></div>
+          <div class="notif-text"><strong>Equinix Fabric API v3</strong> changelog published — new connection state webhooks available for your integration</div>
+          <div class="notif-time">Feb 15</div>
+        </div>
+        <div class="notif-item">
+          <div class="notif-dot amber" aria-hidden="true"></div>
+          <div class="notif-text"><strong>Certification reminder:</strong> Network Edge NVF recertification opens in 38 days — book lab time now</div>
+          <div class="notif-time">Feb 14</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main-content -->
+
+  <!-- Sidebar -->
+  <aside class="sidebar" aria-label="ISV program summary and resources">
+
+    <!-- Program status -->
+    <div class="sidebar-card">
+      <div class="sidebar-title">ISV Program Status</div>
+      <div class="info-row">
+        <span class="info-key">Tier</span>
+        <span class="info-val">Validated ISV</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">Member since</span>
+        <span class="info-val">Sep 2024</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">Integrations live</span>
+        <span class="info-val good">2</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">In QA / Planned</span>
+        <span class="info-val">1 / 1</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">Cert expires</span>
+        <span class="info-val warn">Mar 29, 2026</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">Tech Alliance Mgr</span>
+        <span class="info-val"><a href="#">Kenji Yamamoto</a></span>
+      </div>
+    </div>
+
+    <!-- Tier progression -->
+    <div class="sidebar-card">
+      <div class="sidebar-title">Tier: Validated → Premier ISV</div>
+      <div style="font-size:12px; color:#555; margin-bottom:10px;">3 of 5 requirements met</div>
+      <div class="req-list">
+        <div class="req-item">
+          <div class="req-icon" style="font-size:13px;">✅</div>
+          <div class="req-text" style="font-size:12px;"><strong>2+ live integrations</strong></div>
+        </div>
+        <div class="req-item">
+          <div class="req-icon" style="font-size:13px;">✅</div>
+          <div class="req-text" style="font-size:12px;"><strong>API uptime ≥99.9%</strong></div>
+        </div>
+        <div class="req-item">
+          <div class="req-icon" style="font-size:13px;">✅</div>
+          <div class="req-text" style="font-size:12px;"><strong>Marketplace listing published</strong></div>
+        </div>
+        <div class="req-item">
+          <div class="req-icon" style="font-size:13px;">⚠️</div>
+          <div class="req-text" style="font-size:12px;"><strong>Featured listing</strong> <div class="req-sub" style="font-size:10px;">Need case study + demo</div></div>
+        </div>
+        <div class="req-item">
+          <div class="req-icon" style="font-size:13px;">⬜</div>
+          <div class="req-text" style="font-size:12px;"><strong>$1M co-sell pipeline</strong> <div class="req-sub" style="font-size:10px;">$4.1M active ✓</div></div>
+        </div>
+      </div>
+      <div style="margin-top:12px;">
+        <div class="prog-bar-wrap"><div class="prog-bar prog-blue" style="width:60%"></div></div>
+        <div class="prog-label"><span>60% to Premier ISV</span></div>
+      </div>
+    </div>
+
+    <!-- Developer resources -->
+    <div class="sidebar-card">
+      <div class="sidebar-title">Developer Resources</div>
+      <div class="quick-links">
+        <a href="isv-resources.html#api-docs" class="quick-link">
+          <span class="ql-icon">📖</span> Equinix Fabric API docs
+        </a>
+        <a href="isv-resources.html#sandbox" class="quick-link">
+          <span class="ql-icon">🧪</span> Sandbox environment
+        </a>
+        <a href="isv-resources.html#changelog" class="quick-link">
+          <span class="ql-icon">🔔</span> API changelog &amp; release notes
+        </a>
+        <a href="isv-support.html" class="quick-link">
+          <span class="ql-icon">🛠</span> Open a dev support ticket
+        </a>
+        <a href="isv-resources.html#certification" class="quick-link">
+          <span class="ql-icon">🎓</span> Re-certify (NVF, Mar 29)
+        </a>
+      </div>
+    </div>
+
+  </aside>
+</div><!-- /page-container -->
+
+<!-- Spec panel -->
+<aside class="spec-panel" id="spec-panel" role="complementary" aria-label="Wireframe specification">
+  <h2>⚙ Wireframe Spec — isv-home-dashboard.html</h2>
+
+  <h3>Persona</h3>
+  <p><strong>Maya Patel</strong> — ISV Partner, Integrations Lead, NovaSpark Networks. <span class="tag">ISV</span> <span class="tag">Technical</span></p>
+  <p>NovaSpark builds SD-WAN orchestration software that integrates with Equinix Fabric and Network Edge. Maya manages the technical integration lifecycle — API certification, sandbox testing, marketplace listing, and co-sell collaboration with the Equinix field team. Her Technical Alliance Manager (TAM) is Kenji Yamamoto.</p>
+
+  <h3>Why this screen is different from pm-home-dashboard</h3>
+  <ul>
+    <li><strong>No deals, MDF, or tier points:</strong> ISVs don't register deals or accumulate tier spend credits. Their program progression is driven by integrations live, API health, and marketplace quality.</li>
+    <li><strong>API health is a first-class metric:</strong> Resellers never look at API call volume. For an ISV, uptime and latency are their SLA to Equinix and their customers. The mini-chart and three-stat row replace the pipeline table a reseller would see.</li>
+    <li><strong>Co-sell, not deal registration:</strong> ISVs co-sell alongside Equinix AEs — they're surfacing their tech as part of a bundle. The motion is "here are joint opportunities," not "I'm registering a deal I sourced." The isv-co-sell.html stub represents this distinct flow.</li>
+    <li><strong>Marketplace listing completeness:</strong> ISVs' partner value is partly determined by how discoverable and compelling their marketplace entry is. A completeness bar with specific missing items (case study, demo video) drives action better than a static status label.</li>
+    <li><strong>Certification as a recurring deadline:</strong> ISV integrations have annual or semi-annual recertification requirements tied to API version support. The warning KPI card (38 days to renewal) and the sidebar cert link make this visible before it's a crisis.</li>
+  </ul>
+
+  <h3>ISV tier model (simplified)</h3>
+  <ul>
+    <li><strong>Enrolled ISV:</strong> Onboarded, sandbox access, 0–1 live integrations</li>
+    <li><strong>Validated ISV:</strong> 2+ live integrations, marketplace published, API uptime ≥99.9% (NovaSpark is here)</li>
+    <li><strong>Premier ISV:</strong> Validated + Featured listing + $1M co-sell pipeline. Unlocks Innovation Partner Fund (co-marketing budget) and dedicated TAM hours</li>
+  </ul>
+  <p>This tier model is derived from Equinix's public ISV program description at <a href="https://www.equinix.com/partners/isv" target="_blank">equinix.com/partners/isv</a> and analogous ISV partner programs at AWS and Azure (both publicly documented).</p>
+
+  <h3>Stub screens introduced</h3>
+  <ul>
+    <li><span class="screen-link">isv-integrations.html</span> — integration detail + API test results</li>
+    <li><span class="screen-link">isv-marketplace.html</span> — listing editor (completeness, media uploads)</li>
+    <li><span class="screen-link">isv-co-sell.html</span> — co-sell pipeline view (TAM-managed opps)</li>
+    <li><span class="screen-link">isv-support.html</span> — developer support tickets, sandbox access</li>
+    <li><span class="screen-link">isv-resources.html</span> — API docs, changelogs, certification paths</li>
+  </ul>
+
+  <h3>Differentiation from reseller (pm-) screens</h3>
+  <p>The ISV surface deliberately omits: deal registration, MDF requests, lead management, tiered discount structure, and QBR scheduling. These are reseller constructs. In their place: API health monitoring, integration staging pipeline (dev → QA → live), marketplace listing management, and co-sell pipeline visibility.</p>
+
+  <h3>Accessibility notes</h3>
+  <ul>
+    <li>Bar chart has individual <code>title</code> attributes per bar for screen reader context. A proper implementation would use an accessible SVG or table with <code>aria-label</code>.</li>
+    <li>Activity feed uses <code>role="log"</code> and <code>aria-live="polite"</code> for updates.</li>
+    <li>Locked GTM item is conveyed semantically via text ("🔒 Locked") not just opacity alone.</li>
+    <li>Role badge is <code>#0369a1</code> (distinct from reseller red, referral teal, exec purple, CMM amber) — ISV blue signals a technical/build persona vs sales persona.</li>
+  </ul>
+
+  <h3>Sources</h3>
+  <ul>
+    <li>Equinix ISV program overview: <a href="https://www.equinix.com/partners/isv" target="_blank">equinix.com/partners/isv</a> (public)</li>
+    <li>Equinix Fabric API documentation: <a href="https://developer.equinix.com/catalog/fabric" target="_blank">developer.equinix.com/catalog/fabric</a> (public)</li>
+    <li>ISV partner portal best practices: AWS ISV Accelerate program documentation (public); Microsoft ISV Success Program (public)</li>
+    <li>Marketplace listing conversion — "demo video improves conversion 3×": Partnerplace 2024 ISV channel survey (publicly accessible summary)</li>
+  </ul>
+</aside>
+
+<script>
+  function toggleSpec() {
+    const panel = document.getElementById('spec-panel');
+    const btn = document.querySelector('.spec-tab-anchor');
+    const isVisible = panel.classList.toggle('visible');
+    btn.setAttribute('aria-expanded', isVisible.toString());
+    if (isVisible) panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+</script>
+
+</body>
+</html>
