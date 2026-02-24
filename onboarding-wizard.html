@@ -4,13 +4,13 @@
 <script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Partner Onboarding — Partner Central</title>
+  <title>Account Setup — Partner Central</title>
   <link rel="stylesheet" href="wireframe.css">
   <style>
     * { box-sizing: border-box; }
     body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); }
 
-    /* ── Wizard shell ──────────────────────────────────────── */
+    /* ── Wizard shell ── */
     .wizard-shell { max-width: 820px; margin: 0 auto; padding: 40px 24px 80px; }
     .wizard-intro { margin-bottom: 28px; }
     .wizard-intro h1 { font-size: 22px; font-weight: 700; margin: 0 0 6px; }
@@ -24,8 +24,10 @@
     .context-bar a { color: var(--wf-accent, #3d6daa); font-weight: 600; text-decoration: none; text-transform: none; letter-spacing: 0; font-size: 12px; }
     .context-bar a:hover { text-decoration: underline; }
     .cb-sep { color: var(--wf-line, #b0bdd0); }
+    .cb-exit { margin-left: auto; font-size: 12px; font-weight: 600; color: var(--wf-muted, #6b7f99); text-decoration: none; text-transform: none; letter-spacing: 0; }
+    .cb-exit:hover { color: var(--wf-ink, #1e2a3a); text-decoration: underline; }
 
-    /* ── Stepper ───────────────────────────────────────────── */
+    /* ── Stepper ── */
     .stepper { display: flex; align-items: flex-start; margin-bottom: 32px; }
     .stepper-step { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; }
     .stepper-step:not(:last-child)::after {
@@ -42,11 +44,11 @@
     }
     .stepper-step.active    .step-circle { background: var(--wf-accent, #3d6daa); border-color: var(--wf-accent, #3d6daa); color: white; }
     .stepper-step.completed .step-circle { background: var(--wf-accent, #3d6daa); border-color: var(--wf-accent, #3d6daa); color: white; }
-    .step-label { font-size: 11px; font-weight: 600; color: var(--wf-muted, #6b7f99); margin-top: 6px; text-align: center; line-height: 1.3; max-width: 80px; }
+    .step-label { font-size: 10px; font-weight: 600; color: var(--wf-muted, #6b7f99); margin-top: 6px; text-align: center; line-height: 1.3; max-width: 72px; }
     .stepper-step.active    .step-label { color: var(--wf-accent, #3d6daa); }
     .stepper-step.completed .step-label { color: var(--wf-ink, #1e2a3a); }
 
-    /* ── Cards ─────────────────────────────────────────────── */
+    /* ── Cards ── */
     .step-section { display: none; }
     .step-section.active { display: block; }
     .card { background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.10); padding: 28px 32px; margin-bottom: 16px; }
@@ -55,47 +57,23 @@
     .section-label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--wf-muted, #6b7f99); margin: 0 0 14px; }
     .divider { border: none; border-top: 1px solid var(--wf-line, #b0bdd0); margin: 24px 0; }
 
-    /* ── PSM / welcome card ─────────────────────────────────── */
+    /* ── PSM welcome banner ── */
     .welcome-banner {
       background: var(--wf-ink, #1e2a3a); border-radius: 8px;
       padding: 24px 28px; margin-bottom: 16px; color: white;
       display: flex; align-items: flex-start; gap: 20px;
     }
-    .wb-icon {
-      width: 48px; height: 48px; border-radius: 50%;
-      background: var(--wf-accent, #3d6daa);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 14px; font-weight: 700; color: white; flex-shrink: 0;
-    }
+    .wb-icon { width: 48px; height: 48px; border-radius: 50%; background: var(--wf-accent, #3d6daa); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: white; flex-shrink: 0; }
     .wb-body h2 { font-size: 17px; font-weight: 700; margin: 0 0 4px; }
     .wb-body p  { font-size: 13px; color: rgba(255,255,255,0.7); margin: 0 0 12px; line-height: 1.55; }
-    .wb-psm {
-      display: flex; align-items: center; gap: 10px;
-      background: rgba(255,255,255,0.08); border-radius: 6px;
-      padding: 10px 14px; font-size: 12px;
-    }
-    .wb-psm-avatar {
-      width: 28px; height: 28px; border-radius: 50%;
-      background: rgba(255,255,255,0.15);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 10px; font-weight: 700; color: white; flex-shrink: 0;
-    }
+    .wb-psm { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.08); border-radius: 6px; padding: 10px 14px; font-size: 12px; }
+    .wb-psm-avatar { width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: white; flex-shrink: 0; }
     .wb-psm-info { flex: 1; }
     .wb-psm-name { color: white; font-weight: 700; display: block; }
     .wb-psm-role { color: rgba(255,255,255,0.55); }
     .wb-psm-email { color: rgba(255,255,255,0.7); font-size: 11px; margin-left: auto; }
 
-    /* Profile review ─────────────────────────────────────── */
-    .profile-review-grid {
-      display: grid; grid-template-columns: 1fr 1fr;
-      gap: 12px; margin-bottom: 0;
-    }
-    .pr-field { display: flex; flex-direction: column; gap: 4px; }
-    .pr-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--wf-muted, #6b7f99); }
-    .pr-value { font-size: 13px; font-weight: 600; color: var(--wf-ink, #1e2a3a); }
-    .pr-value.pre { background: var(--wf-tint, #dce4ef); border-radius: 4px; padding: 3px 7px; font-size: 13px; display: inline-block; }
-
-    /* ── Form fields ────────────────────────────────────────── */
+    /* ── Form fields ── */
     .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
     .form-grid.full  { grid-template-columns: 1fr; }
     .form-group { display: flex; flex-direction: column; gap: 5px; }
@@ -110,123 +88,98 @@
     .form-group input.prefilled { background: var(--wf-tint, #dce4ef); border-color: var(--wf-accent, #3d6daa); }
     .field-hint { font-size: 11px; color: var(--wf-muted, #6b7f99); }
 
-    /* ── Team management ─────────────────────────────────────── */
-    .team-table {
-      width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 13px;
-    }
-    .team-table th {
-      font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
-      color: var(--wf-muted, #6b7f99); padding: 0 12px 10px; text-align: left;
-      border-bottom: 2px solid var(--wf-line, #b0bdd0);
-    }
-    .team-table td {
-      padding: 12px; border-bottom: 1px solid var(--wf-line, #b0bdd0);
-      vertical-align: middle; color: var(--wf-ink, #1e2a3a);
-    }
+    /* ── Team management ── */
+    .team-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 13px; }
+    .team-table th { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--wf-muted, #6b7f99); padding: 0 12px 10px; text-align: left; border-bottom: 2px solid var(--wf-line, #b0bdd0); }
+    .team-table td { padding: 12px; border-bottom: 1px solid var(--wf-line, #b0bdd0); vertical-align: middle; color: var(--wf-ink, #1e2a3a); }
     .team-table tr:last-child td { border-bottom: none; }
     .team-row-you { background: var(--wf-tint, #dce4ef); }
-    .you-badge {
-      font-size: 10px; font-weight: 700; text-transform: uppercase;
-      background: var(--wf-accent, #3d6daa); color: white;
-      border-radius: 3px; padding: 1px 5px; margin-left: 6px;
-    }
-    .role-select {
-      padding: 6px 10px; border: 1px solid var(--wf-line, #b0bdd0);
-      border-radius: 5px; font-size: 12px; font-family: inherit;
-      color: var(--wf-ink, #1e2a3a); background: white;
-    }
-    .remove-btn {
-      background: none; border: none; color: var(--wf-muted, #6b7f99);
-      font-size: 16px; cursor: pointer; padding: 2px 6px; line-height: 1;
-    }
+    .you-badge { font-size: 10px; font-weight: 700; text-transform: uppercase; background: var(--wf-accent, #3d6daa); color: white; border-radius: 3px; padding: 1px 5px; margin-left: 6px; }
+    .role-select { padding: 6px 10px; border: 1px solid var(--wf-line, #b0bdd0); border-radius: 5px; font-size: 12px; font-family: inherit; color: var(--wf-ink, #1e2a3a); background: white; }
+    .remove-btn { background: none; border: none; color: var(--wf-muted, #6b7f99); font-size: 16px; cursor: pointer; padding: 2px 6px; line-height: 1; }
     .remove-btn:hover { color: var(--wf-red, #8b4553); }
-    .add-member-row {
-      display: flex; gap: 8px; align-items: flex-end;
-    }
+    .add-member-row { display: flex; gap: 8px; align-items: flex-end; }
     .add-member-row .form-group { flex: 1; margin-bottom: 0; }
 
-    /* ── Checkbox / radio grids ─────────────────────────────── */
+    /* ── Training step ── */
+    .training-person { margin-bottom: 28px; }
+    .training-person:last-of-type { margin-bottom: 0; }
+    .training-person-hd { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .tp-avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--wf-accent, #3d6daa); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: white; flex-shrink: 0; }
+    .tp-name { font-size: 14px; font-weight: 700; color: var(--wf-ink, #1e2a3a); }
+    .tp-role-tag { font-size: 11px; font-weight: 700; background: var(--wf-tint, #dce4ef); color: var(--wf-accent, #3d6daa); border-radius: 3px; padding: 2px 8px; margin-left: 8px; }
+    .courses-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
+    .course-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: var(--wf-canvas, #f5f7fb); border: 1px solid var(--wf-line, #b0bdd0); border-radius: 6px; font-size: 13px; }
+    .course-name { flex: 1; font-weight: 500; color: var(--wf-ink, #1e2a3a); }
+    .course-meta { font-size: 11px; color: var(--wf-muted, #6b7f99); white-space: nowrap; }
+    .course-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; border-radius: 3px; padding: 2px 6px; white-space: nowrap; }
+    .course-tag.required { background: #fef3cd; color: #856404; border: 1px solid #fde68a; }
+    .course-tag.recommended { background: var(--wf-tint, #dce4ef); color: var(--wf-accent, #3d6daa); border: 1px solid var(--wf-line, #b0bdd0); }
+    .course-tag.optional { background: var(--wf-canvas, #f5f7fb); color: var(--wf-muted, #6b7f99); border: 1px solid var(--wf-line, #b0bdd0); }
+    .course-remove { background: none; border: none; color: var(--wf-muted, #6b7f99); font-size: 16px; cursor: pointer; padding: 0 4px; line-height: 1; flex-shrink: 0; }
+    .course-remove:hover { color: var(--wf-red, #8b4553); }
+    .add-course-btn { background: none; border: 1px dashed var(--wf-line, #b0bdd0); border-radius: 6px; color: var(--wf-accent, #3d6daa); font-size: 12px; font-weight: 600; padding: 8px 16px; cursor: pointer; width: 100%; font-family: inherit; transition: all .15s; }
+    .add-course-btn:hover { background: var(--wf-tint, #dce4ef); border-color: var(--wf-accent, #3d6daa); }
+    .training-note { background: var(--wf-canvas, #f5f7fb); border-left: 3px solid var(--wf-accent, #3d6daa); border-radius: 0 4px 4px 0; padding: 12px 16px; font-size: 12px; color: var(--wf-muted, #6b7f99); line-height: 1.5; margin-top: 20px; }
+
+    /* ── Deals & Marketing step ── */
+    .dm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 0; }
+    .hiw-list { display: flex; flex-direction: column; gap: 14px; margin-bottom: 0; }
+    .hiw-item { display: flex; align-items: flex-start; gap: 12px; }
+    .hiw-num { width: 26px; height: 26px; border-radius: 50%; background: var(--wf-accent, #3d6daa); color: white; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+    .hiw-body h4 { font-size: 13px; font-weight: 700; color: var(--wf-ink, #1e2a3a); margin: 0 0 3px; }
+    .hiw-body p { font-size: 12px; color: var(--wf-muted, #6b7f99); margin: 0; line-height: 1.5; }
+    .mdf-highlight { background: var(--wf-tint, #dce4ef); border-radius: 6px; padding: 12px 16px; margin: 14px 0; display: flex; align-items: center; gap: 12px; }
+    .mdf-amount { font-size: 20px; font-weight: 800; color: var(--wf-accent, #3d6daa); white-space: nowrap; }
+    .mdf-label { font-size: 12px; color: var(--wf-ink, #1e2a3a); line-height: 1.4; }
+    .comarket-list { display: flex; flex-direction: column; gap: 0; }
+    .comarket-item { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--wf-ink, #1e2a3a); padding: 8px 0; border-bottom: 1px solid var(--wf-line, #b0bdd0); }
+    .comarket-item:last-child { border-bottom: none; }
+    .comarket-item-icon { font-size: 15px; flex-shrink: 0; width: 20px; text-align: center; }
+    .learn-more { font-size: 12px; font-weight: 600; color: var(--wf-accent, #3d6daa); text-decoration: none; display: inline-block; margin-top: 12px; }
+    .learn-more:hover { text-decoration: underline; }
+
+    /* ── Checkbox / radio grids ── */
     .field-label-group { margin-bottom: 16px; }
     .field-label-group > label { font-size: 12px; font-weight: 700; color: var(--wf-ink, #1e2a3a); display: block; margin-bottom: 10px; }
-    .checkbox-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
-    }
+    .checkbox-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
     .checkbox-grid.two-col { grid-template-columns: repeat(2, 1fr); }
-    .cg-item {
-      display: flex; align-items: center; gap: 8px;
-      border: 1px solid var(--wf-line, #b0bdd0); border-radius: 6px;
-      padding: 10px 12px; cursor: pointer; font-size: 12px;
-      font-weight: 500; color: var(--wf-ink, #1e2a3a); transition: all 0.12s;
-      user-select: none;
-    }
+    .cg-item { display: flex; align-items: center; gap: 8px; border: 1px solid var(--wf-line, #b0bdd0); border-radius: 6px; padding: 10px 12px; cursor: pointer; font-size: 12px; font-weight: 500; color: var(--wf-ink, #1e2a3a); transition: all 0.12s; user-select: none; }
     .cg-item input[type="checkbox"] { width: 14px; height: 14px; flex-shrink: 0; cursor: pointer; accent-color: var(--wf-accent, #3d6daa); }
     .cg-item:hover { border-color: var(--wf-accent, #3d6daa); background: var(--wf-canvas, #f5f7fb); }
     .cg-item:has(input:checked) { border-color: var(--wf-accent, #3d6daa); background: var(--wf-tint, #dce4ef); }
 
-    /* ── Product pills (Step 3 - Equinix products) ──────────── */
-    .product-grid {
-      display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 0;
-    }
-    .product-card {
-      border: 2px solid var(--wf-line, #b0bdd0); border-radius: 8px;
-      padding: 14px 16px; cursor: pointer; transition: all 0.15s; background: white;
-      display: flex; align-items: flex-start; gap: 10px;
-    }
+    /* ── Product cards ── */
+    .product-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 0; }
+    .product-card { border: 2px solid var(--wf-line, #b0bdd0); border-radius: 8px; padding: 14px 16px; cursor: pointer; transition: all 0.15s; background: white; display: flex; align-items: flex-start; gap: 10px; }
     .product-card input[type="checkbox"] { width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px; accent-color: var(--wf-accent, #3d6daa); }
     .product-card:has(input:checked) { border-color: var(--wf-accent, #3d6daa); background: var(--wf-tint, #dce4ef); }
     .product-card:hover { border-color: var(--wf-accent, #3d6daa); }
     .pc-body h4 { font-size: 13px; font-weight: 700; color: var(--wf-ink, #1e2a3a); margin: 0 0 3px; }
     .pc-body p  { font-size: 12px; color: var(--wf-muted, #6b7f99); margin: 0; line-height: 1.45; }
 
-    /* ── Notification preferences ───────────────────────────── */
-    .notif-row {
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 14px 0; border-bottom: 1px solid var(--wf-line, #b0bdd0);
-    }
+    /* ── Notification toggles ── */
+    .notif-row { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; border-bottom: 1px solid var(--wf-line, #b0bdd0); }
     .notif-row:last-child { border-bottom: none; }
     .notif-info h4 { font-size: 13px; font-weight: 700; color: var(--wf-ink, #1e2a3a); margin: 0 0 3px; }
     .notif-info p  { font-size: 12px; color: var(--wf-muted, #6b7f99); margin: 0; }
-    .toggle {
-      position: relative; width: 44px; height: 24px; cursor: pointer;
-    }
+    .toggle { position: relative; width: 44px; height: 24px; cursor: pointer; }
     .toggle input { opacity: 0; width: 0; height: 0; }
-    .toggle-track {
-      position: absolute; inset: 0; border-radius: 12px;
-      background: var(--wf-line, #b0bdd0); transition: background 0.2s;
-    }
+    .toggle-track { position: absolute; inset: 0; border-radius: 12px; background: var(--wf-line, #b0bdd0); transition: background 0.2s; }
     .toggle input:checked + .toggle-track { background: var(--wf-accent, #3d6daa); }
-    .toggle-thumb {
-      position: absolute; top: 3px; left: 3px;
-      width: 18px; height: 18px; border-radius: 50%;
-      background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-      transition: transform 0.2s;
-    }
+    .toggle-thumb { position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.2); transition: transform 0.2s; }
     .toggle input:checked ~ .toggle-thumb { transform: translateX(20px); }
 
-    /* ── Complete / checklist step ──────────────────────────── */
-    .complete-hero {
-      text-align: center; padding: 32px 24px 24px; margin-bottom: 0;
-    }
-    .complete-check {
-      width: 64px; height: 64px; border-radius: 50%;
-      background: #e6f4ec; border: 3px solid #2d9e5a;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 28px; margin: 0 auto 16px; color: #1d6b3c;
-    }
+    /* ── Completion step ── */
+    .complete-hero { text-align: center; padding: 32px 24px 24px; margin-bottom: 0; }
+    .complete-check { width: 64px; height: 64px; border-radius: 50%; background: #e6f4ec; border: 3px solid #2d9e5a; display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 16px; color: #1d6b3c; }
     .complete-hero h2 { font-size: 20px; font-weight: 700; margin: 0 0 8px; }
-    .complete-hero p  { font-size: 14px; color: var(--wf-muted, #6b7f99); margin: 0; max-width: 400px; margin: 0 auto; line-height: 1.55; }
+    .complete-hero p  { font-size: 14px; color: var(--wf-muted, #6b7f99); margin: 0 auto; max-width: 420px; line-height: 1.55; }
 
     .checklist { list-style: none; padding: 0; margin: 0; }
-    .checklist-item {
-      display: flex; align-items: center; gap: 12px;
-      padding: 14px 0; border-bottom: 1px solid var(--wf-line, #b0bdd0);
-      font-size: 13px; color: var(--wf-ink, #1e2a3a);
-    }
+    .checklist-item { display: flex; align-items: center; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--wf-line, #b0bdd0); font-size: 13px; color: var(--wf-ink, #1e2a3a); }
     .checklist-item:last-child { border-bottom: none; }
-    .cl-icon {
-      width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center; font-size: 13px;
-    }
+    .cl-icon { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 13px; }
     .cl-icon.done { background: #e6f4ec; color: #1d6b3c; }
     .cl-icon.req  { background: var(--wf-tint, #dce4ef); color: var(--wf-accent, #3d6daa); }
     .cl-body { flex: 1; }
@@ -234,14 +187,11 @@
     .cl-body span   { color: var(--wf-muted, #6b7f99); font-size: 12px; }
     .cl-action { font-size: 12px; font-weight: 600; color: var(--wf-accent, #3d6daa); text-decoration: none; white-space: nowrap; }
     .cl-action:hover { text-decoration: underline; }
-    .cl-tag {
-      font-size: 10px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 0.06em; border-radius: 3px; padding: 2px 6px;
-    }
+    .cl-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; border-radius: 3px; padding: 2px 6px; }
     .cl-tag.required { background: #fef3cd; color: #856404; border: 1px solid #fde68a; }
     .cl-tag.done     { background: #e6f4ec; color: #1d6b3c; border: 1px solid #86d9a4; }
 
-    /* ── Buttons ────────────────────────────────────────────── */
+    /* ── Buttons ── */
     .btn { display: inline-flex; align-items: center; gap: 6px; padding: 10px 18px; border-radius: 6px; font-size: 13px; font-weight: 600; border: none; cursor: pointer; transition: background 0.15s; font-family: inherit; }
     .btn-primary   { background: var(--wf-accent, #3d6daa); color: white; }
     .btn-primary:hover  { background: var(--wf-ink, #1e2a3a); }
@@ -251,29 +201,18 @@
     .btn-ghost:hover { text-decoration: underline; }
     .btn-large { padding: 13px 24px; font-size: 14px; }
 
-    .nav-row {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-top: 8px; padding-top: 8px;
-    }
+    .nav-row { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; padding-top: 8px; }
+    .nav-right { display: flex; align-items: center; gap: 16px; }
 
-    /* ── Review step ─────────────────────────────────────────── */
-    .review-section { margin-bottom: 20px; }
-    .review-section-hd {
-      display: flex; justify-content: space-between; align-items: center;
-      padding-bottom: 8px; margin-bottom: 10px;
-      border-bottom: 1px solid var(--wf-line, #b0bdd0);
+    @media (max-width: 640px) {
+      .dm-grid { grid-template-columns: 1fr; }
+      .product-grid { grid-template-columns: 1fr; }
+      .checkbox-grid { grid-template-columns: 1fr 1fr; }
     }
-    .review-section-hd h4 { font-size: 13px; font-weight: 700; color: var(--wf-ink, #1e2a3a); margin: 0; }
-    .review-edit { font-size: 12px; color: var(--wf-accent, #3d6daa); font-weight: 600; background: none; border: none; cursor: pointer; font-family: inherit; padding: 0; }
-    .review-edit:hover { text-decoration: underline; }
-    .review-row { display: flex; gap: 16px; padding: 4px 0; font-size: 13px; line-height: 1.5; }
-    .review-label { color: var(--wf-muted, #6b7f99); width: 150px; flex-shrink: 0; font-weight: 500; }
-    .review-value { color: var(--wf-ink, #1e2a3a); font-weight: 500; flex: 1; }
   </style>
 </head>
 <body>
 
-<!-- Site header (post-auth, dark) -->
 <header class="pc-header">
   <div class="pc-header-inner">
     <div class="pc-logo">
@@ -284,35 +223,36 @@
       </div>
     </div>
     <nav class="pc-nav" aria-label="Partner Central navigation">
-      <span class="pc-nav-link pc-nav-active">Onboarding</span>
+      <span class="pc-nav-link pc-nav-active">Account Setup</span>
     </nav>
     <div class="pc-user">
-      <div class="pc-user-avatar" aria-label="User: Steve Rogers">SR</div>
-      <span class="pc-user-name">Steve Rogers</span>
+      <div class="pc-user-avatar" aria-label="User: Jordan Reeves">JR</div>
+      <span class="pc-user-name">Jordan Reeves</span>
     </div>
   </div>
 </header>
 
 <div class="wizard-shell">
 
-  <div class="context-bar">
-    <span>Registration &amp; Onboarding Flow</span>
-    <span class="cb-sep">·</span>
-    <a href="onboarding-auth-setup.html">← Auth Setup</a>
-    <span class="cb-sep">·</span>
-    <span>5 steps · ~10 min</span>
+  <div class="context-bar" role="navigation" aria-label="Wizard context">
+    <span>Account Setup</span>
+    <span class="cb-sep">&middot;</span>
+    <span>6 steps &middot; ~10 min</span>
+    <span class="cb-sep">&middot;</span>
+    <span>You can skip any step and finish later</span>
+    <a href="rep-home.html" class="cb-exit" aria-label="Exit setup and go to dashboard">Exit to dashboard &rarr;</a>
   </div>
 
   <div class="wizard-intro">
     <h1>Welcome to Partner Central</h1>
-    <p>Let's get CloudBridge Technologies set up. This takes about 10 minutes and you can come back to finish any step later.</p>
+    <p>Let's get CloudBridge Solutions set up. Skip anything you're not ready for — you can come back to any step from My Account &rarr; Getting Started.</p>
   </div>
 
   <!-- Stepper -->
-  <nav class="stepper" aria-label="Onboarding steps">
+  <nav class="stepper" aria-label="Setup steps">
     <div class="stepper-step active" id="sn-1">
       <div class="step-circle" aria-current="step">1</div>
-      <div class="step-label">Profile</div>
+      <div class="step-label">Organization</div>
     </div>
     <div class="stepper-step" id="sn-2">
       <div class="step-circle">2</div>
@@ -320,31 +260,32 @@
     </div>
     <div class="stepper-step" id="sn-3">
       <div class="step-circle">3</div>
-      <div class="step-label">Programs</div>
+      <div class="step-label">Training</div>
     </div>
     <div class="stepper-step" id="sn-4">
       <div class="step-circle">4</div>
-      <div class="step-label">Preferences</div>
+      <div class="step-label">Deals &amp; Marketing</div>
     </div>
     <div class="stepper-step" id="sn-5">
       <div class="step-circle">5</div>
-      <div class="step-label">Review</div>
+      <div class="step-label">Preferences</div>
     </div>
     <div class="stepper-step" id="sn-6">
       <div class="step-circle">6</div>
-      <div class="step-label">Get Started</div>
+      <div class="step-label">You're Ready</div>
     </div>
   </nav>
 
-  <!-- ═══ STEP 1: Profile Review ════════════════════════════════ -->
-  <div class="step-section active" id="step-1" aria-label="Step 1: Profile Review">
+
+  <!-- ═══ STEP 1: Organization ══════════════════════════════════ -->
+  <div class="step-section active" id="step-1" aria-label="Step 1: Your Organization">
 
     <!-- PSM welcome banner -->
-    <div class="welcome-banner" role="region" aria-label="Welcome message">
+    <div class="welcome-banner" role="region" aria-label="Message from your Partner Success Manager">
       <div class="wb-icon" aria-hidden="true">MC</div>
       <div class="wb-body">
-        <h2>Welcome to the Equinix Partner Ecosystem, Steve.</h2>
-        <p>Your application has been approved and your account is live. I'm your dedicated Partner Success Manager — I'll be your main point of contact as you get started with deal registration and co-selling.</p>
+        <h2>Welcome to the Equinix Partner Ecosystem.</h2>
+        <p>Your application has been approved and your account is live. I'm your dedicated Partner Success Manager — I'll be your main point of contact as you get started with deal registration and co-selling. Fill in what you can here; we'll cover the rest in our kickoff call.</p>
         <div class="wb-psm" role="group" aria-label="Partner Success Manager contact">
           <div class="wb-psm-avatar" aria-hidden="true">MC</div>
           <div class="wb-psm-info">
@@ -356,20 +297,19 @@
       </div>
     </div>
 
-    <!-- Profile review card -->
     <div class="card">
-      <p class="card-title">Confirm Your Organization Profile</p>
-      <p class="card-desc">We've pre-filled this from your application. Review and update anything that's changed — this data feeds your partner profile and deal registrations.</p>
+      <p class="card-title">Your Organization</p>
+      <p class="card-desc">Tell us about your company. This powers your partner profile and pre-fills deal registrations. You can update these details any time from Settings.</p>
 
-      <p class="section-label">Organization</p>
+      <p class="section-label">Company details</p>
       <div class="form-grid">
         <div class="form-group">
           <label for="o-name">Legal Entity Name <span class="req" aria-hidden="true">*</span></label>
-          <input type="text" id="o-name" class="prefilled" value="CloudBridge Technologies Inc.">
+          <input type="text" id="o-name" class="prefilled" value="CloudBridge Solutions LLC">
         </div>
         <div class="form-group">
           <label for="o-website">Website</label>
-          <input type="url" id="o-website" class="prefilled" value="https://cloudbridge.com">
+          <input type="url" id="o-website" class="prefilled" value="https://cloudbridge.io">
         </div>
         <div class="form-group">
           <label for="o-hq">HQ City</label>
@@ -381,12 +321,12 @@
         </div>
       </div>
 
-      <p class="section-label" style="margin-top:8px;">Tax &amp; Legal IDs (optional — required for MDF and invoicing)</p>
+      <p class="section-label" style="margin-top:8px;">Tax &amp; Legal IDs <span style="font-weight:400; text-transform:none; font-size:11px;">(optional — required for MDF and invoicing)</span></p>
       <div class="form-grid">
         <div class="form-group">
           <label for="o-duns">DUNS Number</label>
           <input type="text" id="o-duns" placeholder="e.g. 12-345-6789">
-          <span class="field-hint">D&amp;B 9-digit DUNS. Used for Equinix credit evaluation.</span>
+          <span class="field-hint">D&amp;B 9-digit number. Used for credit evaluation.</span>
         </div>
         <div class="form-group">
           <label for="o-tax">Tax / VAT ID</label>
@@ -396,19 +336,19 @@
       </div>
 
       <hr class="divider">
-      <p class="section-label">Your Contact Details</p>
+      <p class="section-label">Your contact details</p>
       <div class="form-grid">
         <div class="form-group">
           <label for="c-name">Full Name <span class="req" aria-hidden="true">*</span></label>
-          <input type="text" id="c-name" class="prefilled" value="Steve Rogers">
+          <input type="text" id="c-name" class="prefilled" value="Jordan Reeves">
         </div>
         <div class="form-group">
           <label for="c-title">Job Title</label>
-          <input type="text" id="c-title" class="prefilled" value="Account Executive">
+          <input type="text" id="c-title" class="prefilled" value="Sales Operations Manager">
         </div>
         <div class="form-group">
           <label for="c-email">Work Email <span class="req" aria-hidden="true">*</span></label>
-          <input type="email" id="c-email" class="prefilled" value="steve.rogers@cloudbridge.com" readonly aria-describedby="email-note">
+          <input type="email" id="c-email" class="prefilled" value="jordan.reeves@cloudbridge.io" readonly aria-describedby="email-note">
           <span class="field-hint" id="email-note">Linked to your login — contact support to change.</span>
         </div>
         <div class="form-group">
@@ -420,16 +360,20 @@
 
     <div class="nav-row">
       <span></span>
-      <button class="btn btn-primary" onclick="goToStep(2)">Save &amp; Continue →</button>
+      <div class="nav-right">
+        <button class="btn btn-ghost" onclick="skipStep(2)" aria-label="Skip organization step for now">Skip for now &rarr;</button>
+        <button class="btn btn-primary" onclick="goToStep(2)">Save &amp; Continue &rarr;</button>
+      </div>
     </div>
 
   </div><!-- /step-1 -->
 
-  <!-- ═══ STEP 2: Your Team ═══════════════════════════════════ -->
+
+  <!-- ═══ STEP 2: Your Team ════════════════════════════════════ -->
   <div class="step-section" id="step-2" aria-label="Step 2: Your Team">
     <div class="card">
       <p class="card-title">Add Your Team</p>
-      <p class="card-desc">Invite colleagues who need access to Partner Central. You can always add more team members later from the Team settings page.</p>
+      <p class="card-desc">Invite colleagues who need Partner Central access. Role assignments determine what each person can see and do. Invitations go out with portal credentials once you complete setup — or skip this step and invite people later from Settings &rarr; Team.</p>
 
       <table class="team-table" aria-label="Team members">
         <thead>
@@ -442,35 +386,36 @@
         </thead>
         <tbody id="team-tbody">
           <tr class="team-row-you">
-            <td><strong>Steve Rogers</strong> <span class="you-badge" aria-label="You">You</span></td>
-            <td>steve.rogers@cloudbridge.com</td>
+            <td><strong>Jordan Reeves</strong> <span class="you-badge" aria-label="You">You</span></td>
+            <td>jordan.reeves@cloudbridge.io</td>
             <td>
-              <select class="role-select" aria-label="Role for Steve Rogers" disabled>
-                <option selected>Account Executive</option>
+              <select class="role-select" aria-label="Role for Jordan Reeves" disabled>
+                <option selected>Portal Admin</option>
               </select>
             </td>
             <td></td>
           </tr>
           <tr id="member-row-1">
-            <td>Jordan Reeves</td>
-            <td>jordan.reeves@cloudbridge.com</td>
+            <td>Steve Rogers</td>
+            <td>steve.rogers@cloudbridge.io</td>
             <td>
-              <select class="role-select" aria-label="Role for Jordan Reeves">
+              <select class="role-select" aria-label="Role for Steve Rogers">
                 <option>Portal Admin</option>
-                <option selected>Sales Operations</option>
+                <option selected>Account Executive</option>
                 <option>Finance Contact</option>
                 <option>Deal Registration User</option>
+                <option>Technical</option>
                 <option>Read Only</option>
               </select>
             </td>
-            <td><button class="remove-btn" onclick="removeRow('member-row-1')" aria-label="Remove Jordan Reeves">×</button></td>
+            <td><button class="remove-btn" onclick="removeRow('member-row-1')" aria-label="Remove Steve Rogers">&times;</button></td>
           </tr>
         </tbody>
       </table>
 
       <hr class="divider">
 
-      <p class="section-label">Invite Another Team Member</p>
+      <p class="section-label">Invite another team member</p>
       <div class="add-member-row">
         <div class="form-group">
           <label for="invite-name">Full Name</label>
@@ -478,44 +423,272 @@
         </div>
         <div class="form-group">
           <label for="invite-email">Work Email</label>
-          <input type="email" id="invite-email" placeholder="e.g. alex.kim@cloudbridge.com">
+          <input type="email" id="invite-email" placeholder="e.g. alex.kim@cloudbridge.io">
         </div>
         <div class="form-group">
           <label for="invite-role">Role</label>
           <select id="invite-role">
             <option value="">Select role…</option>
             <option>Portal Admin</option>
-            <option>Sales Operations</option>
+            <option>Account Executive</option>
             <option>Finance Contact</option>
             <option>Deal Registration User</option>
+            <option>Technical</option>
             <option>Read Only</option>
           </select>
         </div>
         <button class="btn btn-secondary" style="white-space:nowrap; margin-bottom:0; align-self:flex-end;" onclick="addMember()">+ Add</button>
       </div>
-
-      <p style="font-size:12px; color:var(--wf-muted, #6b7f99); margin-top:12px;">Invitees will receive an email with setup instructions once you finish onboarding.</p>
+      <p style="font-size:12px; color:var(--wf-muted, #6b7f99); margin-top:12px;">Training paths will be assigned based on each person's role in the next step.</p>
     </div>
 
     <div class="nav-row">
-      <button class="btn btn-ghost" onclick="goToStep(1)">← Back</button>
-      <button class="btn btn-primary" onclick="goToStep(3)">Continue →</button>
+      <button class="btn btn-ghost" onclick="goToStep(1)">&larr; Back</button>
+      <div class="nav-right">
+        <button class="btn btn-ghost" onclick="skipStep(3)" aria-label="Skip team setup for now">Skip for now &rarr;</button>
+        <button class="btn btn-primary" onclick="goToStep(3)">Continue &rarr;</button>
+      </div>
     </div>
   </div><!-- /step-2 -->
 
-  <!-- ═══ STEP 3: Programs & Products ══════════════════════════ -->
-  <div class="step-section" id="step-3" aria-label="Step 3: Programs and Products">
-    <div class="card">
-      <p class="card-title">Select Your Focus Areas</p>
-      <p class="card-desc">Choose the Equinix products and programs that are most relevant to your customers. This helps your PSM prioritize enablement resources and co-sell opportunities for you.</p>
 
-      <p class="section-label">Equinix Products You'll Sell or Refer</p>
+  <!-- ═══ STEP 3: Training ══════════════════════════════════════ -->
+  <div class="step-section" id="step-3" aria-label="Step 3: Training paths">
+    <div class="card">
+      <p class="card-title">Set Up Your Team's Learning Paths</p>
+      <p class="card-desc">We've suggested role-appropriate courses for each team member. Remove anything that doesn't apply, or add from the catalog. You can adjust individual paths any time before invites go out — and team members can manage their own learning once they're in the portal.</p>
+
+      <!-- Jordan Reeves — Portal Admin -->
+      <div class="training-person">
+        <div class="training-person-hd">
+          <div class="tp-avatar" aria-hidden="true">JR</div>
+          <div>
+            <span class="tp-name">Jordan Reeves</span>
+            <span class="tp-role-tag">Portal Admin</span>
+            <span class="you-badge" aria-label="You">You</span>
+          </div>
+        </div>
+        <div class="courses-list" id="courses-jordan" aria-label="Training courses for Jordan Reeves">
+          <div class="course-item">
+            <span class="course-name">Partner Central Fundamentals</span>
+            <span class="course-meta">60 min</span>
+            <span class="course-tag required">Required</span>
+            <button class="course-remove" onclick="removeCourse(this)" aria-label="Remove this course">&times;</button>
+          </div>
+          <div class="course-item">
+            <span class="course-name">Team Management &amp; Permissions</span>
+            <span class="course-meta">30 min</span>
+            <span class="course-tag required">Required</span>
+            <button class="course-remove" onclick="removeCourse(this)" aria-label="Remove this course">&times;</button>
+          </div>
+          <div class="course-item">
+            <span class="course-name">Deal Workflow &amp; Approval Queues</span>
+            <span class="course-meta">45 min</span>
+            <span class="course-tag recommended">Recommended</span>
+            <button class="course-remove" onclick="removeCourse(this)" aria-label="Remove this course">&times;</button>
+          </div>
+          <div class="course-item">
+            <span class="course-name">Reporting &amp; Analytics Overview</span>
+            <span class="course-meta">30 min</span>
+            <span class="course-tag optional">Optional</span>
+            <button class="course-remove" onclick="removeCourse(this)" aria-label="Remove this course">&times;</button>
+          </div>
+        </div>
+        <button class="add-course-btn" aria-label="Add a course for Jordan Reeves">+ Add a course</button>
+      </div>
+
+      <hr class="divider">
+
+      <!-- Steve Rogers — Account Executive -->
+      <div class="training-person">
+        <div class="training-person-hd">
+          <div class="tp-avatar" style="background: #5a6e8c;" aria-hidden="true">SR</div>
+          <div>
+            <span class="tp-name">Steve Rogers</span>
+            <span class="tp-role-tag">Account Executive</span>
+          </div>
+        </div>
+        <div class="courses-list" id="courses-steve" aria-label="Training courses for Steve Rogers">
+          <div class="course-item">
+            <span class="course-name">Deal Registration Mastery</span>
+            <span class="course-meta">45 min</span>
+            <span class="course-tag required">Required</span>
+            <button class="course-remove" onclick="removeCourse(this)" aria-label="Remove this course">&times;</button>
+          </div>
+          <div class="course-item">
+            <span class="course-name">Equinix Products Essentials</span>
+            <span class="course-meta">90 min</span>
+            <span class="course-tag required">Required</span>
+            <button class="course-remove" onclick="removeCourse(this)" aria-label="Remove this course">&times;</button>
+          </div>
+          <div class="course-item">
+            <span class="course-name">Partner Co-Sell Playbook</span>
+            <span class="course-meta">30 min</span>
+            <span class="course-tag recommended">Recommended</span>
+            <button class="course-remove" onclick="removeCourse(this)" aria-label="Remove this course">&times;</button>
+          </div>
+          <div class="course-item">
+            <span class="course-name">Competitive Landscape Overview</span>
+            <span class="course-meta">20 min</span>
+            <span class="course-tag optional">Optional</span>
+            <button class="course-remove" onclick="removeCourse(this)" aria-label="Remove this course">&times;</button>
+          </div>
+        </div>
+        <button class="add-course-btn" aria-label="Add a course for Steve Rogers">+ Add a course</button>
+      </div>
+
+      <div class="training-note" role="note">
+        Learning paths go out alongside portal access invitations. Team members can add or remove their own courses once they're in. Required courses must be completed before submitting deal registrations.
+      </div>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn btn-ghost" onclick="goToStep(2)">&larr; Back</button>
+      <div class="nav-right">
+        <button class="btn btn-ghost" onclick="skipStep(4)" aria-label="Skip training setup for now">Skip for now &rarr;</button>
+        <button class="btn btn-primary" onclick="goToStep(4)">Continue &rarr;</button>
+      </div>
+    </div>
+  </div><!-- /step-3 -->
+
+
+  <!-- ═══ STEP 4: Deals & Marketing ════════════════════════════ -->
+  <div class="step-section" id="step-4" aria-label="Step 4: Deals and Marketing">
+
+    <div class="dm-grid">
+
+      <!-- Deal Registration -->
+      <div class="card" style="margin-bottom:0;">
+        <p class="card-title">Deal Registration</p>
+        <p class="card-desc">Deal registration protects your pricing and locks in commission eligibility. Here's how it works:</p>
+
+        <div class="hiw-list">
+          <div class="hiw-item">
+            <div class="hiw-num" aria-hidden="true">1</div>
+            <div class="hiw-body">
+              <h4>Spot an opportunity</h4>
+              <p>When you identify a customer with an Equinix need, register the deal before quoting.</p>
+            </div>
+          </div>
+          <div class="hiw-item">
+            <div class="hiw-num" aria-hidden="true">2</div>
+            <div class="hiw-body">
+              <h4>Submit in Partner Central</h4>
+              <p>Fill in the company, product, and expected MRR. Takes about 3 minutes.</p>
+            </div>
+          </div>
+          <div class="hiw-item">
+            <div class="hiw-num" aria-hidden="true">3</div>
+            <div class="hiw-body">
+              <h4>Get pricing protection</h4>
+              <p>Approved deals receive 90 days of exclusivity and locked commission rates.</p>
+            </div>
+          </div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="form-group" style="margin-bottom:16px;">
+          <label for="dr-currency">Default Deal Currency</label>
+          <select id="dr-currency">
+            <option value="USD" selected>USD &mdash; US Dollar</option>
+            <option value="EUR">EUR &mdash; Euro</option>
+            <option value="GBP">GBP &mdash; British Pound</option>
+            <option value="SGD">SGD &mdash; Singapore Dollar</option>
+          </select>
+        </div>
+
+        <div class="notif-row">
+          <div class="notif-info">
+            <h4>Deal Registration Alerts</h4>
+            <p>Notify me when deals are approved, declined, or about to expire.</p>
+          </div>
+          <label class="toggle" aria-label="Toggle deal registration alerts">
+            <input type="checkbox" checked>
+            <div class="toggle-track"></div>
+            <div class="toggle-thumb"></div>
+          </label>
+        </div>
+
+        <a href="#" class="learn-more">Read the Deal Registration Guide &rarr;</a>
+      </div>
+
+      <!-- Marketing & MDF -->
+      <div class="card" style="margin-bottom:0;">
+        <p class="card-title">Marketing &amp; MDF</p>
+        <p class="card-desc">As a partner you have access to co-marketing resources and, once eligible, quarterly Market Development Funds.</p>
+
+        <p class="section-label">Market Development Funds</p>
+        <p style="font-size:13px; color:var(--wf-ink, #1e2a3a); margin:0 0 12px; line-height:1.55;">MDF helps offset the cost of co-marketing — events, digital campaigns, partner-branded content. You become eligible after your first revenue quarter posts.</p>
+        <div class="mdf-highlight" role="figure" aria-label="Typical Bronze partner MDF amount">
+          <span class="mdf-amount">~$5,000</span>
+          <span class="mdf-label">Typical quarterly MDF allocation for Bronze partners</span>
+        </div>
+
+        <hr class="divider">
+
+        <p class="section-label">Co-Marketing Programs</p>
+        <p style="font-size:13px; color:var(--wf-ink, #1e2a3a); margin:0 0 12px; line-height:1.55;">Available now through the Marketing Hub:</p>
+        <div class="comarket-list" role="list">
+          <div class="comarket-item" role="listitem">
+            <span class="comarket-item-icon" aria-hidden="true">&#128196;</span>
+            Co-branded sales decks &amp; one-pagers
+          </div>
+          <div class="comarket-item" role="listitem">
+            <span class="comarket-item-icon" aria-hidden="true">&#9993;</span>
+            Email campaign templates
+          </div>
+          <div class="comarket-item" role="listitem">
+            <span class="comarket-item-icon" aria-hidden="true">&#127974;</span>
+            Event co-sponsorship program
+          </div>
+          <div class="comarket-item" role="listitem">
+            <span class="comarket-item-icon" aria-hidden="true">&#128227;</span>
+            Social media content kit
+          </div>
+        </div>
+
+        <div class="notif-row" style="margin-top:12px;">
+          <div class="notif-info">
+            <h4>MDF Fund Alerts</h4>
+            <p>Notify me about available funds and claim deadlines.</p>
+          </div>
+          <label class="toggle" aria-label="Toggle MDF fund alerts">
+            <input type="checkbox">
+            <div class="toggle-track"></div>
+            <div class="toggle-thumb"></div>
+          </label>
+        </div>
+
+        <a href="#" class="learn-more">Browse co-marketing assets &rarr;</a>
+      </div>
+
+    </div><!-- /dm-grid -->
+
+    <div class="nav-row" style="margin-top:16px;">
+      <button class="btn btn-ghost" onclick="goToStep(3)">&larr; Back</button>
+      <div class="nav-right">
+        <button class="btn btn-ghost" onclick="skipStep(5)" aria-label="Skip deals and marketing for now">Skip for now &rarr;</button>
+        <button class="btn btn-primary" onclick="goToStep(5)">Continue &rarr;</button>
+      </div>
+    </div>
+  </div><!-- /step-4 -->
+
+
+  <!-- ═══ STEP 5: Programs & Preferences ════════════════════════ -->
+  <div class="step-section" id="step-5" aria-label="Step 5: Programs and Preferences">
+
+    <div class="card">
+      <p class="card-title">Products &amp; Focus Areas</p>
+      <p class="card-desc">Select the Equinix products and regions you'll focus on. This helps your PSM prioritize enablement and co-sell resources for your team.</p>
+
+      <p class="section-label">Equinix products you'll sell or refer</p>
       <div class="product-grid" role="group" aria-label="Equinix products">
         <label class="product-card">
           <input type="checkbox" name="product" value="fabric" checked>
           <div class="pc-body">
             <h4>Equinix Fabric</h4>
-            <p>Software-defined interconnections between businesses across Equinix data centers globally.</p>
+            <p>Software-defined interconnections across Equinix data centers globally.</p>
           </div>
         </label>
         <label class="product-card">
@@ -529,35 +702,35 @@
           <input type="checkbox" name="product" value="colocation">
           <div class="pc-body">
             <h4>Colocation</h4>
-            <p>Secure, reliable data center space across 240+ data centers in 70 metros.</p>
+            <p>Secure data center space across 240+ locations in 70 metros.</p>
           </div>
         </label>
         <label class="product-card">
           <input type="checkbox" name="product" value="network-edge" checked>
           <div class="pc-body">
             <h4>Network Edge</h4>
-            <p>Virtualized network services deployed on demand at Equinix locations worldwide.</p>
+            <p>Virtualized network services deployed on demand at Equinix locations.</p>
           </div>
         </label>
         <label class="product-card">
-          <input type="checkbox" name="product" value="mpe">
+          <input type="checkbox" name="product" value="ix">
           <div class="pc-body">
-            <h4>Equinix Internet Exchange</h4>
-            <p>Scalable public peering across the world's most interconnected internet exchanges.</p>
+            <h4>Internet Exchange</h4>
+            <p>Scalable public peering across the world's most interconnected exchanges.</p>
           </div>
         </label>
         <label class="product-card">
           <input type="checkbox" name="product" value="digital-services">
           <div class="pc-body">
             <h4>Digital Services</h4>
-            <p>Digital Realty-integrated services and multi-cloud digital infrastructure solutions.</p>
+            <p>Multi-cloud digital infrastructure and managed services solutions.</p>
           </div>
         </label>
       </div>
 
       <hr class="divider">
 
-      <p class="section-label">Target Verticals</p>
+      <p class="section-label">Target verticals</p>
       <div class="checkbox-grid" role="group" aria-label="Target industry verticals">
         <label class="cg-item"><input type="checkbox" name="vertical" value="cloud-it" checked> Cloud &amp; IT Services</label>
         <label class="cg-item"><input type="checkbox" name="vertical" value="financial" checked> Financial Services</label>
@@ -569,59 +742,29 @@
 
       <hr class="divider">
 
-      <p class="section-label">Primary Sales Regions</p>
+      <p class="section-label">Primary sales regions</p>
       <div class="checkbox-grid" role="group" aria-label="Primary sales regions">
-        <label class="cg-item"><input type="checkbox" name="region" value="amer-us" checked> Americas — US</label>
-        <label class="cg-item"><input type="checkbox" name="region" value="amer-latam"> Americas — LatAm</label>
-        <label class="cg-item"><input type="checkbox" name="region" value="emea-west"> EMEA — Western Europe</label>
-        <label class="cg-item"><input type="checkbox" name="region" value="emea-east"> EMEA — Eastern Europe</label>
-        <label class="cg-item"><input type="checkbox" name="region" value="apac-sea"> APAC — SE Asia</label>
-        <label class="cg-item"><input type="checkbox" name="region" value="apac-anz"> APAC — ANZ</label>
+        <label class="cg-item"><input type="checkbox" name="region" value="amer-us" checked> Americas &mdash; US</label>
+        <label class="cg-item"><input type="checkbox" name="region" value="amer-latam"> Americas &mdash; LatAm</label>
+        <label class="cg-item"><input type="checkbox" name="region" value="emea-west"> EMEA &mdash; W. Europe</label>
+        <label class="cg-item"><input type="checkbox" name="region" value="emea-east"> EMEA &mdash; E. Europe</label>
+        <label class="cg-item"><input type="checkbox" name="region" value="apac-sea"> APAC &mdash; SE Asia</label>
+        <label class="cg-item"><input type="checkbox" name="region" value="apac-anz"> APAC &mdash; ANZ</label>
       </div>
     </div>
 
-    <div class="nav-row">
-      <button class="btn btn-ghost" onclick="goToStep(2)">← Back</button>
-      <button class="btn btn-primary" onclick="goToStep(4)">Continue →</button>
-    </div>
-  </div><!-- /step-3 -->
-
-  <!-- ═══ STEP 4: Preferences ═══════════════════════════════════ -->
-  <div class="step-section" id="step-4" aria-label="Step 4: Preferences">
     <div class="card">
       <p class="card-title">Notification Preferences</p>
-      <p class="card-desc">Control how you hear about deal updates, program news, and co-sell opportunities. You can change these from your account settings at any time.</p>
+      <p class="card-desc">Control how you hear about updates. You can change these any time from account settings.</p>
 
       <div role="list" aria-label="Notification preferences">
-        <div class="notif-row" role="listitem">
-          <div class="notif-info">
-            <h4>Deal Registration Updates</h4>
-            <p>Status changes on deals you've submitted: approved, declined, expiring soon.</p>
-          </div>
-          <label class="toggle" aria-label="Toggle deal registration updates">
-            <input type="checkbox" checked>
-            <div class="toggle-track"></div>
-            <div class="toggle-thumb"></div>
-          </label>
-        </div>
         <div class="notif-row" role="listitem">
           <div class="notif-info">
             <h4>Co-Sell Opportunities</h4>
             <p>New opportunities shared by your PSM or the Equinix sales team.</p>
           </div>
-          <label class="toggle" aria-label="Toggle co-sell opportunities notifications">
+          <label class="toggle" aria-label="Toggle co-sell opportunity notifications">
             <input type="checkbox" checked>
-            <div class="toggle-track"></div>
-            <div class="toggle-thumb"></div>
-          </label>
-        </div>
-        <div class="notif-row" role="listitem">
-          <div class="notif-info">
-            <h4>MDF Fund Alerts</h4>
-            <p>Available funds, claim deadlines, and approval status for Market Development Funds.</p>
-          </div>
-          <label class="toggle" aria-label="Toggle MDF fund alerts">
-            <input type="checkbox">
             <div class="toggle-track"></div>
             <div class="toggle-thumb"></div>
           </label>
@@ -629,9 +772,9 @@
         <div class="notif-row" role="listitem">
           <div class="notif-info">
             <h4>Program &amp; Tier Updates</h4>
-            <p>Changes to your partner tier, certification status, and program terms.</p>
+            <p>Changes to your tier, certification status, and program terms.</p>
           </div>
-          <label class="toggle" aria-label="Toggle program and tier updates">
+          <label class="toggle" aria-label="Toggle program and tier update notifications">
             <input type="checkbox" checked>
             <div class="toggle-track"></div>
             <div class="toggle-thumb"></div>
@@ -642,7 +785,7 @@
             <h4>Training &amp; Events</h4>
             <p>New certifications, webinars, and partner summit invitations.</p>
           </div>
-          <label class="toggle" aria-label="Toggle training and events notifications">
+          <label class="toggle" aria-label="Toggle training and event notifications">
             <input type="checkbox" checked>
             <div class="toggle-track"></div>
             <div class="toggle-thumb"></div>
@@ -651,7 +794,7 @@
         <div class="notif-row" role="listitem">
           <div class="notif-info">
             <h4>Weekly Digest</h4>
-            <p>A Friday summary email with deal pipeline stats, news, and upcoming deadlines.</p>
+            <p>A Friday summary email with pipeline stats, news, and upcoming deadlines.</p>
           </div>
           <label class="toggle" aria-label="Toggle weekly digest emails">
             <input type="checkbox">
@@ -663,21 +806,12 @@
 
       <hr class="divider">
 
-      <p class="section-label">Deal Registration Defaults</p>
+      <p class="section-label">Deal defaults</p>
       <div class="form-grid">
-        <div class="form-group">
-          <label for="dr-currency">Default Currency</label>
-          <select id="dr-currency">
-            <option value="USD" selected>USD — US Dollar</option>
-            <option value="EUR">EUR — Euro</option>
-            <option value="GBP">GBP — British Pound</option>
-            <option value="SGD">SGD — Singapore Dollar</option>
-          </select>
-        </div>
         <div class="form-group">
           <label for="dr-owner">Default Deal Owner</label>
           <select id="dr-owner">
-            <option value="self" selected>Me (Steve Rogers)</option>
+            <option value="self" selected>Me (Jordan Reeves)</option>
             <option value="team">Assign per deal</option>
           </select>
           <span class="field-hint">Who's listed as primary owner on new deal submissions.</span>
@@ -686,163 +820,81 @@
     </div>
 
     <div class="nav-row">
-      <button class="btn btn-ghost" onclick="goToStep(3)">← Back</button>
-      <button class="btn btn-primary" onclick="goToStep(5)">Next: Review →</button>
-    </div>
-  </div><!-- /step-4 -->
-
-  <!-- ═══ STEP 5: Review ══════════════════════════════════════ -->
-  <div class="step-section" id="step-5" aria-label="Step 5: Review your setup">
-
-    <div class="card">
-      <p class="card-title">Review your setup</p>
-      <p class="card-desc">Confirm everything looks right. Use the Edit links to go back and change anything before launching.</p>
-
-      <!-- Profile section -->
-      <div class="review-section">
-        <div class="review-section-hd">
-          <h4>Profile</h4>
-          <button class="review-edit" onclick="goToStep(1)" type="button">Edit</button>
-        </div>
-        <div class="review-row">
-          <span class="review-label">Organization</span>
-          <span class="review-value" id="orv-org">CloudBridge Technologies Inc.</span>
-        </div>
-        <div class="review-row">
-          <span class="review-label">Your name</span>
-          <span class="review-value" id="orv-name">—</span>
-        </div>
-        <div class="review-row">
-          <span class="review-label">Email</span>
-          <span class="review-value" id="orv-email">—</span>
-        </div>
+      <button class="btn btn-ghost" onclick="goToStep(4)">&larr; Back</button>
+      <div class="nav-right">
+        <button class="btn btn-ghost" onclick="skipStep(6)" aria-label="Skip programs and preferences for now">Skip for now &rarr;</button>
+        <button class="btn btn-primary" onclick="goToStep(6)">Continue &rarr;</button>
       </div>
-
-      <!-- Team section -->
-      <div class="review-section">
-        <div class="review-section-hd">
-          <h4>Your team</h4>
-          <button class="review-edit" onclick="goToStep(2)" type="button">Edit</button>
-        </div>
-        <div class="review-row">
-          <span class="review-label">Members</span>
-          <span class="review-value" id="orv-team">—</span>
-        </div>
-      </div>
-
-      <!-- Programs section -->
-      <div class="review-section">
-        <div class="review-section-hd">
-          <h4>Programs</h4>
-          <button class="review-edit" onclick="goToStep(3)" type="button">Edit</button>
-        </div>
-        <div class="review-row">
-          <span class="review-label">Products</span>
-          <span class="review-value" id="orv-products">—</span>
-        </div>
-        <div class="review-row">
-          <span class="review-label">Verticals</span>
-          <span class="review-value" id="orv-verticals">—</span>
-        </div>
-        <div class="review-row">
-          <span class="review-label">Regions</span>
-          <span class="review-value" id="orv-regions">—</span>
-        </div>
-      </div>
-
-      <!-- Preferences section -->
-      <div class="review-section">
-        <div class="review-section-hd">
-          <h4>Preferences</h4>
-          <button class="review-edit" onclick="goToStep(4)" type="button">Edit</button>
-        </div>
-        <div class="review-row">
-          <span class="review-label">Notifications</span>
-          <span class="review-value" id="orv-notifs">—</span>
-        </div>
-        <div class="review-row">
-          <span class="review-label">Deal currency</span>
-          <span class="review-value" id="orv-currency">—</span>
-        </div>
-        <div class="review-row">
-          <span class="review-label">Default deal owner</span>
-          <span class="review-value" id="orv-owner">—</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="nav-row">
-      <button class="btn btn-ghost" onclick="goToStep(4)">← Back</button>
-      <button class="btn btn-primary" onclick="goToStep(6)">Looks good — Launch →</button>
     </div>
   </div><!-- /step-5 -->
 
-  <!-- ═══ STEP 6: Get Started ════════════════════════════════ -->
-  <div class="step-section" id="step-6" aria-label="Step 6: Get Started">
 
-    <div class="card complete-hero" role="region" aria-label="Onboarding complete">
-      <div class="complete-check" aria-hidden="true">✓</div>
-      <h2>You're all set, Steve.</h2>
-      <p>CloudBridge Technologies is now active on Partner Central. A few things to complete before your first deal registration.</p>
+  <!-- ═══ STEP 6: You're Ready ══════════════════════════════════ -->
+  <div class="step-section" id="step-6" aria-label="Step 6: Account setup complete">
+
+    <div class="card complete-hero" role="region" aria-label="Setup complete">
+      <div class="complete-check" aria-hidden="true">&#10003;</div>
+      <h2>CloudBridge Solutions is set up.</h2>
+      <p>Your Partner Central account is ready. Invitations will go out to your team shortly. A few things to complete before your first deal registration:</p>
     </div>
 
     <div class="card">
-      <p class="card-title">Your Getting Started Checklist</p>
+      <p class="card-title">Your next steps</p>
       <p class="card-desc">Complete these in any order. Required items must be done before you can submit deal registrations.</p>
 
-      <ul class="checklist" aria-label="Getting started checklist">
+      <ul class="checklist" aria-label="Next steps checklist">
         <li class="checklist-item">
-          <div class="cl-icon done" aria-hidden="true">✓</div>
+          <div class="cl-icon done" aria-hidden="true">&#10003;</div>
           <div class="cl-body">
             <strong>Account setup complete</strong>
-            <span>Authentication configured · Profile reviewed · Team invited</span>
+            <span>Authentication configured &middot; Profile set &middot; Team invited &middot; Training paths assigned</span>
           </div>
           <span class="cl-tag done" aria-label="Status: Done">Done</span>
         </li>
         <li class="checklist-item">
-          <div class="cl-icon req" aria-label="Required item">1</div>
+          <div class="cl-icon req" aria-label="Required step">1</div>
           <div class="cl-body">
             <strong>Complete the Partner Onboarding Training</strong>
-            <span>~45 min · Covers deal registration, portal navigation, co-sell process</span>
+            <span>~45 min &middot; Covers deal registration, portal navigation, co-sell process</span>
           </div>
-          <a href="#" class="cl-action" aria-label="Start partner onboarding training">Start →</a>
+          <a href="#" class="cl-action" aria-label="Start partner onboarding training">Start &rarr;</a>
         </li>
         <li class="checklist-item">
-          <div class="cl-icon req" aria-label="Required item">2</div>
+          <div class="cl-icon req" aria-label="Required step">2</div>
           <div class="cl-body">
             <strong>Sign the Partner Program Agreement</strong>
-            <span>DocuSign · Takes about 5 minutes</span>
+            <span>DocuSign &middot; Takes about 5 minutes if not yet completed</span>
           </div>
-          <a href="onboarding-agreement.html" class="cl-action" aria-label="Review and sign partner program agreement">Review →</a>
+          <a href="onboarding-agreement.html" class="cl-action" aria-label="Review and sign the partner agreement">Review &rarr;</a>
         </li>
         <li class="checklist-item">
-          <div class="cl-icon req" aria-label="Recommended item">3</div>
+          <div class="cl-icon req" aria-label="Recommended step">3</div>
           <div class="cl-body">
-            <strong>Schedule Kickoff Call with Marcus Chen</strong>
-            <span>30 min · Discuss pipeline, co-sell priorities, and MDF</span>
+            <strong>Schedule your kickoff call with your PSM</strong>
+            <span>30 min &middot; Discuss pipeline, co-sell priorities, and MDF with Marcus Chen</span>
           </div>
-          <a href="#" class="cl-action" aria-label="Schedule kickoff call with Marcus Chen">Schedule →</a>
+          <a href="#" class="cl-action" aria-label="Schedule kickoff call with your Partner Success Manager">Schedule &rarr;</a>
         </li>
         <li class="checklist-item">
           <div class="cl-icon" style="background:var(--wf-canvas);border:1px solid var(--wf-line);color:var(--wf-muted);" aria-hidden="true">4</div>
           <div class="cl-body">
-            <strong>Register Your First Deal</strong>
-            <span>Once training is complete — your PSM will guide you through the first submission</span>
+            <strong>Register your first deal</strong>
+            <span>Once training is complete &mdash; your PSM will walk you through the first submission</span>
           </div>
-          <a href="rep-register-deal.html" class="cl-action" aria-label="Register a deal">Register →</a>
+          <a href="rep-register-deal.html" class="cl-action" aria-label="Go to deal registration">Register &rarr;</a>
         </li>
       </ul>
     </div>
 
     <div style="text-align:center; margin-top: 8px;">
-      <a href="pc-dashboard.html" class="btn btn-primary btn-large" aria-label="Go to Partner Central dashboard">
-        Go to My Dashboard →
+      <a href="rep-home.html" class="btn btn-primary btn-large" aria-label="Go to Partner Central dashboard">
+        Go to My Dashboard &rarr;
       </a>
-      <p style="font-size:12px; color:var(--wf-muted, #6b7f99); margin-top:12px;">You can return to this checklist any time from <strong>My Account → Getting Started</strong>.</p>
+      <p style="font-size:12px; color:var(--wf-muted, #6b7f99); margin-top:12px;">Skipped any steps? Return to them any time from <strong>My Account &rarr; Getting Started</strong>.</p>
     </div>
 
     <div class="nav-row">
-      <button class="btn btn-ghost" onclick="goToStep(5)">← Back</button>
+      <button class="btn btn-ghost" onclick="goToStep(5)">&larr; Back</button>
       <span></span>
     </div>
 
@@ -850,90 +902,80 @@
 
 </div><!-- /wizard-shell -->
 
-<!-- ── Spec panel ─────────────────────────────────────────────── -->
+
+<!-- ── Spec panel ── -->
 <button class="spec-toggle" onclick="document.getElementById('spec').classList.toggle('open')" aria-label="Toggle spec panel">Spec</button>
 <aside class="spec-panel" id="spec" role="complementary" aria-label="Design specification">
   <div class="spec-inner">
-    <button class="spec-close" onclick="document.getElementById('spec').classList.remove('open')" aria-label="Close spec panel">×</button>
+    <button class="spec-close" onclick="document.getElementById('spec').classList.remove('open')" aria-label="Close spec panel">&times;</button>
 
     <div class="spec-section">
       <h3 class="spec-section-title">Summary</h3>
-      <p>5-step post-authentication onboarding wizard. Runs immediately after auth setup on first login. Establishes the partner's operational defaults (profile, team, product focus, notification preferences) and surfaces the required training and agreement actions before first deal registration.</p>
+      <p>6-step post-activation account setup wizard. The user arrives here already authenticated, directly from the welcome screen (<code>onboarding-welcome.html</code>). No org data exists yet — only the signed agreement. This wizard establishes the partner's operational profile, team, training assignments, deal defaults, and product focus.</p>
     </div>
 
     <div class="spec-section">
       <h3 class="spec-section-title">Flow Position</h3>
-      <p>Registration chain: Apply → Confirmation → Acceptance Email → Auth Setup → <strong>Onboarding Wizard (this)</strong> → Partner Central Dashboard</p>
+      <p>Apply → Confirmation → Verification → Agreement → Set Password → Welcome → <strong>Setup Wizard (this)</strong> → Dashboard</p>
+    </div>
+
+    <div class="spec-section">
+      <h3 class="spec-section-title">Skip Design</h3>
+      <ul class="spec-list">
+        <li>Every step 1–5 has a "Skip for now →" ghost button alongside the primary Continue action.</li>
+        <li>A persistent "Exit to dashboard →" link in the context bar is always visible.</li>
+        <li>Skipped steps are recorded in localStorage (<code>pcp-onboarding-skipped</code>) so the dashboard can show a "Continue your setup" progress banner.</li>
+        <li>The banner appears on the Partner Home dashboard until all steps are complete or the user explicitly dismisses it. It links back to the wizard at the first incomplete step.</li>
+        <li>Setup is always accessible via <strong>My Account → Getting Started</strong>.</li>
+      </ul>
     </div>
 
     <div class="spec-section">
       <h3 class="spec-section-title">Steps</h3>
       <ul class="spec-list">
-        <li><strong>Step 1 — Profile:</strong> Welcome banner (PSM intro), review/confirm org data from registration, add DUNS/Tax ID, confirm contact details. Pre-filled with CloudBridge data.</li>
-        <li><strong>Step 2 — Your Team:</strong> Invite team members, assign portal roles. Registered user shown as "You" with locked role. Invites queued until onboarding completes.</li>
-        <li><strong>Step 3 — Programs:</strong> Select Equinix products, verticals, and regions. Drives PSM resource targeting and portal content personalization.</li>
-        <li><strong>Step 4 — Preferences:</strong> Toggle notifications per category. Set deal currency and default deal owner. All toggles default to most useful state based on partner type.</li>
-        <li><strong>Step 5 — Get Started:</strong> Completion state. Checklist with required items (training, agreement, kickoff) and first deal registration link.</li>
+        <li><strong>Step 1 — Organization:</strong> PSM welcome banner. Fill in company profile (pre-populated from application where available). DUNS and Tax ID optional. Contact details with read-only email.</li>
+        <li><strong>Step 2 — Your Team:</strong> Invite team members with role assignments. Logged-in user pinned at top. Invitations queue until Step 6 is reached or the user exits.</li>
+        <li><strong>Step 3 — Training:</strong> Role-based learning paths shown per team member (derived from Step 2 role assignments). Individual courses can be removed or added. Training is sent with portal invitations.</li>
+        <li><strong>Step 4 — Deals &amp; Marketing:</strong> How deal registration works (3-step flow), currency default, deal alert toggle. MDF overview with typical allocation, co-marketing program list, MDF alert toggle.</li>
+        <li><strong>Step 5 — Programs &amp; Preferences:</strong> Equinix product focus (2-col cards), target verticals, regions (checkbox grids). Notification toggles. Default deal owner.</li>
+        <li><strong>Step 6 — You're Ready:</strong> Completion state. Required next steps: onboarding training, agreement signing, PSM kickoff, first deal registration.</li>
       </ul>
     </div>
 
     <div class="spec-section">
-      <h3 class="spec-section-title">Design Specification</h3>
-      <p class="spec-subsection-label">Primary Content</p>
+      <h3 class="spec-section-title">Training Step — Role Mapping</h3>
       <ul class="spec-list">
-        <li>Dark welcome banner with PSM avatar, name, role, and direct email</li>
-        <li>Profile form: pre-filled from Salesforce Account record, DUNS/Tax editable</li>
-        <li>Team table: registered user pinned at top (locked), invite row below existing members</li>
-        <li>Product cards (2-col): checkbox + title + description; verticals and regions as 3-col checkbox grids</li>
-        <li>Toggle rows for 6 notification types + deal defaults (currency, owner)</li>
-        <li>Completion checklist: Done/Required/Upcoming states with direct action links</li>
-      </ul>
-      <p class="spec-subsection-label">Interactive Elements</p>
-      <ul class="spec-list">
-        <li>Stepper nav (click to jump only if step already visited)</li>
-        <li>Profile form inputs — editable over pre-filled (tinted) values</li>
-        <li>Role selects in team table; Add Member form + "+" button</li>
-        <li>Remove (×) button removes team row</li>
-        <li>Product checkboxes, vertical/region checkbox grids</li>
-        <li>Notification toggle switches</li>
-        <li>Currency / deal owner selects</li>
-        <li>CTA links in checklist (training, agreement, schedule, deal reg)</li>
-        <li>Go to Dashboard CTA</li>
-      </ul>
-      <p class="spec-subsection-label">Functionality</p>
-      <ul class="spec-list">
-        <li>Wizard state persists per session; user can close and resume from last completed step</li>
-        <li>Step 1 profile saves to Salesforce Contact/Account on Save &amp; Continue</li>
-        <li>Step 2 team invites queued; invitation emails sent on final step completion</li>
-        <li>Step 3 product selections write to partner profile record; drive PSM dashboard segmentation</li>
-        <li>Step 5 checklist items link to existing portal pages; completion status tracked</li>
-        <li>Agreement sign-off gates deal registration until complete</li>
-        <li>Training completion tracked via LMS integration</li>
+        <li><strong>Portal Admin / Sales Ops:</strong> Partner Central Fundamentals (Required), Team Management &amp; Permissions (Required), Deal Workflow &amp; Approval Queues (Recommended), Reporting &amp; Analytics (Optional)</li>
+        <li><strong>Account Executive / Deal Reg User:</strong> Deal Registration Mastery (Required), Equinix Products Essentials (Required), Partner Co-Sell Playbook (Recommended), Competitive Landscape (Optional)</li>
+        <li><strong>Technical:</strong> Equinix Technical Foundations (Required), Interconnection &amp; Fabric Deep Dive (Recommended), API &amp; Integration Essentials (Optional)</li>
+        <li><strong>Finance Contact:</strong> Commission &amp; Revenue Overview (Required), MDF Claims Process (Recommended)</li>
+        <li>In production, these are dynamically generated based on the role values assigned in Step 2.</li>
       </ul>
     </div>
 
     <div class="spec-section">
       <h3 class="spec-section-title">Design Notes</h3>
       <ul class="spec-list">
-        <li>Post-auth header (dark pc-header) used here — user is now logged in</li>
-        <li>PSM intro card is dark/prominent to personalize the experience from the first screen</li>
-        <li>DUNS and Tax ID are optional at onboarding but flagged as needed for MDF — reduces friction without blocking completion</li>
-        <li>Team invites queue until Step 5 completion to avoid sending premature access emails</li>
-        <li>Checkbox grids follow the &lt;10 options tile pattern; product cards use a 2-col variation to allow longer descriptions</li>
-        <li>Toggle defaults set based on partner type: Reseller gets deal and co-sell on; weekly digest off by default</li>
-        <li>"Back" nav available on all steps but doesn't require save confirmation — wizard saves progressively</li>
+        <li>Post-auth header (dark pc-header) used — user is authenticated</li>
+        <li>PSM intro card is dark and prominent to personalize from the first screen</li>
+        <li>DUNS and Tax ID are optional at setup, flagged as needed for MDF — reduces friction without blocking completion</li>
+        <li>Team invitations queue until Step 6 to avoid sending premature credentials</li>
+        <li>Training paths are generated from Step 2 role selections; the step shows a static demo until Step 2 data is committed</li>
+        <li>Deals &amp; Marketing step is primarily orientation — only the currency default and two notification toggles require input</li>
+        <li>Programs &amp; Preferences step covers product/vertical/region focus (previously Step 3) merged with notifications (previously Step 4)</li>
       </ul>
     </div>
 
   </div>
 </aside>
 
+
 <script>
   let currentStep = 1;
   let visitedSteps = new Set([1]);
+  let skippedSteps = new Set();
 
   function goToStep(n) {
-    // Only allow jumping to visited steps (or next step)
     if (n > currentStep + 1) return;
 
     document.querySelectorAll('.step-section').forEach(el => el.classList.remove('active'));
@@ -942,84 +984,41 @@
     for (let i = 1; i <= 6; i++) {
       const sn = document.getElementById('sn-' + i);
       sn.classList.remove('active', 'completed');
-      if (i < n)  { sn.classList.add('completed'); sn.querySelector('.step-circle').textContent = '✓'; }
+      if (i < n)  { sn.classList.add('completed'); sn.querySelector('.step-circle').textContent = '\u2713'; }
       if (i === n) { sn.classList.add('active'); sn.querySelector('.step-circle').textContent = String(i); }
       if (i > n)  { sn.querySelector('.step-circle').textContent = String(i); }
     }
-
-    if (n === 5) populateReviewOnboard();
 
     visitedSteps.add(n);
     currentStep = n;
     history.replaceState(null, '', '#step-' + n);
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    // Update aria-current
     document.querySelectorAll('.step-circle').forEach(el => el.removeAttribute('aria-current'));
     document.querySelector('#sn-' + n + ' .step-circle').setAttribute('aria-current', 'step');
   }
 
-  /* ── Deep-link: read hash on load ───────────────────────── */
+  function skipStep(nextN) {
+    skippedSteps.add(currentStep);
+    try {
+      localStorage.setItem('pcp-onboarding-skipped', JSON.stringify([...skippedSteps]));
+    } catch(e) {}
+    goToStep(nextN);
+  }
+
+  /* Deep-link on load */
   (function initFromHash() {
     const m = window.location.hash.match(/^#step-(\d+)$/);
     if (m) {
       const n = parseInt(m[1], 10);
       if (n >= 1 && n <= 6) {
-        // Pre-mark all preceding steps visited so the guard doesn't block
         for (let i = 1; i < n; i++) visitedSteps.add(i);
         goToStep(n);
       }
     }
   })();
 
-  /* ── Onboarding review: populate summary ─────────────────── */
-  function populateReviewOnboard() {
-    // Profile
-    oRV('orv-org',   document.getElementById('o-name')?.value  || 'CloudBridge Technologies Inc.');
-    oRV('orv-name',  document.getElementById('c-name')?.value  || 'Steve Rogers');
-    oRV('orv-email', document.getElementById('c-email')?.value || 'steve.rogers@cloudbridge.com');
-
-    // Team members from table
-    const rows = document.querySelectorAll('#team-tbody tr');
-    const members = [...rows].map(tr => {
-      const cells = tr.querySelectorAll('td');
-      const role = tr.querySelector('select')?.value || (cells[2]?.textContent.trim() || '');
-      return cells[0]?.textContent.trim() + (role ? ' (' + role + ')' : '');
-    }).filter(Boolean);
-    oRV('orv-team', members.length ? members.join(', ') : 'No additional members');
-
-    // Programs — products
-    const prods = [...document.querySelectorAll('input[name="product"]:checked')].map(el => el.closest('label')?.querySelector('strong')?.textContent.trim() || el.value);
-    oRV('orv-products', prods.length ? prods.join(', ') : 'None selected');
-
-    // Programs — verticals
-    const verts = [...document.querySelectorAll('input[name="vertical"]:checked')].map(el => el.closest('label')?.textContent.trim());
-    oRV('orv-verticals', verts.length ? verts.join(', ') : 'None selected');
-
-    // Programs — regions
-    const regs = [...document.querySelectorAll('input[name="region"]:checked')].map(el => el.closest('label')?.textContent.trim());
-    oRV('orv-regions', regs.length ? regs.join(', ') : 'None selected');
-
-    // Preferences — notifications
-    const notifToggles = document.querySelectorAll('.toggle-input');
-    const onCount = [...notifToggles].filter(t => t.checked).length;
-    oRV('orv-notifs', onCount + ' of ' + notifToggles.length + ' notification types enabled');
-
-    // Preferences — currency
-    const curr = document.getElementById('deal-currency');
-    oRV('orv-currency', curr?.options[curr.selectedIndex]?.text || '—');
-
-    // Preferences — deal owner
-    const own = document.getElementById('dr-owner');
-    oRV('orv-owner', own?.options[own.selectedIndex]?.text || '—');
-  }
-
-  function oRV(id, val) {
-    const el = document.getElementById(id);
-    if (el) el.textContent = val || '—';
-  }
-
-  // Team member management
+  /* Team management */
   let memberCount = 2;
   function addMember() {
     const name  = document.getElementById('invite-name').value.trim();
@@ -1031,19 +1030,16 @@
     const tbody = document.getElementById('team-tbody');
     const tr = document.createElement('tr');
     tr.id = rowId;
+    const roles = ['Portal Admin','Account Executive','Finance Contact','Deal Registration User','Technical','Read Only'];
     tr.innerHTML = `
       <td>${name}</td>
       <td>${email}</td>
       <td>
         <select class="role-select" aria-label="Role for ${name}">
-          <option${role === 'Portal Admin' ? ' selected' : ''}>Portal Admin</option>
-          <option${role === 'Sales Operations' ? ' selected' : ''}>Sales Operations</option>
-          <option${role === 'Finance Contact' ? ' selected' : ''}>Finance Contact</option>
-          <option${role === 'Deal Registration User' ? ' selected' : ''}>Deal Registration User</option>
-          <option${role === 'Read Only' ? ' selected' : ''}>Read Only</option>
+          ${roles.map(r => `<option${r===role?' selected':''}>${r}</option>`).join('')}
         </select>
       </td>
-      <td><button class="remove-btn" onclick="removeRow('${rowId}')" aria-label="Remove ${name}">×</button></td>
+      <td><button class="remove-btn" onclick="removeRow('${rowId}')" aria-label="Remove ${name}">&times;</button></td>
     `;
     tbody.appendChild(tr);
     document.getElementById('invite-name').value = '';
@@ -1054,6 +1050,11 @@
   function removeRow(id) {
     const el = document.getElementById(id);
     if (el) el.remove();
+  }
+
+  function removeCourse(btn) {
+    const item = btn.closest('.course-item');
+    if (item) item.remove();
   }
 </script>
 <script src="wf-nav.js"></script>
