@@ -923,16 +923,56 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
     <div class="node">
       <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
         <div class="node-type t-settings" title="Settings">S</div>
-        <span class="node-label">Program Agreements</span>
+        <span class="node-label">Program Agreements <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">(PAM portfolio view)</span></span>
         <a href="pam-program-agreements.html" class="node-mockup-link" title="View Mockup">→</a>
         <span class="node-chevron">›</span>
       </div>
       <div class="node-children">
-        <div class="child"><span class="child-type ct-kpi">KPI</span> Active · Expiring 90d · Pending countersign · No agreement</div>
+        <div class="child"><span class="child-type ct-kpi">KPI</span> Active · Expiring 90d · Pending countersign · No agreement on file</div>
         <div class="child"><span class="child-type ct-table">Table</span> Agreement ID, partner, tier, type, effective/expiry, status, e-sign state</div>
         <div class="child"><span class="child-type ct-action">Action</span> Generate New Agreement (Salesforce Document Builder)</div>
-        <div class="child"><span class="child-type ct-action">Action</span> Renew · View PDF · Send for countersignature (DocuSign integration)</div>
+        <div class="child"><span class="child-type ct-action">Action</span> Renew → psm-contract-renewal.html · View PDF · Send for countersignature</div>
         <div class="child"><span class="child-type ct-alert">Alert</span> Escalation briefs use Agentforce DocGen — see psm-escalation-brief.html</div>
+      </div>
+    </div>
+
+    <!-- ── Contracts & Agreement Lifecycle ───────────────────────── -->
+    <div style="margin:6px 0 3px 0;padding:3px 8px;background:#e8f5e9;border-left:2px solid #166534;font-size:.63rem;font-weight:700;color:#166534;text-transform:uppercase;letter-spacing:.05em;">Agreement Lifecycle — Amendments &amp; Renewals</div>
+
+    <div class="node">
+      <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="node-type t-workflow" title="Workflow">W</div>
+        <span class="node-label">PPA Amendment <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">(PSM-initiated or partner-requested)</span></span>
+        <a href="psm-ppa-amendment.html" class="node-mockup-link" title="View Mockup">→</a>
+        <span class="node-chevron">›</span>
+      </div>
+      <div class="node-children">
+        <div class="child"><span class="child-type ct-card">Card</span> Amendment header: AMD ID, parent PPA, type (tier upgrade / commission / MDF), change reason (required), PAM authorization</div>
+        <div class="child"><span class="child-type ct-table">Table</span> Before/after redline comparison — 7 changed terms (commission, MDF, certs, deal reg window, PAM, QBR cadence, co-sell)</div>
+        <div class="child"><span class="child-type ct-timeline">Timeline</span> E-signature workflow: 7-step tracker — PSM draft → PAM auth → Legal → DocuSign sent → Partner signs → Equinix countersign → Executed</div>
+        <div class="child"><span class="child-type ct-card">Card</span> Tier change implications callout: auto-system updates on execution (CPQ, MDF budget, cert tracker, co-sell flag, notifications)</div>
+        <div class="child"><span class="child-type ct-action">Action</span> Send Reminder (DocuSign) · Void &amp; Restart</div>
+        <div class="child"><span class="child-type ct-note">Note</span> Template: TMPL-AMD-TIER-UPGRADE-V3 (Salesforce Document Builder, not Agentforce DocGen)</div>
+        <div class="child"><span class="child-type ct-note">Note</span> Entry points: partner clicks "Request Amendment" in pm-contracts.html, OR tier change triggers automatic initiation</div>
+      </div>
+    </div>
+
+    <div class="node">
+      <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="node-type t-workflow" title="Workflow">W</div>
+        <span class="node-label">Agreement Renewal <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">(triggered at 90-day expiry alert)</span></span>
+        <a href="psm-contract-renewal.html" class="node-mockup-link" title="View Mockup">→</a>
+        <span class="node-chevron">›</span>
+      </div>
+      <div class="node-children">
+        <div class="child"><span class="child-type ct-card">Card</span> Renewal context: expiry date, days remaining, revenue YTD, cert status, open escalations, PSM recommendation</div>
+        <div class="child"><span class="child-type ct-card">Card</span> 3 renewal options: Same Terms / Updated Terms / Tier Upgrade — radio-style selection, each with template ID and approval requirements</div>
+        <div class="child"><span class="child-type ct-card">Card</span> Terms preview: 2-col provisions grid, updates with selected option</div>
+        <div class="child"><span class="child-type ct-timeline">Timeline</span> Renewal workflow: draft → PAM review (optional for same tier) → DocuSign → partner signs → countersign → new PPA activated</div>
+        <div class="child"><span class="child-type ct-table">Table</span> Prior renewal history: shows previous agreement cycles with archive links</div>
+        <div class="child"><span class="child-type ct-alert">Alert</span> Urgency sidebar: countdown to lapse, initiation deadline, warning that deal protection and MDF access lapse immediately if agreement expires</div>
+        <div class="child"><span class="child-type ct-note">Note</span> Renewal creates a new Agreement__c record (RNW- prefix); expiring record archived as Expired. Template: TMPL-RENEW-SILVER-V2.</div>
+        <div class="child"><span class="child-type ct-note">Note</span> Triggered by: workflow rule when Expiry_Date__c ≤ TODAY()+90 AND Renewal_Initiated__c = FALSE</div>
       </div>
     </div>
 
@@ -1388,10 +1428,28 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
     <!-- Administration (Partner Admin Only) -->
     <div class="section">
       <div class="section-title" onclick="toggleSection(this)" tabindex="0" role="button" aria-expanded="true">
-        <span class="chevron open">›</span> Administration
-        <span class="count">2</span>
+        <span class="chevron open">›</span> Administration &amp; Agreements
+        <span class="count">3</span>
       </div>
       <div class="section-body">
+
+        <div class="node">
+          <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+            <div class="node-type t-settings" title="Settings">S</div>
+            <span class="node-label">My Partner Agreement (PPA) <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">Jordan / Brian — read-only</span></span>
+            <a href="pm-contracts.html" class="node-mockup-link" title="View Mockup">→</a>
+            <span class="node-chevron">›</span>
+          </div>
+          <div class="node-children">
+            <div class="child"><span class="child-type ct-card">Card</span> Active agreement card: ID, tier, effective/expiry, signatories, renewal countdown</div>
+            <div class="child"><span class="child-type ct-card">Card</span> Key provisions summary (read-only): commission rate, MDF, cert requirements, deal reg protection</div>
+            <div class="child"><span class="child-type ct-table">Table</span> Amendment history: 2 executed amendments (tier upgrade, MDF increase)</div>
+            <div class="child"><span class="child-type ct-action">Action</span> Download Executed PDF (ContentDocument from Agreement__c)</div>
+            <div class="child"><span class="child-type ct-action">Action</span> Request Amendment → notifies PSM, creates task in psm-ppa-amendment.html</div>
+            <div class="child"><span class="child-type ct-card">Card</span> Renewal Status sidebar: 322 days remaining, auto-renewal enabled, renewal reminder CTA</div>
+            <div class="child"><span class="child-type ct-note">Note</span> Partner read-only — PSM owns all edits; amendment initiation routes to Marcus Chen</div>
+          </div>
+        </div>
 
         <div class="node">
           <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
@@ -2155,6 +2213,51 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
       <div><strong>Login:</strong> Passwordless email OTP (Experience Cloud Winter '23+). No password creation step for new reps.</div>
       <div><strong>SF Objects:</strong> PartnerUserRequest__c (join request) → Contact / User provisioned on approval action.</div>
       <div><strong>Fallback:</strong> If no Portal Admin assigned, join requests route to PSM (Marcus Chen) as interim approver.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     CONTRACT & AGREEMENT LIFECYCLE
+     ═══════════════════════════════════════════════════ -->
+<div class="cross-section" style="border:2px solid #166534;">
+  <h3><div class="dot" style="background:#166534;"></div> Contract &amp; Agreement Lifecycle <span style="font-size:.75rem;font-weight:400;color:var(--wf-muted);margin-left:.5rem;">PPA · Amendments · Renewals · Partner View</span></h3>
+  <div class="chain" style="margin-bottom:1rem;">
+    <div class="chain-step" style="border-color:#166534;border-width:2px;"><a href="onboarding-agreement.html" style="color:#166534;text-decoration:none;">1. Initial PPA</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Onboarding · DocuSign</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:#166534;border-width:2px;"><a href="onboarding-agreement-confirmation.html" style="color:#166534;text-decoration:none;">2. Countersign</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Status tracker</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:#1d4ed8;border-width:2px;"><a href="pm-contracts.html" style="color:#1d4ed8;text-decoration:none;">3. Partner views PPA</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Read-only · download</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:#b45309;border-width:2px;"><a href="psm-ppa-amendment.html" style="color:#b45309;text-decoration:none;">4. Amendment</a><br><span style="font-size:.625rem;color:var(--wf-muted);">PSM-led · redline compare</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:#dc2626;border-width:2px;"><a href="psm-contract-renewal.html" style="color:#dc2626;text-decoration:none;">5. Renewal</a><br><span style="font-size:.625rem;color:var(--wf-muted);">90-day trigger · 3 options</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:#6d28d9;border-width:2px;"><a href="pm-partner-offboarding.html" style="color:#6d28d9;text-decoration:none;">6. Offboarding</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Lapse / dormancy</span></div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(260px,1fr));gap:.75rem;font-size:.8125rem;">
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #166534;">
+      <strong><a href="pam-program-agreements.html" style="color:#166534;">PAM: Program Agreements Queue →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">PAM portfolio view — all agreements, expiry alerts, e-sign status, generate new PPA</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #b45309;">
+      <strong><a href="psm-contracts.html" style="color:#b45309;">PSM: Contract Repository →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Full contract management — active agreements, templates, amendment history, 90/60/30-day renewal alerts</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #1d4ed8;">
+      <strong><a href="pm-contracts.html" style="color:#1d4ed8;">Partner: My Agreement →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Partner read-only view — executed PPA, key provisions summary, amendment history, renewal countdown, download PDF</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #b45309;">
+      <strong><a href="psm-ppa-amendment.html" style="color:#b45309;">PSM: PPA Amendment →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Before/after redline compare, DocuSign 7-step tracker, tier change system implications, partner request routing</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #dc2626;">
+      <strong><a href="psm-contract-renewal.html" style="color:#dc2626;">PSM: Agreement Renewal →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">3 renewal options (same terms / updated terms / tier upgrade), urgency sidebar, prior cycle history</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;">
+      <div style="font-size:.75rem;color:var(--wf-muted);font-style:italic;">Amendment trigger: tier change event → auto-initiate psm-ppa-amendment.html with TMPL-AMD-TIER-UPGRADE-V3. Partner "Request Amendment" from pm-contracts.html → PSM task created. Renewal trigger: Expiry_Date__c ≤ TODAY()+90 AND Renewal_Initiated__c = FALSE → PSM task → psm-contract-renewal.html.</div>
     </div>
   </div>
 </div>

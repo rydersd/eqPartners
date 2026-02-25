@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Partner Agreement — CloudBridge Solutions — Equinix PCP Wireframes</title>
+<link rel="stylesheet" href="wireframe.css">
+<style>
+/* Page-specific overrides */
+.ppa-container {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.ppa-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.ppa-sidebar {
+  width: 320px;
+  flex-shrink: 0;
+}
+
+/* Active Agreement Card */
+.agreement-summary-card {
+  background: var(--wf-canvas);
+  border: 1px solid var(--gray-border);
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 32px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.agreement-summary-card h2 {
+  margin: 0 0 4px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--wf-ink);
+}
+
+.agreement-id {
+  font-size: 13px;
+  color: var(--wf-muted);
+  margin-bottom: 16px;
+  font-family: monospace;
+}
+
+.agreement-tier-type {
+  display: inline-block;
+  background: #f0f9ff;
+  color: #0369a1;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.agreement-meta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.meta-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.meta-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--wf-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.meta-value {
+  font-size: 14px;
+  color: var(--wf-ink);
+  font-weight: 500;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #ecfdf5;
+  color: #047857;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-badge::before {
+  content: '✓';
+  font-weight: bold;
+}
+
+.renewal-badge {
+  display: inline-block;
+  background: #dcfce7;
+  color: #16a34a;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.signatories {
+  background: #fafafa;
+  border-radius: 6px;
+  padding: 12px;
+  margin: 16px 0;
+  font-size: 13px;
+}
+
+.signatory-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+}
+
+.signatory-line strong {
+  color: var(--wf-ink);
+}
+
+.signatory-date {
+  color: var(--wf-muted);
+  font-size: 12px;
+}
+
+.agreement-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--gray-border);
+}
+
+.btn-secondary {
+  padding: 8px 16px;
+  border: 1px solid var(--gray-border);
+  background: white;
+  color: var(--wf-ink);
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  background: #f5f5f5;
+  border-color: var(--wf-muted);
+}
+
+.callout-amendment {
+  background: #fef3c7;
+  border-left: 4px solid #f59e0b;
+  padding: 12px;
+  border-radius: 4px;
+  font-size: 13px;
+  color: #78350f;
+  margin-top: 16px;
+}
+
+.callout-amendment strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #92400e;
+}
+
+/* Provisions Grid */
+.provisions-section {
+  margin-bottom: 32px;
+}
+
+.provisions-section h3 {
+  margin: 0 0 16px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--wf-ink);
+}
+
+.provisions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.provision-card {
+  background: var(--wf-canvas);
+  border: 1px solid var(--gray-border);
+  border-radius: 6px;
+  padding: 16px;
+}
+
+.provision-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--wf-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+
+.provision-value {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--wf-ink);
+  margin-bottom: 8px;
+}
+
+.provision-note {
+  font-size: 12px;
+  color: var(--wf-muted);
+  line-height: 1.4;
+}
+
+.check-icon {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background: #10b981;
+  color: white;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 16px;
+  font-size: 12px;
+  margin-right: 6px;
+}
+
+.provisions-disclaimer {
+  background: #f9fafb;
+  border: 1px solid var(--gray-border);
+  border-radius: 6px;
+  padding: 12px;
+  font-size: 12px;
+  color: var(--wf-muted);
+  line-height: 1.5;
+}
+
+/* Amendment History Table */
+.amendments-section {
+  margin-bottom: 32px;
+}
+
+.amendments-section h3 {
+  margin: 0 0 16px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--wf-ink);
+}
+
+.amendments-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--wf-canvas);
+  border: 1px solid var(--gray-border);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.amendments-table thead {
+  background: #f9fafb;
+  border-bottom: 1px solid var(--gray-border);
+}
+
+.amendments-table th {
+  padding: 12px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--wf-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.amendments-table td {
+  padding: 12px;
+  font-size: 13px;
+  color: var(--wf-ink);
+  border-bottom: 1px solid var(--gray-border);
+}
+
+.amendments-table tr:last-child td {
+  border-bottom: none;
+}
+
+.amendment-id {
+  font-family: monospace;
+  font-weight: 500;
+  color: #0369a1;
+}
+
+.amendment-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #ecfdf5;
+  color: #047857;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.amendment-status::before {
+  content: '✓';
+}
+
+.amendments-note {
+  font-size: 13px;
+  color: var(--wf-muted);
+  font-style: italic;
+}
+
+/* Sidebar Cards */
+.sidebar-card {
+  background: var(--wf-canvas);
+  border: 1px solid var(--gray-border);
+  border-radius: 6px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.sidebar-card h4 {
+  margin: 0 0 12px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--wf-ink);
+}
+
+.sidebar-card p {
+  margin: 0 0 8px 0;
+  font-size: 13px;
+  color: var(--wf-muted);
+  line-height: 1.4;
+}
+
+.sidebar-card .progress-bar {
+  height: 6px;
+  background: #e5e7eb;
+  border-radius: 3px;
+  overflow: hidden;
+  margin: 12px 0;
+}
+
+.sidebar-card .progress-fill {
+  height: 100%;
+  background: #16a34a;
+  width: 89%;
+}
+
+.sidebar-contact-link {
+  display: inline-block;
+  color: #0369a1;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  margin-top: 4px;
+}
+
+.sidebar-contact-link:hover {
+  text-decoration: underline;
+}
+
+.docs-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.docs-list li {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--gray-border);
+  font-size: 13px;
+}
+
+.docs-list li:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.doc-link {
+  color: #0369a1;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.doc-link:hover {
+  text-decoration: underline;
+}
+
+.doc-meta {
+  display: block;
+  font-size: 11px;
+  color: var(--wf-muted);
+  margin-top: 2px;
+}
+
+/* Annotation box */
+.annotation-box {
+  background: #fef3c7;
+  border: 1px solid #fcd34d;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 24px;
+  font-size: 12px;
+  color: #78350f;
+}
+
+.annotation-box strong {
+  display: block;
+  margin-bottom: 4px;
+  color: #92400e;
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .ppa-container {
+    flex-direction: column;
+  }
+  
+  .ppa-sidebar {
+    width: 100%;
+  }
+  
+  .agreement-meta-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .provisions-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .amendments-table {
+    font-size: 12px;
+  }
+  
+  .amendments-table th,
+  .amendments-table td {
+    padding: 8px;
+  }
+}
+</style>
+</head>
+<body>
+<div class="sfdc-layout">
+  <!-- Left Nav -->
+  <nav class="left-nav" role="navigation" aria-label="Main navigation">
+    <div class="nav-header">
+      <div class="nav-logo">Equinix PCP</div>
+    </div>
+    <ul class="nav-menu">
+      <li><a href="pm-home-dashboard.html">Dashboard</a></li>
+      <li><a href="pm-team-management.html">My Team</a></li>
+      <li><a href="pm-deals-revenue.html">Deals & Revenue</a></li>
+      <li><a href="pm-course-catalog.html">Training</a></li>
+      <li><a href="pm-mdf-request.html">MDF</a></li>
+      <li><a href="pm-support-center.html">Support</a></li>
+      <li class="nav-active"><a href="pm-contracts.html" aria-current="page">Agreements</a></li>
+      <li><a href="pm-resources.html">Resources</a></li>
+      <li><a href="pm-role-permissions.html">Admin</a></li>
+    </ul>
+    <div class="nav-footer">
+      <small>Logged in as Jordan Reeves</small>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- Page Header -->
+    <header class="page-header">
+      <div class="header-meta">
+        <a href="pm-home-dashboard.html" class="breadcrumb-link">Partner Home</a>
+        <span class="breadcrumb-sep">/</span>
+        <span class="breadcrumb-current">Agreements</span>
+      </div>
+      <h1>My Partner Agreement</h1>
+      <p class="header-subtitle">CloudBridge Solutions · Gold Tier · Americas</p>
+    </header>
+
+    <!-- Annotation (design note) -->
+    <div class="annotation-box" role="note">
+      <strong>Design note:</strong> Partner-read-only view. Amendment initiation routes to PSM — partners cannot self-serve edits. 'Request Amendment' sends notification to Marcus Chen and creates pending task in psm-ppa-amendment.html. Download links trigger Salesforce ContentDocument PDF retrieval.
+    </div>
+
+    <!-- Main Content & Sidebar Container -->
+    <div class="ppa-container">
+      <div class="ppa-main">
+        <!-- Active Agreement Summary Card -->
+        <section class="agreement-summary-card" role="region" aria-label="Active Agreement Summary">
+          <h2>CloudBridge Solutions — Equinix Partner Program Agreement</h2>
+          <div class="agreement-id">Agreement ID: PPA-2024-CB-0142</div>
+          
+          <div class="agreement-tier-type">Gold Tier — Reseller + Referral</div>
+          
+          <div class="agreement-meta-grid">
+            <div class="meta-row">
+              <span class="meta-label">Effective Date</span>
+              <span class="meta-value">January 15, 2024</span>
+            </div>
+            <div class="meta-row">
+              <span class="meta-label">Expiry Date</span>
+              <span class="meta-value">
+                January 14, 2027
+                <span class="renewal-badge" style="margin-left: 8px;">Renews in 322 days</span>
+              </span>
+            </div>
+            <div class="meta-row">
+              <span class="meta-label">Status</span>
+              <div class="status-badge">Active</div>
+            </div>
+            <div class="meta-row">
+              <span class="meta-label">Agreement Type</span>
+              <span class="meta-value">Master Agreement + amendments</span>
+            </div>
+          </div>
+
+          <div style="border-top: 1px solid var(--gray-border); padding-top: 16px; margin-top: 16px;">
+            <div class="meta-label">Signatories</div>
+            <div class="signatories">
+              <div class="signatory-line">
+                <strong>Equinix side:</strong>
+                <span class="signatory-date">Jan 16, 2024</span>
+              </div>
+              <div style="padding-left: 12px; font-size: 12px; color: var(--wf-muted);">
+                Marcus Chen, Partner Success Manager<br>
+                DocuSign signed: Jan 16, 2024
+              </div>
+              <div class="signatory-line" style="margin-top: 12px;">
+                <strong>CloudBridge side:</strong>
+                <span class="signatory-date">Jan 15, 2024</span>
+              </div>
+              <div style="padding-left: 12px; font-size: 12px; color: var(--wf-muted);">
+                Jordan Reeves, Sales Operations Manager<br>
+                DocuSign signed: Jan 15, 2024
+              </div>
+            </div>
+          </div>
+
+          <div class="callout-amendment">
+            <strong>Need to request changes?</strong>
+            To request changes to this agreement, use "Request Amendment" below. Your PSM (Marcus Chen) will be notified and will initiate the amendment workflow.
+          </div>
+
+          <div class="agreement-actions">
+            <button class="btn-secondary" aria-label="Download executed PDF of agreement">
+              📥 Download Executed PDF
+            </button>
+            <button class="btn-secondary" aria-label="Request amendment to agreement — routes to PSM">
+              ✎ Request Amendment
+            </button>
+          </div>
+        </section>
+
+        <!-- Agreement Provisions Summary -->
+        <section class="provisions-section" role="region" aria-label="Agreement Provisions">
+          <h3>Agreement Provisions — Key Commercial Terms</h3>
+          
+          <div class="provisions-grid">
+            <div class="provision-card">
+              <div class="provision-label">Commission Rate</div>
+              <div class="provision-value">8% on net new deals</div>
+              <div class="provision-note">Gold tier baseline; subject to deal registration and certification requirements.</div>
+            </div>
+            <div class="provision-card">
+              <div class="provision-label">Deal Registration Protection</div>
+              <div class="provision-value">90-day exclusivity window</div>
+              <div class="provision-note">Partner-initiated deals locked during registration period to prevent disputes.</div>
+            </div>
+            <div class="provision-card">
+              <div class="provision-label">Annual MDF Allocation</div>
+              <div class="provision-value">$40,000 USD</div>
+              <div class="provision-note">Quarterly tranches ($10K each). Unused funds do not roll over.</div>
+            </div>
+            <div class="provision-card">
+              <div class="provision-label">Certification Requirement</div>
+              <div class="provision-value"><span class="check-icon">✓</span> 5 active certifications by Jan 14, 2025</div>
+              <div class="provision-note">Status: Met. Current certifications: 6 active (Equinix Core, Fabric, Bare Metal, Cloud Gateway, Equinix Metal+).</div>
+            </div>
+            <div class="provision-card">
+              <div class="provision-label">QBR Cadence</div>
+              <div class="provision-value">Quarterly (PSM-led)</div>
+              <div class="provision-note">Last QBR: Feb 10, 2025. Next: May 10, 2025.</div>
+            </div>
+            <div class="provision-card">
+              <div class="provision-label">Termination Notice Period</div>
+              <div class="provision-value">90 days written notice</div>
+              <div class="provision-note">Either party may terminate for convenience with 90-day written notice.</div>
+            </div>
+            <div class="provision-card">
+              <div class="provision-label">Governing Law</div>
+              <div class="provision-value">State of California, USA</div>
+              <div class="provision-note">Disputes subject to arbitration under JAMS rules.</div>
+            </div>
+            <div class="provision-card">
+              <div class="provision-label">Auto-Renewal</div>
+              <div class="provision-value">Yes, annual</div>
+              <div class="provision-note">Renews automatically unless either party gives 60-day notice before expiry.</div>
+            </div>
+          </div>
+
+          <div class="provisions-disclaimer" role="note">
+            <strong>Note:</strong> This is a summary of key commercial terms generated from the agreement record. The full executed agreement (downloadable as PDF below) is the authoritative and legally binding document. For interpretation of any provision, consult the full agreement PDF.
+          </div>
+        </section>
+
+        <!-- Amendment History -->
+        <section class="amendments-section" role="region" aria-label="Amendment History">
+          <h3>Amendment History</h3>
+          
+          <table class="amendments-table" aria-label="History of amendments to this agreement">
+            <thead>
+              <tr>
+                <th scope="col">Amendment ID</th>
+                <th scope="col">Date</th>
+                <th scope="col">Type</th>
+                <th scope="col">Summary</th>
+                <th scope="col">Initiated By</th>
+                <th scope="col">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="amendment-id">AMD-2024-CB-001</td>
+                <td>March 12, 2024</td>
+                <td>Commission Adjustment</td>
+                <td>Updated referral commission rate from 6% to 8% on execution of first Gold-tier deal</td>
+                <td>Marcus Chen (PSM)</td>
+                <td><span class="amendment-status">Executed</span></td>
+              </tr>
+              <tr>
+                <td class="amendment-id">AMD-2025-CB-002</td>
+                <td>November 3, 2025</td>
+                <td>MDF Increase</td>
+                <td>Annual MDF budget increased from $32,000 to $40,000 in line with Gold tier escalation</td>
+                <td>Alex Rivera (PAM)</td>
+                <td><span class="amendment-status">Executed</span></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <p class="amendments-note">No pending amendments.</p>
+        </section>
+      </div>
+
+      <!-- Right Sidebar -->
+      <aside class="ppa-sidebar" role="complementary">
+        <!-- Renewal Status Card -->
+        <div class="sidebar-card">
+          <h4>Renewal Status</h4>
+          <p><strong>Next renewal:</strong><br>January 14, 2027</p>
+          <div class="progress-bar">
+            <div class="progress-fill"></div>
+          </div>
+          <p><strong>322 days remaining</strong></p>
+          <p>Auto-renewal is enabled. Equinix will initiate renewal discussions 90 days before expiry (October 16, 2026). You'll receive a notification when renewal is in progress.</p>
+          <button class="btn-secondary" style="width: 100%; margin-top: 12px;" aria-label="Set reminder for agreement renewal">
+            🔔 Set renewal reminder
+          </button>
+        </div>
+
+        <!-- PSM Contact Card -->
+        <div class="sidebar-card">
+          <h4>Your PSM</h4>
+          <p><strong>Marcus Chen</strong><br>
+          Partner Success Manager<br>
+          Equinix</p>
+          <a href="mailto:marcus.chen@equinix.com" class="sidebar-contact-link">marcus.chen@equinix.com</a><br>
+          <a href="#" class="sidebar-contact-link">📅 Schedule call</a>
+          <p style="margin-top: 12px; font-size: 12px;">For agreement questions or to request amendments, contact Marcus directly.</p>
+        </div>
+
+        <!-- Document Downloads Card -->
+        <div class="sidebar-card">
+          <h4>Document Downloads</h4>
+          <ul class="docs-list">
+            <li>
+              <a href="#" class="doc-link">PPA-2024-CB-0142</a>
+              <span class="doc-meta">Executed • PDF • Jan 16, 2024</span>
+            </li>
+            <li>
+              <a href="#" class="doc-link">AMD-2024-CB-001</a>
+              <span class="doc-meta">Executed • PDF • Mar 12, 2024</span>
+            </li>
+            <li>
+              <a href="#" class="doc-link">AMD-2025-CB-002</a>
+              <span class="doc-meta">Executed • PDF • Nov 3, 2025</span>
+            </li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </main>
+</div>
+
+<script src="wf-nav.js"></script>
+</body>
+</html>
