@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Partner Performance Analytics — Equinix PCP Wireframes</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <style>
+    .wf-layout-3col {
+      display: grid;
+      grid-template-columns: 240px 1fr 320px;
+      gap: 1rem;
+      height: 100vh;
+    }
+    .wf-sidebar-left {
+      background: var(--wf-canvas);
+      border-right: 1px solid var(--gray-border);
+      padding: 1rem;
+      overflow-y: auto;
+    }
+    .wf-sidebar-left h3 {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--wf-muted);
+      margin: 1.5rem 0 0.5rem 0;
+    }
+    .wf-sidebar-left ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .wf-sidebar-left li {
+      margin: 0.25rem 0;
+    }
+    .wf-sidebar-left a {
+      display: block;
+      padding: 0.5rem;
+      color: var(--wf-ink);
+      text-decoration: none;
+      border-radius: 4px;
+      font-size: 0.875rem;
+    }
+    .wf-sidebar-left a:hover {
+      background: var(--wf-muted);
+    }
+    .wf-main-content {
+      overflow-y: auto;
+      padding: 2rem;
+      background: var(--wf-canvas);
+    }
+    .wf-sidebar-right {
+      background: var(--wf-canvas);
+      border-left: 1px solid var(--gray-border);
+      padding: 1.5rem;
+      overflow-y: auto;
+    }
+    .wf-page-title {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.5rem;
+      color: var(--wf-ink);
+    }
+    .wf-page-meta {
+      font-size: 0.875rem;
+      color: var(--wf-muted);
+      margin-bottom: 1.5rem;
+    }
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+    .kpi-card {
+      padding: 1rem;
+      border: 1px solid var(--gray-border);
+      border-radius: 4px;
+      background: var(--wf-canvas);
+    }
+    .kpi-label {
+      font-size: 0.75rem;
+      color: var(--wf-muted);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+    .kpi-value {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--wf-ink);
+      margin-bottom: 0.25rem;
+    }
+    .kpi-progress {
+      width: 100%;
+      height: 6px;
+      background: var(--wf-muted);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-top: 0.5rem;
+    }
+    .kpi-progress-bar {
+      height: 100%;
+      background: var(--wf-accent);
+    }
+    .section-title {
+      font-size: 1rem;
+      color: var(--wf-ink);
+      margin: 2rem 0 1rem 0;
+      font-weight: 600;
+      border-bottom: 1px solid var(--gray-border);
+      padding-bottom: 0.5rem;
+    }
+    .chart-placeholder {
+      background: var(--wf-muted);
+      border: 1px dashed var(--gray-border);
+      border-radius: 4px;
+      padding: 2rem;
+      text-align: center;
+      color: var(--wf-muted);
+      font-size: 0.875rem;
+      margin: 1rem 0;
+    }
+    .bar-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 4px;
+      height: 120px;
+      padding: 1rem 0;
+    }
+    .bar-column {
+      flex: 1;
+      background: var(--wf-accent);
+      border-radius: 2px 2px 0 0;
+      opacity: 0.8;
+      position: relative;
+      min-width: 8px;
+    }
+    .bar-column:hover {
+      opacity: 1;
+    }
+    .pipeline-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+      margin-top: 1rem;
+    }
+    .pipeline-table thead {
+      background: var(--wf-muted);
+      border-bottom: 1px solid var(--gray-border);
+    }
+    .pipeline-table th {
+      padding: 0.75rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--wf-ink);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+    }
+    .pipeline-table td {
+      padding: 0.75rem;
+      border-bottom: 1px solid var(--gray-border);
+      color: var(--wf-ink);
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 3px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .status-submitted {
+      background: #ffeaa7;
+      color: #2d3436;
+    }
+    .status-approved {
+      background: #a3e4d7;
+      color: #0a5b3b;
+    }
+    .sidebar-card {
+      padding: 1rem;
+      border: 1px solid var(--gray-border);
+      border-radius: 4px;
+      margin-bottom: 1rem;
+      background: var(--wf-canvas);
+    }
+    .sidebar-card h4 {
+      margin: 0 0 0.75rem 0;
+      font-size: 0.875rem;
+      color: var(--wf-ink);
+    }
+    .tier-badge {
+      display: inline-block;
+      padding: 0.5rem 0.75rem;
+      border-radius: 4px;
+      background: var(--wf-accent);
+      color: white;
+      font-weight: 600;
+      font-size: 0.875rem;
+      margin-bottom: 0.75rem;
+    }
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: var(--wf-muted);
+      border-radius: 4px;
+      overflow: hidden;
+      margin: 0.5rem 0;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--wf-accent);
+    }
+    .action-item {
+      padding: 0.5rem 0;
+      font-size: 0.875rem;
+      color: var(--wf-ink);
+      border-bottom: 1px solid var(--gray-border);
+    }
+    .action-item:last-child {
+      border-bottom: none;
+    }
+    .action-item strong {
+      color: var(--wf-accent);
+    }
+  </style>
+</head>
+<body>
+  <div class="wf-layout-3col">
+    <!-- Left Sidebar Navigation -->
+    <nav class="wf-sidebar-left" aria-label="Partner portal navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li><a href="ecp-dashboard.html">Dashboard</a></li>
+        <li><a href="ecp-notifications.html">Notifications</a></li>
+        <li><a href="ecp-partner-dashboard.html">Partner Home</a></li>
+        <li><strong style="display: block; padding: 0.5rem; color: var(--wf-accent);">My Performance</strong></li>
+        <li><a href="ecp-services-orders.html">Services & Orders</a></li>
+        <li><a href="ecp-inventory.html">Inventory</a></li>
+        <li><a href="pm-profile.html">Profile</a></li>
+      </ul>
+      <h3>Resources</h3>
+      <ul>
+        <li><a href="pm-playbooks.html">Playbooks</a></li>
+        <li><a href="pm-asset-library.html">Asset Library</a></li>
+        <li><a href="pm-support-center.html">Support</a></li>
+      </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="wf-main-content">
+      <h1 class="wf-page-title">CloudBridge Solutions — My Performance</h1>
+      <p class="wf-page-meta">YTD · Q1 2026 · Gold Tier</p>
+
+      <!-- KPI Row -->
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <div class="kpi-label">Revenue vs Target</div>
+          <div class="kpi-value">$2.1M</div>
+          <div style="font-size: 0.75rem; color: var(--wf-muted);">/ $3.0M (70%)</div>
+          <div class="kpi-progress">
+            <div class="kpi-progress-bar" style="width: 70%;"></div>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Deal Registrations</div>
+          <div class="kpi-value">18</div>
+          <div style="font-size: 0.75rem; color: var(--wf-muted);">14 approved</div>
+          <div class="kpi-progress">
+            <div class="kpi-progress-bar" style="width: 77%;"></div>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Certification Score</div>
+          <div class="kpi-value">3/5</div>
+          <div style="font-size: 0.75rem; color: var(--wf-muted);">2 required</div>
+          <div class="kpi-progress">
+            <div class="kpi-progress-bar" style="width: 60%;"></div>
+          </div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">MDF Utilization</div>
+          <div class="kpi-value">$24K</div>
+          <div style="font-size: 0.75rem; color: var(--wf-muted);">/ $40K (60%)</div>
+          <div class="kpi-progress">
+            <div class="kpi-progress-bar" style="width: 60%;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Revenue Trend Section -->
+      <div class="section-title">Revenue Trend (Monthly)</div>
+      <div class="bar-chart">
+        <div class="bar-column" style="height: 45%; opacity: 0.6;" title="Jan: $140K"></div>
+        <div class="bar-column" style="height: 52%; opacity: 0.6;" title="Feb: $165K"></div>
+        <div class="bar-column" style="height: 60%; opacity: 0.7;" title="Mar: $190K"></div>
+        <div class="bar-column" style="height: 55%; opacity: 0.6;" title="Apr: $175K"></div>
+        <div class="bar-column" style="height: 48%; opacity: 0.6;" title="May: $155K"></div>
+        <div class="bar-column" style="height: 50%; opacity: 0.6;" title="Jun: $160K"></div>
+        <div class="bar-column" style="height: 35%; opacity: 0.6;" title="Jul: $120K"></div>
+        <div class="bar-column" style="height: 40%; opacity: 0.6;" title="Aug: $140K"></div>
+        <div class="bar-column" style="height: 58%; opacity: 0.7;" title="Sep: $185K"></div>
+        <div class="bar-column" style="height: 70%; opacity: 1;" title="Oct: $240K"></div>
+        <div class="bar-column" style="height: 72%; opacity: 1;" title="Nov: $255K"></div>
+        <div class="bar-column" style="height: 75%; opacity: 1;" title="Dec: $270K"></div>
+      </div>
+      <p style="font-size: 0.75rem; color: var(--wf-muted); margin-top: 0.5rem;">Chart renders as Salesforce Lightning bar chart component</p>
+
+      <!-- Open Deal Pipeline -->
+      <div class="section-title">Open Deal Pipeline (2026)</div>
+      <table class="pipeline-table" aria-label="Open deal registrations">
+        <thead>
+          <tr>
+            <th>Deal Name</th>
+            <th>Stage</th>
+            <th>Submitted</th>
+            <th>Days Open</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Alpine Bank — Hybrid Colocation</strong></td>
+            <td>Discovery</td>
+            <td>Feb 18, 2026</td>
+            <td>7</td>
+            <td><span class="status-badge status-submitted">Pending</span></td>
+          </tr>
+          <tr>
+            <td><strong>Forge Industries — Cloud Migration</strong></td>
+            <td>Scoping</td>
+            <td>Feb 10, 2026</td>
+            <td>15</td>
+            <td><span class="status-badge status-submitted">Pending</span></td>
+          </tr>
+          <tr>
+            <td><strong>TechVenture Corp — Disaster Recovery</strong></td>
+            <td>Proposal</td>
+            <td>Jan 28, 2026</td>
+            <td>28</td>
+            <td><span class="status-badge status-approved">Approved</span></td>
+          </tr>
+          <tr>
+            <td><strong>Beacon Analytics — Network Expansion</strong></td>
+            <td>Proposal</td>
+            <td>Jan 15, 2026</td>
+            <td>41</td>
+            <td><span class="status-badge status-approved">Approved</span></td>
+          </tr>
+          <tr>
+            <td><strong>Nexus Logistics — Expansion</strong></td>
+            <td>Negotiation</td>
+            <td>Jan 5, 2026</td>
+            <td>51</td>
+            <td><span class="status-badge status-approved">Approved</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Right Sidebar -->
+    <aside class="wf-sidebar-right" aria-label="Performance summary sidebar">
+      <div class="sidebar-card">
+        <h4>Tier Progress</h4>
+        <div class="tier-badge">Gold Tier</div>
+        <p style="font-size: 0.875rem; color: var(--wf-ink); margin: 0.5rem 0;">
+          Next milestone: <strong>Platinum</strong>
+        </p>
+        <p style="font-size: 0.75rem; color: var(--wf-muted); margin: 0.5rem 0;">
+          Needs +$900K revenue
+        </p>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 70%;"></div>
+        </div>
+        <p style="font-size: 0.75rem; color: var(--wf-muted); margin: 0;">
+          $2.1M / $3.0M needed for Platinum
+        </p>
+      </div>
+
+      <div class="sidebar-card">
+        <h4>Top Actions</h4>
+        <div class="action-item">
+          <strong>2 certs</strong> to complete
+        </div>
+        <div class="action-item">
+          <strong>Q1 MDF claim</strong> deadline Mar 31
+        </div>
+        <div class="action-item">
+          <strong>2 deals</strong> pending submission
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <script src="wf-nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Joint Business Plan — Equinix PCP Wireframes</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <style>
+    .wf-layout-3col {
+      display: grid;
+      grid-template-columns: 240px 1fr 320px;
+      gap: 1rem;
+      min-height: 100vh;
+    }
+    .wf-sidebar-left {
+      background: var(--wf-canvas);
+      border-right: 1px solid var(--gray-border);
+      padding: 1rem;
+      max-height: 100vh;
+      overflow-y: auto;
+    }
+    .wf-sidebar-left h3 {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--wf-muted);
+      margin: 1.5rem 0 0.5rem 0;
+    }
+    .wf-sidebar-left ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .wf-sidebar-left a {
+      display: block;
+      padding: 0.5rem;
+      color: var(--wf-ink);
+      text-decoration: none;
+      border-radius: 4px;
+      font-size: 0.875rem;
+    }
+    .wf-main-content {
+      overflow-y: auto;
+      padding: 2rem;
+      background: var(--wf-canvas);
+    }
+    .wf-sidebar-right {
+      background: var(--wf-canvas);
+      border-left: 1px solid var(--gray-border);
+      padding: 1.5rem;
+      max-height: 100vh;
+      overflow-y: auto;
+    }
+    .breadcrumb {
+      font-size: 0.75rem;
+      color: var(--wf-muted);
+      margin-bottom: 1rem;
+    }
+    .breadcrumb a {
+      color: var(--wf-accent);
+      text-decoration: none;
+    }
+    .page-title {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.5rem;
+      color: var(--wf-ink);
+    }
+    .page-subtitle {
+      font-size: 0.875rem;
+      color: var(--wf-muted);
+      margin-bottom: 2rem;
+    }
+    .form-section {
+      margin-bottom: 2rem;
+      border: 1px solid var(--gray-border);
+      border-radius: 4px;
+      background: var(--wf-canvas);
+    }
+    .section-header {
+      padding: 1rem;
+      background: var(--wf-muted);
+      border-bottom: 1px solid var(--gray-border);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 4px 4px 0 0;
+    }
+    .section-header h3 {
+      margin: 0;
+      font-size: 1rem;
+      color: var(--wf-ink);
+    }
+    .section-header .toggle-icon {
+      color: var(--wf-muted);
+      font-size: 1.25rem;
+    }
+    .section-content {
+      padding: 1.5rem;
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--wf-ink);
+      margin-bottom: 0.5rem;
+    }
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid var(--gray-border);
+      border-radius: 4px;
+      font-size: 0.875rem;
+      color: var(--wf-ink);
+      background: white;
+    }
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--wf-accent);
+      box-shadow: 0 0 0 2px rgba(0, 100, 150, 0.1);
+    }
+    .form-group .help-text {
+      font-size: 0.75rem;
+      color: var(--wf-muted);
+      margin-top: 0.25rem;
+    }
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .goal-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 1rem;
+      align-items: flex-end;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--gray-border);
+    }
+    .goal-row:last-child {
+      border-bottom: none;
+    }
+    .goal-label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--wf-ink);
+    }
+    .goal-baseline {
+      font-size: 0.75rem;
+      color: var(--wf-muted);
+      margin-top: 0.25rem;
+    }
+    .signature-block {
+      padding: 1rem;
+      border: 1px solid var(--gray-border);
+      border-radius: 4px;
+      background: var(--wf-muted);
+      margin-bottom: 1rem;
+      font-size: 0.875rem;
+    }
+    .signature-block strong {
+      display: block;
+      margin-bottom: 0.25rem;
+      color: var(--wf-ink);
+    }
+    .signature-block .sig-status {
+      font-size: 0.75rem;
+      color: var(--wf-muted);
+    }
+    .sidebar-card {
+      padding: 1rem;
+      border: 1px solid var(--gray-border);
+      border-radius: 4px;
+      margin-bottom: 1rem;
+      background: var(--wf-canvas);
+    }
+    .sidebar-card h4 {
+      margin: 0 0 0.75rem 0;
+      font-size: 0.875rem;
+      color: var(--wf-ink);
+    }
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 0.75rem;
+      font-size: 0.875rem;
+      color: var(--wf-ink);
+    }
+    .checklist-item input[type="checkbox"] {
+      margin-right: 0.5rem;
+      margin-top: 0.25rem;
+      flex-shrink: 0;
+    }
+    .related-item {
+      padding: 0.75rem;
+      margin-bottom: 0.5rem;
+      border: 1px solid var(--gray-border);
+      border-radius: 4px;
+      background: var(--wf-canvas);
+      font-size: 0.875rem;
+    }
+    .related-item a {
+      color: var(--wf-accent);
+      text-decoration: none;
+    }
+    .action-bar {
+      position: sticky;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: white;
+      border-top: 1px solid var(--gray-border);
+      padding: 1rem 2rem;
+      display: flex;
+      gap: 1rem;
+      justify-content: flex-end;
+      box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.05);
+    }
+    .btn {
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      border: 1px solid var(--gray-border);
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: white;
+      color: var(--wf-ink);
+    }
+    .btn:hover {
+      background: var(--wf-muted);
+    }
+    .btn-primary {
+      background: var(--wf-accent);
+      color: white;
+      border-color: var(--wf-accent);
+    }
+    .btn-primary:hover {
+      opacity: 0.9;
+    }
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <div class="wf-layout-3col">
+    <!-- Left Sidebar Navigation -->
+    <nav class="wf-sidebar-left" aria-label="PSM portal navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li><a href="psm-program-dashboard.html">Program Home</a></li>
+        <li><a href="psm-partner-account-list.html">Partners</a></li>
+        <li><a href="psm-deal-registration.html">Deal Registration</a></li>
+        <li><a href="psm-mdf-management.html">MDF Management</a></li>
+        <li><strong style="display: block; padding: 0.5rem; color: var(--wf-accent);">JBP</strong></li>
+      </ul>
+      <h3>Tools</h3>
+      <ul>
+        <li><a href="psm-reports-analytics.html">Reports</a></li>
+        <li><a href="psm-partner-account-list.html">QBR Prep</a></li>
+      </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="wf-main-content">
+      <p class="breadcrumb">
+        <a href="psm-program-dashboard.html">PSM Home</a> &gt; <a href="psm-partner-account-list.html">Partner: Redwood Tech</a> &gt; <a href="#">JBP</a> &gt; <strong>New</strong>
+      </p>
+
+      <h1 class="page-title">Create Joint Business Plan</h1>
+      <p class="page-subtitle">Redwood Tech Partners · 2026 Annual Plan</p>
+
+      <!-- Plan Basics -->
+      <div class="form-section">
+        <div class="section-header">
+          <h3>Plan Basics</h3>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="section-content">
+          <div class="form-group">
+            <label for="plan-name">Plan Name</label>
+            <input type="text" id="plan-name" placeholder="Redwood Tech Partners — 2026 JBP" value="Redwood Tech Partners — 2026 JBP">
+          </div>
+          <div class="two-col">
+            <div class="form-group">
+              <label for="plan-start">Plan Period (Start)</label>
+              <input type="date" id="plan-start" value="2026-01-01">
+            </div>
+            <div class="form-group">
+              <label for="plan-end">Plan Period (End)</label>
+              <input type="date" id="plan-end" value="2026-12-31">
+            </div>
+          </div>
+          <div class="two-col">
+            <div class="form-group">
+              <label for="psm">PSM Owner</label>
+              <input type="text" id="psm" placeholder="Marcus Chen" value="Marcus Chen" disabled>
+            </div>
+            <div class="form-group">
+              <label for="partner-exec">Partner Executive</label>
+              <input type="text" id="partner-exec" placeholder="Search: Brian Walsh, VP...">
+              <div class="help-text">Begin typing to search D&amp;B contacts</div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="plan-status">Plan Status</label>
+            <select id="plan-status">
+              <option selected>Draft</option>
+              <option>In Negotiation</option>
+              <option>Finalized</option>
+              <option>Active</option>
+              <option>Closed</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Revenue Goals -->
+      <div class="form-section">
+        <div class="section-header">
+          <h3>Revenue Goals</h3>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="section-content">
+          <div class="goal-row">
+            <div>
+              <div class="goal-label">Equinix Revenue Target</div>
+              <div class="goal-baseline">2025 Baseline: $2.1M</div>
+            </div>
+            <div style="text-align: right;">
+              <input type="number" placeholder="3500000" value="3500000" style="text-align: right;">
+            </div>
+            <div style="font-size: 0.875rem; color: var(--wf-muted);">+$1.4M growth</div>
+          </div>
+          <div class="goal-row">
+            <div>
+              <div class="goal-label">Deal Registrations</div>
+              <div class="goal-baseline">2025 Baseline: 18</div>
+            </div>
+            <div style="text-align: right;">
+              <input type="number" placeholder="24" value="24" style="text-align: right;">
+            </div>
+            <div style="font-size: 0.875rem; color: var(--wf-muted);">+6 deals</div>
+          </div>
+          <div class="goal-row">
+            <div>
+              <div class="goal-label">New Logos (Net New Customers)</div>
+              <div class="goal-baseline">2025 Baseline: 4</div>
+            </div>
+            <div style="text-align: right;">
+              <input type="number" placeholder="6" value="6" style="text-align: right;">
+            </div>
+            <div style="font-size: 0.875rem; color: var(--wf-muted);">+2 new</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Partner Commitments -->
+      <div class="form-section">
+        <div class="section-header">
+          <h3>Partner Commitments</h3>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="section-content">
+          <div class="form-group">
+            <label for="cert-plan">Certification Plan Target</label>
+            <input type="number" id="cert-plan" placeholder="5" value="5">
+            <div class="help-text">Target certifications by June 2026</div>
+          </div>
+          <div class="form-group">
+            <label for="event-participation">Event Participation Commitments</label>
+            <input type="number" id="event-participation" placeholder="2" value="2">
+            <div class="help-text">Number of Equinix partner events partner will attend</div>
+          </div>
+          <div class="form-group">
+            <label for="marketing-activities">Marketing Activities & Co-Marketing Campaigns</label>
+            <input type="number" id="marketing-activities" placeholder="1" value="1">
+            <div class="help-text">Planned co-marketing campaigns (with MDF funding)</div>
+          </div>
+          <div class="form-group">
+            <label for="cosell-target">Co-Sell Engagements Target</label>
+            <input type="number" id="cosell-target" placeholder="3" value="3">
+            <div class="help-text">Target number of co-sell deals with Equinix sales</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Review & Sign-off -->
+      <div class="form-section">
+        <div class="section-header">
+          <h3>Review & Sign-off</h3>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="section-content">
+          <div class="signature-block">
+            <strong>PSM Confirmation</strong>
+            <p style="margin: 0.5rem 0 0; font-size: 0.875rem;">Marcus Chen</p>
+            <p class="sig-status">Awaiting PSM review and approval (will auto-sign)</p>
+          </div>
+
+          <div class="signature-block">
+            <strong>Partner Executive Sign-off</strong>
+            <p style="margin: 0.5rem 0 0; font-size: 0.875rem;">Brian Walsh, VP Sales — Redwood Tech Partners</p>
+            <p class="sig-status">Pending signature via DocuSign</p>
+          </div>
+
+          <div class="signature-block" style="background: #fff8f0;">
+            <strong>Equinix VP Channel Approval (Required for Gold+ tier)</strong>
+            <p style="margin: 0.5rem 0 0; font-size: 0.875rem;">Will be routed to VP Channel after PSM approval</p>
+            <p class="sig-status">Awaiting tier-based routing</p>
+          </div>
+
+          <div class="form-group" style="margin-top: 1.5rem;">
+            <label for="completion-date">Target Completion Date</label>
+            <input type="date" id="completion-date" value="2026-02-28">
+            <div class="help-text">Expected signature completion by this date</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Sidebar -->
+    <aside class="wf-sidebar-right" aria-label="JBP creation checklist">
+      <div class="sidebar-card">
+        <h4>JBP Checklist</h4>
+        <div class="checklist-item">
+          <input type="checkbox" id="check-goals" checked>
+          <label for="check-goals" style="margin: 0;">Revenue & volume goals set</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check-partner-exec" checked>
+          <label for="check-partner-exec" style="margin: 0;">Partner exec confirmed & linked</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check-certs" checked>
+          <label for="check-certs" style="margin: 0;">Certifications aligned w/ JBP</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check-mdf">
+          <label for="check-mdf" style="margin: 0;">MDF budget linked & funded</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check-vp">
+          <label for="check-vp" style="margin: 0;">VP Channel approval obtained</label>
+        </div>
+        <div class="checklist-item">
+          <input type="checkbox" id="check-docu">
+          <label for="check-docu" style="margin: 0;">DocuSign package sent to partner</label>
+        </div>
+      </div>
+
+      <div class="sidebar-card">
+        <h4>Related Records</h4>
+        <div class="related-item">
+          <a href="psm-partner-account-record.html">→ Redwood Tech Partners (Account)</a>
+        </div>
+        <div class="related-item">
+          <a href="#">→ 2025 JBP (Archive)</a>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Action Bar -->
+  <div class="action-bar">
+    <button class="btn">Cancel</button>
+    <button class="btn">Preview</button>
+    <button class="btn btn-primary" disabled>Send for Signature</button>
+  </div>
+
+  <script src="wf-nav.js"></script>
+</body>
+</html>

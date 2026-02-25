@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EMERGENCY Escalation Brief — Redwood Tech Partners · ESC-2026-RTP-003</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;background:#e8ecf0;color:#1a1f2e;font-size:14px;line-height:1.6;}
+
+/* Toolbar */
+.toolbar{background:#1e2a3a;color:#fff;padding:.625rem 2rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;gap:1rem;flex-wrap:wrap;}
+.toolbar-left{display:flex;align-items:center;gap:1rem;}
+.toolbar-right{display:flex;align-items:center;gap:.625rem;}
+.toolbar-title{font-size:.875rem;font-weight:600;color:rgba(255,255,255,.9);}
+.toolbar-meta{font-size:.75rem;color:rgba(255,255,255,.55);}
+.toolbar-badge{display:inline-flex;align-items:center;gap:.3rem;background:#c0392b;color:#fff;font-size:.6875rem;font-weight:700;padding:.2rem .55rem;border-radius:3px;letter-spacing:.03em;}
+.btn-tool{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;padding:.35rem .75rem;border-radius:4px;font-size:.75rem;font-weight:600;cursor:pointer;font-family:inherit;display:flex;align-items:center;gap:.375rem;}
+.btn-tool:hover{background:rgba(255,255,255,.22);}
+.btn-tool.primary{background:#3d6daa;border-color:#3d6daa;}
+.btn-tool.primary:hover{background:#2a5090;}
+.doc-meta{display:flex;align-items:center;gap:1.5rem;font-size:.6875rem;color:rgba(255,255,255,.55);}
+.doc-meta strong{color:rgba(255,255,255,.8);}
+
+/* Page wrapper */
+.page-wrap{padding:2rem;display:flex;justify-content:center;gap:1.5rem;}
+.doc-nav{width:200px;flex-shrink:0;position:sticky;top:60px;align-self:flex-start;}
+@media(max-width:1100px){.doc-nav{display:none;}}
+.doc-nav ul{list-style:none;padding:0;}
+.doc-nav li a{display:block;font-size:.75rem;color:#3d6daa;text-decoration:none;padding:.3rem .5rem;border-left:2px solid #d0dcea;margin-bottom:2px;}
+.doc-nav li a:hover{border-left-color:#3d6daa;background:#f0f5fb;}
+.doc-nav li a.active{border-left-color:#3d6daa;font-weight:700;color:#1e2a3a;}
+.doc-nav-label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#6b7f99;padding:.5rem .5rem .25rem;margin-bottom:.25rem;}
+
+/* Document */
+.document{width:860px;max-width:100%;background:#fff;box-shadow:0 2px 20px rgba(0,0,0,.14);position:relative;}
+
+/* Agentforce draft watermark */
+.draft-bar{background:linear-gradient(90deg,#7b2fbe,#3d6daa);color:#fff;padding:.5rem 2rem;font-size:.75rem;font-weight:600;display:flex;align-items:center;justify-content:space-between;}
+.draft-bar-left{display:flex;align-items:center;gap:.625rem;}
+.draft-badge{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);padding:.15rem .5rem;border-radius:3px;font-size:.6875rem;letter-spacing:.04em;}
+
+/* Letterhead */
+.letterhead{padding:2.5rem 3rem 1.5rem;border-bottom:3px solid #1e2a3a;display:flex;align-items:flex-start;justify-content:space-between;}
+.letterhead-logo{display:flex;flex-direction:column;gap:.25rem;}
+.lh-brand{font-size:1.5rem;font-weight:800;color:#e31837;letter-spacing:-.5px;}
+.lh-division{font-size:.75rem;color:#6b7f99;letter-spacing:.04em;text-transform:uppercase;font-weight:600;}
+.letterhead-meta{text-align:right;}
+.lh-doc-type{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#6b7f99;margin-bottom:.25rem;}
+.lh-doc-id{font-size:1.125rem;font-weight:700;color:#1e2a3a;}
+.lh-status{display:inline-block;margin-top:.25rem;padding:.2rem .6rem;border-radius:3px;font-size:.7rem;font-weight:700;background:#fde8e8;color:#c0392b;border:1px solid #f0c8c8;}
+
+/* Doc header block */
+.doc-header-block{padding:1.75rem 3rem 1.5rem;background:#f5f7fb;border-bottom:1px solid #e2e8f2;}
+.doc-title{font-size:1.4rem;font-weight:800;color:#1e2a3a;margin-bottom:.25rem;}
+.doc-subtitle{font-size:.875rem;color:#3b4f68;margin-bottom:1rem;}
+.doc-meta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem 1.5rem;margin-bottom:1rem;}
+@media(max-width:600px){.doc-meta-grid{grid-template-columns:1fr 1fr;}}
+.doc-meta-item{}
+.dmi-label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#6b7f99;margin-bottom:.15rem;}
+.dmi-val{font-size:.875rem;font-weight:600;color:#1e2a3a;}
+.dmi-val.urgent{color:#c0392b;}
+.doc-purpose{background:#fff;border:1px solid #e2e8f2;border-left:4px solid #c0392b;border-radius:4px;padding:.875rem 1rem;font-size:.8125rem;color:#3b4f68;line-height:1.6;}
+.doc-purpose strong{color:#1e2a3a;}
+
+/* Agentforce generation notice */
+.ai-notice{margin:0 3rem;padding:.5rem .875rem;background:#f5f0ff;border:1px solid #c4b5fd;border-radius:4px;font-size:.75rem;color:#5b21b6;display:flex;align-items:center;gap:.5rem;margin-top:1.25rem;}
+.ai-notice-dot{width:8px;height:8px;border-radius:50%;background:#7c3aed;flex-shrink:0;}
+
+/* Section */
+.section{padding:1.75rem 3rem;border-bottom:1px solid #e9edf4;}
+.section:last-of-type{border-bottom:none;}
+.section-head{display:flex;align-items:baseline;gap:.75rem;margin-bottom:1.25rem;padding-bottom:.625rem;border-bottom:2px solid #e9edf4;}
+.section-num{font-size:.65rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:#6b7f99;background:#edf1f7;padding:.2rem .5rem;border-radius:3px;}
+.section-title{font-size:1rem;font-weight:700;color:#1e2a3a;}
+.section-note{font-size:.7rem;color:#6b7f99;margin-left:auto;font-style:italic;}
+
+/* Field grid */
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem 2rem;margin-bottom:1rem;}
+@media(max-width:600px){.field-grid{grid-template-columns:1fr;}}
+.field{}
+.fl{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#6b7f99;margin-bottom:.125rem;}
+.fv{font-size:.875rem;color:#1e2a3a;}
+.fv.warn{color:#c0392b;font-weight:700;}
+.fv.good{color:#1d7a4e;font-weight:700;}
+.fv.caution{color:#8a5c00;font-weight:700;}
+
+/* Score indicator */
+.score-row{display:flex;align-items:center;gap:.75rem;margin:.375rem 0;}
+.score-bar-track{flex:1;height:8px;background:#e9edf4;border-radius:4px;overflow:hidden;}
+.score-bar-fill{height:100%;border-radius:4px;}
+.score-val{font-size:.8125rem;font-weight:700;width:36px;text-align:right;flex-shrink:0;}
+
+/* Narrative paragraph */
+.narrative{font-size:.875rem;line-height:1.7;color:#3b4f68;margin-bottom:1rem;}
+.narrative + .narrative{margin-top:-.25rem;}
+
+/* Highlight callout */
+.callout{background:#fff8e8;border:1px solid #e0c050;border-left:4px solid #8a5c00;border-radius:4px;padding:.875rem 1rem;margin:.75rem 0;}
+.callout.red{background:#fffafa;border-color:#f0c8c8;border-left-color:#c0392b;}
+.callout.blue{background:#f0f5fb;border-color:#c0d4f0;border-left-color:#3d6daa;}
+.callout p{font-size:.8125rem;color:#3b4f68;line-height:1.6;}
+.callout strong{color:#1e2a3a;}
+.callout-label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:.375rem;}
+.callout.red .callout-label{color:#c0392b;}
+.callout .callout-label{color:#8a5c00;}
+.callout.blue .callout-label{color:#3d6daa;}
+
+/* Timeline */
+.timeline{margin:.5rem 0;}
+.tl-row{display:flex;gap:1rem;padding:.625rem 0;border-bottom:1px solid #edf1f7;align-items:flex-start;}
+.tl-row:last-child{border-bottom:none;}
+.tl-date{font-size:.75rem;font-weight:700;color:#6b7f99;width:72px;flex-shrink:0;padding-top:.1rem;}
+.tl-dot{width:10px;height:10px;border-radius:50%;background:#3d6daa;flex-shrink:0;margin-top:.35rem;}
+.tl-dot.red{background:#c0392b;}
+.tl-dot.amber{background:#8a5c00;}
+.tl-dot.green{background:#1d7a4e;}
+.tl-body{font-size:.8125rem;color:#3b4f68;flex:1;line-height:1.5;}
+.tl-body strong{color:#1e2a3a;}
+
+/* Talking points */
+.tp{display:flex;gap:1rem;padding:.875rem 0;border-bottom:1px solid #edf1f7;align-items:flex-start;}
+.tp:last-child{border-bottom:none;}
+.tp-n{width:28px;height:28px;border-radius:50%;background:#1e2a3a;color:#fff;font-size:.75rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.tp-body{}
+.tp-text{font-size:.875rem;color:#1e2a3a;line-height:1.6;font-weight:600;margin-bottom:.2rem;}
+.tp-detail{font-size:.8125rem;color:#3b4f68;line-height:1.55;}
+.tp-coaching{font-size:.75rem;color:#6b7f99;font-style:italic;margin-top:.375rem;padding-left:.625rem;border-left:2px solid #d0dcea;}
+
+/* Resolution rec box */
+.resolution-box{background:#f0faf8;border:1px solid #86d6b0;border-radius:6px;padding:1.25rem 1.5rem;margin:.75rem 0;}
+.resolution-box h4{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#1d7a4e;margin-bottom:.75rem;}
+.res-item{display:flex;gap:.75rem;margin-bottom:.625rem;align-items:flex-start;}
+.res-item:last-child{margin-bottom:0;}
+.res-num{width:20px;height:20px;border-radius:50%;background:#1d7a4e;color:#fff;font-size:.6875rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem;}
+.res-text{font-size:.8125rem;color:#1e2a3a;line-height:1.5;}
+
+/* Signature block */
+.sig-block{padding:1.5rem 3rem;background:#f5f7fb;border-top:1px solid #e2e8f2;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1.5rem;}
+.sig-item{flex:1;min-width:160px;}
+.sig-label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#6b7f99;margin-bottom:.25rem;}
+.sig-line{border-bottom:1px solid #1e2a3a;height:28px;margin-bottom:.25rem;}
+.sig-name{font-size:.75rem;color:#3b4f68;}
+.sig-title{font-size:.7rem;color:#6b7f99;}
+
+/* Footer */
+.doc-footer{padding:1rem 3rem;background:#1e2a3a;color:rgba(255,255,255,.5);font-size:.6875rem;display:flex;justify-content:space-between;align-items:center;}
+.doc-footer strong{color:rgba(255,255,255,.8);}
+
+/* Print styles */
+@media print{
+  .toolbar,.doc-nav,.draft-bar,.ai-notice{display:none!important;}
+  .page-wrap{padding:0;}
+  .document{box-shadow:none;width:100%;}
+  .section{break-inside:avoid;}
+  body{background:#fff;}
+}
+
+/* Redline annotation */
+.redline{background:#fff0f0;border:1px dashed #c0392b;border-radius:3px;padding:.125rem .3rem;font-size:.7rem;color:#c0392b;font-style:italic;cursor:help;}
+</style>
+</head>
+<body>
+
+<!-- Toolbar -->
+<div class="toolbar" role="toolbar" aria-label="Document actions">
+  <div class="toolbar-left">
+    <a href="psm-escalation-brief.html" class="btn-tool" aria-label="Back to escalation record">← Record</a>
+    <div>
+      <div class="toolbar-title">Escalation Brief · ESC-2026-RTP-003</div>
+      <div class="toolbar-meta">Draft generated by Agentforce · Feb 24, 2026 11:05 AM · PSM: Marcus Chen</div>
+    </div>
+    <span class="toolbar-badge" aria-label="Emergency escalation">⚠ EMERGENCY</span>
+  </div>
+  <div class="toolbar-right">
+    <div class="doc-meta">
+      <span><strong>Status:</strong> Draft — Awaiting PSM review</span>
+      <span><strong>VP Reviewer:</strong> Sarah Kim</span>
+    </div>
+    <button class="btn-tool" onclick="window.print()" aria-label="Print this document">🖨 Print</button>
+    <button class="btn-tool" aria-label="Download as PDF">⬇ Download PDF</button>
+    <button class="btn-tool primary" aria-label="Send to VP Sarah Kim">✉ Send to VP</button>
+  </div>
+</div>
+
+<div class="page-wrap">
+
+  <!-- Section nav -->
+  <nav class="doc-nav" aria-label="Document sections">
+    <div class="doc-nav-label">Sections</div>
+    <ul>
+      <li><a href="#sec-header" class="active">Cover</a></li>
+      <li><a href="#sec-snapshot">1 — Partner Snapshot</a></li>
+      <li><a href="#sec-dispute">2 — Dispute Details</a></li>
+      <li><a href="#sec-history">3 — Relationship History</a></li>
+      <li><a href="#sec-talking">4 — Talking Points</a></li>
+      <li><a href="#sec-resolution">5 — Resolution Path</a></li>
+    </ul>
+    <div class="doc-nav-label" style="margin-top:1rem;">Document</div>
+    <ul>
+      <li><a href="#" onclick="window.print();return false;">Print</a></li>
+      <li><a href="psm-escalation-brief.html">← Back to Record</a></li>
+    </ul>
+  </nav>
+
+  <!-- Document -->
+  <article class="document" id="sec-header" aria-label="Escalation brief document">
+
+    <!-- Agentforce draft banner -->
+    <div class="draft-bar">
+      <div class="draft-bar-left">
+        <span aria-hidden="true">✦</span>
+        <span>Generated by Agentforce Document Generation · <strong>Draft — review before sending</strong></span>
+        <span class="draft-badge">PTMPL-ESCALATION-BRIEF-V2</span>
+      </div>
+      <span>Feb 24, 2026 · 11:05 AM PST</span>
+    </div>
+
+    <!-- Letterhead -->
+    <div class="letterhead">
+      <div class="letterhead-logo">
+        <div class="lh-brand">equinix</div>
+        <div class="lh-division">Partner Channel Programs · PSM Office</div>
+      </div>
+      <div class="letterhead-meta">
+        <div class="lh-doc-type">Escalation Brief</div>
+        <div class="lh-doc-id">ESC-2026-RTP-003</div>
+        <div class="lh-status">⚠ EMERGENCY — VP REVIEW REQUIRED</div>
+      </div>
+    </div>
+
+    <!-- Doc header block -->
+    <div class="doc-header-block">
+      <h1 class="doc-title">Partner Escalation Brief: Redwood Tech Partners</h1>
+      <p class="doc-subtitle">Prepared for VP Sarah Kim · VP Review Call — Feb 26, 2026 · <strong>Deal Registration Conflict &amp; Partner Retention Risk</strong></p>
+
+      <div class="doc-meta-grid">
+        <div class="doc-meta-item">
+          <div class="dmi-label">Partner</div>
+          <div class="dmi-val">Redwood Tech Partners</div>
+        </div>
+        <div class="doc-meta-item">
+          <div class="dmi-label">Tier</div>
+          <div class="dmi-val">Gold · 7 years</div>
+        </div>
+        <div class="doc-meta-item">
+          <div class="dmi-label">Escalation Type</div>
+          <div class="dmi-val urgent">Emergency — DR Conflict + Retention Risk</div>
+        </div>
+        <div class="doc-meta-item">
+          <div class="dmi-label">Partner Executive</div>
+          <div class="dmi-val">Brian Walsh, VP Sales</div>
+        </div>
+        <div class="doc-meta-item">
+          <div class="dmi-label">Escalation Opened</div>
+          <div class="dmi-val">Feb 21, 2026</div>
+        </div>
+        <div class="doc-meta-item">
+          <div class="dmi-label">PSM</div>
+          <div class="dmi-val">Marcus Chen · Americas West</div>
+        </div>
+      </div>
+
+      <div class="doc-purpose">
+        <strong>Purpose of this brief:</strong> Redwood Tech Partners has formally escalated a deal registration conflict and threatened to review the partnership. This brief provides VP Sarah Kim with the full context needed for the Feb 26 call with Brian Walsh — covering the partner's history, the dispute details, health trajectory, and recommended talking points. The goal is to resolve DR-2026-RTW-0147 and rebuild trust before the Q1 tier review.
+      </div>
+    </div>
+
+    <div class="ai-notice" role="note">
+      <div class="ai-notice-dot" aria-hidden="true"></div>
+      This document was generated by Agentforce from live CRM data in <code>Escalation__c</code>, <code>Account</code>, <code>Deal_Registration__c</code>, and <code>Activity</code> records. PSM Marcus Chen has reviewed and approved the content below. Sections 3 and 4 include AI-synthesized narrative — verify any figures against source records before the VP call.
+    </div>
+
+    <!-- SECTION 1: Partner Snapshot -->
+    <div class="section" id="sec-snapshot">
+      <div class="section-head">
+        <span class="section-num">Section 1</span>
+        <h2 class="section-title">Partner Snapshot</h2>
+        <span class="section-note">Auto-populated from Account record</span>
+      </div>
+
+      <div class="field-grid">
+        <div class="field">
+          <div class="fl">Partner Since</div>
+          <div class="fv">2019 (7 years)</div>
+        </div>
+        <div class="field">
+          <div class="fl">Current Tier</div>
+          <div class="fv">Gold — expires Jun 30, 2026</div>
+        </div>
+        <div class="field">
+          <div class="fl">Partner Type</div>
+          <div class="fv">Systems Integrator (SI)</div>
+        </div>
+        <div class="field">
+          <div class="fl">Territory</div>
+          <div class="fv">Western US</div>
+        </div>
+        <div class="field">
+          <div class="fl">Revenue YTD</div>
+          <div class="fv warn">$1.26M of $2.1M target (60%)</div>
+        </div>
+        <div class="field">
+          <div class="fl">Peak Revenue</div>
+          <div class="fv">$4.3M (FY 2024)</div>
+        </div>
+        <div class="field">
+          <div class="fl">Health Score</div>
+          <div class="fv warn">62 / 100 (was 84 in Q2 2025)</div>
+        </div>
+        <div class="field">
+          <div class="fl">Gold Threshold</div>
+          <div class="fv caution">70 required — at risk of demotion Q1 review</div>
+        </div>
+        <div class="field">
+          <div class="fl">Certified Staff</div>
+          <div class="fv warn">2 of 4 required certifications active</div>
+        </div>
+        <div class="field">
+          <div class="fl">Open Deal Registrations</div>
+          <div class="fv">3 active (1 in dispute)</div>
+        </div>
+      </div>
+
+      <div class="callout">
+        <div class="callout-label">⚠ Health Trend</div>
+        <p>Redwood's health score has declined <strong>22 points in two quarters</strong> — from 84 (Q2 2025) to 62 (Q4 2025). Revenue is tracking at 60% of target with one quarter remaining. Without an intervention, Redwood is projected to fall below the Gold threshold at the Q1 tier review. The certification gap (2 of 4 required) is the fastest lever available to protect their tier status.</p>
+      </div>
+    </div>
+
+    <!-- SECTION 2: Dispute Details -->
+    <div class="section" id="sec-dispute">
+      <div class="section-head">
+        <span class="section-num">Section 2</span>
+        <h2 class="section-title">Dispute Details</h2>
+        <span class="section-note">From Escalation__c + Deal_Registration__c</span>
+      </div>
+
+      <div class="field-grid">
+        <div class="field">
+          <div class="fl">Deal Registration ID</div>
+          <div class="fv">DR-2026-RTW-0147</div>
+        </div>
+        <div class="field">
+          <div class="fl">End Customer</div>
+          <div class="fv">Beacon Financial Group</div>
+        </div>
+        <div class="field">
+          <div class="fl">TCV</div>
+          <div class="fv">$380,000</div>
+        </div>
+        <div class="field">
+          <div class="fl">Commission at Issue</div>
+          <div class="fv warn">$22,800 (6% of TCV)</div>
+        </div>
+        <div class="field">
+          <div class="fl">Redwood Submission Date</div>
+          <div class="fv">Feb 3, 2026 · 09:41 AM PST</div>
+        </div>
+        <div class="field">
+          <div class="fl">Conflict Source</div>
+          <div class="fv warn">Equinix Direct AE — incumbency claim</div>
+        </div>
+        <div class="field">
+          <div class="fl">Conflict Reason</div>
+          <div class="fv">Equinix AE cited existing account relationship (Beacon is an Equinix customer for IBX colocation since 2022); claimed the interconnect expansion is an "internal renewal"</div>
+        </div>
+        <div class="field">
+          <div class="fl">Redwood's Documented Evidence</div>
+          <div class="fv">3 activity logs (CRM-verified): Dec 2025 CFO meeting, Jan 2026 technical scoping call, Feb 3 DR submission with signed LOI from Beacon's CTO</div>
+        </div>
+      </div>
+
+      <div class="callout red">
+        <div class="callout-label">PSM Assessment</div>
+        <p>Redwood has a strong case. Their DR was submitted first and is supported by documented executive engagement dating to December 2025. The Equinix AE's incumbency claim applies to the existing colocation account — <strong>not</strong> to the interconnect expansion opportunity that Redwood developed independently. Standard DR rules favor first-in-time submission with documented influence, which Redwood satisfies. Deal Desk should rule in Redwood's favor. The commission exposure ($22,800) is recoverable and should not be the reason a seven-year Gold partner considers leaving.</p>
+      </div>
+
+      <div class="callout blue">
+        <div class="callout-label">Escalation Classification: Emergency</div>
+        <p>This has been classified as an <strong>emergency escalation</strong> — not a standard dispute — because Brian Walsh sent a formal written notice on Feb 20 stating Redwood is "evaluating its vendor relationships" and requested VP-level engagement within 5 business days. Failure to respond by Feb 26 risks a formal partner disengagement notice. This brief has been stored as a <strong>separate reference document</strong> in the ESC-2026-RTP-003 record and in Redwood's partner account file.</p>
+      </div>
+    </div>
+
+    <!-- SECTION 3: Relationship History -->
+    <div class="section" id="sec-history">
+      <div class="section-head">
+        <span class="section-num">Section 3</span>
+        <h2 class="section-title">Relationship History</h2>
+        <span class="section-note">AI-synthesized from Activity timeline · PSM-reviewed</span>
+      </div>
+
+      <p class="narrative">Redwood Tech Partners has been an Equinix Gold partner since 2019, growing to peak revenue of $4.3M in FY 2024 — placing them in the top 15% of SI partners in the Western US region. The relationship has historically been strong, with consistent QBR participation, joint marketing activities, and several marquee customer wins including a $1.2M Hyperscale Connect deployment in Q3 2023.</p>
+
+      <p class="narrative">The current friction did not begin with this dispute. A pattern of declining engagement began in Q3 2025: QBR attendance dropped, two planned MDF campaigns were cancelled, and revenue declined 30% from peak. Brian Walsh raised concerns about "inconsistent PSM support" at the Q4 QBR. The DR conflict appears to be the breaking point rather than the root cause.</p>
+
+      <div class="timeline" aria-label="Relationship timeline">
+        <div class="tl-row">
+          <div class="tl-date">Feb 20, 2026</div>
+          <div class="tl-dot red" aria-hidden="true"></div>
+          <div class="tl-body"><strong>Formal escalation notice received</strong> — Brian Walsh emails PSM and CC's Equinix Legal. References "vendor relationship review." Emergency classification applied. VP engagement requested within 5 business days.</div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-date">Feb 3, 2026</div>
+          <div class="tl-dot amber" aria-hidden="true"></div>
+          <div class="tl-body"><strong>DR-2026-RTW-0147 submitted</strong> — Redwood submits deal registration for Beacon Financial interconnect expansion. $380K TCV, 3 supporting activity logs, signed LOI attached. Submission timestamp: 09:41 AM PST.</div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-date">Jan 14, 2026</div>
+          <div class="tl-dot" aria-hidden="true"></div>
+          <div class="tl-body"><strong>Technical scoping call — Beacon Financial</strong> — Redwood AE Steve Rogers and Beacon CTO participated. Notes logged in CRM. Equinix solution architecture involved: 10G port, 3 cross-connects, IBX SV5.</div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-date">Dec 12, 2025</div>
+          <div class="tl-dot" aria-hidden="true"></div>
+          <div class="tl-body"><strong>Executive meeting — Beacon Financial CFO</strong> — Redwood AE and Brian Walsh meet with Beacon CFO. Meeting documented in CRM with summary: "Beacon evaluating interconnect expansion for Q1 2026. Redwood proposing Equinix solution." Documented 14 weeks before the DR conflict.</div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-date">Q4 2025</div>
+          <div class="tl-dot amber" aria-hidden="true"></div>
+          <div class="tl-body"><strong>Q4 QBR completed — score: 62</strong> — Revenue declined to $1.26M YTD vs $2.1M target. Certification gap flagged. Brian Walsh expressed frustration with DR approval process and PSM availability. Two MDF campaigns cancelled due to bandwidth issues.</div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-date">Q3 2025</div>
+          <div class="tl-dot amber" aria-hidden="true"></div>
+          <div class="tl-body"><strong>Health score decline begins</strong> — Score drops from 84 to 71. QBR attendance inconsistent. PSM notes indicate Redwood team was absorbed in a large non-Equinix integration project (Q3 external delivery).</div>
+        </div>
+        <div class="tl-row">
+          <div class="tl-date">Jan 2023</div>
+          <div class="tl-dot green" aria-hidden="true"></div>
+          <div class="tl-body"><strong>Promoted to Gold tier</strong> — Revenue milestone achieved at $2.8M. Score: 84. Equinix acknowledged Redwood as a "High Potential" partner in the Americas West QBR report.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 4: Talking Points -->
+    <div class="section" id="sec-talking">
+      <div class="section-head">
+        <span class="section-num">Section 4</span>
+        <h2 class="section-title">Recommended Talking Points for VP Call</h2>
+        <span class="section-note">AI-generated · PSM-reviewed · For internal use only</span>
+      </div>
+
+      <p class="narrative" style="margin-bottom:1.25rem;">The following five talking points are recommended for VP Sarah Kim's call with Brian Walsh on February 26. They are sequenced to acknowledge the problem, resolve the immediate dispute, then transition to the longer-term partnership health conversation. <strong>Do not lead with data.</strong></p>
+
+      <div class="tp">
+        <div class="tp-n" aria-label="Talking point 1">1</div>
+        <div class="tp-body">
+          <div class="tp-text">Lead with the relationship, not the policy.</div>
+          <div class="tp-detail">Open by acknowledging what Redwood has built with Equinix over seven years. Reference the Gold promotion in 2023 and the marquee wins. Make clear that this call is happening because Equinix takes long-term partnerships seriously — not because of the formal notice.</div>
+          <div class="tp-coaching">Coaching note: Brian Walsh sent the notice because he felt unheard at the PSM level. He needs to believe the escalation has reached someone with authority. Establish credibility before the dispute.</div>
+        </div>
+      </div>
+
+      <div class="tp">
+        <div class="tp-n" aria-label="Talking point 2">2</div>
+        <div class="tp-body">
+          <div class="tp-text">Present the facts on DR-2026-RTW-0147 — Redwood has a strong case.</div>
+          <div class="tp-detail">Confirm that Redwood submitted first (Feb 3, 09:41 AM) and that their documentation is thorough: three CRM-logged activity records, a CFO meeting in December, a technical scoping call in January, and a signed LOI. The Equinix AE's incumbency claim covers an existing colocation relationship — not the interconnect expansion opportunity that Redwood originated and developed.</div>
+          <div class="tp-coaching">Coaching note: Brian Walsh almost certainly has his own timestamps. Come with the facts. Avoid framing this as "we're still reviewing" — that will read as stalling. Have Deal Desk pre-approve the resolution before the call if possible.</div>
+        </div>
+      </div>
+
+      <div class="tp">
+        <div class="tp-n" aria-label="Talking point 3">3</div>
+        <div class="tp-body">
+          <div class="tp-text">Offer a clear resolution: full deal credit to Redwood on this registration.</div>
+          <div class="tp-detail">Equinix will award Redwood full commission credit on DR-2026-RTW-0147 based on first-in-time submission and documented influence. The internal AE team will be recognized separately for expansion activities within the existing colocation account. Commission payout to Redwood: $22,800. Resolution will be confirmed in writing by end of day Feb 26.</div>
+          <div class="tp-coaching">Coaching note: Confirm with Deal Desk before the call. Do not make the offer if it has not been pre-approved. If Deal Desk is still reviewing, commit to a decision by EOD Feb 26 and follow through — this is the core of the trust repair.</div>
+        </div>
+      </div>
+
+      <div class="tp">
+        <div class="tp-n" aria-label="Talking point 4">4</div>
+        <div class="tp-body">
+          <div class="tp-text">Acknowledge the larger pattern — Redwood's engagement has declined and Equinix has not been responsive enough.</div>
+          <div class="tp-detail">The DR dispute is a symptom. Redwood's score has declined from 84 to 62 in two quarters. Revenue is tracking at 60% of target. Brian Walsh raised PSM availability concerns at the Q4 QBR. Equinix should own its part in this — if there were gaps in PSM support or deal processing delays that contributed, say so directly. Partners disengage when they feel unsupported, not just when a deal goes wrong.</div>
+          <div class="tp-coaching">Coaching note: Do not over-apologize or accept blame you don't own. Be honest. If Marcus's bandwidth was stretched, acknowledge it. If there were process delays in deal review, own that. Partners who feel their problems are heard are more likely to stay.</div>
+        </div>
+      </div>
+
+      <div class="tp">
+        <div class="tp-n" aria-label="Talking point 5">5</div>
+        <div class="tp-body">
+          <div class="tp-text">Close with a concrete action plan to protect Redwood's Gold status through Q1.</div>
+          <div class="tp-detail">Resolve DR-2026-RTW-0147 this week. Schedule a remediation QBR for March with a structured 90-day plan. Flag the certification gap as the fastest lever: two additional certifications would bring Redwood to the 4-cert Gold requirement and contribute 30 points toward their health score. Offer to co-develop a joint pipeline review to identify the 3–4 deals that could move revenue back toward target before the June tier review.</div>
+          <div class="tp-coaching">Coaching note: Give Brian something to take back to his team. The conversation should end with a written action list, not a verbal commitment. Offer a follow-up email recap same day.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 5: Resolution Path -->
+    <div class="section" id="sec-resolution">
+      <div class="section-head">
+        <span class="section-num">Section 5</span>
+        <h2 class="section-title">Recommended Resolution Path</h2>
+        <span class="section-note">PSM-authored · Not AI-generated</span>
+      </div>
+
+      <p class="narrative">The following actions are recommended to resolve this escalation, repair the relationship, and protect Redwood's Gold tier status through the Q1 review. These are sequenced by urgency.</p>
+
+      <div class="resolution-box">
+        <h4>Action Plan — 30 Days</h4>
+        <div class="res-item">
+          <div class="res-num" aria-hidden="true">1</div>
+          <div class="res-text"><strong>By Feb 26 (today):</strong> Deal Desk pre-approves commission award to Redwood on DR-2026-RTW-0147 ($22,800). VP Sarah Kim confirms resolution during call with Brian Walsh. Written confirmation emailed same day.</div>
+        </div>
+        <div class="res-item">
+          <div class="res-num" aria-hidden="true">2</div>
+          <div class="res-text"><strong>By Mar 7:</strong> Marcus Chen schedules a remediation QBR with Redwood. Agenda: DR resolution recap, 90-day joint pipeline review, certification roadmap, Q1 tier protection plan.</div>
+        </div>
+        <div class="res-item">
+          <div class="res-num" aria-hidden="true">3</div>
+          <div class="res-text"><strong>By Mar 14:</strong> Redwood nominates 2 staff members for certification fast-track. PSM provides access to training subsidy if available under MDF program.</div>
+        </div>
+        <div class="res-item">
+          <div class="res-num" aria-hidden="true">4</div>
+          <div class="res-text"><strong>By Mar 31:</strong> Joint pipeline review identifies 3–4 qualified opportunities for Q2. PSM commits to 48-hour DR turnaround for all Redwood submissions through June tier review.</div>
+        </div>
+        <div class="res-item">
+          <div class="res-num" aria-hidden="true">5</div>
+          <div class="res-text"><strong>Escalation closure:</strong> ESC-2026-RTP-003 closed when (a) DR-2026-RTW-0147 is resolved, (b) remediation QBR is completed, and (c) Redwood withdraws the formal disengagement notice in writing.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Signature block -->
+    <div class="sig-block">
+      <div class="sig-item">
+        <div class="sig-label">Prepared by — PSM</div>
+        <div class="sig-line"></div>
+        <div class="sig-name">Marcus Chen</div>
+        <div class="sig-title">Partner Success Manager · Americas West · Equinix</div>
+      </div>
+      <div class="sig-item">
+        <div class="sig-label">Reviewed by — VP</div>
+        <div class="sig-line"></div>
+        <div class="sig-name">Sarah Kim</div>
+        <div class="sig-title">VP, Partner Programs · Equinix</div>
+      </div>
+      <div class="sig-item">
+        <div class="sig-label">Date</div>
+        <div class="sig-line"></div>
+        <div class="sig-name">Feb 26, 2026</div>
+        <div class="sig-title">Escalation call date</div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="doc-footer">
+      <span><strong>Equinix Partner Channel Programs</strong> · Confidential — Internal Use Only · Not for distribution</span>
+      <span>ESC-2026-RTP-003 · Stored: Escalation record + Redwood Tech Partners account file · v1.0 Draft</span>
+    </div>
+
+  </article>
+
+</div>
+
+<script src="wf-nav.js"></script>
+</body>
+</html>

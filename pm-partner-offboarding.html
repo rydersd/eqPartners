@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Partner Offboarding / Dormancy Review — Equinix PCP Wireframes</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <style>
+    .wf-layout-3col {
+      display: grid;
+      grid-template-columns: 240px 1fr 320px;
+      gap: 1rem;
+      min-height: 100vh;
+    }
+    .wf-sidebar-left {
+      background: var(--wf-canvas);
+      border-right: 1px solid var(--gray-border);
+      padding: 1rem;
+      max-height: 100vh;
+      overflow-y: auto;
+    }
+    .wf-sidebar-left h3 {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--wf-muted);
+      margin: 1.5rem 0 0.5rem 0;
+    }
+    .wf-sidebar-left ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .wf-sidebar-left a {
+      display: block;
+      padding: 0.5rem;
+      color: var(--wf-ink);
+      text-decoration: none;
+      border-radius: 4px;
+      font-size: 0.875rem;
+    }
+    .wf-main-content {
+      overflow-y: auto;
+      padding: 2rem;
+      background: var(--wf-canvas);
+    }
+    .wf-sidebar-right {
+      background: var(--wf-canvas);
+      border-left: 1px solid var(--gray-border);
+      padding: 1.5rem;
+      max-height: 100vh;
+      overflow-y: auto;
+    }
+    .page-title {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.5rem;
+      color: var(--wf-ink);
+    }
+    .page-meta {
+      font-size: 0.875rem;
+      color: var(--wf-muted);
+      margin-bottom: 2rem;
+    }
+    .tab-group {
+      display: flex;
+      gap: 0;
+      border-bottom: 2px solid var(--gray-border);
+      margin-bottom: 2rem;
+    }
+    .tab {
+      padding: 1rem 1.5rem;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--wf-muted);
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.2s ease;
+    }
+    .tab:hover {
+      color: var(--wf-ink);
+    }
+    .tab.active {
+      color: var(--wf-accent);
+      border-bottom-color: var(--wf-accent);
+    }
+    .tab-badge {
+      display: inline-block;
+      margin-left: 0.5rem;
+      padding: 0.25rem 0.5rem;
+      background: var(--wf-muted);
+      border-radius: 3px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--wf-ink);
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .dormancy-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.875rem;
+      background: var(--wf-canvas);
+      border: 1px solid var(--gray-border);
+    }
+    .dormancy-table thead {
+      background: var(--wf-muted);
+      border-bottom: 2px solid var(--gray-border);
+    }
+    .dormancy-table th {
+      padding: 0.75rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--wf-ink);
+      border-right: 1px solid var(--gray-border);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+    }
+    .dormancy-table th:last-child {
+      border-right: none;
+    }
+    .dormancy-table td {
+      padding: 1rem 0.75rem;
+      border-right: 1px solid var(--gray-border);
+      border-bottom: 1px solid var(--gray-border);
+      color: var(--wf-ink);
+    }
+    .dormancy-table td:last-child {
+      border-right: none;
+    }
+    .dormancy-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+    .risk-badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 3px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .risk-high {
+      background: #ffcccc;
+      color: #c41c3b;
+    }
+    .risk-medium {
+      background: #ffe6cc;
+      color: #b08500;
+    }
+    .risk-low {
+      background: #dfffde;
+      color: #22863a;
+    }
+    .tier-badge {
+      display: inline-block;
+      padding: 0.25rem 0.5rem;
+      border-radius: 3px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: var(--wf-muted);
+      color: var(--wf-ink);
+    }
+    .action-link {
+      color: var(--wf-accent);
+      cursor: pointer;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .policy-box {
+      padding: 1rem;
+      background: #f0f5ff;
+      border-left: 4px solid var(--wf-accent);
+      border: 1px solid var(--gray-border);
+      border-left: 4px solid var(--wf-accent);
+      border-radius: 4px;
+      margin: 2rem 0;
+      font-size: 0.875rem;
+      line-height: 1.5;
+      color: var(--wf-ink);
+    }
+    .policy-box strong {
+      color: var(--wf-ink);
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    .offboarding-row {
+      padding: 1rem;
+      background: var(--wf-canvas);
+      border: 1px solid var(--gray-border);
+      border-radius: 4px;
+      margin-bottom: 1rem;
+    }
+    .offboarding-row h4 {
+      margin: 0 0 0.5rem 0;
+      color: var(--wf-ink);
+      font-size: 1rem;
+    }
+    .offboarding-row p {
+      margin: 0.5rem 0;
+      color: var(--wf-muted);
+      font-size: 0.875rem;
+    }
+    .offboarding-row .btn-group {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    .btn-group button {
+      padding: 0.5rem 1rem;
+      border: 1px solid var(--gray-border);
+      border-radius: 4px;
+      background: white;
+      color: var(--wf-ink);
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-group button:hover {
+      background: var(--wf-muted);
+    }
+    .btn-group button.btn-primary {
+      background: var(--wf-accent);
+      color: white;
+      border-color: var(--wf-accent);
+    }
+    .btn-group button.btn-primary:hover {
+      opacity: 0.9;
+    }
+    .sidebar-card {
+      padding: 1rem;
+      border: 1px solid var(--gray-border);
+      border-radius: 4px;
+      margin-bottom: 1rem;
+      background: var(--wf-canvas);
+    }
+    .sidebar-card h4 {
+      margin: 0 0 0.75rem 0;
+      font-size: 0.875rem;
+      color: var(--wf-ink);
+      font-weight: 600;
+    }
+    .checklist-step {
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--gray-border);
+      font-size: 0.875rem;
+      color: var(--wf-ink);
+    }
+    .checklist-step:last-child {
+      border-bottom: none;
+    }
+    .step-num {
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      background: var(--wf-muted);
+      border-radius: 50%;
+      text-align: center;
+      line-height: 24px;
+      margin-right: 0.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--wf-ink);
+    }
+  </style>
+</head>
+<body>
+  <div class="wf-layout-3col">
+    <!-- Left Sidebar Navigation -->
+    <nav class="wf-sidebar-left" aria-label="PSM portal navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li><a href="psm-program-dashboard.html">Program Home</a></li>
+        <li><a href="psm-partner-account-list.html">Partner Accounts</a></li>
+        <li><a href="psm-deal-registration.html">Deal Registration</a></li>
+        <li><a href="psm-mdf-management.html">MDF Management</a></li>
+        <li><strong style="display: block; padding: 0.5rem; color: var(--wf-accent);">Dormancy & Offboarding</strong></li>
+      </ul>
+      <h3>Tools</h3>
+      <ul>
+        <li><a href="psm-reports-analytics.html">Reports</a></li>
+        <li><a href="psm-executive-dashboard.html">Executive Dashboard</a></li>
+      </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="wf-main-content">
+      <h1 class="page-title">Partner Dormancy & Offboarding</h1>
+      <p class="page-meta">Active review: Q1 2026 · 3 partners at risk</p>
+
+      <!-- Tab Group -->
+      <div class="tab-group">
+        <button class="tab active" onclick="switchTab(event, 'dormancy')">
+          Dormancy Review
+        </button>
+        <button class="tab" onclick="switchTab(event, 'offboarding')">
+          Offboarding Queue <span class="tab-badge">1</span>
+        </button>
+      </div>
+
+      <!-- Dormancy Review Tab -->
+      <div id="dormancy" class="tab-content active">
+        <table class="dormancy-table" aria-label="Partner dormancy review">
+          <thead>
+            <tr>
+              <th>Partner Name</th>
+              <th>Last Active</th>
+              <th>Last Deal Reg</th>
+              <th>Tier</th>
+              <th>Revenue YTD</th>
+              <th>Risk Level</th>
+              <th>Recommended Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Nexus IT Group</strong></td>
+              <td>180 days ago</td>
+              <td>11 months ago</td>
+              <td><span class="tier-badge">Silver</span></td>
+              <td>$0</td>
+              <td><span class="risk-badge risk-high">HIGH</span></td>
+              <td><a class="action-link" href="#">Send re-engagement email</a></td>
+            </tr>
+            <tr>
+              <td><strong>Pacific Rim Solutions</strong></td>
+              <td>92 days ago</td>
+              <td>6 months ago</td>
+              <td><span class="tier-badge">Bronze</span></td>
+              <td>$12K</td>
+              <td><span class="risk-badge risk-medium">MEDIUM</span></td>
+              <td><a class="action-link" href="#">Schedule check-in call</a></td>
+            </tr>
+            <tr>
+              <td><strong>DataPath Inc</strong></td>
+              <td>47 days ago</td>
+              <td>2 months ago</td>
+              <td><span class="tier-badge">Bronze</span></td>
+              <td>$48K</td>
+              <td><span class="risk-badge risk-low">LOW</span></td>
+              <td><span style="color: var(--wf-muted);">No action needed</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="policy-box">
+          <strong>Dormancy Policy</strong>
+          Silver/Gold partners with 0 activity for 6+ months receive a re-engagement email (template <code>PCP-DORMANT</code>). Partners with 12+ months inactivity are flagged for offboarding review. Bronze partners with 0 revenue for 2 consecutive quarters may be downgraded or removed per partner program policy.
+        </div>
+      </div>
+
+      <!-- Offboarding Queue Tab -->
+      <div id="offboarding" class="tab-content">
+        <div class="offboarding-row">
+          <h4>Nexus IT Group</h4>
+          <p>
+            <strong>Status:</strong> Flagged for offboarding after 12+ months dormancy (last activity: 180 days ago). Pending PSM review and VP Channel approval.
+          </p>
+          <p>
+            <strong>Reason:</strong> Zero revenue, no deal registrations, no portal activity. Meets removal criteria under partner program policy.
+          </p>
+          <div class="btn-group">
+            <button>View Partner Record</button>
+            <button class="btn-primary">Begin Offboarding</button>
+            <button>Mark as Reactivated</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Sidebar -->
+    <aside class="wf-sidebar-right" aria-label="Offboarding checklist">
+      <div class="sidebar-card">
+        <h4>Offboarding Checklist</h4>
+        <div class="checklist-step">
+          <span class="step-num">1</span> Notify partner via <code>PCP-OFFBOARD-NOTICE</code> email
+        </div>
+        <div class="checklist-step">
+          <span class="step-num">2</span> Revoke portal access & SSO credentials
+        </div>
+        <div class="checklist-step">
+          <span class="step-num">3</span> Archive deal registration history
+        </div>
+        <div class="checklist-step">
+          <span class="step-num">4</span> Transfer/close open Deal Registrations
+        </div>
+        <div class="checklist-step">
+          <span class="step-num">5</span> Complete commission & financial closeout
+        </div>
+        <div class="checklist-step">
+          <span class="step-num">6</span> Record final partner status in CRM
+        </div>
+        <div class="checklist-step">
+          <span class="step-num">7</span> VP Channel sign-off & archive confirmation
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <script src="wf-nav.js"></script>
+  <script>
+    function switchTab(event, tabName) {
+      // Hide all tab contents
+      const contents = document.querySelectorAll('.tab-content');
+      contents.forEach(content => content.classList.remove('active'));
+      
+      // Remove active class from all tabs
+      const tabs = document.querySelectorAll('.tab');
+      tabs.forEach(tab => tab.classList.remove('active'));
+      
+      // Show selected tab content and mark tab as active
+      document.getElementById(tabName).classList.add('active');
+      event.target.closest('.tab').classList.add('active');
+    }
+  </script>
+</body>
+</html>

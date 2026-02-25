@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Flow: Emergency Escalation → Executive Brief — Equinix PCP Wireframes</title>
+<link rel="stylesheet" href="wireframe.css">
+<style>
+/* ── Page chrome ── */
+.page-header { padding:1.5rem 2rem 1rem; border-bottom:1px solid var(--gray-border); background:#fff; }
+.page-header h1 { font-size:1.25rem; font-weight:700; color:var(--wf-ink); margin:0 0 .25rem; }
+.page-header .meta { font-size:.75rem; color:var(--wf-muted); display:flex; gap:1rem; flex-wrap:wrap; }
+.page-header .meta span { display:flex; align-items:center; gap:.25rem; }
+.flow-container { max-width:1280px; margin:0 auto; padding:1.5rem 2rem 3rem; }
+
+/* ── Legend ── */
+.legend { display:flex; gap:1rem; flex-wrap:wrap; margin-bottom:1.5rem; }
+.legend-item { display:flex; align-items:center; gap:.375rem; font-size:.75rem; color:var(--wf-ink); }
+.legend-dot { width:12px; height:12px; border-radius:3px; flex-shrink:0; }
+
+/* ── Swimlane layout ── */
+.swimlane-wrap { overflow-x:auto; padding-bottom:1rem; }
+.swimlane-grid {
+  display:grid;
+  grid-template-columns: 130px repeat(8, 1fr);
+  grid-template-rows: auto repeat(6, 1fr);
+  gap:0;
+  min-width:1100px;
+  border:1px solid var(--gray-border);
+  border-radius:8px;
+  overflow:hidden;
+}
+
+/* column headers (steps) */
+.col-header {
+  background:var(--wf-canvas,#f5f7fb);
+  border-bottom:2px solid var(--gray-border);
+  padding:.5rem .5rem;
+  text-align:center;
+  font-size:.6875rem;
+  font-weight:700;
+  color:var(--wf-ink);
+  line-height:1.3;
+}
+.col-header .step-num {
+  display:inline-flex; align-items:center; justify-content:center;
+  width:20px; height:20px; border-radius:50%;
+  background:var(--wf-accent,#3d6daa); color:#fff;
+  font-size:.625rem; font-weight:700; margin-bottom:.25rem;
+}
+.col-header .step-sla {
+  display:block; font-size:.625rem; font-weight:400; color:var(--wf-muted); margin-top:.125rem;
+}
+
+/* row headers (actors) */
+.row-header {
+  background:var(--wf-canvas);
+  border-right:2px solid var(--gray-border);
+  padding:.625rem .5rem;
+  font-size:.6875rem;
+  font-weight:700;
+  color:var(--wf-ink);
+  display:flex; flex-direction:column; align-items:flex-start; justify-content:center;
+  gap:.25rem;
+  line-height:1.3;
+}
+.row-header .actor-badge {
+  display:inline-block;
+  font-size:.5625rem; font-weight:600; padding:.1rem .375rem;
+  border-radius:3px; text-transform:uppercase; letter-spacing:.03em;
+}
+.badge-ext { background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; }
+.badge-int { background:#fdf3ef; color:#b04a2a; border:1px solid #f4c5b2; }
+.badge-sys { background:#f3f4f6; color:#374151; border:1px solid #d1d5db; }
+
+/* grid cells */
+.flow-cell {
+  border:1px solid var(--gray-border);
+  padding:.625rem .5rem;
+  min-height:100px;
+  position:relative;
+  background:#fff;
+  font-size:.75rem;
+}
+.flow-cell.empty { background:var(--wf-canvas); }
+
+/* action card inside a cell */
+.action-card {
+  border-radius:5px;
+  padding:.5rem .625rem;
+  font-size:.75rem;
+  line-height:1.4;
+  height:100%;
+  box-sizing:border-box;
+}
+.ac-partner  { background:#eff6ff; border:1.5px solid #93c5fd; color:#1e3a5f; }
+.ac-psm      { background:#fdf3ef; border:1.5px solid #f4b8a0; color:#6b2a14; }
+.ac-pam      { background:#fef9ee; border:1.5px solid #fcd34d; color:#6b4c00; }
+.ac-dealdesk { background:#f0fdf4; border:1.5px solid #86efac; color:#14532d; }
+.ac-agentforce { background:#f5f3ff; border:1.5px solid #c4b5fd; color:#3b0764; }
+.ac-vp       { background:#fef2f2; border:1.5px solid #fca5a5; color:#7f1d1d; }
+.ac-system   { background:#f8fafc; border:1.5px solid #cbd5e1; color:#334155; }
+
+.action-card strong { display:block; font-weight:700; margin-bottom:.2rem; }
+.action-card .screen-link { font-size:.6875rem; color:var(--wf-accent); display:block; margin-top:.3rem; text-decoration:none; }
+.action-card .screen-link:hover { text-decoration:underline; }
+.action-card .note { font-size:.625rem; color:var(--wf-muted); display:block; margin-top:.2rem; font-style:italic; }
+
+/* connector arrows between cells */
+.cell-arrow {
+  position:absolute; right:-1px; top:50%; transform:translateY(-50%);
+  font-size:1rem; color:var(--wf-accent); z-index:2;
+  background:#fff; padding:0 2px;
+  display:none; /* shown via JS for horizontal adjacency */
+}
+
+/* step highlight */
+.step-critical { background:#fef2f2 !important; }
+.step-ai       { background:#faf5ff !important; }
+
+/* ── Narrative panel ── */
+.narrative { margin-top:1.5rem; display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+@media(max-width:900px){ .narrative { grid-template-columns:1fr; } }
+.narrative-card { background:#fff; border:1px solid var(--gray-border); border-radius:8px; padding:1.125rem 1.25rem; }
+.narrative-card h3 { font-size:.875rem; font-weight:700; margin:0 0 .625rem; display:flex; align-items:center; gap:.5rem; }
+.narrative-card ul { margin:0; padding:0 0 0 1rem; font-size:.8125rem; color:var(--wf-ink); line-height:1.6; }
+.narrative-card ul li { margin-bottom:.375rem; }
+.sla-table { width:100%; border-collapse:collapse; font-size:.75rem; margin-top:.5rem; }
+.sla-table th { text-align:left; font-weight:700; padding:.3rem .5rem; background:var(--wf-canvas); border:1px solid var(--gray-border); }
+.sla-table td { padding:.3rem .5rem; border:1px solid var(--gray-border); vertical-align:top; }
+.sla-ok  { color:#166534; font-weight:600; }
+.sla-warn{ color:#92400e; font-weight:600; }
+.sla-crit{ color:#991b1b; font-weight:600; }
+
+/* ── Agentforce callout ── */
+.af-callout {
+  margin-top:1.5rem;
+  background:linear-gradient(90deg,#f5f3ff 0%,#fdf4ff 100%);
+  border:1.5px solid #c4b5fd;
+  border-radius:8px;
+  padding:1rem 1.25rem;
+  display:flex; gap:1rem; align-items:flex-start;
+  font-size:.8125rem;
+}
+.af-callout .af-icon { font-size:1.5rem; flex-shrink:0; }
+.af-callout strong { display:block; margin-bottom:.25rem; color:#4c1d95; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>Process Flow — Emergency Escalation → Agentforce Executive Brief</h1>
+  <div class="meta">
+    <span>🗺 Process Flow</span>
+    <span>6 Actors</span>
+    <span>8 Steps</span>
+    <span>Story: ESC-2026-RTP-003 · Redwood Tech Partners</span>
+    <span><a href="psm-escalation-brief.html" style="color:var(--wf-accent);">→ PSM Escalation Record</a></span>
+    <span><a href="psm-escalation-brief-preview.html" style="color:var(--wf-accent);">→ Agentforce Brief Preview</a></span>
+    <span><a href="index.html" style="color:var(--wf-muted);">← Sitemap</a></span>
+  </div>
+</div>
+
+<div class="flow-container">
+
+  <!-- Legend -->
+  <div class="legend" role="list" aria-label="Actor legend">
+    <div class="legend-item" role="listitem"><div class="legend-dot" style="background:#93c5fd;"></div> Partner (External)</div>
+    <div class="legend-item" role="listitem"><div class="legend-dot" style="background:#f4b8a0;"></div> PSM — Marcus Chen (Internal)</div>
+    <div class="legend-item" role="listitem"><div class="legend-dot" style="background:#fcd34d;"></div> PAM — Alex Rivera (Internal)</div>
+    <div class="legend-item" role="listitem"><div class="legend-dot" style="background:#86efac;"></div> Deal Desk — Priya Nair (Internal)</div>
+    <div class="legend-item" role="listitem"><div class="legend-dot" style="background:#c4b5fd;"></div> Agentforce (System)</div>
+    <div class="legend-item" role="listitem"><div class="legend-dot" style="background:#fca5a5;"></div> VP Channel (Internal)</div>
+  </div>
+
+  <!-- Swimlane -->
+  <div class="swimlane-wrap">
+  <div class="swimlane-grid" role="table" aria-label="Escalation process flow swimlane">
+
+    <!-- Row 0: Column headers -->
+    <div class="col-header" style="background:#1e2a3a;color:#fff;" role="columnheader">Actor / Step</div>
+
+    <div class="col-header" role="columnheader">
+      <div class="step-num">1</div>
+      Dispute Filed
+      <span class="step-sla">Day 0</span>
+    </div>
+    <div class="col-header" role="columnheader">
+      <div class="step-num">2</div>
+      DR Conflict Review
+      <span class="step-sla">Day 0–1</span>
+    </div>
+    <div class="col-header" role="columnheader">
+      <div class="step-num">3</div>
+      Escalation Created
+      <span class="step-sla">Day 1</span>
+    </div>
+    <div class="col-header step-ai" role="columnheader">
+      <div class="step-num" style="background:#7c3aed;">4</div>
+      Agentforce Brief
+      <span class="step-sla">Day 1 (automated)</span>
+    </div>
+    <div class="col-header" role="columnheader">
+      <div class="step-num">5</div>
+      PSM Review &amp; Send
+      <span class="step-sla">Day 1–2</span>
+    </div>
+    <div class="col-header step-critical" role="columnheader">
+      <div class="step-num" style="background:#dc2626;">6</div>
+      VP Briefed
+      <span class="step-sla">Day 2</span>
+    </div>
+    <div class="col-header" role="columnheader">
+      <div class="step-num">7</div>
+      Partner Call
+      <span class="step-sla">Day 3–4</span>
+    </div>
+    <div class="col-header" role="columnheader">
+      <div class="step-num">8</div>
+      Resolution
+      <span class="step-sla">Day 5 (SLA)</span>
+    </div>
+
+    <!-- Row 1: Partner (External) -->
+    <div class="row-header" role="rowheader">
+      <span class="actor-badge badge-ext">External</span>
+      Partner
+      <span style="font-size:.625rem;font-weight:400;color:var(--wf-muted);">Redwood Tech / Brian Walsh (VP)</span>
+    </div>
+    <div class="flow-cell" role="cell">
+      <div class="action-card ac-partner">
+        <strong>Submits dispute via portal</strong>
+        Rep logs a deal registration dispute claim — Redwood asserts first-touch on Meridian Capital deal.
+        <a href="rep-home.html" class="screen-link">→ rep-home.html</a>
+        <span class="note">Trigger: Commission at risk on $280K Meridian deal</span>
+      </div>
+    </div>
+    <div class="flow-cell empty" role="cell"></div>
+    <div class="flow-cell empty" role="cell"></div>
+    <div class="flow-cell empty" role="cell"></div>
+    <div class="flow-cell empty" role="cell"></div>
+    <div class="flow-cell" role="cell">
+      <div class="action-card ac-partner">
+        <strong>VP receives brief</strong>
+        Brian Walsh (VP) receives Agentforce-generated executive brief as a PDF attachment — by email or secure share link.
+        <span class="note">Not a portal user. Brief delivered out-of-band.</span>
+      </div>
+    </div>
+    <div class="flow-cell" role="cell">
+      <div class="action-card ac-partner">
+        <strong>Participates in resolution call</strong>
+        Brian joins PSM + Equinix VP call. Comes prepared — brief was reviewed in advance.
+      </div>
+    </div>
+    <div class="flow-cell" role="cell">
+      <div class="action-card ac-partner">
+        <strong>Receives resolution notice</strong>
+        Formal outcome communicated. Commission credit confirmed or denied with explanation. PPA amendment if needed.
+        <span class="note">Target: SLA Day 5</span>
+      </div>
+    </div>
+
+    <!-- Row 2: PSM -->
+    <div class="row-header" role="rowheader">
+      <span class="actor-badge badge-int">Internal</span>
+      PSM
+      <span style="font-size:.625rem;font-weight:400;color:var(--wf-muted);">Marcus Chen</span>
+    </div>
+    <div class="flow-cell empty" role="cell"></div>
+    <div class="flow-cell" role="cell">
+      <div class="action-card ac-psm">
+        <strong>Receives conflict alert</strong>
+        PSM is notified of a DR conflict flag on Meridian Capital — two partners claim first-touch registration.
+        <a href="psm-partner-qualification.html" class="screen-link">→ psm-partner-qualification.html</a>
+      </div>
+    </div>
+    <div class="flow-cell" role="cell">
+      <div class="action-card ac-psm">
+        <strong>Creates escalation record</strong>
+        Assesses severity as Emergency. Creates ESC-2026-RTP-003 record. Triggers Agentforce brief generation.
+        <a href="psm-escalation-brief.html" class="screen-link">→ psm-escalation-brief.html</a>
+        <span class="note">Classification: Emergency · 5-day SLA</span>
+      </div>
+    </div>
+    <div class="flow-cell step-ai empty" role="cell" aria-label="Agentforce generates brief (PSM waits)"></div>
+    <div class="flow-cell" role="cell">
+      <div class="action-card ac-psm">
+        <strong>Reviews &amp; approves brief</strong>
+        PSM reviews Agentforce draft. Adds annotations. Approves for VP distribution.
+        <a href="psm-escalation-brief-preview.html" class="screen-link">→ Preview brief</a>
+        <span class="note">Edits limited to annotations — AI narrative preserved</span>
+      </div>
+    </div>
+    <div class="flow-cell" role="cell">
+      <div class="action-card ac-psm">
+        <strong>Briefs VP Channel</strong>
+        10-minute async brief via Chatter or scheduled 15-min call. Hands off talking points.
+        <a href="psm-qbr-minutes.html" class="screen-link">→ psm-qbr-minutes.html (reference)</a>
+      </div>
+    </div>
+    <div class="flow-cell" role="cell">
+      <div class="action-card ac-psm">
+        <strong>Facilitates partner call</strong>
+        PSM joins VP + Brian Walsh call. Provides context, mediates, takes notes.
+      </div>
+    </div>
+    <div class="flow-cell" role="cell">
+      <div class="action-card ac-psm">
+        <strong>Closes escalation</strong>
+        Updates ESC record with resolution. Logs outcome in partner account. Triggers commission adjustment if applicable.
+        <a href="psm-escalation-brief.html" class="screen-link">→ psm-escalation-brief.html</a>
+      </div>
+    </div>
+
+    <!-- Row 3: PAM -->
+    <div class="row-header" role="rowheader">
+      <span class="actor-badge badge-int">Internal</span>
+      PAM
+      <span style="font-size:.625rem;font-weight:400;color:var(--wf-muted);">Alex Rivera</span>
+    </div>
+    <div class="flow-cell empty" role="cell"></div>
+    <div class="flow-cell" role="cell">
+      <div class="action-card ac-pam">
+        <strong>Provides DR history context</strong>
+        PAM has visibility into Redwood's deal registration history. Confirms prior dispute pattern for PSM's assessment.
+        <a href="pam-partner-profile.html" class="screen-link">→ pam-partner-profile.html</a>
+      </div>
+    </div>
+    <div class="flow-cell empty" role="cell"></div>
+    <div class="flow-cell step-ai empty" role="cell"></div>
+    <div class="flow-cell empty" role="cell"></div>
+    <div class="flow-cell empty" role="cell"></div>
+    <div class="flow-cell empty" role="cell"></div>
+    <div class="flow-cell" role="cell">
+      <div class="action-card ac-pam">
+        <strong>Updates partner health record</strong>
+        Logs resolution outcome in Redwood's PAM view. Flags for next QBR agenda.
+        <a href="pam-partner-profile.html" class="screen-link">→ pam-partner-profile.html</a>
+      </div>
+    </div>
+
+    <!-- Row 4: Deal Desk -->
+    <div class="row-header" role="rowheader">
+      <span class="actor-badge badge-int">Internal</span>
+      Deal Desk
+      <span style="font-size:.625rem;font-weight:400;color:var(--wf-muted);">Priya Nair</span>
+    </div>
+    <div class="flow-cell" role="cell">
+      <div class="action-card ac-dealdesk">
+        <strong>Initial DR review</strong>
+        Priya processes the deal registration and surface the timestamp conflict — two submissions within 12 minutes. Flags for PSM review; does not resolve independently.
+        <a href="dealdesk-queue.html" class="screen-link">→ dealdesk-queue.html</a>
+        <span class="note">Root cause: timestamp ambiguity not surfaced at review time</span>
+      </div>
+    </div>
+    <div class="flow-cell" role="cell">
+      <div class="action-card ac-dealdesk">
+        <strong>Conflict data package</strong>
+        Compiles timestamp evidence, both rep submissions, and prior commission history for PSM escalation record.
+        <a href="dealdesk-queue.html" class="screen-link">→ dealdesk-queue.html</a>
+      </div>
+    </div>
+    <div class="flow-cell empty" role="cell"></div>
+    <div class="flow-cell step-ai empty" role="cell"></div>
+    <div class="flow-cell empty" role="cell"></div>
+    <div class="flow-cell empty" role="cell"></div>
+    <div class="flow-cell empty" role="cell"></div>
+    <div class="flow-cell" role="cell">
+      <div class="action-card ac-dealdesk">
+        <strong>Commission adjustment</strong>
+        Applies approved credit split or denial in commission system. Closes commission hold on Meridian deal.
+        <a href="psm-reimbursement.html" class="screen-link">→ psm-reimbursement.html</a>
+      </div>
+    </div>
+
+    <!-- Row 5: Agentforce (System) -->
+    <div class="row-header" role="rowheader">
+      <span class="actor-badge badge-sys">System</span>
+      Agentforce
+    </div>
+    <div class="flow-cell empty" role="cell"></div>
+    <div class="flow-cell empty" role="cell"></div>
+    <div class="flow-cell empty" role="cell"></div>
+    <div class="flow-cell step-ai" role="cell">
+      <div class="action-card ac-agentforce">
+        <strong>✦ Generates Executive Brief</strong>
+        Prompt template PTMPL-ESCALATION-BRIEF-V2 fires. Pulls: partner snapshot, dispute details, 12-month relationship history, commission at risk, recommended talking points.
+        <a href="psm-escalation-brief-preview.html" class="screen-link">→ Preview generated brief</a>
+        <span class="note">~45 sec generation. Human review required before send.</span>
+      </div>
+    </div>
+    <div class="flow-cell empty" role="cell"></div>
+    <div class="flow-cell empty" role="cell"></div>
+    <div class="flow-cell empty" role="cell"></div>
+    <div class="flow-cell empty" role="cell"></div>
+
+    <!-- Row 6: VP Channel -->
+    <div class="row-header" role="rowheader">
+      <span class="actor-badge badge-int">Internal</span>
+      VP Channel
+      <span style="font-size:.625rem;font-weight:400;color:var(--wf-muted);">Equinix leadership</span>
+    </div>
+    <div class="flow-cell empty" role="cell"></div>
+    <div class="flow-cell empty" role="cell"></div>
+    <div class="flow-cell empty" role="cell"></div>
+    <div class="flow-cell step-ai empty" role="cell"></div>
+    <div class="flow-cell empty" role="cell"></div>
+    <div class="flow-cell step-critical" role="cell">
+      <div class="action-card ac-vp">
+        <strong>Receives &amp; reviews brief</strong>
+        VP Channel receives the approved executive brief. Reviews in under 5 minutes — prepared for partner call.
+        <span class="note">Entry point: briefing doc or Chatter summary from PSM</span>
+      </div>
+    </div>
+    <div class="flow-cell step-critical" role="cell">
+      <div class="action-card ac-vp">
+        <strong>Leads resolution call</strong>
+        VP + PSM + Brian Walsh (Redwood). Decision authority on commission split and escalation disposition.
+      </div>
+    </div>
+    <div class="flow-cell" role="cell">
+      <div class="action-card ac-vp">
+        <strong>Signs off on resolution</strong>
+        Approves final outcome. May require PPA amendment or written acknowledgement from Redwood.
+      </div>
+    </div>
+
+  </div><!-- end swimlane-grid -->
+  </div><!-- end swimlane-wrap -->
+
+  <!-- Agentforce callout -->
+  <div class="af-callout" role="note" aria-label="Agentforce integration note">
+    <span class="af-icon">✦</span>
+    <div>
+      <strong>Agentforce generates the executive brief at Step 4 — automatically triggered when an escalation is classified as Emergency.</strong>
+      Template ID: <code>PTMPL-ESCALATION-BRIEF-V2</code> · Setup path: Setup → Agentforce → Document Generation → Prompt Templates.
+      The brief is stored as a separate reference document on the ESC record and in the partner account file.
+      Human review (PSM) is mandatory before distribution — the system does not send autonomously.
+    </div>
+  </div>
+
+  <!-- Narrative panels -->
+  <div class="narrative">
+
+    <div class="narrative-card">
+      <h3><span style="color:#dc2626;">⚠</span> Why This Became an Emergency</h3>
+      <ul>
+        <li>Two reps — one from Redwood, one from a competing partner — submitted deal registrations for Meridian Capital within 12 minutes of each other.</li>
+        <li>Standard DR review (Deal Desk) flagged the timestamp conflict but lacked clear policy to resolve it independently — escalated to PSM.</li>
+        <li>PSM assessment revealed this was the <strong>third commission dispute from Redwood in 18 months</strong>, and Redwood is a Gold-tier partner at risk of tier downgrade.</li>
+        <li>At-risk commission: <strong>$280K Meridian deal</strong> — triggering VP-level engagement threshold per Equinix partner escalation policy.</li>
+        <li>Without the Agentforce brief, VP would have entered the partner call without context — or the call would have been delayed 2–3 days while PSM prepared manually.</li>
+      </ul>
+    </div>
+
+    <div class="narrative-card">
+      <h3><span style="color:#7c3aed;">✦</span> What Agentforce Contributes</h3>
+      <ul>
+        <li>Pulls structured data from 4 Salesforce objects: <code>Escalation__c</code>, <code>PartnerAccount__c</code>, <code>DealRegistration__c</code>, <code>CommissionHistory__c</code>.</li>
+        <li>Generates a 5-section brief: Partner Snapshot, Dispute Details, Relationship History (12-month narrative), Talking Points (5 numbered), Resolution Path.</li>
+        <li>PSM adds annotations — AI narrative is preserved. Adds PSM professional judgment as a contextual overlay, not a replacement.</li>
+        <li>Brief is attached to the ESC record and emailed to VP Channel. Also stored in Redwood's partner account file for future reference.</li>
+        <li>Estimated time saved vs. manual brief preparation: <strong>2–3 hours per escalation</strong>. At ~40 emergency escalations/year across the PSM team, this is ~100 hours recovered.</li>
+      </ul>
+    </div>
+
+    <div class="narrative-card">
+      <h3>SLA Reference</h3>
+      <table class="sla-table" aria-label="Escalation SLA targets">
+        <thead>
+          <tr><th>Step</th><th>Owner</th><th>Target</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Dispute submitted → PSM notified</td><td>System</td><td>Same day</td><td class="sla-ok">Automated</td></tr>
+          <tr><td>PSM creates escalation record</td><td>PSM</td><td>Within 4 hours</td><td class="sla-ok">Day 1</td></tr>
+          <tr><td>Agentforce brief generated</td><td>Agentforce</td><td>~45 seconds</td><td class="sla-ok">Automated</td></tr>
+          <tr><td>PSM review &amp; approval</td><td>PSM</td><td>Within 2 hours</td><td class="sla-ok">Day 1</td></tr>
+          <tr><td>VP briefed</td><td>PSM</td><td>Day 2</td><td class="sla-warn">Manual handoff</td></tr>
+          <tr><td>Partner call scheduled</td><td>PSM + VP</td><td>Day 3</td><td class="sla-warn">Depends on availability</td></tr>
+          <tr><td>Resolution communicated</td><td>VP + PSM</td><td><strong>Day 5</strong></td><td class="sla-crit">Hard SLA</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="narrative-card">
+      <h3>Design Implications</h3>
+      <ul>
+        <li><strong>PSM screen:</strong> "Generate Brief" button on ESC record should be prominent — not buried in a related list. Pre-fill with classification context.</li>
+        <li><strong>Notification gap:</strong> Brian Walsh (VP, Redwood) currently has no in-portal escalation notification. Brief is delivered by email only — a blind spot to address.</li>
+        <li><strong>Deal Desk screen:</strong> Timestamp conflicts should surface a visual alert during DR review, not just a text flag. <code>dealdesk-queue.html</code> needs a conflict severity indicator.</li>
+        <li><strong>Agentforce brief:</strong> Should be stored as an immutable document after PSM approval — not editable post-send. Version history on ESC record.</li>
+        <li><strong>VP summary view:</strong> Brian Walsh identified as needing a proactive quarterly executive summary email (not a portal screen) — separate from the emergency brief flow.</li>
+        <li><strong>Resolution notification:</strong> Partner rep (Steve Rogers) should receive an in-portal notification when the escalation is closed — currently no wired screen for this.</li>
+      </ul>
+    </div>
+
+  </div><!-- end narrative -->
+
+</div><!-- end flow-container -->
+
+<script src="wf-nav.js"></script>
+</body>
+</html>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notification Trigger Map — Equinix PCP Wireframes</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <style>
+    .notification-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 2rem 0 1rem 0;
+      font-size: 0.875rem;
+      background: var(--wf-canvas);
+      border: 1px solid var(--gray-border);
+    }
+    .notification-table thead {
+      background: var(--wf-muted);
+      border-bottom: 2px solid var(--gray-border);
+    }
+    .notification-table th {
+      padding: 0.75rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--wf-ink);
+      border-right: 1px solid var(--gray-border);
+    }
+    .notification-table th:last-child {
+      border-right: none;
+    }
+    .notification-table td {
+      padding: 0.75rem;
+      border-right: 1px solid var(--gray-border);
+      border-bottom: 1px solid var(--gray-border);
+      color: var(--wf-ink);
+    }
+    .notification-table td:last-child {
+      border-right: none;
+    }
+    .notification-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+    .wired-yes {
+      color: #22863a;
+      font-weight: 600;
+    }
+    .wired-planned {
+      color: #b08500;
+      font-weight: 600;
+    }
+    .arch-section {
+      margin: 2rem 0;
+      padding: 1rem;
+      background: var(--wf-canvas);
+      border-left: 4px solid var(--wf-accent);
+      border: 1px solid var(--gray-border);
+      border-left: 4px solid var(--wf-accent);
+    }
+    .arch-section h3 {
+      margin-top: 0;
+      color: var(--wf-ink);
+      font-size: 1rem;
+    }
+    .arch-section p {
+      margin: 0.5rem 0;
+      color: var(--wf-ink);
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+  <nav class="wf-nav-main" aria-label="Main navigation">
+    <h1 class="wf-logo">Equinix PCP Wireframes</h1>
+    <ul class="wf-nav-list">
+      <li><a href="index.html">Index</a></li>
+      <li><a href="sitemap-pcp-v2.html">Sitemap</a></li>
+      <li><a href="personas.html">Personas</a></li>
+      <li><a href="research-best-practices.html">Research</a></li>
+      <li class="wf-nav-current"><strong>Notification Trigger Map</strong></li>
+    </ul>
+  </nav>
+
+  <main class="wf-main-container">
+    <header class="wf-page-header">
+      <h1>Notification Trigger Map</h1>
+      <p class="wf-subtitle">All automated notifications across the Partner Connect Portal — triggers, recipients, channels, and wiring status</p>
+    </header>
+
+    <div class="wf-content">
+      <table class="notification-table" aria-label="Notification trigger map">
+        <thead>
+          <tr>
+            <th>Event</th>
+            <th>Trigger</th>
+            <th>Recipient(s)</th>
+            <th>Channel</th>
+            <th>Template ID</th>
+            <th>Wired?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Partner Application Submitted</td>
+            <td>New application record created and submitted by user</td>
+            <td>PSM, Partner Admin</td>
+            <td>Email, Portal Bell</td>
+            <td>PCP-APP-SUBMITTED</td>
+            <td><span class="wired-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>Application Approved</td>
+            <td>PSM marks application as Approved in system</td>
+            <td>Partner Account Admin</td>
+            <td>Email, Portal Bell</td>
+            <td>PCP-APP-APPROVED</td>
+            <td><span class="wired-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>Application Rejected</td>
+            <td>PSM marks application as Rejected with reason</td>
+            <td>Partner Account Admin</td>
+            <td>Email, Portal Bell</td>
+            <td>PCP-APP-REJECTED</td>
+            <td><span class="wired-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>Agreement Sent</td>
+            <td>PSM sends partner agreement via DocuSign from portal</td>
+            <td>Partner Executive (doc recipient)</td>
+            <td>Email (DocuSign), Portal Bell</td>
+            <td>PCP-AGREE-SENT</td>
+            <td><span class="wired-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>Agreement Countersigned</td>
+            <td>DocuSign envelope returned fully signed</td>
+            <td>PSM, Equinix Legal</td>
+            <td>Email, Chatter</td>
+            <td>PCP-AGREE-SIGNED</td>
+            <td><span class="wired-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>Rep Join Request Submitted</td>
+            <td>Sales rep submits portal access request</td>
+            <td>Portal Admin, Partner Executive</td>
+            <td>Email, Portal Bell</td>
+            <td>PCP-REP-REQUEST</td>
+            <td><span class="wired-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>Rep Approved</td>
+            <td>Portal Admin approves rep access request</td>
+            <td>Sales Rep</td>
+            <td>Email, Portal Bell</td>
+            <td>PCP-REP-APPROVED</td>
+            <td><span class="wired-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>Rep First Login</td>
+            <td>Rep logs into portal for first time</td>
+            <td>—</td>
+            <td>Portal in-app tour</td>
+            <td>N/A</td>
+            <td><span class="wired-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>Deal Registered</td>
+            <td>Rep submits new deal registration</td>
+            <td>PSM, Partner Admin</td>
+            <td>Email, Portal Bell</td>
+            <td>PCP-DR-SUBMITTED</td>
+            <td><span class="wired-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>Deal Approved</td>
+            <td>PSM approves deal registration</td>
+            <td>Rep, Partner Admin</td>
+            <td>Email, Portal Bell</td>
+            <td>PCP-DR-APPROVED</td>
+            <td><span class="wired-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>Deal Rejected</td>
+            <td>PSM rejects deal with reason</td>
+            <td>Rep, Partner Admin</td>
+            <td>Email, Portal Bell</td>
+            <td>PCP-DR-REJECTED</td>
+            <td><span class="wired-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>DR Conflict Flagged</td>
+            <td>Deal registration overlaps with another partner or Equinix direct</td>
+            <td>PSM, VP Channel</td>
+            <td>Email, Chatter</td>
+            <td>PCP-DR-CONFLICT</td>
+            <td><span class="wired-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>Escalation Created (Emergency)</td>
+            <td>PSM or partner escalates deal/contract issue to VP Channel</td>
+            <td>VP Channel, PSM, Partner Exec</td>
+            <td>Email, Chatter (escalation record)</td>
+            <td>PCP-ESCALATION-FILED</td>
+            <td><span class="wired-planned">○ Planned</span></td>
+          </tr>
+          <tr>
+            <td>Escalation Brief Generated</td>
+            <td>Escalation resolved; brief summary generated for VP</td>
+            <td>VP Channel (internal only)</td>
+            <td>Email, Chatter</td>
+            <td>PCP-ESCALATION-BRIEF</td>
+            <td><span class="wired-planned">○ Planned</span></td>
+          </tr>
+          <tr>
+            <td>Escalation Resolved</td>
+            <td>VP marks escalation as Resolved</td>
+            <td>PSM, Partner Admin</td>
+            <td>Email, Portal Bell</td>
+            <td>PCP-ESCALATION-RESOLVED</td>
+            <td><span class="wired-planned">○ Planned</span></td>
+          </tr>
+          <tr>
+            <td>MDF Request Submitted</td>
+            <td>Partner submits MDF co-marketing request</td>
+            <td>PSM, MDF Approver</td>
+            <td>Email, Portal Bell</td>
+            <td>PCP-MDF-REQUESTED</td>
+            <td><span class="wired-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>MDF Approved</td>
+            <td>MDF approver marks request as approved</td>
+            <td>Partner Admin</td>
+            <td>Email, Portal Bell</td>
+            <td>PCP-MDF-APPROVED</td>
+            <td><span class="wired-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>MDF Claim Received</td>
+            <td>Partner submits claim/proof of completion for MDF activity</td>
+            <td>PSM, Finance</td>
+            <td>Email, Portal Bell</td>
+            <td>PCP-MDF-CLAIM</td>
+            <td><span class="wired-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>Certification Completed</td>
+            <td>Rep completes required certification (via external system, synced to PCP)</td>
+            <td>Partner Admin, Rep</td>
+            <td>Email, Portal Bell</td>
+            <td>PCP-CERT-COMPLETED</td>
+            <td><span class="wired-yes">✓</span></td>
+          </tr>
+          <tr>
+            <td>Tier Change Notice</td>
+            <td>Annual review: partner tier updated (Silver → Gold, etc.)</td>
+            <td>Partner Exec, PSM, VP Channel</td>
+            <td>Email, Portal Bell</td>
+            <td>PCP-TIER-CHANGED</td>
+            <td><span class="wired-planned">○ Planned</span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="arch-section">
+        <h3>Notification Architecture</h3>
+        <p>
+          All notifications are dispatched via Salesforce Experience Cloud notification framework. Email templates are Marketing Cloud HTML emails with ref IDs in the <code>PCP-xxx</code> namespace. In-portal bell notifications use the SF Bell component. Chatter-based notifications are internal only (PSM/PAM/VP). No SMS is currently planned.
+        </p>
+        <p>
+          <strong>Wiring Status:</strong> Rows marked with <span class="wired-yes">✓</span> indicate events that have corresponding wireframe screens in the portal. Rows marked with <span class="wired-planned">○ Planned</span> represent notifications that are in the roadmap but do not yet have dedicated UI screens in the wireframes.
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <script src="wf-nav.js"></script>
+</body>
+</html>

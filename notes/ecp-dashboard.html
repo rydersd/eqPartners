@@ -847,10 +847,10 @@
                 <strong>Decision:</strong> Yes — flagged as <strong>Phase 2</strong> feature. The telemetry data required (cross-connect utilization, power draw trends, cabinet occupancy patterns) won't exist at PCP launch because it depends on DCIM/SmartView integration that ships separately. However, the concept is compelling for portal stickiness and upsell.
             </p>
             <p>
-                <strong>Concept — "Smart Insights" Widget:</strong> An Einstein-powered (or external ML) recommendations card on the ECP Dashboard that surfaces actionable cost optimizations. Examples: "Save $3,200/mo by consolidating 3 underutilized cross-connects from 10G to 1G ports" or "Based on DC5 growth trend, you'll need additional cabinet capacity in ~4 months — pre-configured quote available." Could also flag waste patterns: "4 cross-connects in SV5 running at 12% utilization — review for decommission."
+                <strong>Concept — "Smart Insights" Widget:</strong> An Agentforce-powered (or external ML) recommendations card on the ECP Dashboard that surfaces actionable cost optimizations. Examples: "Save $3,200/mo by consolidating 3 underutilized cross-connects from 10G to 1G ports" or "Based on DC5 growth trend, you'll need additional cabinet capacity in ~4 months — pre-configured quote available." Could also flag waste patterns: "4 cross-connects in SV5 running at 12% utilization — review for decommission."
             </p>
             <p>
-                <strong>Prerequisite:</strong> Requires minimum 6 months of telemetry history for pattern detection. ML model needs training data across multiple customers (anonymized) to establish baseline utilization norms by service type and metro. Consider Salesforce Einstein Analytics or external model served via Heroku/AWS endpoint.
+                <strong>Prerequisite:</strong> Requires minimum 6 months of telemetry history for pattern detection. ML model needs training data across multiple customers (anonymized) to establish baseline utilization norms by service type and metro. Consider Salesforce Agentforce Analytics or external model served via Heroku/AWS endpoint.
             </p>
             <p>
                 <strong>UX Placement:</strong> Dashboard card between KPIs and Deployments sections. Show 2-3 top recommendations with estimated savings. Link to full "Optimization Report" page (future build). Include "Dismiss" and "Remind me later" actions per recommendation.
