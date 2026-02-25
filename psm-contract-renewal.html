@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agreement Renewal — TechCorp Solutions — Equinix PCP</title>
+<link rel="stylesheet" href="wireframe.css">
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  background: var(--wf-canvas, #f5f7fb);
+}
+
+.slds-page {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.slds-global-header {
+  background: var(--wf-ink, #1e2a3a);
+  color: var(--wf-surface, #edf1f7);
+  padding: 0 16px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.slds-global-header__waffle {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.slds-global-header__waffle svg {
+  width: 20px;
+  height: 20px;
+}
+
+.slds-global-header__app {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.slds-global-header__app-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--wf-accent, #3d6daa);
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.slds-global-nav {
+  display: flex;
+  gap: 0;
+  flex: 1;
+  margin-left: 16px;
+}
+
+.slds-global-nav__item {
+  color: rgba(255,255,255,0.7);
+  text-decoration: none;
+  padding: 16px 16px;
+  font-size: 13px;
+  border-bottom: 3px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.slds-global-nav__item:hover {
+  color: var(--wf-surface, #edf1f7);
+  background: rgba(255,255,255,0.05);
+}
+
+.slds-global-nav__item.active {
+  color: var(--wf-surface, #edf1f7);
+  border-bottom-color: var(--wf-accent, #3d6daa);
+}
+
+.slds-global-header__search {
+  flex: 1;
+  max-width: 300px;
+}
+
+.slds-global-header__search input {
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: 2px;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.1);
+  color: var(--wf-surface, #edf1f7);
+  font-size: 13px;
+}
+
+.slds-global-header__search input::placeholder {
+  color: rgba(255,255,255,0.5);
+}
+
+.slds-global-header__actions {
+  display: flex;
+  gap: 16px;
+  margin-left: auto;
+}
+
+.slds-global-header__action {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 2px;
+  font-size: 16px;
+}
+
+.slds-global-header__action:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.slds-main {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  gap: 16px;
+}
+
+.slds-sidebar {
+  width: 280px;
+  flex-shrink: 0;
+  background: var(--wf-surface, #edf1f7);
+  border: 1px solid var(--gray-border, #d3dce8);
+  border-radius: 4px;
+  overflow-y: auto;
+}
+
+.slds-sidebar__nav {
+  list-style: none;
+  margin: 0;
+  padding: 12px 0;
+}
+
+.slds-sidebar__nav-item {
+  padding: 0;
+}
+
+.slds-sidebar__nav-link {
+  display: block;
+  padding: 12px 16px;
+  color: var(--wf-ink, #1e2a3a);
+  text-decoration: none;
+  font-size: 13px;
+  border-left: 3px solid transparent;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.slds-sidebar__nav-link:hover {
+  background: rgba(0,0,0,0.02);
+  border-left-color: var(--wf-accent, #3d6daa);
+}
+
+.slds-sidebar__nav-link.active {
+  background: rgba(61, 109, 170, 0.08);
+  border-left-color: var(--wf-accent, #3d6daa);
+  color: var(--wf-accent, #3d6daa);
+  font-weight: 600;
+}
+
+.slds-sidebar__section-label {
+  padding: 16px 16px 8px 16px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--wf-muted, #6b7f99);
+  margin-top: 8px;
+}
+
+.slds-content {
+  flex: 1;
+  display: flex;
+  gap: 16px;
+}
+
+.slds-content-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.slds-content-sidebar {
+  width: 320px;
+  flex-shrink: 0;
+}
+
+.slds-design-notes__title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--wf-red, #8b4553);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.slds-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.slds-badge--success {
+  background: #0f8740;
+  color: white;
+}
+
+.slds-badge--brand {
+  background: var(--wf-accent, #3d6daa);
+  color: white;
+}
+
+.slds-badge--warning {
+  background: #ff9500;
+  color: white;
+}
+
+.slds-badge--neutral {
+  background: var(--wf-tint, #dce4ef);
+  color: var(--wf-text, #3b4f68);
+}
+
+/* Breadcrumbs */
+.slds-breadcrumbs {
+  margin-bottom: 16px;
+  font-size: 12px;
+  color: var(--wf-muted, #6b7f99);
+}
+
+.slds-breadcrumbs a {
+  color: var(--wf-accent, #3d6daa);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.slds-breadcrumbs a:hover {
+  text-decoration: underline;
+}
+
+.slds-breadcrumbs span {
+  margin: 0 6px;
+}
+
+/* Page Header */
+.record-header {
+  background: var(--wf-surface, #edf1f7);
+  border: 1px solid var(--gray-border, #d3dce8);
+  border-radius: 4px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.record-header h1 {
+  margin: 0 0 8px 0;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--wf-ink, #1e2a3a);
+}
+
+.record-header-meta {
+  display: flex;
+  gap: 24px;
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--wf-muted, #6b7f99);
+}
+
+.record-header-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.record-header-badges {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+/* Content Cards */
+.content-card {
+  background: white;
+  border: 1px solid var(--gray-border, #d3dce8);
+  border-radius: 4px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.content-card h2 {
+  margin: 0 0 16px 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--wf-ink, #1e2a3a);
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--gray-border, #d3dce8);
+}
+
+.content-card h3 {
+  margin: 0 0 12px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--wf-ink, #1e2a3a);
+}
+
+/* Renewal Context */
+.context-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.context-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.context-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--wf-muted, #6b7f99);
+  margin-bottom: 4px;
+}
+
+.context-value {
+  font-size: 14px;
+  color: var(--wf-ink, #1e2a3a);
+  font-weight: 500;
+}
+
+.context-note {
+  background-color: #f0f8ff;
+  border-left: 3px solid #0056b3;
+  padding: 12px;
+  border-radius: 3px;
+  font-size: 13px;
+  color: #003d8a;
+  margin-top: 12px;
+  line-height: 1.5;
+}
+
+/* Renewal Options */
+.renewal-options {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.option-card {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  border: 2px solid var(--gray-border, #d3dce8);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  align-items: flex-start;
+}
+
+.option-card:hover {
+  border-color: var(--wf-accent, #3d6daa);
+  background: rgba(61, 109, 170, 0.02);
+}
+
+.option-card.selected {
+  border-color: var(--wf-accent, #3d6daa);
+  background: rgba(61, 109, 170, 0.05);
+}
+
+.option-card input[type="radio"] {
+  margin-top: 2px;
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.option-content {
+  flex: 1;
+}
+
+.option-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--wf-ink, #1e2a3a);
+  margin: 0 0 8px 0;
+}
+
+.option-period {
+  font-size: 12px;
+  color: var(--wf-muted, #6b7f99);
+  margin-bottom: 8px;
+}
+
+.option-terms {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 8px;
+  font-size: 12px;
+}
+
+.term-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.term-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--wf-muted, #6b7f99);
+}
+
+.term-value {
+  font-weight: 600;
+  color: var(--wf-ink, #1e2a3a);
+}
+
+.option-note {
+  font-size: 11px;
+  color: var(--wf-muted, #6b7f99);
+  font-style: italic;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--gray-border, #d3dce8);
+}
+
+.option-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 600;
+  background: #0f8740;
+  color: white;
+  margin-top: 8px;
+}
+
+/* Terms Preview */
+.terms-preview {
+  margin-bottom: 16px;
+}
+
+.terms-note {
+  background-color: #f0f8ff;
+  border-left: 3px solid #0056b3;
+  padding: 12px;
+  border-radius: 3px;
+  font-size: 12px;
+  color: #003d8a;
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.terms-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 1px solid var(--gray-border, #d3dce8);
+  border-radius: 4px;
+  overflow: hidden;
+  font-size: 12px;
+}
+
+.term-row {
+  display: contents;
+}
+
+.term-row-label {
+  background: #f5f5f5;
+  padding: 12px;
+  font-weight: 600;
+  color: var(--wf-ink, #1e2a3a);
+  border-right: 1px solid var(--gray-border, #d3dce8);
+  border-bottom: 1px solid var(--gray-border, #d3dce8);
+}
+
+.term-row-value {
+  background: white;
+  padding: 12px;
+  color: var(--wf-ink, #1e2a3a);
+  border-bottom: 1px solid var(--gray-border, #d3dce8);
+}
+
+.terms-grid .term-row-label:nth-last-child(2),
+.terms-grid .term-row-value:nth-last-child(1) {
+  border-bottom: none;
+}
+
+/* Timeline */
+.timeline-section {
+  margin-top: 12px;
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-left: 2px solid var(--wf-accent, #3d6daa);
+  padding-left: 16px;
+  margin-left: 8px;
+}
+
+.timeline-item {
+  position: relative;
+  padding: 12px 0;
+  font-size: 12px;
+  color: var(--wf-ink, #1e2a3a);
+  line-height: 1.5;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: var(--wf-accent, #3d6daa);
+  border: 2px solid white;
+  border-radius: 50%;
+  left: -21px;
+  top: 14px;
+}
+
+.timeline-item strong {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--wf-ink, #1e2a3a);
+}
+
+/* History Table */
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.history-table thead {
+  background: #f5f5f5;
+}
+
+.history-table th {
+  padding: 12px;
+  text-align: left;
+  font-weight: 700;
+  color: var(--wf-ink, #1e2a3a);
+  border: 1px solid var(--gray-border, #d3dce8);
+}
+
+.history-table td {
+  padding: 12px;
+  border: 1px solid var(--gray-border, #d3dce8);
+  color: var(--wf-ink, #1e2a3a);
+}
+
+.history-table tbody tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+.history-table tbody tr:hover {
+  background: #f0f8ff;
+}
+
+.history-table a {
+  color: var(--wf-accent, #3d6daa);
+  text-decoration: none;
+}
+
+.history-table a:hover {
+  text-decoration: underline;
+}
+
+/* Sidebar Cards */
+.sidebar-card {
+  background: white;
+  border: 1px solid var(--gray-border, #d3dce8);
+  border-radius: 4px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.sidebar-card h3 {
+  margin: 0 0 12px 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--wf-ink, #1e2a3a);
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--gray-border, #d3dce8);
+}
+
+.sidebar-card p {
+  margin: 0 0 8px 0;
+  font-size: 12px;
+  color: var(--wf-ink, #1e2a3a);
+  line-height: 1.5;
+}
+
+.sidebar-card p:last-child {
+  margin-bottom: 0;
+}
+
+/* Urgency Card */
+.urgency-indicator {
+  background: white;
+  border: 1px solid var(--gray-border, #d3dce8);
+  border-radius: 4px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.urgency-days {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--wf-ink, #1e2a3a);
+  margin-bottom: 8px;
+}
+
+.urgency-bar {
+  width: 100%;
+  height: 6px;
+  background: #e0e0e0;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.urgency-bar-fill {
+  height: 100%;
+  background: #0f8740;
+  width: 20%;
+}
+
+.urgency-text {
+  font-size: 11px;
+  color: var(--wf-muted, #6b7f99);
+  line-height: 1.5;
+  margin-bottom: 8px;
+}
+
+.urgency-warning {
+  background: #fff3cd;
+  border-left: 3px solid #ff9500;
+  padding: 8px;
+  border-radius: 2px;
+  font-size: 11px;
+  color: #8b5900;
+  line-height: 1.4;
+}
+
+/* Partner Contact Card */
+.contact-item {
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--gray-border, #d3dce8);
+}
+
+.contact-item:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.contact-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--wf-ink, #1e2a3a);
+  margin-bottom: 4px;
+}
+
+.contact-title {
+  font-size: 11px;
+  color: var(--wf-muted, #6b7f99);
+}
+
+.contact-info {
+  font-size: 11px;
+  color: var(--wf-accent, #3d6daa);
+  margin-top: 4px;
+}
+
+/* Related Records */
+.related-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.related-item {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--gray-border, #d3dce8);
+  font-size: 12px;
+}
+
+.related-item:last-child {
+  border-bottom: none;
+}
+
+.related-item a {
+  color: var(--wf-accent, #3d6daa);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.related-item a:hover {
+  text-decoration: underline;
+}
+
+.related-label {
+  display: block;
+  font-size: 11px;
+  color: var(--wf-muted, #6b7f99);
+  margin-bottom: 3px;
+  font-weight: 600;
+}
+
+/* Action Bar */
+.action-bar {
+  position: sticky;
+  bottom: 0;
+  background: white;
+  border-top: 1px solid var(--gray-border, #d3dce8);
+  padding: 16px;
+  display: flex;
+  gap: 12px;
+  box-shadow: 0 -2px 4px rgba(0,0,0,0.05);
+  z-index: 10;
+}
+
+.button {
+  padding: 10px 16px;
+  border: 1px solid var(--gray-border, #d3dce8);
+  background: white;
+  border-radius: 2px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.button:hover {
+  background: var(--wf-canvas, #f5f7fb);
+  border-color: var(--wf-muted, #6b7f99);
+}
+
+.button--primary {
+  background: #0f8740;
+  color: white;
+  border-color: #0f8740;
+}
+
+.button--primary:hover {
+  background: #0a6b32;
+  border-color: #0a6b32;
+}
+
+.button--secondary {
+  background: var(--wf-surface, #edf1f7);
+  color: var(--wf-ink, #1e2a3a);
+  border-color: var(--gray-border, #d3dce8);
+}
+
+.button--secondary:hover {
+  background: var(--wf-canvas, #f5f7fb);
+}
+
+.button-group {
+  display: flex;
+  gap: 12px;
+  margin-left: auto;
+}
+
+.button-link {
+  color: var(--wf-accent, #3d6daa);
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 10px 0;
+}
+
+.button-link:hover {
+  text-decoration: underline;
+}
+
+/* Annotation Box */
+.design-annotation {
+  background: #fef8e7;
+  border-left: 4px solid #cc9900;
+  padding: 12px;
+  border-radius: 2px;
+  font-size: 11px;
+  color: #7a6b00;
+  line-height: 1.5;
+  margin-top: 16px;
+}
+
+.design-annotation strong {
+  display: block;
+  margin-bottom: 6px;
+  color: #5a4c00;
+}
+
+/* Responsive */
+@media (max-width: 1400px) {
+  .slds-content {
+    flex-direction: column;
+  }
+
+  .slds-content-sidebar {
+    width: 100%;
+  }
+
+  .context-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .option-terms {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .terms-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .term-row-label {
+    border-right: none;
+  }
+}
+</style>
+</head>
+<body>
+<div class="slds-page">
+  <!-- Global Header -->
+  <header class="slds-global-header">
+    <a href="#" class="slds-global-header__waffle" aria-label="Application menu">
+      ☰
+    </a>
+    <div class="slds-global-header__app">
+      <div class="slds-global-header__app-icon">ECP</div>
+      <span>Partner Connect</span>
+    </div>
+    <nav class="slds-global-nav">
+      <a href="#" class="slds-global-nav__item">Portal</a>
+      <a href="#" class="slds-global-nav__item active">PSM</a>
+      <a href="#" class="slds-global-nav__item">Admin</a>
+    </nav>
+    <div class="slds-global-header__search">
+      <input type="text" placeholder="Search partners..." aria-label="Search partners">
+    </div>
+    <div class="slds-global-header__actions">
+      <div class="slds-global-header__action" aria-label="Notifications" title="Notifications">🔔</div>
+      <div class="slds-global-header__action" aria-label="User profile" title="Profile">👤</div>
+    </div>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="slds-main">
+    <!-- Left Sidebar Nav -->
+    <aside class="slds-sidebar">
+      <nav class="slds-sidebar__nav">
+        <div class="slds-sidebar__section-label">Workspace</div>
+        <div class="slds-sidebar__nav-item">
+          <a href="#" class="slds-sidebar__nav-link">Home</a>
+        </div>
+        <div class="slds-sidebar__nav-item">
+          <a href="#" class="slds-sidebar__nav-link">Partner Portfolio</a>
+        </div>
+        <div class="slds-sidebar__nav-item">
+          <a href="#" class="slds-sidebar__nav-link active">Program Agreements</a>
+        </div>
+        <div class="slds-sidebar__nav-item">
+          <a href="#" class="slds-sidebar__nav-link">Escalations</a>
+        </div>
+        <div class="slds-sidebar__nav-item">
+          <a href="#" class="slds-sidebar__nav-link">QBR Minutes</a>
+        </div>
+        <div class="slds-sidebar__nav-item">
+          <a href="#" class="slds-sidebar__nav-link">Reports</a>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Main Content & Right Sidebar -->
+    <div class="slds-content">
+      <!-- Main Content -->
+      <div class="slds-content-main">
+        <!-- Breadcrumbs -->
+        <div class="slds-breadcrumbs">
+          <a href="#">PSM Home</a>
+          <span>&gt;</span>
+          <a href="#">Program Agreements</a>
+          <span>&gt;</span>
+          <a href="#">PPA-2022-TC-0089</a>
+          <span>&gt;</span>
+          <span>Renewal</span>
+        </div>
+
+        <!-- Page Header -->
+        <div class="record-header">
+          <div>
+            <h1>Agreement Renewal — PPA-2022-TC-0089</h1>
+            <div class="record-header-meta">
+              <div class="record-header-meta-item">TechCorp Solutions</div>
+              <div class="record-header-meta-item">Silver Tier</div>
+              <div class="record-header-meta-item">Expires May 15, 2026</div>
+            </div>
+            <div class="record-header-badges">
+              <span class="slds-badge slds-badge--neutral">RNW-2026-TC-0089</span>
+              <span class="slds-badge slds-badge--success">Renewal In Progress</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 1. Renewal Context -->
+        <div class="content-card">
+          <h2>Renewal Context</h2>
+          <div class="context-grid">
+            <div class="context-item">
+              <span class="context-label">Current Tier</span>
+              <span class="context-value">Silver</span>
+            </div>
+            <div class="context-item">
+              <span class="context-label">Agreement Expires</span>
+              <span class="context-value">May 15, 2026 (79 days)</span>
+            </div>
+            <div class="context-item">
+              <span class="context-label">Revenue YTD</span>
+              <span class="context-value">$680K (85% of $800K target)</span>
+            </div>
+            <div class="context-item">
+              <span class="context-label">Certifications Active</span>
+              <span class="context-value">3/3 (all current)</span>
+            </div>
+            <div class="context-item">
+              <span class="context-label">Last QBR</span>
+              <span class="context-value">Dec 2, 2025</span>
+            </div>
+            <div class="context-item">
+              <span class="context-label">Open Escalations</span>
+              <span class="context-value">0</span>
+            </div>
+          </div>
+          <div class="context-note">
+            <strong>Recommendation:</strong> TechCorp meets Silver renewal threshold. Review for potential Gold upgrade — revenue 85% of target, certifications current, zero escalations in 12 months.
+          </div>
+        </div>
+
+        <!-- 2. Renewal Options -->
+        <div class="content-card">
+          <h2>Renewal Options</h2>
+          <div class="renewal-options">
+            <!-- Option A: Renew at Silver -->
+            <div class="option-card selected" role="radiogroup" aria-label="Renewal option A">
+              <input type="radio" name="renewal-option" id="option-a" value="silver-same" checked aria-label="Renew at Silver — Same Terms" role="radio">
+              <div class="option-content">
+                <p class="option-title">Renew at Silver — Same Terms</p>
+                <p class="option-period">New period: May 16, 2026 – May 15, 2029 (3-year term)</p>
+                <div class="option-terms">
+                  <div class="term-item">
+                    <span class="term-label">Commission</span>
+                    <span class="term-value">5%</span>
+                  </div>
+                  <div class="term-item">
+                    <span class="term-label">MDF</span>
+                    <span class="term-value">$20,000</span>
+                  </div>
+                  <div class="term-item">
+                    <span class="term-label">Certs Required</span>
+                    <span class="term-value">3</span>
+                  </div>
+                </div>
+                <div class="option-note">DocuSign template: TMPL-RENEW-SILVER-V2</div>
+                <span class="option-badge">✓ Recommended</span>
+                <div class="option-note">Partner meets Silver renewal criteria; no renegotiation needed.</div>
+              </div>
+            </div>
+
+            <!-- Option B: Renew at Silver - Updated Terms -->
+            <div class="option-card" role="radiogroup" aria-label="Renewal option B">
+              <input type="radio" name="renewal-option" id="option-b" value="silver-custom" aria-label="Renew at Silver — Updated Terms" role="radio">
+              <div class="option-content">
+                <p class="option-title">Renew at Silver — Updated Terms</p>
+                <p class="option-period">New period: May 16, 2026 – May 15, 2029</p>
+                <div class="option-terms">
+                  <div class="term-item">
+                    <span class="term-label">Commission</span>
+                    <span class="term-value">Editable</span>
+                  </div>
+                  <div class="term-item">
+                    <span class="term-label">MDF</span>
+                    <span class="term-value">Editable</span>
+                  </div>
+                  <div class="term-item">
+                    <span class="term-label">Certs Required</span>
+                    <span class="term-value">Editable</span>
+                  </div>
+                </div>
+                <div class="option-note">DocuSign template: TMPL-AMD-RENEW-CUSTOM</div>
+                <div class="option-note">Allows manual edit of commission, MDF, and cert requirements. Requires change reason and PAM authorization.</div>
+              </div>
+            </div>
+
+            <!-- Option C: Upgrade to Gold -->
+            <div class="option-card" role="radiogroup" aria-label="Renewal option C">
+              <input type="radio" name="renewal-option" id="option-c" value="gold-upgrade" aria-label="Upgrade to Gold at Renewal" role="radio">
+              <div class="option-content">
+                <p class="option-title">Upgrade to Gold at Renewal</p>
+                <p class="option-period">New period: May 16, 2026 – May 15, 2029</p>
+                <div class="option-terms">
+                  <div class="term-item">
+                    <span class="term-label">Commission</span>
+                    <span class="term-value">8%</span>
+                  </div>
+                  <div class="term-item">
+                    <span class="term-label">MDF</span>
+                    <span class="term-value">$40,000</span>
+                  </div>
+                  <div class="term-item">
+                    <span class="term-label">Certs Required</span>
+                    <span class="term-value">5</span>
+                  </div>
+                </div>
+                <div class="option-note">Requires partner to achieve 2 additional certifications within 90 days of renewal. Gold upgrade subject to PAM and VP approval.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Renewal Terms Preview -->
+        <div class="content-card">
+          <h2>Renewal Terms Preview</h2>
+          <div class="terms-note">Preview updates when you change Renewal Option above.</div>
+          <div class="terms-grid">
+            <div class="term-row">
+              <div class="term-row-label">Commission Rate</div>
+              <div class="term-row-value">5%</div>
+            </div>
+            <div class="term-row">
+              <div class="term-row-label">Market Development Fund (MDF)</div>
+              <div class="term-row-value">$20,000 annual</div>
+            </div>
+            <div class="term-row">
+              <div class="term-row-label">Required Certifications</div>
+              <div class="term-row-value">3 (all current; no new certs required)</div>
+            </div>
+            <div class="term-row">
+              <div class="term-row-label">Deal Registration Protection</div>
+              <div class="term-row-value">120 days post-announcement</div>
+            </div>
+            <div class="term-row">
+              <div class="term-row-label">QBR Cadence</div>
+              <div class="term-row-value">Quarterly (Feb, May, Aug, Nov)</div>
+            </div>
+            <div class="term-row">
+              <div class="term-row-label">Notice Period (Non-renewal)</div>
+              <div class="term-row-value">180 days</div>
+            </div>
+            <div class="term-row">
+              <div class="term-row-label">Governing Law</div>
+              <div class="term-row-value">Commonwealth of Delaware</div>
+            </div>
+            <div class="term-row">
+              <div class="term-row-label">Auto-renewal</div>
+              <div class="term-row-value">Yes (1-year successive terms, unless terminated)</div>
+            </div>
+          </div>
+          <div class="terms-note" style="margin-top: 12px;">Full draft available after initiating DocuSign.</div>
+        </div>
+
+        <!-- 4. Renewal Timeline -->
+        <div class="content-card">
+          <h2>Renewal Timeline & Next Steps</h2>
+          <div class="timeline-section">
+            <div class="timeline">
+              <div class="timeline-item">
+                <strong>1. Draft agreement generated</strong>
+                Immediately. Salesforce Document Builder uses TMPL-RENEW-SILVER-V2 to auto-generate renewal agreement.
+              </div>
+              <div class="timeline-item">
+                <strong>2. PAM review</strong>
+                Optional for same-tier renewal. Required for Gold upgrade or custom terms. PAM: Alex Rivera.
+              </div>
+              <div class="timeline-item">
+                <strong>3. DocuSign sent to partner</strong>
+                Recipient: Sarah Mitchell, VP Operations (on file). Signing link valid for 14 days.
+              </div>
+              <div class="timeline-item">
+                <strong>4. Partner signature window</strong>
+                14 days to complete. Reminders sent at 7 days, 11 days, and 13 days.
+              </div>
+              <div class="timeline-item">
+                <strong>5. Equinix countersign</strong>
+                Marcus Chen (you) countersigns after partner signature received.
+              </div>
+              <div class="timeline-item">
+                <strong>6. New agreement activated</strong>
+                May 16, 2026 at 00:00 UTC. Prior agreement (PPA-2022-TC-0089) is archived with Status = "Expired".
+              </div>
+              <div class="timeline-item">
+                <strong>7. Partner notification</strong>
+                Email sent to TechCorp with renewal summary. CC: Partnership champion David Chen (CRO).
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Prior Renewal History -->
+        <div class="content-card">
+          <h2>Prior Agreement History</h2>
+          <table class="history-table">
+            <thead>
+              <tr>
+                <th>Agreement ID</th>
+                <th>Period</th>
+                <th>Tier</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><a href="#">PPA-2022-TC-0089</a></td>
+                <td>May 16, 2022 – May 15, 2026</td>
+                <td>Silver</td>
+                <td>Expiring (Active)</td>
+              </tr>
+              <tr>
+                <td><a href="#">PPA-2019-TC-0047</a></td>
+                <td>May 16, 2019 – May 15, 2022</td>
+                <td>Silver</td>
+                <td>Archived</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Design Annotation -->
+        <div class="design-annotation">
+          <strong>Design Note:</strong> Renewal is a new Agreement__c record (child of Account), not a modification of the existing one. The expiring record is archived with Status = "Expired". TMPL-RENEW-SILVER-V2 is a Salesforce Document Builder template — not an Agentforce DocGen template. Renewal records use the RNW- prefix to distinguish from standard agreements (PPA-) and amendments (AMD-). The 90/60/30 day expiry alerts in psm-contracts.html trigger this screen. Workflow rule: When Agreement__c.Expiry_Date__c ≤ TODAY() + 90 AND Status = "Active" AND Renewal_Initiated__c = FALSE, create PSM task.
+        </div>
+      </div>
+
+      <!-- Right Sidebar -->
+      <aside class="slds-content-sidebar">
+        <!-- Urgency Card -->
+        <div class="urgency-indicator">
+          <div class="urgency-days">79 days</div>
+          <div class="urgency-bar">
+            <div class="urgency-bar-fill"></div>
+          </div>
+          <div class="urgency-text">
+            <strong>Time to expiry:</strong> Initiation deadline March 15, 2026 to allow 14-day signing window + buffer.
+          </div>
+          <div class="urgency-warning">
+            ⚠ If agreement lapses, partner loses deal registration protection and MDF access immediately.
+          </div>
+        </div>
+
+        <!-- Partner Contact Card -->
+        <div class="sidebar-card">
+          <h3>Partner Contact</h3>
+          <div class="contact-item">
+            <div class="contact-name">Sarah Mitchell</div>
+            <div class="contact-title">VP Operations</div>
+            <div class="contact-info">
+              📧 sarah.mitchell@techcorp.com<br>
+              📞 (555) 123-4567
+            </div>
+            <div class="contact-title" style="margin-top: 6px; font-style: italic;">DocuSign signatory on prior agreement</div>
+          </div>
+          <div style="padding-top: 8px; border-top: 1px solid var(--gray-border); margin-top: 8px;">
+            <div class="contact-item" style="padding-bottom: 0; border-bottom: none;">
+              <div class="contact-name">David Chen</div>
+              <div class="contact-title">CRO (Partnership Champion)</div>
+              <div class="contact-title" style="margin-top: 4px; font-style: italic;">Include on completion notification</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Related Records -->
+        <div class="sidebar-card">
+          <h3>Related Records</h3>
+          <ul class="related-list">
+            <li class="related-item">
+              <span class="related-label">Expiring Agreement</span>
+              <a href="#">PPA-2022-TC-0089</a>
+            </li>
+            <li class="related-item">
+              <span class="related-label">Prior Agreement</span>
+              <a href="#">PPA-2019-TC-0047</a>
+            </li>
+            <li class="related-item">
+              <span class="related-label">Partner Account</span>
+              <a href="#">TechCorp Solutions</a>
+            </li>
+            <li class="related-item">
+              <span class="related-label">Last QBR Record</span>
+              <a href="#">QBR-2025-DEC-TC</a>
+            </li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- Action Bar -->
+  <div class="action-bar">
+    <button class="button button--secondary" aria-label="Save renewal draft">Save Draft</button>
+    <div class="button-group">
+      <a class="button-link" aria-label="Escalate to PAM for approval" title="Use for upgrades or custom terms">Escalate to PAM</a>
+      <button class="button button--primary" aria-label="Initiate renewal and send DocuSign to partner">Initiate Renewal</button>
+    </div>
+  </div>
+</div>
+
+<script src="wf-nav.js"></script>
+</body>
+</html>
