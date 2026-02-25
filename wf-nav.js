@@ -82,7 +82,22 @@
         { file: 'psm-pop-review',          label: 'PoP Review' },
         { file: 'psm-reimbursement',       label: 'Reimbursement' },
         { file: 'psm-program-admin',       label: 'Program Admin' },
-        { file: 'psm-encourage-modal',     label: 'Encourage Modal' }
+        { file: 'psm-encourage-modal',     label: 'Encourage Modal' },
+        { file: 'psm-escalation-brief',    label: 'Escalation Brief' }
+      ]
+    },
+    {
+      id: 'pam',
+      label: 'PAM',
+      persona: 'pam',
+      personaLabel: 'PAM',
+      personaName: 'J. Patterson · Equinix',
+      items: [
+        { file: 'pam-dashboard',          label: 'PAM Dashboard' },
+        { file: 'pam-partner-portfolio',  label: 'Partner Portfolio' },
+        { file: 'pam-partner-account',    label: 'Partner Account (PAM view)' },
+        { file: 'pam-tier-management',    label: 'Tier Governance' },
+        { file: 'pam-program-agreements', label: 'Program Agreements' }
       ]
     },
 

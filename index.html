@@ -221,13 +221,13 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
             onclick="switchTab('internal')">
       <span>Internal — SFDC</span>
       <span class="tab-plat">Salesforce Lightning</span>
-      <span class="tab-count">2</span>
+      <span class="tab-count">3</span>
     </button>
   </div>
 
-  <!-- Tab panel: Internal SFDC (PSM + AE) — shown first in DOM to match current branch order -->
+  <!-- Tab panel: Internal SFDC (PSM + AE + PAM) — shown first in DOM to match current branch order -->
   <div class="tab-panel" id="tab-panel-internal" role="tabpanel" aria-labelledby="tab-btn-internal">
-  <div class="sitemap-grid sitemap-grid--two-col">
+  <div class="sitemap-grid">
 
 <!-- ═══════════════════════════════════════════════════
      BRANCH 1: INTERNAL — PSM / Channel Manager
@@ -812,6 +812,150 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
         <div class="child"><span class="child-type ct-card">Card</span> Partner visibility — what CloudBridge can see in their portal</div>
         <div class="child"><span class="child-type ct-action">Action</span> Escalate to IBX Manager</div>
         <div class="child"><span class="child-type ct-action">Action</span> Contact IBX Team · Export PDF</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     BRANCH 1c: INTERNAL — PAM Experience
+     Platform: Salesforce Lightning
+     ═══════════════════════════════════════════════════ -->
+<div class="branch">
+  <div class="branch-header internal">
+    <span>🔒</span> Internal — PAM Experience
+    <span class="plat-tag">Salesforce Lightning</span>
+  </div>
+  <div class="branch-body">
+
+    <div style="padding:6px 10px;background:var(--wf-surface);border:1px solid var(--wf-line);border-radius:4px;margin-bottom:4px;font-size:.72rem;color:var(--wf-text);line-height:1.5;">
+      <strong style="color:var(--wf-accent);">Salesforce Lightning App — PAM Experience.</strong>
+      Partner Account Managers handle commercial governance: tier qualification, program agreements, JBP oversight, partner recruitment, and escalation management. PAM is strategic; PSM is operational — they share the same partner account records but use different page layouts and nav apps.
+    </div>
+
+    <!-- ── Dashboard & Portfolio ────────────────────── -->
+    <div style="margin:10px 0 5px 0;padding:4px 10px;background:linear-gradient(90deg,#1a2535,#28394d);color:#fff;font-size:.67rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:6px;border-radius:3px;">
+      <span style="background:rgba(255,255,255,.18);padding:1px 5px;border-radius:2px;font-size:.57rem;font-weight:600;letter-spacing:.03em;">⚡ SF NAV</span>
+      Home &amp; Portfolio
+      <span style="font-size:.6rem;font-weight:400;opacity:.6;margin-left:auto;">2 pages</span>
+    </div>
+
+    <div class="node">
+      <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="node-type t-dashboard" title="Dashboard">D</div>
+        <span class="node-label">PAM Dashboard</span>
+        <a href="pam-dashboard.html" class="node-mockup-link" title="View Mockup">→</a>
+        <span class="node-chevron">›</span>
+      </div>
+      <div class="node-children">
+        <div class="child"><span class="child-type ct-kpi">KPI</span> Managed Partners · Total Revenue · Tier Reviews Due · Agreements Expiring · Escalations</div>
+        <div class="child"><span class="child-type ct-table">Table</span> Partners needing attention — agreement expiry, tier risk, open escalations</div>
+        <div class="child"><span class="child-type ct-chart">Chart</span> Portfolio by tier (Gold / Silver / Bronze bar)</div>
+        <div class="child"><span class="child-type ct-chart">Chart</span> Partner-sourced pipeline funnel by stage</div>
+        <div class="child"><span class="child-type ct-card">Card</span> Recent activity feed · Upcoming calendar</div>
+      </div>
+    </div>
+
+    <div class="node">
+      <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="node-type t-list" title="List View">L</div>
+        <span class="node-label">Partner Portfolio</span>
+        <a href="pam-partner-portfolio.html" class="node-mockup-link" title="View Mockup">→</a>
+        <span class="node-chevron">›</span>
+      </div>
+      <div class="node-children">
+        <div class="child"><span class="child-type ct-table">Table</span> All managed partners: tier, type, score, revenue YTD, health, tier review date, agreement status</div>
+        <div class="child"><span class="child-type ct-filter">Filter</span> Tier · Type · Region · Health · Sort by revenue or score</div>
+        <div class="child"><span class="child-type ct-action">Action</span> Export CSV · + Recruit Partner</div>
+      </div>
+    </div>
+
+    <!-- ── Partner Account Record ─────────────────── -->
+    <div style="margin:6px 0 3px 0;padding:3px 8px;background:#e8eef5;border-left:2px solid var(--wf-accent);font-size:.63rem;font-weight:700;color:var(--wf-accent);text-transform:uppercase;letter-spacing:.05em;">Partner Account Record (PAM view)</div>
+
+    <div class="node">
+      <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="node-type t-record" title="Record Page">R</div>
+        <span class="node-label">Partner Account — PAM Strategic View</span>
+        <a href="pam-partner-account.html" class="node-mockup-link" title="View Mockup">→</a>
+        <span class="node-chevron">›</span>
+      </div>
+      <div class="node-children">
+        <div class="child"><span class="child-type ct-tab">Tab</span> Overview · Agreements · Tier History · JBP / Goals · Contacts · Escalations · Activity</div>
+        <div class="child"><span class="child-type ct-card">Card</span> Partnership Health scorecard (composite 0–100)</div>
+        <div class="child"><span class="child-type ct-card">Card</span> Program commitment tracking vs Gold/Silver/Bronze thresholds</div>
+        <div class="child"><span class="child-type ct-card">Card</span> Left rail: PSM owner · Active agreement · Tier record · JBP · Open escalations</div>
+        <div class="child"><span class="child-type ct-alert">Alert</span> Design note: Same SF Account object as PSM view — different page layout assigned by profile</div>
+      </div>
+    </div>
+
+    <!-- ── Tier Governance ────────────────────────── -->
+    <div style="margin:10px 0 5px 0;padding:4px 10px;background:linear-gradient(90deg,#1a2535,#28394d);color:#fff;font-size:.67rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:6px;border-radius:3px;">
+      <span style="background:rgba(255,255,255,.18);padding:1px 5px;border-radius:2px;font-size:.57rem;font-weight:600;letter-spacing:.03em;">⚡ SF NAV</span>
+      Tier Governance
+      <span style="font-size:.6rem;font-weight:400;opacity:.6;margin-left:auto;">1 page</span>
+    </div>
+
+    <div class="node">
+      <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="node-type t-dashboard" title="Dashboard">D</div>
+        <span class="node-label">Tier Governance</span>
+        <a href="pam-tier-management.html" class="node-mockup-link" title="View Mockup">→</a>
+        <span class="node-chevron">›</span>
+      </div>
+      <div class="node-children">
+        <div class="child"><span class="child-type ct-kpi">KPI</span> Due for review · Upgrade eligible · Downgrade risk · Probationary hold</div>
+        <div class="child"><span class="child-type ct-table">Table</span> Tier review queue: partner, current tier, score, revenue, certs, recommendation</div>
+        <div class="child"><span class="child-type ct-action">Action</span> Approve upgrade / Confirm downgrade / Override / Set remediation plan</div>
+        <div class="child"><span class="child-type ct-table">Table</span> Tier movement history (last 4 quarters)</div>
+        <div class="child"><span class="child-type ct-card">Card</span> Tier threshold config (read-only; editable in PSM Admin)</div>
+      </div>
+    </div>
+
+    <!-- ── Agreements ─────────────────────────────── -->
+    <div style="margin:10px 0 5px 0;padding:4px 10px;background:linear-gradient(90deg,#1a2535,#28394d);color:#fff;font-size:.67rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:6px;border-radius:3px;">
+      <span style="background:rgba(255,255,255,.18);padding:1px 5px;border-radius:2px;font-size:.57rem;font-weight:600;letter-spacing:.03em;">⚡ SF NAV</span>
+      Agreements
+      <span style="font-size:.6rem;font-weight:400;opacity:.6;margin-left:auto;">1 page</span>
+    </div>
+
+    <div class="node">
+      <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="node-type t-settings" title="Settings">S</div>
+        <span class="node-label">Program Agreements</span>
+        <a href="pam-program-agreements.html" class="node-mockup-link" title="View Mockup">→</a>
+        <span class="node-chevron">›</span>
+      </div>
+      <div class="node-children">
+        <div class="child"><span class="child-type ct-kpi">KPI</span> Active · Expiring 90d · Pending countersign · No agreement</div>
+        <div class="child"><span class="child-type ct-table">Table</span> Agreement ID, partner, tier, type, effective/expiry, status, e-sign state</div>
+        <div class="child"><span class="child-type ct-action">Action</span> Generate New Agreement (Salesforce Document Builder)</div>
+        <div class="child"><span class="child-type ct-action">Action</span> Renew · View PDF · Send for countersignature (DocuSign integration)</div>
+        <div class="child"><span class="child-type ct-alert">Alert</span> Escalation briefs use Einstein DocGen — see psm-escalation-brief.html</div>
+      </div>
+    </div>
+
+    <!-- ── Escalation Brief ───────────────────────── -->
+    <div style="margin:6px 0 3px 0;padding:3px 8px;background:#f0e8f5;border-left:2px solid #7b2fbe;font-size:.63rem;font-weight:700;color:#6b21a8;text-transform:uppercase;letter-spacing:.05em;">Escalation Brief (PSM-generated, PAM/VP-consumed)</div>
+
+    <div class="node">
+      <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="node-type t-workflow" title="Workflow" style="background:#7b2fbe;">W</div>
+        <span class="node-label">Escalation Brief
+          <span style="font-size:.57rem;padding:1px 5px;border-radius:2px;background:#f0e8f5;color:#6b21a8;border:1px solid #c4b5fd;font-weight:700;margin-left:5px;white-space:nowrap;" title="Generated by Einstein Document Generation from Escalation__c + Account + Deal Reg records">✦ Einstein DocGen</span>
+        </span>
+        <a href="psm-escalation-brief.html" class="node-mockup-link" title="View Mockup">→</a>
+        <span class="node-chevron">›</span>
+      </div>
+      <div class="node-children">
+        <div class="child"><span class="child-type ct-card">Card</span> Partner snapshot: tier, revenue, health score, program commitments</div>
+        <div class="child"><span class="child-type ct-card">Card</span> Dispute details: DR at issue, TCV, commission exposure, conflicting claims, PSM assessment</div>
+        <div class="child"><span class="child-type ct-timeline">Timeline</span> Relationship history: key events, last QBR, prior escalations</div>
+        <div class="child"><span class="child-type ct-card">Card</span> Recommended talking points: 5 numbered, coaching notes per point</div>
+        <div class="child"><span class="child-type ct-action">Action</span> ✦ Generate with Einstein — uses Einstein Document Generation (Summer '24+)</div>
+        <div class="child"><span class="child-type ct-action">Action</span> Preview PDF · Download · Email to VP reviewer</div>
+        <div class="child"><span class="child-type ct-card">Card</span> Full implementation spec: object model, prompt template, SFDC config, estimated effort</div>
       </div>
     </div>
 

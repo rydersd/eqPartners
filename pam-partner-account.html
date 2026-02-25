@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CloudBridge Solutions — PAM Partner Account · Equinix PCP</title>
+<link rel="stylesheet" href="wireframe.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Salesforce Sans",sans-serif;background:var(--wf-canvas,#f5f7fb);color:var(--wf-ink,#1e2a3a);}
+header{background:var(--wf-ink,#1e2a3a);color:#fff;padding:0.875rem 2rem;}
+.hdr-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;}
+.logo{display:flex;align-items:center;gap:.625rem;font-size:1.375rem;font-weight:700;}
+nav{display:flex;gap:1.5rem;align-items:center;}
+nav a{color:rgba(255,255,255,.8);text-decoration:none;font-size:.875rem;padding:.375rem .625rem;border-radius:4px;transition:background .15s;}
+nav a:hover{background:rgba(255,255,255,.1);}
+nav a.active{background:var(--wf-accent,#3d6daa);color:#fff;}
+
+.container{max-width:1400px;margin:0 auto;padding:0 2rem;}
+.breadcrumb{padding:.75rem 0;font-size:.8125rem;color:var(--wf-text);}
+.breadcrumb a{color:var(--wf-accent);text-decoration:none;}
+.breadcrumb a:hover{text-decoration:underline;}
+
+/* Record header */
+.rec-hdr{background:#fff;border-bottom:1px solid var(--wf-line);padding:.75rem 2rem;}
+.rec-hdr-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem;}
+.rec-title{display:flex;align-items:center;gap:.875rem;}
+.rec-icon{width:44px;height:44px;background:var(--wf-accent,#3d6daa);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.25rem;flex-shrink:0;}
+.rec-name{font-size:1.25rem;font-weight:700;color:var(--wf-ink);}
+.rec-sub{font-size:.8125rem;color:var(--wf-text);margin-top:.125rem;}
+.rec-actions{display:flex;gap:.5rem;flex-wrap:wrap;}
+.btn{padding:.4375rem .875rem;border-radius:5px;font-size:.8125rem;cursor:pointer;font-family:inherit;font-weight:600;border:1px solid transparent;}
+.btn-primary{background:var(--wf-accent,#3d6daa);color:#fff;}
+.btn-secondary{background:#fff;border-color:var(--wf-line);color:var(--wf-ink);}
+.btn-warn{background:#fff;border-color:#e0c050;color:#7a5c00;}
+
+/* Tabs */
+.rec-tabs{background:#fff;border-bottom:1px solid var(--wf-line);}
+.rec-tabs-inner{max-width:1400px;margin:0 auto;padding:0 2rem;display:flex;gap:0;}
+.tab-item{padding:.625rem 1rem;font-size:.8125rem;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;color:var(--wf-text);white-space:nowrap;}
+.tab-item.active{border-bottom-color:var(--wf-accent);color:var(--wf-accent);}
+.tab-item:hover:not(.active){color:var(--wf-ink);}
+
+/* 3-col layout */
+.layout{display:grid;grid-template-columns:280px 1fr 320px;gap:1.25rem;padding:1.25rem 2rem;max-width:1400px;margin:0 auto;}
+@media(max-width:1200px){.layout{grid-template-columns:1fr 320px;}}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}}
+
+/* Left rail — related records */
+.rel-card{background:#fff;border:1px solid var(--wf-line);border-radius:6px;margin-bottom:.75rem;overflow:hidden;}
+.rel-card-title{font-size:.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--wf-text);padding:.5rem .75rem;background:var(--wf-surface);border-bottom:1px solid var(--wf-line);}
+.rel-row{display:flex;align-items:center;gap:.5rem;padding:.4375rem .75rem;font-size:.8125rem;}
+.rel-row+.rel-row{border-top:1px solid var(--wf-line);}
+.rel-icon{width:20px;height:20px;border-radius:3px;background:var(--wf-accent);color:#fff;font-size:.625rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.rel-link{color:var(--wf-accent);font-weight:600;text-decoration:none;font-size:.8125rem;}
+.rel-link:hover{text-decoration:underline;}
+.rel-meta{font-size:.6875rem;color:var(--wf-text);}
+
+/* Card */
+.card{background:#fff;border:1px solid var(--wf-line);border-radius:8px;margin-bottom:1rem;}
+.card-hdr{padding:.75rem 1rem;border-bottom:1px solid var(--wf-line);display:flex;align-items:center;justify-content:space-between;}
+.card-title{font-size:.875rem;font-weight:700;}
+.card-body{padding:1rem;}
+
+/* Field groups */
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:.75rem 1.5rem;}
+.field{display:flex;flex-direction:column;gap:.1875rem;}
+.field-label{font-size:.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--wf-text);}
+.field-val{font-size:.875rem;color:var(--wf-ink);}
+
+/* Score gauge */
+.score-row{display:flex;align-items:center;gap:.75rem;margin-bottom:.625rem;}
+.score-name{font-size:.8125rem;color:var(--wf-text);width:110px;}
+.score-bar-wrap{flex:1;background:var(--wf-canvas);border-radius:3px;height:8px;overflow:hidden;}
+.score-bar{height:100%;border-radius:3px;}
+.score-bar.high{background:#1d7a4e;}
+.score-bar.mid{background:#e07b00;}
+.score-bar.low{background:#c0392b;}
+.score-num{font-size:.8125rem;font-weight:700;width:28px;text-align:right;}
+
+.badge{display:inline-block;padding:.125rem .5rem;border-radius:3px;font-size:.6875rem;font-weight:700;}
+.badge-gold{background:#fff3cc;color:#8a5c00;}
+.badge-green{background:#e5f7ee;color:#1d7a4e;}
+.badge-yellow{background:#fff3cc;color:#8a5c00;}
+.badge-red{background:#fde8e8;color:#c0392b;}
+
+/* Activity feed */
+.feed-item{display:flex;gap:.75rem;padding:.625rem 0;border-bottom:1px solid var(--wf-line);}
+.feed-item:last-child{border-bottom:none;}
+.feed-avatar{width:28px;height:28px;border-radius:50%;background:var(--wf-accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.6875rem;font-weight:700;flex-shrink:0;}
+.feed-body{flex:1;}
+.feed-text{font-size:.8125rem;line-height:1.4;}
+.feed-meta{font-size:.6875rem;color:var(--wf-text);margin-top:.1875rem;}
+
+/* Note on PAM vs PSM distinction */
+.pam-note{background:#f0f5ff;border:1px solid #c0d4f0;border-radius:5px;padding:.625rem .875rem;font-size:.75rem;color:#2b5797;line-height:1.5;margin-bottom:.875rem;}
+.pam-note strong{font-weight:700;}
+</style>
+</head>
+<body>
+
+<header role="banner">
+  <div class="hdr-inner">
+    <div class="logo">⚡ Equinix Partner Channel — PAM</div>
+    <nav aria-label="Primary">
+      <a href="pam-dashboard.html">Home</a>
+      <a href="pam-partner-portfolio.html" class="active">Portfolio</a>
+      <a href="pam-tier-management.html">Tier Governance</a>
+      <a href="pam-program-agreements.html">Agreements</a>
+      <a href="psm-reports-analytics.html">Reports</a>
+    </nav>
+    <div style="font-size:.8125rem;color:rgba(255,255,255,.7);">J. Patterson · PAM, Americas</div>
+  </div>
+</header>
+
+<div class="rec-hdr" role="region" aria-label="Record header">
+  <div class="rec-hdr-inner">
+    <div class="rec-title">
+      <div class="rec-icon" aria-hidden="true">🏢</div>
+      <div>
+        <div class="rec-name">CloudBridge Solutions</div>
+        <div class="rec-sub">
+          <span class="badge badge-gold">Gold</span>
+          &ensp;Systems Integrator · Mid-Market · Americas
+          &ensp;·&ensp;Partner since Apr 2021
+          &ensp;·&ensp;PAM: J. Patterson
+        </div>
+      </div>
+    </div>
+    <div class="rec-actions">
+      <button class="btn btn-secondary">Log Activity</button>
+      <button class="btn btn-warn">Generate Escalation Brief</button>
+      <button class="btn btn-primary">Edit Record</button>
+    </div>
+  </div>
+</div>
+
+<div class="rec-tabs" role="navigation" aria-label="Record tabs">
+  <div class="rec-tabs-inner">
+    <div class="tab-item active" role="tab" aria-selected="true">Overview</div>
+    <div class="tab-item" role="tab" aria-selected="false">Agreements</div>
+    <div class="tab-item" role="tab" aria-selected="false">Tier History</div>
+    <div class="tab-item" role="tab" aria-selected="false">JBP / Goals</div>
+    <div class="tab-item" role="tab" aria-selected="false">Contacts</div>
+    <div class="tab-item" role="tab" aria-selected="false">Escalations</div>
+    <div class="tab-item" role="tab" aria-selected="false">Activity</div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="breadcrumb" aria-label="Breadcrumb">
+    <a href="pam-dashboard.html">PAM Home</a> › <a href="pam-partner-portfolio.html">Portfolio</a> › CloudBridge Solutions
+  </div>
+</div>
+
+<div class="layout" role="main">
+
+  <!-- LEFT RAIL — Related records -->
+  <div aria-label="Related records">
+
+    <div class="pam-note">
+      <strong>PAM vs PSM view:</strong> This is the PAM's strategic account view — program commitments, tier governance, agreement status, and commercial health. The PSM's operational view (deal reg, MDF, QBRs) lives in <a href="psm-partner-account-record.html" style="color:#2b5797;">psm-partner-account-record.html</a>.
+    </div>
+
+    <div class="rel-card">
+      <div class="rel-card-title">PSM Owner</div>
+      <div class="rel-row">
+        <div class="rel-icon">👤</div>
+        <div>
+          <a class="rel-link" href="psm-partner-account-record.html">Marcus Chen</a>
+          <div class="rel-meta">PSM · Americas · marcus@equinix.com</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rel-card">
+      <div class="rel-card-title">Active Agreement</div>
+      <div class="rel-row">
+        <div class="rel-icon">📄</div>
+        <div>
+          <a class="rel-link" href="pam-program-agreements.html">PPA-2024-CBR-007</a>
+          <div class="rel-meta">Gold Partner Program Agreement</div>
+          <div class="rel-meta" style="color:#e07b00;">⚠ Expires Feb 28, 2026</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rel-card">
+      <div class="rel-card-title">Tier Record</div>
+      <div class="rel-row">
+        <div class="rel-icon" style="background:#f0a500;">🏅</div>
+        <div>
+          <span class="rel-link">Gold</span>
+          <div class="rel-meta">Score 84 · Since Jan 2024</div>
+          <div class="rel-meta">Next review: Mar 5, 2026</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rel-card">
+      <div class="rel-card-title">Joint Business Plan</div>
+      <div class="rel-row">
+        <div class="rel-icon">📊</div>
+        <div>
+          <a class="rel-link" href="psm-joint-business-plan.html">JBP-2026-CBR</a>
+          <div class="rel-meta">Target: $4.0M · Q1 attainment 80%</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rel-card">
+      <div class="rel-card-title">Open Escalations</div>
+      <div class="rel-row">
+        <div style="font-size:.8125rem;color:var(--wf-text);font-style:italic;">No open escalations</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CENTER — Main record detail -->
+  <div>
+
+    <!-- Partnership Health -->
+    <div class="card">
+      <div class="card-hdr">
+        <span class="card-title">Partnership Health — Q1 2026</span>
+        <span class="badge badge-green">● Green</span>
+      </div>
+      <div class="card-body">
+        <div class="score-row">
+          <span class="score-name">Revenue</span>
+          <div class="score-bar-wrap"><div class="score-bar high" style="width:84%;"></div></div>
+          <span class="score-num">84</span>
+        </div>
+        <div class="score-row">
+          <span class="score-name">Training / Certs</span>
+          <div class="score-bar-wrap"><div class="score-bar high" style="width:90%;"></div></div>
+          <span class="score-num">90</span>
+        </div>
+        <div class="score-row">
+          <span class="score-name">Deal Registration</span>
+          <div class="score-bar-wrap"><div class="score-bar high" style="width:78%;"></div></div>
+          <span class="score-num">78</span>
+        </div>
+        <div class="score-row">
+          <span class="score-name">MDF Utilization</span>
+          <div class="score-bar-wrap"><div class="score-bar mid" style="width:62%;"></div></div>
+          <span class="score-num">62</span>
+        </div>
+        <div class="score-row">
+          <span class="score-name">Engagement</span>
+          <div class="score-bar-wrap"><div class="score-bar high" style="width:80%;"></div></div>
+          <span class="score-num">80</span>
+        </div>
+        <p style="font-size:.75rem;color:var(--wf-text);margin-top:.75rem;">Composite score: <strong>84 / 100</strong> · Tier threshold for Gold: ≥ 70</p>
+      </div>
+    </div>
+
+    <!-- Key details -->
+    <div class="card">
+      <div class="card-hdr"><span class="card-title">Partnership Details</span></div>
+      <div class="card-body">
+        <div class="field-grid">
+          <div class="field"><span class="field-label">Legal Entity</span><span class="field-val">CloudBridge Solutions Inc.</span></div>
+          <div class="field"><span class="field-label">Partner Type</span><span class="field-val">Systems Integrator</span></div>
+          <div class="field"><span class="field-label">HQ Region</span><span class="field-val">Americas — San Jose, CA</span></div>
+          <div class="field"><span class="field-label">Active Since</span><span class="field-val">April 14, 2021</span></div>
+          <div class="field"><span class="field-label">Salesforce Account ID</span><span class="field-val" style="font-family:monospace;font-size:.8125rem;">0011g000025XqkAAAS</span></div>
+          <div class="field"><span class="field-label">D-U-N-S</span><span class="field-val" style="font-family:monospace;font-size:.8125rem;">61-248-9047</span></div>
+          <div class="field"><span class="field-label">Primary Exec Contact</span><span class="field-val">Dana Wu · VP Partnerships</span></div>
+          <div class="field"><span class="field-label">Primary Technical Contact</span><span class="field-val">Alex Torres · Solutions Architect</span></div>
+          <div class="field"><span class="field-label">Partner Revenue YTD</span><span class="field-val">$3.2M (of $4.0M target)</span></div>
+          <div class="field"><span class="field-label">Certified Staff</span><span class="field-val">12 of 15 required for Gold</span></div>
+          <div class="field"><span class="field-label">Focus Products</span><span class="field-val">Colocation, IBX, Network Edge</span></div>
+          <div class="field"><span class="field-label">Territory</span><span class="field-val">Western US · LATAM</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Program commitments -->
+    <div class="card">
+      <div class="card-hdr"><span class="card-title">Program Commitments — Gold Tier</span></div>
+      <div class="card-body" style="font-size:.8125rem;">
+        <table style="width:100%;border-collapse:collapse;">
+          <thead>
+            <tr>
+              <th style="text-align:left;padding:.375rem .5rem;font-size:.6875rem;text-transform:uppercase;letter-spacing:.04em;color:var(--wf-text);border-bottom:1px solid var(--wf-line);">Commitment</th>
+              <th style="text-align:left;padding:.375rem .5rem;font-size:.6875rem;text-transform:uppercase;letter-spacing:.04em;color:var(--wf-text);border-bottom:1px solid var(--wf-line);">Required</th>
+              <th style="text-align:left;padding:.375rem .5rem;font-size:.6875rem;text-transform:uppercase;letter-spacing:.04em;color:var(--wf-text);border-bottom:1px solid var(--wf-line);">Actual</th>
+              <th style="text-align:left;padding:.375rem .5rem;font-size:.6875rem;text-transform:uppercase;letter-spacing:.04em;color:var(--wf-text);border-bottom:1px solid var(--wf-line);">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td style="padding:.375rem .5rem;border-bottom:1px solid var(--wf-line);">Annual Revenue</td><td style="padding:.375rem .5rem;border-bottom:1px solid var(--wf-line);">$4.0M</td><td style="padding:.375rem .5rem;border-bottom:1px solid var(--wf-line);">$3.2M (80%)</td><td style="padding:.375rem .5rem;border-bottom:1px solid var(--wf-line);"><span class="badge badge-yellow">In Progress</span></td></tr>
+            <tr><td style="padding:.375rem .5rem;border-bottom:1px solid var(--wf-line);">Certified Staff</td><td style="padding:.375rem .5rem;border-bottom:1px solid var(--wf-line);">15</td><td style="padding:.375rem .5rem;border-bottom:1px solid var(--wf-line);">12</td><td style="padding:.375rem .5rem;border-bottom:1px solid var(--wf-line);"><span class="badge badge-yellow">3 in progress</span></td></tr>
+            <tr><td style="padding:.375rem .5rem;border-bottom:1px solid var(--wf-line);">Deal Registrations / Qtr</td><td style="padding:.375rem .5rem;border-bottom:1px solid var(--wf-line);">8</td><td style="padding:.375rem .5rem;border-bottom:1px solid var(--wf-line);">11</td><td style="padding:.375rem .5rem;border-bottom:1px solid var(--wf-line);"><span class="badge badge-green">Met</span></td></tr>
+            <tr><td style="padding:.375rem .5rem;border-bottom:1px solid var(--wf-line);">MDF Utilization</td><td style="padding:.375rem .5rem;border-bottom:1px solid var(--wf-line);">≥ 70%</td><td style="padding:.375rem .5rem;border-bottom:1px solid var(--wf-line);">62%</td><td style="padding:.375rem .5rem;border-bottom:1px solid var(--wf-line);"><span class="badge badge-yellow">Below target</span></td></tr>
+            <tr><td style="padding:.375rem .5rem;">QBR Participation</td><td style="padding:.375rem .5rem;">Quarterly</td><td style="padding:.375rem .5rem;">4 of 4 completed</td><td style="padding:.375rem .5rem;"><span class="badge badge-green">Met</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT — Activity -->
+  <div>
+    <div class="card">
+      <div class="card-hdr"><span class="card-title">Recent Activity</span></div>
+      <div class="card-body" style="padding:.75rem 1rem;">
+        <div class="feed-item">
+          <div class="feed-avatar">JP</div>
+          <div class="feed-body">
+            <div class="feed-text">Agreement renewal draft sent to Dana Wu for review</div>
+            <div class="feed-meta">Feb 24 · J. Patterson</div>
+          </div>
+        </div>
+        <div class="feed-item">
+          <div class="feed-avatar">MC</div>
+          <div class="feed-body">
+            <div class="feed-text">Q1 QBR completed — scored 84. Revenue tracking 80% to target.</div>
+            <div class="feed-meta">Feb 18 · M. Chen (PSM)</div>
+          </div>
+        </div>
+        <div class="feed-item">
+          <div class="feed-avatar">JP</div>
+          <div class="feed-body">
+            <div class="feed-text">Tier review scheduled for Mar 5 — Gold status expected to be retained</div>
+            <div class="feed-meta">Feb 10 · J. Patterson</div>
+          </div>
+        </div>
+        <div class="feed-item">
+          <div class="feed-avatar">JP</div>
+          <div class="feed-body">
+            <div class="feed-text">JBP 2026 signed — $4.0M revenue target, Western US + LATAM territory</div>
+            <div class="feed-meta">Jan 15 · J. Patterson</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr"><span class="card-title">Upcoming</span></div>
+      <div class="card-body" style="font-size:.8125rem;display:flex;flex-direction:column;gap:.5rem;">
+        <div style="padding:.375rem;background:var(--wf-canvas);border-radius:4px;display:flex;gap:.5rem;align-items:center;"><span style="background:#e07b00;color:#fff;border-radius:3px;padding:.1875rem .4375rem;font-size:.6875rem;font-weight:700;">Feb 28</span>Agreement expiration</div>
+        <div style="padding:.375rem;background:var(--wf-canvas);border-radius:4px;display:flex;gap:.5rem;align-items:center;"><span style="background:var(--wf-accent);color:#fff;border-radius:3px;padding:.1875rem .4375rem;font-size:.6875rem;font-weight:700;">Mar 5</span>Annual tier review</div>
+        <div style="padding:.375rem;background:var(--wf-canvas);border-radius:4px;display:flex;gap:.5rem;align-items:center;"><span style="background:#475670;color:#fff;border-radius:3px;padding:.1875rem .4375rem;font-size:.6875rem;font-weight:700;">Mar 31</span>Q1 JBP target close</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-hdr"><span class="card-title">Quick Actions</span></div>
+      <div class="card-body" style="display:flex;flex-direction:column;gap:.5rem;">
+        <a href="pam-program-agreements.html" style="display:block;padding:.5rem;background:var(--wf-surface);border:1px solid var(--wf-line);border-radius:4px;font-size:.8125rem;color:var(--wf-ink);text-decoration:none;font-weight:600;">Renew Agreement →</a>
+        <a href="pam-tier-management.html" style="display:block;padding:.5rem;background:var(--wf-surface);border:1px solid var(--wf-line);border-radius:4px;font-size:.8125rem;color:var(--wf-ink);text-decoration:none;font-weight:600;">Run Tier Review →</a>
+        <a href="psm-escalation-brief.html" style="display:block;padding:.5rem;background:var(--wf-surface);border:1px solid var(--wf-line);border-radius:4px;font-size:.8125rem;color:var(--wf-ink);text-decoration:none;font-weight:600;">Generate Escalation Brief →</a>
+        <a href="psm-partner-account-record.html" style="display:block;padding:.5rem;background:var(--wf-surface);border:1px solid var(--wf-line);border-radius:4px;font-size:.8125rem;color:var(--wf-ink);text-decoration:none;font-weight:600;">PSM Operational View →</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="wf-nav.js"></script>
+</body>
+</html>

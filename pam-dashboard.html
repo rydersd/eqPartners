@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PAM Dashboard — Equinix PCP</title>
+<link rel="stylesheet" href="wireframe.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Salesforce Sans",sans-serif;background:var(--wf-canvas,#f5f7fb);color:var(--wf-ink,#1e2a3a);}
+
+header{background:var(--wf-ink,#1e2a3a);color:#fff;padding:0.875rem 2rem;}
+.hdr-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;}
+.logo{display:flex;align-items:center;gap:.625rem;font-size:1.375rem;font-weight:700;letter-spacing:-.01em;}
+.logo-icon{font-size:1.5rem;}
+nav{display:flex;gap:1.5rem;align-items:center;}
+nav a{color:rgba(255,255,255,.8);text-decoration:none;font-size:.875rem;padding:.375rem .625rem;border-radius:4px;transition:background .15s;}
+nav a:hover{background:rgba(255,255,255,.1);}
+nav a.active{background:var(--wf-accent,#3d6daa);color:#fff;}
+
+.subbar{background:#243447;border-bottom:1px solid rgba(255,255,255,.08);padding:.5rem 2rem;}
+.subbar-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;gap:1.5rem;font-size:.8125rem;}
+.subbar a{color:rgba(255,255,255,.6);text-decoration:none;padding:.25rem .5rem;border-radius:3px;transition:color .15s;}
+.subbar a:hover{color:#fff;}
+.subbar a.active{color:#fff;border-bottom:2px solid var(--wf-accent,#3d6daa);}
+
+.container{max-width:1400px;margin:1.5rem auto;padding:0 2rem;}
+.page-hdr{margin-bottom:1.25rem;}
+.page-hdr h1{font-size:1.375rem;font-weight:700;color:var(--wf-ink);}
+.page-hdr p{font-size:.8125rem;color:var(--wf-text,#3b4f68);margin-top:.25rem;}
+
+/* KPI row */
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;margin-bottom:1.5rem;}
+@media(max-width:1100px){.kpi-row{grid-template-columns:repeat(3,1fr);}}
+.kpi{background:#fff;border:1px solid var(--wf-line,#dde2ea);border-radius:8px;padding:1rem 1.25rem;}
+.kpi-label{font-size:.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--wf-text);}
+.kpi-value{font-size:1.625rem;font-weight:700;margin:.25rem 0;color:var(--wf-ink);}
+.kpi-delta{font-size:.75rem;color:var(--wf-text);}
+.kpi-delta.pos{color:#1d7a4e;}
+.kpi-delta.neg{color:#c0392b;}
+.kpi-delta.warn{color:#e07b00;}
+
+/* Two-col layout */
+.dash-grid{display:grid;grid-template-columns:1fr 360px;gap:1.25rem;}
+@media(max-width:1000px){.dash-grid{grid-template-columns:1fr;}}
+
+/* Card wrapper */
+.card{background:#fff;border:1px solid var(--wf-line,#dde2ea);border-radius:8px;margin-bottom:1.25rem;}
+.card-hdr{padding:.75rem 1rem;border-bottom:1px solid var(--wf-line);display:flex;align-items:center;justify-content:space-between;}
+.card-title{font-size:.875rem;font-weight:700;color:var(--wf-ink);}
+.card-action{font-size:.75rem;color:var(--wf-accent,#3d6daa);cursor:pointer;text-decoration:none;}
+.card-body{padding:1rem;}
+
+/* Tier summary bars */
+.tier-bar-row{display:flex;align-items:center;gap:.75rem;margin-bottom:.625rem;}
+.tier-name{font-size:.8125rem;font-weight:600;width:56px;}
+.tier-bar-wrap{flex:1;background:var(--wf-canvas);border-radius:3px;height:10px;overflow:hidden;}
+.tier-bar{height:100%;border-radius:3px;}
+.tier-bar.gold{background:#f0a500;}
+.tier-bar.silver{background:#8a9bb5;}
+.tier-bar.bronze{background:#b87333;}
+.tier-count{font-size:.75rem;color:var(--wf-text);width:40px;text-align:right;}
+
+/* Attention table */
+.attn-table{width:100%;border-collapse:collapse;font-size:.8125rem;}
+.attn-table th{background:var(--wf-canvas);padding:.5rem .75rem;text-align:left;font-size:.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--wf-text);border-bottom:2px solid var(--wf-line);}
+.attn-table td{padding:.5rem .75rem;border-bottom:1px solid var(--wf-line);}
+.attn-table tr:last-child td{border-bottom:none;}
+.attn-table tr:hover td{background:var(--wf-canvas);}
+.badge{display:inline-block;padding:.125rem .5rem;border-radius:3px;font-size:.6875rem;font-weight:700;}
+.badge-gold{background:#fff3cc;color:#8a5c00;}
+.badge-silver{background:#e8ecf2;color:#475670;}
+.badge-bronze{background:#faeee5;color:#7a4020;}
+.badge-red{background:#fde8e8;color:#c0392b;}
+.badge-yellow{background:#fff3cc;color:#8a5c00;}
+.badge-green{background:#e5f7ee;color:#1d7a4e;}
+
+/* Pipeline mini chart */
+.funnel-row{display:flex;align-items:center;gap:.75rem;margin-bottom:.5rem;}
+.funnel-stage{font-size:.75rem;color:var(--wf-text);width:110px;}
+.funnel-bar-wrap{flex:1;background:var(--wf-canvas);border-radius:3px;height:8px;}
+.funnel-bar{height:100%;border-radius:3px;background:var(--wf-accent,#3d6daa);opacity:.75;}
+.funnel-amt{font-size:.75rem;color:var(--wf-ink);font-weight:600;width:64px;text-align:right;}
+
+/* Activity feed */
+.feed-item{display:flex;gap:.75rem;padding:.625rem 0;border-bottom:1px solid var(--wf-line);}
+.feed-item:last-child{border-bottom:none;}
+.feed-icon{width:28px;height:28px;border-radius:50%;background:var(--wf-surface,#edf1f7);display:flex;align-items:center;justify-content:center;font-size:.875rem;flex-shrink:0;margin-top:.125rem;}
+.feed-content{flex:1;}
+.feed-text{font-size:.8125rem;color:var(--wf-ink);line-height:1.4;}
+.feed-meta{font-size:.6875rem;color:var(--wf-text);margin-top:.25rem;}
+</style>
+</head>
+<body>
+
+<header role="banner">
+  <div class="hdr-inner">
+    <div class="logo">
+      <span class="logo-icon" aria-hidden="true">⚡</span>
+      Equinix Partner Channel — PAM
+    </div>
+    <nav aria-label="Primary">
+      <a href="pam-dashboard.html" class="active">Home</a>
+      <a href="pam-partner-portfolio.html">Portfolio</a>
+      <a href="pam-tier-management.html">Tier Governance</a>
+      <a href="pam-program-agreements.html">Agreements</a>
+      <a href="psm-reports-analytics.html">Reports</a>
+    </nav>
+    <div style="font-size:.8125rem;color:rgba(255,255,255,.7);">J. Patterson · PAM, Americas</div>
+  </div>
+</header>
+
+<div class="subbar" aria-label="Context bar">
+  <div class="subbar-inner">
+    <span style="color:rgba(255,255,255,.5);font-size:.75rem;">Q1 2026</span>
+    <a href="#" class="active">Americas</a>
+    <a href="#">EMEA</a>
+    <a href="#">APAC</a>
+    <span style="margin-left:auto;color:rgba(255,255,255,.5);font-size:.6875rem;">Last refreshed: Today 09:14 AM</span>
+  </div>
+</div>
+
+<main class="container">
+  <div class="page-hdr">
+    <h1>PAM Dashboard — Americas</h1>
+    <p>Partner Account Management · Program-level portfolio view · Q1 2026</p>
+  </div>
+
+  <!-- KPI row -->
+  <div class="kpi-row" role="region" aria-label="Key metrics">
+    <div class="kpi">
+      <div class="kpi-label">Managed Partners</div>
+      <div class="kpi-value">84</div>
+      <div class="kpi-delta pos">↑ 6 new this quarter</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Total Partner Revenue</div>
+      <div class="kpi-value">$38.4M</div>
+      <div class="kpi-delta pos">↑ 11% vs Q1 2025</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Tier Reviews Due</div>
+      <div class="kpi-value">12</div>
+      <div class="kpi-delta warn">⚠ 4 at-risk of downgrade</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Agreements Expiring 90d</div>
+      <div class="kpi-value">7</div>
+      <div class="kpi-delta warn">⚠ 2 require countersign</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Pending Escalations</div>
+      <div class="kpi-value">3</div>
+      <div class="kpi-delta neg">1 VP review requested</div>
+    </div>
+  </div>
+
+  <div class="dash-grid">
+    <!-- LEFT / CENTER -->
+    <div>
+
+      <!-- Partners needing attention -->
+      <div class="card">
+        <div class="card-hdr">
+          <span class="card-title">Partners Needing Attention</span>
+          <a href="pam-partner-portfolio.html" class="card-action">View all →</a>
+        </div>
+        <div class="card-body" style="padding:0;">
+          <table class="attn-table">
+            <thead>
+              <tr>
+                <th>Partner</th>
+                <th>Tier</th>
+                <th>Issue</th>
+                <th>Owner</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><a href="pam-partner-account.html" style="color:var(--wf-accent);font-weight:600;text-decoration:none;">CloudBridge Solutions</a></td>
+                <td><span class="badge badge-gold">Gold</span></td>
+                <td><span class="badge badge-yellow">Agreement expiring Feb 28</span></td>
+                <td>J. Patterson</td>
+                <td><a href="pam-program-agreements.html" style="color:var(--wf-accent);font-size:.75rem;">Renew →</a></td>
+              </tr>
+              <tr>
+                <td><a href="pam-partner-account.html" style="color:var(--wf-accent);font-weight:600;text-decoration:none;">Nexus Integrators</a></td>
+                <td><span class="badge badge-silver">Silver</span></td>
+                <td><span class="badge badge-red">Tier downgrade risk — score 38</span></td>
+                <td>J. Patterson</td>
+                <td><a href="pam-tier-management.html" style="color:var(--wf-accent);font-size:.75rem;">Review →</a></td>
+              </tr>
+              <tr>
+                <td><a href="pam-partner-account.html" style="color:var(--wf-accent);font-weight:600;text-decoration:none;">Redwood Tech Partners</a></td>
+                <td><span class="badge badge-gold">Gold</span></td>
+                <td><span class="badge badge-red">VP escalation open</span></td>
+                <td>J. Patterson</td>
+                <td><a href="psm-escalation-brief.html" style="color:var(--wf-accent);font-size:.75rem;">Brief →</a></td>
+              </tr>
+              <tr>
+                <td><a href="pam-partner-account.html" style="color:var(--wf-accent);font-weight:600;text-decoration:none;">BlueShore Systems</a></td>
+                <td><span class="badge badge-bronze">Bronze</span></td>
+                <td><span class="badge badge-yellow">JBP not signed — 42 days</span></td>
+                <td>A. Cruz</td>
+                <td><a href="#" style="color:var(--wf-accent);font-size:.75rem;">Nudge →</a></td>
+              </tr>
+              <tr>
+                <td><a href="pam-partner-account.html" style="color:var(--wf-accent);font-weight:600;text-decoration:none;">Summit Global MSP</a></td>
+                <td><span class="badge badge-silver">Silver</span></td>
+                <td><span class="badge badge-green">Eligible for tier upgrade</span></td>
+                <td>J. Patterson</td>
+                <td><a href="pam-tier-management.html" style="color:var(--wf-accent);font-size:.75rem;">Initiate →</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Portfolio by tier -->
+      <div class="card">
+        <div class="card-hdr">
+          <span class="card-title">Portfolio by Tier</span>
+          <a href="pam-tier-management.html" class="card-action">Tier governance →</a>
+        </div>
+        <div class="card-body">
+          <div class="tier-bar-row">
+            <span class="tier-name" style="color:#8a5c00;font-weight:700;">Gold</span>
+            <div class="tier-bar-wrap"><div class="tier-bar gold" style="width:29%;"></div></div>
+            <span class="tier-count">24</span>
+          </div>
+          <div class="tier-bar-row">
+            <span class="tier-name" style="color:#475670;">Silver</span>
+            <div class="tier-bar-wrap"><div class="tier-bar silver" style="width:43%;"></div></div>
+            <span class="tier-count">36</span>
+          </div>
+          <div class="tier-bar-row">
+            <span class="tier-name" style="color:#7a4020;">Bronze</span>
+            <div class="tier-bar-wrap"><div class="tier-bar bronze" style="width:29%;"></div></div>
+            <span class="tier-count">24</span>
+          </div>
+          <p style="font-size:.75rem;color:var(--wf-text);margin-top:.75rem;">4 partners on probationary hold · 2 pending new-tier qualification</p>
+        </div>
+      </div>
+
+      <!-- Pipeline by partner type -->
+      <div class="card">
+        <div class="card-hdr">
+          <span class="card-title">Partner-Sourced Pipeline — Americas Q1 2026</span>
+        </div>
+        <div class="card-body">
+          <div class="funnel-row"><span class="funnel-stage">Prospecting</span><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:100%;"></div></div><span class="funnel-amt">$14.2M</span></div>
+          <div class="funnel-row"><span class="funnel-stage">Discovery</span><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:72%;"></div></div><span class="funnel-amt">$10.3M</span></div>
+          <div class="funnel-row"><span class="funnel-stage">Proposal</span><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:48%;"></div></div><span class="funnel-amt">$6.8M</span></div>
+          <div class="funnel-row"><span class="funnel-stage">Negotiation</span><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:28%;"></div></div><span class="funnel-amt">$4.0M</span></div>
+          <div class="funnel-row"><span class="funnel-stage">Closed Won</span><div class="funnel-bar-wrap"><div class="funnel-bar" style="width:16%;"></div></div><span class="funnel-amt">$2.3M</span></div>
+          <p style="font-size:.75rem;color:var(--wf-text);margin-top:.75rem;">Top 5 partners account for 61% of total pipeline</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT SIDEBAR -->
+    <div>
+
+      <!-- My activity -->
+      <div class="card">
+        <div class="card-hdr">
+          <span class="card-title">Recent Activity</span>
+        </div>
+        <div class="card-body" style="padding:.75rem 1rem;">
+          <div class="feed-item">
+            <div class="feed-icon" aria-hidden="true">📋</div>
+            <div class="feed-content">
+              <div class="feed-text">Tier review completed — <strong>Summit Global MSP</strong> eligible for Silver → Gold upgrade</div>
+              <div class="feed-meta">Today · 10:22 AM</div>
+            </div>
+          </div>
+          <div class="feed-item">
+            <div class="feed-icon" aria-hidden="true">✍️</div>
+            <div class="feed-content">
+              <div class="feed-text">Agreement renewal sent to <strong>CloudBridge Solutions</strong> for countersignature</div>
+              <div class="feed-meta">Yesterday · 3:41 PM</div>
+            </div>
+          </div>
+          <div class="feed-item">
+            <div class="feed-icon" aria-hidden="true">⚠️</div>
+            <div class="feed-content">
+              <div class="feed-text">Escalation brief generated for <strong>Redwood Tech Partners</strong> — sent to VP Sales</div>
+              <div class="feed-meta">Feb 24 · 11:05 AM</div>
+            </div>
+          </div>
+          <div class="feed-item">
+            <div class="feed-icon" aria-hidden="true">🆕</div>
+            <div class="feed-content">
+              <div class="feed-text"><strong>Apex Cloud EMEA</strong> onboarded — assigned to J. Patterson Americas</div>
+              <div class="feed-meta">Feb 22 · 9:30 AM</div>
+            </div>
+          </div>
+          <div class="feed-item">
+            <div class="feed-icon" aria-hidden="true">📊</div>
+            <div class="feed-content">
+              <div class="feed-text">Q4 2025 JBP reviews closed — 18 of 24 Gold partners met targets</div>
+              <div class="feed-meta">Feb 20 · 2:15 PM</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick actions -->
+      <div class="card">
+        <div class="card-hdr"><span class="card-title">Quick Actions</span></div>
+        <div class="card-body" style="display:flex;flex-direction:column;gap:.625rem;">
+          <a href="pam-partner-portfolio.html" style="display:block;padding:.625rem .875rem;background:var(--wf-accent,#3d6daa);color:#fff;border-radius:5px;text-decoration:none;font-size:.8125rem;font-weight:600;text-align:center;">View Partner Portfolio</a>
+          <a href="pam-tier-management.html" style="display:block;padding:.625rem .875rem;background:var(--wf-surface);border:1px solid var(--wf-line);color:var(--wf-ink);border-radius:5px;text-decoration:none;font-size:.8125rem;font-weight:600;text-align:center;">Run Tier Review Batch</a>
+          <a href="pam-program-agreements.html" style="display:block;padding:.625rem .875rem;background:var(--wf-surface);border:1px solid var(--wf-line);color:var(--wf-ink);border-radius:5px;text-decoration:none;font-size:.8125rem;font-weight:600;text-align:center;">Manage Agreements</a>
+          <a href="psm-escalation-brief.html" style="display:block;padding:.625rem .875rem;background:var(--wf-surface);border:1px solid var(--wf-line);color:var(--wf-ink);border-radius:5px;text-decoration:none;font-size:.8125rem;font-weight:600;text-align:center;">Generate Escalation Brief</a>
+        </div>
+      </div>
+
+      <!-- Upcoming -->
+      <div class="card">
+        <div class="card-hdr"><span class="card-title">Upcoming</span></div>
+        <div class="card-body" style="font-size:.8125rem;">
+          <div style="padding:.5rem 0;border-bottom:1px solid var(--wf-line);display:flex;gap:.5rem;align-items:flex-start;">
+            <span style="background:#fff3cc;color:#8a5c00;border-radius:3px;padding:.125rem .375rem;font-size:.6875rem;font-weight:700;white-space:nowrap;">Feb 28</span>
+            <span>CloudBridge — Agreement expiration</span>
+          </div>
+          <div style="padding:.5rem 0;border-bottom:1px solid var(--wf-line);display:flex;gap:.5rem;align-items:flex-start;">
+            <span style="background:#e8ecf2;color:#475670;border-radius:3px;padding:.125rem .375rem;font-size:.6875rem;font-weight:700;white-space:nowrap;">Mar 5</span>
+            <span>Q1 Tier Review deadline — 12 partners</span>
+          </div>
+          <div style="padding:.5rem 0;border-bottom:1px solid var(--wf-line);display:flex;gap:.5rem;align-items:flex-start;">
+            <span style="background:#e8ecf2;color:#475670;border-radius:3px;padding:.125rem .375rem;font-size:.6875rem;font-weight:700;white-space:nowrap;">Mar 12</span>
+            <span>Nexus Integrators — QBR (remediation)</span>
+          </div>
+          <div style="padding:.5rem 0;display:flex;gap:.5rem;align-items:flex-start;">
+            <span style="background:#e5f7ee;color:#1d7a4e;border-radius:3px;padding:.125rem .375rem;font-size:.6875rem;font-weight:700;white-space:nowrap;">Mar 31</span>
+            <span>Q1 close — JBP target review</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<script src="wf-nav.js"></script>
+</body>
+</html>

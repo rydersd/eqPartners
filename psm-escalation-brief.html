@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Escalation Brief — Redwood Tech Partners · PSM · Equinix PCP</title>
+<link rel="stylesheet" href="wireframe.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Salesforce Sans",sans-serif;background:var(--wf-canvas,#f5f7fb);color:var(--wf-ink,#1e2a3a);}
+header{background:var(--wf-ink,#1e2a3a);color:#fff;padding:0.875rem 2rem;}
+.hdr-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;}
+.logo{font-size:1.375rem;font-weight:700;}
+nav{display:flex;gap:1.5rem;}
+nav a{color:rgba(255,255,255,.8);text-decoration:none;font-size:.875rem;padding:.375rem .625rem;border-radius:4px;}
+nav a.active{background:var(--wf-accent);color:#fff;}
+.container{max-width:1400px;margin:0 auto;padding:0 2rem;}
+.breadcrumb{padding:.75rem 0;font-size:.8125rem;color:var(--wf-text);}
+.breadcrumb a{color:var(--wf-accent);text-decoration:none;}
+
+/* Record header */
+.rec-hdr{background:#fff;border-bottom:1px solid var(--wf-line);padding:.75rem 2rem;}
+.rec-hdr-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem;}
+.rec-title{display:flex;align-items:center;gap:.875rem;}
+.rec-icon{width:44px;height:44px;background:#c0392b;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.25rem;flex-shrink:0;}
+.rec-name{font-size:1.25rem;font-weight:700;}
+.rec-sub{font-size:.8125rem;color:var(--wf-text);margin-top:.125rem;}
+.rec-actions{display:flex;gap:.5rem;flex-wrap:wrap;}
+.btn{padding:.4375rem .875rem;border-radius:5px;font-size:.8125rem;cursor:pointer;font-family:inherit;font-weight:600;border:1px solid transparent;}
+.btn-primary{background:var(--wf-accent);color:#fff;}
+.btn-secondary{background:#fff;border-color:var(--wf-line);color:var(--wf-ink);}
+.btn-einstein{background:linear-gradient(135deg,#7b2fbe,#3d6daa);color:#fff;display:flex;align-items:center;gap:.5rem;}
+
+/* 3-col layout */
+.layout{display:grid;grid-template-columns:280px 1fr 340px;gap:1.25rem;padding:1.25rem 2rem;max-width:1400px;margin:0 auto;}
+@media(max-width:1200px){.layout{grid-template-columns:1fr 340px;}}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}}
+
+/* Left rail */
+.rel-card{background:#fff;border:1px solid var(--wf-line);border-radius:6px;margin-bottom:.75rem;overflow:hidden;}
+.rel-card-title{font-size:.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--wf-text);padding:.5rem .75rem;background:var(--wf-surface);border-bottom:1px solid var(--wf-line);}
+.rel-row{display:flex;align-items:flex-start;gap:.5rem;padding:.4375rem .75rem;font-size:.8125rem;}
+.rel-row+.rel-row{border-top:1px solid var(--wf-line);}
+.rel-icon{width:20px;height:20px;border-radius:3px;background:var(--wf-accent);color:#fff;font-size:.625rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.125rem;}
+.rel-icon.warn{background:#c0392b;}
+.rel-link{color:var(--wf-accent);font-weight:600;text-decoration:none;font-size:.8125rem;}
+.rel-meta{font-size:.6875rem;color:var(--wf-text);}
+
+/* Cards */
+.card{background:#fff;border:1px solid var(--wf-line);border-radius:8px;margin-bottom:1rem;}
+.card-hdr{padding:.75rem 1rem;border-bottom:1px solid var(--wf-line);display:flex;align-items:center;justify-content:space-between;}
+.card-title{font-size:.875rem;font-weight:700;}
+.card-body{padding:1rem;}
+.card.alert{border-color:#f0c8c8;background:#fffafa;}
+.card.alert .card-hdr{background:#fde8e8;border-color:#f0c8c8;}
+
+/* Brief body */
+.brief-section{margin-bottom:1.25rem;}
+.brief-section h3{font-size:.8125rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--wf-text);border-bottom:1px solid var(--wf-line);padding-bottom:.375rem;margin-bottom:.75rem;}
+.brief-field-grid{display:grid;grid-template-columns:1fr 1fr;gap:.625rem 1.25rem;}
+.field{display:flex;flex-direction:column;gap:.1875rem;}
+.field-label{font-size:.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--wf-text);}
+.field-val{font-size:.875rem;color:var(--wf-ink);}
+.field-val.highlight{color:#c0392b;font-weight:700;}
+
+/* Talking points */
+.talking-point{display:flex;gap:.75rem;padding:.625rem .875rem;border-bottom:1px solid var(--wf-line);align-items:flex-start;}
+.talking-point:last-child{border-bottom:none;}
+.tp-num{width:22px;height:22px;border-radius:50%;background:var(--wf-accent);color:#fff;font-size:.6875rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.1rem;}
+.tp-text{font-size:.8125rem;line-height:1.5;flex:1;}
+.tp-note{font-size:.6875rem;color:var(--wf-text);margin-top:.25rem;}
+
+/* Timeline */
+.timeline-item{display:flex;gap:.75rem;padding:.5rem 0;border-bottom:1px solid var(--wf-line);}
+.timeline-item:last-child{border-bottom:none;}
+.tl-date{font-size:.6875rem;color:var(--wf-text);white-space:nowrap;min-width:60px;}
+.tl-text{font-size:.8125rem;line-height:1.4;}
+
+.badge{display:inline-block;padding:.125rem .5rem;border-radius:3px;font-size:.6875rem;font-weight:700;}
+.badge-gold{background:#fff3cc;color:#8a5c00;}
+.badge-red{background:#fde8e8;color:#c0392b;}
+.badge-yellow{background:#fff3cc;color:#8a5c00;}
+.badge-green{background:#e5f7ee;color:#1d7a4e;}
+.badge-gray{background:var(--wf-surface);color:var(--wf-text);}
+
+/* Einstein spec panel */
+.einstein-panel{background:#f5f0ff;border:2px solid #9b59b6;border-radius:8px;padding:1rem 1.25rem;margin-top:1.25rem;}
+.einstein-panel h3{font-size:.9375rem;font-weight:700;color:#6b21a8;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem;}
+.einstein-panel h4{font-size:.8125rem;font-weight:700;color:#6b21a8;margin:.875rem 0 .4375rem;}
+.einstein-panel p,.einstein-panel li{font-size:.8125rem;color:#3b0764;line-height:1.6;}
+.einstein-panel ul,.einstein-panel ol{padding-left:1.25rem;display:flex;flex-direction:column;gap:.25rem;}
+.einstein-panel code{background:#efe6ff;border:1px solid #c4b5fd;border-radius:3px;padding:.0625rem .3125rem;font-family:monospace;font-size:.75rem;color:#5b21b6;}
+.einstein-panel .spec-block{background:#ede9fe;border:1px solid #c4b5fd;border-radius:5px;padding:.75rem;margin:.5rem 0;font-family:monospace;font-size:.75rem;color:#3b0764;white-space:pre-wrap;line-height:1.5;}
+.einstein-panel table{width:100%;border-collapse:collapse;margin:.5rem 0;}
+.einstein-panel th{background:#ddd6fe;padding:.375rem .5rem;text-align:left;font-size:.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#5b21b6;}
+.einstein-panel td{padding:.375rem .5rem;border-bottom:1px solid #e9d5ff;font-size:.75rem;color:#3b0764;}
+.einstein-panel tr:last-child td{border-bottom:none;}
+</style>
+</head>
+<body>
+
+<header role="banner">
+  <div class="hdr-inner">
+    <div class="logo">⚡ Equinix Partner Channel — PSM</div>
+    <nav aria-label="Primary">
+      <a href="psm-program-dashboard.html">Dashboard</a>
+      <a href="psm-partner-account-list.html">Partners</a>
+      <a href="psm-deal-registration.html">Deal Reg</a>
+      <a href="psm-mdf-management.html">MDF</a>
+      <a href="psm-reports-analytics.html">Reports</a>
+    </nav>
+    <div style="font-size:.8125rem;color:rgba(255,255,255,.7);">Marcus Chen · PSM</div>
+  </div>
+</header>
+
+<div class="rec-hdr" role="region" aria-label="Record header">
+  <div class="rec-hdr-inner">
+    <div class="rec-title">
+      <div class="rec-icon" aria-hidden="true">⚠️</div>
+      <div>
+        <div class="rec-name">Escalation Brief — Redwood Tech Partners</div>
+        <div class="rec-sub">
+          <span class="badge badge-gold">Gold</span>
+          &ensp;ESC-2026-RTP-003
+          &ensp;·&ensp;Opened Feb 21, 2026
+          &ensp;·&ensp;VP Review Requested
+          &ensp;·&ensp;Generated by Marcus Chen
+        </div>
+      </div>
+    </div>
+    <div class="rec-actions">
+      <button class="btn btn-secondary">Log Activity</button>
+      <button class="btn btn-secondary">Preview PDF</button>
+      <button class="btn btn-einstein" aria-label="Generate brief using Einstein Document Generation">
+        <span aria-hidden="true">✦</span> Generate with Einstein
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="breadcrumb" aria-label="Breadcrumb">
+    <a href="psm-program-dashboard.html">PSM Home</a> › <a href="psm-partner-account-list.html">Partners</a> › <a href="psm-partner-account-record.html">Redwood Tech Partners</a> › Escalation Brief
+  </div>
+</div>
+
+<div class="layout" role="main">
+
+  <!-- LEFT RAIL -->
+  <div aria-label="Related records">
+
+    <div class="rel-card">
+      <div class="rel-card-title">Partner</div>
+      <div class="rel-row">
+        <div class="rel-icon">🏢</div>
+        <div>
+          <a class="rel-link" href="pam-partner-account.html">Redwood Tech Partners</a>
+          <div class="rel-meta">Gold · SI · Western US</div>
+          <div class="rel-meta">Revenue YTD: $2.1M</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rel-card">
+      <div class="rel-card-title">Primary Contact</div>
+      <div class="rel-row">
+        <div class="rel-icon">👤</div>
+        <div>
+          <span class="rel-link">Brian Walsh</span>
+          <div class="rel-meta">VP Partnerships</div>
+          <div class="rel-meta">bwalsh@redwoodtech.com</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rel-card">
+      <div class="rel-card-title">Deal Registration at Issue</div>
+      <div class="rel-row">
+        <div class="rel-icon warn">!</div>
+        <div>
+          <a class="rel-link" href="psm-deal-review-detail.html">DR-2026-RTW-0147</a>
+          <div class="rel-meta">Beacon Financial — $380K TCV</div>
+          <div class="rel-meta" style="color:#c0392b;">Disputed: attribution conflict</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rel-card">
+      <div class="rel-card-title">PSM Owner</div>
+      <div class="rel-row">
+        <div class="rel-icon">👤</div>
+        <div>
+          <span class="rel-link">Marcus Chen</span>
+          <div class="rel-meta">PSM · Americas</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rel-card">
+      <div class="rel-card-title">PAM Owner</div>
+      <div class="rel-row">
+        <div class="rel-icon" style="background:#7b2fbe;">P</div>
+        <div>
+          <span class="rel-link">J. Patterson</span>
+          <div class="rel-meta">PAM · Americas</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="rel-card">
+      <div class="rel-card-title">VP Reviewer</div>
+      <div class="rel-row">
+        <div class="rel-icon" style="background:#333;">V</div>
+        <div>
+          <span class="rel-link">Sarah Kim</span>
+          <div class="rel-meta">VP Channel Sales, Americas</div>
+          <div class="rel-meta" style="color:#e07b00;">Review requested Feb 24</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CENTER — Brief content -->
+  <div>
+
+    <div class="card alert">
+      <div class="card-hdr">
+        <span class="card-title" style="color:#c0392b;">⚠ Active Escalation — VP Review Requested</span>
+        <span class="badge badge-red">ESC-2026-RTP-003</span>
+      </div>
+      <div class="card-body" style="font-size:.8125rem;color:#7a0000;">
+        Redwood Tech Partners is disputing deal registration DR-2026-RTW-0147 (Beacon Financial, $380K TCV), claiming prior customer relationship. A conflicting DR was submitted by direct AE team 4 days after Redwood's submission. Redwood's exec contact has escalated to VP level and threatened to pause all deal submissions pending resolution. This brief has been generated for VP Sarah Kim ahead of a scheduled call on Feb 26.
+      </div>
+    </div>
+
+    <!-- Section 1: Partner snapshot -->
+    <div class="card">
+      <div class="card-hdr"><span class="card-title">1 — Partner Snapshot</span></div>
+      <div class="card-body">
+        <div class="brief-field-grid">
+          <div class="field"><span class="field-label">Partner Name</span><span class="field-val">Redwood Tech Partners Inc.</span></div>
+          <div class="field"><span class="field-label">Tier</span><span class="field-val"><span class="badge badge-gold">Gold</span> — Since Jan 2023</span></div>
+          <div class="field"><span class="field-label">Revenue YTD (Q1 2026)</span><span class="field-val">$2.1M (of $3.5M target — 60%)</span></div>
+          <div class="field"><span class="field-label">Revenue 2025 Full Year</span><span class="field-val">$3.8M (↓ 12% vs 2024)</span></div>
+          <div class="field"><span class="field-label">Partner Since</span><span class="field-val">March 2019 — 7 years</span></div>
+          <div class="field"><span class="field-label">Certified Staff</span><span class="field-val">8 of 15 required (Gold)</span></div>
+          <div class="field"><span class="field-label">Health Score</span><span class="field-val highlight">62 / 100 — Yellow</span></div>
+          <div class="field"><span class="field-label">Open Deals (non-disputed)</span><span class="field-val">4 registered · $820K TCV</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 2: Dispute details -->
+    <div class="card">
+      <div class="card-hdr"><span class="card-title">2 — Dispute Details</span></div>
+      <div class="card-body">
+        <div class="brief-field-grid" style="margin-bottom:1rem;">
+          <div class="field"><span class="field-label">Deal Registration</span><span class="field-val"><a href="psm-deal-review-detail.html" style="color:var(--wf-accent);">DR-2026-RTW-0147</a></span></div>
+          <div class="field"><span class="field-label">End Customer</span><span class="field-val">Beacon Financial Group</span></div>
+          <div class="field"><span class="field-label">TCV at Issue</span><span class="field-val highlight">$380,000</span></div>
+          <div class="field"><span class="field-label">Commission Exposure</span><span class="field-val highlight">~$22,800 (6% Gold rate)</span></div>
+          <div class="field"><span class="field-label">Redwood Submission</span><span class="field-val">Feb 3, 2026</span></div>
+          <div class="field"><span class="field-label">Conflicting DR Submitted</span><span class="field-val">Feb 7, 2026 (Direct AE team)</span></div>
+          <div class="field"><span class="field-label">Redwood's Claim</span><span class="field-val">Prior customer relationship; first meeting Dec 2025; 3 exec-level calls documented</span></div>
+          <div class="field"><span class="field-label">Direct Team's Claim</span><span class="field-val">Existing Equinix customer (IBX colocation since 2022); expansion driven by internal AE</span></div>
+        </div>
+        <div style="background:var(--wf-canvas);border-radius:5px;padding:.75rem;font-size:.8125rem;line-height:1.5;">
+          <strong>PSM Assessment:</strong> Redwood's DR was submitted first and includes documented email history. However, Beacon is an existing colocation customer — the incumbency rule in DR-REG-POLICY-v3 (Section 4.2) may apply. Recommend partial credit split as compromise: 60% Redwood / 40% direct, or full award to Redwood with policy exception note.
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 3: Relationship history -->
+    <div class="card">
+      <div class="card-hdr"><span class="card-title">3 — Relationship History</span></div>
+      <div class="card-body" style="padding:.75rem 1rem;">
+        <div class="timeline-item">
+          <div class="tl-date">Feb 21</div>
+          <div class="tl-text"><strong>Escalation opened</strong> — Brian Walsh (VP Partnerships, Redwood) emailed PSM and CC'd PAM requesting VP escalation</div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-date">Feb 10</div>
+          <div class="tl-text">Marcus Chen escalated conflict internally to Deal Desk — conflicting DR still open</div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-date">Feb 7</div>
+          <div class="tl-text">Direct AE submits DR-2026-BFG-0212 for same Beacon Financial opportunity</div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-date">Feb 3</div>
+          <div class="tl-text"><strong>Redwood submits DR-2026-RTW-0147</strong> — Beacon Financial, $380K TCV, 3 supporting activity logs</div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-date">Dec 2025</div>
+          <div class="tl-text">Redwood first executive meeting with Beacon Financial CFO — documented in CRM</div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-date">Q4 2025</div>
+          <div class="tl-text">QBR completed — score 62. Revenue declining, cert gap flagged. Redwood expressed frustration with DR approval delays.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-date">Jan 2023</div>
+          <div class="tl-text">Redwood promoted to Gold tier — peak revenue $4.3M (2024)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 4: Recommended talking points -->
+    <div class="card">
+      <div class="card-hdr"><span class="card-title">4 — Recommended Talking Points for VP Call</span></div>
+      <div class="card-body" style="padding:0;">
+        <div class="talking-point">
+          <div class="tp-num" aria-hidden="true">1</div>
+          <div class="tp-text">
+            Acknowledge the relationship and the frustration. "Redwood is a seven-year Gold partner and we take this seriously. We've reviewed the full activity trail."
+            <div class="tp-note">Sets the tone — don't open with policy. Lead with relationship.</div>
+          </div>
+        </div>
+        <div class="talking-point">
+          <div class="tp-num" aria-hidden="true">2</div>
+          <div class="tp-text">
+            Confirm Redwood's DR was submitted first (Feb 3) and their documentation is on file. Explain the incumbency clause that triggered the conflict.
+            <div class="tp-note">Be factual. Brian Walsh likely has the timestamps. Don't appear to be defending the direct team.</div>
+          </div>
+        </div>
+        <div class="talking-point">
+          <div class="tp-num" aria-hidden="true">3</div>
+          <div class="tp-text">
+            Offer a resolution path: Equinix will award Redwood full credit on DR-2026-RTW-0147 given first-in-time submission and documented influence. Internal AE team will be credited separately for expansion work.
+            <div class="tp-note">Confirm with Deal Desk before the call. Estimated outcome: $22,800 commission to Redwood.</div>
+          </div>
+        </div>
+        <div class="talking-point">
+          <div class="tp-num" aria-hidden="true">4</div>
+          <div class="tp-text">
+            Segue to the larger conversation: Redwood's score has declined from 84 to 62. Revenue is tracking at 60% of target. Is there a pipeline issue, a territory issue, or a team issue we can address together?
+            <div class="tp-note">Don't ignore the health trajectory. The escalation may be a symptom of a disengaged partner.</div>
+          </div>
+        </div>
+        <div class="talking-point">
+          <div class="tp-num" aria-hidden="true">5</div>
+          <div class="tp-text">
+            Confirm next steps: resolve the DR this week, schedule a remediation QBR for March, and flag cert gap as the fastest lever to protect Gold status through the Q1 review.
+            <div class="tp-note">Give Brian something concrete to take back to his team.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT — Einstein spec + actions -->
+  <div>
+
+    <!-- Generation status -->
+    <div class="card">
+      <div class="card-hdr" style="background:#f5f0ff;border-color:#c4b5fd;">
+        <span class="card-title" style="color:#6b21a8;">✦ Einstein Document Generation</span>
+      </div>
+      <div class="card-body" style="font-size:.8125rem;">
+        <div style="margin-bottom:.75rem;">
+          <div style="font-size:.6875rem;font-weight:700;text-transform:uppercase;color:var(--wf-text);letter-spacing:.04em;">Status</div>
+          <div style="margin-top:.25rem;"><span class="badge badge-green">Draft generated</span> · Feb 24, 2026 11:05 AM</div>
+        </div>
+        <div style="margin-bottom:.75rem;">
+          <div style="font-size:.6875rem;font-weight:700;text-transform:uppercase;color:var(--wf-text);letter-spacing:.04em;">Generated by</div>
+          <div style="margin-top:.25rem;">Marcus Chen</div>
+        </div>
+        <div style="margin-bottom:.75rem;">
+          <div style="font-size:.6875rem;font-weight:700;text-transform:uppercase;color:var(--wf-text);letter-spacing:.04em;">Template</div>
+          <div style="margin-top:.25rem;">Partner Escalation Brief v2</div>
+        </div>
+        <div style="margin-bottom:1rem;">
+          <div style="font-size:.6875rem;font-weight:700;text-transform:uppercase;color:var(--wf-text);letter-spacing:.04em;">Output format</div>
+          <div style="margin-top:.25rem;">PDF · Branded Equinix letterhead</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.5rem;">
+          <button class="btn btn-einstein" style="justify-content:center;">✦ Regenerate Brief</button>
+          <button class="btn btn-secondary">Preview PDF</button>
+          <button class="btn btn-secondary">Download PDF</button>
+          <button class="btn btn-secondary">Email to VP Sarah Kim</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Escalation status -->
+    <div class="card">
+      <div class="card-hdr"><span class="card-title">Escalation Status</span></div>
+      <div class="card-body" style="font-size:.8125rem;display:flex;flex-direction:column;gap:.5rem;">
+        <div style="padding:.5rem;background:var(--wf-canvas);border-radius:4px;display:flex;justify-content:space-between;">
+          <span>DR Conflict</span><span class="badge badge-yellow">Open</span>
+        </div>
+        <div style="padding:.5rem;background:var(--wf-canvas);border-radius:4px;display:flex;justify-content:space-between;">
+          <span>Brief Generated</span><span class="badge badge-green">Done</span>
+        </div>
+        <div style="padding:.5rem;background:var(--wf-canvas);border-radius:4px;display:flex;justify-content:space-between;">
+          <span>VP Notified</span><span class="badge badge-green">Done</span>
+        </div>
+        <div style="padding:.5rem;background:var(--wf-canvas);border-radius:4px;display:flex;justify-content:space-between;">
+          <span>VP Call Scheduled</span><span class="badge badge-yellow">Feb 26</span>
+        </div>
+        <div style="padding:.5rem;background:var(--wf-canvas);border-radius:4px;display:flex;justify-content:space-between;">
+          <span>DR Resolution</span><span class="badge" style="background:var(--wf-surface);color:var(--wf-text);">Pending</span>
+        </div>
+        <div style="padding:.5rem;background:var(--wf-canvas);border-radius:4px;display:flex;justify-content:space-between;">
+          <span>Escalation Closed</span><span class="badge" style="background:var(--wf-surface);color:var(--wf-text);">Pending</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Einstein DocGen spec panel — full width -->
+<div class="container" style="padding-bottom:2.5rem;">
+  <div class="einstein-panel" role="complementary" aria-label="Einstein Document Generation implementation spec">
+    <h3><span aria-hidden="true">✦</span> Einstein Document Generation — Implementation Spec</h3>
+
+    <p>The <strong>Generate with Einstein</strong> button triggers Salesforce Einstein Document Generation (generally available as of Summer '24 in Salesforce Enterprise and Unlimited editions). This spec covers the full implementation: data model, prompt template, API flow, and output behavior.</p>
+
+    <h4>Why Einstein DocGen for Escalation Briefs?</h4>
+    <p>Unlike static merged documents (Salesforce Document Builder, Conga), Einstein DocGen uses a generative prompt to synthesize structured CRM data into coherent narrative — ideal for executive-facing content where tone, emphasis, and recommended talking points require judgment, not just field values. The brief content shown above (sections 1–4) is entirely AI-generated from CRM data; PSM reviews and edits before sending.</p>
+
+    <h4>Source Objects — Salesforce Data Model</h4>
+    <table>
+      <tr><th>Object</th><th>Fields used</th><th>Relationship</th></tr>
+      <tr><td><code>Account</code> (Partner)</td><td>Name, Partner_Tier__c, Partner_Since__c, Health_Score__c, Revenue_YTD__c, Revenue_Target__c, Certified_Staff__c</td><td>Root object</td></tr>
+      <tr><td><code>Deal_Registration__c</code></td><td>Name, Status__c, TCV__c, Commission_Exposure__c, Submitted_Date__c, End_Customer__c, Conflict_Reason__c</td><td>Related list on Account</td></tr>
+      <tr><td><code>Escalation__c</code> (custom)</td><td>Escalation_Type__c, Opened_Date__c, VP_Reviewer__c, PSM_Summary__c, Status__c</td><td>Related list on Account</td></tr>
+      <tr><td><code>Activity</code> (Task/Event)</td><td>Subject, ActivityDate, Description, WhoId (contact)</td><td>Activity timeline on Account</td></tr>
+      <tr><td><code>Contact</code></td><td>Name, Title, Email (primary exec + PSM + PAM + VP)</td><td>Related list on Account</td></tr>
+      <tr><td><code>Partner_Program_Agreement__c</code></td><td>Agreement_Status__c, Effective_Date__c, Expiry_Date__c</td><td>Related list on Account</td></tr>
+    </table>
+
+    <h4>Einstein DocGen Prompt Template</h4>
+    <p>Prompt template stored as a <strong>Prompt Template</strong> record in Salesforce (Setup → Einstein → Prompt Templates → Document Generation type). Template ID: <code>PTMPL-ESCALATION-BRIEF-V2</code>.</p>
+    <div class="spec-block">You are preparing a concise escalation brief for a Salesforce VP. The brief will be read by {Escalation__c.VP_Reviewer__r.Name} ahead of a call with the partner executive at {Account.Name}.
+
+Use only the structured data below. Do not invent facts. Write in professional, direct language — no more than 400 words total for sections 3 and 4.
+
+PARTNER PROFILE:
+- Partner: {Account.Name}
+- Tier: {Account.Partner_Tier__c} (since {Account.Tier_Since_Date__c})
+- Health Score: {Account.Health_Score__c}
+- Revenue YTD: {Account.Revenue_YTD__c} vs target {Account.Revenue_Target__c}
+- Certified Staff: {Account.Certified_Staff__c} of {Account.Cert_Required__c}
+- Partner Since: {Account.Partner_Since__c}
+
+DISPUTE:
+- Deal Reg: {Deal_Registration__c.Name}
+- End Customer: {Deal_Registration__c.End_Customer__c}
+- TCV: {Deal_Registration__c.TCV__c}
+- Commission Exposure: {Deal_Registration__c.Commission_Exposure__c}
+- Redwood Submission Date: {Deal_Registration__c.Submitted_Date__c}
+- Conflict Reason: {Deal_Registration__c.Conflict_Reason__c}
+- PSM Summary: {Escalation__c.PSM_Summary__c}
+
+RELATIONSHIP HISTORY (last 5 activities):
+{Activity.list | last 5 | format: "- {ActivityDate}: {Subject} — {Description}"}
+
+TASK: Generate four sections:
+1. Partner Snapshot (field values only, table format)
+2. Dispute Details (field values + 2-sentence PSM assessment)
+3. Relationship History (bullet timeline, most recent first)
+4. Recommended Talking Points (5 numbered points, 2–4 sentences each, include a coaching note for each)</div>
+
+    <h4>Salesforce Configuration Steps</h4>
+    <ol>
+      <li>Enable Einstein Document Generation in Setup → Einstein → Document Generation (requires Einstein 1 or Salesforce Enterprise + AI add-on)</li>
+      <li>Create Prompt Template: Setup → Einstein → Prompt Templates → New → Type: <strong>Document Generation</strong> → Object: <code>Escalation__c</code></li>
+      <li>Paste prompt template above; add merge fields using the field picker. Add related object fields via the dot-notation picker (<code>Escalation__c.Account__r.Name</code>)</li>
+      <li>Associate a <strong>Document Template</strong> (PDF layout with Equinix letterhead) — use the Document Template builder or upload a DOCX template. The generated text is injected into a designated placeholder region</li>
+      <li>Add the <strong>Generate Document</strong> quick action to the <code>Escalation__c</code> page layout. This renders the "Generate with Einstein" button on this screen</li>
+      <li>Configure output: PDF delivery. Set <strong>Post-Generation Action</strong> to: (a) attach PDF to the Escalation record as a File, (b) log a completed Task on the partner Account, (c) optionally trigger a Flow to email the PDF to the VP_Reviewer__c contact</li>
+      <li>PSM sees a preview modal before download/send — they can edit the generated text inline before finalizing</li>
+    </ol>
+
+    <h4>Permissions and Governance</h4>
+    <ul>
+      <li>Generation is available to PSM and PAM profiles only (not AE or partner portal users)</li>
+      <li>Each generation is logged with timestamp, user, and model version for audit purposes</li>
+      <li>The generated PDF is versioned — regeneration creates a new version, previous drafts are retained</li>
+      <li>VP recipient receives the PDF via Salesforce Email (template: Equinix branded, sends from PSM's email alias)</li>
+    </ul>
+
+    <h4>Einstein Model Details</h4>
+    <p>Einstein DocGen uses the configured <strong>Einstein generative model</strong> within the org — defaults to the Salesforce-hosted model (based on Azure OpenAI) or can be pointed to a Bring Your Own Model (BYOM) connector. No data leaves Salesforce's trust boundary. Prompt + CRM data are processed within the Salesforce Einstein AI layer; no external API call to OpenAI is made in the standard configuration.</p>
+
+    <h4>Estimated Effort</h4>
+    <table>
+      <tr><th>Task</th><th>Effort</th><th>Owner</th></tr>
+      <tr><td>Enable Einstein DocGen + license check</td><td>2h</td><td>Salesforce Admin</td></tr>
+      <tr><td>Create Escalation__c custom object (if not exists)</td><td>1 day</td><td>SFDC Developer</td></tr>
+      <tr><td>Build Prompt Template + iterate on output quality</td><td>2–3 days</td><td>PSM + SFDC Developer</td></tr>
+      <tr><td>Design PDF/DOCX output template (branded)</td><td>1 day</td><td>Marketing / Designer</td></tr>
+      <tr><td>Page layout quick action + permission sets</td><td>4h</td><td>SFDC Admin</td></tr>
+      <tr><td>Post-generation Flow (attach + email)</td><td>1 day</td><td>SFDC Developer</td></tr>
+      <tr><td>UAT with PSM team</td><td>2 days</td><td>PSM + QA</td></tr>
+      <tr><td><strong>Total</strong></td><td><strong>~7–10 days</strong></td><td></td></tr>
+    </table>
+  </div>
+</div>
+
+<script src="wf-nav.js"></script>
+</body>
+</html>

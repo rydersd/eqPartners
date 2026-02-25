@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tier Governance — PAM · Equinix PCP</title>
+<link rel="stylesheet" href="wireframe.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Salesforce Sans",sans-serif;background:var(--wf-canvas,#f5f7fb);color:var(--wf-ink,#1e2a3a);}
+header{background:var(--wf-ink,#1e2a3a);color:#fff;padding:0.875rem 2rem;}
+.hdr-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;}
+.logo{font-size:1.375rem;font-weight:700;}
+nav{display:flex;gap:1.5rem;align-items:center;}
+nav a{color:rgba(255,255,255,.8);text-decoration:none;font-size:.875rem;padding:.375rem .625rem;border-radius:4px;}
+nav a.active{background:var(--wf-accent,#3d6daa);color:#fff;}
+.container{max-width:1400px;margin:1.5rem auto;padding:0 2rem;}
+.page-hdr{margin-bottom:1.25rem;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:.75rem;}
+.page-hdr h1{font-size:1.375rem;font-weight:700;}
+.page-hdr p{font-size:.8125rem;color:var(--wf-text);margin-top:.25rem;}
+.btn{padding:.4375rem .875rem;border-radius:5px;font-size:.8125rem;cursor:pointer;font-family:inherit;font-weight:600;border:1px solid transparent;}
+.btn-primary{background:var(--wf-accent,#3d6daa);color:#fff;}
+.btn-secondary{background:#fff;border-color:var(--wf-line);color:var(--wf-ink);}
+
+/* Summary cards */
+.summary-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem;}
+@media(max-width:900px){.summary-row{grid-template-columns:1fr 1fr;}}
+.summary-card{background:#fff;border:1px solid var(--wf-line);border-radius:8px;padding:1rem 1.25rem;}
+.s-label{font-size:.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--wf-text);}
+.s-val{font-size:1.5rem;font-weight:700;margin:.25rem 0;}
+.s-sub{font-size:.75rem;color:var(--wf-text);}
+
+/* Main grid */
+.main-grid{display:grid;grid-template-columns:1fr 340px;gap:1.25rem;}
+@media(max-width:1000px){.main-grid{grid-template-columns:1fr;}}
+.card{background:#fff;border:1px solid var(--wf-line);border-radius:8px;margin-bottom:1rem;}
+.card-hdr{padding:.75rem 1rem;border-bottom:1px solid var(--wf-line);display:flex;align-items:center;justify-content:space-between;}
+.card-title{font-size:.875rem;font-weight:700;}
+.card-body{padding:1rem;}
+
+.tier-table{width:100%;border-collapse:collapse;font-size:.8125rem;}
+.tier-table th{background:var(--wf-surface);padding:.5rem .75rem;text-align:left;font-size:.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--wf-text);border-bottom:2px solid var(--wf-line);}
+.tier-table td{padding:.5rem .75rem;border-bottom:1px solid var(--wf-line);vertical-align:middle;}
+.tier-table tr:last-child td{border-bottom:none;}
+.tier-table tr:hover td{background:#f9fafb;}
+
+.badge{display:inline-block;padding:.125rem .5rem;border-radius:3px;font-size:.6875rem;font-weight:700;}
+.badge-gold{background:#fff3cc;color:#8a5c00;}
+.badge-silver{background:#e8ecf2;color:#475670;}
+.badge-bronze{background:#faeee5;color:#7a4020;}
+.badge-green{background:#e5f7ee;color:#1d7a4e;}
+.badge-yellow{background:#fff3cc;color:#8a5c00;}
+.badge-red{background:#fde8e8;color:#c0392b;}
+.badge-blue{background:#e8f0fb;color:#2b5797;}
+
+.score-pill{display:inline-block;padding:.125rem .5rem;border-radius:10px;font-size:.75rem;font-weight:700;}
+.score-pill.high{background:#e5f7ee;color:#1d7a4e;}
+.score-pill.mid{background:#fff3cc;color:#8a5c00;}
+.score-pill.low{background:#fde8e8;color:#c0392b;}
+
+.row-action{font-size:.6875rem;padding:.1875rem .5rem;border:1px solid var(--wf-line);border-radius:3px;cursor:pointer;color:var(--wf-text);text-decoration:none;background:#fff;display:inline-block;margin-right:.25rem;}
+.row-action:hover{border-color:var(--wf-accent);color:var(--wf-accent);}
+.row-action.primary{background:var(--wf-accent);color:#fff;border-color:var(--wf-accent);}
+
+/* Tier thresholds */
+.threshold-card{border-radius:6px;padding:.875rem 1rem;margin-bottom:.75rem;}
+.threshold-gold{background:#fffbe6;border:1px solid #f0c040;}
+.threshold-silver{background:#f5f7fa;border:1px solid #c5cdd8;}
+.threshold-bronze{background:#fdf3ee;border:1px solid #d4956a;}
+.threshold-label{font-size:.8125rem;font-weight:700;margin-bottom:.375rem;}
+.threshold-rows{font-size:.75rem;color:var(--wf-text);display:flex;flex-direction:column;gap:.1875rem;}
+
+/* Workflow note */
+.workflow-note{background:#f0f5ff;border:1px solid #c0d4f0;border-radius:5px;padding:.625rem .875rem;font-size:.75rem;color:#2b5797;line-height:1.5;margin-bottom:.875rem;}
+</style>
+</head>
+<body>
+
+<header role="banner">
+  <div class="hdr-inner">
+    <div class="logo">⚡ Equinix Partner Channel — PAM</div>
+    <nav aria-label="Primary">
+      <a href="pam-dashboard.html">Home</a>
+      <a href="pam-partner-portfolio.html">Portfolio</a>
+      <a href="pam-tier-management.html" class="active">Tier Governance</a>
+      <a href="pam-program-agreements.html">Agreements</a>
+      <a href="psm-reports-analytics.html">Reports</a>
+    </nav>
+    <div style="font-size:.8125rem;color:rgba(255,255,255,.7);">J. Patterson · PAM, Americas</div>
+  </div>
+</header>
+
+<main class="container">
+  <div class="page-hdr">
+    <div>
+      <h1>Tier Governance</h1>
+      <p>Quarterly tier review cycle · Americas · Q1 2026 review due Mar 5</p>
+    </div>
+    <div style="display:flex;gap:.625rem;">
+      <button class="btn btn-secondary">Export Review Report</button>
+      <button class="btn btn-primary">Run Batch Recalculation</button>
+    </div>
+  </div>
+
+  <!-- Summary row -->
+  <div class="summary-row" role="region" aria-label="Tier review summary">
+    <div class="summary-card">
+      <div class="s-label">Due for Review</div>
+      <div class="s-val">12</div>
+      <div class="s-sub">by Mar 5, 2026</div>
+    </div>
+    <div class="summary-card">
+      <div class="s-label">Upgrade Eligible</div>
+      <div class="s-val" style="color:#1d7a4e;">3</div>
+      <div class="s-sub">score threshold met</div>
+    </div>
+    <div class="summary-card">
+      <div class="s-label">Downgrade Risk</div>
+      <div class="s-val" style="color:#c0392b;">4</div>
+      <div class="s-sub">score below tier minimum</div>
+    </div>
+    <div class="summary-card">
+      <div class="s-label">Probationary Hold</div>
+      <div class="s-val" style="color:#e07b00;">2</div>
+      <div class="s-sub">remediation plans active</div>
+    </div>
+  </div>
+
+  <div class="main-grid">
+    <div>
+      <!-- Partners due for review -->
+      <div class="card">
+        <div class="card-hdr">
+          <span class="card-title">Partners Due for Tier Review — Mar 5, 2026</span>
+          <span style="font-size:.75rem;color:var(--wf-text);">12 partners</span>
+        </div>
+        <div class="card-body" style="padding:0;">
+          <table class="tier-table" aria-label="Tier review queue">
+            <thead>
+              <tr>
+                <th>Partner</th>
+                <th>Current Tier</th>
+                <th>Score</th>
+                <th>Revenue YTD</th>
+                <th>Certs</th>
+                <th>Recommendation</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><a href="pam-partner-account.html" style="color:var(--wf-accent);font-weight:600;text-decoration:none;">Summit Global MSP</a></td>
+                <td><span class="badge badge-silver">Silver</span></td>
+                <td><span class="score-pill high">78</span></td>
+                <td>$2.7M</td>
+                <td>9 / 10 ✓</td>
+                <td><span class="badge badge-green">⬆ Upgrade to Gold</span></td>
+                <td>
+                  <a class="row-action primary" href="#" onclick="return false;">Approve Upgrade</a>
+                  <a class="row-action" href="#">Review</a>
+                </td>
+              </tr>
+              <tr>
+                <td><a href="pam-partner-account.html" style="color:var(--wf-accent);font-weight:600;text-decoration:none;">CloudBridge Solutions</a></td>
+                <td><span class="badge badge-gold">Gold</span></td>
+                <td><span class="score-pill high">84</span></td>
+                <td>$3.2M</td>
+                <td>12 / 15 ⚠</td>
+                <td><span class="badge badge-green">Retain Gold</span></td>
+                <td>
+                  <a class="row-action" href="pam-partner-account.html">Review</a>
+                </td>
+              </tr>
+              <tr>
+                <td><a href="pam-partner-account.html" style="color:var(--wf-accent);font-weight:600;text-decoration:none;">Redwood Tech Partners</a></td>
+                <td><span class="badge badge-gold">Gold</span></td>
+                <td><span class="score-pill mid">62</span></td>
+                <td>$2.1M</td>
+                <td>8 / 15 ✗</td>
+                <td><span class="badge badge-yellow">⚠ Probationary — 90 days</span></td>
+                <td>
+                  <a class="row-action" href="#">Remediation Plan</a>
+                  <a class="row-action" href="psm-escalation-brief.html">Brief</a>
+                </td>
+              </tr>
+              <tr>
+                <td><a href="pam-partner-account.html" style="color:var(--wf-accent);font-weight:600;text-decoration:none;">Nexus Integrators</a></td>
+                <td><span class="badge badge-silver">Silver</span></td>
+                <td><span class="score-pill low">38</span></td>
+                <td>$890K</td>
+                <td>4 / 10 ✗</td>
+                <td><span class="badge badge-red">⬇ Downgrade to Bronze</span></td>
+                <td>
+                  <a class="row-action primary" href="#" onclick="return false;" style="background:#c0392b;">Confirm Downgrade</a>
+                  <a class="row-action" href="#">Override</a>
+                </td>
+              </tr>
+              <tr>
+                <td><a href="pam-partner-account.html" style="color:var(--wf-accent);font-weight:600;text-decoration:none;">BlueShore Systems</a></td>
+                <td><span class="badge badge-bronze">Bronze</span></td>
+                <td><span class="score-pill mid">54</span></td>
+                <td>$440K</td>
+                <td>5 / 5 ✓</td>
+                <td><span class="badge badge-green">Retain Bronze</span></td>
+                <td>
+                  <a class="row-action" href="#">Review</a>
+                </td>
+              </tr>
+              <tr>
+                <td><a href="pam-partner-account.html" style="color:var(--wf-accent);font-weight:600;text-decoration:none;">Apex Cloud EMEA</a></td>
+                <td><span class="badge badge-bronze">Bronze</span></td>
+                <td><span class="score-pill mid">47</span></td>
+                <td>$310K</td>
+                <td>4 / 5 ⚠</td>
+                <td><span class="badge badge-green">Retain Bronze</span></td>
+                <td>
+                  <a class="row-action" href="#">Review</a>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="7" style="padding:.5rem .75rem;font-size:.75rem;color:var(--wf-text);font-style:italic;">+ 6 more partners · Click to expand</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tier movement history -->
+      <div class="card">
+        <div class="card-hdr">
+          <span class="card-title">Tier Movement History — Last 4 Quarters</span>
+        </div>
+        <div class="card-body" style="padding:0;">
+          <table class="tier-table" aria-label="Tier movement history">
+            <thead>
+              <tr><th>Partner</th><th>Date</th><th>Change</th><th>Reason</th><th>Approved by</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>CloudBridge Solutions</td><td>Jan 2026</td>
+                <td><span class="badge badge-silver">Silver</span> → <span class="badge badge-gold">Gold</span></td>
+                <td>Score 84 · Revenue $3.8M</td><td>J. Patterson</td>
+              </tr>
+              <tr>
+                <td>Pacific Rim Solutions</td><td>Oct 2025</td>
+                <td><span class="badge badge-bronze">Bronze</span> → <span class="badge badge-silver">Silver</span></td>
+                <td>Score 72 · All certs met</td><td>J. Patterson</td>
+              </tr>
+              <tr>
+                <td>DataCore Partners</td><td>Oct 2025</td>
+                <td><span class="badge badge-gold">Gold</span> → <span class="badge badge-silver">Silver</span></td>
+                <td>Score 44 · Revenue decline</td><td>J. Patterson</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right sidebar — tier thresholds -->
+    <div>
+      <div class="card">
+        <div class="card-hdr"><span class="card-title">Tier Thresholds</span><a href="psm-program-admin.html" style="font-size:.75rem;color:var(--wf-accent);">Edit →</a></div>
+        <div class="card-body" style="padding:.75rem;">
+          <div class="threshold-card threshold-gold">
+            <div class="threshold-label" style="color:#8a5c00;">🏅 Gold</div>
+            <div class="threshold-rows">
+              <div>Composite score ≥ 70</div>
+              <div>Annual revenue ≥ $3M</div>
+              <div>Certified staff ≥ 15</div>
+              <div>Deal registrations ≥ 8/qtr</div>
+              <div>QBR participation: quarterly</div>
+            </div>
+          </div>
+          <div class="threshold-card threshold-silver">
+            <div class="threshold-label" style="color:#475670;">🥈 Silver</div>
+            <div class="threshold-rows">
+              <div>Composite score 40–69</div>
+              <div>Annual revenue ≥ $750K</div>
+              <div>Certified staff ≥ 8</div>
+              <div>Deal registrations ≥ 4/qtr</div>
+              <div>QBR participation: semi-annual</div>
+            </div>
+          </div>
+          <div class="threshold-card threshold-bronze">
+            <div class="threshold-label" style="color:#7a4020;">🥉 Bronze</div>
+            <div class="threshold-rows">
+              <div>Composite score &lt; 40</div>
+              <div>Annual revenue: any</div>
+              <div>Certified staff ≥ 2</div>
+              <div>Deal registrations ≥ 1/qtr</div>
+              <div>Annual check-in</div>
+            </div>
+          </div>
+          <p style="font-size:.6875rem;color:var(--wf-text);margin-top:.625rem;">Scoring: Revenue 40% · Training 30% · Deal Reg 30%</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hdr"><span class="card-title">Tier Review Process</span></div>
+        <div class="card-body" style="font-size:.8125rem;">
+          <div class="workflow-note">Tier reviews run quarterly. Automated recalculation fires on the 1st of the review month. PAM reviews recommendations and approves changes. Downgrades require 30-day advance notice to partner. Upgrades take effect immediately.</div>
+          <ol style="padding-left:1.25rem;display:flex;flex-direction:column;gap:.375rem;">
+            <li>System recalculates all partner scores</li>
+            <li>PAM reviews auto-recommendations</li>
+            <li>Overrides or approvals applied</li>
+            <li>Tier changes trigger agreement amendment flow</li>
+            <li>Partner notified via Experience Cloud + email</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script src="wf-nav.js"></script>
+</body>
+</html>

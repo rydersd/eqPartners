@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Partner Portfolio — PAM · Equinix PCP</title>
+<link rel="stylesheet" href="wireframe.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Salesforce Sans",sans-serif;background:var(--wf-canvas,#f5f7fb);color:var(--wf-ink,#1e2a3a);}
+header{background:var(--wf-ink,#1e2a3a);color:#fff;padding:0.875rem 2rem;}
+.hdr-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;}
+.logo{display:flex;align-items:center;gap:.625rem;font-size:1.375rem;font-weight:700;}
+nav{display:flex;gap:1.5rem;align-items:center;}
+nav a{color:rgba(255,255,255,.8);text-decoration:none;font-size:.875rem;padding:.375rem .625rem;border-radius:4px;transition:background .15s;}
+nav a:hover{background:rgba(255,255,255,.1);}
+nav a.active{background:var(--wf-accent,#3d6daa);color:#fff;}
+.container{max-width:1400px;margin:1.5rem auto;padding:0 2rem;}
+.page-hdr{margin-bottom:1rem;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:.75rem;}
+.page-hdr h1{font-size:1.375rem;font-weight:700;color:var(--wf-ink);}
+.page-hdr p{font-size:.8125rem;color:var(--wf-text,#3b4f68);margin-top:.125rem;}
+
+/* Filters bar */
+.filters{display:flex;gap:.625rem;align-items:center;flex-wrap:wrap;padding:.75rem 1rem;background:#fff;border:1px solid var(--wf-line,#dde2ea);border-radius:8px;margin-bottom:1rem;}
+.filter-chip{padding:.3125rem .75rem;background:var(--wf-surface,#edf1f7);border:1px solid var(--wf-line);border-radius:20px;font-size:.75rem;cursor:pointer;white-space:nowrap;}
+.filter-chip.active{background:var(--wf-accent);border-color:var(--wf-accent);color:#fff;}
+.search-input{padding:.375rem .75rem;border:1px solid var(--wf-line);border-radius:5px;font-size:.8125rem;min-width:220px;font-family:inherit;}
+.filters select{padding:.375rem .625rem;border:1px solid var(--wf-line);border-radius:5px;font-size:.8125rem;font-family:inherit;background:#fff;}
+
+/* Table */
+.portfolio-table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--wf-line);border-radius:8px;overflow:hidden;font-size:.8125rem;}
+.portfolio-table thead{background:var(--wf-surface);}
+.portfolio-table th{padding:.625rem .875rem;text-align:left;font-size:.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--wf-text);border-bottom:2px solid var(--wf-line);white-space:nowrap;}
+.portfolio-table th.sortable{cursor:pointer;}
+.portfolio-table th.sortable:hover{color:var(--wf-accent);}
+.portfolio-table td{padding:.625rem .875rem;border-bottom:1px solid var(--wf-line);vertical-align:middle;}
+.portfolio-table tr:last-child td{border-bottom:none;}
+.portfolio-table tr:hover td{background:#f9fafb;}
+
+.partner-name{font-weight:600;color:var(--wf-accent);text-decoration:none;}
+.partner-name:hover{text-decoration:underline;}
+.partner-type{font-size:.6875rem;color:var(--wf-text);}
+
+.badge{display:inline-block;padding:.125rem .5rem;border-radius:3px;font-size:.6875rem;font-weight:700;}
+.badge-gold{background:#fff3cc;color:#8a5c00;}
+.badge-silver{background:#e8ecf2;color:#475670;}
+.badge-bronze{background:#faeee5;color:#7a4020;}
+.badge-green{background:#e5f7ee;color:#1d7a4e;}
+.badge-yellow{background:#fff3cc;color:#8a5c00;}
+.badge-red{background:#fde8e8;color:#c0392b;}
+
+/* Score pill */
+.score{display:inline-block;padding:.125rem .5rem;border-radius:10px;font-size:.75rem;font-weight:700;}
+.score.high{background:#e5f7ee;color:#1d7a4e;}
+.score.mid{background:#fff3cc;color:#8a5c00;}
+.score.low{background:#fde8e8;color:#c0392b;}
+
+/* Trend arrows */
+.trend-up{color:#1d7a4e;font-size:.75rem;}
+.trend-dn{color:#c0392b;font-size:.75rem;}
+.trend-flat{color:var(--wf-text);font-size:.75rem;}
+
+/* Pagination */
+.pagination{display:flex;align-items:center;gap:.5rem;padding:.75rem 0;font-size:.8125rem;color:var(--wf-text);}
+.page-btn{padding:.25rem .625rem;border:1px solid var(--wf-line);border-radius:4px;cursor:pointer;background:#fff;font-size:.8125rem;}
+.page-btn.active{background:var(--wf-accent);color:#fff;border-color:var(--wf-accent);}
+
+/* Actions column */
+.row-actions{display:flex;gap:.375rem;}
+.row-action{font-size:.6875rem;padding:.1875rem .5rem;border:1px solid var(--wf-line);border-radius:3px;cursor:pointer;white-space:nowrap;color:var(--wf-text);text-decoration:none;background:#fff;}
+.row-action:hover{border-color:var(--wf-accent);color:var(--wf-accent);}
+</style>
+</head>
+<body>
+
+<header role="banner">
+  <div class="hdr-inner">
+    <div class="logo">⚡ Equinix Partner Channel — PAM</div>
+    <nav aria-label="Primary">
+      <a href="pam-dashboard.html">Home</a>
+      <a href="pam-partner-portfolio.html" class="active">Portfolio</a>
+      <a href="pam-tier-management.html">Tier Governance</a>
+      <a href="pam-program-agreements.html">Agreements</a>
+      <a href="psm-reports-analytics.html">Reports</a>
+    </nav>
+    <div style="font-size:.8125rem;color:rgba(255,255,255,.7);">J. Patterson · PAM, Americas</div>
+  </div>
+</header>
+
+<main class="container">
+  <div class="page-hdr">
+    <div>
+      <h1>Partner Portfolio</h1>
+      <p>84 managed partners · Americas · Q1 2026</p>
+    </div>
+    <div style="display:flex;gap:.625rem;">
+      <button style="padding:.5rem 1rem;background:var(--wf-surface);border:1px solid var(--wf-line);border-radius:5px;font-size:.8125rem;cursor:pointer;">Export CSV</button>
+      <button style="padding:.5rem 1rem;background:var(--wf-accent);color:#fff;border:none;border-radius:5px;font-size:.8125rem;cursor:pointer;font-weight:600;">+ Recruit Partner</button>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div class="filters" role="search" aria-label="Portfolio filters">
+    <input class="search-input" type="search" placeholder="Search partners…" aria-label="Search partners">
+    <span class="filter-chip active">All Tiers</span>
+    <span class="filter-chip">Gold (24)</span>
+    <span class="filter-chip">Silver (36)</span>
+    <span class="filter-chip">Bronze (24)</span>
+    <select aria-label="Filter by region">
+      <option>All Regions</option>
+      <option>North America</option>
+      <option>LATAM</option>
+    </select>
+    <select aria-label="Filter by type">
+      <option>All Types</option>
+      <option>Systems Integrator</option>
+      <option>MSP</option>
+      <option>VAR</option>
+      <option>ISV</option>
+    </select>
+    <select aria-label="Filter by health">
+      <option>Health: All</option>
+      <option>Green</option>
+      <option>Yellow</option>
+      <option>Red</option>
+    </select>
+    <select aria-label="Sort by">
+      <option>Sort: Revenue ↓</option>
+      <option>Sort: Score ↓</option>
+      <option>Sort: Tier review date</option>
+      <option>Sort: Partner name A–Z</option>
+    </select>
+  </div>
+
+  <!-- Partner table -->
+  <table class="portfolio-table" aria-label="Partner portfolio">
+    <thead>
+      <tr>
+        <th class="sortable">Partner ↕</th>
+        <th>Tier</th>
+        <th>Type</th>
+        <th class="sortable">Score ↕</th>
+        <th class="sortable">Partner Rev Q1 ↕</th>
+        <th>Health</th>
+        <th>Tier Review</th>
+        <th>Agreement</th>
+        <th>Owner</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="partner-name" href="pam-partner-account.html">CloudBridge Solutions</a><div class="partner-type">SI · Mid-Market</div></td>
+        <td><span class="badge badge-gold">Gold</span></td>
+        <td>SI</td>
+        <td><span class="score high">84</span></td>
+        <td>$3.2M</td>
+        <td><span class="badge badge-green">Green</span></td>
+        <td>Mar 5 <span class="trend-flat">→</span></td>
+        <td><span class="badge badge-yellow">Expires Feb 28</span></td>
+        <td>J. Patterson</td>
+        <td class="row-actions">
+          <a class="row-action" href="pam-partner-account.html">View</a>
+          <a class="row-action" href="pam-program-agreements.html">Renew</a>
+        </td>
+      </tr>
+      <tr>
+        <td><a class="partner-name" href="pam-partner-account.html">Summit Global MSP</a><div class="partner-type">MSP · Enterprise</div></td>
+        <td><span class="badge badge-silver">Silver</span></td>
+        <td>MSP</td>
+        <td><span class="score high">78</span></td>
+        <td>$2.7M</td>
+        <td><span class="badge badge-green">Green</span></td>
+        <td>Mar 5 <span class="trend-up">↑ Upgrade eligible</span></td>
+        <td><span class="badge badge-green">Active</span></td>
+        <td>J. Patterson</td>
+        <td class="row-actions">
+          <a class="row-action" href="pam-partner-account.html">View</a>
+          <a class="row-action" href="pam-tier-management.html">Upgrade</a>
+        </td>
+      </tr>
+      <tr>
+        <td><a class="partner-name" href="pam-partner-account.html">Redwood Tech Partners</a><div class="partner-type">SI · Enterprise</div></td>
+        <td><span class="badge badge-gold">Gold</span></td>
+        <td>SI</td>
+        <td><span class="score mid">62</span></td>
+        <td>$2.1M</td>
+        <td><span class="badge badge-red">Red</span></td>
+        <td>Mar 5 <span class="trend-dn">↓ At risk</span></td>
+        <td><span class="badge badge-green">Active</span></td>
+        <td>J. Patterson</td>
+        <td class="row-actions">
+          <a class="row-action" href="pam-partner-account.html">View</a>
+          <a class="row-action" href="psm-escalation-brief.html">Brief</a>
+        </td>
+      </tr>
+      <tr>
+        <td><a class="partner-name" href="pam-partner-account.html">Nexus Integrators</a><div class="partner-type">SI · Commercial</div></td>
+        <td><span class="badge badge-silver">Silver</span></td>
+        <td>SI</td>
+        <td><span class="score low">38</span></td>
+        <td>$890K</td>
+        <td><span class="badge badge-red">Red</span></td>
+        <td>Mar 5 <span class="trend-dn">↓ Downgrade risk</span></td>
+        <td><span class="badge badge-green">Active</span></td>
+        <td>J. Patterson</td>
+        <td class="row-actions">
+          <a class="row-action" href="pam-partner-account.html">View</a>
+          <a class="row-action" href="pam-tier-management.html">Review</a>
+        </td>
+      </tr>
+      <tr>
+        <td><a class="partner-name" href="pam-partner-account.html">BlueShore Systems</a><div class="partner-type">VAR · SMB</div></td>
+        <td><span class="badge badge-bronze">Bronze</span></td>
+        <td>VAR</td>
+        <td><span class="score mid">54</span></td>
+        <td>$440K</td>
+        <td><span class="badge badge-yellow">Yellow</span></td>
+        <td>Mar 5 <span class="trend-flat">→</span></td>
+        <td><span class="badge badge-yellow">JBP unsigned</span></td>
+        <td>A. Cruz</td>
+        <td class="row-actions">
+          <a class="row-action" href="pam-partner-account.html">View</a>
+        </td>
+      </tr>
+      <tr>
+        <td><a class="partner-name" href="pam-partner-account.html">Apex Cloud EMEA</a><div class="partner-type">MSP · Commercial</div></td>
+        <td><span class="badge badge-bronze">Bronze</span></td>
+        <td>MSP</td>
+        <td><span class="score mid">47</span></td>
+        <td>$310K</td>
+        <td><span class="badge badge-green">Green</span></td>
+        <td>Mar 5 <span class="trend-flat">→</span></td>
+        <td><span class="badge badge-yellow">Pending countersign</span></td>
+        <td>J. Patterson</td>
+        <td class="row-actions">
+          <a class="row-action" href="pam-partner-account.html">View</a>
+          <a class="row-action" href="pam-program-agreements.html">Follow up</a>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="10" style="padding:.625rem .875rem;font-size:.75rem;color:var(--wf-text);text-align:center;font-style:italic;">Showing 6 of 84 partners · filtered by Americas · sorted by Revenue</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="pagination" aria-label="Pagination">
+    <span>Showing 1–25 of 84</span>
+    <button class="page-btn active" aria-current="page">1</button>
+    <button class="page-btn">2</button>
+    <button class="page-btn">3</button>
+    <button class="page-btn">4</button>
+    <span>…</span>
+    <button class="page-btn">Next →</button>
+  </div>
+
+</main>
+
+<script src="wf-nav.js"></script>
+</body>
+</html>

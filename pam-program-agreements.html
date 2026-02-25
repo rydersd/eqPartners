@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Program Agreements — PAM · Equinix PCP</title>
+<link rel="stylesheet" href="wireframe.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Salesforce Sans",sans-serif;background:var(--wf-canvas,#f5f7fb);color:var(--wf-ink,#1e2a3a);}
+header{background:var(--wf-ink,#1e2a3a);color:#fff;padding:0.875rem 2rem;}
+.hdr-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;}
+.logo{font-size:1.375rem;font-weight:700;}
+nav{display:flex;gap:1.5rem;}
+nav a{color:rgba(255,255,255,.8);text-decoration:none;font-size:.875rem;padding:.375rem .625rem;border-radius:4px;}
+nav a.active{background:var(--wf-accent);color:#fff;}
+.container{max-width:1400px;margin:1.5rem auto;padding:0 2rem;}
+.page-hdr{margin-bottom:1.25rem;display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:.75rem;}
+.page-hdr h1{font-size:1.375rem;font-weight:700;}
+.page-hdr p{font-size:.8125rem;color:var(--wf-text);margin-top:.25rem;}
+.btn{padding:.4375rem .875rem;border-radius:5px;font-size:.8125rem;cursor:pointer;font-family:inherit;font-weight:600;border:1px solid transparent;}
+.btn-primary{background:var(--wf-accent);color:#fff;}
+.btn-secondary{background:#fff;border-color:var(--wf-line);color:var(--wf-ink);}
+
+.summary-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:1.5rem;}
+@media(max-width:900px){.summary-row{grid-template-columns:1fr 1fr;}}
+.summary-card{background:#fff;border:1px solid var(--wf-line);border-radius:8px;padding:1rem 1.25rem;}
+.s-label{font-size:.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--wf-text);}
+.s-val{font-size:1.5rem;font-weight:700;margin:.25rem 0;}
+.s-sub{font-size:.75rem;color:var(--wf-text);}
+
+/* Table */
+.ag-table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--wf-line);border-radius:8px;overflow:hidden;font-size:.8125rem;}
+.ag-table thead{background:var(--wf-surface);}
+.ag-table th{padding:.5rem .875rem;text-align:left;font-size:.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--wf-text);border-bottom:2px solid var(--wf-line);}
+.ag-table td{padding:.5rem .875rem;border-bottom:1px solid var(--wf-line);vertical-align:middle;}
+.ag-table tr:last-child td{border-bottom:none;}
+.ag-table tr:hover td{background:#f9fafb;}
+
+.badge{display:inline-block;padding:.125rem .5rem;border-radius:3px;font-size:.6875rem;font-weight:700;}
+.badge-gold{background:#fff3cc;color:#8a5c00;}
+.badge-silver{background:#e8ecf2;color:#475670;}
+.badge-bronze{background:#faeee5;color:#7a4020;}
+.badge-green{background:#e5f7ee;color:#1d7a4e;}
+.badge-yellow{background:#fff3cc;color:#8a5c00;}
+.badge-red{background:#fde8e8;color:#c0392b;}
+.badge-gray{background:var(--wf-surface);color:var(--wf-text);}
+
+.row-action{font-size:.6875rem;padding:.1875rem .5rem;border:1px solid var(--wf-line);border-radius:3px;cursor:pointer;color:var(--wf-text);text-decoration:none;background:#fff;display:inline-block;margin-right:.25rem;}
+.row-action:hover{border-color:var(--wf-accent);color:var(--wf-accent);}
+
+/* Filters */
+.filters{display:flex;gap:.625rem;flex-wrap:wrap;padding:.75rem 1rem;background:#fff;border:1px solid var(--wf-line);border-radius:8px;margin-bottom:1rem;}
+.filter-chip{padding:.3125rem .75rem;background:var(--wf-surface);border:1px solid var(--wf-line);border-radius:20px;font-size:.75rem;cursor:pointer;}
+.filter-chip.active{background:var(--wf-accent);border-color:var(--wf-accent);color:#fff;}
+.search-input{padding:.375rem .75rem;border:1px solid var(--wf-line);border-radius:5px;font-size:.8125rem;min-width:200px;font-family:inherit;}
+select{padding:.375rem .625rem;border:1px solid var(--wf-line);border-radius:5px;font-size:.8125rem;font-family:inherit;background:#fff;}
+
+/* Detail panel note */
+.spec-note{background:#fff8e8;border:1px solid #e0c050;border-radius:5px;padding:.75rem 1rem;font-size:.75rem;color:#6b4c00;line-height:1.6;margin-top:1.25rem;}
+.spec-note h4{font-weight:700;font-size:.8125rem;margin-bottom:.5rem;color:#5a3c00;}
+</style>
+</head>
+<body>
+
+<header role="banner">
+  <div class="hdr-inner">
+    <div class="logo">⚡ Equinix Partner Channel — PAM</div>
+    <nav aria-label="Primary">
+      <a href="pam-dashboard.html">Home</a>
+      <a href="pam-partner-portfolio.html">Portfolio</a>
+      <a href="pam-tier-management.html">Tier Governance</a>
+      <a href="pam-program-agreements.html" class="active">Agreements</a>
+      <a href="psm-reports-analytics.html">Reports</a>
+    </nav>
+    <div style="font-size:.8125rem;color:rgba(255,255,255,.7);">J. Patterson · PAM, Americas</div>
+  </div>
+</header>
+
+<main class="container">
+  <div class="page-hdr">
+    <div>
+      <h1>Program Agreements</h1>
+      <p>Partner Program Agreements (PPAs), amendments, and e-signature tracking · Americas</p>
+    </div>
+    <div style="display:flex;gap:.625rem;">
+      <button class="btn btn-secondary">Export</button>
+      <button class="btn btn-primary">Generate New Agreement</button>
+    </div>
+  </div>
+
+  <div class="summary-row" role="region" aria-label="Agreement summary">
+    <div class="summary-card">
+      <div class="s-label">Active Agreements</div>
+      <div class="s-val">79</div>
+      <div class="s-sub">of 84 partners</div>
+    </div>
+    <div class="summary-card">
+      <div class="s-label">Expiring in 90 Days</div>
+      <div class="s-val" style="color:#e07b00;">7</div>
+      <div class="s-sub">earliest: Feb 28</div>
+    </div>
+    <div class="summary-card">
+      <div class="s-label">Pending Countersign</div>
+      <div class="s-val" style="color:#e07b00;">4</div>
+      <div class="s-sub">sent, awaiting partner</div>
+    </div>
+    <div class="summary-card">
+      <div class="s-label">No Agreement</div>
+      <div class="s-val" style="color:#c0392b;">5</div>
+      <div class="s-sub">new partners in setup</div>
+    </div>
+  </div>
+
+  <div class="filters" role="search" aria-label="Agreement filters">
+    <input class="search-input" type="search" placeholder="Search by partner or agreement ID…" aria-label="Search agreements">
+    <span class="filter-chip active">All</span>
+    <span class="filter-chip">Active</span>
+    <span class="filter-chip">Expiring 90d</span>
+    <span class="filter-chip">Pending signature</span>
+    <span class="filter-chip">Expired</span>
+    <select aria-label="Filter by tier"><option>All Tiers</option><option>Gold</option><option>Silver</option><option>Bronze</option></select>
+    <select aria-label="Sort"><option>Sort: Expiry date ↑</option><option>Sort: Partner name A–Z</option><option>Sort: Date created ↓</option></select>
+  </div>
+
+  <table class="ag-table" aria-label="Program agreements">
+    <thead>
+      <tr>
+        <th>Agreement ID</th>
+        <th>Partner</th>
+        <th>Tier</th>
+        <th>Type</th>
+        <th>Effective</th>
+        <th>Expires</th>
+        <th>Status</th>
+        <th>e-Sign</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a href="#" style="color:var(--wf-accent);font-weight:600;text-decoration:none;">PPA-2024-CBR-007</a></td>
+        <td><a href="pam-partner-account.html" style="color:var(--wf-accent);text-decoration:none;">CloudBridge Solutions</a></td>
+        <td><span class="badge badge-gold">Gold</span></td>
+        <td>Program Agreement</td>
+        <td>Mar 1, 2024</td>
+        <td style="color:#c0392b;font-weight:600;">Feb 28, 2026</td>
+        <td><span class="badge badge-red">⚠ Expiring</span></td>
+        <td><span class="badge badge-green">Signed</span></td>
+        <td>
+          <a class="row-action" href="#">Renew</a>
+          <a class="row-action" href="#">View PDF</a>
+        </td>
+      </tr>
+      <tr>
+        <td><a href="#" style="color:var(--wf-accent);font-weight:600;text-decoration:none;">PPA-2024-SMG-014</a></td>
+        <td><a href="pam-partner-account.html" style="color:var(--wf-accent);text-decoration:none;">Summit Global MSP</a></td>
+        <td><span class="badge badge-silver">Silver</span></td>
+        <td>Program Agreement</td>
+        <td>Jun 1, 2024</td>
+        <td>May 31, 2026</td>
+        <td><span class="badge badge-green">Active</span></td>
+        <td><span class="badge badge-green">Signed</span></td>
+        <td>
+          <a class="row-action" href="#">View PDF</a>
+          <a class="row-action" href="#">Amendment</a>
+        </td>
+      </tr>
+      <tr>
+        <td><a href="#" style="color:var(--wf-accent);font-weight:600;text-decoration:none;">PPA-2025-RTP-022</a></td>
+        <td><a href="pam-partner-account.html" style="color:var(--wf-accent);text-decoration:none;">Redwood Tech Partners</a></td>
+        <td><span class="badge badge-gold">Gold</span></td>
+        <td>Program Agreement</td>
+        <td>Jan 15, 2025</td>
+        <td>Jan 14, 2027</td>
+        <td><span class="badge badge-green">Active</span></td>
+        <td><span class="badge badge-green">Signed</span></td>
+        <td>
+          <a class="row-action" href="#">View PDF</a>
+          <a class="row-action" href="#">Amendment</a>
+        </td>
+      </tr>
+      <tr>
+        <td><a href="#" style="color:var(--wf-accent);font-weight:600;text-decoration:none;">PPA-2025-NXI-031</a></td>
+        <td><a href="pam-partner-account.html" style="color:var(--wf-accent);text-decoration:none;">Nexus Integrators</a></td>
+        <td><span class="badge badge-silver">Silver</span></td>
+        <td>Program Agreement + Downgrade Notice</td>
+        <td>Apr 1, 2025</td>
+        <td>Mar 31, 2027</td>
+        <td><span class="badge badge-yellow">⚠ Amendment pending</span></td>
+        <td><span class="badge badge-yellow">Awaiting partner</span></td>
+        <td>
+          <a class="row-action" href="#">Send Reminder</a>
+          <a class="row-action" href="#">View PDF</a>
+        </td>
+      </tr>
+      <tr>
+        <td><a href="#" style="color:var(--wf-accent);font-weight:600;text-decoration:none;">PPA-2026-ACE-041</a></td>
+        <td><a href="pam-partner-account.html" style="color:var(--wf-accent);text-decoration:none;">Apex Cloud EMEA</a></td>
+        <td><span class="badge badge-bronze">Bronze</span></td>
+        <td>Program Agreement — Bronze</td>
+        <td>Feb 15, 2026</td>
+        <td>Feb 14, 2028</td>
+        <td><span class="badge badge-yellow">Pending countersign</span></td>
+        <td><span class="badge badge-yellow">Equinix signed · Awaiting partner</span></td>
+        <td>
+          <a class="row-action" href="#">Send Reminder</a>
+          <a class="row-action" href="#">View PDF</a>
+        </td>
+      </tr>
+      <tr>
+        <td>—</td>
+        <td><a href="pam-partner-account.html" style="color:var(--wf-accent);text-decoration:none;">BlueShore Systems</a></td>
+        <td><span class="badge badge-bronze">Bronze</span></td>
+        <td>JBP only (no PPA on file)</td>
+        <td>—</td>
+        <td>—</td>
+        <td><span class="badge badge-red">No agreement</span></td>
+        <td><span class="badge badge-red">Not started</span></td>
+        <td>
+          <a class="row-action" href="#" style="background:var(--wf-accent);color:#fff;border-color:var(--wf-accent);">Generate PPA</a>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="9" style="padding:.5rem .875rem;font-size:.75rem;color:var(--wf-text);text-align:center;font-style:italic;">Showing 6 of 84 agreements · sorted by expiry date</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Design spec note -->
+  <div class="spec-note">
+    <h4>Design Note — Agreement Generation via Salesforce Document Builder</h4>
+    Agreements are generated using <strong>Salesforce Document Builder</strong> (Lightning Document Builder, generally available as of Spring '24). PAM selects agreement type (Bronze/Silver/Gold PPA, JBP, Amendment), the system pulls: legal entity name, D&amp;B verified address, tier, product authorizations, and commission rate table from the partner account record. DocBuilder merges into a branded PDF template. E-signature is handled via <strong>Salesforce eSignature</strong> (DocuSign integration via Salesforce Agreements/CLM), with envelope status synced back to the agreement record in real time. For escalation briefs specifically, see <a href="psm-escalation-brief.html" style="color:#8a5c00;">psm-escalation-brief.html</a> — those use <strong>Einstein Document Generation</strong>.
+  </div>
+
+</main>
+
+<script src="wf-nav.js"></script>
+</body>
+</html>
