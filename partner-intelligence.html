@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Partner Intelligence — Signal Layer Vision · Equinix PCP</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    /* ── Vision doc layout ── */
+    .pi-shell { max-width: 960px; margin: 0 auto; padding: 40px 24px 100px; }
+
+    .pi-hero { margin-bottom: 56px; padding-bottom: 40px; border-bottom: 2px solid var(--wf-tint); }
+    .pi-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--wf-accent); margin-bottom: 12px; }
+    .pi-hero h1 { font-size: 36px; font-weight: 800; color: var(--wf-ink); line-height: 1.15; margin: 0 0 16px; }
+    .pi-hero h1 em { font-style: normal; color: var(--wf-accent); }
+    .pi-hero-sub { font-size: 16px; color: var(--wf-muted); line-height: 1.65; max-width: 680px; }
+
+    .pi-section { margin-bottom: 52px; }
+    .pi-section h2 { font-size: 20px; font-weight: 800; color: var(--wf-ink); margin: 0 0 6px; }
+    .pi-section-sub { font-size: 13px; color: var(--wf-muted); margin-bottom: 24px; }
+    .pi-section p { font-size: 14px; color: var(--wf-text); line-height: 1.7; margin-bottom: 14px; max-width: 720px; }
+
+    /* ── The problem ── */
+    .pi-silo-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 24px 0; }
+    .pi-silo { background: var(--wf-surface); border: 1px solid var(--wf-line); border-radius: 6px; padding: 16px; }
+    .pi-silo-icon { font-size: 22px; margin-bottom: 8px; }
+    .pi-silo-name { font-size: 12px; font-weight: 700; color: var(--wf-ink); margin-bottom: 4px; }
+    .pi-silo-data { font-size: 11px; color: var(--wf-muted); line-height: 1.5; }
+    .pi-silo-lock { font-size: 10px; color: var(--wf-red); font-weight: 700; margin-top: 8px; letter-spacing: .04em; }
+    .pi-arrow-row { display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 22px; color: var(--wf-line); margin: 8px 0; }
+    .pi-unified { background: var(--wf-ink); border-radius: 8px; padding: 20px 24px; display: flex; align-items: center; gap: 16px; margin: 8px 0 0; }
+    .pi-unified-icon { font-size: 28px; flex-shrink: 0; }
+    .pi-unified-name { font-size: 14px; font-weight: 700; color: #e2e8f0; margin-bottom: 4px; }
+    .pi-unified-desc { font-size: 12px; color: #8aa4c8; line-height: 1.5; }
+
+    /* ── Signal types ── */
+    .pi-type-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin: 24px 0; }
+    .pi-type-card { border-radius: 8px; padding: 20px; }
+    .pi-type-card.program     { background: #0d1f3a; border: 1px solid #1e3a66; }
+    .pi-type-card.risk        { background: #1e0f08; border: 1px solid #5a3010; }
+    .pi-type-card.opportunity { background: #071a12; border: 1px solid #0f3a22; }
+    .pi-type-card.insight     { background: #111c28; border: 1px solid #2a3a50; }
+    .pi-type-icon { font-size: 24px; margin-bottom: 10px; }
+    .pi-type-name { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 6px; }
+    .pi-type-card.program     .pi-type-name { color: #60a5fa; }
+    .pi-type-card.risk        .pi-type-name { color: #fb923c; }
+    .pi-type-card.opportunity .pi-type-name { color: #34d399; }
+    .pi-type-card.insight     .pi-type-name { color: #94a3b8; }
+    .pi-type-headline { font-size: 14px; font-weight: 700; color: #e2e8f0; margin-bottom: 6px; }
+    .pi-type-desc { font-size: 12px; color: #8aa4c8; line-height: 1.55; margin-bottom: 10px; }
+    .pi-type-example { font-size: 11px; font-style: italic; color: #4a6080; border-top: 1px solid #1e2d40; padding-top: 10px; line-height: 1.5; }
+    .pi-type-example strong { color: #6a8aaa; font-style: normal; }
+
+    /* ── Fabric Attach scenario ── */
+    .pi-scenario { background: var(--wf-surface); border: 1px solid var(--wf-line); border-radius: 8px; padding: 24px; margin: 24px 0; }
+    .pi-scenario-label { font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--wf-accent); margin-bottom: 12px; }
+    .pi-scenario h3 { font-size: 18px; font-weight: 800; color: var(--wf-ink); margin: 0 0 8px; }
+    .pi-scenario-desc { font-size: 13px; color: var(--wf-muted); margin-bottom: 20px; line-height: 1.6; }
+    .pi-flow { display: flex; flex-direction: column; gap: 0; }
+    .pi-flow-step { display: flex; gap: 16px; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid var(--wf-tint); }
+    .pi-flow-step:last-child { border-bottom: none; }
+    .pi-flow-num { width: 26px; height: 26px; border-radius: 50%; background: var(--wf-accent); color: white; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .pi-flow-content { flex: 1; }
+    .pi-flow-screen { font-size: 11px; font-weight: 700; color: var(--wf-accent); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 3px; }
+    .pi-flow-text { font-size: 13px; color: var(--wf-text); line-height: 1.5; }
+    .pi-flow-signal { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 10px; background: #1a2d4a; color: #60a5fa; border: 1px solid #1e3a66; margin-top: 5px; }
+
+    /* ── Data sources ── */
+    .pi-data-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 20px 0; }
+    .pi-data-card { background: var(--wf-surface); border: 1px solid var(--wf-line); border-radius: 6px; padding: 14px 16px; }
+    .pi-data-icon { font-size: 18px; margin-bottom: 6px; }
+    .pi-data-name { font-size: 12px; font-weight: 700; color: var(--wf-ink); margin-bottom: 4px; }
+    .pi-data-fields { font-size: 11px; color: var(--wf-muted); line-height: 1.6; }
+
+    /* ── Live demo ── */
+    .pi-demo-label { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--wf-accent); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .pi-demo-label::after { content: ''; flex: 1; height: 1px; background: var(--wf-tint); }
+    .pi-demo-screen { background: var(--wf-canvas); border: 1px solid var(--wf-line); border-radius: 8px; overflow: hidden; margin-bottom: 32px; }
+    .pi-demo-screen-bar { background: var(--wf-ink); padding: 8px 16px; display: flex; align-items: center; gap: 10px; font-size: 12px; color: #6b7f99; }
+    .pi-demo-screen-title { font-size: 12px; font-weight: 600; color: #8aa4c8; }
+    .pi-demo-context { background: white; padding: 7px 16px; border-bottom: 1px solid var(--wf-tint); font-size: 11px; color: var(--wf-muted); display: flex; align-items: center; gap: 6px; }
+    .pi-demo-content { padding: 20px 16px; }
+    .pi-demo-note { font-size: 11px; color: var(--wf-muted); font-style: italic; margin-top: 8px; }
+
+    /* ── Bridge section ── */
+    .pi-bridge { background: var(--wf-ink); border-radius: 8px; padding: 28px 32px; margin: 24px 0; color: #8aa4c8; }
+    .pi-bridge h3 { font-size: 18px; font-weight: 800; color: #e2e8f0; margin: 0 0 12px; }
+    .pi-bridge p { font-size: 13px; line-height: 1.7; color: #8aa4c8; margin-bottom: 12px; max-width: 680px; }
+    .pi-bridge p:last-child { margin-bottom: 0; }
+    .pi-bridge strong { color: #c0d4ec; }
+
+    /* ── Hypothesis flag ── */
+    .pi-hypothesis { background: #fffbe6; border: 1px solid #ffe58f; border-radius: 6px; padding: 14px 18px; font-size: 12px; color: #614700; line-height: 1.6; margin: 20px 0; }
+    .pi-hypothesis strong { color: #3d2800; }
+  </style>
+</head>
+<body>
+
+<header class="wf-header">
+  <div class="wf-header-logo"><svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix"><path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/></svg></div>
+  <div class="wf-header-title">Partner Intelligence</div>
+  <nav class="wf-header-nav">
+    <a href="workflows-jtbd.html">JTBD Map</a>
+    <a href="partner-intelligence.html" class="active">Signal Layer</a>
+    <a href="index.html">Sitemap</a>
+  </nav>
+  <div class="wf-header-util">
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+    <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+  </div>
+</header>
+
+<div class="page-context-bar">
+  <span class="persona-badge" style="background:#7c3aed;color:#fff;border-color:#6d28d9;">VISION</span>
+  <span style="font-size:12px;color:#6c757d;margin-left:8px;">Partner Intelligence &rsaquo; Signal Layer</span>
+  <span style="margin-left:auto;font-size:11px;color:#6c757d;">Design spec · Feb 2026</span>
+</div>
+
+<div class="wf-signal-mount"
+     data-partner="Vision Document"
+     data-signals='[
+       {"type":"program","label":"Fabric Attach","headline":"This document IS the Fabric Attach signal","body":"The signal layer makes programs like Fabric Attach actionable inside the portal workflow — not a separate training module, but live context where partners already work.","action":"Jump to Fabric Attach scenario","actionHref":"#fabric-attach"},
+       {"type":"insight","label":"Design Hypothesis","headline":"All signal data is pseudo-realistic (datastory model)","body":"Numbers and patterns in this document feel real but expose no actual partner data. This is the datastory model: constructed data makes the experience legible without compromising real partner information."}
+     ]'>
+</div>
+<script src="wireframe-signals.js"></script>
+
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="(function(){var p=document.getElementById('spec-panel');var b=document.getElementById('spec-toggle');if(!p)return;var open=p.style.display==='block';p.style.display=open?'none':'block';b.setAttribute('aria-expanded',String(!open));})()" aria-expanded="false">Notes</button>
+</div>
+
+<div class="pi-shell">
+
+  <!-- Hero -->
+  <div class="pi-hero">
+    <div class="pi-eyebrow">Partner Intelligence · Signal Layer</div>
+    <h1>The portal knows more<br>than it <em>shows</em>.</h1>
+    <p class="pi-hero-sub">
+      Equinix has a partner data graph that no single person — and no current screen — can see in full.
+      Deal velocity. MDF dispute patterns. API health. Training completion. Tier trajectory. Program eligibility.
+      The signal layer makes that graph visible, contextually, exactly where each persona is working.
+      Not a dashboard. Not a chatbot. Just the two or three things worth knowing right now.
+    </p>
+  </div>
+
+  <!-- The problem -->
+  <div class="pi-section">
+    <h2>The problem: four silos, zero synthesis</h2>
+    <p class="pi-section-sub">Every persona sees their slice. Nobody sees the whole partner.</p>
+    <p>
+      Steve sees his pipeline. Alex sees her approval queue. Marcus sees his 15 partner accounts.
+      Jordan sees the org's training completion rate. Each of them has exactly enough context
+      to do their own job — and not enough to notice what's about to go wrong in someone else's.
+    </p>
+    <p>
+      A Fabric Attach signal lives in Salesforce CRM data. A churn-risk signal lives in deal velocity
+      and contact change data. A dispute-pattern signal lives in the MDF ledger. None of those
+      signals currently cross the boundary into the screens where they would change behavior.
+    </p>
+
+    <div class="pi-silo-grid">
+      <div class="pi-silo">
+        <div class="pi-silo-icon">💼</div>
+        <div class="pi-silo-name">CRM / Salesforce</div>
+        <div class="pi-silo-data">Deal stage, close rates, opportunity history, product attach rates, contact changes</div>
+        <div class="pi-silo-lock">SILOED</div>
+      </div>
+      <div class="pi-silo">
+        <div class="pi-silo-icon">🏦</div>
+        <div class="pi-silo-name">Partner Portal</div>
+        <div class="pi-silo-data">MDF claims, tier status, training completion, deal registrations, document uploads</div>
+        <div class="pi-silo-lock">SILOED</div>
+      </div>
+      <div class="pi-silo">
+        <div class="pi-silo-icon">🔌</div>
+        <div class="pi-silo-name">Developer Platform</div>
+        <div class="pi-silo-data">API call volume, latency, uptime, integration stage, certification status, changelog adoption</div>
+        <div class="pi-silo-lock">SILOED</div>
+      </div>
+      <div class="pi-silo">
+        <div class="pi-silo-icon">📚</div>
+        <div class="pi-silo-name">LMS / Training</div>
+        <div class="pi-silo-data">Course completions, certification status, product knowledge scores, program enrollment</div>
+        <div class="pi-silo-lock">SILOED</div>
+      </div>
+    </div>
+    <div class="pi-arrow-row">↓ ↓ ↓ ↓</div>
+    <div class="pi-unified">
+      <div class="pi-unified-icon">🤖</div>
+      <div>
+        <div class="pi-unified-name">Partner Intelligence Graph — what the signal layer requires</div>
+        <div class="pi-unified-desc">A unified view of each partner's commercial relationship, technical health, program eligibility, and learning trajectory — computed, not queried. This is the data architecture prerequisite. The signal layer is the design hypothesis for what becomes possible when it exists.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Signal types -->
+  <div class="pi-section">
+    <h2>Four signal types. One visual language.</h2>
+    <p class="pi-section-sub">Signals are typed so users develop instincts about what each color means.</p>
+
+    <div class="pi-type-grid">
+      <div class="pi-type-card program">
+        <div class="pi-type-icon">⚡</div>
+        <div class="pi-type-name">Program Signal</div>
+        <div class="pi-type-headline">Active Equinix program is relevant here</div>
+        <div class="pi-type-desc">Surfaced when an active Equinix partner program — Fabric Attach, Network Edge Push, Marketplace Featured, etc. — is directly applicable to what's on screen. The signal translates program strategy into deal-level or account-level action.</div>
+        <div class="pi-type-example"><strong>Example (deal registration):</strong> "84% of comparable deals include Fabric. Partners who attach close 2.3× faster. This deal doesn't have Fabric on it."</div>
+      </div>
+      <div class="pi-type-card risk">
+        <div class="pi-type-icon">⚠</div>
+        <div class="pi-type-name">Risk Detected</div>
+        <div class="pi-type-headline">Something may go wrong or already is</div>
+        <div class="pi-type-desc">Surfaced when pattern matching detects friction, churn risk, compliance gaps, or SLA exposure. Shown to the persona best positioned to act — not broadcast to everyone.</div>
+        <div class="pi-type-example"><strong>Example (MDF approval queue):</strong> "CloudBridge has disputed 3 of their last 5 claims. All three involved event sponsorship. Their next claim is in this queue."</div>
+      </div>
+      <div class="pi-type-card opportunity">
+        <div class="pi-type-icon">↑</div>
+        <div class="pi-type-name">Opportunity</div>
+        <div class="pi-type-headline">A specific upside action is available now</div>
+        <div class="pi-type-desc">Surfaced when timing and context align for a positive action that might otherwise be missed. Time-sensitive. Actionable. Always specific — not generic encouragement.</div>
+        <div class="pi-type-example"><strong>Example (PAM dashboard):</strong> "DataBridge Corp qualified for Gold tier 18 days ago but hasn't been notified. Tier upgrade unlocks 5% incremental margin for them."</div>
+      </div>
+      <div class="pi-type-card insight">
+        <div class="pi-type-icon">◎</div>
+        <div class="pi-type-name">Insight</div>
+        <div class="pi-type-headline">A pattern worth knowing, neutrally stated</div>
+        <div class="pi-type-desc">Surfaced when the system has noticed something that doesn't require immediate action but changes how the persona should read the current situation. No urgency. No judgment. Just: here's what we noticed.</div>
+        <div class="pi-type-example"><strong>Example (PSM QBR prep):</strong> "CloudBridge's deal velocity dropped 40% after January 12th. Their primary contact, Sarah Chen, left the company on that date."</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fabric Attach scenario -->
+  <div class="pi-section" id="fabric-attach">
+    <h2>The Fabric Attach scenario — a program becomes a signal</h2>
+    <p class="pi-section-sub">How one Equinix strategic program translates into contextual intelligence across the partner journey.</p>
+
+    <div class="pi-scenario">
+      <div class="pi-scenario-label">Scenario · Fabric Attach Program</div>
+      <h3>Equinix wants Fabric on every deal. The partner portal doesn't know that.</h3>
+      <p class="pi-scenario-desc">
+        Imagine Equinix runs a strategic program: attach Equinix Fabric to every eligible deal.
+        Internally, this exists as a Sales Play, a training module, a quota component.
+        But in the partner portal, where the deals are actually registered, there is no signal.
+        Steve registers a $200K Colocation deal. No one and nothing tells him Fabric belongs on it.
+        The signal layer fixes this.
+      </p>
+
+      <div class="pi-flow">
+        <div class="pi-flow-step">
+          <div class="pi-flow-num">1</div>
+          <div class="pi-flow-content">
+            <div class="pi-flow-screen">pm-deal-registration.html</div>
+            <div class="pi-flow-text">Steve is registering a $200K Colocation deal for Meridian Financial. He selects "Colocation" as product type and moves to the next step.</div>
+            <div><span class="pi-flow-signal">⚡ Program Signal appears</span></div>
+            <div style="font-size:12px;color:#6b7f99;margin-top:6px;font-style:italic;">"84% of Colocation deals over $150K include Fabric. Partners who attach Fabric retain at 1.8× the rate and close 2.3× faster. Meridian Financial has 3 existing Colo circuits — all Fabric-eligible. Add Fabric to this deal?"</div>
+          </div>
+        </div>
+        <div class="pi-flow-step">
+          <div class="pi-flow-num">2</div>
+          <div class="pi-flow-content">
+            <div class="pi-flow-screen">pam-home-dashboard.html · Alex Rivera's view</div>
+            <div class="pi-flow-text">Steve adds Fabric. The deal comes to Alex for approval. Alex's PAM dashboard shows a signal for her portfolio, not just this deal.</div>
+            <div><span class="pi-flow-signal">◎ Insight appears</span></div>
+            <div style="font-size:12px;color:#6b7f99;margin-top:6px;font-style:italic;">"CloudBridge's Fabric attach rate is 31% — below the 58% Gold tier average. 4 open deals in their pipeline are Fabric-eligible but unattached."</div>
+          </div>
+        </div>
+        <div class="pi-flow-step">
+          <div class="pi-flow-num">3</div>
+          <div class="pi-flow-content">
+            <div class="pi-flow-screen">psm-qbr-prep.html · Marcus Chen's view</div>
+            <div class="pi-flow-text">Marcus is preparing for CloudBridge's quarterly review. A signal surfaces in his QBR prep screen connecting Fabric attach trajectory to tier risk.</div>
+            <div><span class="pi-flow-signal">⚠ Risk appears</span></div>
+            <div style="font-size:12px;color:#6b7f99;margin-top:6px;font-style:italic;">"CloudBridge is 12% below the Gold tier Fabric attach threshold. At current trajectory they will miss the Q2 tier review requirement. QBR is in 8 days — this is the right moment to set a joint attach target."</div>
+          </div>
+        </div>
+        <div class="pi-flow-step">
+          <div class="pi-flow-num">4</div>
+          <div class="pi-flow-content">
+            <div class="pi-flow-screen">pm-team-training.html · Jordan Reeves's view</div>
+            <div class="pi-flow-text">Jordan is managing training assignments for the CloudBridge team. A signal surfaces that Fabric training completion correlates directly with attach rate.</div>
+            <div><span class="pi-flow-signal">↑ Opportunity appears</span></div>
+            <div style="font-size:12px;color:#6b7f99;margin-top:6px;font-style:italic;">"3 AEs on your team haven't completed Fabric Certified Sales. Partners who complete this module increase attach rates by 2.1× within 60 days. Assign now?"</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p>
+      One program. Four screens. Four personas. Four different signals — each one specific to what that
+      person can actually do about it. The signal layer is the mechanism by which Equinix's strategic
+      intent becomes partner-facing intelligence without requiring anyone to navigate to a training module,
+      read a program brief, or remember what the Q2 focus is.
+    </p>
+  </div>
+
+  <!-- Live demo -->
+  <div class="pi-section">
+    <h2>How it looks in the portal</h2>
+    <p class="pi-section-sub">Collapsed by default. Expandable. Never interruptive.</p>
+
+    <div class="pi-demo-label">Live demo — deal registration context</div>
+
+    <div class="pi-demo-screen">
+      <div class="pi-demo-screen-bar">
+        <span style="font-size:11px;font-weight:700;color:#4a6080;">EQ</span>
+        <span class="pi-demo-screen-title">Partner Connect · Steve Rogers · CloudBridge Solutions</span>
+      </div>
+      <div class="pi-demo-context">
+        <span style="background:#c0392b;color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;">PM</span>
+        <span style="color:#ccc;">›</span>
+        <span>Deal Registration · Meridian Financial · $200,000</span>
+      </div>
+      <!-- Live signal mount for this demo -->
+      <div class="wf-signal-mount"
+           data-partner="CloudBridge Solutions"
+           data-signals='[
+             {
+               "type": "program",
+               "icon": "⚡",
+               "label": "Fabric Attach",
+               "headline": "Fabric attach opportunity on this deal",
+               "body": "84% of Colocation deals over $150K include Fabric. Meridian Financial has 3 existing Colo circuits — all Fabric-eligible. Partners who attach Fabric close 2.3× faster and retain at 1.8× the rate.",
+               "metric": "2.3×",
+               "metricLabel": "faster close with Fabric",
+               "action": "Add Fabric to this deal",
+               "actionHref": "pm-deal-registration.html#add-fabric"
+             },
+             {
+               "type": "insight",
+               "icon": "◎",
+               "label": "Attach Rate",
+               "headline": "CloudBridge Fabric attach rate: 31%",
+               "body": "The Gold tier average is 58%. Four other open deals in your pipeline are Fabric-eligible. Improving attach rate is the fastest path to Premier tier.",
+               "metric": "31%",
+               "metricLabel": "vs 58% Gold avg",
+               "action": "See eligible deals",
+               "actionHref": "pm-deals-revenue.html#fabric-eligible"
+             },
+             {
+               "type": "opportunity",
+               "icon": "↑",
+               "label": "Training",
+               "headline": "Fabric Certified Sales module available",
+               "body": "Partners who complete this 45-minute module increase Fabric attach rates by 2.1× within 60 days. You haven'\''t completed it yet.",
+               "action": "Start module (45 min)",
+               "actionHref": "pm-team-training.html#fabric-cert"
+             }
+           ]'>
+      </div>
+      <div class="pi-demo-content" style="background:#f5f7fb;">
+        <div style="background:white;border:1px solid #dde1e7;border-radius:6px;padding:20px;font-size:13px;color:#3b4f68;">
+          <div style="font-weight:700;font-size:15px;color:#1e2a3a;margin-bottom:16px;">Deal Registration — Step 2 of 4: Products</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+            <div style="border:2px solid #3d6daa;border-radius:6px;padding:12px;background:#e8eff8;">
+              <div style="font-size:11px;font-weight:700;color:#3d6daa;margin-bottom:4px;">✓ SELECTED</div>
+              <div style="font-weight:700;color:#1e2a3a;">Colocation</div>
+              <div style="font-size:12px;color:#6b7f99;">IBX space, power, cooling</div>
+            </div>
+            <div style="border:2px dashed #b0bdd0;border-radius:6px;padding:12px;background:#fafbfd;cursor:pointer;opacity:.7;">
+              <div style="font-size:11px;font-weight:700;color:#b0bdd0;margin-bottom:4px;">+ ADD PRODUCT</div>
+              <div style="font-weight:700;color:#1e2a3a;">Equinix Fabric</div>
+              <div style="font-size:12px;color:#6b7f99;">Virtual connections · add to this deal</div>
+            </div>
+          </div>
+          <div style="font-size:11px;color:#6b7f99;font-style:italic;">↑ The signal above is why this Fabric tile is surfaced here.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pi-demo-label">Live demo — PAM home dashboard context</div>
+
+    <div class="pi-demo-screen">
+      <div class="pi-demo-screen-bar">
+        <span style="font-size:11px;font-weight:700;color:#4a6080;">EQ</span>
+        <span class="pi-demo-screen-title">Partner Connect · Alex Rivera · PAM · 14 partners</span>
+      </div>
+      <div class="pi-demo-context">
+        <span style="background:#b04a2a;color:#fff;font-size:10px;font-weight:700;padding:2px 6px;border-radius:3px;">PAM</span>
+        <span style="color:#ccc;">›</span>
+        <span>Partner Home</span>
+      </div>
+      <div class="wf-signal-mount"
+           data-partner="Alex Rivera's portfolio"
+           data-signals='[
+             {
+               "type": "opportunity",
+               "icon": "↑",
+               "label": "Tier Upgrade Pending",
+               "headline": "DataBridge Corp qualified for Gold 18 days ago",
+               "body": "DataBridge crossed the Gold tier threshold on Feb 6th but hasn'\''t been notified. Gold status unlocks 5% incremental margin and preferred pricing on co-location expansions.",
+               "metric": "18d",
+               "metricLabel": "since qualification — unnotified",
+               "action": "Trigger tier upgrade",
+               "actionHref": "pam-tier-dashboard.html#databridge"
+             },
+             {
+               "type": "risk",
+               "icon": "⚠",
+               "label": "Churn Signal",
+               "headline": "Meridian Solutions — deal velocity -67%",
+               "body": "Meridian Solutions registered 9 deals in Q3 2025 and 3 deals in Q4. Primary contact James Wu left the company in December. No new contact has been established.",
+               "metric": "-67%",
+               "metricLabel": "deal velocity Q4 vs Q3",
+               "action": "View account health",
+               "actionHref": "pam-home-dashboard.html#meridian"
+             },
+             {
+               "type": "program",
+               "icon": "⚡",
+               "label": "Fabric Attach",
+               "headline": "4 partners below Fabric attach target",
+               "body": "CloudBridge (31%), Meridian (18%), TechPath (22%), and Nexus SI (11%) are all below the 50% Fabric attach target for Q1. Combined pipeline impact: $1.2M in Fabric TCV.",
+               "metric": "4",
+               "metricLabel": "partners below target",
+               "action": "View attach dashboard",
+               "actionHref": "pam-program-report.html#fabric"
+             }
+           ]'>
+      </div>
+      <div class="pi-demo-content" style="background:#f5f7fb;">
+        <div style="font-size:12px;color:#6b7f99;font-style:italic;padding:12px;text-align:center;">[ PAM dashboard content continues below the signal bar ]</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data sources required -->
+  <div class="pi-section">
+    <h2>What data powers each signal type</h2>
+    <p class="pi-section-sub">The signal layer is a design hypothesis. These are the data sources it requires to become real.</p>
+
+    <div class="pi-hypothesis">
+      <strong>⚠ Design hypothesis note:</strong> Signal data in all wireframe screens is pseudo-realistic — constructed to feel plausible without using actual Equinix partner data. The data architecture below describes what a real implementation would require. It is not a description of Equinix's current data infrastructure, which we have not assessed.
+    </div>
+
+    <div class="pi-data-grid">
+      <div class="pi-data-card">
+        <div class="pi-data-icon">💼</div>
+        <div class="pi-data-name">CRM (Salesforce)</div>
+        <div class="pi-data-fields">Deal stage history · Close rate by product · Fabric attach rate · Contact change events · Opportunity aging · Revenue by quarter</div>
+      </div>
+      <div class="pi-data-card">
+        <div class="pi-data-icon">🏆</div>
+        <div class="pi-data-name">Partner Portal</div>
+        <div class="pi-data-fields">Tier status + history · MDF claim + dispute ledger · Training completion · Deal registration timestamps · Document submission patterns</div>
+      </div>
+      <div class="pi-data-card">
+        <div class="pi-data-icon">📊</div>
+        <div class="pi-data-name">Program Management</div>
+        <div class="pi-data-fields">Active programs + targets · Partner program enrollment · Attach thresholds by tier · Program-to-product mappings · QBR cadence</div>
+      </div>
+      <div class="pi-data-card">
+        <div class="pi-data-icon">🔌</div>
+        <div class="pi-data-name">Developer Platform</div>
+        <div class="pi-data-fields">API uptime + latency · Integration stage · Certification expiry · Changelog version adoption · Sandbox activity</div>
+      </div>
+      <div class="pi-data-card">
+        <div class="pi-data-icon">📚</div>
+        <div class="pi-data-name">LMS / Training</div>
+        <div class="pi-data-fields">Course completions by role · Certification status + expiry · Module-to-product correlations · Completion-to-attach correlation data</div>
+      </div>
+      <div class="pi-data-card">
+        <div class="pi-data-icon">🧠</div>
+        <div class="pi-data-name">Signal Computation</div>
+        <div class="pi-data-fields">Pattern matching engine · Partner segment comparisons · Trend detection (velocity, attach rate) · Program eligibility rules · Signal priority ranking</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bridge to datastory -->
+  <div class="pi-section">
+    <h2>The bridge to the lead-to-cash datastory</h2>
+    <div class="pi-bridge">
+      <h3>Signals are the spine of the narrative.</h3>
+      <p>
+        The lead-to-cash datastory project — an interactive, pseudo-realistic walkthrough of the
+        Equinix partner journey from first contact to closed revenue — needs a backbone.
+        The signal layer is that backbone. Each chapter of the datastory is anchored by a signal:
+        what the system noticed, what changed, what someone did about it.
+      </p>
+      <p>
+        <strong>Chapter 1:</strong> Steve registers a Colocation deal. A Fabric Attach signal appears.
+        He adds Fabric. Deal velocity: +2.3×. <strong>Chapter 2:</strong> Alex sees a dispute-pattern
+        risk signal on CloudBridge. She adds documentation guidance to their next MDF submission template.
+        Disputes drop. <strong>Chapter 3:</strong> Marcus walks into the QBR with a pre-computed
+        attach-trajectory signal. He sets a joint target with the partner. Tier retained.
+      </p>
+      <p>
+        <strong>The signals don't require sensitive data.</strong> They require constructed, plausible,
+        pseudo-realistic data that makes the story legible — numbers that feel true even if they
+        aren't pulled from a live system. That's the datastory model: build the experience first,
+        connect the data pipes later.
+      </p>
+    </div>
+  </div>
+
+  <!-- Screens with signals -->
+  <div class="pi-section">
+    <h2>Where signals appear in this wireframe set</h2>
+    <p class="pi-section-sub">Five screens currently wired. The pattern is additive — any screen can receive a signal mount.</p>
+    <p>
+      Open any of the screens below and look for the dark signal bar between the context bar
+      and the page content. Click to expand. Each screen's signals are tuned to the persona and
+      the specific situation that screen represents.
+    </p>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:20px;">
+      <a href="pm-deal-registration.html" style="display:block;background:var(--wf-surface);border:1px solid var(--wf-line);border-radius:6px;padding:14px 16px;text-decoration:none;">
+        <div style="font-size:10px;font-weight:700;color:#c0392b;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px;">PM · Steve Rogers</div>
+        <div style="font-size:13px;font-weight:700;color:var(--wf-ink);margin-bottom:4px;">Deal Registration</div>
+        <div style="font-size:11px;color:var(--wf-muted);">⚡ Fabric Attach · ◎ Attach Rate · ↑ Training</div>
+      </a>
+      <a href="pam-home-dashboard.html" style="display:block;background:var(--wf-surface);border:1px solid var(--wf-line);border-radius:6px;padding:14px 16px;text-decoration:none;">
+        <div style="font-size:10px;font-weight:700;color:#b04a2a;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px;">PAM · Alex Rivera</div>
+        <div style="font-size:13px;font-weight:700;color:var(--wf-ink);margin-bottom:4px;">PAM Home Dashboard</div>
+        <div style="font-size:11px;color:var(--wf-muted);">↑ Tier Upgrade · ⚠ Churn Signal · ⚡ Attach Program</div>
+      </a>
+      <a href="psm-qbr-prep.html" style="display:block;background:var(--wf-surface);border:1px solid var(--wf-line);border-radius:6px;padding:14px 16px;text-decoration:none;">
+        <div style="font-size:10px;font-weight:700;color:#0d6efd;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px;">PSM · Marcus Chen</div>
+        <div style="font-size:13px;font-weight:700;color:var(--wf-ink);margin-bottom:4px;">QBR Prep</div>
+        <div style="font-size:11px;color:var(--wf-muted);">⚠ Attach Trajectory Risk · ◎ Contact Change · ↑ QBR Agenda</div>
+      </a>
+      <a href="pm-team-training.html" style="display:block;background:var(--wf-surface);border:1px solid var(--wf-line);border-radius:6px;padding:14px 16px;text-decoration:none;">
+        <div style="font-size:10px;font-weight:700;color:#0f766e;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px;">Admin · Jordan Reeves</div>
+        <div style="font-size:13px;font-weight:700;color:var(--wf-ink);margin-bottom:4px;">Team Training</div>
+        <div style="font-size:11px;color:var(--wf-muted);">↑ Fabric Cert Opportunity · ◎ Completion vs Attach Rate</div>
+      </a>
+      <a href="dealdesk-queue.html" style="display:block;background:var(--wf-surface);border:1px solid var(--wf-line);border-radius:6px;padding:14px 16px;text-decoration:none;">
+        <div style="font-size:10px;font-weight:700;color:#374151;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px;">Deal Desk · Rachel Kim</div>
+        <div style="font-size:13px;font-weight:700;color:var(--wf-ink);margin-bottom:4px;">Deal Desk Queue</div>
+        <div style="font-size:11px;color:var(--wf-muted);">⚠ Exception Pattern · ◎ Approval Rate Trend</div>
+      </a>
+    </div>
+  </div>
+
+</div>
+
+<script src="wireframe-signals.js"></script>
+</body>
+</html>
