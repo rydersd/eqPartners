@@ -148,6 +148,21 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
 /* ── Accessibility ── */
 .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0; }
 .node-header:focus-visible, .section-title:focus-visible { outline:2px solid var(--wf-accent); outline-offset:2px; border-radius:4px; }
+
+/* ── Sitemap tabs ── */
+.sitemap-tabs { margin-top:1.5rem; }
+.tab-nav { display:flex; gap:0; border-bottom:2px solid var(--gray-border); }
+.tab-btn { padding:.625rem 1.25rem; font-size:.875rem; font-weight:600; background:var(--gray-light); border:1px solid var(--gray-border); border-bottom:none; color:var(--wf-muted); cursor:pointer; display:flex; align-items:center; gap:.5rem; transition:all .15s; line-height:1; font-family:var(--font); }
+.tab-btn:first-child { border-radius:6px 0 0 0; }
+.tab-btn:nth-child(2) { border-left:none; border-radius:0 6px 0 0; }
+.tab-btn:hover { background:white; color:var(--wf-ink); }
+.tab-btn.active { background:white; color:var(--wf-ink); border-top:2px solid var(--wf-accent); margin-bottom:-2px; font-weight:700; }
+.tab-btn .tab-count { font-size:.625rem; background:var(--gray-border); color:var(--wf-text); padding:.125rem .375rem; border-radius:10px; font-weight:600; }
+.tab-btn.active .tab-count { background:var(--wf-accent); color:white; }
+.tab-btn .tab-plat { font-size:.6rem; font-weight:600; padding:.1rem .4rem; border-radius:3px; background:rgba(0,0,0,.06); color:var(--wf-muted); }
+.tab-panel { display:none; padding-top:1.5rem; }
+.tab-panel.active { display:block; }
+.sitemap-grid--two-col { grid-template-columns:1fr 1fr; }
 </style>
 </head>
 <body>
@@ -192,7 +207,27 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
   <div class="stat"><div class="num">3</div><div class="lbl">Tiers</div></div>
 </div>
 
-<div class="sitemap-grid" style="margin-top:1.5rem;">
+<div class="sitemap-tabs">
+
+  <!-- Tab navigation -->
+  <div class="tab-nav" role="tablist" aria-label="Portal area">
+    <button class="tab-btn active" id="tab-btn-partner" role="tab" aria-selected="true" aria-controls="tab-panel-partner"
+            onclick="switchTab('partner')">
+      <span>Partner Portals</span>
+      <span class="tab-plat">Experience Cloud</span>
+      <span class="tab-count">2</span>
+    </button>
+    <button class="tab-btn" id="tab-btn-internal" role="tab" aria-selected="false" aria-controls="tab-panel-internal"
+            onclick="switchTab('internal')">
+      <span>Internal — SFDC</span>
+      <span class="tab-plat">Salesforce Lightning</span>
+      <span class="tab-count">2</span>
+    </button>
+  </div>
+
+  <!-- Tab panel: Internal SFDC (PSM + AE) — shown first in DOM to match current branch order -->
+  <div class="tab-panel" id="tab-panel-internal" role="tabpanel" aria-labelledby="tab-btn-internal">
+  <div class="sitemap-grid sitemap-grid--two-col">
 
 <!-- ═══════════════════════════════════════════════════
      BRANCH 1: INTERNAL — PSM / Channel Manager
@@ -783,6 +818,12 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
   </div>
 </div>
 
+  </div><!-- end sitemap-grid (internal) -->
+  </div><!-- end tab-panel-internal -->
+
+  <!-- Tab panel: Partner Portals (PM + Rep) -->
+  <div class="tab-panel active" id="tab-panel-partner" role="tabpanel" aria-labelledby="tab-btn-partner">
+  <div class="sitemap-grid sitemap-grid--two-col">
 
 <!-- ═══════════════════════════════════════════════════
      BRANCH 2: PARTNER MANAGER PORTAL
@@ -1591,7 +1632,10 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
   </div>
 </div>
 
-</div><!-- end sitemap-grid -->
+  </div><!-- end sitemap-grid (partner) -->
+  </div><!-- end tab-panel-partner -->
+
+</div><!-- end sitemap-tabs -->
 
 <!-- ═══════════════════════════════════════════════════
      CROSS-CUTTING: Revenue Chain & Tier Scoring
@@ -1981,6 +2025,27 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
 </div><!-- end container -->
 
 <script>
+function switchTab(id) {
+  // Update panels
+  document.querySelectorAll('.tab-panel').forEach(function(p) {
+    p.classList.toggle('active', p.id === 'tab-panel-' + id);
+  });
+  // Update buttons
+  document.querySelectorAll('.tab-btn').forEach(function(b) {
+    var isActive = b.id === 'tab-btn-' + id;
+    b.classList.toggle('active', isActive);
+    b.setAttribute('aria-selected', isActive);
+  });
+  // Persist preference
+  try { sessionStorage.setItem('pcp-sitemap-tab', id); } catch(e) {}
+}
+// Restore last tab on load — default to 'partner'
+document.addEventListener('DOMContentLoaded', function() {
+  var saved = 'partner';
+  try { saved = sessionStorage.getItem('pcp-sitemap-tab') || 'partner'; } catch(e) {}
+  switchTab(saved);
+});
+
 function toggleSection(el) {
   const body = el.nextElementSibling;
   const chev = el.querySelector('.chevron');
