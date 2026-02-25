@@ -457,6 +457,93 @@
       font-weight: bold;
     }
 
+    /* Payment account card */
+    .payment-on-file {
+      background: var(--wf-canvas, #f5f7fb);
+      border: 1px solid var(--wf-tint, #dce4ef);
+      border-radius: 6px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+    }
+
+    .payment-method-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .payment-method-icon {
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .payment-method-detail {
+      flex: 1;
+    }
+
+    .payment-method-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--wf-ink, #1e2a3a);
+    }
+
+    .payment-method-sub {
+      font-size: 12px;
+      color: var(--wf-muted, #6b7f99);
+      margin-top: 2px;
+    }
+
+    .payment-edit-link {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--wf-accent, #3d6daa);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .payment-edit-link:hover { text-decoration: underline; }
+
+    .payment-meta {
+      font-size: 12px;
+      color: var(--wf-muted, #6b7f99);
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--wf-tint, #dce4ef);
+    }
+
+    .payment-note {
+      background: #fffbf0;
+      border: 1px solid #e8d9a0;
+      border-radius: 4px;
+      padding: 10px 14px;
+      font-size: 12px;
+      color: #6b5a2a;
+      line-height: 1.5;
+    }
+
+    .payment-note a {
+      color: var(--wf-accent, #3d6daa);
+      text-decoration: none;
+    }
+
+    .payment-note a:hover { text-decoration: underline; }
+
+    .payment-missing {
+      border: 1.5px dashed var(--wf-amber, #8b7745);
+      background: #fffbf0;
+      border-radius: 6px;
+      padding: 14px 16px;
+      font-size: 13px;
+      color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 12px;
+    }
+
+    .payment-missing-label {
+      font-weight: 600;
+      color: #8b7745;
+      margin-bottom: 4px;
+    }
+
     @media (max-width: 768px) {
       nav {
         display: none;
@@ -650,6 +737,34 @@
         </div>
       </div>
 
+      <!-- Reimbursement Account -->
+      <div class="card">
+        <div class="card-title">Reimbursement Account</div>
+        <p style="font-size:13px;color:var(--wf-muted);margin-bottom:16px;">
+          If approved, Equinix will disburse your co-fund share to the payment account on file for your organization. Reimbursement is triggered after your Proof of Performance is accepted.
+        </p>
+
+        <!-- Account on file state (shown when org has payment details saved) -->
+        <div class="payment-on-file" id="payment-on-file-block">
+          <div class="payment-method-row">
+            <span class="payment-method-icon" aria-hidden="true">🏦</span>
+            <div class="payment-method-detail">
+              <div class="payment-method-label">ACH Direct Deposit</div>
+              <div class="payment-method-sub">Chase Bank · Checking ••••4821</div>
+            </div>
+            <a href="pm-admin-setup.html#payment" class="payment-edit-link" aria-label="Update payment details in organization settings">Update →</a>
+          </div>
+          <div class="payment-meta">
+            Billing contact: Alex Morgan &lt;amorgan@cloudbridge.com&gt;
+          </div>
+        </div>
+
+        <div class="payment-note" role="note">
+          <strong>Note on deal registration payouts:</strong> This same account receives commission payouts for closed partner-sourced deals. Those are processed on a separate quarterly cycle by the Equinix Partner Finance team — they are not part of this MDF request.
+          <a href="#">Learn about commission payouts →</a>
+        </div>
+      </div>
+
       <div class="button-group">
         <button type="submit" class="btn btn-primary">Submit for Approval</button>
         <button type="button" class="btn btn-secondary">Save as Draft</button>
@@ -730,6 +845,7 @@
 <li>Ensure Equinix brand compliance before submission</li>
 <li>Track request through approval workflow and status changes</li>
 <li>Access MDF guidelines and eligibility requirements</li>
+<li>Confirm which payment account will receive reimbursement before submitting</li>
 </ul>
 <hr class="spec-divider">
 <h3>Design Specification</h3>
@@ -774,6 +890,21 @@
 </ul>
 </li>
 </ul>
+<hr class="spec-divider">
+<h3>Payment Account — Design Notes</h3>
+<p>The <strong>Reimbursement Account</strong> card shows the org-level payment method on file rather than collecting banking details inline. This follows standard B2B SaaS practice (Salesforce, HubSpot): payment details are entered once in org settings and referenced per-transaction.</p>
+<h4>Two states</h4>
+<ul>
+<li><strong>Account on file</strong> (default): Shows masked account number + bank + billing contact. "Update →" links to <code>pm-admin-setup.html#payment</code>.</li>
+<li><strong>No account on file</strong>: Show a warning banner prompting the partner to add payment details before submitting. The Submit button should be disabled until payment details are present.</li>
+</ul>
+<h4>MDF reimbursement vs. deal reg commission payouts</h4>
+<p>These are <strong>different payment flows</strong> that share the same bank account:</p>
+<ul>
+<li><strong>MDF reimbursement</strong>: Cost reimbursement. Partner spends money on an approved campaign → submits PoP with receipts → PSM verifies → Finance processes ACH/wire for actual spend up to approved maximum. One-off per campaign. Triggered by PoP acceptance.</li>
+<li><strong>Deal reg commission</strong>: Revenue share. Partner registers a deal → deal closes (Closed Won) → commission calculated as a % of deal value per program tier → processed on a quarterly payout cycle by Partner Finance. Managed via <code>psm-commission-processing.html</code> (internal) and <code>rep-deals-commission.html</code> (partner-facing).</li>
+</ul>
+<p>Same destination account, different triggers, different calculation logic. The note on the form makes this distinction explicit so partners don't expect their MDF reimbursement and quarterly commission to arrive on the same timeline.</p>
 <hr class="spec-divider">
 </div>
 </aside>
