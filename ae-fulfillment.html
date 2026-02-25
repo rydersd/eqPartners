@@ -42,9 +42,20 @@ body { font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; ba
 .stat-value { font-size:22px; font-weight:700; color:var(--wf-ink); }
 .stat-sub { font-size:11px; color:var(--wf-muted); margin-top:2px; }
 
-/* Layout */
-.layout { display:grid; grid-template-columns:1fr 320px; gap:20px; }
+/* Three-column record layout */
+.layout { display:grid; grid-template-columns:280px 1fr 320px; gap:20px; }
+@media(max-width:1200px) { .layout { grid-template-columns:1fr 320px; } }
 @media(max-width:1000px) { .layout { grid-template-columns:1fr; } }
+
+/* Left rail — related records */
+.rel-card { background:white; border:1px solid var(--wf-line); border-radius:6px; margin-bottom:12px; overflow:hidden; }
+.rel-card-title { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--wf-muted); padding:8px 12px; border-bottom:1px solid var(--wf-line); background:var(--wf-surface); }
+.rel-row { display:flex; align-items:center; gap:8px; padding:8px 12px; border-bottom:1px solid var(--wf-canvas); }
+.rel-row:last-child { border-bottom:none; }
+.rel-icon-sm { width:22px; height:22px; border-radius:3px; background:var(--wf-canvas); display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0; }
+.rel-link { font-size:12px; font-weight:600; color:var(--wf-accent); text-decoration:none; display:block; line-height:1.3; }
+.rel-link:hover { text-decoration:underline; }
+.rel-meta { font-size:11px; color:var(--wf-muted); margin-top:1px; }
 
 /* Cards */
 .card { background:white; border:1px solid var(--wf-line); border-radius:6px; margin-bottom:16px; overflow:hidden; }
@@ -172,6 +183,91 @@ body { font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; ba
   </div>
 
   <div class="layout">
+
+    <!-- Left Rail — Related Records -->
+    <div>
+      <div class="rel-card">
+        <div class="rel-card-title">Order</div>
+        <div class="rel-row">
+          <div class="rel-icon-sm">📦</div>
+          <div>
+            <a href="#" class="rel-link">ORD-2026-00914</a>
+            <div class="rel-meta">In Progress · Mar 3, 2026</div>
+          </div>
+        </div>
+      </div>
+      <div class="rel-card">
+        <div class="rel-card-title">Opportunity</div>
+        <div class="rel-row">
+          <div class="rel-icon-sm">○</div>
+          <div>
+            <a href="#" class="rel-link">Meridian Capital — SV5 Expansion</a>
+            <div class="rel-meta">Closed Won · OPP-20248</div>
+          </div>
+        </div>
+      </div>
+      <div class="rel-card">
+        <div class="rel-card-title">Account</div>
+        <div class="rel-row">
+          <div class="rel-icon-sm">🏢</div>
+          <div>
+            <a href="#" class="rel-link">Meridian Capital Group</a>
+            <div class="rel-meta">Financial Services · SV5</div>
+          </div>
+        </div>
+      </div>
+      <div class="rel-card">
+        <div class="rel-card-title">Partner</div>
+        <div class="rel-row">
+          <div class="rel-icon-sm">◈</div>
+          <div>
+            <a href="#" class="rel-link">CloudBridge Inc.</a>
+            <div class="rel-meta">Platinum · Partner-Sourced</div>
+          </div>
+        </div>
+      </div>
+      <div class="rel-card">
+        <div class="rel-card-title">Deal Registration</div>
+        <div class="rel-row">
+          <div class="rel-icon-sm">✓</div>
+          <div>
+            <a href="#" class="rel-link">DR-2026-04821</a>
+            <div class="rel-meta">Approved · Protected</div>
+          </div>
+        </div>
+      </div>
+      <div class="rel-card">
+        <div class="rel-card-title">Key Contacts</div>
+        <div class="rel-row">
+          <div class="contact-avatar" style="width:22px;height:22px;font-size:10px;background:#2e7d32;">OM</div>
+          <div>
+            <a href="#" class="rel-link">Alex Danvers</a>
+            <div class="rel-meta">Order Management</div>
+          </div>
+        </div>
+        <div class="rel-row">
+          <div class="contact-avatar" style="width:22px;height:22px;font-size:10px;background:var(--wf-accent);">MC</div>
+          <div>
+            <a href="#" class="rel-link">Marcus Chen</a>
+            <div class="rel-meta">PSM — CloudBridge</div>
+          </div>
+        </div>
+        <div class="rel-row">
+          <div class="contact-avatar" style="width:22px;height:22px;font-size:10px;background:#8b7745;">SR</div>
+          <div>
+            <a href="#" class="rel-link">Steve Rogers</a>
+            <div class="rel-meta">Partner Rep — CloudBridge</div>
+          </div>
+        </div>
+        <div class="rel-row">
+          <div class="contact-avatar" style="width:22px;height:22px;font-size:10px;background:#6b7280;">MH</div>
+          <div>
+            <a href="#" class="rel-link">Maria Hill</a>
+            <div class="rel-meta">Customer — Meridian Capital</div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /left rail -->
 
     <!-- Main column -->
     <div>
@@ -324,44 +420,6 @@ body { font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; ba
             <div style="display:flex;justify-content:space-between;"><span style="color:var(--wf-muted);">Total MRC</span><span style="font-weight:700;color:var(--wf-ink);">$19,200/mo</span></div>
             <div style="display:flex;justify-content:space-between;"><span style="color:var(--wf-muted);">Contract</span><span style="font-weight:600;">24 months</span></div>
             <div style="display:flex;justify-content:space-between;"><span style="color:var(--wf-muted);">IBX</span><span style="font-weight:600;">SV5 — Silicon Valley</span></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header"><div class="card-title">Key Contacts</div></div>
-        <div class="card-body">
-          <div class="contact-row">
-            <div class="contact-avatar" style="background:#2e7d32;">OM</div>
-            <div class="contact-info">
-              <div class="contact-name">Alex Danvers</div>
-              <div class="contact-role">Order Management</div>
-            </div>
-            <a href="#" class="contact-action">Email</a>
-          </div>
-          <div class="contact-row">
-            <div class="contact-avatar" style="background:var(--wf-accent);">MC</div>
-            <div class="contact-info">
-              <div class="contact-name">Marcus Chen</div>
-              <div class="contact-role">PSM — CloudBridge</div>
-            </div>
-            <a href="#" class="contact-action">Email</a>
-          </div>
-          <div class="contact-row">
-            <div class="contact-avatar" style="background:#8b7745;">SR</div>
-            <div class="contact-info">
-              <div class="contact-name">Steve Rogers</div>
-              <div class="contact-role">Partner Rep — CloudBridge</div>
-            </div>
-            <a href="#" class="contact-action">Email</a>
-          </div>
-          <div class="contact-row">
-            <div class="contact-avatar" style="background:#6b7280;">MH</div>
-            <div class="contact-info">
-              <div class="contact-name">Maria Hill</div>
-              <div class="contact-role">Customer — Meridian Capital</div>
-            </div>
-            <a href="#" class="contact-action">Email</a>
           </div>
         </div>
       </div>

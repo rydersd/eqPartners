@@ -15,7 +15,18 @@
     .breadcrumb a { color: var(--wf-accent,#3d6daa); text-decoration: none; }
     .jtbd-banner { background: #edf4fb; border-left: 4px solid var(--wf-accent,#3d6daa); padding: 10px 16px; border-radius: 0 4px 4px 0; margin-bottom: 20px; font-size: 13px; color: var(--wf-text); }
     .jtbd-banner strong { color: var(--wf-ink); }
-    .two-col { display: grid; grid-template-columns: 1fr 340px; gap: 20px; }
+    .three-col { display: grid; grid-template-columns: 280px 1fr 340px; gap: 20px; }
+    @media(max-width:1200px) { .three-col { grid-template-columns: 1fr 340px; } }
+    @media(max-width:900px)  { .three-col { grid-template-columns: 1fr; } }
+    /* Left rail */
+    .rel-card { background: var(--wf-surface); border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 12px; overflow: hidden; }
+    .rel-card-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--wf-muted); padding: 8px 12px; border-bottom: 1px solid var(--wf-canvas); background: var(--wf-canvas); }
+    .rel-row { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-bottom: 1px solid var(--wf-canvas); font-size: 12px; }
+    .rel-row:last-child { border-bottom: none; }
+    .rel-icon { width: 22px; height: 22px; border-radius: 3px; background: var(--wf-canvas); display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; }
+    .rel-link { font-weight: 600; color: var(--wf-accent,#3d6daa); text-decoration: none; display: block; line-height: 1.3; }
+    .rel-link:hover { text-decoration: underline; }
+    .rel-meta { font-size: 11px; color: var(--wf-muted); margin-top: 1px; }
     .card { background: var(--wf-surface); border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 18px; margin-bottom: 16px; }
     .card-title { font-size: 14px; font-weight: 700; color: var(--wf-ink); margin-bottom: 14px; }
     .detail-row { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--wf-canvas); font-size: 13px; }
@@ -110,7 +121,70 @@
     <div class="stage-step" role="listitem"><span class="stage-num">6</span><span class="stage-label">Closed Won</span></div>
   </div>
 
-  <div class="two-col">
+  <div class="three-col">
+
+    <!-- Left Rail — Related Records -->
+    <div>
+      <div class="rel-card">
+        <div class="rel-card-title">Partner</div>
+        <div class="rel-row">
+          <div class="rel-icon">◈</div>
+          <div>
+            <a href="#" class="rel-link">CloudBridge Solutions</a>
+            <div class="rel-meta">Gold tier · Steve Rogers, AE</div>
+          </div>
+        </div>
+      </div>
+      <div class="rel-card">
+        <div class="rel-card-title">End Customer</div>
+        <div class="rel-row">
+          <div class="rel-icon">🏢</div>
+          <div>
+            <a href="#" class="rel-link">Acme Financial Services</a>
+            <div class="rel-meta">NYC HQ</div>
+          </div>
+        </div>
+      </div>
+      <div class="rel-card">
+        <div class="rel-card-title">Deal Registration</div>
+        <div class="rel-row">
+          <div class="rel-icon">✓</div>
+          <div>
+            <a href="#" class="rel-link">DR-2026-AFS-0091</a>
+            <div class="rel-meta">Registered & Protected</div>
+          </div>
+        </div>
+      </div>
+      <div class="rel-card">
+        <div class="rel-card-title">Other Open Deals — CloudBridge</div>
+        <div class="rel-row">
+          <div class="rel-icon">○</div>
+          <div>
+            <a href="#" class="rel-link">Beacon Insurance — Colocation</a>
+            <div class="rel-meta">$120K · Proposal</div>
+          </div>
+        </div>
+        <div class="rel-row">
+          <div class="rel-icon">○</div>
+          <div>
+            <a href="#" class="rel-link">Redstone Pharma — IX Migration</a>
+            <div class="rel-meta">$95K · Discovery</div>
+          </div>
+        </div>
+        <div class="rel-row">
+          <div class="rel-icon">○</div>
+          <div>
+            <a href="#" class="rel-link">Summit Retail — Fabric Express</a>
+            <div class="rel-meta">$68K · Negotiation</div>
+          </div>
+        </div>
+        <div class="rel-row" style="font-size:11px;color:var(--wf-muted);">
+          Total open pipeline: $1.2M
+        </div>
+      </div>
+    </div><!-- /left rail -->
+
+    <!-- Center — Deal details & actions -->
     <div>
       <div class="card">
         <div class="card-title">Deal Overview</div>
@@ -183,8 +257,9 @@
           </table>
         </div>
       </div>
-    </div>
+    </div><!-- /center -->
 
+    <!-- Right — Activity -->
     <div>
       <div class="card">
         <div class="card-title">Deal Activity Feed</div>
@@ -227,17 +302,8 @@
         </ul>
       </div>
 
-      <div class="card">
-        <div class="card-title">Other Open Deals — CloudBridge</div>
-        <div style="font-size:13px;">
-          <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--wf-canvas);"><button class="btn-link">Beacon Insurance — Colocation</button><span style="font-size:12px;font-weight:700;">$120K</span></div>
-          <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--wf-canvas);"><button class="btn-link">Redstone Pharma — IX Migration</button><span style="font-size:12px;font-weight:700;">$95K</span></div>
-          <div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--wf-canvas);"><button class="btn-link">Summit Retail — Fabric Express</button><span style="font-size:12px;font-weight:700;">$68K</span></div>
-          <div style="padding-top:8px;font-size:12px;color:var(--wf-muted);">Total open pipeline: $1.2M (including this deal)</div>
-        </div>
-      </div>
-    </div>
-  </div>
+    </div><!-- /right -->
+  </div><!-- /three-col -->
 
 </div>
 

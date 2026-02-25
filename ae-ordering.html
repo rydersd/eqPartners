@@ -34,9 +34,20 @@ body { font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; ba
 .step-connector { width:40px; height:2px; background:var(--wf-line); margin:0 6px; flex-shrink:0; }
 .step-connector.done { background:var(--wf-accent); }
 
-/* Two-column layout */
-.layout { display:grid; grid-template-columns:1fr 340px; gap:20px; }
+/* Three-column record layout */
+.layout { display:grid; grid-template-columns:280px 1fr 340px; gap:20px; }
+@media(max-width:1200px) { .layout { grid-template-columns:1fr 340px; } }
 @media(max-width:900px) { .layout { grid-template-columns:1fr; } }
+
+/* Left rail — related records */
+.rel-card { background:white; border:1px solid var(--wf-line); border-radius:6px; margin-bottom:12px; overflow:hidden; }
+.rel-card-title { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--wf-muted); padding:8px 12px; border-bottom:1px solid var(--wf-line); background:var(--wf-surface); }
+.rel-row { display:flex; align-items:center; gap:8px; padding:8px 12px; border-bottom:1px solid var(--wf-canvas); }
+.rel-row:last-child { border-bottom:none; }
+.rel-icon { width:22px; height:22px; border-radius:3px; background:var(--wf-canvas); display:flex; align-items:center; justify-content:center; font-size:11px; flex-shrink:0; }
+.rel-link { font-size:12px; font-weight:600; color:var(--wf-accent); text-decoration:none; display:block; line-height:1.3; }
+.rel-link:hover { text-decoration:underline; }
+.rel-meta { font-size:11px; color:var(--wf-muted); margin-top:1px; }
 
 /* Cards */
 .card { background:white; border:1px solid var(--wf-line); border-radius:6px; margin-bottom:16px; overflow:hidden; }
@@ -157,6 +168,67 @@ textarea { height:64px; resize:vertical; }
   </div>
 
   <div class="layout">
+
+    <!-- Left Rail — Related Records -->
+    <div>
+      <div class="rel-card">
+        <div class="rel-card-title">Opportunity</div>
+        <div class="rel-row">
+          <div class="rel-icon">○</div>
+          <div>
+            <a href="#" class="rel-link">Meridian Capital — SV5 Expansion</a>
+            <div class="rel-meta">Closed Won · $460K TCV</div>
+          </div>
+        </div>
+      </div>
+      <div class="rel-card">
+        <div class="rel-card-title">Account</div>
+        <div class="rel-row">
+          <div class="rel-icon">🏢</div>
+          <div>
+            <a href="#" class="rel-link">Meridian Capital Group</a>
+            <div class="rel-meta">Financial Services</div>
+          </div>
+        </div>
+      </div>
+      <div class="rel-card">
+        <div class="rel-card-title">Partner Attribution</div>
+        <div class="rel-row">
+          <div class="rel-icon">◈</div>
+          <div>
+            <a href="#" class="rel-link">CloudBridge Inc.</a>
+            <div class="rel-meta">Platinum · Partner-Sourced</div>
+          </div>
+        </div>
+        <div class="rel-row">
+          <div class="rel-icon">👤</div>
+          <div>
+            <a href="#" class="rel-link">Steve Rogers</a>
+            <div class="rel-meta">AE · CloudBridge</div>
+          </div>
+        </div>
+      </div>
+      <div class="rel-card">
+        <div class="rel-card-title">Deal Registration</div>
+        <div class="rel-row">
+          <div class="rel-icon">✓</div>
+          <div>
+            <a href="#" class="rel-link">DR-2026-04821</a>
+            <div class="rel-meta">Approved · Partner-Sourced</div>
+          </div>
+        </div>
+      </div>
+      <div class="rel-card">
+        <div class="rel-card-title">CPQ Quote</div>
+        <div class="rel-row">
+          <div class="rel-icon">📋</div>
+          <div>
+            <a href="#" class="rel-link">Q-2026-00914</a>
+            <div class="rel-meta">3 products · $19,200 MRC</div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /left rail -->
 
     <!-- Main form -->
     <div>
