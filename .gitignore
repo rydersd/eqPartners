@@ -2,4 +2,5 @@
 Thumbs.db
 *.log
 *.md
+!CLAUDE.md
 _archive/
