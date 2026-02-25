@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>My Forecast — Steve Rogers — Equinix PCP Wireframes</title>
+<link rel="stylesheet" href="wireframe.css">
+<style>
+  body {
+    --wf-ink: #1a1a1a;
+    --wf-muted: #666;
+    --wf-accent: #0070c7;
+    --gray-border: #ddd;
+    --wf-canvas: #f5f5f5;
+    --status-good: #2da44e;
+    --status-medium: #d4a500;
+    --status-bad: #da3633;
+  }
+
+  .container {
+    display: grid;
+    grid-template-columns: 280px 1fr 320px;
+    gap: 24px;
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 24px;
+  }
+
+  .left-nav {
+    width: 280px;
+  }
+
+  .main-content {
+    flex: 1;
+  }
+
+  .right-sidebar {
+    width: 320px;
+  }
+
+  /* Page Header */
+  .page-header {
+    margin-bottom: 32px;
+  }
+
+  .breadcrumb {
+    font-size: 12px;
+    color: var(--wf-muted);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .breadcrumb a {
+    color: var(--wf-accent);
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    text-decoration: underline;
+  }
+
+  .page-title {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--wf-ink);
+    margin-bottom: 4px;
+  }
+
+  .page-subtitle {
+    font-size: 14px;
+    color: var(--wf-muted);
+  }
+
+  /* KPI Cards Grid */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .kpi-card {
+    background: white;
+    border: 1px solid var(--gray-border);
+    border-radius: 4px;
+    padding: 16px;
+    text-align: left;
+  }
+
+  .kpi-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: var(--wf-muted);
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+  }
+
+  .kpi-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--wf-ink);
+    margin-bottom: 4px;
+  }
+
+  .kpi-meta {
+    font-size: 13px;
+    color: var(--wf-muted);
+    line-height: 1.4;
+  }
+
+  .kpi-warning {
+    color: var(--status-bad);
+    font-weight: 600;
+  }
+
+  /* Health Bar */
+  .health-bar-section {
+    background: white;
+    border: 1px solid var(--gray-border);
+    border-radius: 4px;
+    padding: 16px;
+    margin-bottom: 32px;
+  }
+
+  .health-bar-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--wf-ink);
+    margin-bottom: 12px;
+  }
+
+  .health-metrics {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+
+  .health-item {
+    background: var(--wf-canvas);
+    padding: 8px 12px;
+    border-radius: 3px;
+    font-size: 13px;
+    color: var(--wf-ink);
+  }
+
+  .health-item.good {
+    background: #e6f2e6;
+    color: var(--status-good);
+  }
+
+  .health-item.medium {
+    background: #fff8e6;
+    color: var(--status-medium);
+  }
+
+  .health-item.bad {
+    background: #ffe6e6;
+    color: var(--status-bad);
+  }
+
+  .health-score {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--status-bad);
+  }
+
+  .health-note {
+    font-size: 12px;
+    color: var(--wf-muted);
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--gray-border);
+  }
+
+  /* Pipeline Table */
+  .pipeline-section {
+    background: white;
+    border: 1px solid var(--gray-border);
+    border-radius: 4px;
+    margin-bottom: 32px;
+    overflow: hidden;
+  }
+
+  .section-header {
+    padding: 16px;
+    border-bottom: 1px solid var(--gray-border);
+    background: var(--wf-canvas);
+  }
+
+  .section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--wf-ink);
+    margin-bottom: 4px;
+  }
+
+  .section-subtitle {
+    font-size: 13px;
+    color: var(--wf-muted);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  th {
+    background: white;
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+    color: var(--wf-ink);
+    border-bottom: 2px solid var(--gray-border);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #f0f0f0;
+    color: var(--wf-ink);
+  }
+
+  tr:hover {
+    background: #fafafa;
+  }
+
+  .status-low {
+    color: var(--status-good);
+    font-weight: 600;
+  }
+
+  .status-medium {
+    color: var(--status-medium);
+    font-weight: 600;
+  }
+
+  .status-high {
+    color: var(--status-bad);
+    font-weight: 600;
+  }
+
+  .deal-link {
+    color: var(--wf-accent);
+    text-decoration: none;
+  }
+
+  .deal-link:hover {
+    text-decoration: underline;
+  }
+
+  .stage-badge {
+    background: #e7f5ff;
+    color: var(--wf-accent);
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-weight: 500;
+    display: inline-block;
+  }
+
+  .currency {
+    font-weight: 600;
+    color: var(--wf-ink);
+  }
+
+  .cta-row {
+    background: #e7f5ff;
+    text-align: center;
+  }
+
+  .cta-row td {
+    padding: 20px 16px;
+  }
+
+  .cta-button {
+    background: var(--wf-accent);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .cta-button:hover {
+    background: #0066b3;
+  }
+
+  .pipeline-footer {
+    background: var(--wf-canvas);
+    padding: 16px;
+    border-top: 1px solid var(--gray-border);
+    font-size: 13px;
+  }
+
+  .pipeline-total {
+    font-weight: 600;
+    color: var(--wf-ink);
+    margin-bottom: 8px;
+  }
+
+  .pipeline-note {
+    color: var(--wf-muted);
+  }
+
+  /* Scenarios Section */
+  .scenarios-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+
+  .scenario-card {
+    background: white;
+    border: 1px solid var(--gray-border);
+    border-radius: 4px;
+    padding: 16px;
+  }
+
+  .scenario-card.best {
+    border-left: 4px solid var(--status-good);
+  }
+
+  .scenario-card.base {
+    border-left: 4px solid var(--status-medium);
+  }
+
+  .scenario-card.downside {
+    border-left: 4px solid var(--status-bad);
+  }
+
+  .scenario-title {
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .scenario-icon {
+    font-size: 16px;
+  }
+
+  .scenario-item {
+    margin-bottom: 10px;
+    font-size: 13px;
+  }
+
+  .scenario-label {
+    color: var(--wf-muted);
+  }
+
+  .scenario-value {
+    font-weight: 600;
+    color: var(--wf-ink);
+  }
+
+  .scenario-warning {
+    background: #ffe6e6;
+    padding: 8px;
+    border-radius: 3px;
+    font-size: 12px;
+    color: var(--status-bad);
+    margin-top: 10px;
+  }
+
+  .scenarios-note {
+    font-size: 12px;
+    color: var(--wf-muted);
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--gray-border);
+  }
+
+  /* Action Items */
+  .actions-section {
+    background: white;
+    border: 1px solid var(--gray-border);
+    border-radius: 4px;
+    padding: 16px;
+    margin-bottom: 32px;
+  }
+
+  .actions-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--wf-ink);
+    margin-bottom: 16px;
+  }
+
+  .action-item {
+    padding: 12px;
+    margin-bottom: 12px;
+    border-left: 3px solid var(--gray-border);
+    border-radius: 2px;
+  }
+
+  .action-item.critical {
+    border-left-color: var(--status-bad);
+    background: #ffe6e6;
+  }
+
+  .action-item.warning {
+    border-left-color: var(--status-medium);
+    background: #fff8e6;
+  }
+
+  .action-item.info {
+    border-left-color: var(--status-good);
+    background: #e6f2e6;
+  }
+
+  .action-number {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background: var(--wf-muted);
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    margin-right: 8px;
+  }
+
+  .action-item.critical .action-number {
+    background: var(--status-bad);
+  }
+
+  .action-item.warning .action-number {
+    background: var(--status-medium);
+  }
+
+  .action-item.info .action-number {
+    background: var(--status-good);
+  }
+
+  .action-heading {
+    font-weight: 600;
+    color: var(--wf-ink);
+    margin-bottom: 4px;
+  }
+
+  .action-desc {
+    font-size: 13px;
+    color: var(--wf-muted);
+    margin-bottom: 8px;
+  }
+
+  .action-link {
+    color: var(--wf-accent);
+    text-decoration: none;
+    font-size: 13px;
+  }
+
+  .action-link:hover {
+    text-decoration: underline;
+  }
+
+  /* Right Sidebar Cards */
+  .sidebar-card {
+    background: white;
+    border: 1px solid var(--gray-border);
+    border-radius: 4px;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+
+  .sidebar-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--wf-ink);
+    margin-bottom: 12px;
+  }
+
+  .sidebar-stat {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--wf-accent);
+    margin-bottom: 8px;
+  }
+
+  .sidebar-content {
+    font-size: 13px;
+    color: var(--wf-muted);
+    line-height: 1.5;
+  }
+
+  .sidebar-divider {
+    border-top: 1px solid var(--gray-border);
+    margin: 12px 0;
+    padding-top: 12px;
+  }
+
+  .sidebar-link {
+    color: var(--wf-accent);
+    text-decoration: none;
+    font-size: 13px;
+    display: inline-block;
+    margin-top: 8px;
+  }
+
+  .sidebar-link:hover {
+    text-decoration: underline;
+  }
+
+  .expandable-header {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--gray-border);
+  }
+
+  .expandable-header:hover {
+    background: var(--wf-canvas);
+  }
+
+  .expand-icon {
+    color: var(--wf-muted);
+    font-size: 14px;
+  }
+
+  .expandable-content {
+    display: none;
+    padding-top: 12px;
+  }
+
+  .expandable-content.open {
+    display: block;
+  }
+
+  .protection-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 13px;
+  }
+
+  .protection-label {
+    color: var(--wf-ink);
+  }
+
+  .protection-days {
+    font-weight: 600;
+    color: var(--wf-muted);
+  }
+
+  /* Navigation */
+  .nav-section {
+    margin-bottom: 24px;
+  }
+
+  .nav-title {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: var(--wf-muted);
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+    padding-left: 12px;
+  }
+
+  .nav-link {
+    display: block;
+    padding: 10px 12px;
+    color: var(--wf-muted);
+    text-decoration: none;
+    font-size: 13px;
+    border-radius: 3px;
+    margin-bottom: 4px;
+  }
+
+  .nav-link:hover {
+    background: var(--wf-canvas);
+    color: var(--wf-ink);
+  }
+
+  .nav-link.active {
+    background: var(--wf-accent);
+    color: white;
+    font-weight: 600;
+  }
+
+  /* Annotation */
+  .annotation {
+    background: #f0f0f0;
+    padding: 12px;
+    border-radius: 4px;
+    font-size: 11px;
+    color: #666;
+    margin-top: 16px;
+    border-left: 2px solid #ccc;
+  }
+
+  .annotation strong {
+    color: var(--wf-ink);
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- LEFT NAVIGATION -->
+  <div class="left-nav">
+    <div class="nav-section">
+      <div class="nav-title">Rep Portal</div>
+      <a href="rep-home.html" class="nav-link">Dashboard</a>
+      <a href="rep-deals-commission.html" class="nav-link">My Deals</a>
+      <a href="rep-my-training.html" class="nav-link">My Training</a>
+      <a href="rep-search-commission.html" class="nav-link">Commission</a>
+      <a href="rep-forecast.html" class="nav-link active">My Forecast</a>
+      <a href="rep-resources.html" class="nav-link">Resources</a>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="breadcrumb">
+        <a href="rep-home.html">Rep Home</a> <span>&gt;</span> My Forecast
+      </div>
+      <h1 class="page-title">My Forecast</h1>
+      <p class="page-subtitle">CloudBridge Solutions · Gold Tier · YTD 2026 · Updated today</p>
+    </div>
+
+    <!-- KPI Cards Grid -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Revenue Target</div>
+        <div class="kpi-value">$350K</div>
+        <div class="kpi-meta">
+          <strong>Q1:</strong> $87,500<br>
+          <strong>YTD closed:</strong> $312,000 (89%)
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">Deals Registered</div>
+        <div class="kpi-value">5</div>
+        <div class="kpi-meta">
+          <strong>Target:</strong> 8 annual<br>
+          <strong>Pending:</strong> 2 | <strong>Remaining:</strong> 3
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">Commission Earned (YTD)</div>
+        <div class="kpi-value">$24,960</div>
+        <div class="kpi-meta">
+          <strong>8% of $312K</strong><br>
+          <strong>Est. full-year:</strong> $31,200
+        </div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">Cert Compliance</div>
+        <div class="kpi-value"><span class="kpi-warning">3/5</span></div>
+        <div class="kpi-meta">
+          <strong>2 lapsed</strong><br>
+          At risk of non-compliance
+        </div>
+      </div>
+    </div>
+
+    <!-- Health Bar -->
+    <div class="health-bar-section">
+      <div class="health-bar-label">Your CloudBridge JBP contribution score</div>
+      <div class="health-metrics">
+        <div class="health-item good">Revenue: 89% ✓</div>
+        <div class="health-item medium">DRs: 62% ⚠</div>
+        <div class="health-item medium">Certs: 60% ⚠</div>
+        <div class="health-item bad">Co-sell: 0% ✗</div>
+      </div>
+      <div style="margin-bottom: 8px;">
+        <span class="health-score">67% — At Risk</span>
+      </div>
+      <div class="health-note">
+        <strong>Note:</strong> This score is visible to Jordan Reeves (Admin) and Marcus Chen (PSM). Missing cert renewals and co-sell activities are dragging your overall contribution score.
+      </div>
+    </div>
+
+    <!-- Pipeline Forecast -->
+    <div class="pipeline-section">
+      <div class="section-header">
+        <div class="section-title">My Open Pipeline</div>
+        <div class="section-subtitle">Deals I can still close this year</div>
+      </div>
+      <table aria-label="Open pipeline deals">
+        <thead>
+          <tr>
+            <th>Deal</th>
+            <th>Customer</th>
+            <th>Stage</th>
+            <th>TCV</th>
+            <th>My Commission</th>
+            <th>Expected Close</th>
+            <th>Protection Expires</th>
+            <th>Risk</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="#" class="deal-link">Vertex Dynamics IBX Expansion</a></td>
+            <td>Enterprise</td>
+            <td><span class="stage-badge">Proposal — Final</span></td>
+            <td><span class="currency">$340K</span></td>
+            <td><span class="currency">$27,200</span></td>
+            <td>Mar 20, 2026</td>
+            <td>Apr 15, 2026</td>
+            <td><span class="status-low">🟢 Low</span></td>
+          </tr>
+          <tr>
+            <td><a href="#" class="deal-link">Nexus Global Cloud Migration</a></td>
+            <td>Mid-Market</td>
+            <td><span class="stage-badge">Negotiation</span></td>
+            <td><span class="currency">$210K</span></td>
+            <td><span class="currency">$16,800</span></td>
+            <td>Apr 30, 2026</td>
+            <td>Jun 10, 2026</td>
+            <td><span class="status-medium">🟡 Medium</span></td>
+          </tr>
+          <tr>
+            <td><a href="#" class="deal-link">Harrington Financial SaaS Connect</a></td>
+            <td>Mid-Market</td>
+            <td><span class="stage-badge">Discovery</span></td>
+            <td><span class="currency">$95K</span></td>
+            <td><span class="currency">$7,600</span></td>
+            <td>Q3 2026</td>
+            <td>Aug 2, 2026</td>
+            <td><span class="status-medium">🟡 Medium</span></td>
+          </tr>
+          <tr>
+            <td><a href="#" class="deal-link">Pacific Ventures Co-Location</a></td>
+            <td>SMB</td>
+            <td><span class="stage-badge">Qualified</span></td>
+            <td><span class="currency">$42K</span></td>
+            <td><span class="currency">$3,360</span></td>
+            <td>Q4 2026</td>
+            <td>Oct 5, 2026</td>
+            <td><span class="status-low">🟢 Low</span></td>
+          </tr>
+          <tr class="cta-row">
+            <td colspan="8">
+              <strong>Register a new deal</strong> to get your protection window started today.
+              <a href="rep-home.html" class="cta-button">+ New Deal Registration</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="pipeline-footer">
+        <div class="pipeline-total">Total open pipeline: <span class="currency">$687K</span> | Potential commission at risk: <span class="currency">$54,960</span></div>
+        <div class="pipeline-note">If Vertex Dynamics closes as expected, you will reach <strong>116% of annual revenue target</strong>.</div>
+      </div>
+    </div>
+
+    <!-- Forecast Scenarios -->
+    <div>
+      <h2 style="font-size: 16px; font-weight: 700; color: var(--wf-ink); margin-bottom: 16px;">Forecast Scenarios</h2>
+      <div class="scenarios-grid">
+        <div class="scenario-card best">
+          <div class="scenario-title">
+            <span class="scenario-icon">🟢</span> Best Case
+          </div>
+          <div class="scenario-item">
+            <div class="scenario-label">All open deals close</div>
+          </div>
+          <div class="scenario-item">
+            <div class="scenario-label">Total Revenue:</div>
+            <div class="scenario-value">$999K</div>
+          </div>
+          <div class="scenario-item">
+            <div class="scenario-label">Commission:</div>
+            <div class="scenario-value">$79,920</div>
+          </div>
+          <div class="scenario-item">
+            <div class="scenario-label">DR Target:</div>
+            <div class="scenario-value">107%</div>
+          </div>
+        </div>
+
+        <div class="scenario-card base">
+          <div class="scenario-title">
+            <span class="scenario-icon">🟡</span> Base Case
+          </div>
+          <div class="scenario-item">
+            <div class="scenario-label">Vertex + Nexus Global close, 2 others slip</div>
+          </div>
+          <div class="scenario-item">
+            <div class="scenario-label">Total Revenue:</div>
+            <div class="scenario-value">$862K</div>
+          </div>
+          <div class="scenario-item">
+            <div class="scenario-label">Commission:</div>
+            <div class="scenario-value">$68,960</div>
+          </div>
+          <div class="scenario-item">
+            <div class="scenario-label">DR Target:</div>
+            <div class="scenario-value">94%</div>
+          </div>
+        </div>
+
+        <div class="scenario-card downside">
+          <div class="scenario-title">
+            <span class="scenario-icon">🔴</span> Downside
+          </div>
+          <div class="scenario-item">
+            <div class="scenario-label">Only Vertex closes</div>
+          </div>
+          <div class="scenario-item">
+            <div class="scenario-label">Total Revenue:</div>
+            <div class="scenario-value">$652K</div>
+          </div>
+          <div class="scenario-item">
+            <div class="scenario-label">Commission:</div>
+            <div class="scenario-value">$52,160</div>
+          </div>
+          <div class="scenario-item">
+            <div class="scenario-label">DR Target:</div>
+            <div class="scenario-value">74%</div>
+          </div>
+          <div class="scenario-warning">
+            Below JBP target — Jordan and Marcus flagged
+          </div>
+        </div>
+      </div>
+      <div class="scenarios-note">
+        <strong>Disclaimer:</strong> Scenarios calculated from current deal stages and historical CloudBridge close rates by deal size. Not a guarantee.
+      </div>
+    </div>
+
+    <!-- Action Items -->
+    <div class="actions-section">
+      <h2 class="actions-title">Action Items for You</h2>
+
+      <div class="action-item critical">
+        <span class="action-number">1</span>
+        <div class="action-heading">
+          🔴 Complete Security Fundamentals renewal
+        </div>
+        <div class="action-desc">14 days remaining. Non-compliance risk if missed.</div>
+        <a href="rep-certifications.html" class="action-link">→ View certification →</a>
+      </div>
+
+      <div class="action-item warning">
+        <span class="action-number">2</span>
+        <div class="action-heading">
+          🟡 Register Harrington Financial deal
+        </div>
+        <div class="action-desc">Protection window closes in 60 days. Get it registered to lock in your 90-day protection window.</div>
+        <a href="rep-home.html" class="action-link">→ Start new deal registration →</a>
+      </div>
+
+      <div class="action-item warning">
+        <span class="action-number">3</span>
+        <div class="action-heading">
+          🟡 Move Nexus Global to Negotiation stage
+        </div>
+        <div class="action-desc">Deal has been in Discovery for 45 days. Risk of losing protection if stage doesn't advance.</div>
+        <a href="#" class="action-link">→ Update deal stage →</a>
+      </div>
+
+      <div class="action-item info">
+        <span class="action-number">4</span>
+        <div class="action-heading">
+          🟢 Download Q1 commission statement
+        </div>
+        <div class="action-desc">Your Q1 earnings are ready to review before April 15 payout.</div>
+        <a href="rep-search-commission.html" class="action-link">→ View commission detail →</a>
+      </div>
+    </div>
+
+    <!-- Design Annotation -->
+    <div class="annotation">
+      <strong>Design note:</strong> Forecast data pulls from DealRegistration__c (pipeline), Commission__c (earned), JBP_Commitment__c (targets), Certification__c (compliance). Steve sees his own data only — he cannot see other reps' pipelines or commission. Jordan (Portal Admin) and Marcus (PSM) have read access to this view. Scenario calculations use a rule-based model, not Agentforce prediction — close-rate assumptions are static percentages configured in a custom setting.
+    </div>
+
+  </div>
+
+  <!-- RIGHT SIDEBAR -->
+  <div class="right-sidebar">
+
+    <!-- YTD Commission Card -->
+    <div class="sidebar-card">
+      <div class="sidebar-title">YTD Commission</div>
+      <div class="sidebar-stat">$24,960</div>
+      <div class="sidebar-content">
+        <strong>Q1 2026 earned</strong>
+      </div>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-content">
+        <div style="margin-bottom: 8px;">
+          <strong>Contributing deals:</strong>
+        </div>
+        <div style="font-size: 12px; line-height: 1.6; margin-bottom: 8px;">
+          • Meridian Capital: $16,800<br>
+          • Ascent Logistics: $4,080<br>
+          • CloudWorks Dev: $4,080
+        </div>
+      </div>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-content">
+        <strong>Next payout:</strong> April 15, 2026 (Q1 close)
+      </div>
+      <a href="rep-search-commission.html" class="sidebar-link">View full commission detail →</a>
+    </div>
+
+    <!-- JBP Context Card -->
+    <div class="sidebar-card">
+      <div class="expandable-header" onclick="toggleExpand(this)">
+        <div class="sidebar-title" style="margin-bottom: 0;">Your 2026 JBP Targets</div>
+        <span class="expand-icon">+</span>
+      </div>
+      <div class="expandable-content">
+        <div class="sidebar-content">
+          <div style="margin-bottom: 12px;">
+            <strong>CloudBridge × Equinix</strong>
+          </div>
+          <div style="margin-bottom: 8px;">
+            <strong>Your personal contribution:</strong>
+          </div>
+          <div style="font-size: 12px; line-height: 1.6; margin-bottom: 12px;">
+            • Revenue: $350K (of $3.5M org)<br>
+            • Deal Registrations: 8 (of 24 org)
+          </div>
+          <div style="margin-bottom: 8px;">
+            <strong>Last check-in:</strong> Q1 2026 · Jordan submitted
+          </div>
+          <div style="font-size: 12px; color: var(--wf-muted);">
+            Awaiting partner sign-off
+          </div>
+        </div>
+        <a href="#" class="sidebar-link">View full JBP →</a>
+      </div>
+    </div>
+
+    <!-- Protection Calendar Card -->
+    <div class="sidebar-card">
+      <div class="sidebar-title">Protection Calendar</div>
+      <div class="sidebar-content" style="font-size: 12px; margin-bottom: 12px;">
+        Upcoming protection window expirations:
+      </div>
+      <div>
+        <div class="protection-item">
+          <span class="protection-label">Vertex Dynamics</span>
+          <span class="protection-days">47 days</span>
+        </div>
+        <div class="protection-item">
+          <span class="protection-label">Nexus Global</span>
+          <span class="protection-days">97 days</span>
+        </div>
+        <div class="protection-item">
+          <span class="protection-label">Harrington Fin.</span>
+          <span class="protection-days">159 days</span>
+        </div>
+      </div>
+      <div class="sidebar-divider"></div>
+      <div class="sidebar-content" style="font-size: 12px;">
+        <strong>Tip:</strong> Register new deals early — 90-day protection window starts from registration date.
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script src="wf-nav.js"></script>
+<script>
+  function toggleExpand(element) {
+    const content = element.nextElementSibling;
+    const icon = element.querySelector('.expand-icon');
+    content.classList.toggle('open');
+    icon.textContent = content.classList.contains('open') ? '−' : '+';
+  }
+</script>
+
+</body>
+</html>

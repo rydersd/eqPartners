@@ -1020,6 +1020,23 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
 
     <div class="node">
       <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="node-type t-record" title="Record Page">R</div>
+        <span class="node-label">JBP Quarterly Check-In <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">(PSM progress review · Q1 2026)</span></span>
+        <a href="pm-jbp-checkin.html" class="node-mockup-link" title="View Mockup">→</a>
+        <span class="node-chevron">›</span>
+      </div>
+      <div class="node-children">
+        <div class="child"><span class="child-type ct-kpi">KPI</span> RAG status row: Revenue 🟢 89% / DRs 🟡 83% / Certs 🔴 Behind / Co-Marketing 🔴 Not Started</div>
+        <div class="child"><span class="child-type ct-table">Table</span> Goal progress table (7 rows): target, Q1 actual, %, RAG status, PSM notes</div>
+        <div class="child"><span class="child-type ct-form">Form</span> PSM observations block (Marcus) + Partner Response textarea (Jordan) + Resolution / Next Steps</div>
+        <div class="child"><span class="child-type ct-card">Card</span> Check-in history: Q1 current, Q2/Q3/Q4 scheduled; sign-off card with send request button</div>
+        <div class="child"><span class="child-type ct-action">Action</span> Export Check-in PDF → TMPL-JBP-CHECKIN-SUMMARY (Salesforce Document Builder, not Agentforce DocGen)</div>
+        <div class="child"><span class="child-type ct-note">Note</span> Brian Walsh auto-notified when partner signs; object: JBP_Checkin__c child of JBP__c</div>
+      </div>
+    </div>
+
+    <div class="node">
+      <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
         <div class="node-type t-list" title="List View">L</div>
         <span class="node-label">Partner Dormancy &amp; Offboarding <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">(PSM review)</span></span>
         <a href="pm-partner-offboarding.html" class="node-mockup-link" title="View Mockup">→</a>
@@ -1030,6 +1047,22 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
         <div class="child"><span class="child-type ct-table">Table</span> Offboarding Queue tab: 1 record pending VP approval</div>
         <div class="child"><span class="child-type ct-card">Card</span> Dormancy policy callout: 6-month re-engagement trigger, 12-month offboarding threshold</div>
         <div class="child"><span class="child-type ct-card">Card</span> Offboarding Checklist sidebar: 7 steps (notify, revoke, archive, transfer DRs, commission closeout, sign-off)</div>
+      </div>
+    </div>
+
+    <div class="node">
+      <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="node-type t-workflow" title="Workflow">W</div>
+        <span class="node-label">Deal Handover <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">(PSM — transfer open DRs at offboarding)</span></span>
+        <a href="pm-deal-handover.html" class="node-mockup-link" title="View Mockup">→</a>
+        <span class="node-chevron">›</span>
+      </div>
+      <div class="node-children">
+        <div class="child"><span class="child-type ct-card">Card</span> Context card: offboarding record link (OFB-2026-NEXUS-001), 3 open deals summary</div>
+        <div class="child"><span class="child-type ct-table">Table</span> 3-row transfer table: Vertex Dynamics ($340K ✓ assigned) | DataCore ($180K ⚠ URGENT) | Harmon ($62K expired → direct)</div>
+        <div class="child"><span class="child-type ct-widget">Widget</span> Partner Selector sidebar: filters + recommended Pacific Rim Solutions</div>
+        <div class="child"><span class="child-type ct-action">Action</span> Execute All Assigned Transfers — irreversible action with tooltip warning</div>
+        <div class="child"><span class="child-type ct-note">Note</span> Protection window recalculates from transfer date (not original registration date); object: DealHandover__c</div>
       </div>
     </div>
 
@@ -1429,7 +1462,7 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
     <div class="section">
       <div class="section-title" onclick="toggleSection(this)" tabindex="0" role="button" aria-expanded="true">
         <span class="chevron open">›</span> Administration &amp; Agreements
-        <span class="count">3</span>
+        <span class="count">5</span>
       </div>
       <div class="section-body">
 
@@ -1448,6 +1481,41 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
             <div class="child"><span class="child-type ct-action">Action</span> Request Amendment → notifies PSM, creates task in psm-ppa-amendment.html</div>
             <div class="child"><span class="child-type ct-card">Card</span> Renewal Status sidebar: 322 days remaining, auto-renewal enabled, renewal reminder CTA</div>
             <div class="child"><span class="child-type ct-note">Note</span> Partner read-only — PSM owns all edits; amendment initiation routes to Marcus Chen</div>
+          </div>
+        </div>
+
+        <div class="node">
+          <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+            <div class="node-type t-record" title="Record Page">R</div>
+            <span class="node-label">Amendment Request Status <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">Jordan — track in-flight request</span></span>
+            <a href="pm-amendment-request-status.html" class="node-mockup-link" title="View Mockup">→</a>
+            <span class="node-chevron">›</span>
+          </div>
+          <div class="node-children">
+            <div class="child"><span class="child-type ct-card">Card</span> Status banner: current step highlighted, action required (sign DocuSign) or awaiting Equinix</div>
+            <div class="child"><span class="child-type ct-widget">Widget</span> 7-step progress tracker with completed ✓ / active pulse / pending circles; est. completion date</div>
+            <div class="child"><span class="child-type ct-table">Table</span> What's Changing: before/after comparison of all 7 amended terms (Gold → Platinum)</div>
+            <div class="child"><span class="child-type ct-card">Card</span> Certification obligation notice: 3 certs required within 180 days of effective date</div>
+            <div class="child"><span class="child-type ct-thread">Thread</span> Message thread: system events + PSM messages + Jordan reply textarea</div>
+            <div class="child"><span class="child-type ct-action">Action</span> Sign in DocuSign · Resend DocuSign Email · Download Draft · Withdraw Request</div>
+            <div class="child"><span class="child-type ct-note">Note</span> Entry point: "Request Amendment" in pm-contracts.html; partner-read view of psm-ppa-amendment.html</div>
+          </div>
+        </div>
+
+        <div class="node">
+          <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+            <div class="node-type t-list" title="List View">L</div>
+            <span class="node-label">Notification Log <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">Jordan — admin audit view</span></span>
+            <a href="pm-notification-audit.html" class="node-mockup-link" title="View Mockup">→</a>
+            <span class="node-chevron">›</span>
+          </div>
+          <div class="node-children">
+            <div class="child"><span class="child-type ct-kpi">KPI</span> 90-day stats: Sent, Delivered, Bounced, Email open rate, Portal view rate</div>
+            <div class="child"><span class="child-type ct-table">Table</span> 13-row notification log: Date | Recipient | Type | Subject | Channel | Status | Action</div>
+            <div class="child"><span class="child-type ct-alert">Alert</span> Delivery issues callout: bounced email for Steve Rogers cert expiry warning — amber, dismissible</div>
+            <div class="child"><span class="child-type ct-filter">Filter</span> Team Member / Type / Channel / Date range / Search</div>
+            <div class="child"><span class="child-type ct-card">Card</span> "What gets sent to my team?" explainer: program-required alerts cannot be suppressed</div>
+            <div class="child"><span class="child-type ct-note">Note</span> Source: Email_Activity__c (Marketing Cloud) + Custom_Notification__c (portal bell)</div>
           </div>
         </div>
 
@@ -1680,7 +1748,7 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
     <div class="section">
       <div class="section-title" onclick="toggleSection(this)" tabindex="0" role="button" aria-expanded="true">
         <span class="chevron open">›</span> Deals & Commission
-        <span class="count">4</span>
+        <span class="count">5</span>
       </div>
       <div class="section-body">
 
@@ -1749,6 +1817,25 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
             <div class="child"><span class="child-type ct-card">Card</span> Rate info: org tier determines rate (Bronze 8% / Silver 12% / Gold 15%)</div>
             <div class="child"><span class="child-type ct-table">Table</span> Payout history / historical statements</div>
             <div class="child"><span class="child-type ct-action">Action</span> Export commission statement (CSV)</div>
+          </div>
+        </div>
+
+        <div class="node">
+          <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+            <div class="node-type t-dashboard" title="Dashboard">D</div>
+            <span class="node-label">Goal &amp; Forecast <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">Steve — "see my numbers before my manager does"</span></span>
+            <a href="rep-forecast.html" class="node-mockup-link" title="View Mockup">→</a>
+            <span class="node-chevron">›</span>
+          </div>
+          <div class="node-children">
+            <div class="child"><span class="child-type ct-kpi">KPI</span> Revenue vs Target (89%), DRs (62%), Commission YTD ($24,960), Cert compliance (3/5 ⚠)</div>
+            <div class="child"><span class="child-type ct-widget">Widget</span> JBP contribution health bar: Revenue ✓ | DRs ⚠ | Certs ⚠ | Co-sell ✗ | Overall 67% At Risk</div>
+            <div class="child"><span class="child-type ct-note">Note</span> JBP score visible to Jordan Reeves (Admin) and Marcus Chen (PSM)</div>
+            <div class="child"><span class="child-type ct-table">Table</span> Open pipeline: 4 deals ($687K), commission column (8% TCV), protection expiry, risk flag</div>
+            <div class="child"><span class="child-type ct-card">Card</span> 3 scenario cards: Best Case ($999K) / Base Case ($862K) / Downside ($652K — flagged by Jordan + Marcus)</div>
+            <div class="child"><span class="child-type ct-card">Card</span> 4 personalized action items with priority indicators</div>
+            <div class="child"><span class="child-type ct-widget">Widget</span> Protection Calendar sidebar: upcoming window expirations across all open deals</div>
+            <div class="child"><span class="child-type ct-note">Note</span> Scenario model is rule-based static percentages — not Agentforce prediction</div>
           </div>
         </div>
 
@@ -2231,9 +2318,13 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
     <div class="chain-arrow">→</div>
     <div class="chain-step" style="border-color:#b45309;border-width:2px;"><a href="psm-ppa-amendment.html" style="color:#b45309;text-decoration:none;">4. Amendment</a><br><span style="font-size:.625rem;color:var(--wf-muted);">PSM-led · redline compare</span></div>
     <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:#0d9488;border-width:2px;"><a href="pm-amendment-request-status.html" style="color:#0d9488;text-decoration:none;">4b. Partner tracks AMD</a><br><span style="font-size:.625rem;color:var(--wf-muted);">7-step tracker · sign</span></div>
+    <div class="chain-arrow">→</div>
     <div class="chain-step" style="border-color:#dc2626;border-width:2px;"><a href="psm-contract-renewal.html" style="color:#dc2626;text-decoration:none;">5. Renewal</a><br><span style="font-size:.625rem;color:var(--wf-muted);">90-day trigger · 3 options</span></div>
     <div class="chain-arrow">→</div>
     <div class="chain-step" style="border-color:#6d28d9;border-width:2px;"><a href="pm-partner-offboarding.html" style="color:#6d28d9;text-decoration:none;">6. Offboarding</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Lapse / dormancy</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:#6d28d9;border-width:2px;"><a href="pm-deal-handover.html" style="color:#6d28d9;text-decoration:none;">6b. Deal Transfer</a><br><span style="font-size:.625rem;color:var(--wf-muted);">PSM · open DRs</span></div>
   </div>
   <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(260px,1fr));gap:.75rem;font-size:.8125rem;">
     <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #166534;">
@@ -2256,8 +2347,16 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
       <strong><a href="psm-contract-renewal.html" style="color:#dc2626;">PSM: Agreement Renewal →</a></strong>
       <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">3 renewal options (same terms / updated terms / tier upgrade), urgency sidebar, prior cycle history</div>
     </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #0d9488;">
+      <strong><a href="pm-amendment-request-status.html" style="color:#0d9488;">Partner: Amendment Status Tracker →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Jordan's view of AMD-2025-CB-003 in-flight — 7-step progress, sign DocuSign, message Marcus, terms comparison</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #6d28d9;">
+      <strong><a href="pm-deal-handover.html" style="color:#6d28d9;">PSM: Deal Handover →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Transfer open DRs at offboarding — 3 deals with disposition options, partner selector, execute transfers</div>
+    </div>
     <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;">
-      <div style="font-size:.75rem;color:var(--wf-muted);font-style:italic;">Amendment trigger: tier change event → auto-initiate psm-ppa-amendment.html with TMPL-AMD-TIER-UPGRADE-V3. Partner "Request Amendment" from pm-contracts.html → PSM task created. Renewal trigger: Expiry_Date__c ≤ TODAY()+90 AND Renewal_Initiated__c = FALSE → PSM task → psm-contract-renewal.html.</div>
+      <div style="font-size:.75rem;color:var(--wf-muted);font-style:italic;">Amendment trigger: tier change event → auto-initiate psm-ppa-amendment.html with TMPL-AMD-TIER-UPGRADE-V3. Partner "Request Amendment" from pm-contracts.html → PSM task + pm-amendment-request-status.html entry. Renewal trigger: Expiry_Date__c ≤ TODAY()+90 AND Renewal_Initiated__c = FALSE → PSM task → psm-contract-renewal.html.</div>
     </div>
   </div>
 </div>

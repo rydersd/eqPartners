@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amendment Request Status — Partner Connect Portal</title>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+<style>
+  :root{
+    --wf-canvas:#f5f6f8;--wf-ink:#111827;--wf-muted:#6b7280;--wf-accent:#0070d2;
+    --gray-border:#d1d5db;--teal:#0d9488;--orange:#f59e0b;--red:#dc2626;--green:#16a34a;
+    --sidebar-w:280px;--right-w:320px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--wf-canvas);color:var(--wf-ink);font-size:14px;display:flex;min-height:100vh;}
+  /* ── Left nav ── */
+  .left-nav{width:var(--sidebar-w);background:#1e293b;color:#e2e8f0;flex-shrink:0;display:flex;flex-direction:column;padding:0;}
+  .nav-logo{padding:16px 20px;border-bottom:1px solid #334155;font-weight:700;font-size:15px;color:#fff;}
+  .nav-logo span{display:block;font-size:11px;font-weight:400;color:#94a3b8;margin-top:2px;}
+  .nav-section{padding:12px 0 4px;}
+  .nav-section-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#64748b;padding:0 20px 6px;}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:8px 20px;font-size:13px;color:#cbd5e1;cursor:pointer;border-left:3px solid transparent;transition:all .15s;}
+  .nav-item:hover,.nav-item.active{background:#0f172a;color:#fff;border-left-color:var(--wf-accent);}
+  .nav-item.active{font-weight:600;}
+  .nav-icon{width:16px;text-align:center;flex-shrink:0;}
+  /* ── Main content ── */
+  .main-wrap{flex:1;display:flex;flex-direction:column;min-width:0;}
+  .topbar{background:#fff;border-bottom:1px solid var(--gray-border);padding:0 24px;height:52px;display:flex;align-items:center;gap:12px;}
+  .topbar-breadcrumb{font-size:13px;color:var(--wf-muted);}
+  .topbar-breadcrumb a{color:var(--wf-accent);text-decoration:none;}
+  .topbar-breadcrumb a:hover{text-decoration:underline;}
+  .topbar-spacer{flex:1;}
+  .topbar-user{font-size:13px;color:var(--wf-muted);}
+  .topbar-avatar{width:32px;height:32px;background:#e0f2fe;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#0070d2;}
+  .content-body{flex:1;display:flex;gap:0;min-height:0;}
+  .main-col{flex:1;padding:24px;overflow-y:auto;min-width:0;}
+  .right-col{width:var(--right-w);background:#fff;border-left:1px solid var(--gray-border);padding:20px;overflow-y:auto;flex-shrink:0;}
+  /* ── Page header ── */
+  .page-header{margin-bottom:20px;}
+  .page-title{font-size:20px;font-weight:700;color:var(--wf-ink);}
+  .page-sub{font-size:13px;color:var(--wf-muted);margin-top:4px;}
+  /* ── Status banner ── */
+  .status-banner{border-radius:8px;padding:16px 20px;margin-bottom:20px;display:flex;align-items:flex-start;gap:14px;border:1px solid;}
+  .status-banner.awaiting-partner{background:#fffbeb;border-color:#fcd34d;}
+  .status-banner.in-review{background:#eff6ff;border-color:#93c5fd;}
+  .status-banner.approved{background:#f0fdf4;border-color:#86efac;}
+  .status-banner.action-required{background:#fff1f2;border-color:#fca5a5;}
+  .banner-icon{font-size:22px;flex-shrink:0;margin-top:2px;}
+  .banner-title{font-size:15px;font-weight:700;color:var(--wf-ink);}
+  .banner-body{font-size:13px;color:var(--wf-muted);margin-top:3px;line-height:1.5;}
+  .banner-cta{margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;}
+  /* ── Cards ── */
+  .card{background:#fff;border:1px solid var(--gray-border);border-radius:8px;margin-bottom:16px;}
+  .card-header{padding:14px 16px 12px;border-bottom:1px solid var(--gray-border);display:flex;align-items:center;justify-content:space-between;}
+  .card-title{font-size:14px;font-weight:700;color:var(--wf-ink);}
+  .card-subtitle{font-size:12px;color:var(--wf-muted);margin-top:2px;}
+  .card-body{padding:16px;}
+  /* ── Amendment summary ── */
+  .amd-meta-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px 20px;margin-bottom:4px;}
+  .amd-meta-item label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--wf-muted);display:block;margin-bottom:3px;}
+  .amd-meta-item value{font-size:13px;font-weight:600;color:var(--wf-ink);}
+  .amd-meta-item .sub{font-size:12px;color:var(--wf-muted);font-weight:400;}
+  .badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700;text-transform:uppercase;}
+  .badge-amber{background:#fef3c7;color:#92400e;}
+  .badge-blue{background:#dbeafe;color:#1e40af;}
+  .badge-green{background:#dcfce7;color:#166534;}
+  .badge-red{background:#fee2e2;color:#991b1b;}
+  .badge-purple{background:#ede9fe;color:#5b21b6;}
+  /* ── Progress tracker ── */
+  .progress-track{display:flex;align-items:flex-start;gap:0;position:relative;margin:8px 0 4px;}
+  .progress-track::before{content:'';position:absolute;top:16px;left:16px;right:16px;height:2px;background:var(--gray-border);z-index:0;}
+  .pt-step{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;position:relative;z-index:1;}
+  .pt-circle{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;border:2px solid var(--gray-border);background:#fff;flex-shrink:0;}
+  .pt-circle.done{background:#16a34a;border-color:#16a34a;color:#fff;}
+  .pt-circle.active{background:#0070d2;border-color:#0070d2;color:#fff;box-shadow:0 0 0 3px #dbeafe;}
+  .pt-circle.pending{background:#fff;border-color:#d1d5db;color:#9ca3af;}
+  .pt-circle.action{background:#f59e0b;border-color:#f59e0b;color:#fff;animation:pulse-amber 2s ease-in-out infinite;}
+  @keyframes pulse-amber{0%,100%{box-shadow:0 0 0 3px #fef3c7;}50%{box-shadow:0 0 0 6px #fcd34d;}}
+  .pt-label{font-size:11px;text-align:center;color:var(--wf-muted);line-height:1.3;max-width:70px;}
+  .pt-label.active-label{font-weight:700;color:var(--wf-ink);}
+  .pt-label.action-label{font-weight:700;color:#92400e;}
+  .pt-date{font-size:10px;color:var(--wf-muted);text-align:center;}
+  /* ── Progress line segments ── */
+  .pt-line{flex:1;height:2px;margin-top:15px;flex-shrink:0;}
+  .pt-line.done{background:#16a34a;}
+  .pt-line.pending{background:var(--gray-border);}
+  /* ── Terms comparison ── */
+  .terms-table{width:100%;border-collapse:collapse;font-size:13px;}
+  .terms-table th{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--wf-muted);padding:8px 12px;text-align:left;background:#f9fafb;border-bottom:1px solid var(--gray-border);}
+  .terms-table td{padding:10px 12px;border-bottom:1px solid var(--gray-border);vertical-align:top;}
+  .terms-table tr:last-child td{border-bottom:0;}
+  .terms-table .change-col{font-size:12px;}
+  .val-from{color:var(--wf-muted);text-decoration:line-through;}
+  .val-to{color:var(--green);font-weight:600;}
+  .val-arrow{color:var(--wf-muted);margin:0 4px;}
+  /* ── Conversation log ── */
+  .msg-thread{display:flex;flex-direction:column;gap:12px;}
+  .msg-item{display:flex;gap:10px;}
+  .msg-avatar{width:32px;height:32px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:11px;}
+  .av-jordan{background:#e0f2fe;color:#0070d2;}
+  .av-marcus{background:#ede9fe;color:#5b21b6;}
+  .av-system{background:#f1f5f9;color:#475569;}
+  .msg-bubble{flex:1;}
+  .msg-bubble-header{display:flex;gap:8px;align-items:baseline;margin-bottom:3px;}
+  .msg-name{font-size:12px;font-weight:700;color:var(--wf-ink);}
+  .msg-ts{font-size:11px;color:var(--wf-muted);}
+  .msg-body{font-size:13px;color:var(--wf-ink);line-height:1.5;background:#f9fafb;border:1px solid var(--gray-border);border-radius:6px;padding:10px 12px;}
+  .msg-body.system{background:#fff;font-style:italic;color:var(--wf-muted);}
+  /* ── Right sidebar ── */
+  .sidebar-section{margin-bottom:20px;}
+  .sidebar-section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--wf-muted);margin-bottom:10px;}
+  .sidebar-kv{display:flex;flex-direction:column;gap:8px;}
+  .sidebar-kv-row{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;font-size:12px;}
+  .sidebar-kv-row label{color:var(--wf-muted);flex-shrink:0;}
+  .sidebar-kv-row value{font-weight:600;text-align:right;}
+  .sidebar-divider{border:none;border-top:1px solid var(--gray-border);margin:16px 0;}
+  /* ── Buttons ── */
+  .btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid transparent;text-decoration:none;transition:all .15s;}
+  .btn-primary{background:var(--wf-accent);color:#fff;border-color:var(--wf-accent);}
+  .btn-primary:hover{background:#005cb8;}
+  .btn-secondary{background:#fff;color:var(--wf-ink);border-color:var(--gray-border);}
+  .btn-secondary:hover{background:#f9fafb;}
+  .btn-warning{background:#f59e0b;color:#fff;border-color:#f59e0b;}
+  .btn-warning:hover{background:#d97706;}
+  .btn-sm{padding:5px 10px;font-size:12px;}
+  /* ── Alert / info box ── */
+  .info-box{border-radius:6px;padding:12px 14px;font-size:12px;line-height:1.5;border:1px solid;}
+  .info-box.info{background:#eff6ff;border-color:#bfdbfe;color:#1e40af;}
+  .info-box.warn{background:#fffbeb;border-color:#fcd34d;color:#78350f;}
+  .info-box.success{background:#f0fdf4;border-color:#bbf7d0;color:#14532d;}
+  .info-box + .info-box{margin-top:8px;}
+  /* ── Timeline (right col) ── */
+  .timeline{display:flex;flex-direction:column;gap:0;}
+  .tl-item{display:flex;gap:10px;padding-bottom:14px;position:relative;}
+  .tl-item:not(:last-child)::before{content:'';position:absolute;left:10px;top:22px;bottom:0;width:2px;background:var(--gray-border);}
+  .tl-dot{width:20px;height:20px;border-radius:50%;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:10px;}
+  .tl-dot.done{background:#16a34a;color:#fff;}
+  .tl-dot.active{background:#0070d2;color:#fff;}
+  .tl-dot.pending{background:#e5e7eb;color:#9ca3af;}
+  .tl-dot.action{background:#f59e0b;color:#fff;}
+  .tl-content{flex:1;}
+  .tl-title{font-size:12px;font-weight:700;color:var(--wf-ink);}
+  .tl-desc{font-size:11px;color:var(--wf-muted);margin-top:2px;line-height:1.4;}
+  .tl-date{font-size:11px;color:var(--wf-muted);}
+  /* ── Escalation note ── */
+  .escalation-note{background:#fef2f2;border:1px solid #fca5a5;border-radius:6px;padding:12px 14px;font-size:12px;color:#7f1d1d;line-height:1.5;margin-top:12px;}
+</style>
+</head>
+<body>
+
+<!-- Left Nav -->
+<nav class="left-nav" aria-label="Portal navigation">
+  <div class="nav-logo">Partner Connect<span>CloudBridge Solutions — Jordan Reeves</span></div>
+  <div class="nav-section">
+    <div class="nav-section-label">Home</div>
+    <div class="nav-item" onclick="location.href='pm-home-dashboard.html'"><span class="nav-icon">⌂</span> Dashboard</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-label">Deals &amp; Revenue</div>
+    <div class="nav-item" onclick="location.href='pm-deals-revenue.html'"><span class="nav-icon">◈</span> Deals &amp; Revenue</div>
+    <div class="nav-item" onclick="location.href='pm-deal-registration.html'"><span class="nav-icon">✦</span> Register a Deal</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-label">Performance</div>
+    <div class="nav-item" onclick="location.href='pm-jbp-checkin.html'"><span class="nav-icon">◎</span> JBP Progress</div>
+    <div class="nav-item" onclick="location.href='partner-analytics.html'"><span class="nav-icon">▤</span> Analytics</div>
+    <div class="nav-item" onclick="location.href='pm-cert-tracker.html'"><span class="nav-icon">◉</span> Certifications</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-label">Administration</div>
+    <div class="nav-item" onclick="location.href='pm-contracts.html'"><span class="nav-icon">◐</span> Agreements</div>
+    <div class="nav-item active" aria-current="page"><span class="nav-icon">▷</span> Amendment Requests</div>
+    <div class="nav-item" onclick="location.href='pm-team-management.html'"><span class="nav-icon">◒</span> Team</div>
+    <div class="nav-item" onclick="location.href='pm-notification-audit.html'"><span class="nav-icon">◔</span> Notification Log</div>
+    <div class="nav-item" onclick="location.href='pm-profile.html'"><span class="nav-icon">◕</span> Profile &amp; Settings</div>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-label">Marketing</div>
+    <div class="nav-item" onclick="location.href='pm-mdf-balance.html'"><span class="nav-icon">◈</span> MDF</div>
+    <div class="nav-item" onclick="location.href='pm-asset-library.html'"><span class="nav-icon">◐</span> Asset Library</div>
+  </div>
+</nav>
+
+<!-- Main -->
+<div class="main-wrap">
+  <div class="topbar">
+    <div class="topbar-breadcrumb">
+      <a href="pm-contracts.html">Agreements</a> › <strong>Amendment Request AMD-2025-CB-003</strong>
+    </div>
+    <div class="topbar-spacer"></div>
+    <div class="topbar-user">Jordan Reeves &nbsp;</div>
+    <div class="topbar-avatar" aria-hidden="true">JR</div>
+  </div>
+
+  <div class="content-body">
+    <main class="main-col">
+
+      <!-- Page header -->
+      <div class="page-header">
+        <div class="page-title">Amendment Request — AMD-2025-CB-003</div>
+        <div class="page-sub">Tier upgrade amendment for PPA-2024-CB-0142 · Submitted Feb 10, 2026 · <span style="color:var(--wf-muted)">Managed by Marcus Chen (PSM)</span></div>
+      </div>
+
+      <!-- Status banner — action required (signature pending) -->
+      <div class="status-banner awaiting-partner" role="status" aria-label="Amendment status: awaiting your signature">
+        <div class="banner-icon" aria-hidden="true">✍️</div>
+        <div>
+          <div class="banner-title">Your signature is required</div>
+          <div class="banner-body">
+            DocuSign sent to <strong>jordan.reeves@cloudbridgesolutions.com</strong> on Jan 28, 2026. This request has been waiting <strong>13 days</strong>.
+            Check your inbox for a message from <em>dse@docusign.net</em>. Not seeing it? Use the button below to resend.
+          </div>
+          <div class="banner-cta">
+            <button class="btn btn-warning" aria-label="Open DocuSign to sign the amendment">✍ Sign in DocuSign</button>
+            <button class="btn btn-secondary" aria-label="Resend DocuSign email to your inbox">✉ Resend DocuSign Email</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Progress tracker -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Approval Progress</div>
+            <div class="card-subtitle">7 steps · Step 4 of 7 · Est. completion Feb 28, 2026</div>
+          </div>
+          <span class="badge badge-amber">Awaiting Partner Signature</span>
+        </div>
+        <div class="card-body">
+          <div class="progress-track" role="list" aria-label="Amendment approval steps">
+            <div class="pt-step" role="listitem">
+              <div class="pt-circle done" aria-label="Step 1 complete">✓</div>
+              <div class="pt-label">PSM<br>Drafted</div>
+              <div class="pt-date">Jan 27</div>
+            </div>
+            <div class="pt-line done"></div>
+            <div class="pt-step" role="listitem">
+              <div class="pt-circle done" aria-label="Step 2 complete">✓</div>
+              <div class="pt-label">PAM<br>Authorized</div>
+              <div class="pt-date">Jan 27</div>
+            </div>
+            <div class="pt-line done"></div>
+            <div class="pt-step" role="listitem">
+              <div class="pt-circle done" aria-label="Step 3 complete">✓</div>
+              <div class="pt-label">Legal<br>Reviewed</div>
+              <div class="pt-date">Jan 28</div>
+            </div>
+            <div class="pt-line done"></div>
+            <div class="pt-step" role="listitem">
+              <div class="pt-circle action" aria-label="Step 4 — your action required">4</div>
+              <div class="pt-label action-label">Partner<br>Signs ← You</div>
+              <div class="pt-date">Pending 13d</div>
+            </div>
+            <div class="pt-line pending"></div>
+            <div class="pt-step" role="listitem">
+              <div class="pt-circle pending" aria-label="Step 5 pending">5</div>
+              <div class="pt-label">Equinix<br>Countersign</div>
+              <div class="pt-date">—</div>
+            </div>
+            <div class="pt-line pending"></div>
+            <div class="pt-step" role="listitem">
+              <div class="pt-circle pending" aria-label="Step 6 pending">6</div>
+              <div class="pt-label">Agreement<br>Activated</div>
+              <div class="pt-date">—</div>
+            </div>
+            <div class="pt-line pending"></div>
+            <div class="pt-step" role="listitem">
+              <div class="pt-circle pending" aria-label="Step 7 pending">7</div>
+              <div class="pt-label">All Parties<br>Notified</div>
+              <div class="pt-date">—</div>
+            </div>
+          </div>
+
+          <div class="info-box info" style="margin-top:16px;">
+            <strong>What happens after you sign?</strong> Equinix will countersign within 2 business days.
+            Once fully executed, your tier upgrades to Platinum immediately — commission rates, MDF budget, and deal registration window all update automatically in the portal.
+          </div>
+        </div>
+      </div>
+
+      <!-- Amendment details -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">What's Changing</div>
+            <div class="card-subtitle">Tier upgrade: Gold → Platinum · 7 terms updated</div>
+          </div>
+          <span class="badge badge-purple">Tier Upgrade</span>
+        </div>
+        <div class="card-body" style="padding:0;">
+          <table class="terms-table" aria-label="Amendment terms comparison">
+            <thead>
+              <tr>
+                <th>Term</th>
+                <th>Current (Gold)</th>
+                <th>New (Platinum)</th>
+                <th>Benefit</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Commission Rate</strong></td>
+                <td class="val-from">8%</td>
+                <td class="val-to">11%</td>
+                <td class="change-col">+3pp on all new TCV</td>
+              </tr>
+              <tr>
+                <td><strong>MDF Annual Budget</strong></td>
+                <td class="val-from">$40,000</td>
+                <td class="val-to">$75,000</td>
+                <td class="change-col">+$35K for co-marketing</td>
+              </tr>
+              <tr>
+                <td><strong>Certifications Required</strong></td>
+                <td class="val-from">5</td>
+                <td class="val-to">8</td>
+                <td class="change-col">Must complete 3 more within 180 days</td>
+              </tr>
+              <tr>
+                <td><strong>Deal Reg Protection Window</strong></td>
+                <td class="val-from">90 days</td>
+                <td class="val-to">120 days</td>
+                <td class="change-col">30 extra days per registered deal</td>
+              </tr>
+              <tr>
+                <td><strong>Dedicated PAM</strong></td>
+                <td class="val-from">Shared pool</td>
+                <td class="val-to">Alex Rivera (assigned)</td>
+                <td class="change-col">Direct PAM contact for escalations</td>
+              </tr>
+              <tr>
+                <td><strong>QBR Cadence</strong></td>
+                <td class="val-from">Quarterly</td>
+                <td class="val-to">Monthly check-in + Quarterly</td>
+                <td class="change-col">Added monthly touchpoint with PSM</td>
+              </tr>
+              <tr>
+                <td><strong>Co-Sell Access</strong></td>
+                <td class="val-from">Not included</td>
+                <td class="val-to">Included</td>
+                <td class="change-col">Joint Equinix/CloudBridge co-sell enabled</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Certification notice -->
+      <div class="info-box warn" style="margin-bottom:16px;">
+        <strong>Certification obligation:</strong> The Platinum tier requires 8 active certifications. You currently hold 5.
+        The amendment allows <strong>180 days</strong> from the effective date to complete the remaining 3.
+        <a href="pm-cert-tracker.html" style="color:#92400e;font-weight:700;">View certification tracker →</a>
+      </div>
+
+      <!-- Message thread -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Activity &amp; Messages</div>
+        </div>
+        <div class="card-body">
+          <div class="msg-thread" role="list" aria-label="Amendment activity log">
+
+            <div class="msg-item" role="listitem">
+              <div class="msg-avatar av-system" aria-hidden="true">⚙</div>
+              <div class="msg-bubble">
+                <div class="msg-bubble-header">
+                  <span class="msg-name">System</span>
+                  <span class="msg-ts">Feb 10, 2026 · 9:14 AM</span>
+                </div>
+                <div class="msg-body system">Amendment request AMD-2025-CB-003 submitted by Jordan Reeves. Assigned to PSM Marcus Chen.</div>
+              </div>
+            </div>
+
+            <div class="msg-item" role="listitem">
+              <div class="msg-avatar av-marcus" aria-hidden="true">MC</div>
+              <div class="msg-bubble">
+                <div class="msg-bubble-header">
+                  <span class="msg-name">Marcus Chen (PSM)</span>
+                  <span class="msg-ts">Feb 10, 2026 · 11:32 AM</span>
+                </div>
+                <div class="msg-body">
+                  Hi Jordan — I've reviewed your amendment request and it's all supported by CloudBridge's Q4 numbers.
+                  I've drafted the amendment using the Platinum upgrade template and it's now with Alex Rivera (PAM) for authorization.
+                  Expect this to move to legal this week.
+                </div>
+              </div>
+            </div>
+
+            <div class="msg-item" role="listitem">
+              <div class="msg-avatar av-system" aria-hidden="true">⚙</div>
+              <div class="msg-bubble">
+                <div class="msg-bubble-header">
+                  <span class="msg-name">System</span>
+                  <span class="msg-ts">Jan 27, 2026 · 2:05 PM</span>
+                </div>
+                <div class="msg-body system">PAM authorization received from Alex Rivera. Amendment sent to Equinix Legal for standard review.</div>
+              </div>
+            </div>
+
+            <div class="msg-item" role="listitem">
+              <div class="msg-avatar av-system" aria-hidden="true">⚙</div>
+              <div class="msg-bubble">
+                <div class="msg-bubble-header">
+                  <span class="msg-name">System</span>
+                  <span class="msg-ts">Jan 28, 2026 · 10:19 AM</span>
+                </div>
+                <div class="msg-body system">Legal review complete. No redlines. DocuSign envelope sent to jordan.reeves@cloudbridgesolutions.com.</div>
+              </div>
+            </div>
+
+            <div class="msg-item" role="listitem">
+              <div class="msg-avatar av-marcus" aria-hidden="true">MC</div>
+              <div class="msg-bubble">
+                <div class="msg-bubble-header">
+                  <span class="msg-name">Marcus Chen (PSM)</span>
+                  <span class="msg-ts">Feb 10, 2026 · 9:02 AM</span>
+                </div>
+                <div class="msg-body">
+                  Jordan — just checking in. The DocuSign has been sitting for about 2 weeks now. No rush, but once you sign, we can get Equinix to countersign same day and your Platinum benefits will go live immediately. Let me know if you have any questions on the terms.
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Reply area -->
+          <div style="margin-top:16px;border-top:1px solid var(--gray-border);padding-top:14px;">
+            <label for="reply-box" style="font-size:12px;font-weight:700;color:var(--wf-muted);display:block;margin-bottom:6px;">Message Marcus Chen</label>
+            <textarea id="reply-box" rows="3" placeholder="Type a message…" style="width:100%;border:1px solid var(--gray-border);border-radius:6px;padding:10px;font-size:13px;resize:vertical;" aria-label="Reply to PSM Marcus Chen"></textarea>
+            <div style="margin-top:8px;display:flex;justify-content:flex-end;">
+              <button class="btn btn-primary btn-sm">Send Message</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Withdraw / escalate options -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Other Actions</div>
+          <div class="card-subtitle">Withdrawing this request will require Marcus to reopen a new amendment.</div>
+        </div>
+        <div class="card-body" style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="btn btn-secondary" aria-label="Download draft amendment document as PDF">⬇ Download Draft Amendment</button>
+          <button class="btn btn-secondary" aria-label="Print amendment details">⎙ Print</button>
+          <button class="btn btn-secondary" style="margin-left:auto;color:var(--red);border-color:var(--red);" aria-label="Withdraw this amendment request — this cannot be undone">Withdraw Request</button>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Right sidebar -->
+    <aside class="right-col" aria-label="Amendment details sidebar">
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Request Summary</div>
+        <div class="sidebar-kv">
+          <div class="sidebar-kv-row">
+            <label>Amendment ID</label>
+            <value>AMD-2025-CB-003</value>
+          </div>
+          <div class="sidebar-kv-row">
+            <label>Parent Agreement</label>
+            <value><a href="pm-contracts.html" style="color:var(--wf-accent);">PPA-2024-CB-0142</a></value>
+          </div>
+          <div class="sidebar-kv-row">
+            <label>Submitted</label>
+            <value>Feb 10, 2026</value>
+          </div>
+          <div class="sidebar-kv-row">
+            <label>Amendment Type</label>
+            <value>Tier Upgrade</value>
+          </div>
+          <div class="sidebar-kv-row">
+            <label>Tier Change</label>
+            <value>Gold → Platinum</value>
+          </div>
+          <div class="sidebar-kv-row">
+            <label>Current Step</label>
+            <value><span class="badge badge-amber">4 of 7</span></value>
+          </div>
+          <div class="sidebar-kv-row">
+            <label>Days in Current Step</label>
+            <value style="color:var(--red);font-weight:700;">13 days</value>
+          </div>
+          <div class="sidebar-kv-row">
+            <label>Est. Completion</label>
+            <value>Feb 28, 2026</value>
+          </div>
+        </div>
+      </div>
+
+      <hr class="sidebar-divider">
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Key Contacts</div>
+        <div class="sidebar-kv">
+          <div class="sidebar-kv-row">
+            <label>Your PSM</label>
+            <value>Marcus Chen</value>
+          </div>
+          <div class="sidebar-kv-row">
+            <label>Equinix PAM</label>
+            <value>Alex Rivera</value>
+          </div>
+          <div class="sidebar-kv-row">
+            <label>Legal Review</label>
+            <value style="color:var(--green);">✓ Approved</value>
+          </div>
+          <div class="sidebar-kv-row">
+            <label>DocuSign To</label>
+            <value style="font-size:11px;">jordan.reeves<br>@cloudbridgesolutions.com</value>
+          </div>
+        </div>
+      </div>
+
+      <hr class="sidebar-divider">
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Step Timeline</div>
+        <div class="timeline" role="list" aria-label="Full amendment timeline">
+          <div class="tl-item" role="listitem">
+            <div class="tl-dot done" aria-label="Complete">✓</div>
+            <div class="tl-content">
+              <div class="tl-title">PSM Drafts Amendment</div>
+              <div class="tl-date">Jan 27, 2026</div>
+            </div>
+          </div>
+          <div class="tl-item" role="listitem">
+            <div class="tl-dot done" aria-label="Complete">✓</div>
+            <div class="tl-content">
+              <div class="tl-title">PAM Authorization</div>
+              <div class="tl-desc">Alex Rivera authorized</div>
+              <div class="tl-date">Jan 27, 2026</div>
+            </div>
+          </div>
+          <div class="tl-item" role="listitem">
+            <div class="tl-dot done" aria-label="Complete">✓</div>
+            <div class="tl-content">
+              <div class="tl-title">Legal Review</div>
+              <div class="tl-desc">No redlines — approved</div>
+              <div class="tl-date">Jan 28, 2026</div>
+            </div>
+          </div>
+          <div class="tl-item" role="listitem">
+            <div class="tl-dot action" aria-label="Your action required">!</div>
+            <div class="tl-content">
+              <div class="tl-title" style="color:#92400e;">Partner Signature ← You</div>
+              <div class="tl-desc">Waiting 13 days</div>
+              <div class="tl-date">DocuSign sent Jan 28</div>
+            </div>
+          </div>
+          <div class="tl-item" role="listitem">
+            <div class="tl-dot pending" aria-label="Pending">5</div>
+            <div class="tl-content">
+              <div class="tl-title" style="color:var(--wf-muted);">Equinix Countersign</div>
+              <div class="tl-desc">~1 business day after you sign</div>
+            </div>
+          </div>
+          <div class="tl-item" role="listitem">
+            <div class="tl-dot pending" aria-label="Pending">6</div>
+            <div class="tl-content">
+              <div class="tl-title" style="color:var(--wf-muted);">Agreement Activated</div>
+              <div class="tl-desc">Tier + benefits go live immediately</div>
+            </div>
+          </div>
+          <div class="tl-item" role="listitem">
+            <div class="tl-dot pending" aria-label="Pending">7</div>
+            <div class="tl-content">
+              <div class="tl-title" style="color:var(--wf-muted);">All Parties Notified</div>
+              <div class="tl-desc">Email + portal bell</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="sidebar-divider">
+
+      <div class="sidebar-section">
+        <div class="sidebar-section-title">Related Screens</div>
+        <div class="sidebar-kv">
+          <div class="sidebar-kv-row">
+            <label><a href="pm-contracts.html" style="color:var(--wf-accent);">View Active Agreement</a></label>
+          </div>
+          <div class="sidebar-kv-row">
+            <label><a href="pm-jbp-checkin.html" style="color:var(--wf-accent);">JBP Progress</a></label>
+          </div>
+          <div class="sidebar-kv-row">
+            <label><a href="pm-cert-tracker.html" style="color:var(--wf-accent);">Certifications</a></label>
+          </div>
+        </div>
+      </div>
+
+      <hr class="sidebar-divider">
+
+      <div class="info-box warn">
+        <strong>Note:</strong> Withdrawing this request will require a new amendment to be opened.
+        Marcus Chen will need to restart the approval chain from Step 1.
+      </div>
+
+    </aside>
+  </div><!-- /content-body -->
+</div><!-- /main-wrap -->
+
+<script src="wf-nav.js"></script>
+</body>
+</html>

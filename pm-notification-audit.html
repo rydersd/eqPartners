@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Notification History — CloudBridge Solutions — Equinix PCP Wireframes</title>
+<link rel="stylesheet" href="wireframe.css">
+<style>
+  .page-layout {
+    display: grid;
+    grid-template-columns: 280px 1fr 320px;
+    gap: 1.5rem;
+    padding: 2rem;
+    background: var(--wf-canvas);
+  }
+
+  .page-header {
+    grid-column: 1 / -1;
+    margin-bottom: 1rem;
+  }
+
+  .page-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: var(--wf-ink);
+    margin: 0 0 0.5rem 0;
+  }
+
+  .page-subtitle {
+    font-size: 0.9rem;
+    color: var(--wf-muted);
+    margin: 0;
+  }
+
+  .breadcrumb {
+    font-size: 0.8rem;
+    color: var(--wf-muted);
+    margin-top: 0.75rem;
+  }
+
+  .breadcrumb a {
+    color: var(--wf-accent);
+    text-decoration: none;
+  }
+
+  .breadcrumb a:hover {
+    text-decoration: underline;
+  }
+
+  /* Left nav */
+  .left-nav {
+    background: white;
+    border: 1px solid var(--gray-border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .nav-section {
+    padding: 0;
+  }
+
+  .nav-section-title {
+    padding: 0.75rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--wf-muted);
+    background: #f5f5f5;
+    border-bottom: 1px solid var(--gray-border);
+  }
+
+  .nav-item {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    color: var(--wf-ink);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    border-left: 3px solid transparent;
+  }
+
+  .nav-item:hover {
+    background: #f9f9f9;
+  }
+
+  .nav-item.active {
+    background: #f0f4ff;
+    color: var(--wf-accent);
+    border-left-color: var(--wf-accent);
+  }
+
+  .nav-icon {
+    width: 1rem;
+    height: 1rem;
+    opacity: 0.6;
+  }
+
+  /* Main content */
+  .main-content {
+    background: white;
+    border: 1px solid var(--gray-border);
+    border-radius: 6px;
+    padding: 2rem;
+  }
+
+  .filter-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--gray-border);
+  }
+
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .filter-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--wf-muted);
+  }
+
+  .filter-input,
+  .filter-select {
+    padding: 0.6rem 0.75rem;
+    border: 1px solid var(--gray-border);
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    background: white;
+  }
+
+  .filter-input:focus,
+  .filter-select:focus {
+    outline: none;
+    border-color: var(--wf-accent);
+    box-shadow: 0 0 0 3px rgba(var(--wf-accent-rgb), 0.1);
+  }
+
+  .filter-input::placeholder {
+    color: var(--wf-muted);
+  }
+
+  .filter-chips {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+  }
+
+  .filter-chip {
+    padding: 0.5rem 0.75rem;
+    background: #e8f0ff;
+    color: var(--wf-accent);
+    border-radius: 20px;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .filter-chip-remove {
+    cursor: pointer;
+    font-weight: 600;
+    opacity: 0.6;
+  }
+
+  .filter-chip-remove:hover {
+    opacity: 1;
+  }
+
+  .results-count {
+    font-size: 0.85rem;
+    color: var(--wf-muted);
+  }
+
+  /* Callout */
+  .callout {
+    padding: 1.25rem;
+    border-radius: 6px;
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+
+  .callout.amber {
+    background: #fffaed;
+    border: 1px solid #ffd966;
+  }
+
+  .callout-icon {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    width: 1.5rem;
+    text-align: center;
+  }
+
+  .callout-content {
+    flex: 1;
+  }
+
+  .callout-text {
+    font-size: 0.9rem;
+    color: var(--wf-ink);
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+  }
+
+  .callout-actions {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .btn {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--gray-border);
+    border-radius: 4px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    background: white;
+    color: var(--wf-ink);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+  }
+
+  .btn:hover {
+    background: #f9f9f9;
+    border-color: #ccc;
+  }
+
+  .btn.primary {
+    background: var(--wf-accent);
+    color: white;
+    border-color: var(--wf-accent);
+  }
+
+  .btn.primary:hover {
+    background: #0052cc;
+    border-color: #0052cc;
+  }
+
+  .btn.sm {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.8rem;
+  }
+
+  /* Table */
+  .notification-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 2rem;
+  }
+
+  .notification-table thead {
+    background: #f5f5f5;
+    border-bottom: 2px solid var(--gray-border);
+  }
+
+  .notification-table th {
+    padding: 1rem;
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--wf-muted);
+  }
+
+  .notification-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--gray-border);
+    font-size: 0.9rem;
+  }
+
+  .notification-table tbody tr:hover {
+    background: #fafafa;
+  }
+
+  .notification-table tbody tr.alert-row {
+    background: #fffaed;
+  }
+
+  .notification-table tbody tr.alert-row:hover {
+    background: #fff9e6;
+  }
+
+  .date-cell {
+    color: var(--wf-muted);
+    font-size: 0.85rem;
+    white-space: nowrap;
+  }
+
+  .recipient-cell {
+    font-weight: 500;
+  }
+
+  .type-badge {
+    display: inline-block;
+    padding: 0.4rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .type-badge.certification {
+    background: #e8f5e9;
+    color: #1b5e20;
+  }
+
+  .type-badge.deal {
+    background: #e3f2fd;
+    color: #0d47a1;
+  }
+
+  .type-badge.mdf {
+    background: #f3e5f5;
+    color: #4a148c;
+  }
+
+  .type-badge.agreement {
+    background: #fff3e0;
+    color: #e65100;
+  }
+
+  .type-badge.system {
+    background: #f1f1f1;
+    color: #424242;
+  }
+
+  .type-badge.escalation {
+    background: #ffebee;
+    color: #b71c1c;
+  }
+
+  .subject-cell {
+    font-weight: 500;
+    max-width: 300px;
+    word-break: break-word;
+  }
+
+  .channel-cell {
+    font-size: 0.85rem;
+    color: var(--wf-muted);
+  }
+
+  .status-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  .status-badge {
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .status-badge.delivered {
+    background: #4caf50;
+  }
+
+  .status-badge.bounced {
+    background: #ffa500;
+  }
+
+  .status-badge.opened {
+    background: #2196f3;
+  }
+
+  .status-text {
+    color: var(--wf-ink);
+  }
+
+  .status-text.bounced {
+    color: #f57c00;
+    font-weight: 500;
+  }
+
+  .status-hint {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--wf-muted);
+    margin-top: 0.25rem;
+  }
+
+  .action-cell {
+    text-align: right;
+  }
+
+  .action-link {
+    color: var(--wf-accent);
+    text-decoration: none;
+    font-size: 0.85rem;
+    margin-left: 0.5rem;
+  }
+
+  .action-link:hover {
+    text-decoration: underline;
+  }
+
+  /* Pagination */
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--gray-border);
+    font-size: 0.85rem;
+    color: var(--wf-muted);
+  }
+
+  .pagination-controls {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+  }
+
+  .pagination-select {
+    padding: 0.4rem 0.6rem;
+    border: 1px solid var(--gray-border);
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 0.85rem;
+  }
+
+  /* Right sidebar */
+  .right-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .card {
+    background: white;
+    border: 1px solid var(--gray-border);
+    border-radius: 6px;
+    padding: 1.5rem;
+  }
+
+  .card-title {
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--wf-muted);
+    margin-bottom: 1rem;
+  }
+
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--gray-border);
+    font-size: 0.9rem;
+  }
+
+  .stat-row:last-child {
+    border-bottom: none;
+  }
+
+  .stat-label {
+    color: var(--wf-muted);
+  }
+
+  .stat-value {
+    font-weight: 600;
+    color: var(--wf-ink);
+  }
+
+  .member-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .member-item {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--gray-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+  }
+
+  .member-item:last-child {
+    border-bottom: none;
+  }
+
+  .member-name {
+    font-weight: 500;
+    color: var(--wf-ink);
+  }
+
+  .member-count {
+    color: var(--wf-muted);
+    font-size: 0.85rem;
+  }
+
+  .quick-link {
+    display: block;
+    padding: 0.75rem 0;
+    color: var(--wf-accent);
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+
+  .quick-link:hover {
+    text-decoration: underline;
+  }
+
+  .explainer {
+    background: #f5f9ff;
+    border-left: 3px solid var(--wf-accent);
+    padding: 1rem;
+    border-radius: 4px;
+  }
+
+  .explainer-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--wf-ink);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .explainer-toggle {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    text-align: center;
+    line-height: 1;
+    user-select: none;
+  }
+
+  .explainer-content {
+    margin-top: 0.75rem;
+    font-size: 0.85rem;
+    color: var(--wf-ink);
+    line-height: 1.5;
+    display: none;
+  }
+
+  .explainer-content.show {
+    display: block;
+  }
+
+  .explainer-link {
+    color: var(--wf-accent);
+    text-decoration: none;
+  }
+
+  .explainer-link:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 1200px) {
+    .page-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .left-nav {
+      order: -1;
+    }
+
+    .right-sidebar {
+      order: 2;
+    }
+
+    .filter-row {
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    }
+  }
+
+  @media (max-width: 768px) {
+    .page-layout {
+      padding: 1rem;
+      gap: 1rem;
+    }
+
+    .main-content {
+      padding: 1rem;
+    }
+
+    .filter-row {
+      grid-template-columns: 1fr;
+    }
+
+    .notification-table {
+      font-size: 0.8rem;
+    }
+
+    .notification-table th,
+    .notification-table td {
+      padding: 0.75rem 0.5rem;
+    }
+
+    .subject-cell {
+      max-width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-layout">
+
+  <!-- Page header (spans all columns) -->
+  <div class="page-header">
+    <h1 class="page-title">Notification History</h1>
+    <p class="page-subtitle">CloudBridge Solutions</p>
+    <p class="page-subtitle" style="font-size: 0.85rem; margin-top: 0.5rem;">Outbound communications from the Equinix Partner Connect Portal to your team · Last 90 days</p>
+    <div class="breadcrumb">
+      <a href="pm-home-dashboard.html">Partner Home</a> &gt;
+      <a href="pm-admin-setup.html">Admin</a> &gt;
+      <span>Notification History</span>
+    </div>
+  </div>
+
+  <!-- Left navigation -->
+  <nav class="left-nav">
+    <div class="nav-section">
+      <div class="nav-section-title">Partner</div>
+      <a class="nav-item" href="pm-home-dashboard.html">
+        <span class="nav-icon">⌂</span> Dashboard
+      </a>
+      <a class="nav-item" href="pm-team-management.html">
+        <span class="nav-icon">👥</span> My Team
+      </a>
+      <a class="nav-item" href="pm-opportunities.html">
+        <span class="nav-icon">💼</span> Deals
+      </a>
+      <a class="nav-item" href="pm-cert-tracker.html">
+        <span class="nav-icon">📜</span> Training
+      </a>
+      <a class="nav-item" href="pm-mdf-request.html">
+        <span class="nav-icon">💰</span> MDF
+      </a>
+      <a class="nav-item" href="pm-org-onboarding-agreement.html">
+        <span class="nav-icon">📋</span> Agreements
+      </a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-title">Admin</div>
+      <a class="nav-item" href="pm-admin-setup.html">
+        <span class="nav-icon">⚙</span> Setup
+      </a>
+      <a class="nav-item active" href="pm-notification-audit.html">
+        <span class="nav-icon">🔔</span> Notifications
+      </a>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <div class="main-content">
+
+    <!-- Filters -->
+    <div class="filter-row">
+      <div class="filter-group">
+        <label class="filter-label">Team Member</label>
+        <select class="filter-select">
+          <option>All Members</option>
+          <option selected>Steve Rogers</option>
+          <option>Jordan Reeves</option>
+          <option>Brian Walsh</option>
+          <option>Alex Martinez</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">Type</label>
+        <select class="filter-select">
+          <option selected>All Types</option>
+          <option>Certification</option>
+          <option>Deal Registration</option>
+          <option>MDF</option>
+          <option>Agreement</option>
+          <option>System</option>
+          <option>Escalation</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">Channel</label>
+        <select class="filter-select">
+          <option selected>All Channels</option>
+          <option>Email</option>
+          <option>In-Portal</option>
+          <option>Chatter</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">Date Range</label>
+        <select class="filter-select">
+          <option>Last 30 days</option>
+          <option selected>Last 90 days</option>
+          <option>Custom</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label">Search</label>
+        <input type="text" class="filter-input" placeholder="Subject or keyword…">
+      </div>
+    </div>
+
+    <div class="results-count">
+      Showing <strong>18 notifications</strong> · Sorted by most recent
+    </div>
+
+    <!-- Delivery issues callout -->
+    <div class="callout amber">
+      <div class="callout-icon">⚠</div>
+      <div class="callout-content">
+        <div class="callout-text">
+          <strong>1 delivery issue found in the last 90 days.</strong> Steve Rogers — steve.rogers@cloudbridge.com — bounced on Jan 20. This may mean he missed the cert expiry warning. Review in Team Settings → steve.rogers.
+        </div>
+        <div class="callout-actions">
+          <button class="btn">Go to Team Settings</button>
+          <button class="btn">Dismiss</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notification log table -->
+    <table class="notification-table">
+      <thead>
+        <tr>
+          <th style="width: 12%;">Date</th>
+          <th style="width: 13%;">Recipient</th>
+          <th style="width: 12%;">Type</th>
+          <th style="width: 35%;">Subject</th>
+          <th style="width: 12%;">Channel</th>
+          <th style="width: 10%;">Status</th>
+          <th style="width: 6%; text-align: right;">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="date-cell">Feb 24, 2026</td>
+          <td class="recipient-cell">Steve Rogers</td>
+          <td><span class="type-badge deal">Deal Registration</span></td>
+          <td class="subject-cell">DR-2026-CB-0047 approved — Vertex Dynamics IBX</td>
+          <td class="channel-cell">Email</td>
+          <td class="status-cell">
+            <span class="status-badge delivered"></span>
+            <span class="status-text">Delivered</span>
+          </td>
+          <td class="action-cell"><a href="#" class="action-link">View</a></td>
+        </tr>
+        <tr>
+          <td class="date-cell">Feb 20, 2026</td>
+          <td class="recipient-cell">Jordan Reeves</td>
+          <td><span class="type-badge escalation">Escalation</span></td>
+          <td class="subject-cell">ESC-2026-RTP-003 resolved — Redwood Tech dispute closed</td>
+          <td class="channel-cell">Email</td>
+          <td class="status-cell">
+            <span class="status-badge delivered"></span>
+            <span class="status-text">Delivered</span>
+          </td>
+          <td class="action-cell"><a href="#" class="action-link">View</a></td>
+        </tr>
+        <tr>
+          <td class="date-cell">Feb 12, 2026</td>
+          <td class="recipient-cell">Jordan Reeves</td>
+          <td><span class="type-badge agreement">Agreement</span></td>
+          <td class="subject-cell">PPA Amendment AMD-2025-CB-003 sent for signature (DocuSign)</td>
+          <td class="channel-cell">Email</td>
+          <td class="status-cell">
+            <span class="status-badge delivered"></span>
+            <span class="status-text">Delivered</span>
+          </td>
+          <td class="action-cell"><a href="#" class="action-link">View</a></td>
+        </tr>
+        <tr>
+          <td class="date-cell">Feb 10, 2026</td>
+          <td class="recipient-cell">Brian Walsh</td>
+          <td><span class="type-badge escalation">Escalation</span></td>
+          <td class="subject-cell">Emergency escalation brief generated — ESC-2026-RTP-003</td>
+          <td class="channel-cell">Email</td>
+          <td class="status-cell">
+            <span class="status-badge delivered"></span>
+            <span class="status-text">Delivered</span>
+          </td>
+          <td class="action-cell"><a href="#" class="action-link">View</a></td>
+        </tr>
+        <tr>
+          <td class="date-cell">Jan 30, 2026</td>
+          <td class="recipient-cell">Steve Rogers</td>
+          <td><span class="type-badge certification">Certification</span></td>
+          <td class="subject-cell">⚠ Certification expiring in 14 days — Security Fundamentals</td>
+          <td class="channel-cell">Email + Portal</td>
+          <td class="status-cell">
+            <span class="status-badge opened"></span>
+            <span class="status-text">Opened (portal only)</span>
+            <span class="status-hint">Email unread</span>
+          </td>
+          <td class="action-cell"><a href="#" class="action-link">View</a></td>
+        </tr>
+        <tr class="alert-row">
+          <td class="date-cell">Jan 20, 2026</td>
+          <td class="recipient-cell">Steve Rogers</td>
+          <td><span class="type-badge certification">Certification</span></td>
+          <td class="subject-cell">⚠ Certification expiring in 30 days — Network Architecture</td>
+          <td class="channel-cell">Email + Portal</td>
+          <td class="status-cell">
+            <span class="status-badge bounced"></span>
+            <span class="status-text bounced">Email bounced</span>
+            <span class="status-hint">Check email address</span>
+          </td>
+          <td class="action-cell">
+            <a href="#" class="action-link">View</a>
+            <a href="#" class="action-link">Resend</a>
+          </td>
+        </tr>
+        <tr>
+          <td class="date-cell">Jan 15, 2026</td>
+          <td class="recipient-cell">Jordan Reeves</td>
+          <td><span class="type-badge system">System</span></td>
+          <td class="subject-cell">Your PPA (PPA-2024-CB-0142) has been countersigned — Gold tier active</td>
+          <td class="channel-cell">Email</td>
+          <td class="status-cell">
+            <span class="status-badge delivered"></span>
+            <span class="status-text">Delivered</span>
+          </td>
+          <td class="action-cell"><a href="#" class="action-link">View</a></td>
+        </tr>
+        <tr>
+          <td class="date-cell">Jan 12, 2026</td>
+          <td class="recipient-cell">Jordan Reeves</td>
+          <td><span class="type-badge system">System</span></td>
+          <td class="subject-cell">Equinix PCP: Monthly summary — December 2025</td>
+          <td class="channel-cell">Email</td>
+          <td class="status-cell">
+            <span class="status-badge delivered"></span>
+            <span class="status-text">Delivered</span>
+          </td>
+          <td class="action-cell"><a href="#" class="action-link">View</a></td>
+        </tr>
+        <tr>
+          <td class="date-cell">Jan 5, 2026</td>
+          <td class="recipient-cell">Steve Rogers</td>
+          <td><span class="type-badge deal">Deal Registration</span></td>
+          <td class="subject-cell">DR-2026-CB-0031 rejected — insufficient documentation</td>
+          <td class="channel-cell">Email + Portal</td>
+          <td class="status-cell">
+            <span class="status-badge delivered"></span>
+            <span class="status-text">Delivered</span>
+          </td>
+          <td class="action-cell"><a href="#" class="action-link">View</a></td>
+        </tr>
+        <tr>
+          <td class="date-cell">Dec 15, 2025</td>
+          <td class="recipient-cell">Jordan Reeves</td>
+          <td><span class="type-badge mdf">MDF</span></td>
+          <td class="subject-cell">MDF request MDF-2025-CB-018 approved — $18,750 Q1 allocation</td>
+          <td class="channel-cell">Email</td>
+          <td class="status-cell">
+            <span class="status-badge delivered"></span>
+            <span class="status-text">Delivered</span>
+          </td>
+          <td class="action-cell"><a href="#" class="action-link">View</a></td>
+        </tr>
+        <tr>
+          <td class="date-cell">Dec 10, 2025</td>
+          <td class="recipient-cell">Steve Rogers</td>
+          <td><span class="type-badge certification">Certification</span></td>
+          <td class="subject-cell">✓ Certification completed — Equinix Fabric Foundations</td>
+          <td class="channel-cell">Email + Portal</td>
+          <td class="status-cell">
+            <span class="status-badge delivered"></span>
+            <span class="status-text">Delivered</span>
+          </td>
+          <td class="action-cell"><a href="#" class="action-link">View</a></td>
+        </tr>
+        <tr>
+          <td class="date-cell">Dec 2, 2025</td>
+          <td class="recipient-cell">Jordan Reeves</td>
+          <td><span class="type-badge system">System</span></td>
+          <td class="subject-cell">QBR scheduled for Dec 2, 2025 — Marcus Chen will facilitate</td>
+          <td class="channel-cell">Email</td>
+          <td class="status-cell">
+            <span class="status-badge delivered"></span>
+            <span class="status-text">Delivered</span>
+          </td>
+          <td class="action-cell"><a href="#" class="action-link">View</a></td>
+        </tr>
+        <tr>
+          <td class="date-cell">Nov 28, 2025</td>
+          <td class="recipient-cell">Steve Rogers</td>
+          <td><span class="type-badge deal">Deal Registration</span></td>
+          <td class="subject-cell">DR-2025-CB-0108 approved — DataVault Corp</td>
+          <td class="channel-cell">Email</td>
+          <td class="status-cell">
+            <span class="status-badge delivered"></span>
+            <span class="status-text">Delivered</span>
+          </td>
+          <td class="action-cell"><a href="#" class="action-link">View</a></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div class="pagination">
+      <div>Page 1 of 2 · 18 total notifications</div>
+      <div class="pagination-controls">
+        <label style="font-size: 0.8rem; margin-right: 0.5rem;">Show per page:</label>
+        <select class="pagination-select">
+          <option>10</option>
+          <option selected>25</option>
+          <option>50</option>
+        </select>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Right sidebar -->
+  <div class="right-sidebar">
+
+    <!-- Summary stats -->
+    <div class="card">
+      <div class="card-title">Summary (Last 90 Days)</div>
+      <div class="stat-row">
+        <span class="stat-label">Total sent</span>
+        <span class="stat-value">18</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Delivered</span>
+        <span class="stat-value">16</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Bounced/Failed</span>
+        <span class="stat-value">1</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Email open rate</span>
+        <span class="stat-value">75%</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">Portal view rate</span>
+        <span class="stat-value">88%</span>
+      </div>
+    </div>
+
+    <!-- Most-notified members -->
+    <div class="card">
+      <div class="card-title">Most-Notified Members</div>
+      <ul class="member-list">
+        <li class="member-item">
+          <span class="member-name">Steve Rogers</span>
+          <span class="member-count">8</span>
+        </li>
+        <li class="member-item">
+          <span class="member-name">Jordan Reeves</span>
+          <span class="member-count">7</span>
+        </li>
+        <li class="member-item">
+          <span class="member-name">Brian Walsh</span>
+          <span class="member-count">1</span>
+        </li>
+        <li class="member-item">
+          <span class="member-name">Alex Martinez</span>
+          <span class="member-count">2</span>
+        </li>
+      </ul>
+    </div>
+
+    <!-- Quick admin card -->
+    <div class="card">
+      <div class="card-title">Quick Admin</div>
+      <a href="pm-team-management.html" class="quick-link">Team Settings</a>
+      <a href="#" class="quick-link">Notification Preferences</a>
+      <a href="#" class="quick-link">Export notification log (CSV)</a>
+    </div>
+
+    <!-- Explainer -->
+    <div class="card">
+      <div class="explainer">
+        <div class="explainer-title" onclick="this.parentElement.querySelector('.explainer-content').classList.toggle('show')">
+          <span class="explainer-toggle">▶</span>
+          <span>What gets sent to my team?</span>
+        </div>
+        <div class="explainer-content">
+          <p>Equinix sends notifications for:</p>
+          <ul style="margin: 0.5rem 0; padding-left: 1.25rem;">
+            <li>Deal registration approvals/rejections</li>
+            <li>Certification expirations (30/14/7 day)</li>
+            <li>MDF approvals and updates</li>
+            <li>Agreement milestones</li>
+            <li>System updates and QBR scheduling</li>
+            <li>Escalation resolutions</li>
+          </ul>
+          <p style="margin-top: 0.75rem;">
+            <strong>Note:</strong> You cannot suppress deal registration or certification alerts — these are program-required. <a href="#" class="explainer-link">View full notification policy</a>
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- Design annotations (hidden from display) -->
+<script type="application/json" data-annotation="true">
+{
+  "title": "Notification History — CloudBridge Solutions",
+  "version": "1.0",
+  "design_notes": [
+    "Notification log is read from Marketing Cloud sends via SF Activity object (Email_Activity__c)",
+    "Bounce data synced nightly from ESP webhooks",
+    "Portal bell notifications stored in Custom_Notification__c",
+    "Jordan has read-only visibility into all team notifications — she cannot unsend or edit, but can resend failed emails",
+    "Equinix-to-VP notifications (e.g., Brian Walsh escalation brief) appear in log even if VP is not portal user — email is on file as partner contact",
+    "This gives Jordan full RevOps visibility of what communications have hit her team",
+    "Status column uses both icon (color) and text to serve color-blind users",
+    "Bounced row highlighted in amber (#fffaed) with explicit text label",
+    "Resend action only appears for bounced/failed emails",
+    "Table is fully responsive — collapses to single column on mobile"
+  ],
+  "accessibility_notes": [
+    "All interactive elements properly aria-labeled",
+    "Table has proper thead/th with scope attribute",
+    "Status column uses both color AND text (not color alone)",
+    "Bounced/failed rows use both color and explicit text labels",
+    "Explainer is keyboard-accessible toggle",
+    "Links have sufficient color contrast ratio (4.5:1 minimum)"
+  ]
+}
+</script>
+
+<script src="wf-nav.js"></script>
+
+</body>
+</html>

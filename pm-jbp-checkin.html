@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JBP Check-in — CloudBridge Solutions Q1 2026 — Equinix PCP Wireframes</title>
+<link rel="stylesheet" href="wireframe.css">
+<style>
+.jbp-checkin-page {
+  display: grid;
+  grid-template-columns: 280px 1fr 320px;
+  gap: 1rem;
+  padding: 1rem;
+  min-height: 100vh;
+  background: var(--wf-canvas);
+}
+
+/* Left Navigation */
+.psm-nav {
+  border-right: 1px solid var(--gray-border);
+  padding-right: 1rem;
+}
+
+.psm-nav h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--wf-muted);
+  font-weight: 600;
+}
+
+.psm-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.psm-nav li {
+  margin: 0 0 0.5rem 0;
+}
+
+.psm-nav a {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  color: var(--wf-ink);
+  transition: background-color 0.2s;
+}
+
+.psm-nav a:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.psm-nav a.active {
+  background-color: var(--wf-accent);
+  color: #fff;
+  font-weight: 600;
+}
+
+/* Main Content */
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Page Header */
+.page-header {
+  border-bottom: 1px solid var(--gray-border);
+  padding-bottom: 1rem;
+}
+
+.page-header h1 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.75rem;
+  color: var(--wf-ink);
+}
+
+.page-header .subheader {
+  font-size: 0.9rem;
+  color: var(--wf-muted);
+  margin: 0 0 0.5rem 0;
+}
+
+.breadcrumb {
+  font-size: 0.8rem;
+  color: var(--wf-muted);
+  margin: 0.5rem 0 0 0;
+}
+
+.breadcrumb a {
+  color: var(--wf-accent);
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.badges {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.4rem 0.75rem;
+  background-color: #f5f5f5;
+  border: 1px solid var(--gray-border);
+  border-radius: 3px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--wf-ink);
+}
+
+.badge.status {
+  background-color: #fff3cd;
+  border-color: #ffb703;
+  color: #b8860b;
+}
+
+/* RAG Status Summary */
+.rag-summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.status-card {
+  border: 1px solid var(--gray-border);
+  border-radius: 6px;
+  padding: 1rem;
+  background-color: #fff;
+}
+
+.status-card.on-track {
+  border-left: 4px solid #28a745;
+}
+
+.status-card.at-risk {
+  border-left: 4px solid #ffc107;
+}
+
+.status-card.behind {
+  border-left: 4px solid #dc3545;
+}
+
+.status-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+.status-emoji {
+  font-size: 1.2rem;
+}
+
+.status-title {
+  font-size: 0.85rem;
+  color: var(--wf-muted);
+  margin: 0.5rem 0 0.25rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  overflow: hidden;
+  margin: 0.5rem 0;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: #28a745;
+  transition: width 0.3s;
+}
+
+.status-card.at-risk .progress-fill {
+  background-color: #ffc107;
+}
+
+.status-card.behind .progress-fill {
+  background-color: #dc3545;
+}
+
+.status-value {
+  font-size: 0.85rem;
+  color: var(--wf-muted);
+  margin: 0.5rem 0;
+}
+
+.action-note {
+  font-size: 0.75rem;
+  color: var(--wf-muted);
+  font-style: italic;
+  margin-top: 0.5rem;
+}
+
+/* Goal Progress Table */
+.goal-table-container {
+  background-color: #fff;
+  border: 1px solid var(--gray-border);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.goal-table-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid var(--gray-border);
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--wf-ink);
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 0.8fr 0.8fr 2fr;
+  gap: 1rem;
+  align-items: center;
+}
+
+.goal-row {
+  border-bottom: 1px solid var(--gray-border);
+  padding: 0.75rem 1rem;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 0.8fr 0.8fr 2fr;
+  gap: 1rem;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.goal-row:last-child {
+  border-bottom: none;
+}
+
+.goal-row:hover {
+  background-color: #f9f9f9;
+}
+
+.goal-name {
+  font-weight: 500;
+  color: var(--wf-ink);
+}
+
+.goal-number {
+  color: var(--wf-muted);
+  text-align: center;
+}
+
+.goal-percent {
+  font-weight: 600;
+  text-align: center;
+}
+
+.goal-status {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  justify-content: center;
+}
+
+.status-icon {
+  font-size: 1rem;
+}
+
+.goal-note {
+  color: var(--wf-muted);
+  font-size: 0.8rem;
+}
+
+/* PSM Observations */
+.observations-section {
+  background-color: #fff;
+  border: 1px solid var(--gray-border);
+  border-radius: 6px;
+  padding: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.observations-section h3 {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  color: var(--wf-ink);
+}
+
+.observation-text {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--wf-ink);
+  margin-bottom: 1.5rem;
+}
+
+.response-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.response-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.response-field label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--wf-ink);
+}
+
+.response-field .field-meta {
+  font-size: 0.75rem;
+  color: var(--wf-muted);
+}
+
+.response-field textarea {
+  padding: 0.75rem;
+  border: 1px solid var(--gray-border);
+  border-radius: 4px;
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 0.85rem;
+  resize: vertical;
+  min-height: 80px;
+  background-color: #fafafa;
+  color: var(--wf-ink);
+}
+
+.response-field textarea:focus {
+  outline: none;
+  border-color: var(--wf-accent);
+  background-color: #fff;
+}
+
+/* Check-in History */
+.checkin-history {
+  background-color: #fff;
+  border: 1px solid var(--gray-border);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.history-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid var(--gray-border);
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--wf-ink);
+}
+
+.history-row {
+  border-bottom: 1px solid var(--gray-border);
+  padding: 0.75rem 1rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  font-size: 0.85rem;
+  align-items: center;
+}
+
+.history-row:last-child {
+  border-bottom: none;
+}
+
+.history-quarter {
+  font-weight: 500;
+  color: var(--wf-ink);
+}
+
+.history-status {
+  display: inline-block;
+  padding: 0.35rem 0.6rem;
+  border-radius: 3px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background-color: #f0f0f0;
+  color: var(--wf-muted);
+}
+
+.history-status.current {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.history-row:hover {
+  background-color: #f9f9f9;
+}
+
+.history-row:hover .history-quarter {
+  text-decoration: underline;
+  cursor: pointer;
+  color: var(--wf-accent);
+}
+
+/* Right Sidebar */
+.right-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 320px;
+}
+
+.sidebar-card {
+  background-color: #fff;
+  border: 1px solid var(--gray-border);
+  border-radius: 6px;
+  padding: 1rem;
+}
+
+.sidebar-card h4 {
+  margin: 0 0 0.75rem 0;
+  font-size: 0.9rem;
+  color: var(--wf-ink);
+  font-weight: 600;
+}
+
+.signoff-status {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.signoff-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.signoff-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.2rem;
+  height: 1.2rem;
+  border: 2px solid #28a745;
+  border-radius: 50%;
+  background-color: #fff;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+
+.signoff-check.pending {
+  border-color: var(--gray-border);
+  background-color: #f0f0f0;
+}
+
+.signoff-item-text {
+  flex: 1;
+}
+
+.signoff-item-name {
+  font-weight: 600;
+  color: var(--wf-ink);
+}
+
+.signoff-item-date {
+  color: var(--wf-muted);
+  font-size: 0.8rem;
+}
+
+.sidebar-button {
+  display: block;
+  width: 100%;
+  padding: 0.75rem;
+  background-color: var(--wf-accent);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  transition: opacity 0.2s;
+  margin-top: 0.75rem;
+}
+
+.sidebar-button:hover {
+  opacity: 0.9;
+}
+
+.sidebar-button.secondary {
+  background-color: #f0f0f0;
+  color: var(--wf-ink);
+  border: 1px solid var(--gray-border);
+}
+
+.sidebar-button.secondary:hover {
+  background-color: #e8e8e8;
+}
+
+.quick-stat {
+  font-size: 0.85rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--gray-border);
+}
+
+.quick-stat:last-child {
+  border-bottom: none;
+}
+
+.quick-stat-label {
+  color: var(--wf-muted);
+}
+
+.quick-stat-link {
+  color: var(--wf-accent);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.quick-stat-link:hover {
+  text-decoration: underline;
+}
+
+.actions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.action-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0;
+  font-size: 0.85rem;
+}
+
+.action-item input {
+  cursor: pointer;
+}
+
+.action-item label {
+  cursor: pointer;
+  flex: 1;
+}
+
+.annotation-note {
+  background-color: #fffbea;
+  border: 1px solid #ffe082;
+  border-radius: 4px;
+  padding: 0.75rem;
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: #b8860b;
+  margin-top: 2rem;
+  border-left: 4px solid #ffb703;
+}
+
+.annotation-note strong {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 1400px) {
+  .jbp-checkin-page {
+    grid-template-columns: 1fr;
+  }
+
+  .psm-nav {
+    border-right: none;
+    border-bottom: 1px solid var(--gray-border);
+    padding: 1rem 0;
+    display: flex;
+    gap: 2rem;
+  }
+
+  .right-sidebar {
+    max-width: none;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+
+  .rag-summary {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .jbp-checkin-page {
+    padding: 0.75rem;
+  }
+
+  .rag-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .goal-table-header,
+  .goal-row {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .page-header h1 {
+    font-size: 1.3rem;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="jbp-checkin-page">
+
+  <!-- Left Navigation -->
+  <nav class="psm-nav">
+    <h3>PSM Menu</h3>
+    <ul>
+      <li><a href="psm-program-dashboard.html">Home</a></li>
+      <li><a href="psm-partner-account-list.html">Partner Portfolio</a></li>
+      <li><a href="psm-jbp-create.html" class="active">JBP / Check-ins</a></li>
+      <li><a href="psm-qbr-minutes.html">QBR Minutes</a></li>
+      <li><a href="psm-reports-analytics.html">Reports</a></li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="main-content">
+
+    <!-- Page Header -->
+    <div class="page-header">
+      <h1>JBP Q1 2026 Check-in — CloudBridge Solutions</h1>
+      <div class="subheader">Annual Plan: 2026 · Check-in #1 of 4 · Jan 1 – Mar 31, 2026</div>
+      <div class="badges">
+        <span class="badge">JBP-2026-CB-001-Q1</span>
+        <span class="badge status">In Review — Awaiting PSM Sign-off</span>
+      </div>
+      <div class="breadcrumb">
+        <a href="psm-program-dashboard.html">PSM Home</a> > 
+        <a href="psm-jbp-create.html">JBP / Check-ins</a> > 
+        <a href="psm-partner-account-record.html">CloudBridge 2026 JBP</a> > 
+        Q1 Check-in
+      </div>
+    </div>
+
+    <!-- RAG Status Summary -->
+    <div class="rag-summary">
+      <div class="status-card on-track">
+        <div class="status-label">
+          <span class="status-emoji">🟢</span>
+          <span>On Track</span>
+        </div>
+        <div class="status-title">Revenue</div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 89%;"></div>
+        </div>
+        <div class="status-value">$780K YTD vs $875K Q1 target</div>
+        <div class="action-note">Strong pipeline for Q2 — 3 deals in final stage</div>
+      </div>
+
+      <div class="status-card at-risk">
+        <div class="status-label">
+          <span class="status-emoji">🟡</span>
+          <span>At Risk</span>
+        </div>
+        <div class="status-title">Deal Registrations</div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 83%;"></div>
+        </div>
+        <div class="status-value">5 submitted vs 6 Q1 target</div>
+        <div class="action-note">1 pending approval; remind Steve on Vertex Systems</div>
+      </div>
+
+      <div class="status-card behind">
+        <div class="status-label">
+          <span class="status-emoji">🔴</span>
+          <span>Behind</span>
+        </div>
+        <div class="status-title">Certifications</div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 60%;"></div>
+        </div>
+        <div class="status-value">3/5 required certs active</div>
+        <div class="action-note">2 renewals due by June 30 deadline</div>
+      </div>
+
+      <div class="status-card behind">
+        <div class="status-label">
+          <span class="status-emoji">🔴</span>
+          <span>Not Started</span>
+        </div>
+        <div class="status-title">Co-Marketing</div>
+        <div class="progress-bar">
+          <div class="progress-fill" style="width: 0%;"></div>
+        </div>
+        <div class="status-value">0 activities vs 1 Q1 target</div>
+        <div class="action-note">MDF unspent; plan submitted for Q2</div>
+      </div>
+    </div>
+
+    <!-- Goal Progress Table -->
+    <div class="goal-table-container">
+      <div class="goal-table-header">
+        <div>Goal Area</div>
+        <div>2026 Target</div>
+        <div>Q1 Target</div>
+        <div>Q1 Actual</div>
+        <div>% Complete</div>
+        <div>Status</div>
+        <div>PSM Note</div>
+      </div>
+
+      <div class="goal-row">
+        <div class="goal-name">Equinix Revenue</div>
+        <div class="goal-number">$3.5M</div>
+        <div class="goal-number">$875K</div>
+        <div class="goal-number">$780K</div>
+        <div class="goal-percent">89%</div>
+        <div class="goal-status">
+          <span class="status-icon">🟢</span>
+          <span>On Track</span>
+        </div>
+        <div class="goal-note">Meridian Capital deal (post-escalation) closed Feb — $420K contribution. Strong Q2 pipeline (3 deals in final stage).</div>
+      </div>
+
+      <div class="goal-row">
+        <div class="goal-name">Deal Registrations</div>
+        <div class="goal-number">24</div>
+        <div class="goal-number">6</div>
+        <div class="goal-number">5</div>
+        <div class="goal-percent">83%</div>
+        <div class="goal-status">
+          <span class="status-icon">🟡</span>
+          <span>At Risk</span>
+        </div>
+        <div class="goal-note">1 pending approval. Remind Steve Rogers to register Vertex Systems deal (target close Q2).</div>
+      </div>
+
+      <div class="goal-row">
+        <div class="goal-name">New Logos (Customers)</div>
+        <div class="goal-number">6</div>
+        <div class="goal-number">2</div>
+        <div class="goal-number">1</div>
+        <div class="goal-percent">50%</div>
+        <div class="goal-status">
+          <span class="status-icon">🟡</span>
+          <span>At Risk</span>
+        </div>
+        <div class="goal-note">Nexus Global close expected Q2. Discuss acceleration plan at next check-in.</div>
+      </div>
+
+      <div class="goal-row">
+        <div class="goal-name">Certifications Earned (New)</div>
+        <div class="goal-number">8</div>
+        <div class="goal-number">2</div>
+        <div class="goal-number">0</div>
+        <div class="goal-percent">0%</div>
+        <div class="goal-status">
+          <span class="status-icon">🔴</span>
+          <span>Behind</span>
+        </div>
+        <div class="goal-note">Steve Rogers enrolled in courses but not yet completed. Follow-up planned for April 15.</div>
+      </div>
+
+      <div class="goal-row">
+        <div class="goal-name">Active Certifications (Min 5)</div>
+        <div class="goal-number">5</div>
+        <div class="goal-number">5 (maintain)</div>
+        <div class="goal-number">3</div>
+        <div class="goal-percent">60%</div>
+        <div class="goal-status">
+          <span class="status-icon">🔴</span>
+          <span>Behind</span>
+        </div>
+        <div class="goal-note">2 Gold-tier certs expired in January (Security Fundamentals, Network Architecture). Renewals required by June 30 for PPA compliance.</div>
+      </div>
+
+      <div class="goal-row">
+        <div class="goal-name">MDF Utilization</div>
+        <div class="goal-number">$75K annual</div>
+        <div class="goal-number">$18.75K Q1</div>
+        <div class="goal-number">$0</div>
+        <div class="goal-percent">0%</div>
+        <div class="goal-status">
+          <span class="status-icon">🔴</span>
+          <span>Not Started</span>
+        </div>
+        <div class="goal-note">Q1 co-marketing plan delayed due to partner internal restructuring. Q2 brief ready; make-good activity recommended to utilize Q1 carry-forward ($18.75K).</div>
+      </div>
+
+      <div class="goal-row">
+        <div class="goal-name">Co-sell Engagements</div>
+        <div class="goal-number">3</div>
+        <div class="goal-number">1</div>
+        <div class="goal-number">0</div>
+        <div class="goal-percent">0%</div>
+        <div class="goal-status">
+          <span class="status-icon">🔴</span>
+          <span>Not Started</span>
+        </div>
+        <div class="goal-note">Discussed at kickoff in December. No activity yet. Schedule alignment call to confirm Q2 co-sell priorities.</div>
+      </div>
+    </div>
+
+    <!-- PSM Observations & Responses -->
+    <div class="observations-section">
+      <h3>PSM Observations & Partner Response</h3>
+
+      <div class="observation-text">
+        <strong>Marcus Chen's Observations (PSM):</strong><br><br>
+        CloudBridge is showing strong revenue momentum — the Meridian Capital deal (post-escalation resolution) closed in February and contributed $420K to Q1 revenue. The pipeline is solid with 3 additional deals in final negotiation stage for Q2.<br><br>
+        The certification gap is the primary concern. Two Gold-tier certifications lapsed in January (Steve Rogers, Security Fundamentals + Network Architecture). Renewal courses are enrolled but not completed. If not resolved by June 30, CloudBridge risks non-compliance with the PPA certification requirement — this is a compliance blocker that needs immediate escalation.<br><br>
+        MDF non-utilization in Q1 is unusual for CloudBridge — Jordan indicated the planned co-marketing campaign was delayed due to internal restructuring. Q2 plan should include a make-good activity to utilize the Q1 carry-forward allocation ($18.75K). New logos pipeline is also light; recommend co-sell support to accelerate Nexus Global close and identify 1-2 additional opportunities.<br><br>
+        Recommended action: Schedule a mid-quarter call with Jordan and Brian Walsh (VP) to align on cert renewal priority and confirm Q2 MDF plan.
+      </div>
+
+      <div class="response-fields">
+        <div class="response-field">
+          <label for="partner-response">Partner Response
+            <span class="field-meta">(Jordan Reeves, Portal Admin)</span>
+          </label>
+          <textarea id="partner-response" aria-label="Partner response from Jordan Reeves">Agree on cert urgency — Steve has committed to completing both Security Fundamentals and Network Architecture renewals by April 15. We have enrolled in the expedited track. 
+
+MDF campaign postponed to Q2 due to our org restructuring — marketing brief is ready and we're targeting a June launch. We're confident we can utilize the Q1 carry-forward ($18.75K) plus full Q2 allocation in a combined campaign.
+
+Nexus Global: close expected mid-April. We'll register the deal once it's in contract. Agree on co-sell support — can we schedule a technical deep-dive with your solutions team?</textarea>
+        </div>
+
+        <div class="response-field">
+          <label for="psm-resolution">Resolution / Next Steps
+            <span class="field-meta">(Marcus Chen, PSM)</span>
+          </label>
+          <textarea id="psm-resolution" aria-label="Resolution and next steps from Marcus Chen">1. Follow up April 20 on cert completions — confirm both renewals are passed.
+2. Review Q2 MDF brief by April 1 — schedule creative review call.
+3. Schedule co-sell technical deep-dive for late March (solutions team + Steve Rogers + Nexus Global contact).
+4. Confirm Nexus Global deal registration when contract signed (no later than April 15).
+5. Next check-in: July 15, 2026 (Q2 review).</textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Check-in History -->
+    <div class="checkin-history">
+      <div class="history-header">Check-in Schedule for 2026 JBP</div>
+      <div class="history-row">
+        <div class="history-quarter">Q1 2026 Check-in</div>
+        <div class="history-status current">In Review (Current)</div>
+      </div>
+      <div class="history-row">
+        <div class="history-quarter">Q2 2026 Check-in</div>
+        <div class="history-status">Scheduled — July 15, 2026</div>
+      </div>
+      <div class="history-row">
+        <div class="history-quarter">Q3 2026 Check-in</div>
+        <div class="history-status">Scheduled — Oct 15, 2026</div>
+      </div>
+      <div class="history-row">
+        <div class="history-quarter">Q4 / Annual Review</div>
+        <div class="history-status">Scheduled — Jan 30, 2027</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Right Sidebar -->
+  <div class="right-sidebar">
+
+    <!-- Sign-off Card -->
+    <div class="sidebar-card">
+      <h4>Sign-off Required</h4>
+      <div class="signoff-status">
+        <div class="signoff-item">
+          <div class="signoff-check">✓</div>
+          <div class="signoff-item-text">
+            <div class="signoff-item-name">Marcus Chen (PSM)</div>
+            <div class="signoff-item-date">Submitted Feb 28, 2026</div>
+          </div>
+        </div>
+        <div class="signoff-item">
+          <div class="signoff-check pending">○</div>
+          <div class="signoff-item-text">
+            <div class="signoff-item-name">Jordan Reeves (Partner)</div>
+            <div class="signoff-item-date">Pending — Notified Feb 28</div>
+          </div>
+        </div>
+      </div>
+      <button class="sidebar-button" aria-label="Send sign-off request to partner">Send Sign-off Request</button>
+      <div style="font-size: 0.75rem; color: var(--wf-muted); margin-top: 0.5rem;">
+        Brian Walsh (VP) auto-notified when partner signs.
+      </div>
+    </div>
+
+    <!-- JBP Quick Stats -->
+    <div class="sidebar-card">
+      <h4>JBP Quick Links</h4>
+      <div class="quick-stat">
+        <span class="quick-stat-label">2026 Full Plan</span>
+        <a href="psm-joint-business-plan.html" class="quick-stat-link">View</a>
+      </div>
+      <div class="quick-stat">
+        <span class="quick-stat-label">Prior Check-in</span>
+        <span style="color: var(--wf-muted); font-size: 0.75rem;">n/a (first check-in)</span>
+      </div>
+      <div class="quick-stat">
+        <span class="quick-stat-label">Related QBR</span>
+        <a href="psm-qbr-minutes.html" class="quick-stat-link">Dec 2025 Minutes</a>
+      </div>
+      <div class="quick-stat">
+        <span class="quick-stat-label">Partner Account</span>
+        <a href="psm-partner-account-record.html" class="quick-stat-link">CloudBridge</a>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="sidebar-card">
+      <h4>Actions</h4>
+      <div class="actions-list">
+        <div class="action-item">
+          <label for="schedule-q2">
+            <input type="checkbox" id="schedule-q2"> Schedule Q2 Check-in
+          </label>
+        </div>
+        <div class="action-item">
+          <label for="export-pdf">
+            <input type="checkbox" id="export-pdf"> Export Check-in PDF
+          </label>
+        </div>
+        <div class="action-item">
+          <label for="flag-qbr">
+            <input type="checkbox" id="flag-qbr"> Flag for QBR Agenda
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Annotation -->
+    <div class="annotation-note">
+      <strong>Design Note</strong>
+      <p>Check-in records are stored as JBP_Checkin__c child records on JBP__c. PSM creates the check-in, enters observations, and submits. Partner receives an in-portal notification and can add their response. Both parties sign off. Brian Walsh (VP) receives an auto-generated summary email on completion.</p>
+      <p style="margin-top: 0.5rem;">The "Export Check-in PDF" generates a one-page exec summary using Salesforce Document Builder template (TMPL-JBP-CHECKIN-SUMMARY) — not Agentforce DocGen, which is reserved for escalation briefs.</p>
+    </div>
+
+  </div>
+
+</div>
+
+<script src="wf-nav.js"></script>
+</body>
+</html>
