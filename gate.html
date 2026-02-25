@@ -170,7 +170,7 @@
           placeholder="you@equinix.com"
           required
         >
-        <div class="field-hint">Must be an @equinix.com or @eu.equinix.com address</div>
+        <div class="field-hint">Must be an @equinix.com, @eu.equinix.com, or @ap.equinix.com address</div>
       </div>
       <div class="field">
         <label for="g-pass">Access code</label>
@@ -209,8 +209,8 @@
 
       err.classList.remove('visible');
 
-      if (!email.endsWith('@equinix.com') && !email.endsWith('@eu.equinix.com')) {
-        showError('Access is limited to @equinix.com or @eu.equinix.com email addresses.');
+      if (!email.endsWith('@equinix.com') && !email.endsWith('@eu.equinix.com') && !email.endsWith('@ap.equinix.com')) {
+        showError('Access is limited to @equinix.com, @eu.equinix.com, or @ap.equinix.com email addresses.');
         return;
       }
       if (pass !== PASS) {
