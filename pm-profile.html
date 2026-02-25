@@ -1,403 +1,1007 @@
 <!DOCTYPE html>
-<html lang="en" class="wireframe">
+<html class="wireframe" lang="en">
 <head>
 <script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Profile — Portal Admin · Equinix PCP Partner Portal</title>
+  <title>My Profile — Equinix Partner Connect Portal</title>
   <link rel="stylesheet" href="wireframe.css">
   <style>
-    * { box-sizing: border-box; }
-    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: var(--wf-canvas, #f5f7fb); }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Salesforce Sans, sans-serif;
+      background: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-ink, #1e2a3a);
+    }
     .container { max-width: 960px; margin: 0 auto; padding: 24px; }
 
-    .page-header { display: flex; align-items: center; gap: 8px; margin-bottom: 24px; }
-    .page-header h1 { margin: 0; font-size: 22px; font-weight: 700; color: var(--wf-ink); }
+    /* ── Page header ─────────────────────────────────────── */
+    .page-header { margin-bottom: 28px; }
+    .page-header h1 { font-size: 24px; font-weight: 300; color: var(--wf-ink, #1e2a3a); margin-bottom: 4px; }
+    .page-header-sub { font-size: 13px; color: var(--wf-muted, #6b7f99); }
 
-    /* ── Profile hero ─────────────────────────────────────── */
-    .profile-hero {
-      background: var(--wf-ink);
-      border-radius: 8px;
-      padding: 32px;
-      color: white;
-      display: flex;
-      align-items: center;
-      gap: 24px;
-      margin-bottom: 24px;
+    /* ── Identity card ───────────────────────────────────── */
+    .identity-card {
+      background: white; border-radius: 10px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      padding: 24px; margin-bottom: 28px;
+      display: flex; align-items: center; gap: 20px;
     }
-    .avatar-large {
-      width: 80px; height: 80px;
-      border-radius: 50%;
-      background: var(--wf-accent, #3d6daa);
-      border: 3px solid rgba(255,255,255,0.4);
+    .identity-avatar-wrap { position: relative; flex-shrink: 0; }
+    .identity-avatar {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: #1a6b40; color: white;
+      font-size: 22px; font-weight: 700;
       display: flex; align-items: center; justify-content: center;
-      font-size: 30px; font-weight: 700; color: white;
-      flex-shrink: 0;
     }
-    .profile-hero-info h2 { margin: 0 0 4px; font-size: 22px; font-weight: 700; }
-    .profile-hero-info .role-tag {
-      display: inline-block; font-size: 11px; font-weight: 600;
-      background: rgba(61,109,170,0.5); border-radius: 3px;
-      padding: 2px 8px; margin-bottom: 6px;
+    .avatar-upload-btn {
+      position: absolute; bottom: 0; right: 0;
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--wf-ink, #1e2a3a); color: white;
+      border: 2px solid white; font-size: 12px; line-height: 1;
+      display: flex; align-items: center; justify-content: center; cursor: pointer;
     }
-    .profile-hero-info .company { font-size: 13px; color: rgba(255,255,255,0.8); margin: 0; }
-    .profile-hero-info .email   { font-size: 12px; color: rgba(255,255,255,0.65); margin: 2px 0 0; }
-    .profile-hero-actions { margin-left: auto; }
+    .identity-name    { font-size: 18px; font-weight: 600; color: var(--wf-ink, #1e2a3a); }
+    .identity-role    { font-size: 13px; color: var(--wf-muted, #6b7f99); margin-top: 3px; }
+    .identity-company { font-size: 12px; color: var(--wf-muted, #6b7f99); margin-top: 2px; }
+    .identity-badges  { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 10px;
+    }
+    .badge-portal  { background: #dbeafe; color: #1d4ed8; }
+    .badge-active  { background: #d1fae5; color: #065f46; }
+    .badge-mfa-ok  { background: #d1fae5; color: #065f46; }
+    .badge-mfa-off { background: #fffbeb; color: #92400e; border: 1px solid #f59e0b; }
 
-    /* ── Layout ───────────────────────────────────────────── */
-    .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    /* ── Tab navigation ──────────────────────────────────── */
+    .tabs-wrap { background: white; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow: hidden; }
+    .tab-list {
+      display: flex; border-bottom: 2px solid var(--wf-tint, #e0e7f0);
+      padding: 0 4px; list-style: none; gap: 0;
+    }
+    .tab-btn {
+      padding: 14px 20px; font-size: 13px; font-weight: 600;
+      color: var(--wf-muted, #6b7f99); background: none; border: none;
+      cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px;
+      white-space: nowrap; display: flex; align-items: center; gap: 6px;
+      transition: color 0.15s, border-color 0.15s;
+    }
+    .tab-btn:hover { color: var(--wf-ink, #1e2a3a); }
+    .tab-btn[aria-selected="true"] { color: var(--wf-accent, #3d6daa); border-bottom-color: var(--wf-accent, #3d6daa); }
+    .tab-icon { font-size: 14px; }
+    .tab-panel { padding: 32px; display: none; }
+    .tab-panel.active { display: block; }
 
-    .card { background: white; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow: hidden; }
-    .card-full { grid-column: 1 / -1; }
-    .card-header {
-      padding: 14px 20px 12px;
-      border-bottom: 1px solid var(--wf-tint);
+    /* ── Form primitives ─────────────────────────────────── */
+    .form-section {
+      margin-bottom: 36px; padding-bottom: 32px;
+      border-bottom: 1px solid var(--wf-tint, #e0e7f0);
+    }
+    .form-section:last-of-type { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .form-section-title {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.6px; color: var(--wf-muted, #6b7f99); margin-bottom: 18px;
+    }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 24px; }
+    .form-col-span { grid-column: 1 / -1; }
+    .field { display: flex; flex-direction: column; gap: 5px; }
+    .field label {
+      font-size: 11px; font-weight: 600; color: var(--wf-ink, #1e2a3a);
+      text-transform: uppercase; letter-spacing: 0.2px;
+    }
+    .field-hint { font-size: 11px; color: var(--wf-muted, #6b7f99); }
+    .field input, .field select {
+      padding: 9px 12px; font-size: 13px; border: 1.5px solid var(--wf-tint, #e0e7f0);
+      border-radius: 6px; background: white; color: var(--wf-ink, #1e2a3a);
+      font-family: inherit; transition: border-color 0.15s;
+    }
+    .field input:focus, .field select:focus {
+      outline: none; border-color: var(--wf-accent, #3d6daa);
+      box-shadow: 0 0 0 3px rgba(61,109,170,0.12);
+    }
+    .field input[disabled], .field select[disabled] {
+      background: var(--wf-canvas, #f5f7fb); color: var(--wf-muted, #6b7f99); cursor: not-allowed;
+    }
+    .field select { cursor: pointer; }
+
+    /* ── Buttons ─────────────────────────────────────────── */
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--wf-accent, #3d6daa); color: white;
+      font-size: 13px; font-weight: 600; padding: 9px 20px;
+      border-radius: 6px; border: none; cursor: pointer; transition: background 0.15s;
+    }
+    .btn-primary:hover { background: #2e5590; }
+    .btn-ghost {
+      display: inline-flex; align-items: center;
+      background: none; color: var(--wf-ink, #1e2a3a);
+      font-size: 13px; font-weight: 500; padding: 9px 18px;
+      border-radius: 6px; border: 1.5px solid var(--wf-tint, #e0e7f0);
+      cursor: pointer; transition: background 0.15s;
+    }
+    .btn-ghost:hover { background: var(--wf-canvas, #f5f7fb); }
+    .btn-danger {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: none; color: #991b1b;
+      font-size: 13px; font-weight: 600; padding: 9px 18px;
+      border-radius: 6px; border: 1.5px solid #fca5a5;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .btn-danger:hover { background: #fee2e2; }
+    .btn-destructive {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: #991b1b; color: white;
+      font-size: 13px; font-weight: 600; padding: 9px 18px;
+      border-radius: 6px; border: none; cursor: pointer; transition: background 0.15s;
+    }
+    .btn-destructive:hover { background: #7f1d1d; }
+    .btn-sm {
+      font-size: 12px; font-weight: 600; padding: 6px 14px;
+      border-radius: 5px; cursor: pointer; white-space: nowrap;
+      display: inline-flex; align-items: center; gap: 5px;
+    }
+    .btn-sm-primary { background: var(--wf-accent, #3d6daa); color: white; border: none; }
+    .btn-sm-ghost   { background: white; border: 1.5px solid var(--wf-tint, #e0e7f0); color: var(--wf-ink, #1e2a3a); }
+    .btn-sm-danger  { background: none; border: 1.5px solid #fca5a5; color: #991b1b; }
+
+    /* ── Form actions bar ────────────────────────────────── */
+    .form-actions {
+      display: flex; gap: 10px; align-items: center;
+      padding-top: 24px; border-top: 1px solid var(--wf-tint, #e0e7f0); margin-top: 32px;
+    }
+    .save-confirm { font-size: 12px; color: #059669; font-weight: 500; display: none; align-items: center; gap: 4px; }
+    .save-confirm.visible { display: flex; }
+
+    /* ── Security items ───────────────────────────────────── */
+    .security-item {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 20px; padding: 18px 0; border-bottom: 1px solid var(--wf-tint, #e0e7f0);
+    }
+    .security-item:last-of-type { border-bottom: none; padding-bottom: 0; }
+    .security-item-title {
+      font-size: 13px; font-weight: 600; color: var(--wf-ink, #1e2a3a);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .security-item-desc { font-size: 12px; color: var(--wf-muted, #6b7f99); margin-top: 4px; line-height: 1.5; }
+    .security-status {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px;
+    }
+    .status-enabled  { background: #d1fae5; color: #065f46; }
+    .status-disabled { background: #fee2e2; color: #991b1b; }
+
+    /* ── Sessions table ───────────────────────────────────── */
+    .sessions-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 12px; }
+    .sessions-table th {
+      text-align: left; font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.5px; color: var(--wf-muted, #6b7f99);
+      padding: 8px 12px; border-bottom: 1px solid var(--wf-tint, #e0e7f0);
+    }
+    .sessions-table td {
+      padding: 10px 12px; border-bottom: 1px solid var(--wf-tint, #e0e7f0);
+      color: var(--wf-ink, #1e2a3a); vertical-align: middle;
+    }
+    .sessions-table tr:last-child td { border-bottom: none; }
+    .sessions-table tr.current-session td { background: #f0fdf4; }
+    .session-device { font-weight: 500; }
+    .session-meta   { font-size: 11px; color: var(--wf-muted, #6b7f99); margin-top: 2px; }
+    .this-session   {
+      font-size: 10px; font-weight: 700; background: #d1fae5; color: #065f46;
+      padding: 1px 7px; border-radius: 8px; margin-left: 4px;
+    }
+
+    /* ── Notification toggles ────────────────────────────── */
+    .notif-col-headers {
+      display: flex; justify-content: flex-end; gap: 16px;
+      padding: 0 0 6px; border-bottom: 1px solid var(--wf-tint, #e0e7f0);
+    }
+    .notif-col-label {
+      width: 36px; text-align: center; font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.4px; color: var(--wf-muted, #6b7f99);
+    }
+    .notif-row {
       display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 0; border-bottom: 1px solid var(--wf-tint, #e0e7f0);
     }
-    .card-header h3 { margin: 0; font-size: 13px; font-weight: 700; color: var(--wf-ink); }
-    .card-body { padding: 20px; }
-
-    .field-row { margin-bottom: 16px; }
-    .field-row:last-child { margin-bottom: 0; }
-    .field-label { font-size: 11px; font-weight: 600; color: var(--wf-muted); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }
-    .field-value { font-size: 13px; color: var(--wf-ink); }
-    .field-value.placeholder { color: var(--wf-muted); font-style: italic; }
-    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-
-    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid transparent; }
-    .btn-primary { background: var(--wf-accent); color: white; }
-    .btn-secondary { background: white; color: var(--wf-ink); border-color: var(--wf-line); }
-    .btn-ghost { background: rgba(255,255,255,0.15); color: white; border-color: rgba(255,255,255,0.3); }
-
-    .toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--wf-tint); }
-    .toggle-row:last-child { border-bottom: none; }
-    .toggle-label { font-size: 13px; color: var(--wf-ink); }
-    .toggle-sub { font-size: 11px; color: var(--wf-muted); margin-top: 2px; }
-    .toggle-pill {
-      width: 36px; height: 20px; border-radius: 10px;
-      background: var(--wf-accent); flex-shrink: 0;
-      position: relative; cursor: pointer;
+    .notif-row:last-of-type { border-bottom: none; }
+    .notif-title { font-size: 13px; font-weight: 500; color: var(--wf-ink, #1e2a3a); }
+    .notif-desc  { font-size: 11px; color: var(--wf-muted, #6b7f99); margin-top: 2px; }
+    .notif-controls { display: flex; gap: 16px; flex-shrink: 0; align-items: center; }
+    .toggle { position: relative; width: 36px; height: 20px; cursor: pointer; display: block; }
+    .toggle input { opacity: 0; width: 0; height: 0; position: absolute; }
+    .toggle-track {
+      position: absolute; inset: 0; background: #d1d5db; border-radius: 20px; transition: background 0.2s;
     }
-    .toggle-pill::after { content: ''; position: absolute; top: 2px; right: 2px; width: 16px; height: 16px; background: white; border-radius: 50%; }
-    .toggle-pill.off { background: var(--wf-line); }
-    .toggle-pill.off::after { left: 2px; right: auto; }
+    .toggle input:checked + .toggle-track { background: #1a6b40; }
+    .toggle-thumb {
+      position: absolute; top: 2px; left: 2px;
+      width: 16px; height: 16px; background: white; border-radius: 50%;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2); transition: transform 0.2s;
+      pointer-events: none;
+    }
+    .toggle input:checked ~ .toggle-thumb { transform: translateX(16px); }
+    .toggle input:focus + .toggle-track { box-shadow: 0 0 0 3px rgba(61,109,170,0.25); }
 
-    .activity-row { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--wf-tint); font-size: 12px; }
-    .activity-row:last-child { border-bottom: none; }
-    .activity-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
-    .activity-desc { flex: 1; color: var(--wf-text); line-height: 1.4; }
-    .activity-time { color: var(--wf-muted); font-size: 11px; white-space: nowrap; }
+    /* ── Privacy items ───────────────────────────────────── */
+    .privacy-item {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 20px; padding: 20px 0; border-bottom: 1px solid var(--wf-tint, #e0e7f0);
+    }
+    .privacy-item:last-of-type { border-bottom: none; padding-bottom: 0; }
+    .privacy-item-title { font-size: 13px; font-weight: 600; color: var(--wf-ink, #1e2a3a); margin-bottom: 4px; }
+    .privacy-item-desc  { font-size: 12px; color: var(--wf-muted, #6b7f99); line-height: 1.5; }
+    .consent-history {
+      background: var(--wf-canvas, #f5f7fb); border-radius: 6px;
+      padding: 12px 16px; margin-top: 10px; font-size: 12px; line-height: 1.8; color: var(--wf-ink, #1e2a3a);
+    }
+    .consent-date { color: var(--wf-muted, #6b7f99); font-size: 11px; }
 
-    .permission-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--wf-tint); font-size: 12px; }
-    .permission-row:last-child { border-bottom: none; }
-    .permission-name { font-weight: 600; color: var(--wf-ink); font-size: 13px; }
-    .permission-scope { color: var(--wf-muted); font-size: 11px; margin-top: 2px; }
-    .badge { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 10px; font-weight: 700; text-transform: uppercase; }
-    .badge-blue  { background: var(--wf-accent-lt, #e8eff8); color: var(--wf-accent, #3d6daa); }
-    .badge-green { background: #e8f5e9; color: #2e7d32; }
-    .badge-gray  { background: var(--wf-tint); color: var(--wf-muted); }
+    /* ── Connected apps ──────────────────────────────────── */
+    .app-row {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 0; border-bottom: 1px solid var(--wf-tint, #e0e7f0);
+    }
+    .app-row:last-of-type { border-bottom: none; padding-bottom: 0; }
+    .app-icon {
+      width: 38px; height: 38px; border-radius: 8px; flex-shrink: 0;
+      background: var(--wf-canvas, #f5f7fb); border: 1px solid var(--wf-tint, #e0e7f0);
+      display: flex; align-items: center; justify-content: center; font-size: 18px;
+    }
+    .app-name { font-size: 13px; font-weight: 600; color: var(--wf-ink, #1e2a3a); }
+    .app-meta { font-size: 11px; color: var(--wf-muted, #6b7f99); margin-top: 2px; }
+
+    /* ── Callouts ────────────────────────────────────────── */
+    .callout {
+      display: flex; gap: 10px; padding: 12px 16px; border-radius: 6px;
+      margin-bottom: 20px; font-size: 12px; line-height: 1.5;
+    }
+    .callout-info { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
+    .callout-warn { background: #fffbeb; border: 1px solid #f59e0b; color: #92400e; }
+    .callout-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+
+    /* ── Spec panel ───────────────────────────────────────── */
+    .spec-tab-anchor { position: fixed; right: 0; top: 50%; transform: translateY(-50%); z-index: 200; }
+    .spec-tab-btn {
+      background: var(--wf-ink, #1e2a3a); color: white; border: none; cursor: pointer;
+      writing-mode: vertical-rl; text-orientation: mixed;
+      padding: 12px 8px; border-radius: 6px 0 0 6px;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
+    }
+    .spec-panel {
+      position: fixed; right: -440px; top: 0; bottom: 0; width: 440px;
+      background: white; box-shadow: -4px 0 20px rgba(0,0,0,0.15);
+      z-index: 300; overflow-y: auto; transition: right 0.3s ease; padding: 28px 24px;
+    }
+    .spec-panel.open { right: 0; }
+    .spec-panel h3   { font-size: 13px; font-weight: 700; margin: 0 0 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .spec-panel p, .spec-panel li { font-size: 12px; line-height: 1.6; color: #3d4a5c; }
+    .spec-panel ul   { padding-left: 18px; margin: 0; }
+    .spec-section    { margin-bottom: 22px; padding-bottom: 20px; border-bottom: 1px solid var(--wf-tint, #e0e7f0); }
+    .spec-section:last-child { border-bottom: none; }
+    .spec-close { position: absolute; top: 12px; right: 16px; background: none; border: none; font-size: 20px; cursor: pointer; color: var(--wf-muted, #6b7f99); }
   </style>
 </head>
 <body>
 
-<!-- wf-header injected by wf-nav.js -->
-<div class="wf-header" data-page="pm-profile">
-  <div class="wf-header-left">
-    <img src="data:image/svg+xml,%3Csvg viewBox='0 0 120 32' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='120' height='32' fill='%23212b36'/%3E%3Ctext x='8' y='22' font-family='Arial' font-size='14' font-weight='700' fill='white'%3EEQUINIX%3C/text%3E%3C/svg%3E" alt="Equinix" height="32">
-    <nav class="wf-header-nav">
-      <a href="pm-home-dashboard.html" class="wf-header-nav-link">Dashboard</a>
-      <a href="pm-deals-revenue.html" class="wf-header-nav-link">Deals &amp; Revenue</a>
-      <a href="pm-team-management.html" class="wf-header-nav-link">Team</a>
-      <a href="pm-resources.html" class="wf-header-nav-link">Resources</a>
+<!-- Context / flow bar -->
+<div class="page-context-bar">
+  <div style="max-width:960px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <nav class="wf-breadcrumb" aria-label="Breadcrumb" style="margin-bottom:0;">
+      <a class="wf-breadcrumb-link" href="pm-home-day0.html">Dashboard</a>
+      <span class="wf-breadcrumb-sep">›</span>
+      <span class="wf-breadcrumb-current">My Profile</span>
     </nav>
+    <span class="persona-badge persona-badge--pm">PM · Jordan Reeves</span>
   </div>
-  <div class="wf-header-right">
-    <a href="pm-notifications.html" class="bell-wrapper" aria-label="Notifications" style="position:relative;color:inherit;text-decoration:none;">
+</div>
+
+<!-- App header -->
+<header class="wf-header">
+  <div class="wf-header-logo">
+    <svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix">
+      <path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/>
+    </svg>
+  </div>
+  <div class="wf-header-title">Partner Central</div>
+  <nav class="wf-header-nav">
+    <a href="pm-home-day0.html">Dashboard</a>
+    <a href="pm-team-management.html">Team</a>
+    <a href="pm-deals-revenue.html">Deals</a>
+    <a href="pm-team-training.html">Training</a>
+    <a href="pm-resources.html">Resources</a>
+  </nav>
+  <div class="wf-header-util">
+    <a href="#" aria-label="Notifications" style="position:relative;color:inherit;text-decoration:none;display:flex;align-items:center;">
       <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
       <span style="position:absolute;top:-4px;right:-6px;background:var(--wf-red,#8b4555);color:white;font-size:10px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;">2</span>
     </a>
-    <button class="wf-header-icon-btn" aria-label="Messages">💬</button>
-    <!-- Avatar triggers this page -->
-    <button class="wf-header-avatar wf-header-avatar--pm" aria-label="My Profile" aria-current="page"
-      style="width:32px;height:32px;border-radius:50%;background:var(--wf-accent,#3d6daa);border:2px solid rgba(61,109,170,0.4);color:white;font-size:13px;font-weight:700;cursor:pointer;">JR</button>
+    <!-- Avatar returns to dashboard (we're already on the profile page) -->
+    <a href="pm-home-day0.html"
+       style="width:32px;height:32px;border-radius:50%;background:#1a6b40;border:2px solid rgba(255,255,255,0.35);color:white;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;text-decoration:none;"
+       aria-label="Back to dashboard">JR</a>
   </div>
+</header>
+
+<!-- Spec tab -->
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">📋 Notes</button>
 </div>
 
 <div class="container">
 
+  <!-- Page header -->
   <div class="page-header">
     <h1>My Profile</h1>
+    <div class="page-header-sub">Manage your personal information, security settings, and communication preferences</div>
   </div>
 
-  <!-- Hero card -->
-  <div class="profile-hero">
-    <div class="avatar-large">JR</div>
-    <div class="profile-hero-info">
-      <div class="role-tag">Portal Admin</div>
-      <h2>Jordan Reeves</h2>
-      <p class="company">CloudBridge Inc.</p>
-      <p class="email">jreeves@cloudbridge.com</p>
+  <!-- Identity summary card -->
+  <div class="identity-card" aria-label="Account summary">
+    <div class="identity-avatar-wrap">
+      <div class="identity-avatar" aria-hidden="true">JR</div>
+      <button class="avatar-upload-btn" title="Change profile photo" aria-label="Change profile photo"
+        onclick="alert('Photo upload → not wired in wireframe')">✎</button>
     </div>
-    <div class="profile-hero-actions">
-      <button class="btn btn-ghost">Edit Photo</button>
+    <div>
+      <div class="identity-name">Jordan Reeves</div>
+      <div class="identity-role">Sales Operations Manager — Partner Portal Lead</div>
+      <div class="identity-company">CloudBridge Technologies Inc.</div>
+      <div class="identity-badges">
+        <span class="badge badge-portal">Portal Admin</span>
+        <span class="badge badge-active">Active partner</span>
+        <span class="badge badge-mfa-off" id="identity-mfa-badge">🔐 MFA not set up</span>
+      </div>
     </div>
   </div>
 
-  <div class="profile-grid">
+  <!-- ═══════ Tab component ═══════ -->
+  <div class="tabs-wrap">
 
-    <!-- Personal Information -->
-    <div class="card">
-      <div class="card-header">
-        <h3>Personal Information</h3>
-        <button class="btn btn-secondary" style="font-size:11px;padding:5px 10px;">Edit</button>
-      </div>
-      <div class="card-body">
-        <div class="two-col">
-          <div class="field-row">
-            <div class="field-label">First Name</div>
-            <div class="field-value">Jordan</div>
-          </div>
-          <div class="field-row">
-            <div class="field-label">Last Name</div>
-            <div class="field-value">Reeves</div>
-          </div>
-        </div>
-        <div class="field-row">
-          <div class="field-label">Job Title</div>
-          <div class="field-value">Sales Operations Manager</div>
-        </div>
-        <div class="field-row">
-          <div class="field-label">Email</div>
-          <div class="field-value">jreeves@cloudbridge.com</div>
-        </div>
-        <div class="field-row">
-          <div class="field-label">Phone</div>
-          <div class="field-value">+1 (415) 555-0182</div>
-        </div>
-        <div class="field-row">
-          <div class="field-label">Time Zone</div>
-          <div class="field-value">America/Los_Angeles (UTC−8)</div>
-        </div>
-        <div class="field-row">
-          <div class="field-label">Language</div>
-          <div class="field-value">English (US)</div>
-        </div>
-      </div>
-    </div>
+    <ul class="tab-list" role="tablist" aria-label="Profile settings">
+      <li role="presentation">
+        <button class="tab-btn" role="tab" id="tab-profile"
+          aria-selected="true" aria-controls="panel-profile" tabindex="0">
+          <span class="tab-icon" aria-hidden="true">👤</span> Profile
+        </button>
+      </li>
+      <li role="presentation">
+        <button class="tab-btn" role="tab" id="tab-security"
+          aria-selected="false" aria-controls="panel-security" tabindex="-1">
+          <span class="tab-icon" aria-hidden="true">🔒</span> Security
+        </button>
+      </li>
+      <li role="presentation">
+        <button class="tab-btn" role="tab" id="tab-notifications"
+          aria-selected="false" aria-controls="panel-notifications" tabindex="-1">
+          <span class="tab-icon" aria-hidden="true">🔔</span> Notifications
+        </button>
+      </li>
+      <li role="presentation">
+        <button class="tab-btn" role="tab" id="tab-privacy"
+          aria-selected="false" aria-controls="panel-privacy" tabindex="-1">
+          <span class="tab-icon" aria-hidden="true">🛡️</span> Privacy &amp; Data
+        </button>
+      </li>
+    </ul>
 
-    <!-- Admin Role & Permissions -->
-    <div class="card">
-      <div class="card-header">
-        <h3>Admin Role &amp; Permissions</h3>
-        <span class="badge badge-blue">Admin</span>
-      </div>
-      <div class="card-body" style="padding-top:8px;padding-bottom:8px;">
-        <div class="permission-row">
-          <div>
-            <div class="permission-name">User Management</div>
-            <div class="permission-scope">Invite, deactivate, and assign roles to team members</div>
-          </div>
-          <span class="badge badge-green">Full</span>
-        </div>
-        <div class="permission-row">
-          <div>
-            <div class="permission-name">Deal Registration</div>
-            <div class="permission-scope">Submit, edit, and approve deal registrations</div>
-          </div>
-          <span class="badge badge-green">Full</span>
-        </div>
-        <div class="permission-row">
-          <div>
-            <div class="permission-name">MDF Management</div>
-            <div class="permission-scope">Request, approve, and report on MDF funds</div>
-          </div>
-          <span class="badge badge-green">Full</span>
-        </div>
-        <div class="permission-row">
-          <div>
-            <div class="permission-name">Reports &amp; Analytics</div>
-            <div class="permission-scope">View org-level dashboards and export data</div>
-          </div>
-          <span class="badge badge-green">Full</span>
-        </div>
-        <div class="permission-row">
-          <div>
-            <div class="permission-name">Program Settings</div>
-            <div class="permission-scope">Modify partner program configuration</div>
-          </div>
-          <span class="badge badge-gray">Read only</span>
-        </div>
-      </div>
-    </div>
 
-    <!-- Organization -->
-    <div class="card">
-      <div class="card-header">
-        <h3>Organization</h3>
-      </div>
-      <div class="card-body">
-        <div class="field-row">
-          <div class="field-label">Partner Organization</div>
-          <div class="field-value">CloudBridge Inc.</div>
-        </div>
-        <div class="field-row">
-          <div class="field-label">Partner Tier</div>
-          <div class="field-value">Gold</div>
-        </div>
-        <div class="field-row">
-          <div class="field-label">Portal Role</div>
-          <div class="field-value">Administrator</div>
-        </div>
-        <div class="field-row">
-          <div class="field-label">Assigned PSM</div>
-          <div class="field-value">Marcus Chen</div>
-        </div>
-        <div class="field-row">
-          <div class="field-label">Team Size</div>
-          <div class="field-value">8 active users</div>
-        </div>
-        <div class="field-row">
-          <div class="field-label">Admin Since</div>
-          <div class="field-value">January 2022</div>
-        </div>
-      </div>
-    </div>
+    <!-- ═══════════════════════════════════════
+         TAB 1 — PROFILE
+    ════════════════════════════════════════════ -->
+    <div class="tab-panel active" id="panel-profile" role="tabpanel" aria-labelledby="tab-profile">
 
-    <!-- Security -->
-    <div class="card">
-      <div class="card-header">
-        <h3>Security</h3>
-      </div>
-      <div class="card-body">
-        <div class="field-row">
-          <div class="field-label">Password</div>
-          <div class="field-value" style="display:flex;align-items:center;justify-content:space-between;">
-            <span>••••••••••••</span>
-            <button class="btn btn-secondary" style="font-size:11px;padding:4px 10px;">Change</button>
+      <div class="form-section">
+        <div class="form-section-title">Personal information</div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="first-name">First name</label>
+            <input id="first-name" type="text" value="Jordan" autocomplete="given-name">
+          </div>
+          <div class="field">
+            <label for="last-name">Last name</label>
+            <input id="last-name" type="text" value="Reeves" autocomplete="family-name">
+          </div>
+          <div class="field">
+            <label for="job-title">Job title</label>
+            <input id="job-title" type="text" value="Sales Operations Manager" autocomplete="organization-title">
+          </div>
+          <div class="field">
+            <label for="job-function">Job function</label>
+            <select id="job-function">
+              <option selected>Sales Operations</option>
+              <option>Sales</option>
+              <option>Business Development</option>
+              <option>Marketing</option>
+              <option>Technical / Pre-Sales</option>
+              <option>Operations</option>
+              <option>Finance</option>
+              <option>Executive</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="direct-phone">Direct phone</label>
+            <input id="direct-phone" type="tel" value="+1 (415) 555-0142" autocomplete="tel">
+          </div>
+          <div class="field">
+            <label for="mobile-phone">Mobile phone <span style="font-weight:400;text-transform:none;font-size:10px;">(optional)</span></label>
+            <input id="mobile-phone" type="tel" placeholder="+1 (xxx) xxx-xxxx" autocomplete="tel">
+          </div>
+          <div class="field form-col-span">
+            <label for="linkedin-url">LinkedIn URL <span style="font-weight:400;text-transform:none;font-size:10px;">(optional)</span></label>
+            <input id="linkedin-url" type="url" placeholder="https://linkedin.com/in/your-profile">
           </div>
         </div>
-        <div class="field-row">
-          <div class="field-label">Two-Factor Authentication</div>
-          <div class="field-value" style="display:flex;align-items:center;justify-content:space-between;">
-            <span style="color:#2e7d32;font-weight:600;">Enabled (Authenticator App)</span>
-            <button class="btn btn-secondary" style="font-size:11px;padding:4px 10px;">Manage</button>
-          </div>
-        </div>
-        <div class="field-row">
-          <div class="field-label">SSO</div>
-          <div class="field-value">Linked — cloudbridge.com</div>
-        </div>
-        <div class="field-row">
-          <div class="field-label">Last Login</div>
-          <div class="field-value">Today, 8:02 AM — Chrome / macOS</div>
-        </div>
       </div>
-    </div>
 
-    <!-- Notification Preferences -->
-    <div class="card">
-      <div class="card-header">
-        <h3>Notification Preferences</h3>
+      <div class="form-section">
+        <div class="form-section-title">Language &amp; region</div>
+        <div class="callout callout-info">
+          <span class="callout-icon">ℹ️</span>
+          <span>Language and date format affect how the portal displays content to you. They don't change the language of system emails sent to your team.</span>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="portal-language">Portal language</label>
+            <select id="portal-language">
+              <option selected>English (US)</option>
+              <option>English (UK)</option>
+              <option>Français</option>
+              <option>Deutsch</option>
+              <option>日本語</option>
+              <option>Simplified Chinese (简体中文)</option>
+              <option>Español</option>
+              <option>Português (Brasil)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="timezone">Timezone</label>
+            <select id="timezone">
+              <option>America/Los_Angeles (UTC−8)</option>
+              <option selected>America/New_York (UTC−5)</option>
+              <option>America/Chicago (UTC−6)</option>
+              <option>America/Denver (UTC−7)</option>
+              <option>Europe/London (UTC+0)</option>
+              <option>Europe/Paris (UTC+1)</option>
+              <option>Europe/Berlin (UTC+1)</option>
+              <option>Asia/Tokyo (UTC+9)</option>
+              <option>Asia/Singapore (UTC+8)</option>
+              <option>Australia/Sydney (UTC+11)</option>
+            </select>
+            <span class="field-hint">Used for scheduling, due dates, and notification timing</span>
+          </div>
+          <div class="field">
+            <label for="date-format">Date format</label>
+            <select id="date-format">
+              <option selected>MM/DD/YYYY (02/25/2026)</option>
+              <option>DD/MM/YYYY (25/02/2026)</option>
+              <option>YYYY-MM-DD (2026-02-25)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="number-format">Number format</label>
+            <select id="number-format">
+              <option selected>1,234,567.89 (US)</option>
+              <option>1.234.567,89 (EU)</option>
+              <option>1 234 567.89 (FR)</option>
+            </select>
+          </div>
+        </div>
       </div>
-      <div class="card-body" style="padding-top:8px;padding-bottom:8px;">
-        <div class="toggle-row">
-          <div>
-            <div class="toggle-label">New User Requests</div>
-            <div class="toggle-sub">When a team member requests portal access</div>
-          </div>
-          <div class="toggle-pill"></div>
-        </div>
-        <div class="toggle-row">
-          <div>
-            <div class="toggle-label">Deal Approvals &amp; Disputes</div>
-            <div class="toggle-sub">Status changes on your org's deals</div>
-          </div>
-          <div class="toggle-pill"></div>
-        </div>
-        <div class="toggle-row">
-          <div>
-            <div class="toggle-label">MDF Activity</div>
-            <div class="toggle-sub">Approvals, rejections, and upcoming deadlines</div>
-          </div>
-          <div class="toggle-pill"></div>
-        </div>
-        <div class="toggle-row">
-          <div>
-            <div class="toggle-label">Tier Status Changes</div>
-            <div class="toggle-sub">When your org's partner tier is at risk or changes</div>
-          </div>
-          <div class="toggle-pill"></div>
-        </div>
-        <div class="toggle-row">
-          <div>
-            <div class="toggle-label">Weekly Summary Email</div>
-            <div class="toggle-sub">Org activity digest every Monday</div>
-          </div>
-          <div class="toggle-pill off"></div>
-        </div>
-      </div>
-    </div>
 
-    <!-- Recent Activity -->
-    <div class="card">
-      <div class="card-header">
-        <h3>Recent Activity</h3>
-      </div>
-      <div class="card-body" style="padding-top:8px;padding-bottom:8px;">
-        <div class="activity-row">
-          <div class="activity-icon">👤</div>
-          <div class="activity-desc">Approved access request for <strong>Taylor Kim</strong> (Sales Rep)</div>
-          <div class="activity-time">1h ago</div>
-        </div>
-        <div class="activity-row">
-          <div class="activity-icon">💰</div>
-          <div class="activity-desc">Submitted MDF request: <strong>Q1 Event Sponsorship — $12,000</strong></div>
-          <div class="activity-time">Yesterday</div>
-        </div>
-        <div class="activity-row">
-          <div class="activity-icon">📊</div>
-          <div class="activity-desc">Downloaded org health report for Q4 2025</div>
-          <div class="activity-time">2 days ago</div>
-        </div>
-        <div class="activity-row">
-          <div class="activity-icon">🔄</div>
-          <div class="activity-desc">Updated team training assignments for 6 users</div>
-          <div class="activity-time">4 days ago</div>
+      <div class="form-section">
+        <div class="form-section-title">Account (read-only)</div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="email-address">Email address</label>
+            <input id="email-address" type="email" value="jordan.reeves@cloudbridgetech.com" disabled>
+            <span class="field-hint">Contact your Equinix PSM to change your email</span>
+          </div>
+          <div class="field">
+            <label for="portal-role">Portal role</label>
+            <input id="portal-role" type="text" value="Portal Admin" disabled>
+            <span class="field-hint">Role changes require your primary admin or PSM</span>
+          </div>
+          <div class="field">
+            <label for="partner-org">Partner organization</label>
+            <input id="partner-org" type="text" value="CloudBridge Technologies Inc." disabled>
+          </div>
+          <div class="field">
+            <label for="member-since">Member since</label>
+            <input id="member-since" type="text" value="February 25, 2026" disabled>
+          </div>
         </div>
       </div>
-    </div>
 
-  </div><!-- /profile-grid -->
+      <div class="form-actions">
+        <button class="btn-primary" onclick="showSaveConfirm('profile-saved')">Save changes</button>
+        <button class="btn-ghost" onclick="return false;">Discard</button>
+        <span class="save-confirm" id="profile-saved" role="status" aria-live="polite">✓ Changes saved</span>
+      </div>
+
+    </div><!-- /panel-profile -->
+
+
+    <!-- ═══════════════════════════════════════
+         TAB 2 — SECURITY
+    ════════════════════════════════════════════ -->
+    <div class="tab-panel" id="panel-security" role="tabpanel" aria-labelledby="tab-security">
+
+      <div class="callout callout-warn" id="security-mfa-callout">
+        <span class="callout-icon">⚠️</span>
+        <div><strong>MFA is not configured.</strong> Multi-factor authentication is required to submit deal registrations and access sensitive partner data.
+        <a href="onboarding-wizard.html#step-1" style="color:#92400e;font-weight:700;">Set up MFA now →</a></div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title">Multi-factor authentication</div>
+
+        <div class="security-item">
+          <div style="flex:1;">
+            <div class="security-item-title">
+              Authenticator app
+              <span class="security-status status-disabled">Not configured</span>
+            </div>
+            <div class="security-item-desc">Use Google Authenticator, Authy, or Microsoft Authenticator to generate one-time codes. Recommended primary method.</div>
+          </div>
+          <a href="onboarding-wizard.html#step-1" class="btn-sm btn-sm-primary">Set up</a>
+        </div>
+
+        <div class="security-item">
+          <div style="flex:1;">
+            <div class="security-item-title">
+              SMS text message
+              <span class="security-status status-disabled">Not configured</span>
+            </div>
+            <div class="security-item-desc">Receive a one-time code by text. Less secure than an authenticator app — best used as a backup only.</div>
+          </div>
+          <button class="btn-sm btn-sm-ghost" onclick="alert('SMS MFA setup → not wired in wireframe')">Set up</button>
+        </div>
+
+        <div class="security-item">
+          <div style="flex:1;">
+            <div class="security-item-title">Backup codes</div>
+            <div class="security-item-desc">One-time emergency codes to use if your primary MFA method is unavailable. Available after your primary method is configured.</div>
+          </div>
+          <button class="btn-sm btn-sm-ghost" disabled style="opacity:0.45;cursor:not-allowed;"
+            onclick="alert('Configure a primary MFA method first')">Download</button>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title">Password</div>
+        <div class="security-item">
+          <div style="flex:1;">
+            <div class="security-item-title">Password</div>
+            <div class="security-item-desc">Last changed: <em>Never — set when account was created.</em> Minimum 12 characters with uppercase, lowercase, number, and special character.</div>
+          </div>
+          <button class="btn-sm btn-sm-ghost" onclick="alert('Change password modal → not wired in wireframe')">Change</button>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title">Active sessions</div>
+        <p style="font-size:12px;color:var(--wf-muted,#6b7f99);margin-bottom:4px;">All devices currently signed into your account. Revoke any session you don't recognize.</p>
+        <table class="sessions-table" aria-label="Active login sessions">
+          <thead>
+            <tr>
+              <th scope="col">Device / Browser</th>
+              <th scope="col">Location</th>
+              <th scope="col">Last active</th>
+              <th scope="col"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="current-session">
+              <td>
+                <div class="session-device">Chrome on macOS <span class="this-session">This session</span></div>
+                <div class="session-meta">MacBook Pro · 192.168.1.47</div>
+              </td>
+              <td>San Jose, CA</td>
+              <td>Just now</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>
+                <div class="session-device">Safari on iPhone</div>
+                <div class="session-meta">iPhone 15 Pro · 172.58.x.x</div>
+              </td>
+              <td>San Francisco, CA</td>
+              <td>2 days ago</td>
+              <td><button class="btn-sm btn-sm-danger" onclick="alert('Revoke session → not wired in wireframe')">Revoke</button></td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="margin-top:14px;">
+          <button class="btn-danger" onclick="alert('Sign out all other sessions → not wired in wireframe')">Sign out all other sessions</button>
+        </div>
+      </div>
+
+    </div><!-- /panel-security -->
+
+
+    <!-- ═══════════════════════════════════════
+         TAB 3 — NOTIFICATIONS
+    ════════════════════════════════════════════ -->
+    <div class="tab-panel" id="panel-notifications" role="tabpanel" aria-labelledby="tab-notifications">
+
+      <div class="callout callout-info">
+        <span class="callout-icon">ℹ️</span>
+        <span>Email notifications go to <strong>jordan.reeves@cloudbridgetech.com</strong>. In-app notifications appear in the bell icon in the header.</span>
+      </div>
+
+      <div class="notif-col-headers">
+        <div class="notif-col-label">Email</div>
+        <div class="notif-col-label">In-app</div>
+      </div>
+
+      <div class="form-section" style="padding-top:16px;">
+        <div class="form-section-title">Deals</div>
+        <div class="notif-row">
+          <div style="flex:1;">
+            <div class="notif-title">Deal registration status changes</div>
+            <div class="notif-desc">When a deal is submitted, approved, rejected, or expired</div>
+          </div>
+          <div class="notif-controls">
+            <label class="toggle" aria-label="Email: deal registration status changes">
+              <input type="checkbox" checked><span class="toggle-track"></span><span class="toggle-thumb"></span>
+            </label>
+            <label class="toggle" aria-label="In-app: deal registration status changes">
+              <input type="checkbox" checked><span class="toggle-track"></span><span class="toggle-thumb"></span>
+            </label>
+          </div>
+        </div>
+        <div class="notif-row">
+          <div style="flex:1;">
+            <div class="notif-title">Deal expiring soon</div>
+            <div class="notif-desc">Reminder 7 days and 1 day before a deal registration expires</div>
+          </div>
+          <div class="notif-controls">
+            <label class="toggle" aria-label="Email: deal expiring soon">
+              <input type="checkbox" checked><span class="toggle-track"></span><span class="toggle-thumb"></span>
+            </label>
+            <label class="toggle" aria-label="In-app: deal expiring soon">
+              <input type="checkbox" checked><span class="toggle-track"></span><span class="toggle-thumb"></span>
+            </label>
+          </div>
+        </div>
+        <div class="notif-row">
+          <div style="flex:1;">
+            <div class="notif-title">MDF request updates</div>
+            <div class="notif-desc">When a marketing development fund request needs review or changes status</div>
+          </div>
+          <div class="notif-controls">
+            <label class="toggle" aria-label="Email: MDF request updates">
+              <input type="checkbox" checked><span class="toggle-track"></span><span class="toggle-thumb"></span>
+            </label>
+            <label class="toggle" aria-label="In-app: MDF request updates">
+              <input type="checkbox"><span class="toggle-track"></span><span class="toggle-thumb"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title">Team &amp; admin</div>
+        <div class="notif-row">
+          <div style="flex:1;">
+            <div class="notif-title">Team join requests</div>
+            <div class="notif-desc">When a rep requests to join your organization's portal team</div>
+          </div>
+          <div class="notif-controls">
+            <label class="toggle" aria-label="Email: team join requests">
+              <input type="checkbox" checked><span class="toggle-track"></span><span class="toggle-thumb"></span>
+            </label>
+            <label class="toggle" aria-label="In-app: team join requests">
+              <input type="checkbox" checked><span class="toggle-track"></span><span class="toggle-thumb"></span>
+            </label>
+          </div>
+        </div>
+        <div class="notif-row">
+          <div style="flex:1;">
+            <div class="notif-title">Contract &amp; agreement updates</div>
+            <div class="notif-desc">When a partner agreement is signed, countersigned, or approaching renewal</div>
+          </div>
+          <div class="notif-controls">
+            <label class="toggle" aria-label="Email: contract updates">
+              <input type="checkbox" checked><span class="toggle-track"></span><span class="toggle-thumb"></span>
+            </label>
+            <label class="toggle" aria-label="In-app: contract updates">
+              <input type="checkbox" checked><span class="toggle-track"></span><span class="toggle-thumb"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title">Training &amp; programs</div>
+        <div class="notif-row">
+          <div style="flex:1;">
+            <div class="notif-title">Training reminders</div>
+            <div class="notif-desc">Reminders for incomplete or expiring certifications and required courses</div>
+          </div>
+          <div class="notif-controls">
+            <label class="toggle" aria-label="Email: training reminders">
+              <input type="checkbox" checked><span class="toggle-track"></span><span class="toggle-thumb"></span>
+            </label>
+            <label class="toggle" aria-label="In-app: training reminders">
+              <input type="checkbox"><span class="toggle-track"></span><span class="toggle-thumb"></span>
+            </label>
+          </div>
+        </div>
+        <div class="notif-row">
+          <div style="flex:1;">
+            <div class="notif-title">Program announcements</div>
+            <div class="notif-desc">New incentive tiers, promotional windows, and policy changes from Equinix</div>
+          </div>
+          <div class="notif-controls">
+            <label class="toggle" aria-label="Email: program announcements">
+              <input type="checkbox" checked><span class="toggle-track"></span><span class="toggle-thumb"></span>
+            </label>
+            <label class="toggle" aria-label="In-app: program announcements">
+              <input type="checkbox"><span class="toggle-track"></span><span class="toggle-thumb"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title">System</div>
+        <div class="notif-row">
+          <div style="flex:1;">
+            <div class="notif-title">Security alerts</div>
+            <div class="notif-desc">New sign-ins from unrecognized devices or locations</div>
+          </div>
+          <div class="notif-controls">
+            <label class="toggle" aria-label="Email: security alerts — cannot be disabled" style="cursor:not-allowed;opacity:0.7;">
+              <input type="checkbox" checked disabled><span class="toggle-track"></span><span class="toggle-thumb"></span>
+            </label>
+            <span style="width:36px;text-align:center;font-size:12px;color:var(--wf-muted);">—</span>
+          </div>
+        </div>
+        <p style="font-size:11px;color:var(--wf-muted,#6b7f99);margin-top:4px;">Security alert emails cannot be disabled.</p>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-primary" onclick="showSaveConfirm('notif-saved')">Save preferences</button>
+        <span class="save-confirm" id="notif-saved" role="status" aria-live="polite">✓ Preferences saved</span>
+      </div>
+
+    </div><!-- /panel-notifications -->
+
+
+    <!-- ═══════════════════════════════════════
+         TAB 4 — PRIVACY & DATA
+    ════════════════════════════════════════════ -->
+    <div class="tab-panel" id="panel-privacy" role="tabpanel" aria-labelledby="tab-privacy">
+
+      <div class="form-section">
+        <div class="form-section-title">Consent &amp; data use</div>
+
+        <div class="privacy-item">
+          <div style="flex:1;">
+            <div class="privacy-item-title">Consent history</div>
+            <div class="privacy-item-desc">A record of agreements you've accepted to use Partner Central.</div>
+            <div class="consent-history" aria-label="Consent history entries">
+              <div>Partner Connect Portal Terms of Service <span class="consent-date">— Accepted Feb 25, 2026</span></div>
+              <div>Data Processing Agreement (DPA) <span class="consent-date">— Accepted Feb 25, 2026</span></div>
+              <div>Cookie Policy <span class="consent-date">— Accepted Feb 25, 2026</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="privacy-item">
+          <div style="flex:1;">
+            <div class="privacy-item-title">Analytics &amp; product improvement</div>
+            <div class="privacy-item-desc">Allow Equinix to use anonymized usage data to improve the portal experience. This does not include your account, deal, or contract data.</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+            <label class="toggle" aria-label="Analytics and product improvement opt-in">
+              <input type="checkbox" checked><span class="toggle-track"></span><span class="toggle-thumb"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title">Your data</div>
+
+        <div class="privacy-item">
+          <div style="flex:1;">
+            <div class="privacy-item-title">Download my data</div>
+            <div class="privacy-item-desc">Request a copy of your profile data, deal registrations you submitted, and activity history. A download link will be emailed within 48 hours.</div>
+          </div>
+          <button class="btn-sm btn-sm-ghost"
+            onclick="alert('Export request submitted. You\'ll receive a link within 48 hours. (Not wired in wireframe.)')">Request export</button>
+        </div>
+
+        <div class="privacy-item">
+          <div style="flex:1;">
+            <div class="privacy-item-title">Delete my account</div>
+            <div class="privacy-item-desc">Permanently remove your user account and personal data from Partner Central. Your organization's deal history and contract records are retained per Equinix's data retention policy. <strong>This cannot be undone.</strong></div>
+          </div>
+          <button class="btn-destructive"
+            onclick="alert('Account deletion confirmation modal → not wired in wireframe')">Delete account</button>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <div class="form-section-title">Connected apps &amp; integrations</div>
+        <p style="font-size:12px;color:var(--wf-muted,#6b7f99);margin-bottom:16px;">Apps authorized to exchange data with your Partner Central account.</p>
+
+        <div class="app-row">
+          <div class="app-icon" aria-hidden="true">🔷</div>
+          <div style="flex:1;">
+            <div class="app-name">Salesforce CRM</div>
+            <div class="app-meta">Syncs deal registrations and pipeline · Connected Feb 25, 2026</div>
+          </div>
+          <button class="btn-sm btn-sm-danger" onclick="alert('Disconnect Salesforce → not wired in wireframe')">Disconnect</button>
+        </div>
+
+        <div class="app-row">
+          <div class="app-icon" aria-hidden="true">📄</div>
+          <div style="flex:1;">
+            <div class="app-name">DocuSign</div>
+            <div class="app-meta">Electronic signatures for partner agreements · Connected Feb 25, 2026</div>
+          </div>
+          <button class="btn-sm btn-sm-danger" onclick="alert('Disconnect DocuSign → not wired in wireframe')">Disconnect</button>
+        </div>
+
+        <div class="app-row">
+          <div class="app-icon" aria-hidden="true">🎓</div>
+          <div style="flex:1;">
+            <div class="app-name">SumTotal LMS</div>
+            <div class="app-meta">Training completion and certification tracking · Connected Feb 25, 2026</div>
+          </div>
+          <button class="btn-sm btn-sm-danger" onclick="alert('Disconnect SumTotal → not wired in wireframe')">Disconnect</button>
+        </div>
+      </div>
+
+    </div><!-- /panel-privacy -->
+
+  </div><!-- /tabs-wrap -->
 </div><!-- /container -->
 
-<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Wireframe notes">
-  <div id="spec-toggle" class="spec-toggle-btn" aria-expanded="false">Notes</div>
-  <div class="spec-content">
-    <h2>My Profile — Portal Admin</h2>
-    <h3>Trigger</h3>
-    <p>This page is reached by clicking the user avatar in the top-right of the Partner Portal navigation bar. The admin avatar shows initials with the Portal Admin color (blue accent). An <code>aria-current="page"</code> attribute marks it as active when on this page.</p>
-    <h3>Design Notes</h3>
-    <ul>
-      <li>Unlike the Sales Rep profile, the Admin profile shows the Permissions card instead of Certifications, since certifications are less central to the admin role</li>
-      <li>Admin role and permissions are managed by Equinix/PSM, not self-service — the section is read-only</li>
-      <li>SSO linking is only shown for organizations that have configured SSO via Equinix's identity broker</li>
-      <li>The Notification Preferences section will have more rows for admins than sales reps due to org-level events</li>
-      <li>Recent Activity for admins logs administrative actions (user management, MDF, reports) not just personal activity</li>
-    </ul>
-    <h3>Differences from Sales Rep Profile</h3>
-    <p>Portal Admin profile swaps the Certifications card for an Admin Permissions card. The hero role tag uses blue (Portal Admin color) instead of violet (Sales Rep color). The activity log reflects admin actions rather than deal/training activity.</p>
+
+<!-- ════════ Spec panel ════════ -->
+<div class="spec-panel" id="spec-panel" role="complementary" aria-label="Design notes">
+  <button class="spec-close" onclick="toggleSpec()" aria-label="Close notes">×</button>
+
+  <div class="spec-section">
+    <h3>Page purpose</h3>
+    <p>Full user profile settings page, reached via the avatar popover in the app header. Covers personal info, security, notifications, and privacy &amp; data. Language and timezone live here — not in the onboarding wizard.</p>
   </div>
-</aside>
+
+  <div class="spec-section">
+    <h3>Tab structure</h3>
+    <ul>
+      <li><strong>Profile</strong> — name, title, phone, LinkedIn, language, timezone, date/number format, read-only account fields</li>
+      <li><strong>Security</strong> — MFA methods, password, active sessions</li>
+      <li><strong>Notifications</strong> — per-category email/in-app toggles; security alerts cannot be disabled</li>
+      <li><strong>Privacy &amp; Data</strong> — consent log, analytics opt-out, data export, account deletion, connected apps</li>
+    </ul>
+    <p style="margin-top:8px;">Informed by HubSpot (language in Profile, timezone in Preferences), Salesforce EC (Personal Info | Login tabs), and Okta (session management pattern).</p>
+  </div>
+
+  <div class="spec-section">
+    <h3>Key design decisions</h3>
+    <ul>
+      <li>Language + timezone in Profile tab per explicit product direction — closes Jira gap</li>
+      <li>Email and portal role are read-only; edits require PSM or primary admin</li>
+      <li>MFA callout on Security tab reads from localStorage; hides when MFA done</li>
+      <li>Security alert email toggle is forced-on and disabled</li>
+      <li>Destructive actions (delete account) use a separate red button style, not ghost</li>
+      <li>Deep-linking via hash: #security, #notifications, #privacy</li>
+    </ul>
+  </div>
+
+  <div class="spec-section">
+    <h3>Accessibility</h3>
+    <ul>
+      <li><code>role="tablist"</code> / <code>role="tab"</code> / <code>role="tabpanel"</code> per ARIA APG tab pattern</li>
+      <li>Arrow key navigation cycles tabs; Enter/Space activates</li>
+      <li>Each toggle has its own <code>aria-label</code> (not relying on proximity)</li>
+      <li>Save confirmations use <code>aria-live="polite"</code></li>
+      <li>Disabled inputs communicate constraints via <code>field-hint</code> text</li>
+    </ul>
+  </div>
+
+  <div class="spec-section">
+    <h3>Salesforce / CRM mapping</h3>
+    <ul>
+      <li>Language → <code>User.LanguageLocaleKey</code></li>
+      <li>Timezone → <code>User.TimeZoneSidKey</code></li>
+      <li>MFA status → <code>User.MFA_Verified__c</code></li>
+      <li>Notification prefs → <code>Notification_Preferences__c</code></li>
+      <li>Connected apps → <code>ConnectedApplication</code> via OAuth token records</li>
+    </ul>
+  </div>
+
+  <div class="spec-section">
+    <h3>Linked screens</h3>
+    <ul>
+      <li><a href="pm-home-day0.html">pm-home-day0.html</a> — Admin Home (avatar popover links here)</li>
+      <li><a href="onboarding-wizard.html#step-1">onboarding-wizard.html#step-1</a> — MFA setup step</li>
+    </ul>
+  </div>
+</div>
+
 
 <script>
-function toggleSpec(){
-  var p=document.getElementById('spec-panel');
-  var b=document.getElementById('spec-toggle');
-  if(!p||!b)return;
-  var isOpen=p.classList.toggle('open');
-  b.setAttribute('aria-expanded',isOpen);
-}
+  /* ── Spec panel ─────────────────────────────────────── */
+  function toggleSpec() {
+    var panel  = document.getElementById('spec-panel');
+    var toggle = document.getElementById('spec-toggle');
+    var open   = panel.classList.toggle('open');
+    if (toggle) toggle.setAttribute('aria-expanded', String(open));
+  }
+
+  /* ── Tab component ──────────────────────────────────── */
+  (function() {
+    var tabs   = Array.from(document.querySelectorAll('[role="tab"]'));
+    var panels = Array.from(document.querySelectorAll('[role="tabpanel"]'));
+
+    function activateTab(tab) {
+      tabs.forEach(function(t) {
+        t.setAttribute('aria-selected', 'false');
+        t.setAttribute('tabindex', '-1');
+      });
+      panels.forEach(function(p) { p.classList.remove('active'); });
+      tab.setAttribute('aria-selected', 'true');
+      tab.setAttribute('tabindex', '0');
+      var panel = document.getElementById(tab.getAttribute('aria-controls'));
+      if (panel) panel.classList.add('active');
+    }
+
+    tabs.forEach(function(tab) {
+      tab.addEventListener('click', function() { activateTab(tab); });
+      tab.addEventListener('keydown', function(e) {
+        var idx = tabs.indexOf(tab);
+        if (e.key === 'ArrowRight') { e.preventDefault(); tabs[(idx + 1) % tabs.length].focus(); }
+        else if (e.key === 'ArrowLeft')  { e.preventDefault(); tabs[(idx - 1 + tabs.length) % tabs.length].focus(); }
+        else if (e.key === 'Home')  { e.preventDefault(); tabs[0].focus(); }
+        else if (e.key === 'End')   { e.preventDefault(); tabs[tabs.length - 1].focus(); }
+        else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activateTab(tab); }
+      });
+    });
+
+    // Hash-based deep-link: #security, #notifications, #privacy
+    var hashMap = {
+      '#profile':       'tab-profile',
+      '#security':      'tab-security',
+      '#notifications': 'tab-notifications',
+      '#privacy':       'tab-privacy'
+    };
+    var targetId = hashMap[window.location.hash];
+    if (targetId) {
+      var t = document.getElementById(targetId);
+      if (t) activateTab(t);
+    }
+  })();
+
+  /* ── MFA state ──────────────────────────────────────── */
+  (function() {
+    try {
+      var step    = parseInt(localStorage.getItem('pcp-wizard-step') || '1', 10);
+      var skipped = [];
+      try { skipped = JSON.parse(localStorage.getItem('pcp-onboarding-skipped') || '[]'); } catch(e) {}
+      var mfaDone = step > 1 && skipped.indexOf(1) === -1;
+      if (mfaDone) {
+        var callout = document.getElementById('security-mfa-callout');
+        if (callout) callout.style.display = 'none';
+        var badge = document.getElementById('identity-mfa-badge');
+        if (badge) { badge.textContent = '✓ MFA enabled'; badge.className = 'badge badge-mfa-ok'; }
+      }
+    } catch(e) {}
+  })();
+
+  /* ── Save confirm ───────────────────────────────────── */
+  function showSaveConfirm(id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.classList.add('visible');
+    setTimeout(function() { el.classList.remove('visible'); }, 3000);
+  }
 </script>
-<script src="wf-nav.js"></script>
 </body>
 </html>

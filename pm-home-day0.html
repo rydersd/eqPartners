@@ -283,6 +283,80 @@
     .spec-section    { margin-bottom: 22px; padding-bottom: 20px; border-bottom: 1px solid var(--wf-tint, #e0e7f0); }
     .spec-section:last-child { border-bottom: none; }
     .spec-close { position: absolute; top: 12px; right: 16px; background: none; border: none; font-size: 20px; cursor: pointer; color: var(--wf-muted, #6b7f99); }
+
+    /* ── Avatar popover ───────────────────────────────────── */
+    .avatar-menu { position: relative; display: flex; align-items: center; }
+    .wf-header-avatar {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: #1a6b40; border: 2px solid rgba(255,255,255,0.35);
+      color: white; font-size: 13px; font-weight: 700;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: box-shadow 0.15s;
+    }
+    .wf-header-avatar:hover,
+    .wf-header-avatar[aria-expanded="true"] {
+      box-shadow: 0 0 0 3px rgba(255,255,255,0.35);
+    }
+    .avatar-popover {
+      position: absolute; top: calc(100% + 10px); right: 0;
+      width: 284px; background: white;
+      border-radius: 10px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.16), 0 1px 4px rgba(0,0,0,0.06);
+      border: 1px solid var(--wf-tint, #e0e7f0);
+      z-index: 500;
+      animation: ap-appear 0.12s ease;
+    }
+    .avatar-popover[hidden] { display: none; }
+    @keyframes ap-appear {
+      from { opacity: 0; transform: translateY(-5px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .avatar-popover::before {
+      content: ''; position: absolute; top: -6px; right: 13px;
+      width: 11px; height: 11px; background: white;
+      border-top: 1px solid var(--wf-tint, #e0e7f0);
+      border-left: 1px solid var(--wf-tint, #e0e7f0);
+      transform: rotate(45deg);
+    }
+    .ap-identity {
+      padding: 16px 16px 13px;
+      display: flex; align-items: center; gap: 12px;
+      border-bottom: 1px solid var(--wf-tint, #e0e7f0);
+    }
+    .ap-avatar {
+      width: 42px; height: 42px; border-radius: 50%;
+      background: #1a6b40; color: white;
+      font-size: 14px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .ap-name  { font-size: 13px; font-weight: 700; color: var(--wf-ink, #1e2a3a); }
+    .ap-role  { font-size: 11px; color: var(--wf-muted, #6b7f99); margin-top: 2px; line-height: 1.3; }
+    .ap-email { font-size: 11px; color: var(--wf-muted, #6b7f99); margin-top: 3px; }
+    .ap-mfa-warn {
+      margin: 9px 12px 2px; padding: 7px 10px;
+      background: #fffbeb; border: 1px solid #f59e0b; border-radius: 5px;
+      font-size: 11px; color: #92400e; display: none;
+    }
+    .ap-mfa-warn a { color: #b45309; font-weight: 600; text-decoration: none; }
+    .ap-mfa-warn a:hover { text-decoration: underline; }
+    .ap-mfa-warn.visible { display: block; }
+    .ap-links { padding: 6px 0; border-bottom: 1px solid var(--wf-tint, #e0e7f0); }
+    .ap-link {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 16px; font-size: 13px;
+      color: var(--wf-ink, #1e2a3a); text-decoration: none;
+      transition: background 0.1s;
+    }
+    .ap-link:hover { background: var(--wf-canvas, #f5f7fb); }
+    .ap-link-icon { font-size: 15px; width: 18px; text-align: center; flex-shrink: 0; }
+    .ap-footer { padding: 7px 12px 10px; }
+    .ap-signout {
+      width: 100%; padding: 8px 12px;
+      font-size: 13px; font-weight: 600; color: #991b1b;
+      background: none; border: none; cursor: pointer;
+      text-align: left; border-radius: 5px; transition: background 0.1s;
+    }
+    .ap-signout:hover { background: #fee2e2; }
   </style>
 </head>
 <body>
@@ -325,8 +399,53 @@
       <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"/></svg>
       <span style="position:absolute;top:-4px;right:-6px;background:var(--wf-red,#8b4555);color:white;font-size:10px;font-weight:700;width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;">2</span>
     </a>
-    <button class="wf-header-avatar" aria-label="My Profile"
-      style="width:32px;height:32px;border-radius:50%;background:#1a6b40;border:2px solid rgba(255,255,255,0.35);color:white;font-size:13px;font-weight:700;cursor:pointer;border:none;">JR</button>
+    <div class="avatar-menu">
+      <button class="wf-header-avatar"
+        id="avatar-btn"
+        aria-label="My account — Jordan Reeves"
+        aria-haspopup="dialog"
+        aria-expanded="false"
+        aria-controls="avatar-popover">JR</button>
+
+      <div class="avatar-popover" id="avatar-popover" role="dialog" aria-label="Account menu" hidden>
+        <!-- Identity block -->
+        <div class="ap-identity">
+          <div class="ap-avatar" aria-hidden="true">JR</div>
+          <div class="ap-info">
+            <div class="ap-name">Jordan Reeves</div>
+            <div class="ap-role">Portal Admin · CloudBridge Technologies Inc.</div>
+            <div class="ap-email">jordan.reeves@cloudbridgetech.com</div>
+          </div>
+        </div>
+        <!-- MFA warning (shown when MFA not configured) -->
+        <div class="ap-mfa-warn" id="ap-mfa-warn" role="alert">
+          🔐 MFA not configured — <a href="onboarding-wizard.html#step-1">Set up now</a>
+        </div>
+        <!-- Quick navigation links -->
+        <nav class="ap-links" aria-label="Account navigation">
+          <a href="pm-profile.html" class="ap-link">
+            <span class="ap-link-icon" aria-hidden="true">👤</span>
+            <span>Profile &amp; Preferences</span>
+          </a>
+          <a href="pm-profile.html#notifications" class="ap-link">
+            <span class="ap-link-icon" aria-hidden="true">🔔</span>
+            <span>Notifications</span>
+          </a>
+          <a href="pm-profile.html#security" class="ap-link">
+            <span class="ap-link-icon" aria-hidden="true">🔒</span>
+            <span>Security</span>
+          </a>
+          <a href="#" class="ap-link" onclick="alert('Help center → not wired'); return false;">
+            <span class="ap-link-icon" aria-hidden="true">❓</span>
+            <span>Help &amp; Support</span>
+          </a>
+        </nav>
+        <!-- Sign out -->
+        <div class="ap-footer">
+          <button class="ap-signout" onclick="alert('Sign out → not wired in wireframe')">Sign out</button>
+        </div>
+      </div>
+    </div>
   </div>
 </header>
 
@@ -787,6 +906,56 @@
     const open   = panel.classList.toggle('open');
     toggle.setAttribute('aria-expanded', open);
   }
+
+  /* ── Avatar popover ─────────────────────────────────── */
+  (function() {
+    var btn = document.getElementById('avatar-btn');
+    var pop = document.getElementById('avatar-popover');
+    if (!btn || !pop) return;
+
+    // Show MFA warning inside popover if MFA not configured
+    var mfaWarn = document.getElementById('ap-mfa-warn');
+    if (mfaWarn) {
+      try {
+        var step = parseInt(localStorage.getItem('pcp-wizard-step') || '1', 10);
+        var skipped = [];
+        try { skipped = JSON.parse(localStorage.getItem('pcp-onboarding-skipped') || '[]'); } catch(e) {}
+        if (step <= 1 || skipped.indexOf(1) > -1) {
+          mfaWarn.classList.add('visible');
+        }
+      } catch(e) {}
+    }
+
+    // Toggle on avatar click
+    btn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var isOpen = !pop.hidden;
+      pop.hidden = isOpen;
+      btn.setAttribute('aria-expanded', String(!isOpen));
+      if (!isOpen) {
+        // Focus first link when opening
+        var first = pop.querySelector('a, button');
+        if (first) setTimeout(function(){ first.focus(); }, 50);
+      }
+    });
+
+    // Close on outside click
+    document.addEventListener('click', function(e) {
+      if (!pop.hidden && !pop.contains(e.target) && e.target !== btn) {
+        pop.hidden = true;
+        btn.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    // Close on Escape
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && !pop.hidden) {
+        pop.hidden = true;
+        btn.setAttribute('aria-expanded', 'false');
+        btn.focus();
+      }
+    });
+  })();
 
   /* ── Onboarding state banners ───────────────────────── */
   (function() {
