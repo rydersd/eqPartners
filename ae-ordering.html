@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Order — AE · Equinix PCP</title>
+<link rel="stylesheet" href="wireframe.css">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background:var(--wf-canvas, #f5f7fb); color:var(--wf-text, #3b4f68); line-height:1.5; }
+
+.sf-header { background:var(--wf-ink, #1e2a3a); color:white; height:48px; display:flex; align-items:center; padding:0 1.5rem; gap:1rem; font-size:13px; flex-shrink:0; }
+.sf-logo { width:28px; height:28px; background:white; border-radius:4px; display:flex; align-items:center; justify-content:center; font-weight:bold; color:var(--wf-ink); font-size:12px; }
+.sf-header nav { display:flex; gap:1.25rem; margin-left:1rem; }
+.sf-header nav a { color:rgba(255,255,255,.75); text-decoration:none; font-size:12px; font-weight:500; }
+.sf-header nav a.active { color:white; border-bottom:2px solid white; padding-bottom:2px; }
+.sf-header-right { margin-left:auto; display:flex; align-items:center; gap:1rem; }
+.sf-avatar { width:28px; height:28px; border-radius:50%; background:var(--wf-accent, #3d6daa); display:flex; align-items:center; justify-content:center; color:white; font-size:11px; font-weight:600; }
+
+.page-container { padding:24px; max-width:1200px; margin:0 auto; }
+
+/* Progress stepper */
+.stepper { display:flex; align-items:center; margin-bottom:28px; background:white; border:1px solid var(--wf-line); border-radius:6px; padding:16px 24px; }
+.step { display:flex; align-items:center; gap:10px; flex:1; }
+.step-num { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; flex-shrink:0; }
+.step.done .step-num  { background:var(--wf-accent); color:white; }
+.step.active .step-num { background:var(--wf-ink); color:white; }
+.step.todo .step-num  { background:var(--wf-surface); color:var(--wf-muted); border:1px solid var(--wf-line); }
+.step-label { font-size:12px; font-weight:600; }
+.step.done .step-label  { color:var(--wf-accent); }
+.step.active .step-label { color:var(--wf-ink); }
+.step.todo .step-label  { color:var(--wf-muted); }
+.step-connector { width:40px; height:2px; background:var(--wf-line); margin:0 6px; flex-shrink:0; }
+.step-connector.done { background:var(--wf-accent); }
+
+/* Two-column layout */
+.layout { display:grid; grid-template-columns:1fr 340px; gap:20px; }
+@media(max-width:900px) { .layout { grid-template-columns:1fr; } }
+
+/* Cards */
+.card { background:white; border:1px solid var(--wf-line); border-radius:6px; margin-bottom:16px; overflow:hidden; }
+.card-header { padding:12px 16px; border-bottom:1px solid var(--wf-line); display:flex; align-items:center; justify-content:space-between; }
+.card-title { font-size:13px; font-weight:700; color:var(--wf-ink); }
+.card-body { padding:16px; }
+
+/* Field rows */
+.field-row { margin-bottom:14px; }
+.field-label { font-size:11px; font-weight:600; color:var(--wf-muted); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:4px; }
+.field-value { font-size:13px; color:var(--wf-text); font-weight:500; }
+.field-value.locked { color:var(--wf-ink); background:var(--wf-canvas); padding:6px 10px; border-radius:4px; border:1px solid var(--wf-line); }
+.field-value.partner { color:var(--wf-accent); font-weight:600; }
+
+/* Form elements */
+.form-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.form-group { margin-bottom:14px; }
+.form-group label { display:block; font-size:11px; font-weight:600; color:var(--wf-muted); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:4px; }
+.form-group label.required::after { content:" *"; color:#c05621; }
+select, input[type="text"], input[type="number"], input[type="date"], textarea {
+  width:100%; padding:7px 10px; border:1px solid var(--wf-line); border-radius:4px; font-size:13px; background:white; color:var(--wf-text); font-family:inherit;
+}
+select:focus, input:focus, textarea:focus { outline:2px solid var(--wf-accent); outline-offset:1px; border-color:transparent; }
+textarea { height:64px; resize:vertical; }
+
+/* Product line items */
+.product-table { width:100%; border-collapse:collapse; font-size:12px; }
+.product-table thead { background:var(--wf-surface); }
+.product-table th { padding:8px 10px; text-align:left; font-weight:700; color:var(--wf-muted); font-size:11px; text-transform:uppercase; letter-spacing:0.04em; border-bottom:2px solid var(--wf-line); }
+.product-table td { padding:8px 10px; border-bottom:1px solid var(--wf-canvas); color:var(--wf-text); vertical-align:middle; }
+.product-table tr:last-child td { border-bottom:none; }
+.product-sku { font-family:monospace; font-size:11px; color:var(--wf-muted); }
+.product-name { font-weight:600; color:var(--wf-ink); }
+.product-qty input { width:60px; text-align:center; }
+.product-price { font-weight:600; color:var(--wf-ink); }
+
+.add-product-row { padding:10px; display:flex; align-items:center; gap:8px; border-top:1px solid var(--wf-line); background:var(--wf-surface); font-size:12px; }
+
+/* Sidebar summary */
+.summary-item { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid var(--wf-canvas); font-size:13px; }
+.summary-item:last-child { border-bottom:none; }
+.summary-item.total { font-weight:700; color:var(--wf-ink); border-top:2px solid var(--wf-line); padding-top:10px; font-size:14px; }
+.summary-label { color:var(--wf-muted); }
+.summary-value { font-weight:600; color:var(--wf-text); }
+
+/* Partner attribution callout */
+.attribution-callout { background:#edf4fb; border:1px solid var(--wf-accent); border-radius:6px; padding:14px; margin-bottom:16px; }
+.attribution-callout-title { font-size:12px; font-weight:700; color:var(--wf-ink); margin-bottom:8px; display:flex; align-items:center; gap:6px; }
+.attribution-callout dt { font-size:11px; color:var(--wf-muted); margin-bottom:2px; }
+.attribution-callout dd { font-size:13px; font-weight:600; color:var(--wf-ink); margin-bottom:8px; }
+
+/* Actions */
+.action-bar { display:flex; align-items:center; justify-content:space-between; padding:16px; border-top:1px solid var(--wf-line); background:white; margin-top:8px; border-radius:6px; }
+.btn { padding:8px 16px; border-radius:4px; font-size:12px; font-weight:600; border:1px solid transparent; cursor:pointer; }
+.btn-primary { background:var(--wf-accent); color:white; }
+.btn-secondary { background:white; color:var(--wf-text); border-color:var(--wf-line); }
+.btn-ghost { background:none; border:none; color:var(--wf-muted); }
+
+.jtbd-banner { background:#edf4fb; border-left:4px solid var(--wf-accent); padding:10px 16px; border-radius:0 4px 4px 0; margin-bottom:20px; font-size:13px; }
+.jtbd-banner strong { color:var(--wf-ink); }
+
+.badge { display:inline-block; padding:3px 8px; border-radius:3px; font-size:11px; font-weight:600; }
+.badge-approved { background:#e8f5e9; color:#2e7d32; }
+</style>
+</head>
+<body>
+
+<header class="sf-header">
+  <div class="sf-logo">SF</div>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#">Accounts</a>
+    <a href="ae-opportunities.html">Opportunities</a>
+    <a href="#" class="active">Orders</a>
+    <a href="#">Reports</a>
+    <a href="#">Partner Connect</a>
+  </nav>
+  <div class="sf-header-right">
+    <svg width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="1.5"><circle cx="8" cy="8" r="5"/><path d="M13 13l2.5 2.5"/></svg>
+    <div class="sf-avatar">SR</div>
+  </div>
+</header>
+
+<div class="page-context-bar"></div>
+
+<div class="page-container">
+
+  <div class="jtbd-banner">
+    <strong>AE job:</strong> Convert a closed-won opportunity into a Salesforce order with the correct products, site, and partner attribution locked in — before handing off to the Order Management team.
+  </div>
+
+  <!-- Stepper -->
+  <div class="stepper" role="list" aria-label="Order creation steps">
+    <div class="step done" role="listitem">
+      <div class="step-num">✓</div>
+      <div class="step-label">Opportunity</div>
+    </div>
+    <div class="step-connector done"></div>
+    <div class="step done" role="listitem">
+      <div class="step-num">✓</div>
+      <div class="step-label">DR Verified</div>
+    </div>
+    <div class="step-connector done"></div>
+    <div class="step active" role="listitem" aria-current="step">
+      <div class="step-num">3</div>
+      <div class="step-label">Configure Order</div>
+    </div>
+    <div class="step-connector"></div>
+    <div class="step todo" role="listitem">
+      <div class="step-num">4</div>
+      <div class="step-label">Review &amp; Submit</div>
+    </div>
+    <div class="step-connector"></div>
+    <div class="step todo" role="listitem">
+      <div class="step-num">5</div>
+      <div class="step-label">Order Management</div>
+    </div>
+  </div>
+
+  <div class="layout">
+
+    <!-- Main form -->
+    <div>
+
+      <!-- Locked context (from opportunity) -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">From Opportunity</div>
+          <span style="font-size:11px;color:var(--wf-muted);">Read-only — pulled from Opportunity record</span>
+        </div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="field-row">
+              <div class="field-label">Opportunity</div>
+              <div class="field-value locked">Meridian Capital — SV5 Interconnect Expansion</div>
+            </div>
+            <div class="field-row">
+              <div class="field-label">Account</div>
+              <div class="field-value locked">Meridian Capital Group</div>
+            </div>
+            <div class="field-row">
+              <div class="field-label">AE Owner</div>
+              <div class="field-value locked">Steve Rogers</div>
+            </div>
+            <div class="field-row">
+              <div class="field-label">Deal Registration</div>
+              <div class="field-value"><span class="badge badge-approved">✓ DR-2026-04821 Approved</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Partner attribution -->
+      <div class="attribution-callout">
+        <div class="attribution-callout-title">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="var(--wf-accent)" stroke-width="2"><path d="M8 1L10 6h5L11 9l2 5-5-3-5 3 2-5L1 6h5z"/></svg>
+          Partner Attribution — Locked
+        </div>
+        <dl style="display:grid;grid-template-columns:1fr 1fr;gap:0;">
+          <dt>Partner Org</dt>
+          <dd>CloudBridge Inc.</dd>
+          <dt>Partner Contact</dt>
+          <dd>Steve Rogers</dd>
+          <dt>Partner Tier</dt>
+          <dd>Platinum</dd>
+          <dt>Attribution Type</dt>
+          <dd>Partner Sourced</dd>
+        </dl>
+        <div style="font-size:11px;color:var(--wf-muted);margin-top:8px;">Attribution is pulled from the approved deal registration and cannot be modified on this order.</div>
+      </div>
+
+      <!-- Order details -->
+      <div class="card">
+        <div class="card-header"><div class="card-title">Order Details</div></div>
+        <div class="card-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="required">IBX / Data Center</label>
+              <select aria-required="true">
+                <option selected>SV5 — Silicon Valley</option>
+                <option>SV1</option>
+                <option>SV8</option>
+                <option>NY4</option>
+                <option>DA2</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="required">Order Type</label>
+              <select aria-required="true">
+                <option selected>New Install</option>
+                <option>Renewal</option>
+                <option>Upgrade</option>
+                <option>Termination</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="required">Requested Start Date</label>
+              <input type="date" value="2026-04-01" aria-required="true">
+            </div>
+            <div class="form-group">
+              <label>Contract Term</label>
+              <select>
+                <option>12 months</option>
+                <option selected>24 months</option>
+                <option>36 months</option>
+                <option>60 months</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Order Notes (internal)</label>
+            <textarea placeholder="Add notes for the Order Management team…"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product line items -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Products &amp; Services</div>
+          <span style="font-size:11px;color:var(--wf-muted);">From CPQ quote Q-2026-00914</span>
+        </div>
+        <table class="product-table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>SKU</th>
+              <th>Qty</th>
+              <th>Unit Price</th>
+              <th>MRC</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="product-name">Colocation — Full Cabinet</div>
+                <div class="product-sku">COL-FULL-CAB-SV5</div>
+              </td>
+              <td class="product-sku">COL-FULL-CAB</td>
+              <td class="product-qty"><input type="number" value="4" min="1" aria-label="Quantity"></td>
+              <td class="product-price">$3,200/mo</td>
+              <td class="product-price">$12,800</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="product-name">Cross Connect — MMR</div>
+                <div class="product-sku">XC-MMR-1G-SV5</div>
+              </td>
+              <td class="product-sku">XC-MMR-1G</td>
+              <td class="product-qty"><input type="number" value="8" min="1" aria-label="Quantity"></td>
+              <td class="product-price">$350/mo</td>
+              <td class="product-price">$2,800</td>
+            </tr>
+            <tr>
+              <td>
+                <div class="product-name">Equinix Fabric — Port (1G)</div>
+                <div class="product-sku">EF-PORT-1G-SV5</div>
+              </td>
+              <td class="product-sku">EF-PORT-1G</td>
+              <td class="product-qty"><input type="number" value="2" min="1" aria-label="Quantity"></td>
+              <td class="product-price">$1,800/mo</td>
+              <td class="product-price">$3,600</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="add-product-row">
+          <button class="btn btn-secondary" style="font-size:11px;padding:4px 10px;">+ Add Product</button>
+          <span style="color:var(--wf-muted);">Search CPQ product catalog</span>
+        </div>
+      </div>
+
+      <!-- Action bar -->
+      <div class="action-bar">
+        <button class="btn btn-ghost">← Back</button>
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-secondary">Save Draft</button>
+          <button class="btn btn-primary">Review &amp; Submit →</button>
+        </div>
+      </div>
+
+    </div><!-- /main -->
+
+    <!-- Sidebar -->
+    <div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">Order Summary</div></div>
+        <div class="card-body">
+          <div class="summary-item">
+            <span class="summary-label">Colocation (4 cabinets)</span>
+            <span class="summary-value">$12,800/mo</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Cross Connects (8)</span>
+            <span class="summary-value">$2,800/mo</span>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Fabric Ports (2)</span>
+            <span class="summary-value">$3,600/mo</span>
+          </div>
+          <div class="summary-item total">
+            <span>Total MRC</span>
+            <span>$19,200/mo</span>
+          </div>
+          <div style="margin-top:10px;font-size:12px;color:var(--wf-muted);">
+            <div>Contract: 24 months</div>
+            <div>Total TCV: ~$460,800</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">What Happens Next</div></div>
+        <div class="card-body" style="font-size:13px;">
+          <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--wf-canvas);">
+            <div style="font-weight:600;color:var(--wf-ink);margin-bottom:3px;">Order Management Review</div>
+            <div style="color:var(--wf-muted);font-size:12px;">OM team validates site readiness, power, and cage assignment. Typical SLA: 2 business days.</div>
+          </div>
+          <div style="margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid var(--wf-canvas);">
+            <div style="font-weight:600;color:var(--wf-ink);margin-bottom:3px;">IBX Installation</div>
+            <div style="color:var(--wf-muted);font-size:12px;">Physical installation scheduled with the IBX team. Typical lead time: 2–4 weeks.</div>
+          </div>
+          <div>
+            <div style="font-weight:600;color:var(--wf-ink);margin-bottom:3px;">Partner Notification</div>
+            <div style="color:var(--wf-muted);font-size:12px;">CloudBridge Inc. receives order confirmation and fulfillment status via Partner Connect Portal.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">Track Fulfillment</div></div>
+        <div class="card-body" style="font-size:13px;">
+          <div style="color:var(--wf-muted);margin-bottom:10px;">After submission, track installation progress in the fulfillment dashboard.</div>
+          <a href="ae-fulfillment.html" style="display:block;text-align:center;padding:8px;background:var(--wf-surface);border:1px solid var(--wf-line);border-radius:4px;font-size:12px;font-weight:600;color:var(--wf-accent);text-decoration:none;">View Fulfillment Dashboard →</a>
+        </div>
+      </div>
+
+    </div><!-- /sidebar -->
+
+  </div><!-- /layout -->
+
+</div><!-- /page-container -->
+
+<script src="wf-nav.js"></script>
+</body>
+</html>

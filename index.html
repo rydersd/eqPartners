@@ -692,6 +692,99 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
 
 
 <!-- ═══════════════════════════════════════════════════
+     BRANCH 1b: INTERNAL — AE Experience
+     Platform: Salesforce Lightning
+     ═══════════════════════════════════════════════════ -->
+<div class="branch">
+  <div class="branch-header internal">
+    <span>🔒</span> Internal — AE Experience
+    <span class="plat-tag">Salesforce Lightning</span>
+  </div>
+  <div class="branch-body">
+
+    <div style="padding:6px 10px;background:var(--wf-surface);border:1px solid var(--wf-line);border-radius:4px;margin-bottom:4px;font-size:.72rem;color:var(--wf-text);line-height:1.5;">
+      <strong style="color:var(--wf-accent);">Salesforce Lightning App — AE Experience.</strong>
+      The Account Executive's SFDC context: partner-sourced pipeline, co-sell opportunities, order creation, and fulfillment tracking.
+      AE sees partner deal registrations as read-only context; the PSM owns DR approvals.
+    </div>
+
+    <!-- ── Opportunities ──────────────────────────────── -->
+    <div style="margin:10px 0 5px 0;padding:4px 10px;background:linear-gradient(90deg,#1a2535,#28394d);color:#fff;font-size:.67rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:6px;border-radius:3px;">
+      <span style="background:rgba(255,255,255,.18);padding:1px 5px;border-radius:2px;font-size:.57rem;font-weight:600;letter-spacing:.03em;">⚡ SF NAV</span>
+      Opportunities
+      <span style="font-size:.6rem;font-weight:400;opacity:.6;margin-left:auto;">1 page</span>
+    </div>
+
+    <div class="node">
+      <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="node-type t-list" title="List View">L</div>
+        <span class="node-label">Partner-Sourced Opportunities</span>
+        <span class="node-screen">Screen —</span>
+        <a href="ae-opportunities.html" class="node-mockup-link" title="View Mockup">→</a>
+        <span class="node-chevron">›</span>
+      </div>
+      <div class="node-children">
+        <div class="child"><span class="child-type ct-kpi">KPI</span> Partner pipeline total · Closing this quarter · Pending DR</div>
+        <div class="child"><span class="child-type ct-table">Table</span> Opportunity list — partner org, stage, DR status, amount, close date</div>
+        <div class="child"><span class="child-type ct-filter">Filter</span> Stage · DR Status · Partner · Close date range</div>
+        <div class="child"><span class="child-type ct-action">Action</span> Create Order (from Verbal / Closed Won row)</div>
+        <div class="child"><span class="child-type ct-action">Action</span> Nudge PSM (from Pending DR row)</div>
+        <div class="child"><span class="child-type ct-action">Action</span> Request DR (from rows with no DR)</div>
+      </div>
+    </div>
+
+    <!-- ── Orders ──────────────────────────────────────── -->
+    <div style="margin:10px 0 5px 0;padding:4px 10px;background:linear-gradient(90deg,#1a2535,#28394d);color:#fff;font-size:.67rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:6px;border-radius:3px;">
+      <span style="background:rgba(255,255,255,.18);padding:1px 5px;border-radius:2px;font-size:.57rem;font-weight:600;letter-spacing:.03em;">⚡ SF NAV</span>
+      Orders
+      <span style="font-size:.6rem;font-weight:400;opacity:.6;margin-left:auto;">2 pages</span>
+    </div>
+
+    <div class="node">
+      <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="node-type t-form" title="Form">F</div>
+        <span class="node-label">Create Order (Salesforce Ordering Flow)</span>
+        <span class="node-screen">Screen —</span>
+        <a href="ae-ordering.html" class="node-mockup-link" title="View Mockup">→</a>
+        <span class="node-chevron">›</span>
+      </div>
+      <div class="node-children">
+        <div class="child"><span class="child-type ct-card">Card</span> Locked context from Opportunity (account, DR, AE owner)</div>
+        <div class="child"><span class="child-type ct-card">Card</span> Partner attribution — read-only, pulled from approved DR</div>
+        <div class="child"><span class="child-type ct-form">Form</span> Order details: IBX, order type, start date, contract term</div>
+        <div class="child"><span class="child-type ct-table">Table</span> CPQ product line items: SKU, quantity, unit price, MRC</div>
+        <div class="child"><span class="child-type ct-card">Card</span> Order summary sidebar: total MRC, TCV, what happens next</div>
+        <div class="child"><span class="child-type ct-stepper">Flow</span> 5-step progress: Opportunity → DR Verified → Configure → Review → OM</div>
+        <div class="child"><span class="child-type ct-action">Action</span> Review &amp; Submit → Order Management queue</div>
+      </div>
+    </div>
+
+    <div class="node">
+      <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="node-type t-detail" title="Detail">Dt</div>
+        <span class="node-label">Order Fulfillment</span>
+        <span class="node-screen">Screen —</span>
+        <a href="ae-fulfillment.html" class="node-mockup-link" title="View Mockup">→</a>
+        <span class="node-chevron">›</span>
+      </div>
+      <div class="node-children">
+        <div class="child"><span class="child-type ct-kpi">KPI</span> Submitted date · Target go-live · IBX · Services complete · Open issues</div>
+        <div class="child"><span class="child-type ct-chart">Chart</span> Overall progress bar (% provisioned)</div>
+        <div class="child"><span class="child-type ct-table">Table</span> Service line items: cage, cross connects, power, colocation, Fabric — each with status + completion date</div>
+        <div class="child"><span class="child-type ct-timeline">Timeline</span> Fulfillment milestones with status (complete / active / blocked)</div>
+        <div class="child"><span class="child-type ct-card">Card</span> Open issues callout (blocked services, delay notes, escalation)</div>
+        <div class="child"><span class="child-type ct-card">Card</span> Key contacts: OM, PSM, Partner Rep, Customer</div>
+        <div class="child"><span class="child-type ct-card">Card</span> Partner visibility — what CloudBridge can see in their portal</div>
+        <div class="child"><span class="child-type ct-action">Action</span> Escalate to IBX Manager</div>
+        <div class="child"><span class="child-type ct-action">Action</span> Contact IBX Team · Export PDF</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
      BRANCH 2: PARTNER MANAGER PORTAL
      Platform: Experience Cloud
      ═══════════════════════════════════════════════════ -->

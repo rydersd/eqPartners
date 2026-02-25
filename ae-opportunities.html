@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Partner-Sourced Opportunities — AE · Equinix PCP</title>
+<link rel="stylesheet" href="wireframe.css">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background:var(--wf-canvas, #f5f7fb); color:var(--wf-text, #3b4f68); line-height:1.5; }
+
+/* Lightning-style header */
+.sf-header { background:var(--wf-ink, #1e2a3a); color:white; height:48px; display:flex; align-items:center; padding:0 1.5rem; gap:1rem; font-size:13px; flex-shrink:0; }
+.sf-logo { width:28px; height:28px; background:white; border-radius:4px; display:flex; align-items:center; justify-content:center; font-weight:bold; color:var(--wf-ink); font-size:12px; }
+.sf-header nav { display:flex; gap:1.25rem; margin-left:1rem; }
+.sf-header nav a { color:rgba(255,255,255,.75); text-decoration:none; font-size:12px; font-weight:500; }
+.sf-header nav a.active { color:white; border-bottom:2px solid white; padding-bottom:2px; }
+.sf-header-right { margin-left:auto; display:flex; align-items:center; gap:1rem; }
+.sf-avatar { width:28px; height:28px; border-radius:50%; background:var(--wf-accent, #3d6daa); display:flex; align-items:center; justify-content:center; color:white; font-size:11px; font-weight:600; }
+
+.page-container { padding:24px; max-width:1400px; margin:0 auto; }
+
+/* List view chrome */
+.list-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+.list-title { font-size:20px; font-weight:700; color:var(--wf-ink); }
+.list-subtitle { font-size:13px; color:var(--wf-muted); margin-top:2px; }
+.list-actions { display:flex; align-items:center; gap:8px; }
+.btn { padding:7px 14px; border-radius:4px; font-size:12px; font-weight:600; border:1px solid transparent; cursor:pointer; display:inline-flex; align-items:center; gap:5px; }
+.btn-primary { background:var(--wf-accent); color:white; border-color:var(--wf-accent); }
+.btn-secondary { background:white; color:var(--wf-text); border-color:var(--wf-line, #b0bdd0); }
+
+/* Filters bar */
+.filter-bar { display:flex; align-items:center; gap:10px; margin-bottom:16px; padding:12px; background:white; border-radius:4px; border:1px solid var(--wf-line); flex-wrap:wrap; }
+.filter-label { font-size:11px; font-weight:700; color:var(--wf-muted); text-transform:uppercase; letter-spacing:0.04em; }
+.filter-chip { padding:4px 10px; border-radius:12px; font-size:11px; font-weight:600; cursor:pointer; border:1px solid var(--wf-line); background:var(--wf-surface); color:var(--wf-text); }
+.filter-chip.active { background:var(--wf-accent); color:white; border-color:var(--wf-accent); }
+.filter-sep { color:var(--wf-line); }
+.search-box { margin-left:auto; padding:5px 10px; border:1px solid var(--wf-line); border-radius:4px; font-size:12px; width:220px; background:white; color:var(--wf-text); }
+
+/* Stat summary row */
+.summary-row { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:20px; }
+.stat-card { background:white; border:1px solid var(--wf-line); border-radius:6px; padding:14px 16px; }
+.stat-label { font-size:11px; font-weight:600; color:var(--wf-muted); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:4px; }
+.stat-value { font-size:24px; font-weight:700; color:var(--wf-ink); }
+.stat-sub { font-size:11px; color:var(--wf-muted); margin-top:2px; }
+.stat-card.highlight { border-left:3px solid var(--wf-accent); }
+
+/* Table */
+.table-wrapper { background:white; border:1px solid var(--wf-line); border-radius:6px; overflow:hidden; }
+table { width:100%; border-collapse:collapse; font-size:13px; }
+thead { background:var(--wf-surface); border-bottom:2px solid var(--wf-line); }
+th { padding:10px 12px; text-align:left; font-weight:700; color:var(--wf-muted); font-size:11px; text-transform:uppercase; letter-spacing:0.04em; white-space:nowrap; cursor:pointer; }
+th.sort-asc::after { content:" ↑"; }
+th.sort-desc::after { content:" ↓"; }
+td { padding:10px 12px; border-bottom:1px solid var(--wf-canvas); color:var(--wf-text); vertical-align:middle; }
+tr:last-child td { border-bottom:none; }
+tr:hover td { background:#f9fbfd; }
+.opp-name { font-weight:600; color:var(--wf-accent); text-decoration:none; }
+.opp-name:hover { text-decoration:underline; }
+
+/* Stage pill */
+.stage { display:inline-block; padding:3px 8px; border-radius:3px; font-size:11px; font-weight:600; }
+.stage-prospect   { background:#e8f0fa; color:#1e6fa8; }
+.stage-qualify    { background:#e3f2fd; color:#1565c0; }
+.stage-propose    { background:#fff3e0; color:#8d5524; }
+.stage-negotiate  { background:#fce4ec; color:#880e4f; }
+.stage-verbal     { background:#f3e5f5; color:#6a1b9a; }
+.stage-closed-won { background:#e8f5e9; color:#2e7d32; }
+
+/* DR badge */
+.dr-badge { display:inline-flex; align-items:center; gap:4px; padding:3px 8px; border-radius:3px; font-size:11px; font-weight:600; }
+.dr-approved  { background:#e8f5e9; color:#2e7d32; }
+.dr-pending   { background:#fff8e1; color:#8b7745; }
+.dr-none      { background:var(--wf-surface); color:var(--wf-muted); }
+
+/* Partner tier dot */
+.tier-dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:4px; }
+.tier-platinum { background:#6b7280; }
+.tier-gold     { background:#d97706; }
+.tier-silver   { background:#9ca3af; }
+
+.amount { font-weight:600; color:var(--wf-ink); }
+.close-date { font-size:12px; color:var(--wf-muted); }
+.close-date.soon { color:#c05621; font-weight:600; }
+
+/* JTBD annotation */
+.jtbd-banner { background:#edf4fb; border-left:4px solid var(--wf-accent); padding:10px 16px; border-radius:0 4px 4px 0; margin-bottom:20px; font-size:13px; }
+.jtbd-banner strong { color:var(--wf-ink); }
+</style>
+</head>
+<body>
+
+<!-- Salesforce Lightning header -->
+<header class="sf-header">
+  <div class="sf-logo">SF</div>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#">Accounts</a>
+    <a href="#" class="active">Opportunities</a>
+    <a href="#">Orders</a>
+    <a href="#">Reports</a>
+    <a href="#">Partner Connect</a>
+  </nav>
+  <div class="sf-header-right">
+    <svg width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="1.5"><circle cx="8" cy="8" r="5"/><path d="M13 13l2.5 2.5"/></svg>
+    <div class="sf-avatar">SR</div>
+  </div>
+</header>
+
+<div class="page-context-bar"></div>
+
+<div class="page-container">
+
+  <div class="jtbd-banner">
+    <strong>AE job:</strong> Identify partner-sourced opportunities in my book of business, verify deal registration is in place before committing to co-sell, and ensure the deal gets properly attributed before I create an order.
+  </div>
+
+  <div class="list-header">
+    <div>
+      <div class="list-title">Partner-Sourced Opportunities</div>
+      <div class="list-subtitle">My open opportunities with an attached partner deal registration · Sorted by close date</div>
+    </div>
+    <div class="list-actions">
+      <button class="btn btn-secondary">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h12M4 8h8M6 12h4"/></svg>
+        Filter
+      </button>
+      <button class="btn btn-secondary">Export</button>
+      <button class="btn btn-primary">New Opportunity</button>
+    </div>
+  </div>
+
+  <!-- Summary stats -->
+  <div class="summary-row">
+    <div class="stat-card highlight">
+      <div class="stat-label">Pipeline (Partner)</div>
+      <div class="stat-value">$3.2M</div>
+      <div class="stat-sub">12 open opportunities</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Closing This Quarter</div>
+      <div class="stat-value">$870K</div>
+      <div class="stat-sub">4 opportunities</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Pending DR Approval</div>
+      <div class="stat-value">3</div>
+      <div class="stat-sub">Needs PSM action</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Won This Quarter</div>
+      <div class="stat-value">$540K</div>
+      <div class="stat-sub">2 closed won</div>
+    </div>
+  </div>
+
+  <!-- Filter bar -->
+  <div class="filter-bar">
+    <span class="filter-label">Stage</span>
+    <span class="filter-chip active">All</span>
+    <span class="filter-chip">Qualify</span>
+    <span class="filter-chip">Propose</span>
+    <span class="filter-chip">Negotiate</span>
+    <span class="filter-chip">Verbal</span>
+    <span class="filter-sep">|</span>
+    <span class="filter-label">DR Status</span>
+    <span class="filter-chip active">All</span>
+    <span class="filter-chip">Approved</span>
+    <span class="filter-chip">Pending</span>
+    <input class="search-box" type="text" placeholder="Search opportunities…" aria-label="Search opportunities">
+  </div>
+
+  <!-- Opportunity table -->
+  <div class="table-wrapper">
+    <table>
+      <thead>
+        <tr>
+          <th class="sort-asc">Opportunity Name</th>
+          <th>Account</th>
+          <th>Partner</th>
+          <th>Stage</th>
+          <th>DR Status</th>
+          <th>Amount</th>
+          <th>Close Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><a href="ae-ordering.html" class="opp-name">Meridian Capital — SV5 Interconnect Expansion</a></td>
+          <td>Meridian Capital Group</td>
+          <td><span class="tier-dot tier-platinum"></span>CloudBridge Inc.</td>
+          <td><span class="stage stage-verbal">Verbal</span></td>
+          <td><span class="dr-badge dr-approved">✓ Approved</span></td>
+          <td class="amount">$320,000</td>
+          <td class="close-date soon">Mar 15, 2026 ⚠</td>
+          <td><a href="ae-ordering.html" style="font-size:11px;color:var(--wf-accent);font-weight:600;">Create Order →</a></td>
+        </tr>
+        <tr>
+          <td><a href="#" class="opp-name">Apex Logistics — NY4 Colocation + Cross Connect</a></td>
+          <td>Apex Logistics Ltd.</td>
+          <td><span class="tier-dot tier-gold"></span>NetScale Partners</td>
+          <td><span class="stage stage-negotiate">Negotiate</span></td>
+          <td><span class="dr-badge dr-approved">✓ Approved</span></td>
+          <td class="amount">$185,000</td>
+          <td class="close-date soon">Mar 28, 2026 ⚠</td>
+          <td><button class="btn btn-secondary" style="padding:4px 8px;font-size:11px;">View DR</button></td>
+        </tr>
+        <tr>
+          <td><a href="#" class="opp-name">Sunrise Health Systems — CH4 Deployment</a></td>
+          <td>Sunrise Health Systems</td>
+          <td><span class="tier-dot tier-gold"></span>CloudBridge Inc.</td>
+          <td><span class="stage stage-propose">Propose</span></td>
+          <td><span class="dr-badge dr-pending">⏳ Pending</span></td>
+          <td class="amount">$240,000</td>
+          <td class="close-date">Apr 10, 2026</td>
+          <td><button class="btn btn-secondary" style="padding:4px 8px;font-size:11px;">Nudge PSM</button></td>
+        </tr>
+        <tr>
+          <td><a href="#" class="opp-name">GreenStar Renewables — DA2 Fabric Connect</a></td>
+          <td>GreenStar Renewables</td>
+          <td><span class="tier-dot tier-silver"></span>TelePath Solutions</td>
+          <td><span class="stage stage-qualify">Qualify</span></td>
+          <td><span class="dr-badge dr-pending">⏳ Pending</span></td>
+          <td class="amount">$95,000</td>
+          <td class="close-date">Apr 30, 2026</td>
+          <td><button class="btn btn-secondary" style="padding:4px 8px;font-size:11px;">Nudge PSM</button></td>
+        </tr>
+        <tr>
+          <td><a href="#" class="opp-name">Vantage Realty — LD5 Colocation Renewal</a></td>
+          <td>Vantage Realty Trust</td>
+          <td><span class="tier-dot tier-platinum"></span>CloudBridge Inc.</td>
+          <td><span class="stage stage-verbal">Verbal</span></td>
+          <td><span class="dr-badge dr-approved">✓ Approved</span></td>
+          <td class="amount">$410,000</td>
+          <td class="close-date">May 1, 2026</td>
+          <td><a href="ae-ordering.html" style="font-size:11px;color:var(--wf-accent);font-weight:600;">Create Order →</a></td>
+        </tr>
+        <tr>
+          <td><a href="#" class="opp-name">Blue Harbor Media — SG1 Interconnection</a></td>
+          <td>Blue Harbor Media</td>
+          <td><span class="tier-dot tier-gold"></span>NetScale Partners</td>
+          <td><span class="stage stage-prospect">Prospect</span></td>
+          <td><span class="dr-badge dr-none">— None</span></td>
+          <td class="amount">$68,000</td>
+          <td class="close-date">May 30, 2026</td>
+          <td><button class="btn btn-secondary" style="padding:4px 8px;font-size:11px;">Request DR</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="margin-top:12px;font-size:12px;color:var(--wf-muted);display:flex;justify-content:space-between;align-items:center;">
+    <span>Showing 6 of 12 opportunities</span>
+    <div style="display:flex;gap:6px;">
+      <button class="btn btn-secondary" style="padding:4px 10px;">← Prev</button>
+      <button class="btn btn-secondary" style="padding:4px 10px;">Next →</button>
+    </div>
+  </div>
+
+</div><!-- /page-container -->
+
+<script src="wf-nav.js"></script>
+</body>
+</html>

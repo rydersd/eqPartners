@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order Fulfillment — AE · Equinix PCP</title>
+<link rel="stylesheet" href="wireframe.css">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background:var(--wf-canvas, #f5f7fb); color:var(--wf-text, #3b4f68); line-height:1.5; }
+
+.sf-header { background:var(--wf-ink, #1e2a3a); color:white; height:48px; display:flex; align-items:center; padding:0 1.5rem; gap:1rem; font-size:13px; }
+.sf-logo { width:28px; height:28px; background:white; border-radius:4px; display:flex; align-items:center; justify-content:center; font-weight:bold; color:var(--wf-ink); font-size:12px; }
+.sf-header nav { display:flex; gap:1.25rem; margin-left:1rem; }
+.sf-header nav a { color:rgba(255,255,255,.75); text-decoration:none; font-size:12px; font-weight:500; }
+.sf-header nav a.active { color:white; border-bottom:2px solid white; padding-bottom:2px; }
+.sf-header-right { margin-left:auto; display:flex; align-items:center; gap:1rem; }
+.sf-avatar { width:28px; height:28px; border-radius:50%; background:var(--wf-accent, #3d6daa); display:flex; align-items:center; justify-content:center; color:white; font-size:11px; font-weight:600; }
+
+.page-container { padding:24px; max-width:1400px; margin:0 auto; }
+
+/* Record header */
+.record-header { background:white; border:1px solid var(--wf-line); border-radius:6px; padding:20px 24px; margin-bottom:20px; display:flex; align-items:flex-start; justify-content:space-between; gap:20px; }
+.record-meta { flex:1; }
+.record-type-label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:0.04em; color:var(--wf-muted); margin-bottom:4px; }
+.record-name { font-size:22px; font-weight:700; color:var(--wf-ink); margin-bottom:6px; }
+.record-chips { display:flex; gap:8px; flex-wrap:wrap; }
+.chip { display:inline-flex; align-items:center; gap:4px; padding:4px 10px; border-radius:12px; font-size:11px; font-weight:600; }
+.chip-in-progress { background:#fff3e0; color:#8d5524; }
+.chip-partner    { background:#e8f0fa; color:#1e6fa8; }
+.chip-dr         { background:#e8f5e9; color:#2e7d32; }
+.record-actions { display:flex; gap:8px; flex-shrink:0; }
+.btn { padding:7px 14px; border-radius:4px; font-size:12px; font-weight:600; border:1px solid transparent; cursor:pointer; }
+.btn-primary { background:var(--wf-accent); color:white; }
+.btn-secondary { background:white; color:var(--wf-text); border-color:var(--wf-line); }
+
+/* Summary stats */
+.summary-row { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:20px; }
+.stat-card { background:white; border:1px solid var(--wf-line); border-radius:6px; padding:14px 16px; }
+.stat-label { font-size:11px; font-weight:600; color:var(--wf-muted); text-transform:uppercase; letter-spacing:0.04em; margin-bottom:4px; }
+.stat-value { font-size:22px; font-weight:700; color:var(--wf-ink); }
+.stat-sub { font-size:11px; color:var(--wf-muted); margin-top:2px; }
+
+/* Layout */
+.layout { display:grid; grid-template-columns:1fr 320px; gap:20px; }
+@media(max-width:1000px) { .layout { grid-template-columns:1fr; } }
+
+/* Cards */
+.card { background:white; border:1px solid var(--wf-line); border-radius:6px; margin-bottom:16px; overflow:hidden; }
+.card-header { padding:12px 16px; border-bottom:1px solid var(--wf-line); display:flex; align-items:center; justify-content:space-between; }
+.card-title { font-size:13px; font-weight:700; color:var(--wf-ink); }
+.card-body { padding:16px; }
+
+/* Fulfillment timeline */
+.timeline { list-style:none; position:relative; padding-left:24px; }
+.timeline::before { content:""; position:absolute; left:8px; top:0; bottom:0; width:2px; background:var(--wf-line); }
+.timeline-item { position:relative; margin-bottom:20px; }
+.timeline-item:last-child { margin-bottom:0; }
+.timeline-dot { position:absolute; left:-20px; top:3px; width:16px; height:16px; border-radius:50%; border:2px solid white; display:flex; align-items:center; justify-content:center; font-size:9px; font-weight:700; flex-shrink:0; }
+.dot-done     { background:var(--wf-accent); }
+.dot-active   { background:var(--wf-amber, #8b7745); }
+.dot-todo     { background:var(--wf-line); }
+.dot-blocked  { background:#dc2626; }
+.timeline-label { font-size:13px; font-weight:600; color:var(--wf-ink); }
+.timeline-date  { font-size:11px; color:var(--wf-muted); margin-top:1px; }
+.timeline-note  { font-size:12px; color:var(--wf-text); margin-top:4px; }
+.timeline-note.warn { color:#8b7745; font-weight:600; }
+
+/* Progress bar */
+.progress-wrapper { margin-bottom:6px; }
+.progress-label { display:flex; justify-content:space-between; font-size:12px; color:var(--wf-muted); margin-bottom:4px; }
+.progress-bar { height:8px; background:var(--wf-canvas); border-radius:4px; overflow:hidden; }
+.progress-fill { height:100%; border-radius:4px; background:var(--wf-accent); }
+
+/* Service items table */
+.svc-table { width:100%; border-collapse:collapse; font-size:13px; }
+.svc-table thead { background:var(--wf-surface); }
+.svc-table th { padding:9px 12px; text-align:left; font-weight:700; color:var(--wf-muted); font-size:11px; text-transform:uppercase; letter-spacing:0.04em; border-bottom:2px solid var(--wf-line); }
+.svc-table td { padding:9px 12px; border-bottom:1px solid var(--wf-canvas); vertical-align:middle; }
+.svc-table tr:last-child td { border-bottom:none; }
+
+.status-pill { display:inline-block; padding:3px 8px; border-radius:3px; font-size:11px; font-weight:600; }
+.status-complete  { background:#e8f5e9; color:#2e7d32; }
+.status-active    { background:#fff3e0; color:#8d5524; }
+.status-pending   { background:var(--wf-surface); color:var(--wf-muted); border:1px solid var(--wf-line); }
+.status-blocked   { background:#fde8e8; color:#c82a2a; }
+
+/* Contact list */
+.contact-row { display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--wf-canvas); }
+.contact-row:last-child { border-bottom:none; }
+.contact-avatar { width:32px; height:32px; border-radius:50%; background:var(--wf-muted); display:flex; align-items:center; justify-content:center; color:white; font-size:11px; font-weight:600; flex-shrink:0; }
+.contact-info { flex:1; }
+.contact-name { font-size:12px; font-weight:600; color:var(--wf-ink); }
+.contact-role { font-size:11px; color:var(--wf-muted); }
+.contact-action { font-size:11px; color:var(--wf-accent); text-decoration:none; }
+
+.jtbd-banner { background:#edf4fb; border-left:4px solid var(--wf-accent); padding:10px 16px; border-radius:0 4px 4px 0; margin-bottom:20px; font-size:13px; }
+.jtbd-banner strong { color:var(--wf-ink); }
+</style>
+</head>
+<body>
+
+<header class="sf-header">
+  <div class="sf-logo">SF</div>
+  <nav>
+    <a href="#">Home</a>
+    <a href="#">Accounts</a>
+    <a href="ae-opportunities.html">Opportunities</a>
+    <a href="#" class="active">Orders</a>
+    <a href="#">Reports</a>
+    <a href="#">Partner Connect</a>
+  </nav>
+  <div class="sf-header-right">
+    <svg width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="1.5"><circle cx="8" cy="8" r="5"/><path d="M13 13l2.5 2.5"/></svg>
+    <div class="sf-avatar">SR</div>
+  </div>
+</header>
+
+<div class="page-context-bar"></div>
+
+<div class="page-container">
+
+  <div class="jtbd-banner">
+    <strong>AE job:</strong> After submitting an order, track installation progress, catch delays early, and keep the partner and customer informed — without having to chase the IBX team directly.
+  </div>
+
+  <!-- Record header -->
+  <div class="record-header">
+    <div class="record-meta">
+      <div class="record-type-label">Order · ORD-2026-00914</div>
+      <div class="record-name">Meridian Capital — SV5 Interconnect Expansion</div>
+      <div class="record-chips">
+        <span class="chip chip-in-progress">⟳ In Progress</span>
+        <span class="chip chip-partner">CloudBridge Inc. (Platinum)</span>
+        <span class="chip chip-dr">✓ DR-2026-04821</span>
+      </div>
+    </div>
+    <div class="record-actions">
+      <button class="btn btn-secondary">Export PDF</button>
+      <button class="btn btn-primary">Contact IBX Team</button>
+    </div>
+  </div>
+
+  <!-- Summary stats -->
+  <div class="summary-row">
+    <div class="stat-card">
+      <div class="stat-label">Order Submitted</div>
+      <div class="stat-value">Mar 3</div>
+      <div class="stat-sub">2026</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Target Go-Live</div>
+      <div class="stat-value">Apr 1</div>
+      <div class="stat-sub">29 days remaining</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">IBX</div>
+      <div class="stat-value">SV5</div>
+      <div class="stat-sub">Silicon Valley</div>
+    </div>
+    <div class="stat-card" style="border-left:3px solid var(--wf-accent);">
+      <div class="stat-label">Services Complete</div>
+      <div class="stat-value">2 / 5</div>
+      <div class="stat-sub">40% provisioned</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Open Issues</div>
+      <div class="stat-value" style="color:#c82a2a;">1</div>
+      <div class="stat-sub">Power cage delay</div>
+    </div>
+  </div>
+
+  <div class="layout">
+
+    <!-- Main column -->
+    <div>
+
+      <!-- Overall progress -->
+      <div class="card">
+        <div class="card-header"><div class="card-title">Overall Fulfillment Progress</div></div>
+        <div class="card-body">
+          <div class="progress-wrapper">
+            <div class="progress-label"><span>Installation Progress</span><span style="font-weight:600;color:var(--wf-ink);">40%</span></div>
+            <div class="progress-bar" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">
+              <div class="progress-fill" style="width:40%"></div>
+            </div>
+          </div>
+          <div style="margin-top:12px;font-size:12px;color:var(--wf-muted);">On track for Apr 1 go-live. One item (power cage) flagged as delayed — see issues below.</div>
+        </div>
+      </div>
+
+      <!-- Service line items -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Service Line Items</div>
+          <span style="font-size:11px;color:var(--wf-muted);">5 services · 2 complete</span>
+        </div>
+        <table class="svc-table">
+          <thead>
+            <tr>
+              <th>Service</th>
+              <th>SKU</th>
+              <th>Qty</th>
+              <th>Status</th>
+              <th>Completion Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="font-weight:600;color:var(--wf-ink);">Cage Assignment</td>
+              <td style="font-size:11px;color:var(--wf-muted);">CAG-SV5</td>
+              <td>1</td>
+              <td><span class="status-pill status-complete">Complete</span></td>
+              <td style="font-size:12px;">Mar 5, 2026</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;color:var(--wf-ink);">Cross Connect — MMR (8)</td>
+              <td style="font-size:11px;color:var(--wf-muted);">XC-MMR-1G</td>
+              <td>8</td>
+              <td><span class="status-pill status-complete">Complete</span></td>
+              <td style="font-size:12px;">Mar 10, 2026</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;color:var(--wf-ink);">Power — Cabinet Install</td>
+              <td style="font-size:11px;color:var(--wf-muted);">PWR-CAB-20A</td>
+              <td>4</td>
+              <td><span class="status-pill status-blocked">Delayed</span></td>
+              <td style="font-size:12px;color:#c82a2a;">TBD — site issue</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;color:var(--wf-ink);">Colocation Cabinet (Full)</td>
+              <td style="font-size:11px;color:var(--wf-muted);">COL-FULL-CAB</td>
+              <td>4</td>
+              <td><span class="status-pill status-active">In Progress</span></td>
+              <td style="font-size:12px;">Est. Mar 25, 2026</td>
+            </tr>
+            <tr>
+              <td style="font-weight:600;color:var(--wf-ink);">Equinix Fabric Port (1G)</td>
+              <td style="font-size:11px;color:var(--wf-muted);">EF-PORT-1G</td>
+              <td>2</td>
+              <td><span class="status-pill status-pending">Pending</span></td>
+              <td style="font-size:12px;">After power complete</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Timeline -->
+      <div class="card">
+        <div class="card-header"><div class="card-title">Fulfillment Timeline</div></div>
+        <div class="card-body">
+          <ul class="timeline" aria-label="Fulfillment milestones">
+            <li class="timeline-item">
+              <div class="timeline-dot dot-done" aria-label="Complete">✓</div>
+              <div class="timeline-label">Order Submitted &amp; Validated</div>
+              <div class="timeline-date">Mar 3, 2026</div>
+              <div class="timeline-note">OM team confirmed all products and site readiness. DR-2026-04821 verified.</div>
+            </li>
+            <li class="timeline-item">
+              <div class="timeline-dot dot-done" aria-label="Complete">✓</div>
+              <div class="timeline-label">Cage Assigned — SV5-C14</div>
+              <div class="timeline-date">Mar 5, 2026</div>
+              <div class="timeline-note">Cage SV5-C14 assigned. Access badge requests sent to Meridian Capital contacts.</div>
+            </li>
+            <li class="timeline-item">
+              <div class="timeline-dot dot-done" aria-label="Complete">✓</div>
+              <div class="timeline-label">Cross Connects Installed (8 of 8)</div>
+              <div class="timeline-date">Mar 10, 2026</div>
+              <div class="timeline-note">All 8 MMR cross connects tested and active.</div>
+            </li>
+            <li class="timeline-item">
+              <div class="timeline-dot dot-blocked" aria-label="Blocked">!</div>
+              <div class="timeline-label">Power Infrastructure — Delayed</div>
+              <div class="timeline-date">Expected Mar 18, 2026 — Now TBD</div>
+              <div class="timeline-note warn">⚠ Site power upgrade required in SV5 Zone C before cabinet installation. IBX team working resolution. ETA: +5–7 days.</div>
+            </li>
+            <li class="timeline-item">
+              <div class="timeline-dot dot-active" aria-label="In progress"></div>
+              <div class="timeline-label">Cabinet Installation</div>
+              <div class="timeline-date">Est. Mar 25, 2026</div>
+              <div class="timeline-note">4 full cabinets. Pending power clearance.</div>
+            </li>
+            <li class="timeline-item">
+              <div class="timeline-dot dot-todo" aria-label="Not started"></div>
+              <div class="timeline-label">Fabric Ports Activated</div>
+              <div class="timeline-date">Est. Mar 28, 2026</div>
+              <div class="timeline-note">2 × 1G Fabric ports activated after cabinet install completes.</div>
+            </li>
+            <li class="timeline-item">
+              <div class="timeline-dot dot-todo" aria-label="Not started"></div>
+              <div class="timeline-label">Customer Acceptance &amp; Go-Live</div>
+              <div class="timeline-date">Target: Apr 1, 2026</div>
+              <div class="timeline-note">Customer and partner notified. Order marked Active. Partner commission processing triggered.</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+    </div><!-- /main -->
+
+    <!-- Sidebar -->
+    <div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">Open Issues</div></div>
+        <div class="card-body">
+          <div style="background:#fde8e8;border:1px solid #f9a8a8;border-radius:6px;padding:12px;font-size:13px;">
+            <div style="font-weight:700;color:#c82a2a;margin-bottom:6px;">⚠ SV5 Zone C Power Delay</div>
+            <div style="color:var(--wf-text);">SV5 Zone C requires a power upgrade before 4 cabinets can be installed. IBX team estimate: +5–7 business days.</div>
+            <div style="margin-top:8px;font-size:11px;color:#c82a2a;font-weight:600;">Risk: May push go-live to Apr 7–9</div>
+            <button class="btn btn-secondary" style="margin-top:10px;width:100%;font-size:11px;border-color:#f9a8a8;">Escalate to IBX Manager</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">Order Details</div></div>
+        <div class="card-body" style="font-size:13px;">
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <div style="display:flex;justify-content:space-between;"><span style="color:var(--wf-muted);">Order ID</span><span style="font-weight:600;">ORD-2026-00914</span></div>
+            <div style="display:flex;justify-content:space-between;"><span style="color:var(--wf-muted);">Opportunity</span><span style="font-weight:600;color:var(--wf-accent);">OPP-20248</span></div>
+            <div style="display:flex;justify-content:space-between;"><span style="color:var(--wf-muted);">Account</span><span style="font-weight:600;">Meridian Capital</span></div>
+            <div style="display:flex;justify-content:space-between;"><span style="color:var(--wf-muted);">Total MRC</span><span style="font-weight:700;color:var(--wf-ink);">$19,200/mo</span></div>
+            <div style="display:flex;justify-content:space-between;"><span style="color:var(--wf-muted);">Contract</span><span style="font-weight:600;">24 months</span></div>
+            <div style="display:flex;justify-content:space-between;"><span style="color:var(--wf-muted);">IBX</span><span style="font-weight:600;">SV5 — Silicon Valley</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">Key Contacts</div></div>
+        <div class="card-body">
+          <div class="contact-row">
+            <div class="contact-avatar" style="background:#2e7d32;">OM</div>
+            <div class="contact-info">
+              <div class="contact-name">Alex Danvers</div>
+              <div class="contact-role">Order Management</div>
+            </div>
+            <a href="#" class="contact-action">Email</a>
+          </div>
+          <div class="contact-row">
+            <div class="contact-avatar" style="background:var(--wf-accent);">MC</div>
+            <div class="contact-info">
+              <div class="contact-name">Marcus Chen</div>
+              <div class="contact-role">PSM — CloudBridge</div>
+            </div>
+            <a href="#" class="contact-action">Email</a>
+          </div>
+          <div class="contact-row">
+            <div class="contact-avatar" style="background:#8b7745;">SR</div>
+            <div class="contact-info">
+              <div class="contact-name">Steve Rogers</div>
+              <div class="contact-role">Partner Rep — CloudBridge</div>
+            </div>
+            <a href="#" class="contact-action">Email</a>
+          </div>
+          <div class="contact-row">
+            <div class="contact-avatar" style="background:#6b7280;">MH</div>
+            <div class="contact-info">
+              <div class="contact-name">Maria Hill</div>
+              <div class="contact-role">Customer — Meridian Capital</div>
+            </div>
+            <a href="#" class="contact-action">Email</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header"><div class="card-title">Partner Visibility</div></div>
+        <div class="card-body" style="font-size:13px;">
+          <div style="color:var(--wf-muted);margin-bottom:10px;">CloudBridge Inc. can see order status in their Partner Connect Portal. They cannot see internal IBX notes or OM queue.</div>
+          <div style="display:flex;justify-content:space-between;font-size:12px;border-top:1px solid var(--wf-canvas);padding-top:10px;">
+            <span style="color:var(--wf-muted);">Partner last viewed</span>
+            <span style="font-weight:600;">Mar 12, 2026</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /sidebar -->
+
+  </div><!-- /layout -->
+
+</div><!-- /page-container -->
+
+<script src="wf-nav.js"></script>
+</body>
+</html>

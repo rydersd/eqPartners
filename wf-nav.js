@@ -27,7 +27,15 @@
       persona: 'ae',
       personaLabel: 'AE',
       personaName: '— Equinix',
-      items: []
+      items: [
+        {
+          file: 'ae-opportunities', label: 'Opportunities',
+          children: [
+            { file: 'ae-ordering',     label: 'Create Order' },
+            { file: 'ae-fulfillment',  label: 'Fulfillment' }
+          ]
+        }
+      ]
     },
     {
       id: 'psm',
