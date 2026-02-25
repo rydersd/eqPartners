@@ -4,7 +4,7 @@
 <script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome — Partner Admin Setup · Equinix Partner Manager Portal</title>
+    <title>Account Setup · Equinix Partner Manager Portal</title>
     <link rel="stylesheet" href="wireframe.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -364,15 +364,15 @@
 
     <!-- Wizard exit bar -->
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;padding:10px 0;">
-      <span style="font-size:13px;color:var(--wf-muted,#6b7f99);font-weight:600;">Admin Setup · Step 4 of 5</span>
-      <a href="pm-home-dashboard.html" style="font-size:12px;color:var(--wf-accent,#3d6daa);text-decoration:none;font-weight:600;display:flex;align-items:center;gap:4px;" aria-label="Exit setup wizard and go to dashboard">
-        Skip setup, go to dashboard
+      <span style="font-size:13px;color:var(--wf-muted,#6b7f99);font-weight:600;">Account Setup · Step 4 of 4</span>
+      <a href="pm-home-day0.html" style="font-size:12px;color:var(--wf-accent,#3d6daa);text-decoration:none;font-weight:600;display:flex;align-items:center;gap:4px;" aria-label="Exit setup wizard and go to dashboard">
+        Skip to dashboard
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M2 6h8M7 3l3 3-3 3"/></svg>
       </a>
     </div>
 
     <!-- Step Indicator -->
-    <div class="step-indicator" role="progressbar" aria-valuenow="4" aria-valuemin="1" aria-valuemax="5" aria-label="Admin Setup Progress">
+    <div class="step-indicator" role="progressbar" aria-valuenow="4" aria-valuemin="1" aria-valuemax="4" aria-label="Account Setup Progress">
         <div class="step completed">
             <div class="step-number" aria-hidden="true"></div>
             <div class="step-label">Welcome</div>
@@ -387,10 +387,6 @@
         </div>
         <div class="step active" aria-current="step">
             <div class="step-number" aria-hidden="true">4</div>
-            <div class="step-label">Set Up Your Team</div>
-        </div>
-        <div class="step pending">
-            <div class="step-number" aria-hidden="true">5</div>
             <div class="step-label">Ready to Go</div>
         </div>
     </div>
@@ -442,206 +438,22 @@
         </div>
     </div>
 
-    <!-- ── Step 4: Set Up Your Team (Expanded / Active) ── -->
-    <div class="content-card" aria-label="Step 4: Set Up Your Team — Current Step">
+    <!-- ── Step 4: Ready to Go (Expanded / Active) ── -->
+    <div class="content-card" aria-label="Step 4: Ready to Go — Current Step">
         <div class="card-header">
-            <div class="card-title">Set Up Your Team</div>
-            <div class="card-subtitle">Step 4 of 5 — Learn how to manage your org in Partner Manager Portal</div>
-        </div>
-        <div class="card-content">
-
-            <div class="info-callout" role="note">
-                <strong>You're the admin.</strong> As the Portal Administrator for CloudBridge Solutions, you control who has access to this portal, what they can see, and what they're required to complete. The sections below walk you through the key tools at your disposal.
-            </div>
-
-            <!-- 4a: Invite Your Team -->
-            <div class="orient-section">
-                <div class="orient-header">
-                    <div class="orient-icon users" aria-hidden="true">👥</div>
-                    <div class="orient-title">Invite Your Team</div>
-                </div>
-                <div class="orient-body">
-                    <p>Add reps and other users to your org. Each person you invite gets their own login and lands in the Rep Portal with role-appropriate access. You can invite one at a time or send bulk invitations by uploading a CSV.</p>
-                    <ul class="action-list">
-                        <li>Send individual invitations with role assignment (Sales Rep, SE, Marketing)</li>
-                        <li>Upload a CSV to invite multiple users at once — first name, last name, email, role</li>
-                        <li>Track invitation status: Sent, Opened, Accepted, Pending</li>
-                        <li>Resend or revoke invitations at any time from Team Management</li>
-                    </ul>
-                    <div class="invite-box" style="margin-top:14px;">
-                        <div style="font-size:12px;font-weight:600;color:var(--wf-text,#3b4f68);margin-bottom:10px;">Quick Invite — try it now</div>
-                        <div class="form-row" style="margin-bottom:10px;">
-                            <div>
-                                <label for="invite-email" style="font-size:12px;margin-bottom:4px;">Email address</label>
-                                <input type="email" id="invite-email" placeholder="colleague@cloudbridge.io">
-                            </div>
-                            <div>
-                                <label for="invite-role" style="font-size:12px;margin-bottom:4px;">Role</label>
-                                <select id="invite-role">
-                                    <option value="" selected>Select role…</option>
-                                    <option value="sales-rep">Sales Rep / Account Executive</option>
-                                    <option value="se">Solutions Engineer</option>
-                                    <option value="marketing">Marketing</option>
-                                    <option value="exec">Executive / Observer</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div style="display:flex;gap:8px;align-items:center;">
-                            <button class="btn btn-secondary" onclick="addInvite()" style="font-size:12px;padding:7px 14px;">+ Add to list</button>
-                            <button class="btn btn-link" style="font-size:12px;" onclick="showBulkUpload()">Upload CSV instead</button>
-                        </div>
-                        <div id="invite-tags" style="margin-top:10px;min-height:28px;">
-                            <span class="invite-tag">s.rogers@cloudbridge.io — Sales Rep <span class="remove" aria-label="Remove" role="button" tabindex="0">×</span></span>
-                            <span class="invite-tag">t.stark@cloudbridge.io — Solutions Engineer <span class="remove" aria-label="Remove" role="button" tabindex="0">×</span></span>
-                        </div>
-                        <div class="invite-count">2 invitations queued — will be sent when you complete setup</div>
-                        <a href="pm-team-management.html" class="action-link" style="display:inline-block;margin-top:8px;">Go to Team Management →</a>
-                    </div>
-                </div>
-            </div>
-
-            <hr class="orient-divider" aria-hidden="true">
-
-            <!-- 4b: Assign Training -->
-            <div class="orient-section">
-                <div class="orient-header">
-                    <div class="orient-icon train" aria-hidden="true">🎓</div>
-                    <div class="orient-title">Assign Training &amp; Certifications</div>
-                </div>
-                <div class="orient-body">
-                    <p>Every rep you invite starts with a default training track based on their role. You can customize assignments, add or remove courses, and set due dates. Certifications earned by your team count toward your org's tier status.</p>
-                    <ul class="action-list">
-                        <li>Required courses auto-assign when you create a user — portal handles it for you</li>
-                        <li>Add supplemental courses from the catalog to any rep at any time</li>
-                        <li>Set or extend due dates on individual assignments</li>
-                        <li>Track completion rates per person on the Training Dashboard</li>
-                        <li>Certifications (e.g., Equinix Interconnect Certified) appear on rep profiles and contribute to tier advancement</li>
-                    </ul>
-                    <a href="pm-team-training.html" class="action-link" style="display:inline-block;margin-top:10px;">Go to Training Management →</a>
-                </div>
-            </div>
-
-            <hr class="orient-divider" aria-hidden="true">
-
-            <!-- 4c: Partnership Tiers -->
-            <div class="orient-section">
-                <div class="orient-header">
-                    <div class="orient-icon tier" aria-hidden="true">🏆</div>
-                    <div class="orient-title">Your Partnership Tier &amp; Benefits</div>
-                </div>
-                <div class="orient-body">
-                    <p>CloudBridge Solutions is currently a <strong>Bronze Partner.</strong> Your tier determines the benefits, deal registration commission rates, MDF budget, and co-selling resources your org can access. Here's how the tiers compare:</p>
-                    <table class="tier-table" role="table" aria-label="Partnership tier comparison">
-                        <thead>
-                            <tr>
-                                <th scope="col">Tier</th>
-                                <th scope="col">Min. Revenue</th>
-                                <th scope="col">Deal Reg Uplift</th>
-                                <th scope="col">MDF Budget</th>
-                                <th scope="col">PSM Access</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="tier-current">
-                                <td><span class="tier-badge bronze">● Bronze</span> <span style="font-size:11px;color:var(--wf-accent,#3d6daa);font-weight:600;">← You are here</span></td>
-                                <td>$0</td>
-                                <td>+5%</td>
-                                <td>$2,500</td>
-                                <td>Shared queue</td>
-                            </tr>
-                            <tr>
-                                <td><span class="tier-badge silver">● Silver</span></td>
-                                <td>$250K ARR</td>
-                                <td>+10%</td>
-                                <td>$10,000</td>
-                                <td>Named PSM</td>
-                            </tr>
-                            <tr>
-                                <td><span class="tier-badge gold">● Gold</span></td>
-                                <td>$750K ARR</td>
-                                <td>+15%</td>
-                                <td>$25,000</td>
-                                <td>Named PSM + SE</td>
-                            </tr>
-                            <tr>
-                                <td><span class="tier-badge platinum">● Platinum</span></td>
-                                <td>$2M ARR</td>
-                                <td>+20%</td>
-                                <td>$75,000</td>
-                                <td>Dedicated team</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <p style="margin-top:10px;font-size:12px;color:var(--wf-muted,#6b7f99);">Tier is re-evaluated quarterly. Training completions, active certifications, and deal volume all factor into tier advancement. Your PSM can provide a roadmap to Silver.</p>
-                    <a href="pm-home-dashboard.html" class="action-link" style="display:inline-block;margin-top:8px;">View Partnership Health Dashboard →</a>
-                </div>
-            </div>
-
-            <hr class="orient-divider" aria-hidden="true">
-
-            <!-- 4d: Deal Registration -->
-            <div class="orient-section">
-                <div class="orient-header">
-                    <div class="orient-icon deals" aria-hidden="true">📋</div>
-                    <div class="orient-title">Deal Registration &amp; Pipeline</div>
-                </div>
-                <div class="orient-body">
-                    <p>Your reps register deals through the Rep Portal. You see every deal in your org's pipeline here, can track approval status, and co-register on behalf of a rep when needed.</p>
-                    <ul class="action-list">
-                        <li>Deals move through: Draft → Submitted → Under Review → Approved / Rejected</li>
-                        <li>Approved deals lock the commission uplift for your org — timing matters</li>
-                        <li>Submit a deal on behalf of a rep from the Deals tab in this portal</li>
-                        <li>Revenue and commissions roll up on your Partnership Health dashboard</li>
-                        <li>Expired deals (no activity in 90 days) auto-close — set reminders for your team</li>
-                    </ul>
-                    <a href="pm-deals-revenue.html" class="action-link" style="display:inline-block;margin-top:10px;">Go to Deals &amp; Revenue →</a>
-                </div>
-            </div>
-
-            <hr class="orient-divider" aria-hidden="true">
-
-            <!-- 4e: MDF -->
-            <div class="orient-section">
-                <div class="orient-header">
-                    <div class="orient-icon mdf" aria-hidden="true">💰</div>
-                    <div class="orient-title">Market Development Funds (MDF)</div>
-                </div>
-                <div class="orient-body">
-                    <p>As a Bronze Partner, CloudBridge Solutions has <strong>$2,500</strong> in MDF available for co-marketing activities. MDF can be used for events, digital campaigns, co-branded materials, or customer demos. You submit a request, Equinix approves it, and you get reimbursed after submitting proof of performance.</p>
-                    <ul class="action-list">
-                        <li>Submit an MDF request with activity description, expected reach, and budget breakdown</li>
-                        <li>Approval typically takes 5–7 business days; your PSM can expedite</li>
-                        <li>After the activity, submit a Proof of Performance (PoP) to receive reimbursement</li>
-                        <li>Unused MDF does not roll over — plan activities early in each quarter</li>
-                    </ul>
-                    <a href="pm-mdf-comarketing.html" class="action-link" style="display:inline-block;margin-top:10px;">Go to MDF &amp; Co-Marketing →</a>
-                </div>
-            </div>
-
-            <div class="button-group" style="margin-top:28px;border-top:1px solid var(--wf-surface,#edf1f7);padding-top:20px;">
-                <button class="btn btn-primary" onclick="goToStep5()" aria-label="Continue to Step 5: Ready to Go">Continue to Ready to Go →</button>
-                <button class="btn btn-secondary" onclick="saveAndContinueLater()">Save &amp; Finish Later</button>
-                <button class="btn btn-link" onclick="skipStep()">Skip this step</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ── Step 5: Ready to Go ── -->
-    <div class="content-card" aria-label="Step 5: Ready to Go">
-        <div class="card-header">
-            <div class="card-title">Portal is Ready — You're in Charge</div>
-            <div class="card-subtitle">Step 5 of 5 — Setup complete</div>
+            <div class="card-title">You're all set — welcome to Partner Central</div>
+            <div class="card-subtitle">Step 4 of 4 — Setup complete</div>
         </div>
         <div class="card-content">
             <p style="color:var(--wf-muted,#6b7f99);font-size:13px;margin-bottom:20px;">
-                Your admin account is active. Invited team members will receive their welcome emails and can begin onboarding. You can manage users, review deal registrations, and configure MDF programs from your dashboard — or return to any setup step from your profile settings.
+                Your account is active and your MFA is configured. Your portal admin has been notified that you've joined. You'll find your training assignments, deal registration tools, and resources waiting on your dashboard.
             </p>
             <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
-              <a href="pm-home-dashboard.html" class="btn btn-primary" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;">
+              <a href="pm-home-day0.html" class="btn btn-primary" style="text-decoration:none;display:inline-flex;align-items:center;gap:6px;">
                 Go to Dashboard
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4"/></svg>
               </a>
-              <a href="pm-team-management.html" style="font-size:13px;color:var(--wf-accent,#3d6daa);text-decoration:none;font-weight:500;">Manage your team →</a>
+              <a href="pm-team-training.html" style="font-size:13px;color:var(--wf-accent,#3d6daa);text-decoration:none;font-weight:500;">View my training →</a>
             </div>
         </div>
     </div>
@@ -688,49 +500,8 @@
 
 <!-- ── Script ── -->
 <script>
-    function goToStep5() {
-        alert('Step 4 complete! Queued invitations will be sent and you\'ll proceed to your portal dashboard.');
-        // In production: mark step complete, advance wizard state, redirect to pm-home-dashboard.html
-    }
-
-    function saveAndContinueLater() {
-        alert('Progress saved. You can return to complete setup from your dashboard at any time.');
-    }
-
-    function skipStep() {
-        if (confirm('Skip portal orientation? You can access all these features from your dashboard any time.')) {
-            window.location.href = 'pm-home-dashboard.html';
-        }
-    }
-
-    function addInvite() {
-        const emailInput = document.getElementById('invite-email');
-        const roleInput  = document.getElementById('invite-role');
-        const container  = document.getElementById('invite-tags');
-        if (!emailInput.value || !roleInput.value) {
-            alert('Please enter an email address and select a role.');
-            return;
-        }
-        const tag = document.createElement('span');
-        tag.className = 'invite-tag';
-        tag.innerHTML = emailInput.value + ' — ' + roleInput.options[roleInput.selectedIndex].text +
-            ' <span class="remove" aria-label="Remove" role="button" tabindex="0" onclick="this.parentElement.remove()">×</span>';
-        container.appendChild(tag);
-        emailInput.value = '';
-        roleInput.value  = '';
-    }
-
-    function showBulkUpload() {
-        alert('In production: opens a CSV upload dialog. Template: first_name, last_name, email, role');
-    }
-
-    // Keyboard support for invite tags
-    document.addEventListener('keydown', function(e) {
-        if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('remove')) {
-            e.preventDefault();
-            e.target.parentElement.remove();
-        }
-    });
+    // In production: on "Go to Dashboard" click, set User.IsFirstLogin__c = false
+    // and redirect to pm-home-day0.html
 </script>
 
 <!-- ── Spec Panel ── -->
@@ -741,7 +512,7 @@
   </div>
   <div class="spec-panel-bd">
     <h3>Summary</h3>
-    <p>First-login onboarding wizard for the Partner Admin user — the first person from a partner org to activate their account after the partner application is approved. Jordan Reeves (jordan.reeves@cloudbridge.io), Portal Admin at CloudBridge Solutions. Five-step wizard: Welcome → Security Setup → Profile → Set Up Your Team (admin orientation) → Ready to Go. The portal orientation step is the differentiator from the Rep first-login: it covers team invitations, training assignment, tier economics, deal registration concepts, and MDF access.</p>
+    <p>First-login account setup for invited users — reps and secondary admins who join a partner org via invitation. Four-step flow: Welcome → Security Setup (MFA) → Your Profile → Ready to Go. MFA is required at this step because invited users haven't gone through the main onboarding wizard. Team setup and admin orientation are handled by the org admin (Jordan) in the onboarding-wizard.html flow — not here.</p>
     <hr class="spec-divider">
     <h3>Jobs to Be Done</h3>
     <ul>
@@ -753,13 +524,12 @@
     </ul>
     <hr class="spec-divider">
     <h3>Design Specification</h3>
-    <h4>Step 4 — Set Up Your Team (Admin-Specific)</h4>
+    <h4>Step 4 — Ready to Go</h4>
     <ul>
-      <li>Five orientation blocks, each collapsible: Invite Team, Assign Training, Tier Benefits, Deal Registration, MDF</li>
-      <li>Inline quick-invite form: email + role dropdown + add-to-queue. Tagged list shows queued invites. Invitations send on wizard completion.</li>
-      <li>Tier table: 4 tiers × 5 columns (Min Revenue, Deal Reg Uplift, MDF Budget, PSM Access). Current row highlighted.</li>
-      <li>Each section links to its respective portal page for deeper exploration</li>
-      <li>Save &amp; Finish Later preserves wizard state in User.Onboarding_Step__c</li>
+      <li>Confirmation state showing setup complete for invited users</li>
+      <li>On "Go to Dashboard" click: User.IsFirstLogin__c → false; redirect to pm-home-day0.html</li>
+      <li>Links to Training (first task most invited reps need) as a secondary CTA</li>
+      <li>Team setup / admin orientation removed — that's the org admin's job in onboarding-wizard.html</li>
     </ul>
     <h4>Navigation</h4>
     <ul>

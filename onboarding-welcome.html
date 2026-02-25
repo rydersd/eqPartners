@@ -101,41 +101,52 @@
     <div class="welcome-hero" role="region" aria-label="Welcome to Partner Central">
       <div class="welcome-badge">&#10003; Enrollment complete &nbsp;&middot;&nbsp; You're authenticated</div>
       <h1>You're in. Welcome to Partner Central.</h1>
-      <p>Your account is active. Take a few minutes to set up your team, assign training, and configure your deal defaults — or head straight to the dashboard and come back when it works for you.</p>
+      <p>Your account is active. Let's get CloudBridge Solutions configured — set up MFA, sign the agreement, invite your team, and configure deal defaults. Takes about 15 minutes and unlocks everything.</p>
       <div class="hero-ctas">
-        <a href="onboarding-wizard.html" class="hero-btn">Set up your account (~10 min) &rarr;</a>
-        <a href="pm-home-day0.html" class="hero-btn-ghost">Skip to dashboard</a>
+        <a href="onboarding-wizard.html" class="hero-btn">Start account setup (~15 min) &rarr;</a>
       </div>
-      <p class="skip-note">You can return to setup any time from <strong>My Account &rarr; Getting Started</strong></p>
+      <p class="skip-note">Not ready? <a href="pm-home-day0.html" style="color:rgba(255,255,255,0.6);text-decoration:underline;">Skip to dashboard</a> — you can return to setup any time from <strong>My Account &rarr; Getting Started</strong></p>
     </div>
 
     <!-- What you'll set up in the wizard -->
     <div class="section-card">
       <h2>What you'll set up</h2>
-      <p class="subtitle">Four areas, about 10 minutes total. You can skip any step and finish it later.</p>
-      <div class="setup-grid">
+      <p class="subtitle">Seven steps, about 15 minutes total. You can skip any step and finish it later.</p>
+      <div class="setup-grid" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="setup-card">
+          <span class="setup-card-icon" aria-hidden="true">&#128274;</span>
+          <div class="setup-card-title">Security</div>
+          <p class="setup-card-desc">Set up multi-factor authentication for your account. Required before deal submissions.</p>
+          <span class="setup-time">~2 min</span>
+        </div>
         <div class="setup-card">
           <span class="setup-card-icon" aria-hidden="true">&#127970;</span>
           <div class="setup-card-title">Organization Profile</div>
-          <p class="setup-card-desc">Confirm your company details, add tax IDs if needed, and choose the Equinix products and regions you'll focus on. This data powers your deal registrations and partner profile.</p>
+          <p class="setup-card-desc">Confirm your company details and the Equinix products and regions you'll focus on.</p>
           <span class="setup-time">~3 min</span>
+        </div>
+        <div class="setup-card">
+          <span class="setup-card-icon" aria-hidden="true">&#128196;</span>
+          <div class="setup-card-title">Contract</div>
+          <p class="setup-card-desc">Review and sign the Partner Program Agreement. Equinix countersigns — usually within one business day.</p>
+          <span class="setup-time">~2 min</span>
+        </div>
+        <div class="setup-card">
+          <span class="setup-card-icon" aria-hidden="true">&#127968;</span>
+          <div class="setup-card-title">Tax &amp; Banking</div>
+          <p class="setup-card-desc">Add tax IDs and payment details for MDF reimbursements and invoicing. Required for MDF access.</p>
+          <span class="setup-time">~2 min</span>
         </div>
         <div class="setup-card">
           <span class="setup-card-icon" aria-hidden="true">&#128101;</span>
           <div class="setup-card-title">Your Team</div>
-          <p class="setup-card-desc">Invite colleagues who need Partner Central access and assign each person a role. Invitations go out with portal credentials once you finish setup.</p>
-          <span class="setup-time">~2 min</span>
-        </div>
-        <div class="setup-card">
-          <span class="setup-card-icon" aria-hidden="true">&#127891;</span>
-          <div class="setup-card-title">Training Paths</div>
-          <p class="setup-card-desc">We'll suggest role-based learning curricula for each team member based on how you've assigned them. Account Executives, Portal Admins, and Technical users each get a tailored track. You can adjust before invites go out.</p>
+          <p class="setup-card-desc">Invite colleagues and assign roles. Invitations go out with portal credentials once you complete setup.</p>
           <span class="setup-time">~2 min</span>
         </div>
         <div class="setup-card">
           <span class="setup-card-icon" aria-hidden="true">&#128202;</span>
-          <div class="setup-card-title">Deals &amp; Marketing</div>
-          <p class="setup-card-desc">Learn how deal registration works, set your default currency, and see what co-marketing and MDF resources are available to you. Mostly orientation — takes just a few minutes.</p>
+          <div class="setup-card-title">Deals &amp; Preferences</div>
+          <p class="setup-card-desc">Learn how deal registration works, set your currency default, and configure notification preferences.</p>
           <span class="setup-time">~3 min</span>
         </div>
       </div>

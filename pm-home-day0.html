@@ -220,6 +220,49 @@
     }
     .iag-tip { text-decoration: underline dotted; cursor: help; }
 
+    /* ── MFA nag banner ──────────────────────────────────── */
+    .mfa-nag {
+      background: #fffbeb; border: 1px solid #f59e0b;
+      border-left: 4px solid #d97706; border-radius: 8px;
+      padding: 14px 20px; margin-bottom: 16px;
+      display: flex; align-items: center; gap: 14px;
+    }
+    .mfa-nag-icon { font-size: 20px; flex-shrink: 0; }
+    .mfa-nag-body { flex: 1; }
+    .mfa-nag-title { font-size: 13px; font-weight: 700; color: #92400e; }
+    .mfa-nag-desc  { font-size: 12px; color: #92400e; opacity: 0.85; margin-top: 2px; line-height: 1.4; }
+    .mfa-nag-cta {
+      font-size: 12px; font-weight: 700;
+      background: #d97706; color: white;
+      padding: 6px 14px; border-radius: 4px;
+      text-decoration: none; white-space: nowrap; flex-shrink: 0;
+    }
+    .mfa-nag-cta:hover { background: #b45309; }
+
+    /* ── Countersign notification ─────────────────────── */
+    .countersign-banner {
+      background: #d1fae5; border: 1px solid #34d399;
+      border-left: 4px solid #059669; border-radius: 8px;
+      padding: 14px 20px; margin-bottom: 16px;
+      display: none; align-items: center; gap: 14px;
+    }
+    .countersign-banner.visible { display: flex; }
+    .cs-icon { font-size: 22px; flex-shrink: 0; }
+    .cs-body { flex: 1; }
+    .cs-title { font-size: 13px; font-weight: 700; color: #065f46; }
+    .cs-desc  { font-size: 12px; color: #065f46; opacity: 0.85; margin-top: 2px; line-height: 1.4; }
+    .cs-cta {
+      font-size: 12px; font-weight: 700;
+      background: #059669; color: white;
+      padding: 6px 14px; border-radius: 4px;
+      text-decoration: none; white-space: nowrap; flex-shrink: 0;
+    }
+    .cs-cta:hover { background: #047857; }
+    .contract-pending-note {
+      font-size: 11px; color: rgba(255,255,255,0.7);
+      margin-bottom: 4px; font-style: italic;
+    }
+
     /* ── Spec panel ───────────────────────────────────────── */
     .spec-tab-anchor { position: fixed; right: 0; top: 50%; transform: translateY(-50%); z-index: 200; }
     .spec-tab-btn {
@@ -294,6 +337,26 @@
 
 <div class="container">
 
+  <!-- MFA nag — shown when MFA (wizard step 1) was skipped or not started -->
+  <div class="mfa-nag" id="mfa-nag-banner" role="alert" aria-live="assertive" style="display:none;">
+    <span class="mfa-nag-icon" aria-hidden="true">🔐</span>
+    <div class="mfa-nag-body">
+      <div class="mfa-nag-title">Multi-factor authentication is not set up</div>
+      <div class="mfa-nag-desc">MFA is required before submitting deal registrations. Set it up now to keep your account secure and your deals moving.</div>
+    </div>
+    <a href="onboarding-wizard.html#step-1" class="mfa-nag-cta">Set up MFA →</a>
+  </div>
+
+  <!-- Countersign notification — hidden until 15s demo timer fires -->
+  <div class="countersign-banner" id="countersign-banner" role="status" aria-live="polite">
+    <span class="cs-icon" aria-hidden="true">🎉</span>
+    <div class="cs-body">
+      <div class="cs-title">Your partner agreement has been countersigned by Equinix</div>
+      <div class="cs-desc">Your partnership is now active. Continue your setup to unlock deal registration and MDF funds.</div>
+    </div>
+    <a href="onboarding-wizard.html#step-4" class="cs-cta">Continue setup →</a>
+  </div>
+
   <!-- Welcome banner -->
   <div class="welcome-banner" role="banner">
     <div>
@@ -301,10 +364,11 @@
       <div class="company-info">CloudBridge Technologies Inc. · Portal Admin</div>
       <div class="company-meta">First login · 2 user requests pending approval</div>
     </div>
-    <div class="setup-cta-block" role="status" aria-label="Setup progress: 1 of 4 steps complete">
-      <div class="setup-cta-label">Setup progress — 1 of 4 steps</div>
-      <div class="setup-cta-bar"><div class="setup-cta-fill"></div></div>
-      <a href="psm-contracts.html" class="setup-cta-link">Continue setup →</a>
+    <div class="setup-cta-block" id="setup-cta-block" role="status" aria-label="Setup progress">
+      <div class="setup-cta-label" id="setup-cta-label">Setup progress — Step 2 of 7</div>
+      <div class="contract-pending-note" id="contract-pending-note" style="display:none;" aria-live="polite">⏳ Waiting for Equinix countersignature</div>
+      <div class="setup-cta-bar"><div class="setup-cta-fill" id="setup-cta-fill" style="width:14%;"></div></div>
+      <a href="onboarding-wizard.html#step-2" class="setup-cta-link" id="setup-cta-link">Continue setup →</a>
     </div>
   </div>
 
@@ -361,7 +425,7 @@
 
           <div class="setup-footer">
             <span class="setup-pct">1 of 4 complete (25%)</span>
-            <a href="psm-contracts.html" style="font-size:12px;font-weight:600;color:var(--wf-accent,#3d6daa);text-decoration:none;">Next step →</a>
+            <a href="onboarding-wizard.html" id="setup-footer-link" style="font-size:12px;font-weight:600;color:var(--wf-accent,#3d6daa);text-decoration:none;">Continue setup →</a>
           </div>
 
           <div class="ec-note" role="note">
@@ -716,12 +780,86 @@
 </div>
 
 <script>
+  /* ── Spec panel ─────────────────────────────────────── */
   function toggleSpec() {
     const panel  = document.getElementById('spec-panel');
     const toggle = document.getElementById('spec-toggle');
     const open   = panel.classList.toggle('open');
     toggle.setAttribute('aria-expanded', open);
   }
+
+  /* ── Onboarding state banners ───────────────────────── */
+  (function() {
+    const TOTAL = 7;
+
+    // Read wizard progress from localStorage
+    let currentStep = 1;
+    try {
+      const s = localStorage.getItem('pcp-wizard-step');
+      if (s) currentStep = Math.max(1, Math.min(parseInt(s, 10) || 1, TOTAL));
+    } catch(e) {}
+
+    let skippedSteps = new Set();
+    try {
+      const s = localStorage.getItem('pcp-onboarding-skipped');
+      if (s) JSON.parse(s).forEach(function(n){ skippedSteps.add(Number(n)); });
+    } catch(e) {}
+
+    const contractPending = (function(){
+      try { return localStorage.getItem('pcp-contract-pending') === '1'; } catch(e) { return false; }
+    })();
+
+    // MFA nag: show when wizard hasn't started OR step 1 was skipped
+    const mfaNotDone = (currentStep <= 1) || skippedSteps.has(1);
+    if (mfaNotDone) {
+      var nag = document.getElementById('mfa-nag-banner');
+      if (nag) nag.style.display = 'flex';
+    }
+
+    // Update setup CTA block
+    var pct   = Math.round(((currentStep - 1) / TOTAL) * 100);
+    var label = document.getElementById('setup-cta-label');
+    var fill  = document.getElementById('setup-cta-fill');
+    var link  = document.getElementById('setup-cta-link');
+    var footerLink = document.getElementById('setup-footer-link');
+    var pendingNote = document.getElementById('contract-pending-note');
+    var ctaBlock = document.getElementById('setup-cta-block');
+
+    if (label) label.textContent = 'Setup progress \u2014 Step ' + currentStep + ' of ' + TOTAL;
+    if (fill)  fill.style.width  = pct + '%';
+    if (link)  link.setAttribute('href', 'onboarding-wizard.html#step-' + currentStep);
+    if (footerLink) footerLink.setAttribute('href', 'onboarding-wizard.html#step-' + currentStep);
+    if (ctaBlock) ctaBlock.setAttribute('aria-label', 'Setup progress: step ' + currentStep + ' of ' + TOTAL);
+
+    // Contract pending state
+    if (contractPending) {
+      if (pendingNote) pendingNote.style.display = 'block';
+      if (link) {
+        link.textContent = 'View contract status \u2192';
+        link.setAttribute('href', 'onboarding-wizard.html#step-3');
+      }
+
+      // 15-second demo timer — simulates Equinix countersigning
+      setTimeout(function() {
+        try { localStorage.removeItem('pcp-contract-pending'); } catch(e) {}
+
+        // Hide pending note, restore normal CTA
+        if (pendingNote) pendingNote.style.display = 'none';
+        if (link) {
+          link.textContent = 'Continue setup \u2192';
+          link.setAttribute('href', 'onboarding-wizard.html#step-4');
+        }
+        if (footerLink) footerLink.setAttribute('href', 'onboarding-wizard.html#step-4');
+
+        // Show countersign notification banner
+        var banner = document.getElementById('countersign-banner');
+        if (banner) {
+          banner.classList.add('visible');
+          banner.setAttribute('role', 'alert'); // upgrade to alert for screen readers
+        }
+      }, 15000);
+    }
+  })();
 </script>
 </body>
 </html>
