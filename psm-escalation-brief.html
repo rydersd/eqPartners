@@ -84,6 +84,15 @@ nav a.active{background:var(--wf-accent);color:#fff;}
 .badge-green{background:#e5f7ee;color:#1d7a4e;}
 .badge-gray{background:var(--wf-surface);color:var(--wf-text);}
 
+/* License split note */
+.license-note{border-radius:5px;padding:.625rem .75rem;font-size:.75rem;line-height:1.5;margin-bottom:.875rem;}
+.license-note.licensed{background:#f0f5ff;border:1px solid #c0d4f0;color:#2b5797;}
+.license-note.fallback{background:#fff8e8;border:1px solid #e0c050;color:#6b4c00;}
+.license-note strong{font-weight:700;}
+.license-toggle{display:flex;gap:0;margin-bottom:.875rem;border-radius:5px;overflow:hidden;border:1px solid var(--wf-line);}
+.license-toggle button{flex:1;padding:.375rem .5rem;font-size:.6875rem;font-weight:700;font-family:inherit;cursor:pointer;border:none;background:var(--wf-surface);color:var(--wf-text);transition:background .15s;}
+.license-toggle button.active{background:var(--wf-accent);color:#fff;}
+
 /* Einstein spec panel */
 .einstein-panel{background:#f5f0ff;border:2px solid #9b59b6;border-radius:8px;padding:1rem 1.25rem;margin-top:1.25rem;}
 .einstein-panel h3{font-size:.9375rem;font-weight:700;color:#6b21a8;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem;}
@@ -357,9 +366,25 @@ nav a.active{background:var(--wf-accent);color:#fff;}
     <!-- Generation status -->
     <div class="card">
       <div class="card-hdr" style="background:#f5f0ff;border-color:#c4b5fd;">
-        <span class="card-title" style="color:#6b21a8;">✦ Einstein Document Generation</span>
+        <span class="card-title" style="color:#6b21a8;">✦ Brief Generation</span>
       </div>
       <div class="card-body" style="font-size:.8125rem;">
+
+        <!-- ⚙ Design note: Einstein vs. fallback -->
+        <div style="margin-bottom:.875rem;">
+          <div style="font-size:.6875rem;font-weight:700;text-transform:uppercase;color:var(--wf-text);letter-spacing:.04em;margin-bottom:.375rem;">⚙ Design Note — Two Paths</div>
+          <div class="license-toggle" role="group" aria-label="License scenario toggle">
+            <button class="active" onclick="showLicensed()" aria-pressed="true">Einstein licensed</button>
+            <button onclick="showFallback()" aria-pressed="false">No Einstein license</button>
+          </div>
+          <div id="note-licensed" class="license-note licensed">
+            <strong>Einstein Document Generation (Summer '24+).</strong> PSM clicks "Generate with Einstein." The system calls the <code>PTMPL-ESCALATION-BRIEF-V2</code> prompt template, pulls live data from <code>Escalation__c</code>, <code>Account</code>, <code>Deal_Registration__c</code>, and <code>Activity</code>, and generates: (1) synthesized narrative in each section, (2) AI-written talking points with coaching notes. PSM reviews in a preview modal, edits inline if needed, then downloads or emails the PDF. The button label reads <strong>"✦ Generate with Einstein."</strong>
+          </div>
+          <div id="note-fallback" class="license-note fallback" style="display:none;">
+            <strong>Fallback: Salesforce Document Builder (no AI license required).</strong> Same button, label changes to <strong>"Generate Brief PDF."</strong> The system merges field values from the same objects into a static branded PDF template — no narrative synthesis, no talking points. Sections 1 and 2 (snapshot + dispute details) are fully populated from field values. Section 3 (relationship history) is a formatted activity log dump. Section 4 (talking points) is replaced with a <strong>PSM-editable text area</strong> that PSM fills in manually before generating. Output quality is lower but the workflow and data model are identical.
+          </div>
+        </div>
+
         <div style="margin-bottom:.75rem;">
           <div style="font-size:.6875rem;font-weight:700;text-transform:uppercase;color:var(--wf-text);letter-spacing:.04em;">Status</div>
           <div style="margin-top:.25rem;"><span class="badge badge-green">Draft generated</span> · Feb 24, 2026 11:05 AM</div>
@@ -504,6 +529,22 @@ TASK: Generate four sections:
   </div>
 </div>
 
+<script>
+function showLicensed() {
+  document.getElementById('note-licensed').style.display = '';
+  document.getElementById('note-fallback').style.display = 'none';
+  var btns = document.querySelectorAll('.license-toggle button');
+  btns[0].classList.add('active'); btns[0].setAttribute('aria-pressed','true');
+  btns[1].classList.remove('active'); btns[1].setAttribute('aria-pressed','false');
+}
+function showFallback() {
+  document.getElementById('note-licensed').style.display = 'none';
+  document.getElementById('note-fallback').style.display = '';
+  var btns = document.querySelectorAll('.license-toggle button');
+  btns[1].classList.add('active'); btns[1].setAttribute('aria-pressed','true');
+  btns[0].classList.remove('active'); btns[0].setAttribute('aria-pressed','false');
+}
+</script>
 <script src="wf-nav.js"></script>
 </body>
 </html>
