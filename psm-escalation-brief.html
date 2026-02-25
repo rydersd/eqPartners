@@ -372,16 +372,16 @@ nav a.active{background:var(--wf-accent);color:#fff;}
 
         <!-- ⚙ Design note: Einstein vs. fallback -->
         <div style="margin-bottom:.875rem;">
-          <div style="font-size:.6875rem;font-weight:700;text-transform:uppercase;color:var(--wf-text);letter-spacing:.04em;margin-bottom:.375rem;">⚙ Design Note — Two Paths</div>
-          <div class="license-toggle" role="group" aria-label="License scenario toggle">
-            <button class="active" onclick="showLicensed()" aria-pressed="true">Einstein licensed</button>
-            <button onclick="showFallback()" aria-pressed="false">No Einstein license</button>
+          <div style="font-size:.6875rem;font-weight:700;text-transform:uppercase;color:var(--wf-text);letter-spacing:.04em;margin-bottom:.375rem;">⚙ Implementation Note — Einstein DocGen via Agentforce</div>
+          <div class="license-toggle" role="group" aria-label="Implementation scenario toggle">
+            <button class="active" onclick="showLicensed()" aria-pressed="true">✦ Primary: Einstein</button>
+            <button onclick="showFallback()" aria-pressed="false">Fallback (no license)</button>
           </div>
           <div id="note-licensed" class="license-note licensed">
-            <strong>Einstein Document Generation (Summer '24+).</strong> PSM clicks "Generate with Einstein." The system calls the <code>PTMPL-ESCALATION-BRIEF-V2</code> prompt template, pulls live data from <code>Escalation__c</code>, <code>Account</code>, <code>Deal_Registration__c</code>, and <code>Activity</code>, and generates: (1) synthesized narrative in each section, (2) AI-written talking points with coaching notes. PSM reviews in a preview modal, edits inline if needed, then downloads or emails the PDF. The button label reads <strong>"✦ Generate with Einstein."</strong>
+            <strong>Einstein Document Generation — confirmed via Agentforce.</strong> PSM clicks "Generate with Einstein." The system calls the <code>PTMPL-ESCALATION-BRIEF-V2</code> prompt template, pulls live data from <code>Escalation__c</code>, <code>Account</code>, <code>Deal_Registration__c</code>, and <code>Activity</code>, and generates: (1) synthesized narrative in each section, (2) AI-written talking points with coaching notes. PSM reviews in a preview modal, edits inline if needed, then downloads or emails the PDF.
           </div>
           <div id="note-fallback" class="license-note fallback" style="display:none;">
-            <strong>Fallback: Salesforce Document Builder (no AI license required).</strong> Same button, label changes to <strong>"Generate Brief PDF."</strong> The system merges field values from the same objects into a static branded PDF template — no narrative synthesis, no talking points. Sections 1 and 2 (snapshot + dispute details) are fully populated from field values. Section 3 (relationship history) is a formatted activity log dump. Section 4 (talking points) is replaced with a <strong>PSM-editable text area</strong> that PSM fills in manually before generating. Output quality is lower but the workflow and data model are identical.
+            <strong>If Einstein DocGen is unavailable:</strong> fall back to Salesforce Document Builder. Button label changes to <strong>"Generate Brief PDF."</strong> Field values merge into a static branded PDF — no AI narrative, no generated talking points. Section 4 is replaced with a PSM-editable text area. Workflow and data model are otherwise identical. This path is not expected to be needed given the Agentforce license.
           </div>
         </div>
 
@@ -494,7 +494,7 @@ TASK: Generate four sections:
 
     <h4>Salesforce Configuration Steps</h4>
     <ol>
-      <li>Enable Einstein Document Generation in Setup → Einstein → Document Generation (requires Einstein 1 or Salesforce Enterprise + AI add-on)</li>
+      <li>Enable Einstein Document Generation in Setup → Einstein → Document Generation (Agentforce license confirmed — no separate add-on needed)</li>
       <li>Create Prompt Template: Setup → Einstein → Prompt Templates → New → Type: <strong>Document Generation</strong> → Object: <code>Escalation__c</code></li>
       <li>Paste prompt template above; add merge fields using the field picker. Add related object fields via the dot-notation picker (<code>Escalation__c.Account__r.Name</code>)</li>
       <li>Associate a <strong>Document Template</strong> (PDF layout with Equinix letterhead) — use the Document Template builder or upload a DOCX template. The generated text is injected into a designated placeholder region</li>
@@ -517,7 +517,7 @@ TASK: Generate four sections:
     <h4>Estimated Effort</h4>
     <table>
       <tr><th>Task</th><th>Effort</th><th>Owner</th></tr>
-      <tr><td>Enable Einstein DocGen + license check</td><td>2h</td><td>Salesforce Admin</td></tr>
+      <tr><td>Enable Einstein DocGen in Setup (Agentforce license confirmed)</td><td>2h</td><td>Salesforce Admin</td></tr>
       <tr><td>Create Escalation__c custom object (if not exists)</td><td>1 day</td><td>SFDC Developer</td></tr>
       <tr><td>Build Prompt Template + iterate on output quality</td><td>2–3 days</td><td>PSM + SFDC Developer</td></tr>
       <tr><td>Design PDF/DOCX output template (branded)</td><td>1 day</td><td>Marketing / Designer</td></tr>
