@@ -1,0 +1,1263 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Deal Handover — Nexus IT Group — Equinix PCP Wireframes</title>
+<link rel="stylesheet" href="wireframe.css">
+<style>
+.pm-deal-handover {
+  --status-urgent: #d62828;
+  --status-success: #0a7a00;
+  --status-pending: #f77f00;
+  display: grid;
+  grid-template-columns: 280px 1fr 320px;
+  gap: 24px;
+  min-height: 100vh;
+  padding: 24px;
+  background: var(--wf-canvas);
+}
+
+.pm-dh-left-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.pm-dh-nav-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pm-dh-nav-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--wf-muted);
+  letter-spacing: 0.5px;
+  padding: 0 12px;
+}
+
+.pm-dh-nav-item {
+  padding: 10px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--wf-ink);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.2s;
+}
+
+.pm-dh-nav-item:hover {
+  background-color: rgba(0,0,0,0.04);
+}
+
+.pm-dh-nav-item.active {
+  background-color: var(--wf-accent);
+  color: white;
+  font-weight: 500;
+}
+
+.pm-dh-main {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.pm-dh-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pm-dh-breadcrumb {
+  font-size: 12px;
+  color: var(--wf-muted);
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.pm-dh-breadcrumb a {
+  color: var(--wf-accent);
+  text-decoration: none;
+}
+
+.pm-dh-breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.pm-dh-breadcrumb::before {
+  content: '';
+}
+
+.pm-dh-title {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--wf-ink);
+  line-height: 1.2;
+}
+
+.pm-dh-subtitle {
+  font-size: 14px;
+  color: var(--wf-muted);
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.pm-dh-badge-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.pm-dh-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background-color: #f0f0f0;
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--wf-ink);
+  font-weight: 500;
+}
+
+.pm-dh-badge.status-in-progress {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+/* Context card */
+.pm-dh-context-card {
+  background: white;
+  border: 1px solid var(--gray-border);
+  border-radius: 4px;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.pm-dh-context-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pm-dh-context-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--wf-muted);
+  letter-spacing: 0.5px;
+}
+
+.pm-dh-context-value {
+  font-size: 14px;
+  color: var(--wf-ink);
+}
+
+.pm-dh-context-value a {
+  color: var(--wf-accent);
+  text-decoration: none;
+}
+
+.pm-dh-context-value a:hover {
+  text-decoration: underline;
+}
+
+/* Deal handover table */
+.pm-dh-table-wrapper {
+  background: white;
+  border: 1px solid var(--gray-border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.pm-dh-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.pm-dh-table thead {
+  background-color: #f5f5f5;
+  border-bottom: 1px solid var(--gray-border);
+}
+
+.pm-dh-table th {
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--wf-ink);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.pm-dh-table tbody tr {
+  border-bottom: 1px solid var(--gray-border);
+  transition: background-color 0.2s;
+}
+
+.pm-dh-table tbody tr:hover {
+  background-color: #fafafa;
+}
+
+.pm-dh-table tbody tr.resolved {
+  background-color: #f9f9f9;
+  opacity: 0.75;
+}
+
+.pm-dh-table td {
+  padding: 16px;
+  vertical-align: middle;
+  color: var(--wf-ink);
+}
+
+.pm-dh-deal-name {
+  font-weight: 500;
+}
+
+.pm-dh-deal-name.resolved {
+  color: #888;
+  text-decoration: line-through;
+}
+
+.pm-dh-tcv {
+  text-align: right;
+  font-weight: 500;
+}
+
+.pm-dh-expires {
+  font-size: 13px;
+}
+
+.pm-dh-expires.urgent {
+  color: var(--status-urgent);
+  font-weight: 600;
+}
+
+.pm-dh-expires.expired {
+  color: #888;
+}
+
+.pm-dh-disposition {
+  font-size: 13px;
+  color: var(--wf-muted);
+}
+
+.pm-dh-transfer-to {
+  font-size: 13px;
+}
+
+.pm-dh-transfer-to.empty {
+  color: var(--status-urgent);
+  font-weight: 600;
+}
+
+.pm-dh-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: 3px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.pm-dh-status-badge.success {
+  background-color: #d4edda;
+  color: var(--status-success);
+}
+
+.pm-dh-status-badge.pending {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.pm-dh-status-badge.urgent {
+  background-color: #f8d7da;
+  color: var(--status-urgent);
+}
+
+.pm-dh-status-icon {
+  font-size: 11px;
+}
+
+.pm-dh-expand-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: var(--wf-accent);
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pm-dh-expand-btn:hover {
+  opacity: 0.7;
+}
+
+.pm-dh-row-expanded {
+  display: table-row;
+}
+
+.pm-dh-row-detail {
+  background-color: #fafafa;
+  border-top: 1px solid var(--gray-border);
+}
+
+.pm-dh-row-detail td {
+  padding: 12px 16px;
+}
+
+.pm-dh-detail-content {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.pm-dh-detail-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pm-dh-detail-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--wf-muted);
+  letter-spacing: 0.5px;
+}
+
+.pm-dh-detail-value {
+  font-size: 13px;
+  color: var(--wf-ink);
+  line-height: 1.4;
+}
+
+.pm-dh-table-note {
+  padding: 16px;
+  background-color: #f9f9f9;
+  border-top: 1px solid var(--gray-border);
+  font-size: 13px;
+  color: var(--wf-muted);
+  line-height: 1.5;
+}
+
+/* Notification plan section */
+.pm-dh-notification-card {
+  background: white;
+  border: 1px solid var(--gray-border);
+  border-radius: 4px;
+  padding: 16px;
+}
+
+.pm-dh-card-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--wf-ink);
+  margin-bottom: 12px;
+}
+
+.pm-dh-notification-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pm-dh-notification-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  font-size: 13px;
+}
+
+.pm-dh-notification-icon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #e8e8e8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: var(--wf-muted);
+}
+
+.pm-dh-notification-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pm-dh-notification-recipient {
+  font-weight: 500;
+  color: var(--wf-ink);
+}
+
+.pm-dh-notification-type {
+  font-size: 12px;
+  color: var(--wf-muted);
+}
+
+/* Audit trail */
+.pm-dh-audit-card {
+  background: white;
+  border: 1px solid var(--gray-border);
+  border-radius: 4px;
+  padding: 16px;
+}
+
+.pm-dh-audit-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pm-dh-audit-entry {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  font-size: 13px;
+}
+
+.pm-dh-audit-marker {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--wf-accent);
+  margin-top: 6px;
+}
+
+.pm-dh-audit-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pm-dh-audit-action {
+  font-weight: 500;
+  color: var(--wf-ink);
+}
+
+.pm-dh-audit-meta {
+  font-size: 12px;
+  color: var(--wf-muted);
+}
+
+/* Right sidebar */
+.pm-dh-right-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  height: fit-content;
+}
+
+.pm-dh-sidebar-card {
+  background: white;
+  border: 1px solid var(--gray-border);
+  border-radius: 4px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Status card */
+.pm-dh-status-card {
+  background: white;
+  border: 1px solid var(--gray-border);
+  border-radius: 4px;
+  padding: 16px;
+}
+
+.pm-dh-status-metric {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 13px;
+}
+
+.pm-dh-status-metric:last-child {
+  border-bottom: none;
+}
+
+.pm-dh-status-label {
+  color: var(--wf-muted);
+}
+
+.pm-dh-status-number {
+  font-weight: 600;
+  color: var(--wf-ink);
+}
+
+.pm-dh-progress-bar {
+  width: 100%;
+  height: 6px;
+  background-color: #e8e8e8;
+  border-radius: 3px;
+  overflow: hidden;
+  margin: 12px 0;
+}
+
+.pm-dh-progress-fill {
+  height: 100%;
+  background-color: var(--wf-accent);
+  width: 33%;
+}
+
+.pm-dh-completion-deadline {
+  padding: 8px;
+  background-color: #fff3cd;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #856404;
+  line-height: 1.4;
+}
+
+/* Partner selector */
+.pm-dh-partner-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pm-dh-selector-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--wf-ink);
+}
+
+.pm-dh-selector-search {
+  position: relative;
+}
+
+.pm-dh-selector-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--gray-border);
+  border-radius: 4px;
+  font-size: 13px;
+  color: var(--wf-ink);
+  background-color: white;
+}
+
+.pm-dh-selector-input::placeholder {
+  color: var(--wf-muted);
+}
+
+.pm-dh-selector-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pm-dh-selector-filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pm-dh-selector-filter-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--wf-muted);
+  letter-spacing: 0.5px;
+}
+
+.pm-dh-selector-filter-options {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.pm-dh-filter-tag {
+  padding: 4px 8px;
+  background-color: #f0f0f0;
+  border-radius: 3px;
+  font-size: 12px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+}
+
+.pm-dh-filter-tag:hover {
+  background-color: #e0e0e0;
+}
+
+.pm-dh-filter-tag.selected {
+  background-color: var(--wf-accent);
+  color: white;
+  border-color: var(--wf-accent);
+}
+
+.pm-dh-suggestion-box {
+  padding: 12px;
+  background-color: #f9f9f9;
+  border: 1px solid var(--gray-border);
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.pm-dh-suggestion-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--wf-muted);
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.pm-dh-suggestion-partner {
+  font-weight: 500;
+  color: var(--wf-ink);
+  margin-bottom: 4px;
+}
+
+.pm-dh-suggestion-details {
+  font-size: 11px;
+  color: var(--wf-muted);
+  display: flex;
+  gap: 8px;
+}
+
+/* Related records */
+.pm-dh-related-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pm-dh-related-item {
+  padding: 8px 12px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+  border-left: 3px solid var(--wf-accent);
+  font-size: 13px;
+}
+
+.pm-dh-related-item a {
+  color: var(--wf-accent);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.pm-dh-related-item a:hover {
+  text-decoration: underline;
+}
+
+/* Action bar */
+.pm-dh-action-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border-top: 1px solid var(--gray-border);
+  padding: 16px 24px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  align-items: center;
+}
+
+.pm-dh-action-bar-warning {
+  position: absolute;
+  left: 24px;
+  font-size: 12px;
+  color: #d62828;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.pm-dh-btn {
+  padding: 10px 18px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pm-dh-btn-secondary {
+  background-color: #f0f0f0;
+  color: var(--wf-ink);
+  border-color: var(--gray-border);
+}
+
+.pm-dh-btn-secondary:hover {
+  background-color: #e0e0e0;
+}
+
+.pm-dh-btn-primary {
+  background-color: var(--wf-accent);
+  color: white;
+}
+
+.pm-dh-btn-primary:hover {
+  opacity: 0.9;
+}
+
+.pm-dh-btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pm-dh-btn[title] {
+  position: relative;
+}
+
+.pm-dh-btn[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  white-space: nowrap;
+  z-index: 1000;
+  margin-bottom: 8px;
+}
+
+/* Annotations */
+.pm-dh-annotation {
+  background-color: #fff9e6;
+  border-left: 4px solid #f77f00;
+  padding: 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #856404;
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+/* Urgent badge inline */
+.pm-dh-urgent-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background-color: #f8d7da;
+  color: var(--status-urgent);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-left: 6px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1440px) {
+  .pm-deal-handover {
+    grid-template-columns: 1fr;
+  }
+  .pm-dh-left-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    order: 3;
+    width: 100%;
+  }
+  .pm-dh-right-sidebar {
+    order: 2;
+  }
+}
+
+@media (max-width: 768px) {
+  .pm-deal-handover {
+    padding: 12px;
+  }
+  .pm-dh-context-card {
+    grid-template-columns: 1fr;
+  }
+  .pm-dh-detail-content {
+    grid-template-columns: 1fr;
+  }
+  .pm-dh-action-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .pm-dh-action-bar-warning {
+    position: static;
+    margin-bottom: 8px;
+  }
+  .pm-dh-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="pm-deal-handover">
+
+  <!-- LEFT NAVIGATION -->
+  <nav class="pm-dh-left-nav" aria-label="PSM Navigation">
+    <div class="pm-dh-nav-section">
+      <div class="pm-dh-nav-label">PSM Tools</div>
+      <a href="psm-program-dashboard.html" class="pm-dh-nav-item">Dashboard</a>
+      <a href="psm-partner-account-list.html" class="pm-dh-nav-item">Partner Portfolio</a>
+      <a href="psm-partner-offboarding.html" class="pm-dh-nav-item active">Dormancy & Offboarding</a>
+      <a href="psm-reports-analytics.html" class="pm-dh-nav-item">Reports</a>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="pm-dh-main">
+
+    <!-- Breadcrumb -->
+    <div class="pm-dh-breadcrumb">
+      <a href="psm-program-dashboard.html">PSM Home</a>
+      <span>&gt;</span>
+      <a href="psm-partner-offboarding.html">Dormancy & Offboarding</a>
+      <span>&gt;</span>
+      <a href="psm-partner-account-record.html">Nexus IT Group</a>
+      <span>&gt;</span>
+      <span>Deal Handover</span>
+    </div>
+
+    <!-- Page Header -->
+    <div class="pm-dh-header">
+      <h1 class="pm-dh-title">Deal Handover — Nexus IT Group</h1>
+      <p class="pm-dh-subtitle">
+        Offboarding <span aria-hidden="true">·</span>
+        3 open deals <span aria-hidden="true">·</span>
+        Partner inactive 180+ days
+      </p>
+      <div class="pm-dh-badge-group">
+        <span class="pm-dh-badge">HDVR-2026-NEXUS-001</span>
+        <span class="pm-dh-badge status-in-progress">Status: Handover In Progress — 2 of 3 Assigned</span>
+      </div>
+    </div>
+
+    <!-- Context Card -->
+    <section class="pm-dh-context-card" aria-labelledby="context-heading">
+      <div class="pm-dh-context-field">
+        <div class="pm-dh-context-label">Partner</div>
+        <div class="pm-dh-context-value"><a href="psm-partner-account-record.html">Nexus IT Group</a> (Silver tier)</div>
+      </div>
+      <div class="pm-dh-context-field">
+        <div class="pm-dh-context-label">Reason for Handover</div>
+        <div class="pm-dh-context-value">Partner dormancy (180+ days inactive)</div>
+      </div>
+      <div class="pm-dh-context-field">
+        <div class="pm-dh-context-label">Offboarding Record</div>
+        <div class="pm-dh-context-value"><a href="psm-partner-offboarding.html">OFB-2026-NEXUS-001</a></div>
+      </div>
+      <div class="pm-dh-context-field">
+        <div class="pm-dh-context-label">Open Deals to Transfer</div>
+        <div class="pm-dh-context-value">3</div>
+      </div>
+      <div class="pm-dh-context-field">
+        <div class="pm-dh-context-label">Commission Impact</div>
+        <div class="pm-dh-context-value">2 deals with 60-day protection; 1 expired</div>
+      </div>
+      <div class="pm-dh-context-field">
+        <div class="pm-dh-context-label">PSM Notes</div>
+        <div class="pm-dh-context-value">Prioritize Vertex Dynamics and DataCore Group — both have pending Equinix proposals. Harmon LLC deal expired; close or void.</div>
+      </div>
+    </section>
+
+    <!-- Deal Handover Table -->
+    <section aria-labelledby="deals-heading">
+      <h2 id="deals-heading" style="font-size: 16px; font-weight: 600; margin-bottom: 12px; color: var(--wf-ink);">Deal Transfers</h2>
+      <div class="pm-dh-table-wrapper">
+        <table class="pm-dh-table">
+          <thead>
+            <tr>
+              <th style="width: 24px;"></th>
+              <th>Deal</th>
+              <th>Customer</th>
+              <th style="text-align: right;">TCV</th>
+              <th>Protection Expires</th>
+              <th>Disposition</th>
+              <th>Transfer To</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Row 1: Vertex Dynamics -->
+            <tr id="deal-1">
+              <td>
+                <button class="pm-dh-expand-btn" aria-expanded="false" aria-controls="deal-1-detail" onclick="toggleDetail(this)">
+                  <span aria-hidden="true">▶</span>
+                </button>
+              </td>
+              <td><span class="pm-dh-deal-name">Vertex Dynamics IBX Expansion</span></td>
+              <td>Vertex Dynamics Inc.</td>
+              <td class="pm-dh-tcv">$340K</td>
+              <td class="pm-dh-expires">Apr 15, 2026 <span style="font-size: 12px; color: var(--wf-muted);">(47 days)</span></td>
+              <td class="pm-dh-disposition">Transfer to Partner</td>
+              <td class="pm-dh-transfer-to">CloudBridge Solutions (Gold)</td>
+              <td>
+                <span class="pm-dh-status-badge success">
+                  <span class="pm-dh-status-icon">✓</span> Assigned
+                </span>
+              </td>
+            </tr>
+            <tr id="deal-1-detail" class="pm-dh-row-detail" style="display: none;">
+              <td colspan="8">
+                <div class="pm-dh-detail-content">
+                  <div class="pm-dh-detail-field">
+                    <div class="pm-dh-detail-label">Customer Contact</div>
+                    <div class="pm-dh-detail-value">David Okafor, CTO</div>
+                  </div>
+                  <div class="pm-dh-detail-field">
+                    <div class="pm-dh-detail-label">Sales Stage</div>
+                    <div class="pm-dh-detail-value">Proposal</div>
+                  </div>
+                  <div class="pm-dh-detail-field">
+                    <div class="pm-dh-detail-label">Notes</div>
+                    <div class="pm-dh-detail-value">CloudBridge has prior relationship with Vertex Dynamics — recommended transfer recipient. Pending partner acceptance.</div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Row 2: DataCore Group -->
+            <tr id="deal-2">
+              <td>
+                <button class="pm-dh-expand-btn" aria-expanded="false" aria-controls="deal-2-detail" onclick="toggleDetail(this)">
+                  <span aria-hidden="true">▶</span>
+                </button>
+              </td>
+              <td><span class="pm-dh-deal-name">DataCore Group Colocation</span></td>
+              <td>DataCore Group Ltd.</td>
+              <td class="pm-dh-tcv">$180K</td>
+              <td class="pm-dh-expires urgent">Mar 20, 2026 <span class="pm-dh-urgent-badge"><span aria-hidden="true">!</span>URGENT</span></td>
+              <td class="pm-dh-disposition">Transfer to Partner</td>
+              <td class="pm-dh-transfer-to empty">⚠ Not assigned</td>
+              <td>
+                <span class="pm-dh-status-badge urgent">
+                  <span class="pm-dh-status-icon">!</span> Action Required
+                </span>
+              </td>
+            </tr>
+            <tr id="deal-2-detail" class="pm-dh-row-detail" style="display: none;">
+              <td colspan="8">
+                <div class="pm-dh-detail-content">
+                  <div class="pm-dh-detail-field">
+                    <div class="pm-dh-detail-label">Customer Contact</div>
+                    <div class="pm-dh-detail-value">Sarah Chen, VP Infrastructure</div>
+                  </div>
+                  <div class="pm-dh-detail-field">
+                    <div class="pm-dh-detail-label">Sales Stage</div>
+                    <div class="pm-dh-detail-value">Evaluation (2 competing proposals)</div>
+                  </div>
+                  <div class="pm-dh-detail-field">
+                    <div class="pm-dh-detail-label">Notes</div>
+                    <div class="pm-dh-detail-value">URGENT: Protection expires in 20 days. Recommend Pacific Rim Solutions (Bronze, familiar with customer segment) or return to Equinix direct. PSM must assign by March 5, 2026.</div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+
+            <!-- Row 3: Harmon LLC -->
+            <tr id="deal-3" class="resolved">
+              <td>
+                <button class="pm-dh-expand-btn" aria-expanded="false" aria-controls="deal-3-detail" onclick="toggleDetail(this)">
+                  <span aria-hidden="true">▶</span>
+                </button>
+              </td>
+              <td><span class="pm-dh-deal-name resolved">Harmon LLC Network Services</span></td>
+              <td>Harmon LLC</td>
+              <td class="pm-dh-tcv">$62K</td>
+              <td class="pm-dh-expires expired">EXPIRED <span style="font-size: 12px; color: var(--wf-muted);">(Jan 12, 2026)</span></td>
+              <td class="pm-dh-disposition">Return to Equinix Direct</td>
+              <td class="pm-dh-transfer-to">Equinix Channel Direct</td>
+              <td>
+                <span class="pm-dh-status-badge success">
+                  <span class="pm-dh-status-icon">✓</span> Closed
+                </span>
+              </td>
+            </tr>
+            <tr id="deal-3-detail" class="pm-dh-row-detail" style="display: none;">
+              <td colspan="8">
+                <div class="pm-dh-detail-content">
+                  <div class="pm-dh-detail-field">
+                    <div class="pm-dh-detail-label">Customer Contact</div>
+                    <div class="pm-dh-detail-value">James Park, COO</div>
+                  </div>
+                  <div class="pm-dh-detail-field">
+                    <div class="pm-dh-detail-label">Sales Stage</div>
+                    <div class="pm-dh-detail-value">Closed (customer requested direct)</div>
+                  </div>
+                  <div class="pm-dh-detail-field">
+                    <div class="pm-dh-detail-label">Notes</div>
+                    <div class="pm-dh-detail-value">Deal protection expired Jan 12, 2026. Customer (Harmon LLC) requested Equinix direct engagement. Account transferred to Equinix AE Kelly Nakamura. Commission: $0 (protection expired — no partner claim).</div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="pm-dh-table-note">
+          <strong>Important:</strong> Unassigned deals lose protection on their expiry date. Commission recovery for transferred deals follows standard 90-day protection policy.
+        </div>
+      </div>
+    </section>
+
+    <!-- Notification Plan -->
+    <section class="pm-dh-notification-card" aria-labelledby="notification-heading">
+      <h2 id="notification-heading" class="pm-dh-card-title">Notification Plan</h2>
+      <div class="pm-dh-notification-list">
+        <div class="pm-dh-notification-item">
+          <div class="pm-dh-notification-icon">📧</div>
+          <div class="pm-dh-notification-content">
+            <div class="pm-dh-notification-recipient">Nexus IT Group</div>
+            <div class="pm-dh-notification-type">PCP-OFFBOARD-DR-TRANSFER — Notifying them their deals are being transferred, with reason</div>
+          </div>
+        </div>
+        <div class="pm-dh-notification-item">
+          <div class="pm-dh-notification-icon">🔔</div>
+          <div class="pm-dh-notification-content">
+            <div class="pm-dh-notification-recipient">CloudBridge Solutions</div>
+            <div class="pm-dh-notification-type">PCP-DR-INBOUND — Notification of incoming deal transfer for Vertex Dynamics; requires acceptance</div>
+          </div>
+        </div>
+        <div class="pm-dh-notification-item">
+          <div class="pm-dh-notification-icon">📞</div>
+          <div class="pm-dh-notification-content">
+            <div class="pm-dh-notification-recipient">DataCore Group customer</div>
+            <div class="pm-dh-notification-type">No automatic notification — PSM to contact personally (due to urgency)</div>
+          </div>
+        </div>
+        <div class="pm-dh-notification-item">
+          <div class="pm-dh-notification-icon">💬</div>
+          <div class="pm-dh-notification-content">
+            <div class="pm-dh-notification-recipient">Equinix AE Kelly Nakamura</div>
+            <div class="pm-dh-notification-type">Internal Chatter notification on Harmon LLC transfer</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Audit Trail -->
+    <section class="pm-dh-audit-card" aria-labelledby="audit-heading">
+      <h2 id="audit-heading" class="pm-dh-card-title">Audit Trail</h2>
+      <div class="pm-dh-audit-timeline">
+        <div class="pm-dh-audit-entry">
+          <div class="pm-dh-audit-marker"></div>
+          <div class="pm-dh-audit-content">
+            <div class="pm-dh-audit-action">Offboarding initiated</div>
+            <div class="pm-dh-audit-meta">Feb 20, 2026 — Marcus Chen</div>
+          </div>
+        </div>
+        <div class="pm-dh-audit-entry">
+          <div class="pm-dh-audit-marker"></div>
+          <div class="pm-dh-audit-content">
+            <div class="pm-dh-audit-action">Deal handover record created</div>
+            <div class="pm-dh-audit-meta">Feb 22, 2026 — System (HDVR-2026-NEXUS-001)</div>
+          </div>
+        </div>
+        <div class="pm-dh-audit-entry">
+          <div class="pm-dh-audit-marker"></div>
+          <div class="pm-dh-audit-content">
+            <div class="pm-dh-audit-action">Harmon LLC deal returned to Equinix direct — executed</div>
+            <div class="pm-dh-audit-meta">Feb 23, 2026 — Marcus Chen</div>
+          </div>
+        </div>
+        <div class="pm-dh-audit-entry">
+          <div class="pm-dh-audit-marker"></div>
+          <div class="pm-dh-audit-content">
+            <div class="pm-dh-audit-action">Vertex Dynamics transfer proposed to CloudBridge Solutions</div>
+            <div class="pm-dh-audit-meta">Feb 24, 2026 — Marcus Chen (awaiting partner acceptance)</div>
+          </div>
+        </div>
+        <div class="pm-dh-audit-entry">
+          <div class="pm-dh-audit-marker" style="background-color: #d62828;"></div>
+          <div class="pm-dh-audit-content">
+            <div class="pm-dh-audit-action">DataCore Group — unassigned, URGENT flag triggered (20 days to expiry)</div>
+            <div class="pm-dh-audit-meta">Mar 2, 2026 — System alert</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Design Annotation -->
+    <div class="pm-dh-annotation">
+      <strong>Design Note:</strong> Deal handover records (DealHandover__c) are child records of the offboarding record. Transfer requires: (1) receiving partner acceptance via in-portal notification (PCP-DR-INBOUND), (2) PSM confirmation. Deal protection windows are recalculated from transfer date, not original registration date. Handover screen is accessed from pm-partner-offboarding.html "Transfer open DRs" checklist step. Co-sell deals in progress (where Equinix AE is co-selling with the partner) are flagged differently and require both PSM and AE sign-off for handover. This scenario is not yet wired.
+    </div>
+
+  </main>
+
+  <!-- RIGHT SIDEBAR -->
+  <aside class="pm-dh-right-sidebar" aria-label="Handover status and actions">
+
+    <!-- Handover Status Card -->
+    <div class="pm-dh-status-card">
+      <h2 class="pm-dh-card-title">Handover Status</h2>
+      <div class="pm-dh-status-metric">
+        <span class="pm-dh-status-label">Resolved</span>
+        <span class="pm-dh-status-number">1 of 3</span>
+      </div>
+      <div class="pm-dh-status-metric">
+        <span class="pm-dh-status-label">Assigned (Pending Acceptance)</span>
+        <span class="pm-dh-status-number">1 of 3</span>
+      </div>
+      <div class="pm-dh-status-metric">
+        <span class="pm-dh-status-label">Urgent / Unassigned</span>
+        <span class="pm-dh-status-number">1 of 3</span>
+      </div>
+      <div class="pm-dh-progress-bar">
+        <div class="pm-dh-progress-fill"></div>
+      </div>
+      <div style="text-align: center; font-size: 12px; color: var(--wf-muted); margin-bottom: 12px;">33% complete</div>
+      <div class="pm-dh-completion-deadline">
+        <strong>Complete by: Mar 5, 2026</strong><br>
+        DataCore Group protection expiry deadline
+      </div>
+    </div>
+
+    <!-- Partner Selector Card -->
+    <div class="pm-dh-sidebar-card">
+      <h2 class="pm-dh-card-title">Assign DataCore Group Deal</h2>
+      <div class="pm-dh-partner-selector">
+        <div class="pm-dh-selector-label">Find a partner to receive DataCore Group</div>
+        <div class="pm-dh-selector-search">
+          <input
+            type="text"
+            class="pm-dh-selector-input"
+            placeholder="Search partners by name or ID…"
+            aria-label="Partner search"
+          />
+        </div>
+      </div>
+
+      <div class="pm-dh-selector-filters">
+        <div class="pm-dh-selector-filter-group">
+          <div class="pm-dh-selector-filter-label">Tier</div>
+          <div class="pm-dh-selector-filter-options">
+            <span class="pm-dh-filter-tag selected">All</span>
+            <span class="pm-dh-filter-tag">Gold</span>
+            <span class="pm-dh-filter-tag">Silver</span>
+            <span class="pm-dh-filter-tag">Bronze</span>
+          </div>
+        </div>
+        <div class="pm-dh-selector-filter-group">
+          <div class="pm-dh-selector-filter-label">Region</div>
+          <div class="pm-dh-selector-filter-options">
+            <span class="pm-dh-filter-tag selected">Americas</span>
+            <span class="pm-dh-filter-tag">EMEA</span>
+            <span class="pm-dh-filter-tag">APAC</span>
+          </div>
+        </div>
+        <div class="pm-dh-selector-filter-group">
+          <div class="pm-dh-selector-filter-label">PSM Assignment</div>
+          <div class="pm-dh-selector-filter-options">
+            <span class="pm-dh-filter-tag selected">Any</span>
+            <span class="pm-dh-filter-tag">My partners only</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="pm-dh-suggestion-box">
+        <div class="pm-dh-suggestion-label">Recommended</div>
+        <div class="pm-dh-suggestion-partner">Pacific Rim Solutions</div>
+        <div class="pm-dh-suggestion-details">
+          <span>Silver</span>
+          <span aria-hidden="true">·</span>
+          <span>$12K YTD</span>
+          <span aria-hidden="true">·</span>
+          <span>0 escalations</span>
+        </div>
+      </div>
+
+      <button class="pm-dh-btn pm-dh-btn-primary" style="width: 100%; justify-content: center; margin-top: 12px;">
+        Assign
+      </button>
+    </div>
+
+    <!-- Related Records -->
+    <div class="pm-dh-sidebar-card">
+      <h2 class="pm-dh-card-title">Related Records</h2>
+      <div class="pm-dh-related-list">
+        <div class="pm-dh-related-item">
+          <a href="psm-partner-offboarding.html">OFB-2026-NEXUS-001</a><br>
+          <span style="font-size: 11px; color: var(--wf-muted);">Nexus IT Group offboarding</span>
+        </div>
+        <div class="pm-dh-related-item">
+          <a href="psm-partner-account-record.html">Nexus IT Group</a><br>
+          <span style="font-size: 11px; color: var(--wf-muted);">Partner account</span>
+        </div>
+        <div class="pm-dh-related-item">
+          <a href="psm-partner-account-record.html">CloudBridge Solutions</a><br>
+          <span style="font-size: 11px; color: var(--wf-muted);">Receiving Vertex Dynamics</span>
+        </div>
+      </div>
+    </div>
+
+  </aside>
+
+</div>
+
+<!-- ACTION BAR -->
+<div class="pm-dh-action-bar">
+  <div class="pm-dh-action-bar-warning">
+    <span aria-hidden="true">⚠</span>
+    <span>Executing transfers closes DR records permanently. Commission holds released.</span>
+  </div>
+  <button class="pm-dh-btn pm-dh-btn-secondary" aria-label="Save changes without executing transfers">
+    Save & Continue
+  </button>
+  <button
+    class="pm-dh-btn pm-dh-btn-primary"
+    title="Sends all notifications and updates DR records. Irreversible."
+    aria-label="Execute all assigned transfers, irreversible action"
+  >
+    Execute All Assigned Transfers
+  </button>
+</div>
+
+<script>
+function toggleDetail(button) {
+  const isExpanded = button.getAttribute('aria-expanded') === 'true';
+  const detailRowId = button.getAttribute('aria-controls');
+  const detailRow = document.getElementById(detailRowId);
+
+  if (detailRow) {
+    if (isExpanded) {
+      detailRow.style.display = 'none';
+      button.setAttribute('aria-expanded', 'false');
+      button.innerHTML = '<span aria-hidden="true">▶</span>';
+    } else {
+      detailRow.style.display = 'table-row';
+      button.setAttribute('aria-expanded', 'true');
+      button.innerHTML = '<span aria-hidden="true">▼</span>';
+    }
+  }
+}
+</script>
+
+<script src="wf-nav.js"></script>
+
+</body>
+</html>
