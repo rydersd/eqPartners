@@ -999,6 +999,43 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
       </div>
     </div>
 
+    <div class="node">
+      <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="node-type t-list" title="List View">L</div>
+        <span class="node-label">Escalation Queue <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">(PSM portfolio triage)</span></span>
+        <a href="psm-escalation-queue.html" class="node-mockup-link" title="View Mockup">→</a>
+        <span class="node-chevron">›</span>
+      </div>
+      <div class="node-children">
+        <div class="child"><span class="child-type ct-kpi">KPI</span> Open (5), Action Required (2), Avg Age (9.4d), Oldest (18d — Pacific Rim commission dispute)</div>
+        <div class="child"><span class="child-type ct-table">Table</span> 5-row triage table: Priority | Partner | Deal/Issue | Days Open | Status | Next Action | Quick Actions</div>
+        <div class="child"><span class="child-type ct-alert">Alert</span> Amber banner: "2 escalations need action today — deal at risk for Nexus IT Group ($340K, 4 days)"</div>
+        <div class="child"><span class="child-type ct-tab">Tab</span> All (5) | Action Required (2) | In Progress (2) | Resolved This Month (6)</div>
+        <div class="child"><span class="child-type ct-card">Card</span> SLA Reference card: Critical 24h/5d · Medium 48h/10d · Low 72h/20d</div>
+        <div class="child"><span class="child-type ct-note">Note</span> Agentforce DocGen brief only for Critical escalations — Medium/Low use standard SF case management</div>
+      </div>
+    </div>
+
+    <!-- ── Tier Upgrade Recommendation ───────────────── -->
+    <div style="margin:6px 0 3px 0;padding:3px 8px;background:#e0f2fe;border-left:2px solid #0070d2;font-size:.63rem;font-weight:700;color:#0070d2;text-transform:uppercase;letter-spacing:.05em;">Tier Management (PSM-initiated)</div>
+
+    <div class="node">
+      <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="node-type t-form" title="Form">F</div>
+        <span class="node-label">Tier Upgrade Recommendation <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">(PSM → PAM → Amendment)</span></span>
+        <a href="psm-tier-review-recommendation.html" class="node-mockup-link" title="View Mockup">→</a>
+        <span class="node-chevron">›</span>
+      </div>
+      <div class="node-children">
+        <div class="child"><span class="child-type ct-table">Table</span> Qualification Scorecard: 5 criteria (Revenue, Certs, DRs, Win Rate, Tenure) — all Met for CloudBridge</div>
+        <div class="child"><span class="child-type ct-card">Card</span> Overall qualification score: 94/100 · Eligible badge · trailing 12-month window</div>
+        <div class="child"><span class="child-type ct-form">Form</span> PSM Recommendation: rationale textarea, Change Reason dropdown (required), confirmation checkbox</div>
+        <div class="child"><span class="child-type ct-card">Card</span> Amendment Preview: TMPL-AMD-TIER-UPGRADE-V3 · commission 8→11% · MDF $40K→$75K · deal protection 90→120d</div>
+        <div class="child"><span class="child-type ct-action">Action</span> Submit to PAM for Authorization → routes to Alex Rivera → on approval: amendment auto-initiated</div>
+        <div class="child"><span class="child-type ct-note">Note</span> Trigger: SF Flow when Tier_Qualification_Score__c ≥ 90; object: Tier_Review__c → Tier_Review_Criterion__c (children)</div>
+      </div>
+    </div>
+
     <!-- ── JBP & Offboarding ───────────────────────── -->
     <div style="margin:6px 0 3px 0;padding:3px 8px;background:#f0fdf4;border-left:2px solid #166534;font-size:.63rem;font-weight:700;color:#166534;text-transform:uppercase;letter-spacing:.05em;">Partner Lifecycle — JBP &amp; Offboarding</div>
 
@@ -1266,6 +1303,34 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
             <div class="child"><span class="child-type ct-table">Table</span> Team certs: name, cert, issued, expiry, status</div>
             <div class="child"><span class="child-type ct-alert">Alert</span> Expiring within 30 days highlighted</div>
             <div class="child"><span class="child-type ct-action">Action</span> Nudge team member to renew</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- QBR -->
+    <div class="section">
+      <div class="section-title" onclick="toggleSection(this)" tabindex="0" role="button" aria-expanded="true">
+        <span class="chevron open">›</span> QBR &amp; Reviews
+        <span class="count">1</span>
+      </div>
+      <div class="section-body">
+
+        <div class="node">
+          <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+            <div class="node-type t-record" title="Record Page">R</div>
+            <span class="node-label">QBR View <span style="font-size:.57rem;padding:1px 5px;border-radius:2px;background:#ddeeff;color:#2b5797;border:1px solid #b3d4f5;font-weight:700;margin-left:5px;white-space:nowrap;" title="Companion to PSM's psm-qbr-prep.html">⟷ PSM</span></span>
+            <a href="pm-qbr-view.html" class="node-mockup-link" title="View Mockup">→</a>
+            <span class="node-chevron">›</span>
+          </div>
+          <div class="node-children">
+            <div class="child"><span class="child-type ct-card">Card</span> Upcoming QBR: scheduled date, format, attendees, shared agenda (5 items with timings)</div>
+            <div class="child"><span class="child-type ct-widget">Widget</span> Jordan's Prep Checklist: 5 items with interactive checkboxes, progress bar in sidebar</div>
+            <div class="child"><span class="child-type ct-kpi">KPI</span> Data Preview: Revenue 70% 🟡 / DRs strong 🟢 / Certs attention 🟡 — what Marcus will present</div>
+            <div class="child"><span class="child-type ct-form">Form</span> Jordan's private prep notes textarea (not shared with Marcus)</div>
+            <div class="child"><span class="child-type ct-table">Table</span> Past QBRs: 3 completed records with minutes links and action item tracking (✅ done / ⚠ deferred)</div>
+            <div class="child"><span class="child-type ct-note">Note</span> Partner-side companion to psm-qbr-prep.html; minutes visible only after PSM marks QBR__c.Status = 'Closed'</div>
           </div>
         </div>
 
@@ -1748,7 +1813,7 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
     <div class="section">
       <div class="section-title" onclick="toggleSection(this)" tabindex="0" role="button" aria-expanded="true">
         <span class="chevron open">›</span> Deals & Commission
-        <span class="count">5</span>
+        <span class="count">6</span>
       </div>
       <div class="section-body">
 
@@ -1836,6 +1901,23 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
             <div class="child"><span class="child-type ct-card">Card</span> 4 personalized action items with priority indicators</div>
             <div class="child"><span class="child-type ct-widget">Widget</span> Protection Calendar sidebar: upcoming window expirations across all open deals</div>
             <div class="child"><span class="child-type ct-note">Note</span> Scenario model is rule-based static percentages — not Agentforce prediction</div>
+          </div>
+        </div>
+
+        <div class="node">
+          <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+            <div class="node-type t-form" title="Form">F</div>
+            <span class="node-label">Register Co-Sell Opportunity <span style="font-weight:400;color:#6d28d9;font-size:11px;">Platinum only</span></span>
+            <a href="rep-co-sell.html" class="node-mockup-link" title="View Mockup">→</a>
+            <span class="node-chevron">›</span>
+          </div>
+          <div class="node-children">
+            <div class="child"><span class="child-type ct-card">Card</span> "Co-sell now available" teal banner — first-time Platinum access announcement (dismissible)</div>
+            <div class="child"><span class="child-type ct-form">Form</span> Opportunity Details: customer, industry, TCV ($480K), close date, products, DC location, stage</div>
+            <div class="child"><span class="child-type ct-form">Form</span> Co-sell request: 6 checkbox types (exec intro, joint demo, reference, tech review, pricing, competitive) + rationale textarea</div>
+            <div class="child"><span class="child-type ct-form">Form</span> Contacts: primary contact + decision maker + existing Equinix contact toggle</div>
+            <div class="child"><span class="child-type ct-card">Card</span> Program guide sidebar: what co-sell means, who reviews, commission unchanged, deal reg is separate</div>
+            <div class="child"><span class="child-type ct-note">Note</span> On submit: creates CoSell_Opportunity__c, routes to Marcus (psm-deal-cosell.html); does NOT create DealRegistration__c automatically</div>
           </div>
         </div>
 
@@ -2432,9 +2514,9 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
       <strong><a href="flow-escalation-brief.html" style="color:#6d28d9;">Emergency Escalation → Executive Brief →</a></strong>
       <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Dispute detected → PSM creates escalation → Agentforce generates brief → VP call scheduled → resolution. 6 actors, 8 steps.</div>
     </div>
-    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #b45309;opacity:.65;">
-      <strong style="color:#b45309;">Deal Registration Flow → <span style="font-weight:400;font-size:.7rem;">(planned)</span></strong>
-      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Rep submits DR → Deal Desk reviews → conflict detection → approval/rejection → partner notified. SLA-tracked.</div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #6d28d9;">
+      <strong><a href="flow-deal-registration.html" style="color:#6d28d9;">Deal Registration Lifecycle →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Rep submits DR → system validates → PSM approves → protection window starts on approval date → pipeline tracked → Deal Desk qualifies commission → close-out. 5 actors, 7 steps.</div>
     </div>
     <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #0369a1;opacity:.65;">
       <strong style="color:#0369a1;">MDF Request &amp; Claim Flow → <span style="font-weight:400;font-size:.7rem;">(planned)</span></strong>
@@ -2454,8 +2536,8 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
     </div>
   </div>
   <div style="padding:.5rem .75rem;background:#f5f3ff;border:1px solid #c4b5fd;border-radius:4px;font-size:.75rem;color:#4c1d95;">
-    <strong>Wired:</strong> Emergency Escalation Brief flow (flow-escalation-brief.html) — full 8-step cross-actor diagram.
-    <strong style="margin-left:.75rem;">Planned:</strong> DR, MDF, Tier Review, JBP flows — stubs defined, diagrams pending.
+    <strong>Wired:</strong> Emergency Escalation Brief (flow-escalation-brief.html) · Deal Registration Lifecycle (flow-deal-registration.html) — full cross-actor swimlane diagrams.
+    <strong style="margin-left:.75rem;">Planned:</strong> MDF Request &amp; Claim, Tier Review Cycle, JBP Creation flows — stubs defined, diagrams pending.
   </div>
 </div>
 

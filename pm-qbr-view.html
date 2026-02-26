@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QBR Reviews — Equinix Partner Connect Portal</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --wf-canvas: #f5f6f8;
+            --wf-ink: #111827;
+            --wf-muted: #6b7280;
+            --gray-border: #d1d5db;
+            --teal: #0d9488;
+            --orange: #f59e0b;
+            --red: #dc2626;
+            --green: #16a34a;
+            --accent: #0070d2;
+            --accent-light: #e6f0ff;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: var(--wf-canvas);
+            color: var(--wf-ink);
+            line-height: 1.5;
+        }
+
+        /* Auth gate */
+        script {
+            display: none;
+        }
+
+        /* Layout */
+        .pcp-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr 320px;
+            grid-template-rows: auto 1fr;
+            min-height: 100vh;
+            gap: 0;
+        }
+
+        .pcp-sidebar-left {
+            grid-column: 1;
+            grid-row: 1 / 3;
+            background: white;
+            border-right: 1px solid var(--gray-border);
+            overflow-y: auto;
+        }
+
+        .pcp-topbar {
+            grid-column: 2 / 4;
+            grid-row: 1;
+            background: white;
+            border-bottom: 1px solid var(--gray-border);
+            padding: 16px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .pcp-main {
+            grid-column: 2;
+            grid-row: 2;
+            padding: 32px;
+            overflow-y: auto;
+        }
+
+        .pcp-sidebar-right {
+            grid-column: 3;
+            grid-row: 2;
+            background: white;
+            border-left: 1px solid var(--gray-border);
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        /* Topbar */
+        .topbar-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: var(--wf-muted);
+        }
+
+        .topbar-breadcrumb a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .topbar-breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .topbar-user {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .topbar-user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .topbar-user-name {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Nav */
+        .nav-section {
+            padding: 24px 0;
+            border-bottom: 1px solid var(--gray-border);
+        }
+
+        .nav-section:last-child {
+            border-bottom: none;
+        }
+
+        .nav-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--wf-muted);
+            letter-spacing: 0.5px;
+            padding: 0 16px 12px 16px;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 12px 16px;
+            color: var(--wf-ink);
+            text-decoration: none;
+            font-size: 14px;
+            border-left: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+            background: var(--wf-canvas);
+            color: var(--accent);
+        }
+
+        .nav-item.active {
+            background: var(--accent-light);
+            border-left-color: var(--accent);
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        /* Page header */
+        .page-header {
+            margin-bottom: 32px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .page-subtitle {
+            font-size: 16px;
+            color: var(--wf-muted);
+        }
+
+        /* Cards */
+        .card {
+            background: white;
+            border: 1px solid var(--gray-border);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .card.highlighted {
+            border: 2px solid var(--accent);
+            box-shadow: 0 0 0 4px var(--accent-light);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .card-subtitle {
+            font-size: 14px;
+            color: var(--wf-muted);
+            margin-top: 4px;
+        }
+
+        /* Badges & Status */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge.upcoming {
+            background: var(--accent-light);
+            color: var(--accent);
+        }
+
+        .badge.complete {
+            background: #ecfdf5;
+            color: var(--green);
+        }
+
+        .badge.at-risk {
+            background: #fef3c7;
+            color: #b45309;
+        }
+
+        .badge.strong {
+            background: #ecfdf5;
+            color: var(--green);
+        }
+
+        .badge.attention {
+            background: #fef3c7;
+            color: #b45309;
+        }
+
+        .rag-icon {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .rag-red {
+            background: var(--red);
+        }
+
+        .rag-amber {
+            background: var(--orange);
+        }
+
+        .rag-green {
+            background: var(--green);
+        }
+
+        /* Upcoming QBR structure */
+        .upcoming-header {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: start;
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--gray-border);
+        }
+
+        .qbr-meta {
+            display: grid;
+            gap: 8px;
+        }
+
+        .qbr-id {
+            font-size: 12px;
+            color: var(--wf-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .qbr-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .qbr-details {
+            display: flex;
+            gap: 24px;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+
+        .qbr-detail {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .detail-icon {
+            width: 18px;
+            height: 18px;
+            background: var(--accent-light);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: var(--accent);
+        }
+
+        .upcoming-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+            margin-bottom: 24px;
+        }
+
+        .agenda-section h4,
+        .checklist-section h4 {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--wf-muted);
+            margin-bottom: 16px;
+        }
+
+        .agenda-items {
+            display: grid;
+            gap: 12px;
+        }
+
+        .agenda-item {
+            padding: 12px;
+            background: var(--wf-canvas);
+            border-radius: 6px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .agenda-item-title {
+            font-weight: 600;
+            color: var(--wf-ink);
+        }
+
+        .agenda-item-time {
+            font-size: 12px;
+            color: var(--wf-muted);
+        }
+
+        .checklist-section {
+            display: grid;
+            gap: 12px;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .checklist-item:hover {
+            background: var(--wf-canvas);
+        }
+
+        .checklist-item input[type="checkbox"] {
+            margin-top: 2px;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+
+        .checklist-item label {
+            cursor: pointer;
+            font-size: 13px;
+            flex: 1;
+            user-select: none;
+        }
+
+        .checklist-item input[type="checkbox"]:checked + label {
+            color: var(--wf-muted);
+            text-decoration: line-through;
+        }
+
+        .checklist-item a {
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 12px;
+        }
+
+        .checklist-item a:hover {
+            text-decoration: underline;
+        }
+
+        /* Action buttons */
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--gray-border);
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0059b3;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent-light);
+        }
+
+        .btn-sm {
+            padding: 8px 12px;
+            font-size: 13px;
+        }
+
+        /* Data preview */
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .kpi-item {
+            padding: 16px;
+            background: var(--wf-canvas);
+            border-radius: 6px;
+        }
+
+        .kpi-label {
+            font-size: 12px;
+            color: var(--wf-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .kpi-value {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .kpi-secondary {
+            font-size: 12px;
+            color: var(--wf-muted);
+        }
+
+        .kpi-status {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        /* Textarea */
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--gray-border);
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-light);
+        }
+
+        /* Notes section */
+        .notes-label {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .notes-hint {
+            font-size: 12px;
+            color: var(--wf-muted);
+            margin-bottom: 12px;
+        }
+
+        /* Collapsible */
+        .collapsible {
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 0;
+            border: none;
+            background: none;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--wf-ink);
+        }
+
+        .collapsible-icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            transition: transform 0.2s;
+        }
+
+        .collapsible.collapsed .collapsible-icon {
+            transform: rotate(-90deg);
+        }
+
+        .collapsible-content {
+            display: grid;
+            gap: 16px;
+            max-height: 1000px;
+            overflow: hidden;
+            transition: max-height 0.3s;
+        }
+
+        .collapsible.collapsed .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+        }
+
+        /* Past QBR cards */
+        .qbr-card {
+            background: var(--wf-canvas);
+            border: 1px solid var(--gray-border);
+            border-radius: 6px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .qbr-card-header {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--gray-border);
+        }
+
+        .qbr-card-title {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .qbr-card-date {
+            font-size: 12px;
+            color: var(--wf-muted);
+            margin-top: 2px;
+        }
+
+        .qbr-card-summary {
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 12px;
+            color: var(--wf-ink);
+        }
+
+        .qbr-card-actions {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .qbr-action-items {
+            display: grid;
+            gap: 6px;
+            padding-top: 12px;
+            border-top: 1px solid var(--gray-border);
+        }
+
+        .action-item {
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-item-icon {
+            width: 14px;
+            height: 14px;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 9px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .action-done {
+            background: var(--green);
+            color: white;
+        }
+
+        .action-pending {
+            background: var(--orange);
+            color: white;
+        }
+
+        /* Right sidebar */
+        .sidebar-section {
+            margin-bottom: 24px;
+        }
+
+        .sidebar-title {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--wf-muted);
+            margin-bottom: 12px;
+        }
+
+        .countdown {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 4px;
+        }
+
+        .countdown-label {
+            font-size: 13px;
+            color: var(--wf-muted);
+        }
+
+        .progress-container {
+            margin-top: 16px;
+        }
+
+        .progress-label {
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--gray-border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .quick-facts {
+            display: grid;
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .fact-item {
+            padding: 12px;
+            background: var(--wf-canvas);
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .fact-label {
+            color: var(--wf-muted);
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .fact-value {
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .quick-links {
+            display: grid;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .quick-link {
+            padding: 8px 12px;
+            background: var(--wf-canvas);
+            border-radius: 4px;
+            font-size: 13px;
+            color: var(--accent);
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .quick-link:hover {
+            background: var(--accent-light);
+        }
+
+        .contact-card {
+            border: 1px solid var(--gray-border);
+            border-radius: 6px;
+            padding: 16px;
+            text-align: center;
+            margin-top: 16px;
+        }
+
+        .contact-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--teal), var(--accent));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 700;
+            margin: 0 auto 12px;
+        }
+
+        .contact-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .contact-email {
+            font-size: 12px;
+            color: var(--wf-muted);
+            margin-bottom: 12px;
+        }
+
+        .contact-action {
+            padding: 8px 12px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .contact-action:hover {
+            background: #0059b3;
+        }
+
+        /* Modal placeholder */
+        .modal-placeholder {
+            border: 2px dashed var(--gray-border);
+            border-radius: 6px;
+            padding: 16px;
+            background: var(--wf-canvas);
+            font-size: 13px;
+            color: var(--wf-muted);
+            text-align: center;
+            margin-top: 12px;
+            display: none;
+        }
+
+        .modal-placeholder.show {
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 1400px) {
+            .pcp-layout {
+                grid-template-columns: 280px 1fr;
+            }
+
+            .pcp-sidebar-right {
+                grid-column: 1;
+                grid-row: 3;
+                border-left: none;
+                border-top: 1px solid var(--gray-border);
+                padding: 24px;
+                max-height: 500px;
+            }
+
+            .pcp-main {
+                grid-column: 2;
+            }
+
+            .upcoming-content {
+                grid-template-columns: 1fr;
+            }
+
+            .kpi-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .pcp-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .pcp-sidebar-left {
+                grid-column: 1;
+                grid-row: 3;
+                display: none;
+            }
+
+            .pcp-topbar {
+                grid-column: 1;
+                padding: 12px;
+            }
+
+            .pcp-main {
+                grid-column: 1;
+                padding: 16px;
+            }
+
+            .topbar-breadcrumb {
+                display: none;
+            }
+
+            .upcoming-content {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .kpi-row {
+                grid-template-columns: 1fr;
+            }
+
+            .qbr-details {
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Auth gate -->
+    <script>
+        if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');
+    </script>
+
+    <div class="pcp-layout">
+        <!-- Left Navigation -->
+        <div class="pcp-sidebar-left">
+            <div style="padding: 20px;">
+                <div style="font-size: 16px; font-weight: 700; color: var(--accent); margin-bottom: 24px;">PCP</div>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-label">Partner Dashboard</div>
+                <a href="pm-home-dashboard.html" class="nav-item">Dashboard</a>
+                <a href="pm-deals-revenue.html" class="nav-item">Deals & Revenue</a>
+                <a href="pm-jbp.html" class="nav-item">JBP Progress</a>
+                <a href="pm-analytics.html" class="nav-item">Analytics</a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-label">Program</div>
+                <a href="pm-agreements.html" class="nav-item">Agreements</a>
+                <a href="pm-team-management.html" class="nav-item">Team</a>
+                <a href="pm-notifications.html" class="nav-item">Notifications</a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-label">Strategic</div>
+                <a href="pm-qbr-view.html" class="nav-item active">QBR Reviews</a>
+                <a href="pm-jbp-checkin.html" class="nav-item">JBP Check-in</a>
+            </div>
+
+            <div class="nav-section">
+                <div class="nav-label">Account</div>
+                <a href="pm-profile.html" class="nav-item">Profile</a>
+            </div>
+        </div>
+
+        <!-- Topbar -->
+        <div class="pcp-topbar">
+            <div class="topbar-breadcrumb">
+                <a href="pm-home-dashboard.html">Dashboard</a>
+                <span>/</span>
+                <span>QBR Reviews</span>
+            </div>
+            <div class="topbar-user">
+                <div class="topbar-user-name">Jordan Reeves</div>
+                <div class="topbar-user-avatar">JR</div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="pcp-main">
+            <div class="page-header">
+                <div class="page-title">QBR Reviews</div>
+                <div class="page-subtitle">Quarterly Business Reviews with Equinix · Marcus Chen (PSM)</div>
+            </div>
+
+            <!-- Upcoming QBR Card -->
+            <div class="card highlighted">
+                <div class="upcoming-header">
+                    <div class="qbr-meta">
+                        <div class="qbr-id">QBR-2026-CB-Q1</div>
+                        <div class="qbr-title">Q1 2026 QBR</div>
+                        <div class="qbr-details">
+                            <div class="qbr-detail">
+                                <div class="detail-icon">📅</div>
+                                <span>March 15, 2026 · 10:00 AM PT</span>
+                            </div>
+                            <div class="qbr-detail">
+                                <div class="detail-icon">📞</div>
+                                <span>Video call (Google Meet)</span>
+                            </div>
+                            <div class="qbr-detail">
+                                <div class="detail-icon">⏱</div>
+                                <span>60 minutes</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div class="badge upcoming">
+                            <span class="rag-icon" style="background: var(--accent);"></span>
+                            Upcoming — Agenda Shared
+                        </div>
+                    </div>
+                </div>
+
+                <div class="upcoming-content">
+                    <!-- Left: Shared Agenda -->
+                    <div>
+                        <h4>Shared Agenda</h4>
+                        <div class="agenda-items">
+                            <div class="agenda-item">
+                                <div class="agenda-item-title">1. Q1 Performance Review</div>
+                                <div class="agenda-item-time">15 min · Revenue, DRs, Certifications vs JBP targets</div>
+                            </div>
+                            <div class="agenda-item">
+                                <div class="agenda-item-title">2. Deal Pipeline Review</div>
+                                <div class="agenda-item-time">15 min · Open DRs, protection windows, co-sell update</div>
+                            </div>
+                            <div class="agenda-item">
+                                <div class="agenda-item-title">3. JBP Q1 Check-in</div>
+                                <div class="agenda-item-time">10 min · RAG status, commitment progress</div>
+                            </div>
+                            <div class="agenda-item">
+                                <div class="agenda-item-title">4. Platinum Tier Update</div>
+                                <div class="agenda-item-time">10 min · Amendment status, new benefits timeline</div>
+                            </div>
+                            <div class="agenda-item">
+                                <div class="agenda-item-title">5. Q2 Planning</div>
+                                <div class="agenda-item-time">10 min · Goals, MDF allocation, cert roadmap</div>
+                            </div>
+                        </div>
+                        <button class="btn btn-secondary btn-sm" style="margin-top: 16px; width: 100%;" onclick="toggleAddAgenda()">
+                            + Add Agenda Item
+                        </button>
+                        <div class="modal-placeholder" id="add-agenda-modal">
+                            <strong>Add Agenda Item</strong><br><br>
+                            <input type="text" placeholder="Topic title..." style="width: 100%; padding: 8px; margin-bottom: 8px; border: 1px solid var(--gray-border); border-radius: 4px;">
+                            <textarea placeholder="Description..." style="width: 100%; min-height: 80px; margin-bottom: 8px;"></textarea><br>
+                            <button class="btn btn-primary btn-sm">Submit</button>
+                            <button class="btn btn-secondary btn-sm" onclick="toggleAddAgenda()">Cancel</button>
+                        </div>
+                    </div>
+
+                    <!-- Right: Prep Checklist -->
+                    <div>
+                        <h4>Your Prep Checklist</h4>
+                        <div class="checklist-section">
+                            <div class="checklist-item">
+                                <input type="checkbox" id="prep1" onchange="updateProgress()">
+                                <label for="prep1">Pull Q1 revenue actuals from CRM</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="prep2" onchange="updateProgress()">
+                                <label for="prep2">
+                                    Review JBP Q1 check-in 
+                                    <a href="pm-jbp-checkin.html" target="_blank">(link)</a>
+                                </label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="prep3" onchange="updateProgress()">
+                                <label for="prep3">Confirm Brian Walsh calendar invite</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="prep4" onchange="updateProgress()">
+                                <label for="prep4">Prepare 2 open questions for Marcus</label>
+                            </div>
+                            <div class="checklist-item">
+                                <input type="checkbox" id="prep5" onchange="updateProgress()">
+                                <label for="prep5">
+                                    Review amendment status 
+                                    <a href="pm-amendment-request-status.html" target="_blank">(link)</a>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="https://calendar.google.com" class="btn btn-secondary">
+                        📥 Add to Calendar (.ics)
+                    </a>
+                    <a href="https://meet.google.com" class="btn btn-primary" target="_blank">
+                        Join Meeting
+                    </a>
+                </div>
+            </div>
+
+            <!-- Attendees / Details Card -->
+            <div class="card">
+                <h3 class="card-title" style="margin-bottom: 16px;">Attendees</h3>
+                <div style="display: grid; gap: 12px;">
+                    <div style="padding: 12px; background: var(--wf-canvas); border-radius: 6px; font-size: 14px;">
+                        <strong>Marcus Chen</strong> — PSM, Equinix <span style="color: var(--green); font-size: 12px; margin-left: 8px;">Required</span>
+                    </div>
+                    <div style="padding: 12px; background: var(--wf-canvas); border-radius: 6px; font-size: 14px;">
+                        <strong>Jordan Reeves</strong> — Sales Operations Manager, CloudBridge <span style="color: var(--green); font-size: 12px; margin-left: 8px;">Required</span>
+                    </div>
+                    <div style="padding: 12px; background: var(--wf-canvas); border-radius: 6px; font-size: 14px;">
+                        <strong>Brian Walsh</strong> — VP Sales, CloudBridge <span style="color: var(--orange); font-size: 12px; margin-left: 8px;">Optional</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Preview Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">What Marcus Will Present</div>
+                        <div class="card-subtitle">Live preview of your Q1 performance</div>
+                    </div>
+                </div>
+                <div class="kpi-row">
+                    <div class="kpi-item">
+                        <div class="kpi-label">Revenue Q1 YTD</div>
+                        <div class="kpi-value">$525K</div>
+                        <div class="kpi-secondary">vs $750K target = 70%</div>
+                        <div class="kpi-status">
+                            <span class="rag-icon rag-amber"></span>
+                            At Risk
+                        </div>
+                    </div>
+                    <div class="kpi-item">
+                        <div class="kpi-label">Active Deal Registrations</div>
+                        <div class="kpi-value">18</div>
+                        <div class="kpi-secondary">approved</div>
+                        <div class="kpi-status">
+                            <span class="rag-icon rag-green"></span>
+                            Strong
+                        </div>
+                    </div>
+                    <div class="kpi-item">
+                        <div class="kpi-label">Certifications</div>
+                        <div class="kpi-value">5/5</div>
+                        <div class="kpi-secondary">active · Platinum: needs 3 more in 180d</div>
+                        <div class="kpi-status">
+                            <span class="rag-icon rag-amber"></span>
+                            Attention
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top: 16px; padding: 12px; background: var(--wf-canvas); border-radius: 6px; font-size: 13px; color: var(--wf-muted);">
+                    These numbers are pulled from your live portal data. Marcus may adjust for factors not visible here.
+                    <a href="pm-analytics.html" style="color: var(--accent); text-decoration: none; margin-left: 8px;">View full analytics →</a>
+                </div>
+            </div>
+
+            <!-- Notes Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">Your Private Prep Notes</div>
+                </div>
+                <div class="notes-hint">Not shared with Marcus — only you can see these</div>
+                <textarea id="prep-notes" placeholder="Add your talking points, questions, or concerns here..."></textarea>
+                <button class="btn btn-primary" style="margin-top: 12px;" onclick="saveNotes()">💾 Save Notes</button>
+            </div>
+
+            <!-- Past QBRs Section -->
+            <div class="card">
+                <button class="collapsible" onclick="toggleCollapsible(this)">
+                    <span class="collapsible-icon">▶</span>
+                    <span>Past QBRs</span>
+                    <span style="margin-left: auto; font-weight: 400; font-size: 13px; color: var(--wf-muted);">3 completed</span>
+                </button>
+                <div class="collapsible-content" style="max-height: 1000px;">
+                    <!-- Q4 2025 -->
+                    <div class="qbr-card">
+                        <div class="qbr-card-header">
+                            <div>
+                                <div class="qbr-card-title">Q4 2025 QBR</div>
+                                <div class="qbr-card-date">December 14, 2025</div>
+                            </div>
+                            <div class="badge complete">
+                                <span class="rag-icon" style="background: var(--green);"></span>
+                                Complete
+                            </div>
+                        </div>
+                        <div class="qbr-card-summary">
+                            Revenue 88% of target, strong Q4 finish. Action items: renew 2 expiring certs by Feb 28, submit MDF co-marketing claim for Digital Edge event.
+                        </div>
+                        <div class="qbr-card-actions">
+                            <a href="psm-qbr-minutes.html" class="btn btn-secondary btn-sm">📋 View Minutes</a>
+                        </div>
+                        <div class="qbr-action-items">
+                            <div style="font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--wf-muted); margin-bottom: 8px;">Action Items</div>
+                            <div class="action-item">
+                                <div class="action-item-icon action-done">✓</div>
+                                <span>Renew certs — <span style="color: var(--green);">done Jan 15</span></span>
+                            </div>
+                            <div class="action-item">
+                                <div class="action-item-icon action-done">✓</div>
+                                <span>MDF claim submitted — <span style="color: var(--green);">done Jan 20</span></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Q3 2025 -->
+                    <div class="qbr-card">
+                        <div class="qbr-card-header">
+                            <div>
+                                <div class="qbr-card-title">Q3 2025 QBR</div>
+                                <div class="qbr-card-date">September 18, 2025</div>
+                            </div>
+                            <div class="badge complete">
+                                <span class="rag-icon" style="background: var(--green);"></span>
+                                Complete
+                            </div>
+                        </div>
+                        <div class="qbr-card-summary">
+                            Deal velocity strong but cert score flagged. Marcus recommended immediate enrollment in 2 technical courses.
+                        </div>
+                        <div class="qbr-card-actions">
+                            <a href="psm-qbr-minutes.html" class="btn btn-secondary btn-sm">📋 View Minutes</a>
+                        </div>
+                        <div class="qbr-action-items">
+                            <div style="font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--wf-muted); margin-bottom: 8px;">Action Items</div>
+                            <div class="action-item">
+                                <div class="action-item-icon action-done">✓</div>
+                                <span>Enrolled in technical courses — <span style="color: var(--green);">done Oct 5</span></span>
+                            </div>
+                            <div class="action-item">
+                                <div class="action-item-icon action-pending">⏳</div>
+                                <span>Co-marketing plan — <span style="color: var(--orange);">deferred to Q4</span></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Q2 2025 -->
+                    <div class="qbr-card">
+                        <div class="qbr-card-header">
+                            <div>
+                                <div class="qbr-card-title">Q2 2025 QBR</div>
+                                <div class="qbr-card-date">June 19, 2025</div>
+                            </div>
+                            <div class="badge complete">
+                                <span class="rag-icon" style="background: var(--green);"></span>
+                                Complete
+                            </div>
+                        </div>
+                        <div class="qbr-card-summary">
+                            First QBR as Gold tier partner. Reviewed Gold benefits, set annual JBP targets for fiscal year.
+                        </div>
+                        <div class="qbr-card-actions">
+                            <a href="psm-qbr-minutes.html" class="btn btn-secondary btn-sm">📋 View Minutes</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Sidebar -->
+        <div class="pcp-sidebar-right">
+            <!-- Countdown -->
+            <div class="sidebar-section">
+                <div class="sidebar-title">Next QBR</div>
+                <div class="countdown">17</div>
+                <div class="countdown-label">days to Q1 QBR</div>
+            </div>
+
+            <!-- Prep Readiness -->
+            <div class="sidebar-section">
+                <div class="sidebar-title">Prep Readiness</div>
+                <div class="progress-label">
+                    <span>Your progress</span>
+                    <span id="progress-percent">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill" style="width: 0%;"></div>
+                </div>
+                <div style="font-size: 12px; color: var(--wf-muted); margin-top: 8px;">Start your prep!</div>
+            </div>
+
+            <!-- Key Numbers -->
+            <div class="sidebar-section">
+                <div class="sidebar-title">Key Numbers to Know</div>
+                <div class="quick-facts">
+                    <div class="fact-item">
+                        <div class="fact-label">Revenue Q1 YTD</div>
+                        <div class="fact-value">$525K</div>
+                        <div style="font-size: 11px; color: var(--orange); margin-top: 4px;">
+                            <span class="rag-icon rag-amber"></span> 70% of target
+                        </div>
+                    </div>
+                    <div class="fact-item">
+                        <div class="fact-label">Open DRs</div>
+                        <div class="fact-value">18</div>
+                        <div style="font-size: 11px; color: var(--green); margin-top: 4px;">
+                            <span class="rag-icon rag-green"></span> Strong
+                        </div>
+                    </div>
+                    <div class="fact-item">
+                        <div class="fact-label">Certifications</div>
+                        <div class="fact-value">5/5</div>
+                        <div style="font-size: 11px; color: var(--orange); margin-top: 4px;">
+                            <span class="rag-icon rag-amber"></span> Platinum gap
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="sidebar-section">
+                <div class="sidebar-title">Quick Links</div>
+                <div class="quick-links">
+                    <a href="pm-jbp.html" class="quick-link">→ JBP Progress</a>
+                    <a href="pm-analytics.html" class="quick-link">→ Analytics</a>
+                    <a href="pm-agreements.html" class="quick-link">→ Agreement Status</a>
+                    <a href="pm-team-management.html" class="quick-link">→ Team Certifications</a>
+                </div>
+            </div>
+
+            <!-- Contact Card -->
+            <div class="sidebar-section">
+                <div class="sidebar-title">Your PSM</div>
+                <div class="contact-card">
+                    <div class="contact-avatar">MC</div>
+                    <div class="contact-name">Marcus Chen</div>
+                    <div class="contact-email">marcus@equinix.com</div>
+                    <button class="contact-action" onclick="alert('Message feature placeholder')">💬 Message</button>
+                </div>
+            </div>
+
+            <!-- Request Topic -->
+            <div class="sidebar-section">
+                <button class="btn btn-secondary" style="width: 100%;" onclick="alert('Request topic form placeholder')">
+                    🔗 Request a Topic
+                </button>
+                <div style="font-size: 11px; color: var(--wf-muted); margin-top: 8px; text-align: center;">
+                    Ask Marcus to add a topic before the QBR
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="wf-nav.js"></script>
+    <script>
+        // Prep checklist progress tracking
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('.checklist-item input[type="checkbox"]');
+            const checked = Array.from(checkboxes).filter(cb => cb.checked).length;
+            const total = checkboxes.length;
+            const percent = Math.round((checked / total) * 100);
+            
+            document.getElementById('progress-fill').style.width = percent + '%';
+            document.getElementById('progress-percent').textContent = percent + '%';
+            
+            // Update label text
+            const prepLabel = document.querySelector('.progress-label + div');
+            if (prepLabel) {
+                if (percent === 0) {
+                    prepLabel.textContent = 'Start your prep!';
+                } else if (percent < 100) {
+                    prepLabel.textContent = `${checked} of ${total} done`;
+                } else {
+                    prepLabel.textContent = 'Ready to go!';
+                }
+            }
+        }
+
+        // Toggle add agenda modal
+        function toggleAddAgenda() {
+            const modal = document.getElementById('add-agenda-modal');
+            modal.classList.toggle('show');
+        }
+
+        // Toggle collapsible section
+        function toggleCollapsible(btn) {
+            btn.classList.toggle('collapsed');
+            const content = btn.nextElementSibling;
+            if (btn.classList.contains('collapsed')) {
+                content.style.maxHeight = '0';
+            } else {
+                content.style.maxHeight = '1000px';
+            }
+        }
+
+        // Save notes
+        function saveNotes() {
+            const notes = document.getElementById('prep-notes').value;
+            localStorage.setItem('qbr-prep-notes', notes);
+            alert('Notes saved!');
+        }
+
+        // Load saved notes on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            const saved = localStorage.getItem('qbr-prep-notes');
+            if (saved) {
+                document.getElementById('prep-notes').value = saved;
+            }
+        });
+    </script>
+
+    <!-- SF Object Notes (for developers) -->
+    <!--
+    Salesforce Objects & Fields:
+    
+    QBR__c (Custom Object)
+    - QBR_Number__c (e.g., "QBR-2026-CB-Q1")
+    - Quarter__c (lookup to Period/Quarter)
+    - Account__c (lookup to Account — Partner company)
+    - PSM__c (lookup to User — Marcus Chen)
+    - Scheduled_Date__c (DateTime)
+    - Duration_Minutes__c (Number)
+    - Format__c (picklist: Video Call, In-person, Hybrid)
+    - Meeting_Link__c (URL)
+    - Status__c (picklist: Upcoming, Completed, Cancelled)
+    - QBR_Status__c (picklist: Agenda_Shared, Minutes_Pending, Closed)
+    - Partner_Notes__c (Long Text Area — partner-editable, PSM read-only)
+    - Partner_Prep_Status__c (JSON text field storing checklist state)
+    
+    QBR_Agenda_Item__c (Child of QBR__c)
+    - Title__c (String)
+    - Description__c (Text Area)
+    - Duration_Minutes__c (Number)
+    - Sequence__c (Number for ordering)
+    - Shared__c (Checkbox — if false, hidden from partner)
+    - Owner__c (User — who created the item)
+    
+    QBR_Attendee__c (Join Object between QBR__c and User)
+    - QBR__c (Master)
+    - Attendee_User__c (Master)
+    - Required__c (Checkbox)
+    - Response_Status__c (picklist: Accepted, Declined, No Response)
+    
+    QBR_Action_Item__c (Child of QBR__c)
+    - Description__c (Text)
+    - Owner_User__c (lookup to User)
+    - Status__c (picklist: Open, Complete, Deferred)
+    - Due_Date__c (Date)
+    - Completed_Date__c (Date, auto-set on status change to Complete)
+    
+    Security/Sharing:
+    - Partner users see only QBR records for their Account__c
+    - Agenda items with Shared__c = false are hidden via SOQL filtering
+    - Partner_Notes__c visible to partner (create/edit), PSM (read)
+    -->
+</body>
+</html>

@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Process Flow: Deal Registration | Equinix Partner Connect Portal</title>
+  <style>
+    :root {
+      --wf-canvas: #f5f6f8;
+      --wf-ink: #111827;
+      --wf-muted: #6b7280;
+      --wf-accent: #0070d2;
+      --gray-border: #d1d5db;
+      --teal: #0d9488;
+      --orange: #f59e0b;
+      --red: #dc2626;
+      --green: #16a34a;
+      
+      /* Actor swim lane colors */
+      --actor-rep: #dbeafe;        /* light blue */
+      --actor-system: #f1f5f9;     /* light gray */
+      --actor-psm: #ede9fe;        /* light purple */
+      --actor-admin: #dcfce7;      /* light green */
+      --actor-desk: #fef3c7;       /* light amber */
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: var(--wf-canvas);
+      color: var(--wf-ink);
+      line-height: 1.6;
+    }
+
+    /* ============ TOPBAR ============ */
+    .topbar {
+      background: white;
+      border-bottom: 1px solid var(--gray-border);
+      padding: 1rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .breadcrumb {
+      font-size: 0.875rem;
+      color: var(--wf-muted);
+    }
+
+    .breadcrumb strong {
+      color: var(--wf-ink);
+    }
+
+    /* ============ MAIN CONTAINER ============ */
+    .container {
+      display: flex;
+      gap: 1.5rem;
+      padding: 1.5rem;
+      max-width: 100%;
+      margin: 0 auto;
+    }
+
+    .main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .sidebar {
+      width: 300px;
+      flex-shrink: 0;
+    }
+
+    /* ============ SWIMLANE GRID ============ */
+    .swimlane-header {
+      margin-bottom: 1.5rem;
+    }
+
+    .swimlane-header h1 {
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .swimlane-header p {
+      color: var(--wf-muted);
+      font-size: 0.95rem;
+    }
+
+    .swimlane-grid {
+      display: grid;
+      grid-template-columns: 140px repeat(7, 1fr);
+      grid-template-rows: auto repeat(5, auto);
+      gap: 1px;
+      background: var(--gray-border);
+      border: 1px solid var(--gray-border);
+      border-radius: 0.5rem;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    /* Actor labels (leftmost column) */
+    .swimlane-actor {
+      padding: 1rem;
+      font-weight: 600;
+      font-size: 0.875rem;
+      display: flex;
+      align-items: center;
+      background: white;
+      border-right: 2px solid var(--gray-border);
+    }
+
+    /* Step header (top row) */
+    .swimlane-step {
+      padding: 1rem;
+      background: var(--wf-ink);
+      color: white;
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.25rem;
+    }
+
+    .step-number {
+      font-size: 0.75rem;
+      opacity: 0.8;
+    }
+
+    .step-title {
+      font-size: 0.875rem;
+    }
+
+    /* Cells in the grid */
+    .swimlane-cell {
+      padding: 1rem;
+      background: white;
+      border-bottom: 1px solid var(--gray-border);
+      border-right: 1px solid var(--gray-border);
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+
+    /* Actor-specific cell colors (for rows 2-6, columns 2-8) */
+    .swimlane-grid > :nth-child(n + 9):nth-child(-n + 15) { background: var(--actor-rep); }      /* Row 2 (Rep) */
+    .swimlane-grid > :nth-child(n + 16):nth-child(-n + 22) { background: var(--actor-system); }  /* Row 3 (System) */
+    .swimlane-grid > :nth-child(n + 23):nth-child(-n + 29) { background: var(--actor-psm); }     /* Row 4 (PSM) */
+    .swimlane-grid > :nth-child(n + 30):nth-child(-n + 36) { background: var(--actor-admin); }   /* Row 5 (Partner Admin) */
+    .swimlane-grid > :nth-child(n + 37):nth-child(-n + 43) { background: var(--actor-desk); }    /* Row 6 (Deal Desk) */
+
+    /* Step headers don't get row coloring */
+    .swimlane-grid > .swimlane-step {
+      grid-column: auto;
+    }
+
+    /* Leftmost column borders */
+    .swimlane-actor {
+      grid-column: 1;
+    }
+
+    /* RAG badges */
+    .rag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.25rem 0.625rem;
+      border-radius: 0.25rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-top: 0.5rem;
+    }
+
+    .rag.red {
+      background: #fecaca;
+      color: var(--red);
+    }
+
+    .rag.amber {
+      background: #fef08a;
+      color: var(--orange);
+    }
+
+    .rag.green {
+      background: #dcfce7;
+      color: var(--green);
+    }
+
+    .rag::before {
+      content: '●';
+      font-size: 0.625rem;
+    }
+
+    /* Emphasis for key details */
+    .key-detail {
+      background: #fef3c7;
+      padding: 0.375rem 0.5rem;
+      border-left: 2px solid var(--orange);
+      margin-top: 0.5rem;
+      font-size: 0.8125rem;
+      font-style: italic;
+    }
+
+    /* ============ BELOW SWIMLANE ============ */
+    .sla-table {
+      margin-top: 2rem;
+      background: white;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      border: 1px solid var(--gray-border);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    .sla-table h3 {
+      padding: 1rem 1.5rem;
+      background: var(--wf-ink);
+      color: white;
+      font-size: 0.95rem;
+      border-bottom: 1px solid var(--gray-border);
+    }
+
+    .sla-rows {
+      display: grid;
+      grid-template-columns: 1fr 1fr 2fr;
+      gap: 1px;
+      background: var(--gray-border);
+      padding: 1px;
+    }
+
+    .sla-row {
+      background: white;
+      padding: 0.75rem 1rem;
+      font-size: 0.875rem;
+    }
+
+    .sla-row strong {
+      display: block;
+      color: var(--wf-ink);
+      margin-bottom: 0.25rem;
+    }
+
+    .sla-row em {
+      color: var(--wf-muted);
+      font-style: italic;
+    }
+
+    /* Narrative grid */
+    .narrative-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .narrative-panel {
+      background: white;
+      border-radius: 0.5rem;
+      padding: 1.25rem;
+      border: 1px solid var(--gray-border);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    .narrative-panel h4 {
+      font-size: 0.95rem;
+      margin-bottom: 0.75rem;
+      color: var(--wf-ink);
+    }
+
+    .narrative-panel p {
+      font-size: 0.8125rem;
+      color: var(--wf-muted);
+      line-height: 1.6;
+    }
+
+    /* ============ SIDEBAR ============ */
+    .sidebar-section {
+      background: white;
+      border-radius: 0.5rem;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      border: 1px solid var(--gray-border);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    }
+
+    .sidebar-section h3 {
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--wf-muted);
+    }
+
+    .sidebar-stat {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #f3f4f6;
+      font-size: 0.875rem;
+    }
+
+    .sidebar-stat:last-child {
+      border-bottom: none;
+    }
+
+    .sidebar-stat-label {
+      color: var(--wf-muted);
+    }
+
+    .sidebar-stat-value {
+      font-weight: 600;
+      color: var(--wf-ink);
+    }
+
+    .failure-point {
+      padding: 0.75rem;
+      margin-bottom: 0.75rem;
+      background: #fffbeb;
+      border-left: 2px solid var(--orange);
+      border-radius: 0.25rem;
+      font-size: 0.8125rem;
+    }
+
+    .failure-point strong {
+      display: block;
+      color: var(--orange);
+      margin-bottom: 0.25rem;
+    }
+
+    .failure-point em {
+      color: var(--wf-muted);
+    }
+
+    .sidebar-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .sidebar-link {
+      padding: 0.625rem;
+      background: #f9fafb;
+      border: 1px solid var(--gray-border);
+      border-radius: 0.25rem;
+      font-size: 0.8125rem;
+      color: var(--wf-accent);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .sidebar-link:hover {
+      background: var(--wf-accent);
+      color: white;
+    }
+
+    .design-implications {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--gray-border);
+    }
+
+    .design-implications h4 {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--wf-muted);
+      margin-bottom: 0.75rem;
+      letter-spacing: 0.05em;
+    }
+
+    .design-implications li {
+      font-size: 0.8125rem;
+      color: var(--wf-muted);
+      margin-bottom: 0.5rem;
+      line-height: 1.5;
+      list-style-position: inside;
+    }
+
+    /* ============ RESPONSIVE ============ */
+    @media (max-width: 1200px) {
+      .narrative-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 992px) {
+      .container {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+      }
+
+      .swimlane-grid {
+        grid-template-columns: 120px repeat(7, 1fr);
+        font-size: 0.8125rem;
+      }
+
+      .swimlane-cell {
+        padding: 0.75rem;
+      }
+
+      .swimlane-actor {
+        padding: 0.75rem;
+      }
+
+      .swimlane-step {
+        padding: 0.75rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .narrative-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <script>
+    if(localStorage.getItem('pcp-wf-auth')!=='1') location.replace('gate.html');
+  </script>
+
+  <div class="topbar">
+    <div class="breadcrumb">
+      Process Flows › <strong>Deal Registration</strong>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="main">
+      <div class="swimlane-header">
+        <h1>Deal Registration Process</h1>
+        <p>End-to-end deal protection workflow: submission through commission payout. Scenario: Steve Rogers (CloudBridge) registers a deal for Harrington Financial Group.</p>
+      </div>
+
+      <!-- ============ SWIMLANE ============ -->
+      <div class="swimlane-grid">
+        <!-- Step Headers (Row 1) -->
+        <div class="swimlane-step" style="grid-column: 1; grid-row: 1;">Step</div>
+        <div class="swimlane-step" style="grid-column: 2; grid-row: 1;"><span class="step-number">Step 1</span><span class="step-title">Submit Deal</span></div>
+        <div class="swimlane-step" style="grid-column: 3; grid-row: 1;"><span class="step-number">Step 2</span><span class="step-title">Initial Validation</span></div>
+        <div class="swimlane-step" style="grid-column: 4; grid-row: 1;"><span class="step-number">Step 3</span><span class="step-title">PSM Review</span></div>
+        <div class="swimlane-step" style="grid-column: 5; grid-row: 1;"><span class="step-number">Step 4</span><span class="step-title">Approval & Protection Starts</span></div>
+        <div class="swimlane-step" style="grid-column: 6; grid-row: 1;"><span class="step-number">Step 5</span><span class="step-title">Active Pipeline Mgmt</span></div>
+        <div class="swimlane-step" style="grid-column: 7; grid-row: 1;"><span class="step-number">Step 6</span><span class="step-title">Deal Won / Close</span></div>
+        <div class="swimlane-step" style="grid-column: 8; grid-row: 1;"><span class="step-number">Step 7</span><span class="step-title">Commission & Close-Out</span></div>
+
+        <!-- Actor Labels (Column 1) -->
+        <div class="swimlane-actor" style="grid-column: 1; grid-row: 2;">Rep (Steve)</div>
+        <div class="swimlane-actor" style="grid-column: 1; grid-row: 3;">System (PCP)</div>
+        <div class="swimlane-actor" style="grid-column: 1; grid-row: 4;">PSM (Marcus)</div>
+        <div class="swimlane-actor" style="grid-column: 1; grid-row: 5;">Admin (Jordan)</div>
+        <div class="swimlane-actor" style="grid-column: 1; grid-row: 6;">Deal Desk (Priya)</div>
+
+        <!-- ROW 2: Rep (Steve) -->
+        <div class="swimlane-cell" style="grid-column: 2; grid-row: 2;">
+          Completes rep-register-deal.html form:<br>• Customer name<br>• Products & IBX<br>• TCV<br>• Expected close date<br>• Deal type<br>• Customer quote (attachment)
+          <div class="rag green">ACTOR READY</div>
+        </div>
+        <div class="swimlane-cell" style="grid-column: 3; grid-row: 2;">—</div>
+        <div class="swimlane-cell" style="grid-column: 4; grid-row: 2;">—</div>
+        <div class="swimlane-cell" style="grid-column: 5; grid-row: 2;">
+          Receives approval email:<br>• DR number<br>• Protection window dates<br>• Expected commission rate
+          <div class="rag green">NOTIFIED</div>
+        </div>
+        <div class="swimlane-cell" style="grid-column: 6; grid-row: 2;">
+          Updates deal stages in rep-pipeline.html as opportunities progress. Receives 30-day, 14-day, 7-day expiry alerts.
+          <div class="key-detail">Extension requests via portal → PSM approval</div>
+        </div>
+        <div class="swimlane-cell" style="grid-column: 7; grid-row: 2;">
+          Marks deal Won in CRM → triggers Order process
+          <div class="rag green">CLOSES DEAL</div>
+        </div>
+        <div class="swimlane-cell" style="grid-column: 8; grid-row: 2;">
+          Views commission details in rep-deals-commission.html. Commission shown at partner tier rate.
+          <div class="rag green">PAYOUT VISIBLE</div>
+        </div>
+
+        <!-- ROW 3: System (PCP) -->
+        <div class="swimlane-cell" style="grid-column: 2; grid-row: 3;">
+          Creates DealRegistration__c record:<br>• Status: Submitted<br>• Assigns DR number: DR-2026-CB-019<br>• Captures timestamp (T0)<br>• Sends confirmation to Steve
+          <div class="key-detail">Submission T0 ≠ protection start. Protection begins only on APPROVAL (Step 4).</div>
+        </div>
+        <div class="swimlane-cell" style="grid-column: 3; grid-row: 3;">
+          Automated validation:<br>• Duplicate check (same customer + IBX + product in 90d?)<br>• Completeness check<br>• Partner tier eligibility<br><br>PASS → routes to PSM<br>FAIL → returns to Rep with error
+          <div class="rag amber">IF DUPLICATE: PSM resolves</div>
+        </div>
+        <div class="swimlane-cell" style="grid-column: 4; grid-row: 3;">—</div>
+        <div class="swimlane-cell" style="grid-column: 5; grid-row: 3;">
+          On PSM approval:<br>• Status → 'Approved'<br>• Protection_Start_Date = TODAY<br>• Protection_End_Date = TODAY + window<br>• Sends approval email to rep & admin
+        </div>
+        <div class="swimlane-cell" style="grid-column: 6; grid-row: 3;">
+          Monitors deal record. Calculates expiry countdown. Sends interval alerts (30d/14d/7d before expiry).
+        </div>
+        <div class="swimlane-cell" style="grid-column: 7; grid-row: 3;">
+          Creates Order record. Validates commission qualification trigger.
+        </div>
+        <div class="swimlane-cell" style="grid-column: 8; grid-row: 3;">
+          Commission__c record created at partner tier rate. Stages for payout Net 30 from close. Status → 'Won'.
+        </div>
+
+        <!-- ROW 4: PSM (Marcus) -->
+        <div class="swimlane-cell" style="grid-column: 2; grid-row: 4;">—</div>
+        <div class="swimlane-cell" style="grid-column: 3; grid-row: 4;">
+          If validation fails or duplicate detected: receives alert in queue for investigation.
+        </div>
+        <div class="swimlane-cell" style="grid-column: 4; grid-row: 4;">
+          Reviews in psm-deal-registration.html queue (SLA: 2 business days):<br>• Customer legitimacy<br>• No Equinix direct relationship<br>• Correct product/IBX<br>• Fair TCV estimate<br><br>OUTCOMES:<br>✓ Approve → Step 4<br>⚠ Request Info → back to Rep<br>✗ Reject → closed with reason
+          <div class="rag amber">2-BUSINESS-DAY SLA</div>
+        </div>
+        <div class="swimlane-cell" style="grid-column: 5; grid-row: 4;">
+          Approves deal (if needed). Record moves to Active protection.
+        </div>
+        <div class="swimlane-cell" style="grid-column: 6; grid-row: 4;">
+          Monitors across portfolio. Reviews extension requests. Resolves disputes if customer not validly registered (routes to psm-deal-dispute.html).
+          <div class="key-detail">If deal at risk of expiry: PSM can request extended documentation from rep</div>
+        </div>
+        <div class="swimlane-cell" style="grid-column: 7; grid-row: 4;">
+          Reviews for disputes (e.g., customer claimed by another rep or direct). Routes to psm-deal-dispute.html if contested.
+          <div class="rag red">MAY DISPUTE</div>
+        </div>
+        <div class="swimlane-cell" style="grid-column: 8; grid-row: 4;">
+          Closes record. Logs in quarterly portfolio metrics.
+        </div>
+
+        <!-- ROW 5: Partner Admin (Jordan) -->
+        <div class="swimlane-cell" style="grid-column: 2; grid-row: 5;">—</div>
+        <div class="swimlane-cell" style="grid-column: 3; grid-row: 5;">—</div>
+        <div class="swimlane-cell" style="grid-column: 4; grid-row: 5;">
+          Notified of team deal submitted (email notification only; no action required).
+        </div>
+        <div class="swimlane-cell" style="grid-column: 5; grid-row: 5;">
+          Receives approval notification. Can view deal in team dashboard.
+          <div class="rag green">NOTIFIED ONLY</div>
+        </div>
+        <div class="swimlane-cell" style="grid-column: 6; grid-row: 5;">
+          Views team deal progress in pm-opportunities.html or partner team portal. Sees protection window countdown.
+        </div>
+        <div class="swimlane-cell" style="grid-column: 7; grid-row: 5;">—</div>
+        <div class="swimlane-cell" style="grid-column: 8; grid-row: 5;">
+          Views org-level commission total in pm-deals-revenue.html. Commission visible by partner, quarter, rep.
+        </div>
+
+        <!-- ROW 6: Deal Desk (Priya) -->
+        <div class="swimlane-cell" style="grid-column: 2; grid-row: 6;">—</div>
+        <div class="swimlane-cell" style="grid-column: 3; grid-row: 6;">—</div>
+        <div class="swimlane-cell" style="grid-column: 4; grid-row: 6;">
+          Involved only if deal flagged as complex or disputed during PSM review (auto-escalation rule).
+        </div>
+        <div class="swimlane-cell" style="grid-column: 5; grid-row: 6;">—</div>
+        <div class="swimlane-cell" style="grid-column: 6; grid-row: 6;">
+          If escalated: monitors complex deal. May review documentation or contact PSM for guidance.
+        </div>
+        <div class="swimlane-cell" style="grid-column: 7; grid-row: 6;">
+          Reviews commission qualification:<br>• Is deal within protection window?<br>• Is customer the registered account?<br><br>PASS → Commission created<br>FAIL → Dispute flag → psm-deal-dispute.html
+          <div class="rag amber">QUALIFICATION GATE</div>
+        </div>
+        <div class="swimlane-cell" style="grid-column: 8; grid-row: 6;">
+          Validates commission payout. Coordinates with Finance for Net 30 payout.
+        </div>
+      </div>
+
+      <!-- ============ SLA TABLE ============ -->
+      <div class="sla-table">
+        <h3>SLA & Window Definitions</h3>
+        <div class="sla-rows">
+          <div class="sla-row">
+            <strong>Validation (Automated)</strong>
+            <em>&lt; 2 hours from submission</em>
+          </div>
+          <div class="sla-row">
+            <strong>PSM Review</strong>
+            <em>2 business days from submission</em>
+          </div>
+          <div class="sla-row">
+            <strong>Protection Windows (from APPROVAL date)</strong>
+            <em>New Logo: 90 days | Expansion: 60 days | Renewal: 45 days</em>
+          </div>
+
+          <div class="sla-row">
+            <strong>Expiry Alerts</strong>
+            <em>30 days, 14 days, 7 days before end date (to Rep & PSM)</em>
+          </div>
+          <div class="sla-row">
+            <strong>Commission Payout</strong>
+            <em>Net 30 from close date (subject to qualification)</em>
+          </div>
+          <div class="sla-row">
+            <strong>Deal Desk Review (if flagged)</strong>
+            <em>Within 24 hours of close event</em>
+          </div>
+        </div>
+      </div>
+
+      <!-- ============ NARRATIVE GRID ============ -->
+      <div class="narrative-grid">
+        <div class="narrative-panel">
+          <h4>Duplicate Detection</h4>
+          <p>
+            PCP runs automated duplicate rule on Customer_Account__c + IBX__c + Product_Family__c within any 90-day lookback window. If a match is found, the new deal is flagged and routed to Marcus (PSM) for investigation. Marcus resolves by either approving the new deal (if legitimate cross-sell) or rejecting as true duplicate. Only one deal per customer-IBX-product combo can hold active protection at a time.
+          </p>
+        </div>
+
+        <div class="narrative-panel">
+          <h4>Protection Window Mechanics</h4>
+          <p>
+            Protection window <strong>starts on PSM approval date</strong> (Step 4), not on submission date (Step 1). This ensures the rep has time to gather customer quote and PSM has time to vet legitimacy before the 90/60/45-day countdown begins. Deal window is visible in both rep-pipeline.html and partner admin portal. If deal expires without closure, protection ends automatically and rep cannot claim commission.
+          </p>
+        </div>
+
+        <div class="narrative-panel">
+          <h4>Extension Requests</h4>
+          <p>
+            Rep can request a single extension (up to 30 days max) via portal before window expires. Request routes to PSM for approval based on documented customer engagement or contract term extension. Extension requires PSM signature and reason code. No automatic re-approval; PSM must re-review legitimacy each extension round.
+          </p>
+        </div>
+
+        <div class="narrative-panel">
+          <h4>Commission Qualification</h4>
+          <p>
+            Priya Nair (Deal Desk) qualifies commission at close event. Checks: (1) close date within protection window? (2) customer account matches registered partner account? (3) no conflicting claim from another rep? If all pass, Commission__c created at partner's tier rate and stages for Net 30 payout. If dispute, routes to psm-deal-dispute.html for arbitration.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ SIDEBAR ============ -->
+    <div class="sidebar">
+      <div class="sidebar-section">
+        <h3>Flow Statistics</h3>
+        <div class="sidebar-stat">
+          <span class="sidebar-stat-label">Total Steps</span>
+          <span class="sidebar-stat-value">7</span>
+        </div>
+        <div class="sidebar-stat">
+          <span class="sidebar-stat-label">Actors</span>
+          <span class="sidebar-stat-value">5</span>
+        </div>
+        <div class="sidebar-stat">
+          <span class="sidebar-stat-label">Avg PSM Review Time</span>
+          <span class="sidebar-stat-value">1.3 days</span>
+        </div>
+        <div class="sidebar-stat">
+          <span class="sidebar-stat-label">Protection Window (typical)</span>
+          <span class="sidebar-stat-value">60–90 days</span>
+        </div>
+        <div class="sidebar-stat">
+          <span class="sidebar-stat-label">Commission Payout</span>
+          <span class="sidebar-stat-value">Net 30</span>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <h3>Common Failure Points</h3>
+        <div class="failure-point">
+          <strong>Incomplete Form (40%)</strong>
+          <em>Rep submits without customer quote or missing TCV — validation rejects, returns to rep with error list.</em>
+        </div>
+        <div class="failure-point">
+          <strong>Duplicate Submission (25%)</strong>
+          <em>Same customer + IBX + product detected in 90-day window. Flagged for PSM investigation; rep must provide differentiation (e.g., new product upsell) or deal rejected.</em>
+        </div>
+        <div class="failure-point">
+          <strong>TCV Underestimate (15%)</strong>
+          <em>PSM flags unusually low pricing vs. market rate. Requests justification from rep. May reject if customer clearly overstates discount or rep lack documentation.</em>
+        </div>
+        <div class="failure-point">
+          <strong>Expired Protection Window (12%)</strong>
+          <em>Deal closes after window expires. Commission disqualified. Rep receives no payout, even if customer truly acquired during protected period (records prove legitimacy post-facto).</em>
+        </div>
+        <div class="failure-point">
+          <strong>Disputed Customer Claim (8%)</strong>
+          <em>Another rep or direct account claim detected at close. Routes to psm-deal-dispute.html for arbitration. Commission held pending resolution.</em>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <h3>Relevant Screens</h3>
+        <div class="sidebar-links">
+          <a href="rep-register-deal.html" class="sidebar-link">Rep: Register Deal Form</a>
+          <a href="psm-deal-registration.html" class="sidebar-link">PSM: Deal Queue & Review</a>
+          <a href="rep-pipeline.html" class="sidebar-link">Rep: Pipeline & Protection Countdown</a>
+          <a href="rep-deals-commission.html" class="sidebar-link">Rep: Commission Details & Payout</a>
+          <a href="psm-deal-dispute.html" class="sidebar-link">PSM: Dispute Resolution</a>
+          <a href="pm-deals-revenue.html" class="sidebar-link">Admin: Org-Level Revenue & Commission</a>
+          <a href="pm-opportunities.html" class="sidebar-link">Admin: Team Deal Progress</a>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <div class="design-implications">
+          <h4>Design Implications</h4>
+          <ul>
+            <li><strong>Clear Protection Window Visibility:</strong> Countdown timer must be prominent in rep dashboard and partner admin portal to reduce "surprise expired" events.</li>
+            <li><strong>Duplicate Detection UX:</strong> When system detects duplicate, must show rep the prior deal and let them choose: approve new deal with differentiation note, or cancel. Avoid silent rejections.</li>
+            <li><strong>PSM Workload Scaling:</strong> Deal queue must surface urgent items (approaching expiry, customer escalations, disputes). Bulk actions for batch approval of low-risk deals reduce review time.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="wf-nav.js"></script>
+</body>
+</html>

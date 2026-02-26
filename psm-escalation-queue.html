@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Escalation Queue – Equinix Partner Connect Portal (PSM Internal)</title>
+  <style>
+    :root {
+      --wf-canvas: #f5f6f8;
+      --wf-ink: #111827;
+      --wf-muted: #6b7280;
+      --wf-accent: #0070d2;
+      --gray-border: #d1d5db;
+      --teal: #0d9488;
+      --orange: #f59e0b;
+      --red: #dc2626;
+      --green: #16a34a;
+
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 12px;
+      --space-lg: 16px;
+      --space-xl: 24px;
+      --space-2xl: 32px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background-color: var(--wf-canvas);
+      color: var(--wf-ink);
+      line-height: 1.5;
+    }
+
+    /* ========== AUTH GATE ========== */
+    <script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+
+    /* ========== LAYOUT ========== */
+    .container {
+      display: flex;
+      height: 100vh;
+      flex-direction: column;
+    }
+
+    .topbar {
+      background: white;
+      border-bottom: 1px solid var(--gray-border);
+      padding: var(--space-lg) var(--space-xl);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+      z-index: 100;
+    }
+
+    .breadcrumb {
+      font-size: 14px;
+      color: var(--wf-muted);
+      font-weight: 500;
+    }
+
+    .breadcrumb a {
+      color: var(--wf-accent);
+      text-decoration: none;
+    }
+
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+
+    .breadcrumb span {
+      margin: 0 var(--space-sm);
+      color: var(--gray-border);
+    }
+
+    .main-flex {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .left-nav {
+      width: 280px;
+      background: white;
+      border-right: 1px solid var(--gray-border);
+      overflow-y: auto;
+      padding: var(--space-lg) 0;
+    }
+
+    .left-nav-section {
+      margin-bottom: var(--space-xl);
+      padding: 0 var(--space-lg);
+    }
+
+    .left-nav-section-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--wf-muted);
+      margin-bottom: var(--space-md);
+      letter-spacing: 0.5px;
+    }
+
+    .left-nav-item {
+      display: flex;
+      align-items: center;
+      padding: var(--space-md) var(--space-lg);
+      margin: 0 calc(var(--space-lg) * -1);
+      cursor: pointer;
+      border-left: 3px solid transparent;
+      transition: all 0.2s ease;
+      font-size: 14px;
+      color: var(--wf-ink);
+    }
+
+    .left-nav-item:hover {
+      background-color: var(--wf-canvas);
+    }
+
+    .left-nav-item.active {
+      background-color: var(--wf-canvas);
+      border-left-color: var(--wf-accent);
+      color: var(--wf-accent);
+      font-weight: 600;
+    }
+
+    .left-nav-icon {
+      margin-right: var(--space-md);
+      font-size: 16px;
+    }
+
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .main-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: var(--space-2xl);
+    }
+
+    .right-sidebar {
+      width: 320px;
+      background: white;
+      border-left: 1px solid var(--gray-border);
+      overflow-y: auto;
+      padding: var(--space-2xl) var(--space-lg);
+      border-top: 1px solid var(--gray-border);
+    }
+
+    /* ========== PAGE HEADER ========== */
+    .page-header {
+      margin-bottom: var(--space-2xl);
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--wf-ink);
+      margin-bottom: var(--space-sm);
+    }
+
+    .page-subtitle {
+      font-size: 14px;
+      color: var(--wf-muted);
+      margin-bottom: var(--space-lg);
+    }
+
+    /* ========== FILTER TABS ========== */
+    .filter-tabs {
+      display: flex;
+      gap: var(--space-md);
+      margin-bottom: var(--space-xl);
+      flex-wrap: wrap;
+    }
+
+    .filter-pill {
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--gray-border);
+      background: white;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--wf-ink);
+      transition: all 0.2s ease;
+    }
+
+    .filter-pill:hover {
+      border-color: var(--wf-accent);
+      background: var(--wf-canvas);
+    }
+
+    .filter-pill.active {
+      background: var(--wf-accent);
+      color: white;
+      border-color: var(--wf-accent);
+    }
+
+    /* ========== ALERT BANNER ========== */
+    .alert-banner {
+      padding: var(--space-lg);
+      border-radius: 6px;
+      background-color: #fef3c7;
+      border-left: 4px solid var(--orange);
+      margin-bottom: var(--space-xl);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .alert-icon {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      margin-right: var(--space-md);
+      flex-shrink: 0;
+      font-size: 16px;
+      line-height: 20px;
+      color: var(--orange);
+    }
+
+    .alert-content {
+      flex: 1;
+      font-size: 14px;
+      color: #92400e;
+      line-height: 1.5;
+    }
+
+    .alert-dismiss {
+      cursor: pointer;
+      color: var(--wf-muted);
+      margin-left: var(--space-lg);
+      flex-shrink: 0;
+      font-size: 16px;
+      line-height: 20px;
+    }
+
+    .alert-dismiss:hover {
+      color: var(--wf-ink);
+    }
+
+    /* ========== TABLE ========== */
+    .escalation-table {
+      background: white;
+      border-radius: 6px;
+      border: 1px solid var(--gray-border);
+      overflow: hidden;
+      margin-bottom: var(--space-xl);
+    }
+
+    .table-header {
+      display: grid;
+      grid-template-columns: 60px 140px 220px 100px 80px 120px 180px 120px;
+      gap: var(--space-md);
+      padding: var(--space-lg);
+      background-color: var(--wf-canvas);
+      border-bottom: 1px solid var(--gray-border);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--wf-muted);
+      letter-spacing: 0.5px;
+      position: sticky;
+      top: 0;
+    }
+
+    .table-body {
+      divide-y: 1px solid var(--gray-border);
+    }
+
+    .table-row {
+      display: grid;
+      grid-template-columns: 60px 140px 220px 100px 80px 120px 180px 120px;
+      gap: var(--space-md);
+      padding: var(--space-lg);
+      border-bottom: 1px solid var(--gray-border);
+      align-items: center;
+      transition: background-color 0.2s ease;
+    }
+
+    .table-row:hover {
+      background-color: var(--wf-canvas);
+    }
+
+    .table-row:last-child {
+      border-bottom: none;
+    }
+
+    .table-cell {
+      font-size: 13px;
+      color: var(--wf-ink);
+    }
+
+    .cell-priority {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-weight: 600;
+    }
+
+    .priority-badge {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .priority-critical .priority-badge {
+      background-color: var(--red);
+    }
+
+    .priority-medium .priority-badge {
+      background-color: var(--orange);
+    }
+
+    .priority-low .priority-badge {
+      background-color: var(--green);
+    }
+
+    .cell-partner {
+      font-weight: 600;
+      color: var(--wf-accent);
+      cursor: pointer;
+    }
+
+    .cell-partner:hover {
+      text-decoration: underline;
+    }
+
+    .cell-issue {
+      line-height: 1.4;
+    }
+
+    .cell-issue-title {
+      font-weight: 500;
+      margin-bottom: 2px;
+    }
+
+    .cell-issue-detail {
+      font-size: 12px;
+      color: var(--wf-muted);
+    }
+
+    .cell-status {
+      display: flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .status-badge.action-required {
+      background-color: #fee2e2;
+      color: var(--red);
+    }
+
+    .status-badge.action-required::before {
+      content: '●';
+      font-size: 6px;
+      color: var(--red);
+    }
+
+    .status-badge.in-progress {
+      background-color: #fef3c7;
+      color: #92400e;
+    }
+
+    .status-badge.in-progress::before {
+      content: '●';
+      font-size: 6px;
+      color: var(--orange);
+    }
+
+    .status-badge.monitoring {
+      background-color: #dcfce7;
+      color: #166534;
+    }
+
+    .status-badge.monitoring::before {
+      content: '●';
+      font-size: 6px;
+      color: var(--green);
+    }
+
+    .cell-next-action {
+      font-size: 12px;
+      color: var(--wf-muted);
+      line-height: 1.4;
+    }
+
+    .cell-actions {
+      display: flex;
+      gap: var(--space-sm);
+      flex-wrap: wrap;
+    }
+
+    .quick-action-link {
+      padding: 4px 10px;
+      background: var(--wf-canvas);
+      border: 1px solid var(--gray-border);
+      border-radius: 4px;
+      font-size: 12px;
+      color: var(--wf-accent);
+      cursor: pointer;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+
+    .quick-action-link:hover {
+      background: var(--wf-accent);
+      color: white;
+      border-color: var(--wf-accent);
+    }
+
+    /* ========== RESOLVED SECTION ========== */
+    .resolved-section {
+      background: white;
+      border-radius: 6px;
+      border: 1px solid var(--gray-border);
+      overflow: hidden;
+      margin-bottom: var(--space-xl);
+    }
+
+    .resolved-header {
+      padding: var(--space-lg);
+      background-color: var(--wf-canvas);
+      border-bottom: 1px solid var(--gray-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .resolved-header:hover {
+      background-color: #f0f1f3;
+    }
+
+    .resolved-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--wf-ink);
+    }
+
+    .resolved-count {
+      font-size: 13px;
+      color: var(--wf-muted);
+      margin-left: var(--space-md);
+    }
+
+    .resolved-toggle {
+      cursor: pointer;
+      color: var(--wf-muted);
+      font-size: 16px;
+    }
+
+    .resolved-content {
+      display: none;
+      padding: var(--space-lg);
+    }
+
+    .resolved-content.expanded {
+      display: block;
+    }
+
+    .resolved-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .resolved-item {
+      display: grid;
+      grid-template-columns: 150px 200px 100px 1fr;
+      gap: var(--space-lg);
+      padding: var(--space-md);
+      background: var(--wf-canvas);
+      border-radius: 4px;
+      font-size: 13px;
+      align-items: center;
+    }
+
+    .resolved-item-label {
+      color: var(--wf-muted);
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    /* ========== SLA REFERENCE ========== */
+    .sla-card {
+      background: white;
+      border-radius: 6px;
+      border: 1px solid var(--gray-border);
+      overflow: hidden;
+      margin-bottom: var(--space-xl);
+    }
+
+    .sla-header {
+      padding: var(--space-lg);
+      background-color: var(--wf-canvas);
+      border-bottom: 1px solid var(--gray-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .sla-header:hover {
+      background-color: #f0f1f3;
+    }
+
+    .sla-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--wf-ink);
+    }
+
+    .sla-toggle {
+      cursor: pointer;
+      color: var(--wf-muted);
+      font-size: 16px;
+    }
+
+    .sla-content {
+      display: none;
+      padding: var(--space-lg);
+      border-top: 1px solid var(--gray-border);
+    }
+
+    .sla-content.expanded {
+      display: block;
+    }
+
+    .sla-row {
+      display: grid;
+      grid-template-columns: 80px 1fr;
+      gap: var(--space-lg);
+      margin-bottom: var(--space-lg);
+      padding-bottom: var(--space-lg);
+      border-bottom: 1px solid var(--gray-border);
+    }
+
+    .sla-row:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .sla-level {
+      font-weight: 600;
+      color: var(--wf-ink);
+      font-size: 13px;
+    }
+
+    .sla-details {
+      font-size: 13px;
+      color: var(--wf-muted);
+      line-height: 1.5;
+    }
+
+    .sla-footer {
+      font-size: 11px;
+      color: var(--wf-muted);
+      font-style: italic;
+      margin-top: var(--space-lg);
+      padding-top: var(--space-lg);
+      border-top: 1px solid var(--gray-border);
+    }
+
+    /* ========== RIGHT SIDEBAR ========== */
+    .sidebar-section {
+      margin-bottom: var(--space-xl);
+      padding-bottom: var(--space-xl);
+      border-bottom: 1px solid var(--gray-border);
+    }
+
+    .sidebar-section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .sidebar-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--wf-muted);
+      margin-bottom: var(--space-md);
+      letter-spacing: 0.5px;
+    }
+
+    .stats-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--space-md) 0;
+      border-bottom: 1px solid var(--gray-border);
+      font-size: 13px;
+    }
+
+    .stats-row:last-child {
+      border-bottom: none;
+    }
+
+    .stat-label {
+      color: var(--wf-muted);
+    }
+
+    .stat-value {
+      font-weight: 700;
+      color: var(--wf-ink);
+      font-size: 14px;
+    }
+
+    .stat-value.critical {
+      color: var(--red);
+    }
+
+    .stat-value.medium {
+      color: var(--orange);
+    }
+
+    .partner-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+    }
+
+    .partner-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--space-sm) var(--space-md);
+      background: var(--wf-canvas);
+      border-radius: 4px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .partner-item:hover {
+      background-color: #f0f1f3;
+    }
+
+    .partner-name {
+      color: var(--wf-ink);
+      font-weight: 500;
+    }
+
+    .partner-count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      background: var(--wf-accent);
+      color: white;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .priority-focus {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .priority-focus-item {
+      padding: var(--space-md);
+      background: var(--wf-canvas);
+      border-radius: 4px;
+      border-left: 3px solid var(--red);
+    }
+
+    .priority-focus-label {
+      font-size: 12px;
+      color: var(--wf-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .priority-focus-text {
+      font-size: 13px;
+      color: var(--wf-ink);
+      font-weight: 500;
+      margin-bottom: var(--space-sm);
+    }
+
+    .priority-focus-link {
+      font-size: 12px;
+      color: var(--wf-accent);
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .priority-focus-link:hover {
+      text-decoration: underline;
+    }
+
+    .sidebar-button {
+      width: 100%;
+      padding: var(--space-md) var(--space-lg);
+      background: var(--wf-accent);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .sidebar-button:hover {
+      background-color: #0059a8;
+    }
+
+    .sidebar-link {
+      display: block;
+      padding: var(--space-md) 0;
+      color: var(--wf-accent);
+      text-decoration: none;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .sidebar-link:hover {
+      text-decoration: underline;
+    }
+
+    /* ========== SCROLLBAR ========== */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--gray-border);
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--wf-muted);
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="breadcrumb">
+        <a href="psm-program-dashboard.html">Program Dashboard</a>
+        <span>/</span>
+        <span>Escalations</span>
+      </div>
+    </div>
+
+    <!-- MAIN LAYOUT -->
+    <div class="main-flex">
+      <!-- LEFT NAVIGATION -->
+      <div class="left-nav">
+        <div class="left-nav-section">
+          <div class="left-nav-section-title">My Portfolio</div>
+          <div class="left-nav-item">
+            <div class="left-nav-icon">👥</div>
+            My Partners
+          </div>
+          <div class="left-nav-item active">
+            <div class="left-nav-icon">⚠️</div>
+            Escalations
+          </div>
+          <div class="left-nav-item">
+            <div class="left-nav-icon">💼</div>
+            Deals & Co-Sell
+          </div>
+          <div class="left-nav-item">
+            <div class="left-nav-icon">💰</div>
+            MDF
+          </div>
+        </div>
+
+        <div class="left-nav-section">
+          <div class="left-nav-section-title">Admin</div>
+          <div class="left-nav-item">
+            <div class="left-nav-icon">📋</div>
+            Agreements
+          </div>
+          <div class="left-nav-item">
+            <div class="left-nav-icon">⭐</div>
+            Tier Reviews
+          </div>
+          <div class="left-nav-item">
+            <div class="left-nav-icon">📊</div>
+            Reports
+          </div>
+        </div>
+      </div>
+
+      <!-- MAIN CONTENT -->
+      <div class="main-content">
+        <div class="main-scroll">
+          <!-- PAGE HEADER -->
+          <div class="page-header">
+            <h1 class="page-title">Escalation Queue</h1>
+            <p class="page-subtitle">8 partners · 5 open escalations · 2 require action today</p>
+          </div>
+
+          <!-- FILTER TABS -->
+          <div class="filter-tabs">
+            <div class="filter-pill active">All (5)</div>
+            <div class="filter-pill">Action Required (2)</div>
+            <div class="filter-pill">In Progress (2)</div>
+            <div class="filter-pill">Resolved This Month (6)</div>
+          </div>
+
+          <!-- ALERT BANNER -->
+          <div class="alert-banner">
+            <div style="display: flex; align-items: flex-start; flex: 1;">
+              <div class="alert-icon">⚠️</div>
+              <div class="alert-content">
+                <strong>2 escalations need your input before end of day</strong> — deal at risk for Nexus IT Group ($340K, expires in 4 days)
+              </div>
+            </div>
+            <div class="alert-dismiss">✕</div>
+          </div>
+
+          <!-- ESCALATION TABLE -->
+          <div class="escalation-table">
+            <div class="table-header">
+              <div>Priority</div>
+              <div>Partner</div>
+              <div>Deal / Issue</div>
+              <div>Opened</div>
+              <div>Days Open</div>
+              <div>Status</div>
+              <div>Next Action</div>
+              <div>Quick Actions</div>
+            </div>
+
+            <div class="table-body">
+              <!-- Row 1: Critical - Nexus IT Group -->
+              <div class="table-row priority-critical">
+                <div class="table-cell cell-priority">
+                  <div class="priority-badge"></div>
+                  <span style="color: var(--red); font-weight: 700;">Critical</span>
+                </div>
+                <div class="table-cell cell-partner">Nexus IT Group</div>
+                <div class="table-cell cell-issue">
+                  <div class="cell-issue-title">Deal Protection Expiry</div>
+                  <div class="cell-issue-detail">HDVR-2026-NEXUS-001 ($340K) · 4 days remaining</div>
+                </div>
+                <div class="table-cell">Feb 22, 2026</div>
+                <div class="table-cell">4</div>
+                <div class="table-cell">
+                  <span class="status-badge action-required">Action Required</span>
+                </div>
+                <div class="table-cell cell-next-action">Assign to new partner (deal handover pending)</div>
+                <div class="table-cell cell-actions">
+                  <a class="quick-action-link" href="psm-escalation-brief.html">View Brief →</a>
+                  <a class="quick-action-link" href="#">View Deal →</a>
+                </div>
+              </div>
+
+              <!-- Row 2: Critical - Pacific Rim Solutions -->
+              <div class="table-row priority-critical">
+                <div class="table-cell cell-priority">
+                  <div class="priority-badge"></div>
+                  <span style="color: var(--red); font-weight: 700;">Critical</span>
+                </div>
+                <div class="table-cell cell-partner">Pacific Rim Solutions</div>
+                <div class="table-cell cell-issue">
+                  <div class="cell-issue-title">Commission Dispute</div>
+                  <div class="cell-issue-detail">QTR-2025-Q4 · $12,400 underpaid</div>
+                </div>
+                <div class="table-cell">Feb 8, 2026</div>
+                <div class="table-cell">18</div>
+                <div class="table-cell">
+                  <span class="status-badge action-required">Action Required</span>
+                </div>
+                <div class="table-cell cell-next-action">Respond to dispute · reply due Feb 28</div>
+                <div class="table-cell cell-actions">
+                  <a class="quick-action-link" href="#">View Brief →</a>
+                  <a class="quick-action-link" href="#">View Dispute →</a>
+                </div>
+              </div>
+
+              <!-- Row 3: Medium - CloudBridge Solutions -->
+              <div class="table-row priority-medium">
+                <div class="table-cell cell-priority">
+                  <div class="priority-badge"></div>
+                  <span style="color: var(--orange); font-weight: 700;">Medium</span>
+                </div>
+                <div class="table-cell cell-partner">CloudBridge Solutions</div>
+                <div class="table-cell cell-issue">
+                  <div class="cell-issue-title">MDF Claim Review</div>
+                  <div class="cell-issue-detail">CMD-2025-CB-018 · $8,200 co-marketing</div>
+                </div>
+                <div class="table-cell">Feb 18, 2026</div>
+                <div class="table-cell">8</div>
+                <div class="table-cell">
+                  <span class="status-badge in-progress">In Progress</span>
+                </div>
+                <div class="table-cell cell-next-action">PSM review · due Mar 1</div>
+                <div class="table-cell cell-actions">
+                  <a class="quick-action-link" href="psm-pop-review.html">Review Claim →</a>
+                </div>
+              </div>
+
+              <!-- Row 4: Medium - DataPath Technologies -->
+              <div class="table-row priority-medium">
+                <div class="table-cell cell-priority">
+                  <div class="priority-badge"></div>
+                  <span style="color: var(--orange); font-weight: 700;">Medium</span>
+                </div>
+                <div class="table-cell cell-partner">DataPath Technologies</div>
+                <div class="table-cell cell-issue">
+                  <div class="cell-issue-title">Portal Access Issue</div>
+                  <div class="cell-issue-detail">3 reps locked out · password policy change</div>
+                </div>
+                <div class="table-cell">Feb 20, 2026</div>
+                <div class="table-cell">6</div>
+                <div class="table-cell">
+                  <span class="status-badge in-progress">In Progress</span>
+                </div>
+                <div class="table-cell cell-next-action">IT ticket #IT-88422 · ETA Feb 27</div>
+                <div class="table-cell cell-actions">
+                  <a class="quick-action-link" href="#">View Ticket →</a>
+                </div>
+              </div>
+
+              <!-- Row 5: Low - SkyEdge Networks -->
+              <div class="table-row priority-low">
+                <div class="table-cell cell-priority">
+                  <div class="priority-badge"></div>
+                  <span style="color: var(--green); font-weight: 700;">Low</span>
+                </div>
+                <div class="table-cell cell-partner">SkyEdge Networks</div>
+                <div class="table-cell cell-issue">
+                  <div class="cell-issue-title">Certification Extension Request</div>
+                  <div class="cell-issue-detail">rep illness · 30-day extension needed</div>
+                </div>
+                <div class="table-cell">Feb 15, 2026</div>
+                <div class="table-cell">11</div>
+                <div class="table-cell">
+                  <span class="status-badge monitoring">Monitoring</span>
+                </div>
+                <div class="table-cell cell-next-action">Extension granted · monitoring to Mar 22</div>
+                <div class="table-cell cell-actions">
+                  <a class="quick-action-link" href="#">View Record →</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RESOLVED SECTION -->
+          <div class="resolved-section">
+            <div class="resolved-header" onclick="this.nextElementSibling.classList.toggle('expanded'); this.querySelector('.resolved-toggle').textContent = this.nextElementSibling.classList.contains('expanded') ? '▼' : '▶';">
+              <div>
+                <span class="resolved-title">Resolved This Month</span>
+                <span class="resolved-count">(6 items)</span>
+              </div>
+              <div class="resolved-toggle">▶</div>
+            </div>
+            <div class="resolved-content">
+              <div class="resolved-list">
+                <div class="resolved-item">
+                  <div style="font-weight: 600; color: var(--wf-ink);">TechCorp Solutions</div>
+                  <div style="color: var(--wf-muted);">Tier Demotion Appeal</div>
+                  <div style="color: var(--wf-muted);">Feb 12, 2026</div>
+                  <div style="display: flex; align-items: center; gap: var(--space-sm);"><span style="background: #dcfce7; color: #166534; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">✓ Resolved</span> <span style="color: var(--wf-muted);">appeal granted</span></div>
+                </div>
+                <div class="resolved-item">
+                  <div style="font-weight: 600; color: var(--wf-ink);">Vertex Dynamics</div>
+                  <div style="color: var(--wf-muted);">Deal Reg Duplicate</div>
+                  <div style="color: var(--wf-muted);">Feb 5, 2026</div>
+                  <div style="display: flex; align-items: center; gap: var(--space-sm);"><span style="background: #dcfce7; color: #166534; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">✓ Resolved</span> <span style="color: var(--wf-muted);">merged records</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SLA REFERENCE CARD -->
+          <div class="sla-card">
+            <div class="sla-header" onclick="this.nextElementSibling.classList.toggle('expanded'); this.querySelector('.sla-toggle').textContent = this.nextElementSibling.classList.contains('expanded') ? '▼' : '▶';">
+              <div class="sla-title">Escalation SLA Reference</div>
+              <div class="sla-toggle">▶</div>
+            </div>
+            <div class="sla-content">
+              <div class="sla-row">
+                <div class="sla-level">🔴 Critical</div>
+                <div class="sla-details">Respond within 24h · Resolve within 5 business days</div>
+              </div>
+              <div class="sla-row">
+                <div class="sla-level">🟡 Medium</div>
+                <div class="sla-details">Respond within 48h · Resolve within 10 business days</div>
+              </div>
+              <div class="sla-row">
+                <div class="sla-level">🟢 Low</div>
+                <div class="sla-details">Respond within 72h · Resolve within 20 business days</div>
+              </div>
+              <div class="sla-footer">Source: Equinix Channel Partner SLA Policy v2.3</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT SIDEBAR -->
+      <div class="right-sidebar">
+        <!-- SUMMARY STATS -->
+        <div class="sidebar-section">
+          <div class="sidebar-title">Summary</div>
+          <div class="stats-row">
+            <div class="stat-label">Open</div>
+            <div class="stat-value">5</div>
+          </div>
+          <div class="stats-row">
+            <div class="stat-label">Action Required</div>
+            <div class="stat-value critical">2</div>
+          </div>
+          <div class="stats-row">
+            <div class="stat-label">Avg Age</div>
+            <div class="stat-value">9.4 days</div>
+          </div>
+          <div class="stats-row">
+            <div class="stat-label">Oldest</div>
+            <div class="stat-value critical">18 days</div>
+          </div>
+          <div style="font-size: 12px; color: var(--wf-muted); margin-top: var(--space-sm);">Pacific Rim · Commission dispute</div>
+        </div>
+
+        <!-- BY PARTNER -->
+        <div class="sidebar-section">
+          <div class="sidebar-title">By Partner</div>
+          <div class="partner-list">
+            <div class="partner-item">
+              <span class="partner-name">Nexus IT Group</span>
+              <span class="partner-count">1</span>
+            </div>
+            <div class="partner-item">
+              <span class="partner-name">Pacific Rim Solutions</span>
+              <span class="partner-count">1</span>
+            </div>
+            <div class="partner-item">
+              <span class="partner-name">CloudBridge Solutions</span>
+              <span class="partner-count">1</span>
+            </div>
+            <div class="partner-item">
+              <span class="partner-name">DataPath Technologies</span>
+              <span class="partner-count">1</span>
+            </div>
+            <div class="partner-item">
+              <span class="partner-name">SkyEdge Networks</span>
+              <span class="partner-count">1</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- TODAY'S PRIORITY FOCUS -->
+        <div class="sidebar-section">
+          <div class="sidebar-title">Today's Priority Focus</div>
+          <div class="priority-focus">
+            <div class="priority-focus-item">
+              <div class="priority-focus-label">Expires in 4 days</div>
+              <div class="priority-focus-text">Nexus IT Group — Deal Protection Expiry</div>
+              <a class="priority-focus-link" href="psm-escalation-brief.html">View brief →</a>
+            </div>
+            <div class="priority-focus-item">
+              <div class="priority-focus-label">Due Feb 28</div>
+              <div class="priority-focus-text">Pacific Rim Solutions — Commission dispute</div>
+              <a class="priority-focus-link" href="#">Respond →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- NEW ESCALATION BUTTON -->
+        <div class="sidebar-section">
+          <button class="sidebar-button">+ New Escalation</button>
+        </div>
+
+        <!-- LINK -->
+        <div class="sidebar-section">
+          <a class="sidebar-link" href="psm-escalation-brief.html">View Escalation Brief (Nexus IT Group) →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navigation script -->
+  <script src="wf-nav.js"></script>
+</body>
+</html>

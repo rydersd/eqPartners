@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tier Upgrade Recommendation — CloudBridge Solutions | PCP PSM Portal</title>
+  <style>
+    :root {
+      --wf-canvas: #f5f6f8;
+      --wf-ink: #111827;
+      --wf-muted: #6b7280;
+      --wf-accent: #0070d2;
+      --gray-border: #d1d5db;
+      --teal: #0d9488;
+      --orange: #f59e0b;
+      --red: #dc2626;
+      --green: #16a34a;
+      --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --line-height: 1.5;
+      --radius: 6px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-stack);
+      color: var(--wf-ink);
+      background: var(--wf-canvas);
+      line-height: var(--line-height);
+    }
+
+    /* ===== LAYOUT ===== */
+    .wf-container {
+      display: grid;
+      grid-template-columns: 280px 1fr 320px;
+      gap: 0;
+      min-height: 100vh;
+      background: var(--wf-canvas);
+    }
+
+    .wf-nav {
+      grid-column: 1;
+      background: white;
+      border-right: 1px solid var(--gray-border);
+      overflow-y: auto;
+      max-height: 100vh;
+      position: sticky;
+      top: 0;
+    }
+
+    .wf-main {
+      grid-column: 2;
+      background: white;
+      border-right: 1px solid var(--gray-border);
+      overflow-y: auto;
+      max-height: 100vh;
+    }
+
+    .wf-main-inner {
+      padding: 40px;
+      max-width: 100%;
+    }
+
+    .wf-sidebar {
+      grid-column: 3;
+      background: var(--wf-canvas);
+      overflow-y: auto;
+      max-height: 100vh;
+      padding: 0;
+    }
+
+    .wf-sidebar-inner {
+      padding: 24px;
+    }
+
+    /* ===== LEFT NAV ===== */
+    .nav-header {
+      padding: 20px 16px;
+      border-bottom: 1px solid var(--gray-border);
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--wf-muted);
+      letter-spacing: 0.5px;
+    }
+
+    .nav-item {
+      padding: 12px 16px;
+      font-size: 14px;
+      color: var(--wf-muted);
+      cursor: pointer;
+      border-left: 3px solid transparent;
+      transition: all 0.15s ease;
+      text-decoration: none;
+      display: block;
+    }
+
+    .nav-item:hover {
+      background: var(--wf-canvas);
+      color: var(--wf-ink);
+    }
+
+    .nav-item.active {
+      background: rgba(0, 112, 210, 0.08);
+      border-left-color: var(--wf-accent);
+      color: var(--wf-accent);
+      font-weight: 500;
+    }
+
+    /* ===== BREADCRUMB ===== */
+    .wf-breadcrumb {
+      font-size: 13px;
+      color: var(--wf-muted);
+      margin-bottom: 24px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .wf-breadcrumb a {
+      color: var(--wf-accent);
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .wf-breadcrumb a:hover {
+      text-decoration: underline;
+    }
+
+    .wf-breadcrumb span {
+      color: var(--wf-muted);
+    }
+
+    /* ===== PAGE HEADER ===== */
+    .page-header {
+      margin-bottom: 32px;
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--wf-ink);
+      margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+      font-size: 14px;
+      color: var(--wf-muted);
+      margin-bottom: 16px;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: var(--radius);
+      font-size: 13px;
+      font-weight: 500;
+      color: #92400e;
+    }
+
+    .status-badge::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--orange);
+    }
+
+    /* ===== CARDS ===== */
+    .card {
+      background: white;
+      border: 1px solid var(--gray-border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--gray-border);
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--wf-ink);
+    }
+
+    .card-subtitle {
+      font-size: 13px;
+      color: var(--wf-muted);
+      margin-top: 4px;
+    }
+
+    /* ===== QUALIFICATION SCORECARD ===== */
+    .scorecard-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+
+    .scorecard-table th {
+      background: var(--wf-canvas);
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+      color: var(--wf-ink);
+      border-bottom: 1px solid var(--gray-border);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .scorecard-table td {
+      padding: 14px 12px;
+      border-bottom: 1px solid var(--gray-border);
+    }
+
+    .scorecard-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .criterion-name {
+      font-weight: 500;
+      color: var(--wf-ink);
+    }
+
+    .threshold {
+      color: var(--wf-muted);
+      font-size: 13px;
+    }
+
+    .actual {
+      color: var(--wf-ink);
+      font-weight: 500;
+    }
+
+    .status-met {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--green);
+      font-weight: 500;
+      font-size: 14px;
+    }
+
+    .status-met::before {
+      content: '✅';
+      display: inline-block;
+    }
+
+    .notes-text {
+      color: var(--wf-muted);
+      font-size: 13px;
+      max-width: 200px;
+    }
+
+    .scorecard-footer {
+      padding: 16px;
+      background: var(--wf-canvas);
+      border-radius: var(--radius);
+      font-size: 13px;
+      color: var(--wf-muted);
+      margin-bottom: 20px;
+    }
+
+    /* ===== SCORE CHIP ===== */
+    .score-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 16px;
+      background: var(--wf-canvas);
+      border: 1px solid var(--green);
+      border-radius: var(--radius);
+      font-weight: 600;
+      color: var(--wf-ink);
+    }
+
+    .score-chip-label {
+      font-size: 13px;
+      color: var(--wf-muted);
+    }
+
+    .score-chip-value {
+      font-size: 18px;
+      color: var(--green);
+    }
+
+    .score-chip-status {
+      font-size: 12px;
+      color: var(--green);
+      font-weight: 500;
+    }
+
+    /* ===== FORM ELEMENTS ===== */
+    .form-group {
+      margin-bottom: 24px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--wf-ink);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--gray-border);
+      border-radius: var(--radius);
+      font-family: var(--font-stack);
+      font-size: 14px;
+      color: var(--wf-ink);
+      line-height: var(--line-height);
+      resize: vertical;
+      min-height: 140px;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--wf-accent);
+      box-shadow: 0 0 0 3px rgba(0, 112, 210, 0.1);
+    }
+
+    select {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--gray-border);
+      border-radius: var(--radius);
+      font-family: var(--font-stack);
+      font-size: 14px;
+      color: var(--wf-ink);
+      background: white;
+      cursor: pointer;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: var(--wf-accent);
+      box-shadow: 0 0 0 3px rgba(0, 112, 210, 0.1);
+    }
+
+    .form-helper {
+      font-size: 12px;
+      color: var(--wf-muted);
+      margin-top: 6px;
+    }
+
+    /* ===== CHECKBOX ===== */
+    .checkbox-group {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px;
+      background: var(--wf-canvas);
+      border-radius: var(--radius);
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      margin-top: 2px;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: var(--wf-accent);
+      flex-shrink: 0;
+    }
+
+    .checkbox-label {
+      font-size: 13px;
+      color: var(--wf-ink);
+      line-height: 1.4;
+    }
+
+    /* ===== AMENDMENT PREVIEW ===== */
+    .collapsible-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      padding: 16px;
+      background: var(--wf-canvas);
+      border: 1px solid var(--gray-border);
+      border-radius: var(--radius);
+      margin-bottom: 0;
+      user-select: none;
+      font-weight: 600;
+      color: var(--wf-ink);
+      font-size: 14px;
+    }
+
+    .collapsible-header:hover {
+      background: rgba(0, 112, 210, 0.04);
+    }
+
+    .collapsible-header.expanded {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      border-bottom-color: transparent;
+    }
+
+    .collapsible-toggle {
+      font-size: 18px;
+      color: var(--wf-muted);
+      transition: transform 0.2s ease;
+      display: inline-block;
+    }
+
+    .collapsible-header.expanded .collapsible-toggle {
+      transform: rotate(180deg);
+    }
+
+    .collapsible-content {
+      display: none;
+      padding: 20px 16px;
+      background: white;
+      border: 1px solid var(--gray-border);
+      border-top: none;
+      border-bottom-left-radius: var(--radius);
+      border-bottom-right-radius: var(--radius);
+    }
+
+    .collapsible-content.expanded {
+      display: block;
+    }
+
+    .amendment-row {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--gray-border);
+      font-size: 13px;
+    }
+
+    .amendment-row:last-child {
+      border-bottom: none;
+    }
+
+    .amendment-label {
+      font-weight: 600;
+      color: var(--wf-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      font-size: 11px;
+    }
+
+    .amendment-value {
+      color: var(--wf-ink);
+      font-weight: 500;
+    }
+
+    .amendment-note {
+      padding: 12px;
+      background: var(--wf-canvas);
+      border-left: 3px solid var(--wf-accent);
+      border-radius: var(--radius);
+      font-size: 12px;
+      color: var(--wf-ink);
+      margin-top: 16px;
+    }
+
+    /* ===== ROUTING CARD ===== */
+    .routing-info {
+      padding: 16px;
+      background: var(--wf-canvas);
+      border-radius: var(--radius);
+      margin-bottom: 16px;
+    }
+
+    .routing-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--wf-muted);
+      margin-bottom: 12px;
+      letter-spacing: 0.4px;
+    }
+
+    .routing-contact {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--wf-ink);
+      margin-bottom: 4px;
+    }
+
+    .routing-detail {
+      font-size: 12px;
+      color: var(--wf-muted);
+    }
+
+    .routing-detail strong {
+      color: var(--wf-ink);
+    }
+
+    /* ===== BUTTONS ===== */
+    .button-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid var(--gray-border);
+    }
+
+    button {
+      padding: 12px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: var(--radius);
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      font-family: var(--font-stack);
+    }
+
+    .btn-primary {
+      background: var(--wf-accent);
+      color: white;
+      flex: 1;
+      max-width: 280px;
+    }
+
+    .btn-primary:hover {
+      background: #005bb3;
+      box-shadow: 0 2px 8px rgba(0, 112, 210, 0.3);
+    }
+
+    .btn-primary:active {
+      background: #004a8c;
+    }
+
+    .btn-secondary {
+      background: white;
+      color: var(--wf-ink);
+      border-color: var(--gray-border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--wf-canvas);
+      border-color: var(--wf-muted);
+    }
+
+    .btn-secondary:active {
+      background: #e5e7eb;
+    }
+
+    /* ===== SIDEBAR ===== */
+    .sidebar-card {
+      background: white;
+      border: 1px solid var(--gray-border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 16px;
+      font-size: 13px;
+    }
+
+    .sidebar-card-title {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--wf-muted);
+      margin-bottom: 12px;
+      letter-spacing: 0.4px;
+    }
+
+    .sidebar-field {
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--gray-border);
+    }
+
+    .sidebar-field:last-child {
+      margin-bottom: 0;
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+
+    .sidebar-label {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--wf-muted);
+      margin-bottom: 4px;
+      letter-spacing: 0.3px;
+    }
+
+    .sidebar-value {
+      color: var(--wf-ink);
+      font-weight: 500;
+      word-break: break-word;
+    }
+
+    .sidebar-link {
+      color: var(--wf-accent);
+      text-decoration: none;
+      cursor: pointer;
+      font-weight: 500;
+      word-break: break-word;
+    }
+
+    .sidebar-link:hover {
+      text-decoration: underline;
+    }
+
+    /* ===== WARNING BOX ===== */
+    .warning-box {
+      background: rgba(220, 38, 38, 0.05);
+      border: 1px solid rgba(220, 38, 38, 0.2);
+      border-radius: var(--radius);
+      padding: 12px;
+      font-size: 12px;
+      color: #7f1d1d;
+      line-height: 1.5;
+      margin-top: 16px;
+    }
+
+    .warning-box::before {
+      content: '⚠️ ';
+      margin-right: 6px;
+    }
+
+    /* ===== TIMELINE ===== */
+    .timeline {
+      position: relative;
+      padding-left: 24px;
+      font-size: 12px;
+      color: var(--wf-muted);
+      line-height: 1.6;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--gray-border);
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -28px;
+      top: 4px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: white;
+      border: 2px solid var(--gray-border);
+      box-sizing: border-box;
+    }
+
+    .timeline-item.active::before {
+      background: var(--green);
+      border-color: var(--green);
+    }
+
+    .timeline-text {
+      color: var(--wf-muted);
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1400px) {
+      .wf-container {
+        grid-template-columns: 240px 1fr;
+      }
+      .wf-sidebar {
+        display: none;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .wf-container {
+        grid-template-columns: 1fr;
+      }
+      .wf-nav {
+        display: none;
+      }
+      .wf-main-inner {
+        padding: 20px;
+      }
+    }
+  </style>
+  <script>
+    if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');
+  </script>
+</head>
+<body>
+
+<div class="wf-container">
+
+  <!-- LEFT NAV -->
+  <nav class="wf-nav">
+    <div class="nav-header">PSM Tools</div>
+    <a href="psm-partner-account-list.html" class="nav-item">My Partners</a>
+    <a href="psm-escalation-queue.html" class="nav-item">Escalations</a>
+    <a href="psm-mdf-management.html" class="nav-item">MDF</a>
+    <a href="psm-contracts.html" class="nav-item">Agreements</a>
+    <a href="#" class="nav-item active">Tier Reviews</a>
+    <a href="psm-reports-analytics.html" class="nav-item">Reports</a>
+    <a href="psm-program-admin.html" class="nav-item">Settings</a>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="wf-main">
+    <div class="wf-main-inner">
+
+      <!-- BREADCRUMB -->
+      <div class="wf-breadcrumb">
+        <a href="psm-partner-account-list.html">My Partners</a>
+        <span>›</span>
+        <a href="psm-partner-account-record.html">CloudBridge Solutions</a>
+        <span>›</span>
+        <span>Tier Upgrade Recommendation</span>
+      </div>
+
+      <!-- PAGE HEADER -->
+      <div class="page-header">
+        <h1 class="page-title">Tier Upgrade Recommendation — CloudBridge Solutions</h1>
+        <p class="page-subtitle">Gold → Platinum · Recommendation draft · Initiated by workflow rule Feb 14, 2026</p>
+        <div class="status-badge">Draft — Pending PAM Authorization</div>
+      </div>
+
+      <!-- QUALIFICATION SCORECARD -->
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <div class="card-title">Platinum Tier Qualification Criteria</div>
+            <div class="card-subtitle">All 5 criteria must be met to recommend upgrade</div>
+          </div>
+        </div>
+
+        <table class="scorecard-table">
+          <thead>
+            <tr>
+              <th>Criterion</th>
+              <th>Platinum Threshold</th>
+              <th>CloudBridge Actual</th>
+              <th>Status</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="criterion-name">Revenue YTD</td>
+              <td class="threshold">$2.0M</td>
+              <td class="actual">$2.1M</td>
+              <td><div class="status-met">Met</div></td>
+              <td class="notes-text">105% of threshold</td>
+            </tr>
+            <tr>
+              <td class="criterion-name">Certifications Active</td>
+              <td class="threshold">5</td>
+              <td class="actual">5</td>
+              <td><div class="status-met">Met</div></td>
+              <td class="notes-text">3 technical, 2 business (Platinum requires 8 — must complete 3 more post-upgrade within 180 days)</td>
+            </tr>
+            <tr>
+              <td class="criterion-name">Registered Deals (active)</td>
+              <td class="threshold">12</td>
+              <td class="actual">18</td>
+              <td><div class="status-met">Met</div></td>
+              <td class="notes-text">150% — consistently above threshold</td>
+            </tr>
+            <tr>
+              <td class="criterion-name">Deal Win Rate</td>
+              <td class="threshold">60%</td>
+              <td class="actual">64%</td>
+              <td><div class="status-met">Met</div></td>
+              <td class="notes-text">Based on last 12 months</td>
+            </tr>
+            <tr>
+              <td class="criterion-name">Program Tenure</td>
+              <td class="threshold">18 months</td>
+              <td class="actual">24 months</td>
+              <td><div class="status-met">Met</div></td>
+              <td class="notes-text">Partner since Feb 2024</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="scorecard-footer">
+          <strong>Qualification window:</strong> Feb 1, 2025 – Jan 31, 2026 (trailing 12 months)
+        </div>
+
+        <div class="score-chip">
+          <div>
+            <div class="score-chip-label">Qualification Score</div>
+            <div class="score-chip-value">94 / 100</div>
+            <div class="score-chip-status">Eligible</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PSM RECOMMENDATION RATIONALE -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Marcus Chen's Recommendation</div>
+        </div>
+
+        <div class="form-group">
+          <label>Recommendation Rationale</label>
+          <textarea placeholder="Add your recommendation here..." readonly>CloudBridge has demonstrated consistent performance across all Platinum criteria for 2+ consecutive quarters. Revenue growth of 18% YoY driven by 3 new enterprise wins. Certification compliance solid. Recommend upgrading to accelerate co-sell pipeline and unlock dedicated PAM resource. No escalation history in past 12 months.</textarea>
+          <div class="form-helper">Edit disabled during workflow review. Contact your Manager to revise.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="change-reason">Change Reason</label>
+          <select id="change-reason">
+            <option>Performance — All Criteria Exceeded</option>
+            <option>Strategic Partnership Expansion</option>
+            <option>Competitive Requirement</option>
+            <option>Partner Request</option>
+          </select>
+        </div>
+
+        <div class="checkbox-group">
+          <input type="checkbox" id="confirm-check" checked disabled>
+          <label for="confirm-check" class="checkbox-label">I confirm this recommendation is based on verified Salesforce data and program guidelines</label>
+        </div>
+      </div>
+
+      <!-- AMENDMENT PREVIEW -->
+      <div class="card" style="padding: 0;">
+        <div class="collapsible-header expanded" onclick="toggleCollapsible(this)">
+          <span>Amendment Preview — PPA-2024-CB-0142</span>
+          <span class="collapsible-toggle">▼</span>
+        </div>
+        <div class="collapsible-content expanded">
+          <div class="form-helper" style="margin-bottom: 16px;">Template: <strong>TMPL-AMD-TIER-UPGRADE-V3</strong> (Salesforce Document Builder)</div>
+
+          <div class="amendment-row">
+            <div class="amendment-label">Commission Rate</div>
+            <div class="amendment-value">8% → 11%</div>
+          </div>
+
+          <div class="amendment-row">
+            <div class="amendment-label">MDF Budget</div>
+            <div class="amendment-value">$40K → $75K annually</div>
+          </div>
+
+          <div class="amendment-row">
+            <div class="amendment-label">Deal Protection</div>
+            <div class="amendment-value">90 days → 120 days</div>
+          </div>
+
+          <div class="amendment-note">
+            <strong>Timeline:</strong> Amendment will be auto-drafted once PAM authorizes. Partner will be notified via portal bell + email to review & sign via DocuSign.
+          </div>
+        </div>
+      </div>
+
+      <!-- ROUTING CARD -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Route to PAM for Authorization</div>
+        </div>
+
+        <div class="routing-info">
+          <div class="routing-label">This recommendation will be routed to:</div>
+          <div class="routing-contact">Alex Rivera — Partner Account Manager</div>
+          <div class="routing-detail"><strong>Email:</strong> alex.rivera@equinix.com</div>
+          <div class="routing-detail" style="margin-top: 4px;"><strong>Expected response:</strong> 1 business day</div>
+          <div class="routing-detail" style="margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--gray-border);">
+            After PAM authorization, the amendment will be auto-drafted in <strong>psm-ppa-amendment.html</strong>, and CloudBridge will be notified via portal notification + email.
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTION ROW -->
+      <div class="button-row">
+        <button class="btn-primary">Submit to PAM for Authorization</button>
+        <button class="btn-secondary">Save Draft</button>
+        <button class="btn-secondary">Cancel</button>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- RIGHT SIDEBAR -->
+  <aside class="wf-sidebar">
+    <div class="wf-sidebar-inner">
+
+      <!-- PARTNER SUMMARY -->
+      <div class="sidebar-card">
+        <div class="sidebar-card-title">Partner Summary</div>
+        <div class="sidebar-field">
+          <div class="sidebar-label">Organization</div>
+          <div class="sidebar-value">CloudBridge Solutions</div>
+        </div>
+        <div class="sidebar-field">
+          <div class="sidebar-label">PPA ID</div>
+          <div class="sidebar-value">PPA-2024-CB-0142</div>
+        </div>
+        <div class="sidebar-field">
+          <div class="sidebar-label">Current Tier</div>
+          <div class="sidebar-value">Gold (since Mar 2024)</div>
+        </div>
+        <div class="sidebar-field">
+          <div class="sidebar-label">Your Role</div>
+          <div class="sidebar-value">PSM (Marcus Chen)</div>
+        </div>
+      </div>
+
+      <!-- TIER HISTORY -->
+      <div class="sidebar-card">
+        <div class="sidebar-card-title">Tier Change History</div>
+        <div class="sidebar-field">
+          <div class="sidebar-label">Prior Changes</div>
+          <div class="sidebar-value">1 prior change</div>
+        </div>
+        <div class="timeline">
+          <div class="timeline-item active">
+            <div class="timeline-text">Bronze → Gold</div>
+            <div class="timeline-text" style="font-size: 11px; margin-top: 2px;">Mar 2024</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- APPROVAL TIMELINE -->
+      <div class="sidebar-card">
+        <div class="sidebar-card-title">Expected Timeline</div>
+        <div class="timeline">
+          <div class="timeline-item active">
+            <div class="timeline-text">Triggered by workflow</div>
+            <div class="timeline-text" style="font-size: 11px; margin-top: 2px;">Feb 14, 2026</div>
+          </div>
+          <div class="timeline-item active">
+            <div class="timeline-text">Marcus reviews</div>
+            <div class="timeline-text" style="font-size: 11px; margin-top: 2px;">Feb 14–20, 2026</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-text">PAM authorizes</div>
+            <div class="timeline-text" style="font-size: 11px; margin-top: 2px;">Est. Feb 21, 2026</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-text">Amendment drafted</div>
+            <div class="timeline-text" style="font-size: 11px; margin-top: 2px;">Auto-generated</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-text">DocuSign signature</div>
+            <div class="timeline-text" style="font-size: 11px; margin-top: 2px;">~3 business days</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-text">Platinum tier active</div>
+            <div class="timeline-text" style="font-size: 11px; margin-top: 2px;">On signature</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUICK LINKS -->
+      <div class="sidebar-card">
+        <div class="sidebar-card-title">Quick Links</div>
+        <div class="sidebar-field">
+          <a href="psm-partner-account-record.html" class="sidebar-link">View Partner Account</a>
+        </div>
+        <div class="sidebar-field">
+          <a href="#" class="sidebar-link">View Current PPA</a>
+        </div>
+        <div class="sidebar-field">
+          <a href="#" class="sidebar-link">View Related Deals</a>
+        </div>
+      </div>
+
+      <!-- WARNING BOX -->
+      <div class="sidebar-card" style="background: rgba(220, 38, 38, 0.02); border-color: rgba(220, 38, 38, 0.2);">
+        <div class="warning-box" style="background: none; border: none; padding: 0; margin: 0;">Once submitted, you cannot recall this recommendation. PAM has final authority to approve or decline.</div>
+      </div>
+
+      <!-- TECH NOTES -->
+      <div class="sidebar-card" style="background: var(--wf-canvas); border-color: var(--gray-border); font-size: 11px;">
+        <div class="sidebar-card-title">Design Notes</div>
+        <div style="color: var(--wf-muted); line-height: 1.6;">
+          <strong>Salesforce Objects:</strong><br>
+          Tier_Review__c (parent) → Tier_Review_Criterion__c (5 children)<br><br>
+          <strong>Trigger:</strong><br>
+          Flow on Agreement__c: Tier_Qualification_Score__c ≥ 90 → creates Tier_Review__c, assigns to PSM<br><br>
+          <strong>On PAM Auth:</strong><br>
+          Status → "Authorized" → auto-creates Agreement_Amendment__c<br><br>
+          <strong>Entry Points:</strong><br>
+          Notification bell, My Partners tab, PAM tier dashboard
+        </div>
+      </div>
+
+    </div>
+  </aside>
+
+</div>
+
+<script src="wf-nav.js"></script>
+
+<script>
+  function toggleCollapsible(header) {
+    header.classList.toggle('expanded');
+    header.nextElementSibling.classList.toggle('expanded');
+  }
+</script>
+
+</body>
+</html>
