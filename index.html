@@ -425,7 +425,7 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
     <div style="margin:10px 0 5px 0;padding:4px 10px;background:linear-gradient(90deg,#1a2535,#28394d);color:#fff;font-size:.67rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:6px;border-radius:3px;">
       <span style="background:rgba(255,255,255,.18);padding:1px 5px;border-radius:2px;font-size:.57rem;font-weight:600;letter-spacing:.03em;">⚡ SF NAV</span>
       Partners
-      <span style="font-size:.6rem;font-weight:400;opacity:.6;margin-left:auto;">9 pages</span>
+      <span style="font-size:.6rem;font-weight:400;opacity:.6;margin-left:auto;">10 pages</span>
     </div>
 
     <div class="node">
@@ -584,6 +584,23 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
         <div class="child"><span class="child-type ct-action">Action</span> Log call / Compose email / Schedule follow-up</div>
         <div class="child"><span class="child-type ct-filter">Filter</span> Partner / Date range / Type / Initiated by</div>
         <div class="child"><span class="child-type ct-note">Note</span> Aggregates Activity__c records tagged to Account; links to SF Activity timeline on account record</div>
+      </div>
+    </div>
+
+    <div class="node">
+      <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="node-type t-list" title="List">L</div>
+        <span class="node-label">Dormancy &amp; Offboarding <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">Marcus — review at-risk partners, manage offboarding queue</span></span>
+        <a href="pm-partner-offboarding.html" class="node-mockup-link" title="View Mockup">→</a>
+        <span class="node-chevron">›</span>
+      </div>
+      <div class="node-children">
+        <div class="child"><span class="child-type ct-kpi">KPI</span> Tracked · At Risk · In Offboarding · Re-engagement Sent</div>
+        <div class="child"><span class="child-type ct-table">Table</span> Dormancy Review: partner, last login, last DR, tier, revenue YTD, days-to-threshold, risk badge, recommended action</div>
+        <div class="child"><span class="child-type ct-alert">Alert</span> Row-level risk highlighting (red = exceeded threshold, amber = approaching)</div>
+        <div class="child"><span class="child-type ct-card">Card</span> Offboarding Queue: 7-step wizard tracker with per-step status (done / active / pending / blocked)</div>
+        <div class="child"><span class="child-type ct-table">Table</span> Open DR resolution sub-table: transfer or close before access revocation</div>
+        <div class="child"><span class="child-type ct-note">Note</span> VP Channel sign-off required; PAM must close program agreement obligations before Step 7</div>
       </div>
     </div>
 

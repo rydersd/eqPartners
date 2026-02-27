@@ -267,138 +267,475 @@
       font-weight: 600;
       color: var(--wf-ink);
     }
+    /* KPI strip */
+    .kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: .75rem;
+      margin-bottom: 1.5rem;
+    }
+    .kpi-cell {
+      padding: .75rem;
+      background: white;
+      border: 1px solid var(--gray-border);
+      border-radius: 4px;
+      text-align: center;
+    }
+    .kpi-cell .kpi-val {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--wf-ink);
+      line-height: 1;
+    }
+    .kpi-cell .kpi-lbl {
+      font-size: .7rem;
+      color: var(--wf-muted);
+      margin-top: .25rem;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+    }
+    .kpi-cell.kpi-warn .kpi-val { color: var(--orange); }
+    .kpi-cell.kpi-danger .kpi-val { color: var(--red); }
+    /* Row risk highlighting */
+    .dormancy-table tbody tr.row-high { background: #fff5f5; }
+    .dormancy-table tbody tr.row-medium { background: #fffbf0; }
+    /* Offboarding wizard */
+    .ob-card {
+      border: 1px solid var(--gray-border);
+      border-radius: 4px;
+      margin-bottom: 1.5rem;
+      background: white;
+      overflow: hidden;
+    }
+    .ob-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: .875rem 1rem;
+      border-bottom: 1px solid var(--gray-border);
+      background: #f9fafb;
+    }
+    .ob-card-header h4 { margin: 0; font-size: 1rem; color: var(--wf-ink); }
+    .ob-card-body { padding: 1rem; }
+    .ob-meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: .75rem;
+      margin-bottom: 1rem;
+    }
+    .ob-meta-item { font-size: .8rem; }
+    .ob-meta-item .label { color: var(--wf-muted); margin-bottom: .1rem; }
+    .ob-meta-item .value { font-weight: 600; color: var(--wf-ink); }
+    /* Step tracker */
+    .step-tracker { margin: 1rem 0; }
+    .step-track-item {
+      display: flex;
+      align-items: flex-start;
+      gap: .75rem;
+      padding: .75rem 0;
+      border-bottom: 1px solid var(--gray-border);
+      font-size: .8rem;
+    }
+    .step-track-item:last-child { border-bottom: none; }
+    .step-track-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .7rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: .1rem;
+    }
+    .step-done { background: #dcfce7; color: #16a34a; }
+    .step-active { background: #dbeafe; color: #1d4ed8; border: 2px solid #1d4ed8; }
+    .step-pending { background: #f3f4f6; color: #9ca3af; }
+    .step-blocked { background: #fee2e2; color: #dc2626; }
+    .step-track-content { flex: 1; }
+    .step-track-title { font-weight: 600; color: var(--wf-ink); margin-bottom: .2rem; }
+    .step-track-detail { color: var(--wf-muted); line-height: 1.4; }
+    .step-track-action {
+      margin-top: .4rem;
+      display: flex;
+      gap: .5rem;
+      flex-wrap: wrap;
+    }
+    .step-btn {
+      padding: .25rem .6rem;
+      border: 1px solid var(--gray-border);
+      border-radius: 3px;
+      font-size: .75rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: white;
+      color: var(--wf-ink);
+    }
+    .step-btn.primary {
+      background: var(--wf-accent);
+      color: white;
+      border-color: var(--wf-accent);
+    }
+    /* DR sub-table */
+    .sub-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: .78rem;
+      margin-top: .5rem;
+      border: 1px solid var(--gray-border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .sub-table th {
+      background: #f3f4f6;
+      padding: .4rem .6rem;
+      text-align: left;
+      font-weight: 600;
+      color: var(--wf-muted);
+      font-size: .7rem;
+      text-transform: uppercase;
+    }
+    .sub-table td {
+      padding: .5rem .6rem;
+      border-top: 1px solid var(--gray-border);
+      color: var(--wf-ink);
+    }
+    /* Sidebar enhancements */
+    .step-pill {
+      display: inline-block;
+      padding: .15rem .45rem;
+      border-radius: 3px;
+      font-size: .7rem;
+      font-weight: 700;
+      margin-right: .3rem;
+    }
+    .pill-done { background: #dcfce7; color: #16a34a; }
+    .pill-active { background: #dbeafe; color: #1d4ed8; }
+    .pill-pending { background: #f3f4f6; color: #6b7280; }
+    .pill-blocked { background: #fee2e2; color: #dc2626; }
   </style>
 </head>
 <body>
   <div class="wf-layout-3col">
     <!-- Left Sidebar Navigation -->
     <nav class="wf-sidebar-left" aria-label="PSM portal navigation">
-      <h3>Navigation</h3>
+      <h3>My Partners</h3>
       <ul>
         <li><a href="psm-program-dashboard.html">Program Home</a></li>
         <li><a href="psm-partner-account-list.html">Partner Accounts</a></li>
+        <li><a href="psm-portfolio.html">Portfolio View</a></li>
+      </ul>
+      <h3>Partner Activity</h3>
+      <ul>
         <li><a href="psm-deal-registration.html">Deal Registration</a></li>
+        <li><a href="psm-deal-cosell-queue.html">Co-Sell Queue</a></li>
         <li><a href="psm-mdf-management.html">MDF Management</a></li>
-        <li><strong style="display: block; padding: 0.5rem; color: var(--wf-accent);">Dormancy & Offboarding</strong></li>
+      </ul>
+      <h3>Partner Health</h3>
+      <ul>
+        <li><a href="psm-health-scorecard.html">Health Scorecards</a></li>
+        <li><a href="psm-qbr-prep.html">QBR Prep</a></li>
+        <li><strong style="display: block; padding: 0.5rem; color: var(--wf-accent);">Dormancy &amp; Offboarding</strong></li>
       </ul>
       <h3>Tools</h3>
       <ul>
         <li><a href="psm-reports-analytics.html">Reports</a></li>
-        <li><a href="psm-executive-dashboard.html">Executive Dashboard</a></li>
+        <li><a href="psm-mdf-analytics.html">MDF Analytics</a></li>
       </ul>
     </nav>
 
     <!-- Main Content -->
     <div class="wf-main-content">
-      <h1 class="page-title">Partner Dormancy & Offboarding</h1>
-      <p class="page-meta">Active review: Q1 2026 · 3 partners at risk</p>
+      <h1 class="page-title">Partner Dormancy &amp; Offboarding</h1>
+      <p class="page-meta">Q1 2026 review · Marcus Chen · Portfolio: 12 partners</p>
+
+      <!-- KPI Strip -->
+      <div class="kpi-strip" role="list" aria-label="Portfolio dormancy summary">
+        <div class="kpi-cell" role="listitem">
+          <div class="kpi-val">12</div>
+          <div class="kpi-lbl">Tracked</div>
+        </div>
+        <div class="kpi-cell kpi-warn" role="listitem">
+          <div class="kpi-val">3</div>
+          <div class="kpi-lbl">At Risk</div>
+        </div>
+        <div class="kpi-cell kpi-danger" role="listitem">
+          <div class="kpi-val">1</div>
+          <div class="kpi-lbl">In Offboarding</div>
+        </div>
+        <div class="kpi-cell" role="listitem">
+          <div class="kpi-val">2</div>
+          <div class="kpi-lbl">Re-Engagement Sent</div>
+        </div>
+      </div>
 
       <!-- Tab Group -->
-      <div class="tab-group">
-        <button class="tab active" onclick="switchTab(event, 'dormancy')">
-          Dormancy Review
+      <div class="tab-group" role="tablist">
+        <button class="tab active" onclick="switchTab(event, 'dormancy')" role="tab" aria-selected="true" aria-controls="dormancy">
+          Dormancy Review <span class="tab-badge" style="background:#fef3c7;color:#92400e;">3</span>
         </button>
-        <button class="tab" onclick="switchTab(event, 'offboarding')">
-          Offboarding Queue <span class="tab-badge">1</span>
+        <button class="tab" onclick="switchTab(event, 'offboarding')" role="tab" aria-selected="false" aria-controls="offboarding">
+          Offboarding Queue <span class="tab-badge" style="background:#fee2e2;color:#991b1b;">1</span>
         </button>
       </div>
 
       <!-- Dormancy Review Tab -->
-      <div id="dormancy" class="tab-content active">
-        <table class="dormancy-table" aria-label="Partner dormancy review">
+      <div id="dormancy" class="tab-content active" role="tabpanel">
+        <table class="dormancy-table" aria-label="Partner dormancy review — 3 partners at risk">
           <thead>
             <tr>
-              <th>Partner Name</th>
-              <th>Last Active</th>
-              <th>Last Deal Reg</th>
-              <th>Tier</th>
-              <th>Revenue YTD</th>
-              <th>Risk Level</th>
-              <th>Recommended Action</th>
+              <th scope="col">Partner</th>
+              <th scope="col">Last Portal Login</th>
+              <th scope="col">Last Deal Reg</th>
+              <th scope="col">Tier</th>
+              <th scope="col">Revenue YTD</th>
+              <th scope="col">Days to Threshold</th>
+              <th scope="col">Risk</th>
+              <th scope="col">Recommended Action</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td><strong>Nexus IT Group</strong></td>
+            <tr class="row-high">
+              <td><strong><a href="psm-partner-account.html" style="color:var(--wf-accent);">Nexus IT Group</a></strong><div style="font-size:.7rem;color:var(--wf-muted);margin-top:.2rem;">Silver · SF: 001NX002</div></td>
               <td>180 days ago</td>
               <td>11 months ago</td>
               <td><span class="tier-badge">Silver</span></td>
-              <td>$0</td>
+              <td style="color:var(--red);font-weight:600;">$0</td>
+              <td><span style="color:var(--red);font-weight:600;">Exceeded</span><div style="font-size:.7rem;color:var(--wf-muted);">12-mo mark passed</div></td>
               <td><span class="risk-badge risk-high">HIGH</span></td>
-              <td><a class="action-link" href="#">Send re-engagement email</a></td>
+              <td><a class="action-link" href="#">Flag for offboarding →</a></td>
             </tr>
-            <tr>
-              <td><strong>Pacific Rim Solutions</strong></td>
+            <tr class="row-medium">
+              <td><strong><a href="psm-partner-account.html" style="color:var(--wf-accent);">Pacific Rim Solutions</a></strong><div style="font-size:.7rem;color:var(--wf-muted);margin-top:.2rem;">Bronze · SF: 001PR007</div></td>
               <td>92 days ago</td>
               <td>6 months ago</td>
               <td><span class="tier-badge">Bronze</span></td>
-              <td>$12K</td>
+              <td style="color:var(--orange);font-weight:600;">$12K</td>
+              <td><span style="color:var(--orange);font-weight:600;">+88 days</span><div style="font-size:.7rem;color:var(--wf-muted);">to 6-mo threshold</div></td>
               <td><span class="risk-badge risk-medium">MEDIUM</span></td>
-              <td><a class="action-link" href="#">Schedule check-in call</a></td>
+              <td><a class="action-link" href="#">Send PCP-DORMANT email →</a><div style="font-size:.7rem;color:var(--wf-muted);margin-top:.2rem;">Re-engagement email sent 30 days ago (opened, no reply)</div></td>
             </tr>
             <tr>
-              <td><strong>DataPath Inc</strong></td>
+              <td><strong><a href="psm-partner-account.html" style="color:var(--wf-accent);">DataPath Inc</a></strong><div style="font-size:.7rem;color:var(--wf-muted);margin-top:.2rem;">Bronze · SF: 001DP011</div></td>
               <td>47 days ago</td>
               <td>2 months ago</td>
               <td><span class="tier-badge">Bronze</span></td>
-              <td>$48K</td>
+              <td style="font-weight:600;">$48K</td>
+              <td><span style="color:var(--green);font-weight:600;">+133 days</span><div style="font-size:.7rem;color:var(--wf-muted);">to 6-mo threshold</div></td>
               <td><span class="risk-badge risk-low">LOW</span></td>
-              <td><span style="color: var(--wf-muted);">No action needed</span></td>
+              <td style="color:var(--wf-muted);font-size:.8rem;">No action needed — monitor at next QBR</td>
             </tr>
           </tbody>
         </table>
 
-        <div class="policy-box">
-          <strong>Dormancy Policy</strong>
-          Silver/Gold partners with 0 activity for 6+ months receive a re-engagement email (template <code>PCP-DORMANT</code>). Partners with 12+ months inactivity are flagged for offboarding review. Bronze partners with 0 revenue for 2 consecutive quarters may be downgraded or removed per partner program policy.
+        <div class="policy-box" style="margin-top:1.5rem;">
+          <strong>Dormancy Policy (Partner Program v4.2)</strong>
+          Silver/Gold: 0 portal activity for 180+ days triggers automated <code>PCP-DORMANT</code> re-engagement email. If no response within 30 days, PSM schedules re-engagement call. At 365 days: flagged for offboarding review (requires VP Channel sign-off). Bronze: 0 revenue for 2 consecutive full quarters → automatic tier review + potential removal. Partners in active deal dispute or remediation period are excluded from dormancy thresholds.
         </div>
       </div>
 
       <!-- Offboarding Queue Tab -->
-      <div id="offboarding" class="tab-content">
-        <div class="offboarding-row">
-          <h4>Nexus IT Group</h4>
-          <p>
-            <strong>Status:</strong> Flagged for offboarding after 12+ months dormancy (last activity: 180 days ago). Pending PSM review and VP Channel approval.
-          </p>
-          <p>
-            <strong>Reason:</strong> Zero revenue, no deal registrations, no portal activity. Meets removal criteria under partner program policy.
-          </p>
-          <div class="btn-group">
-            <button>View Partner Record</button>
-            <button class="btn-primary">Begin Offboarding</button>
-            <button>Mark as Reactivated</button>
+      <div id="offboarding" class="tab-content" role="tabpanel">
+
+        <!-- Nexus IT Group offboarding card -->
+        <div class="ob-card">
+          <div class="ob-card-header">
+            <div>
+              <h4>Nexus IT Group <span style="font-size:.75rem;font-weight:400;color:var(--wf-muted);margin-left:.5rem;">Silver · SF Account: 001NX002</span></h4>
+              <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.2rem;">Offboarding initiated: Feb 10, 2026 · Initiated by: Marcus Chen</div>
+            </div>
+            <div style="display:flex;gap:.5rem;align-items:center;">
+              <span style="background:#fee2e2;color:#991b1b;padding:.3rem .7rem;border-radius:3px;font-size:.75rem;font-weight:700;">IN PROGRESS — Step 3 of 7</span>
+              <button class="step-btn" style="font-size:.75rem;">Mark as Reactivated</button>
+            </div>
+          </div>
+          <div class="ob-card-body">
+
+            <!-- Partner context summary -->
+            <div class="ob-meta-grid">
+              <div class="ob-meta-item">
+                <div class="label">Reason for offboarding</div>
+                <div class="value">12+ months dormancy — zero revenue, no deal reg, no portal activity</div>
+              </div>
+              <div class="ob-meta-item">
+                <div class="label">Open Deal Registrations</div>
+                <div class="value" style="color:var(--orange);">2 open DRs require resolution</div>
+              </div>
+              <div class="ob-meta-item">
+                <div class="label">Outstanding financials</div>
+                <div class="value">$0 pending commissions · $0 MDF balance</div>
+              </div>
+              <div class="ob-meta-item">
+                <div class="label">VP Channel approval</div>
+                <div class="value" style="color:var(--green);">✓ Approved — Feb 12, 2026</div>
+              </div>
+              <div class="ob-meta-item">
+                <div class="label">Partner notified</div>
+                <div class="value" style="color:var(--green);">✓ PCP-OFFBOARD-NOTICE sent Feb 10</div>
+              </div>
+              <div class="ob-meta-item">
+                <div class="label">30-day response window</div>
+                <div class="value" style="color:var(--orange);">Expires Mar 12, 2026 (14 days left)</div>
+              </div>
+            </div>
+
+            <!-- Step tracker -->
+            <div class="step-tracker" role="list" aria-label="Offboarding steps for Nexus IT Group">
+
+              <div class="step-track-item" role="listitem">
+                <div class="step-track-icon step-done" aria-label="Complete">✓</div>
+                <div class="step-track-content">
+                  <div class="step-track-title">Step 1 — Notify Partner <span class="step-pill pill-done">Done</span></div>
+                  <div class="step-track-detail">PCP-OFFBOARD-NOTICE email sent Feb 10, 2026. Delivery confirmed. No response received within 30-day window.</div>
+                </div>
+              </div>
+
+              <div class="step-track-item" role="listitem">
+                <div class="step-track-icon step-done" aria-label="Complete">✓</div>
+                <div class="step-track-content">
+                  <div class="step-track-title">Step 2 — VP Channel Sign-Off <span class="step-pill pill-done">Done</span></div>
+                  <div class="step-track-detail">Approved by Sarah Kim (VP Channel Partnerships) on Feb 12, 2026. Approval recorded in Salesforce case CS-2026-1104.</div>
+                </div>
+              </div>
+
+              <div class="step-track-item" role="listitem">
+                <div class="step-track-icon step-active" aria-label="In progress">3</div>
+                <div class="step-track-content">
+                  <div class="step-track-title">Step 3 — Resolve Open Deal Registrations <span class="step-pill pill-active">In Progress</span></div>
+                  <div class="step-track-detail">2 active DRs must be transferred or closed before portal access can be revoked. Transferred DRs retain existing commission attribution for the current rep.</div>
+                  <table class="sub-table" aria-label="Open deal registrations for Nexus IT Group">
+                    <thead>
+                      <tr>
+                        <th>DR ID</th>
+                        <th>Opportunity</th>
+                        <th>Stage</th>
+                        <th>Close Date</th>
+                        <th>Value</th>
+                        <th>Resolution</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>DR-2025-4471</td>
+                        <td>Vertex Analytics — Colocation</td>
+                        <td>Proposal</td>
+                        <td>Mar 31, 2026</td>
+                        <td>$88K</td>
+                        <td><a class="action-link" href="psm-deal-registration.html">Transfer to Active Rep →</a></td>
+                      </tr>
+                      <tr>
+                        <td>DR-2025-3390</td>
+                        <td>Inland Logistics — IBX Access</td>
+                        <td>Discovery</td>
+                        <td>Apr 15, 2026</td>
+                        <td>$24K</td>
+                        <td><a class="action-link" href="#">Close (no viable path) →</a></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div class="step-track-action">
+                    <button class="step-btn primary">Mark Step 3 Complete</button>
+                    <button class="step-btn">Add Note</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="step-track-item" role="listitem">
+                <div class="step-track-icon step-pending" aria-label="Pending">4</div>
+                <div class="step-track-content">
+                  <div class="step-track-title">Step 4 — Revoke Portal Access &amp; SSO <span class="step-pill pill-pending">Pending</span></div>
+                  <div class="step-track-detail">Deactivates all user accounts under Nexus IT Group org (3 active users). Revokes SSO credentials and Experience Cloud access. Action is logged to Salesforce and triggers automated notification to Equinix IT.</div>
+                </div>
+              </div>
+
+              <div class="step-track-item" role="listitem">
+                <div class="step-track-icon step-pending" aria-label="Pending">5</div>
+                <div class="step-track-content">
+                  <div class="step-track-title">Step 5 — Commission &amp; Financial Closeout <span class="step-pill pill-pending">Pending</span></div>
+                  <div class="step-track-detail">Confirm $0 outstanding commissions. Verify no open MDF claims. Final balance reconciled with Finance team before CRM close.</div>
+                </div>
+              </div>
+
+              <div class="step-track-item" role="listitem">
+                <div class="step-track-icon step-pending" aria-label="Pending">6</div>
+                <div class="step-track-content">
+                  <div class="step-track-title">Step 6 — Archive Deal Registration History <span class="step-pill pill-pending">Pending</span></div>
+                  <div class="step-track-detail">Historical DRs, commission records, and MDF claims archived to read-only status in Salesforce. Partner account set to Inactive — data retained for 7 years per Equinix data retention policy.</div>
+                </div>
+              </div>
+
+              <div class="step-track-item" role="listitem">
+                <div class="step-track-icon step-pending" aria-label="Pending">7</div>
+                <div class="step-track-content">
+                  <div class="step-track-title">Step 7 — Final CRM Record &amp; Confirmation <span class="step-pill pill-pending">Pending</span></div>
+                  <div class="step-track-detail">Update Salesforce Account to Status: Offboarded. Log offboarding summary note. Send PCP-OFFBOARD-CONFIRM email to partner contact on record. Notify PAM (Alex Rivera) to close any open program agreement obligations.</div>
+                </div>
+              </div>
+
+            </div><!-- end step-tracker -->
           </div>
         </div>
       </div>
     </div>
 
     <!-- Right Sidebar -->
-    <aside class="wf-sidebar-right" aria-label="Offboarding checklist">
+    <aside class="wf-sidebar-right" aria-label="Offboarding context and policy">
+
+      <!-- Active offboarding progress summary -->
       <div class="sidebar-card">
-        <h4>Offboarding Checklist</h4>
+        <h4>Nexus IT Group — Progress</h4>
+        <div style="font-size:.75rem;color:var(--wf-muted);margin-bottom:.75rem;">Step 3 of 7 · Est. completion: Mar 15, 2026</div>
         <div class="checklist-step">
-          <span class="step-num">1</span> Notify partner via <code>PCP-OFFBOARD-NOTICE</code> email
+          <span class="step-pill pill-done">Done</span> Step 1 — Partner notified
         </div>
         <div class="checklist-step">
-          <span class="step-num">2</span> Revoke portal access & SSO credentials
+          <span class="step-pill pill-done">Done</span> Step 2 — VP Channel sign-off
         </div>
         <div class="checklist-step">
-          <span class="step-num">3</span> Archive deal registration history
+          <span class="step-pill pill-active">Active</span> Step 3 — Resolve open DRs
         </div>
         <div class="checklist-step">
-          <span class="step-num">4</span> Transfer/close open Deal Registrations
+          <span class="step-pill pill-pending">Pending</span> Step 4 — Revoke access
         </div>
         <div class="checklist-step">
-          <span class="step-num">5</span> Complete commission & financial closeout
+          <span class="step-pill pill-pending">Pending</span> Step 5 — Financial closeout
         </div>
         <div class="checklist-step">
-          <span class="step-num">6</span> Record final partner status in CRM
+          <span class="step-pill pill-pending">Pending</span> Step 6 — Archive history
         </div>
         <div class="checklist-step">
-          <span class="step-num">7</span> VP Channel sign-off & archive confirmation
+          <span class="step-pill pill-pending">Pending</span> Step 7 — CRM final record
         </div>
       </div>
+
+      <!-- Re-engagement window -->
+      <div class="sidebar-card" style="border-left:3px solid var(--orange);">
+        <h4 style="color:var(--orange);">30-Day Response Window</h4>
+        <div style="font-size:.8rem;color:var(--wf-ink);line-height:1.5;">
+          Nexus IT Group has until <strong>Mar 12, 2026</strong> to respond to the offboarding notice. If they contest the decision or provide a reactivation plan, Marcus can pause the process and escalate to PAM review.
+        </div>
+        <div style="margin-top:.75rem;font-size:.75rem;color:var(--wf-muted);">14 days remaining</div>
+      </div>
+
+      <!-- PAM notification -->
+      <div class="sidebar-card">
+        <h4>PAM Owner</h4>
+        <div style="font-size:.8rem;color:var(--wf-ink);margin-bottom:.25rem;font-weight:600;">Alex Rivera</div>
+        <div style="font-size:.75rem;color:var(--wf-muted);margin-bottom:.5rem;">PAM must close open program agreement obligations (PPA-2024-NX-0039) before Step 7 can complete.</div>
+        <a href="pam-program-agreements.html" style="font-size:.75rem;color:var(--wf-accent);font-weight:600;">View Program Agreement →</a>
+      </div>
+
+      <!-- Related flow -->
+      <div class="sidebar-card" style="border-left:3px solid #6d28d9;">
+        <h4 style="color:#6d28d9;">Related Resources</h4>
+        <div style="font-size:.78rem;line-height:1.8;">
+          <a href="psm-partner-account.html" style="color:var(--wf-accent);display:block;">Partner Account Record →</a>
+          <a href="psm-deal-registration.html" style="color:var(--wf-accent);display:block;">Deal Registration (transfer DRs) →</a>
+          <a href="pam-tier-management.html" style="color:var(--wf-accent);display:block;">Tier Management (PAM) →</a>
+        </div>
+      </div>
+
     </aside>
   </div>
 
