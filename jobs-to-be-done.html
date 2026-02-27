@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jobs to Be Done — Equinix PCP</title>
+<link rel="stylesheet" href="wireframe.css">
+<style>
+/* ── Header ── */
+header { background:linear-gradient(135deg, var(--wf-ink, #1e2a3a) 0%, var(--blue, #3d6daa) 100%); color:#fff; padding:1.5rem 2rem; display:flex; justify-content:space-between; align-items:center; }
+header h1 { font-size:1.75rem; font-weight:700; }
+header .subtitle { font-size:.8125rem; opacity:.85; margin-top:.125rem; max-width:500px; }
+.header-meta { display:flex; gap:.75rem; align-items:center; font-size:.75rem; opacity:.8; flex-wrap:wrap; justify-content:flex-end; max-width:340px; }
+.header-meta span { background:rgba(255,255,255,.15); padding:.25rem .75rem; border-radius:4px; font-weight:600; }
+.header-meta span.warn { background:rgba(251,191,36,.25); color:#fde68a; opacity:1; }
+
+
+/* ── Research note ── */
+.research-note {
+  background:#fff;
+  border-left:4px solid var(--wf-amber,#8b7745);
+  padding:1rem 1.25rem; border-radius:4px;
+  margin-bottom:1.75rem; font-size:.875rem;
+  color:var(--wf-text,#3b4f68);
+  line-height:1.6;
+}
+.research-note strong { color:var(--wf-amber,#8b7745); }
+
+/* ── What is JTBD box ── */
+.method-box {
+  background:#fff;
+  border:1px solid var(--wf-line,#d8e1ec);
+  border-radius:8px;
+  padding:1.25rem 1.5rem;
+  margin-bottom:1.75rem;
+  font-size:.875rem;
+  color:var(--wf-text,#3b4f68);
+  line-height:1.65;
+}
+.method-box h2 { font-size:.9375rem; font-weight:700; color:var(--wf-ink,#1e2a3a); margin-bottom:.625rem; }
+.method-box p + p { margin-top:.5rem; }
+
+/* ── Tab system ── */
+.tab-wrap { background:#fff; border:1px solid var(--wf-line,#d8e1ec); border-radius:8px; overflow:hidden; }
+.tab-nav {
+  display:flex; border-bottom:1px solid var(--wf-line,#d8e1ec);
+  background:var(--wf-surface,#edf1f7);
+}
+.tab-btn {
+  flex:1; padding:.75rem 1.25rem; font-size:.875rem; font-weight:600;
+  background:transparent; border:none; cursor:pointer;
+  font-family:inherit; color:var(--wf-text,#3b4f68);
+  border-bottom:3px solid transparent; transition:all .15s;
+  display:flex; align-items:center; gap:.5rem; justify-content:center;
+}
+.tab-btn:hover { color:var(--wf-ink,#1e2a3a); background:var(--wf-tint,#f0f4f8); }
+.tab-btn.active {
+  color:var(--wf-accent,#3d6daa);
+  border-bottom-color:var(--wf-accent,#3d6daa);
+  background:#fff;
+}
+.tab-count {
+  font-size:.6875rem; font-weight:700;
+  background:var(--wf-surface,#edf1f7); color:var(--wf-muted,#6b7f99);
+  padding:.1rem .45rem; border-radius:10px; border:1px solid var(--wf-line,#d8e1ec);
+}
+.tab-btn.active .tab-count { background:#e8f0fb; color:var(--wf-accent,#3d6daa); border-color:#c5d8f6; }
+.tab-panel { display:none; padding:1.5rem; }
+.tab-panel.active { display:block; }
+
+/* ── Audience section heading ── */
+.jtbd-audience-hd {
+  font-size:.6875rem; font-weight:700; text-transform:uppercase;
+  letter-spacing:.06em; color:var(--wf-muted,#6b7f99);
+  padding:.375rem .5rem; border-bottom:1px solid var(--wf-line,#d8e1ec);
+  margin-bottom:.875rem; display:flex; align-items:center; gap:.5rem;
+}
+.audience-section { margin-bottom:2rem; }
+.audience-section:last-child { margin-bottom:0; }
+
+/* ── JTBD persona grid ── */
+.jtbd-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(360px, 1fr));
+  gap:1.25rem;
+}
+.jtbd-grid.full-width { grid-template-columns:1fr; }
+
+/* ── Persona block ── */
+.jtbd-persona-block {
+  background:#fff;
+  border:1px solid var(--wf-line,#d8e1ec);
+  border-radius:8px; overflow:hidden;
+}
+.jtbd-persona-block.solo-persona { border-left:3px solid var(--wf-amber,#8b7745); }
+.jtbd-persona-block.solo-persona .jtbd-persona-hd { background:var(--wf-tint,#f0f4f8); }
+.jtbd-persona-hd {
+  padding:.875rem 1rem; display:flex; align-items:center;
+  gap:.75rem; border-bottom:1px solid var(--wf-line,#d8e1ec);
+}
+.jtbd-avatar {
+  width:36px; height:36px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:.875rem; font-weight:700; color:#fff; flex-shrink:0;
+}
+.jtbd-persona-name { font-size:.9375rem; font-weight:700; color:var(--wf-ink,#1e2a3a); line-height:1.2; }
+.jtbd-persona-role { font-size:.6875rem; color:var(--wf-muted,#6b7f99); margin-top:.1rem; }
+.jtbd-list { padding:0; }
+.jtbd-item {
+  padding:.5625rem 1rem; border-top:1px solid var(--wf-surface,#edf1f7);
+  display:flex; gap:.625rem; align-items:flex-start;
+}
+.jtbd-item:first-child { border-top:none; }
+.jtbd-num {
+  font-size:.5625rem; font-weight:700; color:var(--wf-muted,#6b7f99);
+  background:var(--wf-surface,#edf1f7); border:1px solid var(--wf-line,#d8e1ec);
+  padding:.125rem .35rem; border-radius:10px; flex-shrink:0;
+  margin-top:.15rem; min-width:24px; text-align:center;
+}
+.jtbd-text { font-size:.8125rem; color:var(--wf-ink,#1e2a3a); line-height:1.5; }
+.jtbd-screens {
+  font-size:.6875rem; color:var(--wf-muted,#6b7f99);
+  display:block; margin-top:.25rem; font-style:italic;
+}
+
+/* ── Solo grid (1 card wide) ── */
+.solo-grid { max-width:640px; }
+
+/* ── Summary table ── */
+.summary-table { width:100%; border-collapse:collapse; font-size:.8125rem; margin-top:.75rem; }
+.summary-table th {
+  text-align:left; padding:.5rem .75rem;
+  font-size:.6875rem; text-transform:uppercase; letter-spacing:.05em;
+  font-weight:700; color:var(--wf-muted,#6b7f99);
+  background:var(--wf-surface,#edf1f7); border-bottom:2px solid var(--wf-line,#d8e1ec);
+}
+.summary-table td {
+  padding:.5rem .75rem; border-bottom:1px solid var(--wf-tint,#f0f4f8);
+  color:var(--wf-text,#3b4f68); vertical-align:top;
+}
+.summary-table tr:last-child td { border-bottom:none; }
+.summary-table td:first-child { font-weight:600; color:var(--wf-ink,#1e2a3a); width:25%; }
+.summary-table td:nth-child(2) { width:10%; text-align:center; font-weight:700; }
+.persona-dot {
+  display:inline-block; width:10px; height:10px; border-radius:50%;
+  margin-right:.25rem; vertical-align:middle;
+}
+
+/* ── Flow chain components ── */
+.cross-section { background:#fff; border:1px solid var(--gray-border); border-radius:8px; padding:1.25rem; margin-top:1.5rem; }
+.cross-section h3 { font-size:1rem; font-weight:700; margin-bottom:1rem; display:flex; align-items:center; gap:.5rem; }
+.cross-section h3 .dot { width:8px; height:8px; border-radius:2px; }
+.dot { width:8px; height:8px; border-radius:2px; display:inline-block; flex-shrink:0; }
+.chain { display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; margin-bottom:1rem; }
+.chain-step { background:var(--gray-light); border:1px solid var(--gray-border); border-radius:4px; padding:.375rem .625rem; font-size:.75rem; font-weight:600; line-height:1.4; }
+.chain-arrow { color:var(--wf-muted,#6b7f99); font-weight:700; }
+.tier-table { width:100%; border-collapse:collapse; font-size:.8125rem; margin-top:.75rem; }
+.tier-table th { background:var(--gray-light); padding:.5rem; text-align:left; font-weight:600; font-size:.75rem; border-bottom:1px solid var(--gray-border); }
+.tier-table td { padding:.5rem; border-bottom:1px solid var(--gray-light); }
+.tier-badge { display:inline-block; padding:.125rem .5rem; border-radius:3px; font-weight:600; font-size:.6875rem; }
+.tb-bronze { background:var(--wf-surface,#edf1f7); color:var(--wf-ink,#1e2a3a); }
+.tb-silver { background:var(--wf-surface,#edf1f7); color:var(--wf-ink,#1e2a3a); }
+.tb-gold   { background:var(--wf-surface,#edf1f7); color:var(--wf-ink,#1e2a3a); }
+.plat-badge { padding:.1875rem .5rem; border-radius:3px; font-weight:600; font-size:.6875rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>Jobs to Be Done</h1>
+    <p class="subtitle">Design spine of the Partner Connect Portal — 47 job statements across 9 personas.</p>
+  </div>
+  <div class="header-meta">
+    <span>47 JTBDs</span>
+    <span>9 Personas</span>
+    <span>3 Audiences</span>
+    <span class="warn">⚠ Proto-personas — not research-validated</span>
+  </div>
+</header>
+
+<nav class="view-control" aria-label="View selector">
+  <span class="view-control-label">View</span>
+  <div class="view-btns" role="navigation" aria-label="Select view">
+    <a class="view-btn" href="index.html">Sitemap</a>
+    <a class="view-btn active" href="jobs-to-be-done.html" aria-current="page">Jobs to Be Done</a>
+    <a class="view-btn" href="service-diagram.html">Service Diagram</a>
+    <a class="view-btn" href="flows-reference.html">Flows &amp; Reference</a>
+  </div>
+</nav>
+
+<div class="container">
+
+  <div class="research-note">
+    <strong>Validation status:</strong> Sam Chen, Jordan Reeves, Steve Rogers, Marcus Chen, and Alex Rivera are grounded in secondary research (job postings, industry surveys, public community threads). Brian Walsh, Priya Nair, Rachel Kim, and the Equinix AE are draft hypotheses with no primary research backing. All nine are design-fiction anchors — treat as <em>hypotheses until validated through primary user research.</em> See <a href="personas.html" style="color:var(--wf-accent);">Persona Research →</a> for accuracy notes.
+  </div>
+
+  <div class="method-box">
+    <h2>What is a Job to Be Done?</h2>
+    <p>A JTBD describes what a person is trying to accomplish, stated as progress: <em>"[Action] so I can [outcome] without [friction]."</em> Jobs are stable over time — the portal, the screens, and the features exist to fulfil them. Each JTBD here includes the screen(s) that primarily support it.</p>
+    <p>External jobs belong to Partner-side users (Jordan, Steve, Sam). Internal jobs belong to Equinix-side users operating in Salesforce Lightning (Marcus, Alex, AE, Priya, Rachel).</p>
+  </div>
+
+  <!-- Summary table -->
+  <div class="method-box" style="margin-bottom:1.75rem;">
+    <h2 style="margin-bottom:.75rem;">Persona Summary</h2>
+    <table class="summary-table">
+      <thead>
+        <tr>
+          <th>Persona</th>
+          <th>JTBDs</th>
+          <th>Role</th>
+          <th>System</th>
+          <th>Research basis</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="persona-dot" style="background:#1a7a3c;"></span>Sam Chen</td>
+          <td>1</td>
+          <td>Sales Rep · CloudBridge</td>
+          <td>Pre-auth flow</td>
+          <td>Design hypothesis — self-registration path</td>
+          <td><a href="jtbd-sam.html" style="color:var(--wf-accent,#3d6daa);font-size:.75rem;white-space:nowrap;">View →</a></td>
+        </tr>
+        <tr>
+          <td><span class="persona-dot" style="background:#3d6daa;"></span>Jordan Reeves</td>
+          <td>14</td>
+          <td>Portal Admin / RevOps Manager · CloudBridge</td>
+          <td>PM Portal (Experience Cloud)</td>
+          <td>Secondary research — job postings, industry surveys</td>
+          <td><a href="jtbd-jordan.html" style="color:var(--wf-accent,#3d6daa);font-size:.75rem;white-space:nowrap;">View →</a></td>
+        </tr>
+        <tr>
+          <td><span class="persona-dot" style="background:#3d6daa;"></span>Steve Rogers</td>
+          <td>9</td>
+          <td>Sales Rep / AE · CloudBridge</td>
+          <td>Rep Portal (Experience Cloud)</td>
+          <td>Secondary research — job postings, industry surveys</td>
+          <td><a href="jtbd-steve.html" style="color:var(--wf-accent,#3d6daa);font-size:.75rem;white-space:nowrap;">View →</a></td>
+        </tr>
+        <tr>
+          <td><span class="persona-dot" style="background:#1e2a3a;"></span>Marcus Chen</td>
+          <td>11</td>
+          <td>Partner Success Manager · Equinix</td>
+          <td>Salesforce Lightning</td>
+          <td>Secondary research — job postings, PSM community</td>
+          <td><a href="jtbd-marcus.html" style="color:var(--wf-accent,#3d6daa);font-size:.75rem;white-space:nowrap;">View →</a></td>
+        </tr>
+        <tr>
+          <td><span class="persona-dot" style="background:#6d28d9;"></span>Alex Rivera</td>
+          <td>9</td>
+          <td>Partner Account Manager · Equinix</td>
+          <td>Salesforce Lightning</td>
+          <td>Secondary research — job postings, PAM forums</td>
+          <td><a href="jtbd-alex.html" style="color:var(--wf-accent,#3d6daa);font-size:.75rem;white-space:nowrap;">View →</a></td>
+        </tr>
+        <tr>
+          <td><span class="persona-dot" style="background:#0891b2;"></span>Equinix AE</td>
+          <td>1</td>
+          <td>Account Executive · Equinix</td>
+          <td>Salesforce Lightning</td>
+          <td>Draft hypothesis — no primary research</td>
+          <td rowspan="3"><a href="jtbd-equinix.html" style="color:var(--wf-accent,#3d6daa);font-size:.75rem;white-space:nowrap;">View →</a></td>
+        </tr>
+        <tr>
+          <td><span class="persona-dot" style="background:#7c3aed;"></span>Priya Nair</td>
+          <td>1</td>
+          <td>Channel Marketing Manager · Equinix</td>
+          <td>Salesforce Lightning</td>
+          <td>Draft hypothesis — no primary research</td>
+        </tr>
+        <tr>
+          <td><span class="persona-dot" style="background:#0891b2;"></span>Rachel Kim</td>
+          <td>1</td>
+          <td>Deal Desk · Equinix</td>
+          <td>Salesforce Lightning</td>
+          <td>Draft hypothesis — no primary research</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Tab system -->
+  <div class="tab-wrap">
+    <div class="tab-nav" role="tablist" aria-label="Audience">
+      <button class="tab-btn active" id="jtbd-tab-external" role="tab" aria-selected="true" aria-controls="jtbd-panel-external" onclick="switchJtbdTab('external')">
+        External — Partner-Facing <span class="tab-count">25</span>
+      </button>
+      <button class="tab-btn" id="jtbd-tab-internal" role="tab" aria-selected="false" aria-controls="jtbd-panel-internal" onclick="switchJtbdTab('internal')">
+        Internal — Equinix <span class="tab-count">22</span>
+      </button>
+    </div>
+
+    <!-- ══ EXTERNAL ══ -->
+    <div class="tab-panel active" id="jtbd-panel-external">
+
+      <!-- Sam Chen -->
+      <div class="audience-section">
+        <div class="jtbd-audience-hd">New Rep — Self-Registration Path</div>
+        <div class="jtbd-grid full-width">
+          <div class="jtbd-persona-block solo-persona solo-grid">
+            <div class="jtbd-persona-hd">
+              <div class="jtbd-avatar" style="background:#1a7a3c;">SC</div>
+              <div>
+                <div class="jtbd-persona-name">Sam Chen</div>
+                <div class="jtbd-persona-role">Sales Rep · CloudBridge Solutions · Discovered the portal secondhand</div>
+              </div>
+            </div>
+            <div class="jtbd-list">
+              <div class="jtbd-item">
+                <span class="jtbd-num">1</span>
+                <div class="jtbd-text">Find my company's portal org and request access so I can start registering deals without going through Jordan every time.
+                  <span class="jtbd-screens">partner-user-request → onboarding-rep-approval-email → onboarding-auth-setup → rep-first-login → rep-home-day0</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Jordan Reeves -->
+      <div class="audience-section">
+        <div class="jtbd-audience-hd">PM Portal — Jordan Reeves, Portal Admin / RevOps Manager · CloudBridge Solutions</div>
+        <div class="jtbd-grid">
+          <div class="jtbd-persona-block">
+            <div class="jtbd-persona-hd">
+              <div class="jtbd-avatar" style="background:var(--wf-accent,#3d6daa);">JR</div>
+              <div>
+                <div class="jtbd-persona-name">Jordan Reeves</div>
+                <div class="jtbd-persona-role">Portal Admin / RevOps Manager · CloudBridge Solutions</div>
+              </div>
+            </div>
+            <div class="jtbd-list">
+              <div class="jtbd-item"><span class="jtbd-num">2</span><div class="jtbd-text">Apply to the program and set up the org from scratch so CloudBridge is active in the portal before the quarter starts.<span class="jtbd-screens">onboarding-partner-type → apply-wizard → confirmation → agreement → welcome → onboarding-wizard → pm-home-day0 → pm-admin-setup</span></div></div>
+              <div class="jtbd-item"><span class="jtbd-num">3</span><div class="jtbd-text">Get oriented on Day 0 — know what the portal does, complete admin setup, designate a backup admin so nothing breaks when I'm out.<span class="jtbd-screens">pm-home-day0, pm-admin-setup</span></div></div>
+              <div class="jtbd-item"><span class="jtbd-num">4</span><div class="jtbd-text">Monitor my org's health at a glance — tier standing, training completion, deal pipeline, certifications — without having to dig through separate reports.<span class="jtbd-screens">pm-home-dashboard, pm-org-health, pm-exec-dashboard</span></div></div>
+              <div class="jtbd-item"><span class="jtbd-num">5</span><div class="jtbd-text">Keep my team trained and certified — assign courses, track completion, send reminders, prevent cert lapses before they affect tier status.<span class="jtbd-screens">pm-team-training, pm-team-training-user, pm-cert-tracker, pm-course-catalog</span></div></div>
+              <div class="jtbd-item"><span class="jtbd-num">6</span><div class="jtbd-text">Prepare for my QBR — see Marcus's agenda, preview what data he'll show, add private notes so I'm not blindsided.<span class="jtbd-screens">pm-qbr-view</span></div></div>
+              <div class="jtbd-item"><span class="jtbd-num">7</span><div class="jtbd-text">Register and track deals for my org — submit deals, monitor status across the pipeline funnel.<span class="jtbd-screens">pm-deal-registration, pm-opportunities</span></div></div>
+            </div>
+          </div>
+          <div class="jtbd-persona-block">
+            <div class="jtbd-persona-hd">
+              <div class="jtbd-avatar" style="background:var(--wf-accent,#3d6daa);">JR</div>
+              <div>
+                <div class="jtbd-persona-name">Jordan Reeves (cont.)</div>
+                <div class="jtbd-persona-role">Portal Admin / RevOps Manager · CloudBridge Solutions</div>
+              </div>
+            </div>
+            <div class="jtbd-list">
+              <div class="jtbd-item"><span class="jtbd-num">8</span><div class="jtbd-text">Understand our revenue and commission earned — YTD revenue, commission rates by tier, payout history.<span class="jtbd-screens">pm-deals-revenue, pm-opportunities</span></div></div>
+              <div class="jtbd-item"><span class="jtbd-num">9</span><div class="jtbd-text">Request, execute, and claim MDF — submit campaign, track budget, submit proof of performance, get reimbursed without losing the receipt trail.<span class="jtbd-screens">pm-mdf-comarketing, pm-mdf-request, pm-mdf-balance, pm-pop-submission</span></div></div>
+              <div class="jtbd-item"><span class="jtbd-num">10</span><div class="jtbd-text">Review and respond to a contract renewal before it lapses — compare proposed vs. current terms, accept or raise questions without involving legal every time.<span class="jtbd-screens">pm-contract-renewal, pm-contracts</span></div></div>
+              <div class="jtbd-item"><span class="jtbd-num">11</span><div class="jtbd-text">Track an amendment request in flight — follow the 7-step tracker, sign DocuSign, message Marcus.<span class="jtbd-screens">pm-amendment-request-status</span></div></div>
+              <div class="jtbd-item"><span class="jtbd-num">12</span><div class="jtbd-text">Dispute a rejected MDF claim — see rejection reason, submit evidence, route to PSM for mediation.<span class="jtbd-screens">pm-mdf-dispute</span></div></div>
+              <div class="jtbd-item"><span class="jtbd-num">13</span><div class="jtbd-text">Contest a tier downgrade decision — submit appeal grounds, upload evidence, track outcome within the 30-day window before the decision is final.<span class="jtbd-screens">pm-tier-appeal</span></div></div>
+              <div class="jtbd-item"><span class="jtbd-num">14</span><div class="jtbd-text">Manage who has access to the portal — invite users, set roles, deactivate leavers so I stay GDPR-clean.<span class="jtbd-screens">pm-team-management, pm-role-permissions</span></div></div>
+              <div class="jtbd-item"><span class="jtbd-num">15</span><div class="jtbd-text">Download sales collateral and get support when something's broken — without waiting for a reply-all email chain.<span class="jtbd-screens">pm-playbooks, pm-resources, pm-support-center</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Steve Rogers -->
+      <div class="audience-section">
+        <div class="jtbd-audience-hd">Rep Portal — Steve Rogers, Sales Rep / AE · CloudBridge Solutions</div>
+        <div class="jtbd-grid">
+          <div class="jtbd-persona-block">
+            <div class="jtbd-persona-hd">
+              <div class="jtbd-avatar" style="background:#3d6daa;">SR</div>
+              <div>
+                <div class="jtbd-persona-name">Steve Rogers</div>
+                <div class="jtbd-persona-role">Sales Rep / AE · CloudBridge Solutions</div>
+              </div>
+            </div>
+            <div class="jtbd-list">
+              <div class="jtbd-item"><span class="jtbd-num">16</span><div class="jtbd-text">Get oriented on first login — complete security setup, fill in profile, understand training requirements so nothing delays me from selling.<span class="jtbd-screens">rep-first-login, rep-home-day0</span></div></div>
+              <div class="jtbd-item"><span class="jtbd-num">17</span><div class="jtbd-text">Register a deal before someone else claims the prospect — submit details, start protection window, track approval status.<span class="jtbd-screens">pc-dr-deal-type → pc-dr-step1–4; rep-register-deal (SFDC variant)</span></div></div>
+              <div class="jtbd-item"><span class="jtbd-num">18</span><div class="jtbd-text">Track my pipeline and know when protection is about to expire before I lose the deal to inaction.<span class="jtbd-screens">rep-pipeline, rep-deal-expiring</span></div></div>
+              <div class="jtbd-item"><span class="jtbd-num">19</span><div class="jtbd-text">Track my commission and flag when a payment is short — see what I'm owed vs. what I got, dispute in one step.<span class="jtbd-screens">rep-deals-commission, rep-commission-dispute</span></div></div>
+              <div class="jtbd-item"><span class="jtbd-num">20</span><div class="jtbd-text">Complete required training and keep my certifications current so I stay eligible to earn commission and co-sell.<span class="jtbd-screens">rep-my-training, rep-course-detail, rep-certifications, rep-course-catalog</span></div></div>
+            </div>
+          </div>
+          <div class="jtbd-persona-block">
+            <div class="jtbd-persona-hd">
+              <div class="jtbd-avatar" style="background:#3d6daa;">SR</div>
+              <div>
+                <div class="jtbd-persona-name">Steve Rogers (cont.)</div>
+                <div class="jtbd-persona-role">Sales Rep / AE · CloudBridge Solutions</div>
+              </div>
+            </div>
+            <div class="jtbd-list">
+              <div class="jtbd-item"><span class="jtbd-num">21</span><div class="jtbd-text">Know my numbers against quota before my manager does — attainment, JBP health, deal risk, forecast scenarios.<span class="jtbd-screens">rep-forecast</span></div></div>
+              <div class="jtbd-item"><span class="jtbd-num">22</span><div class="jtbd-text">Grab the sales tools I need to close this deal — playbooks, battle cards, proposal templates — without digging through email.<span class="jtbd-screens">rep-sales-tools</span></div></div>
+              <div class="jtbd-item"><span class="jtbd-num">23</span><div class="jtbd-text">Initiate a co-sell request with Equinix for a strategic Platinum-tier opportunity.<span class="jtbd-screens">rep-co-sell</span></div></div>
+              <div class="jtbd-item"><span class="jtbd-num">24</span><div class="jtbd-text">Update my profile and adjust notification preferences so the portal talks to me in a way that's actually useful.<span class="jtbd-screens">pm-profile</span></div></div>
+              <div class="jtbd-item"><span class="jtbd-num">25</span><div class="jtbd-text">Manage my notifications so I don't miss deal expirations or cert renewals in a sea of portal email.<span class="jtbd-screens">rep-notifications, rep-notification-preferences, rep-notification-history</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end jtbd-panel-external -->
+
+    <!-- ══ INTERNAL ══ -->
+    <div class="tab-panel" id="jtbd-panel-internal">
+
+      <!-- Marcus Chen -->
+      <div class="audience-section">
+        <div class="jtbd-audience-hd">Partner Success Manager — Marcus Chen · Equinix · Salesforce Lightning</div>
+        <div class="jtbd-grid">
+          <div class="jtbd-persona-block">
+            <div class="jtbd-persona-hd">
+              <div class="jtbd-avatar" style="background:var(--wf-ink,#1e2a3a);">MC</div>
+              <div>
+                <div class="jtbd-persona-name">Marcus Chen</div>
+                <div class="jtbd-persona-role">Partner Success Manager · Equinix · Salesforce Lightning</div>
+              </div>
+            </div>
+            <div class="jtbd-list">
+              <div class="jtbd-item"><span class="jtbd-num">26</span><div class="jtbd-text">Review and approve deal registrations within SLA — validate eligibility, start the protection window before the partner loses confidence.<span class="jtbd-screens">psm-deal-registration, psm-deal-review-detail</span></div></div>
+              <div class="jtbd-item"><span class="jtbd-num">27</span><div class="jtbd-text">Resolve deal disputes and commission discrepancies before they escalate to the partner exec team.<span class="jtbd-screens">psm-deal-dispute, psm-commission-processing</span></div></div>
+              <div class="jtbd-item"><span class="jtbd-num">28</span><div class="jtbd-text">Co-sell with a partner rep on a strategic opportunity — assign Equinix AE support, track collaboration without the deal falling through the cracks.<span class="jtbd-screens">psm-deal-cosell-queue, psm-deal-cosell</span></div></div>
+              <div class="jtbd-item"><span class="jtbd-num">29</span><div class="jtbd-text">Monitor my portfolio and surface at-risk partners before they go dormant and I'm explaining it to leadership.<span class="jtbd-screens">psm-partner-portfolio, psm-partnership-health-scorecard</span></div></div>
+              <div class="jtbd-item"><span class="jtbd-num">30</span><div class="jtbd-text">Onboard a newly approved partner through their 30/60/90-day plan so they reach first revenue fast.<span class="jtbd-screens">psm-partner-app-review, psm-new-partner-config, psm-30-60-90</span></div></div>
+              <div class="jtbd-item"><span class="jtbd-num">31</span><div class="jtbd-text">Send a supportive nudge to a partner manager whose team is falling behind on training before the cert lapse triggers a tier flag.<span class="jtbd-screens">psm-encourage-modal, psm-partner-comms</span></div></div>
+            </div>
+          </div>
+          <div class="jtbd-persona-block">
+            <div class="jtbd-persona-hd">
+              <div class="jtbd-avatar" style="background:var(--wf-ink,#1e2a3a);">MC</div>
+              <div>
+                <div class="jtbd-persona-name">Marcus Chen (cont.)</div>
+                <div class="jtbd-persona-role">Partner Success Manager · Equinix · Salesforce Lightning</div>
+              </div>
+            </div>
+            <div class="jtbd-list">
+              <div class="jtbd-item"><span class="jtbd-num">32</span><div class="jtbd-text">Run a productive QBR — pull data, set agenda, take minutes, track action items — without three prep days in spreadsheets.<span class="jtbd-screens">psm-qbr-prep, psm-qbr-agenda</span></div></div>
+              <div class="jtbd-item"><span class="jtbd-num">33</span><div class="jtbd-text">Manage the PPA renewal cycle before it lapses — present options, send DocuSign, track countersign.<span class="jtbd-screens">psm-contract-renewal, psm-contracts</span></div></div>
+              <div class="jtbd-item"><span class="jtbd-num">34</span><div class="jtbd-text">Approve MDF requests, validate proof of performance, and process reimbursement within the claim window.<span class="jtbd-screens">psm-mdf-approval, psm-pop-review, psm-reimbursement</span></div></div>
+              <div class="jtbd-item"><span class="jtbd-num">35</span><div class="jtbd-text">Generate an executive escalation brief quickly when a partner relationship is at risk and leadership needs to call.<span class="jtbd-screens">psm-escalation screens, flow-escalation-brief</span></div></div>
+              <div class="jtbd-item"><span class="jtbd-num">36</span><div class="jtbd-text">Flag dormant partners and manage offboarding cleanly — archive the account without leaving orphaned deals or open contracts.<span class="jtbd-screens">psm-dormancy-offboarding</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alex Rivera -->
+      <div class="audience-section">
+        <div class="jtbd-audience-hd">Partner Account Manager — Alex Rivera · Equinix · Salesforce Lightning</div>
+        <div class="jtbd-grid">
+          <div class="jtbd-persona-block">
+            <div class="jtbd-persona-hd">
+              <div class="jtbd-avatar" style="background:#6d28d9;">AR</div>
+              <div>
+                <div class="jtbd-persona-name">Alex Rivera</div>
+                <div class="jtbd-persona-role">Partner Account Manager · Equinix · Salesforce Lightning</div>
+              </div>
+            </div>
+            <div class="jtbd-list">
+              <div class="jtbd-item"><span class="jtbd-num">37</span><div class="jtbd-text">Govern the tier review cycle at scale — evaluate partners, authorize upgrades and downgrades without running individual spreadsheets per partner.<span class="jtbd-screens">pam-tier-governance, pam-tier-distribution, pam-tier-demotion, pam-tier-upgrade-rec</span></div></div>
+              <div class="jtbd-item"><span class="jtbd-num">38</span><div class="jtbd-text">Manage all partner agreements across the portfolio — expiry alerts, generate new PPAs, track amendment requests.<span class="jtbd-screens">pam-program-agreements, pam-ppa-amendment, pam-agreement-renewal</span></div></div>
+              <div class="jtbd-item"><span class="jtbd-num">39</span><div class="jtbd-text">Control MDF budget allocations and review claim approvals before the budget period closes.<span class="jtbd-screens">pam-mdf-queue, pam-mdf-claims</span></div></div>
+              <div class="jtbd-item"><span class="jtbd-num">40</span><div class="jtbd-text">Onboard a newly recruited partner — process application queue, approve org, trigger provisioning so the PSM can start their 30/60/90 plan.<span class="jtbd-screens">pam-app-review-queue, pam-partner-account-strategic</span></div></div>
+              <div class="jtbd-item"><span class="jtbd-num">41</span><div class="jtbd-text">Run a portfolio health review and surface at-risk partners for leadership before the quarterly business review.<span class="jtbd-screens">pam-dashboard, pam-partner-portfolio, pam-program-report</span></div></div>
+            </div>
+          </div>
+          <div class="jtbd-persona-block">
+            <div class="jtbd-persona-hd">
+              <div class="jtbd-avatar" style="background:#6d28d9;">AR</div>
+              <div>
+                <div class="jtbd-persona-name">Alex Rivera (cont.)</div>
+                <div class="jtbd-persona-role">Partner Account Manager · Equinix · Salesforce Lightning</div>
+              </div>
+            </div>
+            <div class="jtbd-list">
+              <div class="jtbd-item"><span class="jtbd-num">42</span><div class="jtbd-text">Create and check in on a Joint Business Plan with a strategic partner so commitments don't go stale between QBRs.<span class="jtbd-screens">pam-create-jbp, pam-jbp-checkin</span></div></div>
+              <div class="jtbd-item"><span class="jtbd-num">43</span><div class="jtbd-text">Manage partner offboarding and transfer open deals cleanly to a new partner or AE without revenue attribution disputes.<span class="jtbd-screens">pam-partner-dormancy-offboarding, pam-deal-handover</span></div></div>
+              <div class="jtbd-item"><span class="jtbd-num">44</span><div class="jtbd-text">Handle an escalation at the program level — review brief, manage resolution, close the loop with the partner exec.<span class="jtbd-screens">pam-escalation-brief, pam-escalation-queue</span></div></div>
+              <div class="jtbd-item"><span class="jtbd-num">45</span><div class="jtbd-text">Produce a program health report and financial detail for leadership review.<span class="jtbd-screens">pam-program-report, pam-partner-financial</span></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Solo personas row -->
+      <div class="audience-section">
+        <div class="jtbd-audience-hd">Single-JTBD Personas — Equinix Lightning</div>
+        <div class="jtbd-grid">
+
+          <!-- Equinix AE -->
+          <div class="jtbd-persona-block solo-persona">
+            <div class="jtbd-persona-hd">
+              <div class="jtbd-avatar" style="background:#0891b2;">AE</div>
+              <div>
+                <div class="jtbd-persona-name">Equinix AE</div>
+                <div class="jtbd-persona-role">Account Executive · Equinix · Salesforce Lightning</div>
+              </div>
+            </div>
+            <div class="jtbd-list">
+              <div class="jtbd-item"><span class="jtbd-num">46</span><div class="jtbd-text">See which partner-sourced opportunities are in my territory, create a quote, and fulfill the order without the partner having to chase me for status.<span class="jtbd-screens">ae-partner-opps, ae-create-order, ae-order-fulfillment</span></div></div>
+            </div>
+          </div>
+
+          <!-- Priya Nair -->
+          <div class="jtbd-persona-block solo-persona">
+            <div class="jtbd-persona-hd">
+              <div class="jtbd-avatar" style="background:#7c3aed;">PN</div>
+              <div>
+                <div class="jtbd-persona-name">Priya Nair</div>
+                <div class="jtbd-persona-role">Channel Marketing Manager · Equinix · Salesforce Lightning</div>
+              </div>
+            </div>
+            <div class="jtbd-list">
+              <div class="jtbd-item"><span class="jtbd-num">47</span><div class="jtbd-text">Govern the MDF program budget across all partner tiers — track utilization, campaign performance, and allocation health without Excel reconciliation.<span class="jtbd-screens">cmm-home-dashboard</span></div></div>
+            </div>
+          </div>
+
+          <!-- Rachel Kim -->
+          <div class="jtbd-persona-block solo-persona">
+            <div class="jtbd-persona-hd">
+              <div class="jtbd-avatar" style="background:#0891b2;">RK</div>
+              <div>
+                <div class="jtbd-persona-name">Rachel Kim</div>
+                <div class="jtbd-persona-role">Deal Desk · Equinix · Salesforce Lightning</div>
+              </div>
+            </div>
+            <div class="jtbd-list">
+              <div class="jtbd-item"><span class="jtbd-num">48</span><div class="jtbd-text">Resolve commission disputes and deal exceptions within the 3–5 day SLA so the partner doesn't escalate to their exec sponsor.<span class="jtbd-screens">dealdesk-queue</span></div></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div><!-- end jtbd-panel-internal -->
+  </div><!-- end tab-wrap -->
+
+
+<!-- ═══════════════════════════════════════════════════
+     FLOWS & PROCESS CHAINS
+     ═══════════════════════════════════════════════════ -->
+<div style="margin-top:2.5rem;padding-bottom:.5rem;border-bottom:2px solid var(--wf-line,#d8e1ec);">
+  <h2 style="font-size:1.125rem;font-weight:700;color:var(--wf-ink,#1e2a3a);margin:0 0 .25rem;">Flows &amp; Process Chains</h2>
+  <p style="font-size:.8125rem;color:var(--wf-muted,#6b7f99);margin:0;">End-to-end process chains, lifecycle diagrams, and cross-cutting reference material that span multiple screens and actors.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PARTNER ONBOARDING FLOW (Pre-Auth, 5-Step)
+     ═══════════════════════════════════════════════════ -->
+<div class="cross-section" style="border:2px solid var(--teal);">
+  <h3><div class="dot" style="background:var(--teal);"></div> Partner Onboarding Flow <span style="font-size:.75rem;font-weight:400;color:var(--wf-muted);margin-left:.5rem;">Pre-Auth · Equinix Brand · Apply (4-step) + Onboard (6-step)</span></h3>
+  <div class="chain">
+    <div class="chain-step" style="border-color:#6b7280;border-width:2px;"><a href="onboarding-partner-type.html" style="color:#374151;text-decoration:none;">0. Partner Type</a><br><span style="font-size:.625rem;color:var(--wf-muted);">SI / Reseller / ISV / Referral</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:var(--teal);border-width:2px;"><a href="onboarding-apply-wizard.html" style="color:var(--teal);text-decoration:none;">1. Apply</a><br><span style="font-size:.625rem;color:var(--wf-muted);">4-step wizard</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:var(--teal);border-width:2px;"><a href="onboarding-confirmation.html" style="color:var(--teal);text-decoration:none;">2. Confirmation</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Email + timeline</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:var(--teal);border-width:2px;"><a href="onboarding-agreement.html" style="color:var(--teal);text-decoration:none;">3. Agreement</a><br><span style="font-size:.625rem;color:var(--wf-muted);">DocuSign</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:var(--teal);border-width:2px;"><a href="onboarding-agreement-confirmation.html" style="color:var(--teal);text-decoration:none;">4. Countersign</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Status tracker</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:var(--teal);border-width:2px;"><a href="onboarding-welcome.html" style="color:var(--teal);text-decoration:none;">5. Welcome</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Credentials + checklist</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:var(--teal);border-width:2px;"><a href="onboarding-wizard.html" style="color:var(--teal);text-decoration:none;">6. Setup</a><br><span style="font-size:.625rem;color:var(--wf-muted);">6-step wizard</span></div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px,1fr));gap:.75rem;margin-top:1rem;font-size:.8125rem;">
+    <div><strong>PSM Pipeline Mapping:</strong> Recruitment → Application → Due Diligence → Agreement → Provisioning → Active</div>
+    <div><strong>Emails:</strong> 4 auto-generated Marketing Cloud emails with ref IDs (PCP-CONFIRM, PCP-APPROVE, PCP-AGRMNT, PCP-WELCOME)</div>
+    <div><strong>SF Objects:</strong> Partner_Application__c → Partner_Agreement__c → Partner_Account__c → Onboarding_Checklist__c</div>
+    <div><strong>E-Signature:</strong> DocuSign via SF package. Countersign SLA: 1-2 business days. Reminders at 7/11/13 days.</div>
+  </div>
+
+  <!-- Referral alternate entry path -->
+  <div style="margin-top:1rem;padding:.75rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:4px;font-size:.8rem;">
+    <strong style="color:#166534;">Alternate Entry — Referral Path:</strong>
+    Partners referred by an Equinix AE or existing partner skip the public-site discovery step and enter at <a href="onboarding-apply-referral.html" style="color:var(--teal);font-weight:600;">Referral Application →</a> — pre-populated with company and referral context. Same downstream steps (type selection → wizard → agreement → setup).
+  </div>
+  <div style="margin-top:.5rem;padding:.75rem;background:#f9fafb;border:1px solid var(--gray-border);border-radius:4px;font-size:.8rem;">
+    <strong>Email template preview:</strong> <a href="onboarding-acceptance-email.html" style="color:var(--wf-accent);">Agreement Accepted Notification →</a> — rendered preview of PCP-AGRMNT email sent after countersign. Shows partner name, agreement ID, start date, PSM contact, and portal access link.
+  </div>
+
+  <!-- Login / Auth screens -->
+  <div style="margin-top:1rem;padding:.75rem;background:#eff6ff;border:1px solid #bfdbfe;border-radius:4px;font-size:.8rem;display:flex;gap:1.5rem;align-items:center;flex-wrap:wrap;">
+    <strong style="color:#1d4ed8;">Pre-Auth Login Screens:</strong>
+    <a href="partner-login.html" style="color:var(--wf-accent);font-weight:600;">Partner Login →</a>
+    <span style="color:var(--wf-muted);">Passwordless OTP entry — email address only, no password</span>
+    <a href="partner-set-password.html" style="color:var(--wf-accent);font-weight:600;">Set Password →</a>
+    <span style="color:var(--wf-muted);">Legacy fallback for non-OTP accounts (phased out)</span>
+  </div>
+
+  <!-- Subsequent user registration sub-chain -->
+  <div style="margin-top:1.25rem;padding-top:1.25rem;border-top:1px dashed var(--gray-border);">
+    <h4 style="font-size:.8125rem;font-weight:700;color:var(--wf-ink);margin:0 0 .625rem;display:flex;align-items:center;gap:.5rem;">
+      <div style="width:8px;height:8px;border-radius:2px;background:#1a7a3c;flex-shrink:0;"></div>
+      Subsequent User Registration Flow
+      <span style="font-size:.75rem;font-weight:400;color:var(--wf-muted);">Pre-Auth · Additional team members joining an existing partner org</span>
+    </h4>
+    <div class="chain">
+      <div class="chain-step" style="border-color:#1a7a3c;border-width:2px;"><a href="partner-user-request.html" style="color:#1a7a3c;text-decoration:none;">1. Email check</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Gate: account exists?</span></div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-step" style="border-color:#1a7a3c;border-width:2px;"><a href="partner-user-request.html" style="color:#1a7a3c;text-decoration:none;">2. Org search</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Find + select org</span></div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-step" style="border-color:#1a7a3c;border-width:2px;"><a href="partner-user-request.html" style="color:#1a7a3c;text-decoration:none;">3. Join request</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Name, role, reason</span></div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-step" style="border-color:#1a7a3c;border-width:2px;"><a href="partner-user-request.html" style="color:#1a7a3c;text-decoration:none;">4. Admin approval</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Portal Admin or PSM fallback</span></div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-step" style="border-color:#1a7a3c;border-width:2px;"><a href="onboarding-rep-approval-email.html" style="color:#1a7a3c;text-decoration:none;">5. Approval email</a><br><span style="font-size:.625rem;color:var(--wf-muted);">PCP-REP-APPROVE</span></div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-step" style="border-color:#1a7a3c;border-width:2px;"><a href="onboarding-auth-setup.html" style="color:#1a7a3c;text-decoration:none;">6. OTP + Auth</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Passwordless activation</span></div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-step" style="border-color:#1a7a3c;border-width:2px;"><a href="rep-first-login.html" style="color:#1a7a3c;text-decoration:none;">7. Orientation</a><br><span style="font-size:.625rem;color:var(--wf-muted);">or skip → dashboard</span></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px,1fr));gap:.75rem;margin-top:.75rem;font-size:.8125rem;">
+      <div><strong>Email:</strong> PCP-REP-APPROVE — Experience Cloud auto-send on admin approval. Distinct from org-level PCP-APPROVE.</div>
+      <div><strong>Login:</strong> Passwordless email OTP (Experience Cloud Winter '23+). No password creation step for new reps.</div>
+      <div><strong>SF Objects:</strong> PartnerUserRequest__c (join request) → Contact / User provisioned on approval action.</div>
+      <div><strong>Fallback:</strong> If no Portal Admin assigned, join requests route to PSM (Marcus Chen) as interim approver.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     CONTRACT & AGREEMENT LIFECYCLE
+     ═══════════════════════════════════════════════════ -->
+<div class="cross-section" style="border:2px solid #166534;">
+  <h3><div class="dot" style="background:#166534;"></div> Contract &amp; Agreement Lifecycle <span style="font-size:.75rem;font-weight:400;color:var(--wf-muted);margin-left:.5rem;">PPA · Amendments · Renewals · Partner View</span></h3>
+  <div class="chain" style="margin-bottom:1rem;">
+    <div class="chain-step" style="border-color:#166534;border-width:2px;"><a href="onboarding-agreement.html" style="color:#166534;text-decoration:none;">1. Initial PPA</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Onboarding · DocuSign</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:#166534;border-width:2px;"><a href="onboarding-agreement-confirmation.html" style="color:#166534;text-decoration:none;">2. Countersign</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Status tracker</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:#1d4ed8;border-width:2px;"><a href="pm-contracts.html" style="color:#1d4ed8;text-decoration:none;">3. Partner views PPA</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Read-only · download</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:#b45309;border-width:2px;"><a href="psm-ppa-amendment.html" style="color:#b45309;text-decoration:none;">4. Amendment</a><br><span style="font-size:.625rem;color:var(--wf-muted);">PSM-led · redline compare</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:#0d9488;border-width:2px;"><a href="pm-amendment-request-status.html" style="color:#0d9488;text-decoration:none;">4b. Partner tracks AMD</a><br><span style="font-size:.625rem;color:var(--wf-muted);">7-step tracker · sign</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:#dc2626;border-width:2px;"><a href="psm-contract-renewal.html" style="color:#dc2626;text-decoration:none;">5. Renewal</a><br><span style="font-size:.625rem;color:var(--wf-muted);">90-day trigger · 3 options</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:#6d28d9;border-width:2px;"><a href="pm-partner-offboarding.html" style="color:#6d28d9;text-decoration:none;">6. Offboarding</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Lapse / dormancy</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:#6d28d9;border-width:2px;"><a href="pm-deal-handover.html" style="color:#6d28d9;text-decoration:none;">6b. Deal Transfer</a><br><span style="font-size:.625rem;color:var(--wf-muted);">PSM · open DRs</span></div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(260px,1fr));gap:.75rem;font-size:.8125rem;">
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #166534;">
+      <strong><a href="pam-program-agreements.html" style="color:#166534;">PAM: Program Agreements Queue →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">PAM portfolio view — all agreements, expiry alerts, e-sign status, generate new PPA</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #b45309;">
+      <strong><a href="psm-contracts.html" style="color:#b45309;">PSM: Contract Repository →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Full contract management — active agreements, templates, amendment history, 90/60/30-day renewal alerts</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #1d4ed8;">
+      <strong><a href="pm-contracts.html" style="color:#1d4ed8;">Partner: My Agreement →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Partner read-only view — executed PPA, key provisions summary, amendment history, renewal countdown, download PDF</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #b45309;">
+      <strong><a href="psm-ppa-amendment.html" style="color:#b45309;">PSM: PPA Amendment →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Before/after redline compare, DocuSign 7-step tracker, tier change system implications, partner request routing</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #dc2626;">
+      <strong><a href="psm-contract-renewal.html" style="color:#dc2626;">PSM: Agreement Renewal →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">3 renewal options (same terms / updated terms / tier upgrade), urgency sidebar, prior cycle history</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #0d9488;">
+      <strong><a href="pm-amendment-request-status.html" style="color:#0d9488;">Partner: Amendment Status Tracker →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Jordan's view of AMD-2025-CB-003 in-flight — 7-step progress, sign DocuSign, message Marcus, terms comparison</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #6d28d9;">
+      <strong><a href="pm-deal-handover.html" style="color:#6d28d9;">PSM: Deal Handover →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Transfer open DRs at offboarding — 3 deals with disposition options, partner selector, execute transfers</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;">
+      <div style="font-size:.75rem;color:var(--wf-muted);font-style:italic;">Amendment trigger: tier change event → auto-initiate psm-ppa-amendment.html with TMPL-AMD-TIER-UPGRADE-V3. Partner "Request Amendment" from pm-contracts.html → PSM task + pm-amendment-request-status.html entry. Renewal trigger: Expiry_Date__c ≤ TODAY()+90 AND Renewal_Initiated__c = FALSE → PSM task → psm-contract-renewal.html.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     GLOBAL SEARCH SUITE
+     ═══════════════════════════════════════════════════ -->
+<div class="cross-section" style="border:2px solid var(--wf-accent);">
+  <h3><div class="dot" style="background:var(--wf-accent);"></div> Global Search Suite <span style="font-size:.75rem;font-weight:400;color:var(--wf-muted);margin-left:.5rem;">4 Query Types · Federated Search</span></h3>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px,1fr));gap:.75rem;font-size:.8125rem;">
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid var(--wf-accent);">
+      <strong><a href="rep-search-results.html" style="color:var(--wf-accent);">"Acme"</a></strong> — Customer/deal name (35%)
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Federated results across all objects</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid var(--wf-accent);">
+      <strong><a href="rep-search-fabric.html" style="color:var(--wf-accent);">"Fabric"</a></strong> — Product keyword (20%)
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Synonym expansion, courses promoted</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid var(--wf-accent);">
+      <strong><a href="rep-search-training.html" style="color:var(--wf-accent);">"Security Fundamentals"</a></strong> — Course title (15%)
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Best Match banner, 1-click resume</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid var(--wf-accent);">
+      <strong><a href="rep-search-commission.html" style="color:var(--wf-accent);">"commission Q1"</a></strong> — Financial query (10%)
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Quarterly summary, pipeline projections</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PERSONA CARDS & REFERENCE
+     ═══════════════════════════════════════════════════ -->
+<div class="cross-section" style="border:2px solid var(--orange);">
+  <h3><div class="dot" style="background:var(--orange);"></div> Personas & Reference <span style="font-size:.75rem;font-weight:400;color:var(--wf-muted);margin-left:.5rem;">7 Proto-Personas · Story Reference · Research · Design Spine</span></h3>
+  <div style="padding:.5rem .75rem;background:#fffbe6;border:1px solid #f0d060;border-radius:4px;font-size:.75rem;color:#6b5a00;margin-bottom:.75rem;">
+    ⚠ <strong>Proto-personas — not yet research-validated.</strong> Steve Rogers (AE), Jordan Reeves (RevOps), Brian Walsh (Partner Executive), Marcus Chen (PSM), Alex Rivera (PAM), Priya Nair (Deal Desk), and Maria Hill (EUC) are design-fiction anchors. Steve, Jordan, Marcus, and Alex are grounded in secondary research (job postings, industry surveys); Brian, Priya, and Maria are draft hypotheses with no primary research backing yet. None have been validated through primary user research. Treat all as hypotheses until validated.
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px,1fr));gap:.75rem;font-size:.8125rem;">
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;">
+      <strong><a href="personas.html" style="color:var(--orange);">Persona Research →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">7 personas across 3 audiences — Partner-Side (Steve, Jordan, Brian), Equinix-Side (Marcus, Alex, Priya), End Customer (Maria) — with accuracy notes and design implications</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;">
+      <strong><a href="story-reference.html" style="color:var(--orange);">Story Reference →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Cast of characters, organizations, legal entities, and wireframe key — who appears where and why</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;">
+      <strong><a href="research-best-practices.html" style="color:var(--orange);">Best Practices Research →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Snowflake SPN analysis, deal reg patterns, partner type flows, UX recommendations</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #7c3aed;">
+      <strong><a href="workflows-jtbd.html" style="color:#7c3aed;">Jobs to Be Done Map →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">The design spine — 18 JTBD statements across 6 personas, mapped to workflows and screen clusters. Anchor for every screen decision.</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #7c3aed;">
+      <strong><a href="partner-intelligence.html" style="color:#7c3aed;">Partner Intelligence → Signal Layer →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Design vision and live demo: how an AI-inferred signal layer makes Equinix's partner data graph visible contextually — where each persona already works.</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #1d4ed8;">
+      <strong><a href="notification-trigger-map.html" style="color:#1d4ed8;">Notification Trigger Map →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">All 20 automated notifications: event triggers, recipients, channels (portal/email/Chatter), template IDs, and wiring status.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PROCESS FLOWS
+     ═══════════════════════════════════════════════════ -->
+<div class="cross-section" style="border:2px solid #6d28d9;">
+  <h3><div class="dot" style="background:#6d28d9;"></div> Process Flows <span style="font-size:.75rem;font-weight:400;color:var(--wf-muted);margin-left:.5rem;">End-to-end journeys across multiple screens and actors</span></h3>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(300px,1fr));gap:.75rem;font-size:.8125rem;margin-bottom:1rem;">
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #6d28d9;">
+      <strong><a href="flow-escalation-brief.html" style="color:#6d28d9;">Emergency Escalation → Executive Brief →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Dispute detected → PSM creates escalation → Agentforce generates brief → VP call scheduled → resolution. 6 actors, 8 steps.</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #6d28d9;">
+      <strong><a href="flow-deal-registration.html" style="color:#6d28d9;">Deal Registration Lifecycle →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Rep submits DR → system validates → PSM approves → protection window starts on approval date → pipeline tracked → Deal Desk qualifies commission → close-out. 5 actors, 7 steps.</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #0369a1;">
+      <strong><a href="flow-mdf-lifecycle.html" style="color:#0369a1;">MDF Lifecycle →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Partner requests MDF → PSM reviews eligibility → PAM approves budget → partner executes activity → claim submitted with proof → PAM verifies → Finance reimburses. Dispute branch included. 4 actors, 7 steps.</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid var(--teal);opacity:.65;">
+      <strong style="color:var(--teal);">Partner Onboarding Journey → <span style="font-weight:400;font-size:.7rem;">(see above)</span></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Pre-auth → application → agreement → provisioning → Day-0 orientation → active selling. Fully wired above.</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #1a7a3c;">
+      <strong><a href="flow-tier-review.html" style="color:#1a7a3c;">Tier Review Cycle →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">System triggers annual eval → PSM reviews health scorecard → PAM authorizes tier change → 3 outcome paths (upgrade / maintain / downgrade) → partner notified → optional 30-day appeal → tier change on renewal date. 4 actors, 8 steps.</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #7c3aed;opacity:.65;">
+      <strong style="color:#7c3aed;">Joint Business Plan Creation → <span style="font-weight:400;font-size:.7rem;">(planned)</span></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">PSM + Partner Executive co-create JBP → goals set → commitments signed → quarterly check-in cycle. Addresses exec-level blind spot.</div>
+    </div>
+  </div>
+  <div style="padding:.5rem .75rem;background:#f5f3ff;border:1px solid #c4b5fd;border-radius:4px;font-size:.75rem;color:#4c1d95;">
+    <strong>Wired:</strong> Emergency Escalation Brief · Deal Registration Lifecycle · MDF Lifecycle · Tier Review Cycle — full cross-actor swimlane diagrams.
+    <strong style="margin-left:.75rem;">Planned:</strong> JBP Creation flow — stub defined, diagram pending.
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     DEAL REGISTRATION FLOW
+     ═══════════════════════════════════════════════════ -->
+<div class="cross-section" style="border:2px solid #2563eb;">
+  <h3><div class="dot" style="background:#2563eb;"></div> Deal Registration Flow <span style="font-size:.75rem;font-weight:400;color:var(--wf-muted);margin-left:.5rem;">Partner Portal Submission · PSM Review · Protection Window</span></h3>
+  <div class="chain">
+    <div class="chain-step" style="border-color:#2563eb;border-width:2px;"><a href="pc-dr-deal-type.html" style="color:#2563eb;text-decoration:none;">1. Deal Type</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Referral vs. Resale</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:#2563eb;border-width:2px;"><a href="pc-dr-step1.html" style="color:#2563eb;text-decoration:none;">2. Customer</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Prospect details</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:#2563eb;border-width:2px;"><a href="pc-dr-step2.html" style="color:#2563eb;text-decoration:none;">3. Opportunity</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Deal context</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:#2563eb;border-width:2px;"><a href="pc-dr-step3.html" style="color:#2563eb;text-decoration:none;">4. Products</a><br><span style="font-size:.625rem;color:var(--wf-muted);">IBXs + SKUs</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:#2563eb;border-width:2px;"><a href="pc-dr-step4.html" style="color:#2563eb;text-decoration:none;">5. Review &amp; Submit</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Confirm + submit</span></div>
+  </div>
+
+  <!-- Internal continuation -->
+  <div style="margin-top:1.25rem;padding-top:1.25rem;border-top:1px dashed var(--gray-border);">
+    <h4 style="font-size:.8125rem;font-weight:700;color:var(--wf-ink);margin:0 0 .625rem;display:flex;align-items:center;gap:.5rem;">
+      <div style="width:8px;height:8px;border-radius:2px;background:#1e40af;flex-shrink:0;"></div>
+      Equinix-Side — PSM Review &amp; Approval
+      <span style="font-size:.75rem;font-weight:400;color:var(--wf-muted);">Pending queue → individual review → approve / reject / dispute</span>
+    </h4>
+    <div class="chain">
+      <div class="chain-step" style="border-color:#1e40af;border-width:2px;"><a href="psm-deal-registration.html" style="color:#1e40af;text-decoration:none;">PSM Queue</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Pending DRs</span></div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-step" style="border-color:#1e40af;border-width:2px;"><a href="psm-deal-review-detail.html" style="color:#1e40af;text-decoration:none;">Review Detail</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Approve / reject</span></div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-step" style="border-color:#1e40af;border-width:2px;"><a href="psm-deal-reg-rules.html" style="color:#1e40af;text-decoration:none;">DR Rules</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Eligibility config</span></div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-step" style="border-color:#059669;border-width:2px;"><a href="rep-deals-commission.html" style="color:#059669;text-decoration:none;">Commission View</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Rep — earnings tracker</span></div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px,1fr));gap:.75rem;margin-top:1rem;font-size:.8125rem;">
+    <div><strong>Protection window:</strong> Starts on PSM approval date (not submission). Standard window: 90 days. Alerts at expiry → <a href="rep-deal-expiring.html" style="color:#2563eb;">rep-deal-expiring.html</a></div>
+    <div><strong>SF Objects:</strong> Deal_Registration__c created on submission → linked to Opportunity on approval. Status: Pending → Approved / Rejected / Expired.</div>
+    <div><strong>Dispute path:</strong> PSM can flag overlap with existing deal or Equinix AE opportunity → <a href="psm-deal-dispute.html" style="color:#2563eb;">psm-deal-dispute.html</a></div>
+    <div><strong>PM Dashboard:</strong> Jordan sees all org DRs at <a href="pm-deal-registration.html" style="color:#2563eb;">pm-deal-registration.html</a>. Deal Desk review queue → <a href="dealdesk-queue.html" style="color:#2563eb;">dealdesk-queue.html</a></div>
+  </div>
+
+  <div style="margin-top:.75rem;padding:.5rem .75rem;background:#eff6ff;border:1px solid #bfdbfe;border-radius:4px;font-size:.75rem;color:#1e40af;">
+    <strong>Full lifecycle flow:</strong> <a href="flow-deal-registration.html" style="color:#2563eb;">Deal Registration Lifecycle →</a> — cross-actor swimlane: Rep submits → validation → PSM reviews → protection window → Deal Desk qualifies commission → close-out. 5 actors, 7 steps.
+  </div>
+</div>
+
+</div><!-- end container -->
+
+<script>
+function switchJtbdTab(tab) {
+  document.querySelectorAll('.tab-panel').forEach(function(p) {
+    p.classList.toggle('active', p.id === 'jtbd-panel-' + tab);
+  });
+  document.querySelectorAll('.tab-btn').forEach(function(b) {
+    var isActive = b.id === 'jtbd-tab-' + tab;
+    b.classList.toggle('active', isActive);
+    b.setAttribute('aria-selected', String(isActive));
+  });
+  try { sessionStorage.setItem('pcp-jtbd-tab', tab); } catch(e) {}
+}
+document.addEventListener('DOMContentLoaded', function() {
+  var saved = 'external';
+  try { saved = sessionStorage.getItem('pcp-jtbd-tab') || 'external'; } catch(e) {}
+  switchJtbdTab(saved);
+});
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

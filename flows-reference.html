@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flows &amp; Reference — Equinix PCP</title>
+<link rel="stylesheet" href="wireframe.css">
+</head>
+<body>
+<header>
+  <div>
+    <h1>Equinix Partner Channel Program</h1>
+    <p>Site Map & Information Architecture — v2.6 (92 pages)</p>
+  </div>
+  <div class="header-meta">
+    <span>Feb 2026</span>
+    <span>Draft — Design Phase</span>
+  </div>
+</header>
+
+<nav class="view-control" aria-label="View selector">
+  <span class="view-control-label">View</span>
+  <div class="view-btns" role="navigation" aria-label="Select view">
+    <a class="view-btn" href="index.html">Sitemap</a>
+    <a class="view-btn" href="jobs-to-be-done.html">Jobs to Be Done</a>
+    <a class="view-btn" href="service-diagram.html">Service Diagram</a>
+    <a class="view-btn active" href="flows-reference.html" aria-current="page">Flows &amp; Reference</a>
+  </div>
+</nav>
+
+<div class="container">
+<div style="padding:1.25rem 1.5rem 2.5rem;">
+  <div style="margin-bottom:1.5rem;padding-bottom:.75rem;border-bottom:1px solid var(--gray-border);">
+    <h2 style="font-size:1.125rem;font-weight:700;color:var(--wf-ink);margin:0 0 .25rem;">Flows &amp; Reference</h2>
+    <p style="font-size:.8125rem;color:var(--wf-muted);margin:0;">End-to-end process chains, lifecycle diagrams, global search patterns, persona docs, and cross-cutting reference.</p>
+  </div>
+<!-- ═══════════════════════════════════════════════════
+     PARTNER ONBOARDING FLOW (Pre-Auth, 5-Step)
+     ═══════════════════════════════════════════════════ -->
+<div class="cross-section" style="border:2px solid var(--teal);">
+  <h3><div class="dot" style="background:var(--teal);"></div> Partner Onboarding Flow <span style="font-size:.75rem;font-weight:400;color:var(--wf-muted);margin-left:.5rem;">Pre-Auth · Equinix Brand · Apply (4-step) + Onboard (6-step)</span></h3>
+  <div class="chain">
+    <div class="chain-step" style="border-color:#6b7280;border-width:2px;"><a href="onboarding-partner-type.html" style="color:#374151;text-decoration:none;">0. Partner Type</a><br><span style="font-size:.625rem;color:var(--wf-muted);">SI / Reseller / ISV / Referral</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:var(--teal);border-width:2px;"><a href="onboarding-apply-wizard.html" style="color:var(--teal);text-decoration:none;">1. Apply</a><br><span style="font-size:.625rem;color:var(--wf-muted);">4-step wizard</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:var(--teal);border-width:2px;"><a href="onboarding-confirmation.html" style="color:var(--teal);text-decoration:none;">2. Confirmation</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Email + timeline</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:var(--teal);border-width:2px;"><a href="onboarding-agreement.html" style="color:var(--teal);text-decoration:none;">3. Agreement</a><br><span style="font-size:.625rem;color:var(--wf-muted);">DocuSign</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:var(--teal);border-width:2px;"><a href="onboarding-agreement-confirmation.html" style="color:var(--teal);text-decoration:none;">4. Countersign</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Status tracker</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:var(--teal);border-width:2px;"><a href="onboarding-welcome.html" style="color:var(--teal);text-decoration:none;">5. Welcome</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Credentials + checklist</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:var(--teal);border-width:2px;"><a href="onboarding-wizard.html" style="color:var(--teal);text-decoration:none;">6. Setup</a><br><span style="font-size:.625rem;color:var(--wf-muted);">6-step wizard</span></div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px,1fr));gap:.75rem;margin-top:1rem;font-size:.8125rem;">
+    <div><strong>PSM Pipeline Mapping:</strong> Recruitment → Application → Due Diligence → Agreement → Provisioning → Active</div>
+    <div><strong>Emails:</strong> 4 auto-generated Marketing Cloud emails with ref IDs (PCP-CONFIRM, PCP-APPROVE, PCP-AGRMNT, PCP-WELCOME)</div>
+    <div><strong>SF Objects:</strong> Partner_Application__c → Partner_Agreement__c → Partner_Account__c → Onboarding_Checklist__c</div>
+    <div><strong>E-Signature:</strong> DocuSign via SF package. Countersign SLA: 1-2 business days. Reminders at 7/11/13 days.</div>
+  </div>
+
+  <!-- Referral alternate entry path -->
+  <div style="margin-top:1rem;padding:.75rem;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:4px;font-size:.8rem;">
+    <strong style="color:#166534;">Alternate Entry — Referral Path:</strong>
+    Partners referred by an Equinix AE or existing partner skip the public-site discovery step and enter at <a href="onboarding-apply-referral.html" style="color:var(--teal);font-weight:600;">Referral Application →</a> — pre-populated with company and referral context. Same downstream steps (type selection → wizard → agreement → setup).
+  </div>
+  <div style="margin-top:.5rem;padding:.75rem;background:#f9fafb;border:1px solid var(--gray-border);border-radius:4px;font-size:.8rem;">
+    <strong>Email template preview:</strong> <a href="onboarding-acceptance-email.html" style="color:var(--wf-accent);">Agreement Accepted Notification →</a> — rendered preview of PCP-AGRMNT email sent after countersign. Shows partner name, agreement ID, start date, PSM contact, and portal access link.
+  </div>
+
+  <!-- Login / Auth screens -->
+  <div style="margin-top:1rem;padding:.75rem;background:#eff6ff;border:1px solid #bfdbfe;border-radius:4px;font-size:.8rem;display:flex;gap:1.5rem;align-items:center;flex-wrap:wrap;">
+    <strong style="color:#1d4ed8;">Pre-Auth Login Screens:</strong>
+    <a href="partner-login.html" style="color:var(--wf-accent);font-weight:600;">Partner Login →</a>
+    <span style="color:var(--wf-muted);">Passwordless OTP entry — email address only, no password</span>
+    <a href="partner-set-password.html" style="color:var(--wf-accent);font-weight:600;">Set Password →</a>
+    <span style="color:var(--wf-muted);">Legacy fallback for non-OTP accounts (phased out)</span>
+  </div>
+
+  <!-- Subsequent user registration sub-chain -->
+  <div style="margin-top:1.25rem;padding-top:1.25rem;border-top:1px dashed var(--gray-border);">
+    <h4 style="font-size:.8125rem;font-weight:700;color:var(--wf-ink);margin:0 0 .625rem;display:flex;align-items:center;gap:.5rem;">
+      <div style="width:8px;height:8px;border-radius:2px;background:#1a7a3c;flex-shrink:0;"></div>
+      Subsequent User Registration Flow
+      <span style="font-size:.75rem;font-weight:400;color:var(--wf-muted);">Pre-Auth · Additional team members joining an existing partner org</span>
+    </h4>
+    <div class="chain">
+      <div class="chain-step" style="border-color:#1a7a3c;border-width:2px;"><a href="partner-user-request.html" style="color:#1a7a3c;text-decoration:none;">1. Email check</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Gate: account exists?</span></div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-step" style="border-color:#1a7a3c;border-width:2px;"><a href="partner-user-request.html" style="color:#1a7a3c;text-decoration:none;">2. Org search</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Find + select org</span></div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-step" style="border-color:#1a7a3c;border-width:2px;"><a href="partner-user-request.html" style="color:#1a7a3c;text-decoration:none;">3. Join request</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Name, role, reason</span></div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-step" style="border-color:#1a7a3c;border-width:2px;"><a href="partner-user-request.html" style="color:#1a7a3c;text-decoration:none;">4. Admin approval</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Portal Admin or PSM fallback</span></div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-step" style="border-color:#1a7a3c;border-width:2px;"><a href="onboarding-rep-approval-email.html" style="color:#1a7a3c;text-decoration:none;">5. Approval email</a><br><span style="font-size:.625rem;color:var(--wf-muted);">PCP-REP-APPROVE</span></div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-step" style="border-color:#1a7a3c;border-width:2px;"><a href="onboarding-auth-setup.html" style="color:#1a7a3c;text-decoration:none;">6. OTP + Auth</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Passwordless activation</span></div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-step" style="border-color:#1a7a3c;border-width:2px;"><a href="rep-first-login.html" style="color:#1a7a3c;text-decoration:none;">7. Orientation</a><br><span style="font-size:.625rem;color:var(--wf-muted);">or skip → dashboard</span></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px,1fr));gap:.75rem;margin-top:.75rem;font-size:.8125rem;">
+      <div><strong>Email:</strong> PCP-REP-APPROVE — Experience Cloud auto-send on admin approval. Distinct from org-level PCP-APPROVE.</div>
+      <div><strong>Login:</strong> Passwordless email OTP (Experience Cloud Winter '23+). No password creation step for new reps.</div>
+      <div><strong>SF Objects:</strong> PartnerUserRequest__c (join request) → Contact / User provisioned on approval action.</div>
+      <div><strong>Fallback:</strong> If no Portal Admin assigned, join requests route to PSM (Marcus Chen) as interim approver.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     CONTRACT & AGREEMENT LIFECYCLE
+     ═══════════════════════════════════════════════════ -->
+<div class="cross-section" style="border:2px solid #166534;">
+  <h3><div class="dot" style="background:#166534;"></div> Contract &amp; Agreement Lifecycle <span style="font-size:.75rem;font-weight:400;color:var(--wf-muted);margin-left:.5rem;">PPA · Amendments · Renewals · Partner View</span></h3>
+  <div class="chain" style="margin-bottom:1rem;">
+    <div class="chain-step" style="border-color:#166534;border-width:2px;"><a href="onboarding-agreement.html" style="color:#166534;text-decoration:none;">1. Initial PPA</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Onboarding · DocuSign</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:#166534;border-width:2px;"><a href="onboarding-agreement-confirmation.html" style="color:#166534;text-decoration:none;">2. Countersign</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Status tracker</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:#1d4ed8;border-width:2px;"><a href="pm-contracts.html" style="color:#1d4ed8;text-decoration:none;">3. Partner views PPA</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Read-only · download</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:#b45309;border-width:2px;"><a href="psm-ppa-amendment.html" style="color:#b45309;text-decoration:none;">4. Amendment</a><br><span style="font-size:.625rem;color:var(--wf-muted);">PSM-led · redline compare</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:#0d9488;border-width:2px;"><a href="pm-amendment-request-status.html" style="color:#0d9488;text-decoration:none;">4b. Partner tracks AMD</a><br><span style="font-size:.625rem;color:var(--wf-muted);">7-step tracker · sign</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:#dc2626;border-width:2px;"><a href="psm-contract-renewal.html" style="color:#dc2626;text-decoration:none;">5. Renewal</a><br><span style="font-size:.625rem;color:var(--wf-muted);">90-day trigger · 3 options</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:#6d28d9;border-width:2px;"><a href="pm-partner-offboarding.html" style="color:#6d28d9;text-decoration:none;">6. Offboarding</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Lapse / dormancy</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:#6d28d9;border-width:2px;"><a href="pm-deal-handover.html" style="color:#6d28d9;text-decoration:none;">6b. Deal Transfer</a><br><span style="font-size:.625rem;color:var(--wf-muted);">PSM · open DRs</span></div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(260px,1fr));gap:.75rem;font-size:.8125rem;">
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #166534;">
+      <strong><a href="pam-program-agreements.html" style="color:#166534;">PAM: Program Agreements Queue →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">PAM portfolio view — all agreements, expiry alerts, e-sign status, generate new PPA</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #b45309;">
+      <strong><a href="psm-contracts.html" style="color:#b45309;">PSM: Contract Repository →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Full contract management — active agreements, templates, amendment history, 90/60/30-day renewal alerts</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #1d4ed8;">
+      <strong><a href="pm-contracts.html" style="color:#1d4ed8;">Partner: My Agreement →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Partner read-only view — executed PPA, key provisions summary, amendment history, renewal countdown, download PDF</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #b45309;">
+      <strong><a href="psm-ppa-amendment.html" style="color:#b45309;">PSM: PPA Amendment →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Before/after redline compare, DocuSign 7-step tracker, tier change system implications, partner request routing</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #dc2626;">
+      <strong><a href="psm-contract-renewal.html" style="color:#dc2626;">PSM: Agreement Renewal →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">3 renewal options (same terms / updated terms / tier upgrade), urgency sidebar, prior cycle history</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #0d9488;">
+      <strong><a href="pm-amendment-request-status.html" style="color:#0d9488;">Partner: Amendment Status Tracker →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Jordan's view of AMD-2025-CB-003 in-flight — 7-step progress, sign DocuSign, message Marcus, terms comparison</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #6d28d9;">
+      <strong><a href="pm-deal-handover.html" style="color:#6d28d9;">PSM: Deal Handover →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Transfer open DRs at offboarding — 3 deals with disposition options, partner selector, execute transfers</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;">
+      <div style="font-size:.75rem;color:var(--wf-muted);font-style:italic;">Amendment trigger: tier change event → auto-initiate psm-ppa-amendment.html with TMPL-AMD-TIER-UPGRADE-V3. Partner "Request Amendment" from pm-contracts.html → PSM task + pm-amendment-request-status.html entry. Renewal trigger: Expiry_Date__c ≤ TODAY()+90 AND Renewal_Initiated__c = FALSE → PSM task → psm-contract-renewal.html.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     GLOBAL SEARCH SUITE
+     ═══════════════════════════════════════════════════ -->
+<div class="cross-section" style="border:2px solid var(--wf-accent);">
+  <h3><div class="dot" style="background:var(--wf-accent);"></div> Global Search Suite <span style="font-size:.75rem;font-weight:400;color:var(--wf-muted);margin-left:.5rem;">4 Query Types · Federated Search</span></h3>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px,1fr));gap:.75rem;font-size:.8125rem;">
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid var(--wf-accent);">
+      <strong><a href="rep-search-results.html" style="color:var(--wf-accent);">"Acme"</a></strong> — Customer/deal name (35%)
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Federated results across all objects</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid var(--wf-accent);">
+      <strong><a href="rep-search-fabric.html" style="color:var(--wf-accent);">"Fabric"</a></strong> — Product keyword (20%)
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Synonym expansion, courses promoted</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid var(--wf-accent);">
+      <strong><a href="rep-search-training.html" style="color:var(--wf-accent);">"Security Fundamentals"</a></strong> — Course title (15%)
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Best Match banner, 1-click resume</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid var(--wf-accent);">
+      <strong><a href="rep-search-commission.html" style="color:var(--wf-accent);">"commission Q1"</a></strong> — Financial query (10%)
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Quarterly summary, pipeline projections</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PERSONA CARDS & REFERENCE
+     ═══════════════════════════════════════════════════ -->
+<div class="cross-section" style="border:2px solid var(--orange);">
+  <h3><div class="dot" style="background:var(--orange);"></div> Personas & Reference <span style="font-size:.75rem;font-weight:400;color:var(--wf-muted);margin-left:.5rem;">7 Proto-Personas · Story Reference · Research · Design Spine</span></h3>
+  <div style="padding:.5rem .75rem;background:#fffbe6;border:1px solid #f0d060;border-radius:4px;font-size:.75rem;color:#6b5a00;margin-bottom:.75rem;">
+    ⚠ <strong>Proto-personas — not yet research-validated.</strong> Steve Rogers (AE), Jordan Reeves (RevOps), Brian Walsh (Partner Executive), Marcus Chen (PSM), Alex Rivera (PAM), Priya Nair (Deal Desk), and Maria Hill (EUC) are design-fiction anchors. Steve, Jordan, Marcus, and Alex are grounded in secondary research (job postings, industry surveys); Brian, Priya, and Maria are draft hypotheses with no primary research backing yet. None have been validated through primary user research. Treat all as hypotheses until validated.
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px,1fr));gap:.75rem;font-size:.8125rem;">
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;">
+      <strong><a href="personas.html" style="color:var(--orange);">Persona Research →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">7 personas across 3 audiences — Partner-Side (Steve, Jordan, Brian), Equinix-Side (Marcus, Alex, Priya), End Customer (Maria) — with accuracy notes and design implications</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;">
+      <strong><a href="story-reference.html" style="color:var(--orange);">Story Reference →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Cast of characters, organizations, legal entities, and wireframe key — who appears where and why</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;">
+      <strong><a href="research-best-practices.html" style="color:var(--orange);">Best Practices Research →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Snowflake SPN analysis, deal reg patterns, partner type flows, UX recommendations</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #7c3aed;">
+      <strong><a href="workflows-jtbd.html" style="color:#7c3aed;">Jobs to Be Done Map →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">The design spine — 18 JTBD statements across 6 personas, mapped to workflows and screen clusters. Anchor for every screen decision.</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #7c3aed;">
+      <strong><a href="partner-intelligence.html" style="color:#7c3aed;">Partner Intelligence → Signal Layer →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Design vision and live demo: how an AI-inferred signal layer makes Equinix's partner data graph visible contextually — where each persona already works.</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #1d4ed8;">
+      <strong><a href="notification-trigger-map.html" style="color:#1d4ed8;">Notification Trigger Map →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">All 20 automated notifications: event triggers, recipients, channels (portal/email/Chatter), template IDs, and wiring status.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PROCESS FLOWS
+     ═══════════════════════════════════════════════════ -->
+<div class="cross-section" style="border:2px solid #6d28d9;">
+  <h3><div class="dot" style="background:#6d28d9;"></div> Process Flows <span style="font-size:.75rem;font-weight:400;color:var(--wf-muted);margin-left:.5rem;">End-to-end journeys across multiple screens and actors</span></h3>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(300px,1fr));gap:.75rem;font-size:.8125rem;margin-bottom:1rem;">
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #6d28d9;">
+      <strong><a href="flow-escalation-brief.html" style="color:#6d28d9;">Emergency Escalation → Executive Brief →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Dispute detected → PSM creates escalation → Agentforce generates brief → VP call scheduled → resolution. 6 actors, 8 steps.</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #6d28d9;">
+      <strong><a href="flow-deal-registration.html" style="color:#6d28d9;">Deal Registration Lifecycle →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Rep submits DR → system validates → PSM approves → protection window starts on approval date → pipeline tracked → Deal Desk qualifies commission → close-out. 5 actors, 7 steps.</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #0369a1;">
+      <strong><a href="flow-mdf-lifecycle.html" style="color:#0369a1;">MDF Lifecycle →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Partner requests MDF → PSM reviews eligibility → PAM approves budget → partner executes activity → claim submitted with proof → PAM verifies → Finance reimburses. Dispute branch included. 4 actors, 7 steps.</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid var(--teal);opacity:.65;">
+      <strong style="color:var(--teal);">Partner Onboarding Journey → <span style="font-weight:400;font-size:.7rem;">(see above)</span></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Pre-auth → application → agreement → provisioning → Day-0 orientation → active selling. Fully wired above.</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #1a7a3c;">
+      <strong><a href="flow-tier-review.html" style="color:#1a7a3c;">Tier Review Cycle →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">System triggers annual eval → PSM reviews health scorecard → PAM authorizes tier change → 3 outcome paths (upgrade / maintain / downgrade) → partner notified → optional 30-day appeal → tier change on renewal date. 4 actors, 8 steps.</div>
+    </div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #7c3aed;opacity:.65;">
+      <strong style="color:#7c3aed;">Joint Business Plan Creation → <span style="font-weight:400;font-size:.7rem;">(planned)</span></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">PSM + Partner Executive co-create JBP → goals set → commitments signed → quarterly check-in cycle. Addresses exec-level blind spot.</div>
+    </div>
+  </div>
+  <div style="padding:.5rem .75rem;background:#f5f3ff;border:1px solid #c4b5fd;border-radius:4px;font-size:.75rem;color:#4c1d95;">
+    <strong>Wired:</strong> Emergency Escalation Brief · Deal Registration Lifecycle · MDF Lifecycle · Tier Review Cycle — full cross-actor swimlane diagrams.
+    <strong style="margin-left:.75rem;">Planned:</strong> JBP Creation flow — stub defined, diagram pending.
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     DEAL REGISTRATION FLOW
+     ═══════════════════════════════════════════════════ -->
+<div class="cross-section" style="border:2px solid #2563eb;">
+  <h3><div class="dot" style="background:#2563eb;"></div> Deal Registration Flow <span style="font-size:.75rem;font-weight:400;color:var(--wf-muted);margin-left:.5rem;">Partner Portal Submission · PSM Review · Protection Window</span></h3>
+  <div class="chain">
+    <div class="chain-step" style="border-color:#2563eb;border-width:2px;"><a href="pc-dr-deal-type.html" style="color:#2563eb;text-decoration:none;">1. Deal Type</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Referral vs. Resale</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:#2563eb;border-width:2px;"><a href="pc-dr-step1.html" style="color:#2563eb;text-decoration:none;">2. Customer</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Prospect details</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:#2563eb;border-width:2px;"><a href="pc-dr-step2.html" style="color:#2563eb;text-decoration:none;">3. Opportunity</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Deal context</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:#2563eb;border-width:2px;"><a href="pc-dr-step3.html" style="color:#2563eb;text-decoration:none;">4. Products</a><br><span style="font-size:.625rem;color:var(--wf-muted);">IBXs + SKUs</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:#2563eb;border-width:2px;"><a href="pc-dr-step4.html" style="color:#2563eb;text-decoration:none;">5. Review &amp; Submit</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Confirm + submit</span></div>
+  </div>
+
+  <!-- Internal continuation -->
+  <div style="margin-top:1.25rem;padding-top:1.25rem;border-top:1px dashed var(--gray-border);">
+    <h4 style="font-size:.8125rem;font-weight:700;color:var(--wf-ink);margin:0 0 .625rem;display:flex;align-items:center;gap:.5rem;">
+      <div style="width:8px;height:8px;border-radius:2px;background:#1e40af;flex-shrink:0;"></div>
+      Equinix-Side — PSM Review &amp; Approval
+      <span style="font-size:.75rem;font-weight:400;color:var(--wf-muted);">Pending queue → individual review → approve / reject / dispute</span>
+    </h4>
+    <div class="chain">
+      <div class="chain-step" style="border-color:#1e40af;border-width:2px;"><a href="psm-deal-registration.html" style="color:#1e40af;text-decoration:none;">PSM Queue</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Pending DRs</span></div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-step" style="border-color:#1e40af;border-width:2px;"><a href="psm-deal-review-detail.html" style="color:#1e40af;text-decoration:none;">Review Detail</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Approve / reject</span></div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-step" style="border-color:#1e40af;border-width:2px;"><a href="psm-deal-reg-rules.html" style="color:#1e40af;text-decoration:none;">DR Rules</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Eligibility config</span></div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-step" style="border-color:#059669;border-width:2px;"><a href="rep-deals-commission.html" style="color:#059669;text-decoration:none;">Commission View</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Rep — earnings tracker</span></div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px,1fr));gap:.75rem;margin-top:1rem;font-size:.8125rem;">
+    <div><strong>Protection window:</strong> Starts on PSM approval date (not submission). Standard window: 90 days. Alerts at expiry → <a href="rep-deal-expiring.html" style="color:#2563eb;">rep-deal-expiring.html</a></div>
+    <div><strong>SF Objects:</strong> Deal_Registration__c created on submission → linked to Opportunity on approval. Status: Pending → Approved / Rejected / Expired.</div>
+    <div><strong>Dispute path:</strong> PSM can flag overlap with existing deal or Equinix AE opportunity → <a href="psm-deal-dispute.html" style="color:#2563eb;">psm-deal-dispute.html</a></div>
+    <div><strong>PM Dashboard:</strong> Jordan sees all org DRs at <a href="pm-deal-registration.html" style="color:#2563eb;">pm-deal-registration.html</a>. Deal Desk review queue → <a href="dealdesk-queue.html" style="color:#2563eb;">dealdesk-queue.html</a></div>
+  </div>
+
+  <div style="margin-top:.75rem;padding:.5rem .75rem;background:#eff6ff;border:1px solid #bfdbfe;border-radius:4px;font-size:.75rem;color:#1e40af;">
+    <strong>Full lifecycle flow:</strong> <a href="flow-deal-registration.html" style="color:#2563eb;">Deal Registration Lifecycle →</a> — cross-actor swimlane: Rep submits → validation → PSM reviews → protection window → Deal Desk qualifies commission → close-out. 5 actors, 7 steps.
+  </div>
+</div>
+
+</div>
+</div>
+
+<script src="wf-nav.js"></script>
+</body>
+</html>

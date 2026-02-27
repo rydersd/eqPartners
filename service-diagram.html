@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Service Diagram — Equinix PCP</title>
+<link rel="stylesheet" href="wireframe.css">
+<style>
+  /* SVG node interactivity */
+  svg a.sd-node-link { cursor: pointer; }
+  svg a.sd-node-link text { text-decoration: none; }
+  svg a.sd-node-link:hover rect,
+  svg a.sd-node-link:hover circle { opacity: 0.82; }
+  svg a.sd-node-link:focus-visible { outline: 2px solid #3d6daa; outline-offset: 2px; }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Equinix Partner Channel Program</h1>
+    <p>Site Map & Information Architecture — v2.6 (92 pages)</p>
+  </div>
+  <div class="header-meta">
+    <span>Feb 2026</span>
+    <span>Draft — Design Phase</span>
+  </div>
+</header>
+
+<nav class="view-control" aria-label="View selector">
+  <span class="view-control-label">View</span>
+  <div class="view-btns" role="navigation" aria-label="Select view">
+    <a class="view-btn" href="index.html">Sitemap</a>
+    <a class="view-btn" href="jobs-to-be-done.html">Jobs to Be Done</a>
+    <a class="view-btn active" href="service-diagram.html" aria-current="page">Service Diagram</a>
+    <a class="view-btn" href="flows-reference.html">Flows &amp; Reference</a>
+  </div>
+</nav>
+
+<div class="container">
+<div class="sd-wrap">
+  <div class="sd-hd">
+    <h3>Service Blueprint — Partner Channel Program</h3>
+    <div class="sd-filters" role="group" aria-label="Highlight workflow">
+      <button class="sd-btn active" id="sd-all" onclick="highlightFlow('all')" style="background:var(--wf-ink);color:#fff;border-color:var(--wf-ink);">All</button>
+      <button class="sd-btn" id="sd-onboarding" onclick="highlightFlow('onboarding')" style="--sd-c:#0d9488;">Onboarding</button>
+      <button class="sd-btn" id="sd-dealreg" onclick="highlightFlow('dealreg')" style="--sd-c:#2563eb;">Deal Registration</button>
+      <button class="sd-btn" id="sd-mdf" onclick="highlightFlow('mdf')" style="--sd-c:#d97706;">MDF Lifecycle</button>
+      <button class="sd-btn" id="sd-tier" onclick="highlightFlow('tier')" style="--sd-c:#7c3aed;">Tier Review</button>
+      <button class="sd-btn" id="sd-agreement" onclick="highlightFlow('agreement')" style="--sd-c:#166534;">Agreements</button>
+    </div>
+  </div>
+  <div class="sd-body">
+    <svg class="sd-svg" viewBox="0 0 1060 520" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Service blueprint swim lane diagram showing how partner workflows cross user-facing portals, Salesforce, and external systems">
+
+      <!-- Lane backgrounds -->
+      <rect x="0" y="0" width="1060" height="520" fill="#f9fafb"/>
+
+      <!-- Lane 1: Partner Org actors -->
+      <rect x="0" y="0" width="1060" height="108" fill="#f0f7ff"/>
+      <!-- Lane 2: External Portals -->
+      <rect x="0" y="108" width="1060" height="120" fill="#fff"/>
+      <!-- Lane 3: Transaction / Data Layer -->
+      <rect x="0" y="228" width="1060" height="96" fill="#f8f6ff"/>
+      <!-- Lane 4: Salesforce Internal -->
+      <rect x="0" y="324" width="1060" height="104" fill="#fff"/>
+      <!-- Lane 5: External Systems -->
+      <rect x="0" y="428" width="1060" height="92" fill="#f0fdf4"/>
+
+      <!-- Lane dividers -->
+      <line x1="0" y1="108" x2="1060" y2="108" stroke="#e2e8f0" stroke-width="1"/>
+      <line x1="0" y1="228" x2="1060" y2="228" stroke="#e2e8f0" stroke-width="1"/>
+      <line x1="0" y1="324" x2="1060" y2="324" stroke="#e2e8f0" stroke-width="1"/>
+      <line x1="0" y1="428" x2="1060" y2="428" stroke="#e2e8f0" stroke-width="1"/>
+
+      <!-- Lane labels -->
+      <text x="8" y="18" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" text-transform="uppercase" fill="#94a3b8" letter-spacing="0.06em">PARTNER ORG</text>
+      <text x="8" y="126" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="#94a3b8" letter-spacing="0.06em">EXPERIENCE CLOUD</text>
+      <text x="8" y="246" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="#94a3b8" letter-spacing="0.06em">WORKFLOWS &amp; TRANSACTIONS</text>
+      <text x="8" y="342" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="#94a3b8" letter-spacing="0.06em">SALESFORCE LIGHTNING</text>
+      <text x="8" y="446" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="#94a3b8" letter-spacing="0.06em">EXTERNAL SYSTEMS</text>
+
+      <!-- ─── LANE 1: Partner Org actors ─── -->
+      <!-- Jordan -->
+      <g id="actor-jordan">
+        <a href="jtbd-jordan.html" class="sd-node-link" aria-label="Jordan Reeves — view JTBDs">
+        <title>Jordan Reeves · Portal Admin — configures the PM Portal, manages user access, and oversees partner program setup at CloudBridge</title>
+        <circle cx="130" cy="55" r="20" fill="#3b82f6"/>
+        <text x="130" y="59" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" font-weight="700" fill="#fff">JR</text>
+        <text x="130" y="84" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="#1e40af">Jordan</text>
+        <text x="130" y="95" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#94a3b8">Portal Admin</text>
+        </a>
+      </g>
+      <!-- Steve -->
+      <g id="actor-steve">
+        <a href="jtbd-steve.html" class="sd-node-link" aria-label="Steve Rogers — view JTBDs">
+        <title>Steve Rogers · Sales Rep — registers deals, tracks pipeline, and requests MDF through the Rep Portal</title>
+        <circle cx="250" cy="55" r="20" fill="#3d6daa"/>
+        <text x="250" y="59" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" font-weight="700" fill="#fff">SR</text>
+        <text x="250" y="84" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="#1e3a5f">Steve</text>
+        <text x="250" y="95" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#94a3b8">Sales Rep</text>
+        </a>
+      </g>
+      <!-- Sam -->
+      <g id="actor-sam">
+        <a href="jtbd-sam.html" class="sd-node-link" aria-label="Sam Chen — view JTBD">
+        <title>Sam Chen · Prospective Partner — self-discovers the program externally and initiates onboarding (dashed circle = outside the invited partner flow)</title>
+        <circle cx="370" cy="55" r="20" fill="#1a7a3c" fill-opacity="0.7" stroke="#1a7a3c" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <text x="370" y="59" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" font-weight="700" fill="#fff">SC</text>
+        <text x="370" y="84" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="#1a7a3c">Sam</text>
+        <text x="370" y="95" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#94a3b8">Self-registers</text>
+        </a>
+      </g>
+      <!-- Brian (exec) -->
+      <g id="actor-brian">
+        <title>Brian Wang · Partner Exec — approves MDF requests, reviews QBR results, and represents CloudBridge in tier reviews</title>
+        <circle cx="480" cy="55" r="16" fill="#64748b"/>
+        <text x="480" y="59" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="#fff">BW</text>
+        <text x="480" y="80" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="#475569">Brian</text>
+        <text x="480" y="91" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#94a3b8">Partner Exec</text>
+      </g>
+      <!-- Maria (EUC) -->
+      <g id="actor-maria">
+        <title>Maria Hernandez · End Customer — interacts via ECP; not a direct PCP portal user but appears in deal records as the end-customer contact</title>
+        <circle cx="580" cy="55" r="16" fill="#dc2626"/>
+        <text x="580" y="59" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="#fff">MH</text>
+        <text x="580" y="80" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="#991b1b">Maria</text>
+        <text x="580" y="91" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#94a3b8">End Customer</text>
+      </g>
+
+      <!-- ─── LANE 2: Experience Cloud Portals ─── -->
+      <!-- Onboarding portal -->
+      <a href="onboarding-apply-wizard.html" class="sd-node-link" aria-label="Open Onboarding Portal wireframe">
+        <title>Onboarding Portal — pre-auth Experience Cloud portal for new partner applications: D&amp;B company lookup, contact setup, agreement, and account provisioning</title>
+        <rect x="60" y="120" width="110" height="40" rx="5" fill="#ccfbf1" stroke="#0d9488" stroke-width="1.5"/>
+      <text x="115" y="137" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" font-weight="700" fill="#134e4a">Onboarding</text>
+      <text x="115" y="149" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#134e4a">Pre-auth flow</text>
+      </a>
+
+      <!-- PM Portal -->
+      <a href="pm-home-dashboard.html" class="sd-node-link" aria-label="Open PM Portal wireframe">
+        <title>PM Portal · Experience Cloud — program manager hub: deal pipeline, MDF management, tier tracking, certifications, and partner reporting</title>
+        <rect x="195" y="120" width="110" height="40" rx="5" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+      <text x="250" y="137" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" font-weight="700" fill="#1e40af">PM Portal</text>
+      <text x="250" y="149" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#1e40af">Experience Cloud</text>
+      </a>
+
+      <!-- Rep Portal -->
+      <a href="rep-home.html" class="sd-node-link" aria-label="Open Rep Portal wireframe">
+        <title>Rep Portal · Experience Cloud — sales rep hub: deal registration, pipeline tracking, co-sell resources, enablement content, and MDF requests</title>
+        <rect x="325" y="120" width="110" height="40" rx="5" fill="#e0e7ff" stroke="#3d6daa" stroke-width="1.5"/>
+      <text x="380" y="137" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" font-weight="700" fill="#1e3a5f">Rep Portal</text>
+      <text x="380" y="149" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#1e3a5f">Experience Cloud</text>
+      </a>
+
+      <!-- ECP -->
+      <g>
+        <title>Equinix Customer Portal (ECP) — end-customer facing portal; outside direct PCP scope. Partner deal records reference ECP accounts for co-sell tracking.</title>
+        <rect x="455" y="120" width="90" height="40" rx="5" fill="#fee2e2" stroke="#dc2626" stroke-width="1.5"/>
+      <text x="500" y="137" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" font-weight="700" fill="#991b1b">ECP</text>
+      <text x="500" y="149" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#991b1b">Customer Portal</text>
+      </g>
+
+      <!-- ─── LANE 3: Workflows / Transactions ─── -->
+      <!-- Key workflow nodes -->
+      <a href="flows-reference.html" class="sd-node-link" aria-label="View onboarding flow reference">
+        <title>Partner Onboarding — application → PSM review → legal agreement → Salesforce provisioning → portal activation. Avg. 5–14 days.</title>
+        <rect x="60" y="242" width="90" height="34" rx="4" fill="#ccfbf1" stroke="#0d9488" stroke-width="1" class="flow-onboarding"/>
+      <text x="105" y="256" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="#134e4a">Partner</text>
+      <text x="105" y="267" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#134e4a">Onboarding</text>
+      </a>
+
+      <a href="flows-reference.html" class="sd-node-link" aria-label="View deal registration flow reference">
+        <title>Deal Registration — partner submits deal → PSM reviews for conflicts → AE co-sells → Deal Desk validates pricing. 48-hour SLA for PSM review.</title>
+        <rect x="170" y="242" width="90" height="34" rx="4" fill="#dbeafe" stroke="#2563eb" stroke-width="1" class="flow-dealreg"/>
+      <text x="215" y="256" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="#1e40af">Deal</text>
+      <text x="215" y="267" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#1e40af">Registration</text>
+      </a>
+
+      <a href="flows-reference.html" class="sd-node-link" aria-label="View MDF lifecycle flow reference">
+        <title>MDF Lifecycle — partner requests funds → CMM approves → activity executes → claim submission → finance reconciliation. Tied to tier allocation.</title>
+        <rect x="280" y="242" width="90" height="34" rx="4" fill="#fef3c7" stroke="#d97706" stroke-width="1" class="flow-mdf"/>
+      <text x="325" y="256" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="#92400e">MDF</text>
+      <text x="325" y="267" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#92400e">Lifecycle</text>
+      </a>
+
+      <a href="flows-reference.html" class="sd-node-link" aria-label="View tier review flow reference">
+        <title>Tier Review — annual automated assessment of revenue, certifications, and engagement scores. Triggers program agreement renewal and MDF reallocation.</title>
+        <rect x="390" y="242" width="90" height="34" rx="4" fill="#ede9fe" stroke="#7c3aed" stroke-width="1" class="flow-tier"/>
+      <text x="435" y="256" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="#4c1d95">Tier</text>
+      <text x="435" y="267" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#4c1d95">Review</text>
+      </a>
+
+      <a href="flows-reference.html" class="sd-node-link" aria-label="View agreements flow reference">
+        <title>Agreements &amp; Renewals — DocuSign-based partner program agreement. Triggered at onboarding and annually at tier review. Countersigned by PSM.</title>
+        <rect x="500" y="242" width="90" height="34" rx="4" fill="#dcfce7" stroke="#166534" stroke-width="1" class="flow-agreement"/>
+      <text x="545" y="256" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="#166534">Agreements</text>
+      <text x="545" y="267" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#166534">&amp; Renewals</text>
+      </a>
+
+      <a href="pm-cert-tracker.html" class="sd-node-link" aria-label="Open certification tracker wireframe">
+        <title>Training &amp; Certification — SumTotal LMS integration syncs completion data into Salesforce. Cert counts feed directly into tier scoring.</title>
+        <rect x="610" y="242" width="90" height="34" rx="4" fill="#f1f5f9" stroke="#64748b" stroke-width="1"/>
+      <text x="655" y="256" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="#475569">Training</text>
+      <text x="655" y="267" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#475569">Certification</text>
+      </a>
+
+      <g>
+        <title>QBR / JBP — Marcus's quarterly business review prep: pulls deal data, MDF utilization, and tier progress. Joint Business Plan sets next-quarter targets.</title>
+        <rect x="720" y="242" width="90" height="34" rx="4" fill="#f1f5f9" stroke="#64748b" stroke-width="1"/>
+      <text x="765" y="256" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="#475569">QBR /</text>
+      <text x="765" y="267" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#475569">JBP</text>
+      </g>
+
+      <g>
+        <title>Commission Disputes — partner-initiated dispute escalation. Routes to Deal Desk (Rachel Kim) and ERP/Finance for payout reconciliation.</title>
+        <rect x="830" y="242" width="90" height="34" rx="4" fill="#f1f5f9" stroke="#64748b" stroke-width="1"/>
+      <text x="875" y="256" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="#475569">Commission</text>
+      <text x="875" y="267" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#475569">Disputes</text>
+      </g>
+
+      <!-- ─── LANE 4: Salesforce Internal ─── -->
+      <!-- PSM -->
+      <a href="jtbd-marcus.html" class="sd-node-link" aria-label="Marcus Chen — view JTBDs">
+        <title>PSM · Marcus Chen — Partner Success Manager at Equinix. Manages 5–15 partners, reviews deals, resolves disputes, runs QBRs, and co-signs program agreements.</title>
+        <rect x="60" y="338" width="100" height="42" rx="4" fill="#f0f0f0" stroke="#1e2a3a" stroke-width="1.5"/>
+      <text x="110" y="356" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" font-weight="700" fill="#1e2a3a">PSM</text>
+      <text x="110" y="368" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#475569">Marcus Chen</text>
+      </a>
+
+      <!-- PAM -->
+      <a href="jtbd-alex.html" class="sd-node-link" aria-label="Alex Rivera — view JTBDs">
+        <title>PAM · Alex Rivera — Partner Account Manager. Handles day-to-day partner requests, enablement scheduling, and escalation triage before PSM involvement.</title>
+        <rect x="185" y="338" width="100" height="42" rx="4" fill="#ede9fe" stroke="#6d28d9" stroke-width="1.5"/>
+      <text x="235" y="356" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" font-weight="700" fill="#4c1d95">PAM</text>
+      <text x="235" y="368" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#4c1d95">Alex Rivera</text>
+      </a>
+
+      <!-- AE -->
+      <a href="jtbd-equinix.html" class="sd-node-link" aria-label="Equinix AE — view JTBD">
+        <title>Equinix AE — internal Account Executive. Co-sells with partner reps on registered deals, manages order entry, and coordinates with Deal Desk on pricing.</title>
+        <rect x="310" y="338" width="80" height="42" rx="4" fill="#f0f9ff" stroke="#0891b2" stroke-width="1"/>
+      <text x="350" y="356" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" font-weight="700" fill="#0e7490">Equinix AE</text>
+      <text x="350" y="368" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#0e7490">Order mgmt</text>
+      </a>
+
+      <!-- CMM -->
+      <g>
+        <title>CMM · Priya Nair — Channel Marketing Manager. Reviews and approves MDF requests, sets activity expectations, and validates claim documentation.</title>
+        <rect x="415" y="338" width="80" height="42" rx="4" fill="#faf5ff" stroke="#7c3aed" stroke-width="1"/>
+      <text x="455" y="356" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" font-weight="700" fill="#6d28d9">CMM</text>
+      <text x="455" y="368" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#6d28d9">Priya Nair</text>
+      </g>
+
+      <!-- Deal Desk -->
+      <g>
+        <title>Deal Desk · Rachel Kim — reviews non-standard deal terms, validates pricing exceptions, and handles commission dispute escalations from the partner portal.</title>
+        <rect x="520" y="338" width="80" height="42" rx="4" fill="#f0f9ff" stroke="#0891b2" stroke-width="1"/>
+      <text x="560" y="356" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" font-weight="700" fill="#0e7490">Deal Desk</text>
+      <text x="560" y="368" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#0e7490">Rachel Kim</text>
+      </g>
+
+      <!-- Agentforce -->
+      <g>
+        <title>Agentforce — Salesforce AI layer. Handles automated triage, partner query routing, and deal conflict pre-screening before PSM review. Still in evaluation for PCP.</title>
+        <rect x="625" y="338" width="90" height="42" rx="4" fill="#fafaf0" stroke="#b45309" stroke-width="1"/>
+      <text x="670" y="356" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" font-weight="700" fill="#92400e">Agentforce</text>
+      <text x="670" y="368" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#92400e">AI layer</text>
+      </g>
+
+      <!-- ─── LANE 5: External Systems ─── -->
+      <g>
+        <title>SumTotal LMS — Equinix's learning management system. Syncs partner training completion and certification status into Salesforce for tier scoring.</title>
+        <rect x="60" y="444" width="85" height="34" rx="4" fill="#f0fdf4" stroke="#16a34a" stroke-width="1"/>
+      <text x="102" y="458" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="#166534">SumTotal LMS</text>
+      <text x="102" y="469" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#166534">Training sync</text>
+      </g>
+
+      <g>
+        <title>DocuSign — e-signature platform. Used for program agreements at onboarding and tier review renewal. Both partner and PSM countersign.</title>
+        <rect x="165" y="444" width="80" height="34" rx="4" fill="#f0fdf4" stroke="#16a34a" stroke-width="1"/>
+      <text x="205" y="458" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="#166534">DocuSign</text>
+      <text x="205" y="469" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#166534">e-signatures</text>
+      </g>
+
+      <g>
+        <title>Dun &amp; Bradstreet — canonical company data lookup at onboarding. Search-before-create pattern prevents duplicate partner org records in Salesforce.</title>
+        <rect x="265" y="444" width="80" height="34" rx="4" fill="#f0fdf4" stroke="#16a34a" stroke-width="1"/>
+      <text x="305" y="458" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="#166534">D&amp;B</text>
+      <text x="305" y="469" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#166534">Company data</text>
+      </g>
+
+      <g>
+        <title>Salesforce Marketing Cloud — transactional email for onboarding steps, deal status updates, MDF approvals, and tier review notifications to partner contacts.</title>
+        <rect x="365" y="444" width="90" height="34" rx="4" fill="#f0fdf4" stroke="#16a34a" stroke-width="1"/>
+      <text x="410" y="458" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="#166534">Mktg Cloud</text>
+      <text x="410" y="469" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#166534">Email/notifs</text>
+      </g>
+
+      <g>
+        <title>ERP / Finance System — commission calculation and payout reconciliation. Receives deal close data from Salesforce; partner disputes route back through Deal Desk.</title>
+        <rect x="475" y="444" width="80" height="34" rx="4" fill="#f0fdf4" stroke="#16a34a" stroke-width="1"/>
+      <text x="515" y="458" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="#166534">ERP / Finance</text>
+      <text x="515" y="469" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#166534">Commissions</text>
+      </g>
+
+      <!-- ─── Connecting arrows (always visible) ─── -->
+      <!-- Partner org → portals -->
+      <line x1="130" y1="75" x2="115" y2="119" stroke="#cbd5e1" stroke-width="1.5" marker-end="url(#arr-gray)"/>
+      <line x1="130" y1="75" x2="200" y2="119" stroke="#cbd5e1" stroke-width="1.5" marker-end="url(#arr-gray)"/>
+      <line x1="250" y1="75" x2="250" y2="119" stroke="#cbd5e1" stroke-width="1.5" marker-end="url(#arr-gray)"/>
+      <line x1="370" y1="75" x2="340" y2="119" stroke="#cbd5e1" stroke-width="1.5" marker-end="url(#arr-gray)"/>
+      <!-- Portals → workflows -->
+      <line x1="115" y1="161" x2="105" y2="241" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr-gray)"/>
+      <line x1="250" y1="161" x2="215" y2="241" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr-gray)"/>
+      <line x1="380" y1="161" x2="215" y2="241" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr-gray)"/>
+      <!-- Workflows → SF internal -->
+      <line x1="215" y1="277" x2="110" y2="337" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr-gray)"/>
+      <line x1="325" y1="277" x2="235" y2="337" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr-gray)"/>
+      <!-- SF → external systems -->
+      <line x1="110" y1="381" x2="102" y2="443" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr-gray)"/>
+      <line x1="110" y1="381" x2="165" y2="443" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr-gray)"/>
+      <line x1="235" y1="381" x2="205" y2="443" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr-gray)"/>
+
+      <!-- Arrow marker definitions -->
+      <defs>
+        <marker id="arr-gray" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L6,3 z" fill="#cbd5e1"/>
+        </marker>
+        <marker id="arr-teal" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L6,3 z" fill="#0d9488"/>
+        </marker>
+        <marker id="arr-blue" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L6,3 z" fill="#2563eb"/>
+        </marker>
+        <marker id="arr-amber" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L6,3 z" fill="#d97706"/>
+        </marker>
+        <marker id="arr-purple" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L6,3 z" fill="#7c3aed"/>
+        </marker>
+        <marker id="arr-green" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L6,3 z" fill="#166534"/>
+        </marker>
+      </defs>
+
+      <!-- ─── Workflow highlight paths (hidden by default, shown via JS) ─── -->
+      <!-- Onboarding path -->
+      <g id="path-onboarding" opacity="0" style="transition:opacity .3s">
+        <line x1="130" y1="75" x2="115" y2="119" stroke="#0d9488" stroke-width="2.5" marker-end="url(#arr-teal)"/>
+        <line x1="115" y1="161" x2="105" y2="241" stroke="#0d9488" stroke-width="2.5" marker-end="url(#arr-teal)"/>
+        <line x1="105" y1="277" x2="110" y2="337" stroke="#0d9488" stroke-width="2.5" marker-end="url(#arr-teal)"/>
+        <line x1="110" y1="381" x2="165" y2="443" stroke="#0d9488" stroke-width="2.5" marker-end="url(#arr-teal)"/>
+        <rect x="58" y="240" width="94" height="38" rx="4" fill="none" stroke="#0d9488" stroke-width="2.5"/>
+      </g>
+      <!-- Deal Registration path -->
+      <g id="path-dealreg" opacity="0" style="transition:opacity .3s">
+        <line x1="250" y1="75" x2="250" y2="119" stroke="#2563eb" stroke-width="2.5" marker-end="url(#arr-blue)"/>
+        <line x1="370" y1="75" x2="340" y2="119" stroke="#2563eb" stroke-width="2.5" marker-end="url(#arr-blue)"/>
+        <line x1="380" y1="161" x2="215" y2="241" stroke="#2563eb" stroke-width="2.5" marker-end="url(#arr-blue)"/>
+        <line x1="215" y1="277" x2="110" y2="337" stroke="#2563eb" stroke-width="2.5" marker-end="url(#arr-blue)"/>
+        <line x1="350" y1="381" x2="515" y2="443" stroke="#2563eb" stroke-width="2.5" marker-end="url(#arr-blue)"/>
+        <rect x="168" y="240" width="94" height="38" rx="4" fill="none" stroke="#2563eb" stroke-width="2.5"/>
+      </g>
+      <!-- MDF path -->
+      <g id="path-mdf" opacity="0" style="transition:opacity .3s">
+        <line x1="130" y1="75" x2="200" y2="119" stroke="#d97706" stroke-width="2.5" marker-end="url(#arr-amber)"/>
+        <line x1="250" y1="161" x2="325" y2="241" stroke="#d97706" stroke-width="2.5" marker-end="url(#arr-amber)"/>
+        <line x1="325" y1="277" x2="235" y2="337" stroke="#d97706" stroke-width="2.5" marker-end="url(#arr-amber)"/>
+        <line x1="235" y1="381" x2="455" y2="443" stroke="#d97706" stroke-width="2.5" marker-end="url(#arr-amber)"/>
+        <rect x="278" y="240" width="94" height="38" rx="4" fill="none" stroke="#d97706" stroke-width="2.5"/>
+      </g>
+      <!-- Tier Review path -->
+      <g id="path-tier" opacity="0" style="transition:opacity .3s">
+        <line x1="670" y1="381" x2="435" y2="278" stroke="#7c3aed" stroke-width="2.5" stroke-dasharray="6,3" marker-end="url(#arr-purple)"/>
+        <line x1="110" y1="337" x2="235" y2="337" stroke="#7c3aed" stroke-width="2.5" marker-end="url(#arr-purple)"/>
+        <line x1="435" y1="277" x2="250" y2="161" stroke="#7c3aed" stroke-width="2.5" marker-end="url(#arr-purple)"/>
+        <rect x="388" y="240" width="94" height="38" rx="4" fill="none" stroke="#7c3aed" stroke-width="2.5"/>
+      </g>
+      <!-- Agreement path -->
+      <g id="path-agreement" opacity="0" style="transition:opacity .3s">
+        <line x1="130" y1="75" x2="115" y2="119" stroke="#166534" stroke-width="2.5" marker-end="url(#arr-green)"/>
+        <line x1="115" y1="161" x2="545" y2="241" stroke="#166534" stroke-width="2.5" marker-end="url(#arr-green)"/>
+        <line x1="545" y1="277" x2="110" y2="337" stroke="#166534" stroke-width="2.5" marker-end="url(#arr-green)"/>
+        <line x1="110" y1="381" x2="205" y2="443" stroke="#166534" stroke-width="2.5" marker-end="url(#arr-green)"/>
+        <rect x="498" y="240" width="94" height="38" rx="4" fill="none" stroke="#166534" stroke-width="2.5"/>
+      </g>
+
+      <!-- Line of visibility markers -->
+      <line x1="0" y1="108" x2="1060" y2="108" stroke="#94a3b8" stroke-width="0.5" stroke-dasharray="8,4"/>
+      <line x1="0" y1="228" x2="1060" y2="228" stroke="#94a3b8" stroke-width="0.5" stroke-dasharray="8,4"/>
+      <line x1="0" y1="324" x2="1060" y2="324" stroke="#94a3b8" stroke-width="0.5" stroke-dasharray="8,4"/>
+      <line x1="0" y1="428" x2="1060" y2="428" stroke="#94a3b8" stroke-width="0.5" stroke-dasharray="8,4"/>
+
+      <!-- "Line of visibility" labels -->
+      <text x="950" y="106" text-anchor="end" font-family="-apple-system,sans-serif" font-size="7" fill="#94a3b8" font-style="italic">— line of visibility (partner / portal) —</text>
+      <text x="950" y="226" text-anchor="end" font-family="-apple-system,sans-serif" font-size="7" fill="#94a3b8" font-style="italic">— line of internal interaction —</text>
+      <text x="950" y="322" text-anchor="end" font-family="-apple-system,sans-serif" font-size="7" fill="#94a3b8" font-style="italic">— line of support (external systems) —</text>
+    </svg>
+  </div>
+  <div style="padding:.5rem 1.25rem;font-size:.75rem;color:var(--wf-muted);border-top:1px solid var(--gray-border);">
+    Click a workflow above to highlight its path. Dashed circles = Sam Chen's self-registration arc (not invited — discovers portal externally). Dashed connector lines = async/background processes. "Lines of visibility" follow standard service blueprint convention.
+  </div>
+</div>
+</div>
+
+<script>
+// ── Service Diagram flow highlighting ──────────────────
+var _flowColors = {
+  onboarding: '#0d9488',
+  dealreg:    '#2563eb',
+  mdf:        '#d97706',
+  tier:       '#7c3aed',
+  agreement:  '#166534'
+};
+function highlightFlow(flow) {
+  // Reset all paths
+  document.querySelectorAll('[id^="path-"]').forEach(function(p) {
+    p.style.opacity = flow === 'all' ? '1' : '0';
+  });
+  // Show selected path
+  if (flow !== 'all') {
+    var el = document.getElementById('path-' + flow);
+    if (el) el.style.opacity = '1';
+  }
+  // Update filter buttons
+  document.querySelectorAll('.sd-btn').forEach(function(b) {
+    var btnFlow = b.id.replace('sd-', '');
+    var isActive = btnFlow === flow;
+    b.classList.toggle('active', isActive);
+    if (isActive) {
+      var c = flow === 'all' ? 'var(--wf-ink)' : (_flowColors[flow] || '#2563eb');
+      b.style.background = c;
+      b.style.color = '#fff';
+      b.style.borderColor = 'transparent';
+    } else {
+      b.style.background = '';
+      b.style.color = '';
+      b.style.borderColor = '';
+    }
+  });
+}
+document.addEventListener('DOMContentLoaded', function() {
+  highlightFlow('all');
+});
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>
