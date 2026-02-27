@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deal Details — Deal Registration · Partner Central · Equinix PCP</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: var(--wf-white); }
+
+    /* ── Partner Central Header ──────────────────────────────── */
+    .pc-header {
+      background: var(--wf-ink); height: 56px; display: flex; align-items: center;
+      padding: 0 24px; gap: 16px; position: sticky; top: 0; z-index: 100;
+    }
+    .pc-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; flex-shrink: 0; }
+    .pc-logo-wordmark { font-size: 14px; font-weight: 590; color: white; }
+    .pc-logo-divider { opacity: 0.4; }
+    .pc-logo-product { opacity: 0.8; }
+    .pc-header-nav { flex: 1; display: flex; align-items: center; height: 56px; }
+    .pc-header-nav a {
+      display: flex; align-items: center; height: 56px; padding: 0 16px;
+      font-size: 13px; color: rgba(255,255,255,0.8); text-decoration: none;
+      border-bottom: 3px solid transparent; transition: all 0.15s;
+    }
+    .pc-header-nav a.active { color: white; border-bottom-color: white; }
+    .pc-header-nav a:hover { color: white; background: rgba(255,255,255,0.05); }
+    .pc-header-controls { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .pc-icon-btn {
+      width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.15);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: rgba(255,255,255,0.7); border: none;
+    }
+    .pc-icon-btn:hover { background: rgba(255,255,255,0.25); }
+    .pc-avatar {
+      width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; color: white; cursor: pointer; flex-shrink: 0;
+    }
+
+    /* ── Page Hero ───────────────────────────────────────────── */
+    .pc-hero { background: var(--wf-canvas); border-bottom: 1px solid var(--wf-tint); padding: 20px 24px; }
+    .pc-hero-title { font-size: 22px; font-weight: 700; color: var(--wf-ink); margin-bottom: 4px; }
+    .pc-hero-sub { font-size: 13px; color: var(--wf-muted); line-height: 1.5; }
+    .pc-hero-context { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 12px; color: var(--wf-muted); }
+    .pc-hero-context-chip {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 2px 10px; border-radius: 12px;
+      background: rgba(61,109,170,0.1); color: var(--wf-accent);
+      font-size: 12px; font-weight: 600;
+    }
+
+    /* ── Two-column wizard layout ────────────────────────────── */
+    .pc-wizard-wrap {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 32px;
+      padding: 28px 24px 48px;
+    }
+
+    /* ── Stepper ─────────────────────────────────────────────── */
+    .pc-stepper { display: flex; align-items: flex-start; margin-bottom: 36px; }
+    .pc-step { display: flex; flex-direction: column; align-items: center; flex: 1; position: relative; }
+    .pc-step:not(:last-child)::after {
+      content: ''; position: absolute; top: 14px; left: 50%;
+      width: 100%; height: 2px; background: var(--wf-tint); z-index: 0;
+    }
+    .pc-step.complete::after { background: var(--wf-accent); }
+    .pc-step-dot {
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; border: 2px solid var(--wf-tint);
+      background: white; color: var(--wf-muted); position: relative; z-index: 1;
+    }
+    .pc-step.active .pc-step-dot { border-color: var(--wf-accent); background: var(--wf-accent); color: white; }
+    .pc-step.complete .pc-step-dot { border-color: var(--wf-accent); background: var(--wf-accent); color: white; }
+    .pc-step-label { font-size: 11px; margin-top: 7px; color: var(--wf-muted); text-align: center; line-height: 1.3; max-width: 80px; }
+    .pc-step.active .pc-step-label { color: var(--wf-ink); font-weight: 600; }
+    .pc-step.complete .pc-step-label { color: var(--wf-accent); }
+
+    /* ── Form styles ─────────────────────────────────────────── */
+    .form-req-note { font-size: 12px; color: var(--wf-muted); margin-bottom: 24px; }
+    .form-req-note .req { color: #c0392b; }
+    .form-section { margin-bottom: 36px; }
+    .form-section-title { font-size: 15px; font-weight: 700; color: var(--wf-ink); margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--wf-tint); }
+    .form-row { margin-bottom: 18px; }
+    .form-row:last-child { margin-bottom: 0; }
+    .form-label { display: block; font-size: 13px; font-weight: 600; color: var(--wf-ink); margin-bottom: 5px; }
+    .form-label .req { color: #c0392b; }
+    .form-input { width: 100%; padding: 9px 12px; border: 1px solid var(--wf-line); border-radius: 4px; font-size: 14px; color: var(--wf-ink); background: white; font-family: inherit; }
+    select.form-input { cursor: pointer; }
+    .form-input:focus { outline: none; border-color: var(--wf-accent); box-shadow: 0 0 0 2px rgba(61,109,170,0.15); }
+    .form-hint { font-size: 12px; color: var(--wf-muted); margin-top: 4px; line-height: 1.4; }
+    .form-cols-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    textarea.form-input { resize: vertical; min-height: 100px; }
+
+    /* ── Checkbox group ──────────────────────────────────────── */
+    .checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px; }
+    .checkbox-item { display: flex; align-items: flex-start; gap: 8px; }
+    .checkbox-item input[type="checkbox"] { margin-top: 2px; flex-shrink: 0; accent-color: var(--wf-accent); width: 15px; height: 15px; cursor: pointer; }
+    .checkbox-item label { font-size: 13px; color: var(--wf-text); cursor: pointer; line-height: 1.4; }
+
+    /* ── Region radio group ──────────────────────────────────── */
+    .region-group { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+    .region-radio { display: none; }
+    .region-label {
+      padding: 7px 16px; border-radius: 20px; font-size: 13px; font-weight: 500;
+      border: 1px solid var(--wf-line); color: var(--wf-muted); cursor: pointer;
+      transition: all 0.15s;
+    }
+    .region-radio:checked + .region-label {
+      background: var(--wf-accent); color: white; border-color: var(--wf-accent);
+    }
+    .region-label:hover { border-color: var(--wf-accent); color: var(--wf-accent); }
+
+    /* ── Dual listbox ────────────────────────────────────────── */
+    .dual-listbox {
+      display: grid;
+      grid-template-columns: 1fr 36px 1fr;
+      gap: 0;
+      align-items: center;
+      border: 1px solid var(--wf-line);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .dlb-pane { display: flex; flex-direction: column; }
+    .dlb-pane-hd {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.04em; color: var(--wf-muted);
+      padding: 8px 10px; background: var(--wf-surface);
+      border-bottom: 1px solid var(--wf-tint);
+    }
+    .dlb-list {
+      width: 100%; border: none; height: 140px; font-size: 13px;
+      color: var(--wf-text); padding: 4px 0; outline: none;
+      background: white; font-family: inherit;
+    }
+    .dlb-list:focus { box-shadow: inset 0 0 0 2px rgba(61,109,170,0.2); }
+    .dlb-list option { padding: 5px 10px; }
+    .dlb-controls {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 6px; padding: 0 4px;
+      background: var(--wf-surface); height: 100%;
+      justify-content: center; border-left: 1px solid var(--wf-tint); border-right: 1px solid var(--wf-tint);
+    }
+    .dlb-btn {
+      width: 26px; height: 26px; border-radius: 4px;
+      border: 1px solid var(--wf-line); background: white;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 12px; color: var(--wf-muted);
+      transition: all 0.15s;
+    }
+    .dlb-btn:hover { border-color: var(--wf-accent); color: var(--wf-accent); background: rgba(61,109,170,0.05); }
+
+    /* ── File upload ─────────────────────────────────────────── */
+    .file-drop {
+      border: 2px dashed var(--wf-tint); border-radius: 6px;
+      padding: 24px; text-align: center; background: var(--wf-canvas);
+      cursor: pointer; transition: all 0.15s;
+    }
+    .file-drop:hover { border-color: var(--wf-accent); background: rgba(61,109,170,0.04); }
+    .file-drop-icon { font-size: 24px; margin-bottom: 8px; }
+    .file-drop p { font-size: 13px; color: var(--wf-muted); margin-bottom: 4px; }
+    .file-drop a { color: var(--wf-accent); font-weight: 600; }
+    .file-drop small { font-size: 11px; color: var(--wf-muted); }
+
+    /* ── Actions bar ─────────────────────────────────────────── */
+    .pc-actions {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 28px; border-top: 1px solid var(--wf-tint); margin-top: 8px;
+    }
+    .pc-actions-right { display: flex; gap: 12px; }
+    .btn-pc {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 10px 24px; border-radius: 4px; font-size: 14px; font-weight: 600;
+      cursor: pointer; text-decoration: none; border: none; font-family: inherit; transition: all 0.15s;
+    }
+    .btn-pc-primary { background: var(--wf-accent); color: white; }
+    .btn-pc-primary:hover { background: #2c5a94; }
+    .btn-pc-ghost { background: transparent; color: var(--wf-muted); border: 1px solid var(--wf-line); }
+    .btn-pc-ghost:hover { color: var(--wf-ink); border-color: var(--wf-text); }
+    .btn-pc-text { background: transparent; color: var(--wf-muted); padding: 10px 0; border: none; }
+    .btn-pc-text:hover { color: var(--wf-ink); text-decoration: underline; }
+
+    /* ── AI rail ─────────────────────────────────────────────── */
+    .pc-ai-rail {
+      position: sticky; top: 76px; height: fit-content;
+      border: 1px dashed var(--wf-line); border-radius: 8px;
+      background: var(--wf-canvas); overflow: hidden;
+    }
+    .pc-ai-rail-hd {
+      display: flex; align-items: center; gap: 8px;
+      padding: 14px 16px; background: white; border-bottom: 1px solid var(--wf-tint);
+    }
+    .pc-ai-icon {
+      width: 28px; height: 28px; border-radius: 6px; background: var(--wf-tint);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .pc-ai-rail-hd-title { font-size: 13px; font-weight: 600; color: var(--wf-ink); flex: 1; }
+    .pc-ai-badge {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.05em; padding: 2px 8px; border-radius: 10px;
+      background: var(--wf-tint); color: var(--wf-muted);
+    }
+    .pc-ai-rail-bd { padding: 20px 16px; }
+    .pc-ai-placeholder {
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center; gap: 12px; padding: 16px 0;
+    }
+    .pc-ai-placeholder-icon {
+      width: 48px; height: 48px; border-radius: 50%; background: var(--wf-tint);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .pc-ai-placeholder p { font-size: 12px; color: var(--wf-muted); line-height: 1.6; }
+    .pc-ai-hint-list { list-style: none; padding: 0; margin-top: 4px; }
+    .pc-ai-hint-list li {
+      font-size: 12px; color: var(--wf-muted); line-height: 1.5;
+      padding: 8px 0; border-bottom: 1px solid var(--wf-tint);
+      display: flex; gap: 8px; align-items: flex-start;
+    }
+    .pc-ai-hint-list li:last-child { border-bottom: none; padding-bottom: 0; }
+    .pc-ai-hint-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--wf-line); flex-shrink: 0; margin-top: 5px; }
+  </style>
+</head>
+<body>
+
+<!-- ── WIREFRAME CONTEXT BAR ──────────────────────────────── -->
+<div class="page-context-bar">
+  <div style="max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:flex-end;">
+    <span class="persona-badge persona-badge--pm" title="Jordan Reeves — Portal Admin / Sales Ops">Admin</span>
+  </div>
+</div>
+
+<!-- ── SPEC NOTES TAB ──────────────────────────────────────── -->
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+<!-- ── PARTNER CENTRAL HEADER ─────────────────────────────── -->
+<header class="pc-header" role="banner">
+  <a href="pc-home.html" class="pc-logo" aria-label="Equinix Partner Central home">
+    <div class="wf-header-logo">
+      <svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix">
+        <path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/>
+      </svg>
+    </div>
+    <span class="pc-logo-wordmark">
+      EQUINIX
+      <span class="pc-logo-divider"> | </span>
+      <span class="pc-logo-product">Partner Central</span>
+    </span>
+  </a>
+  <nav class="pc-header-nav" aria-label="Primary navigation">
+    <a href="pc-home.html" class="active" aria-current="page">Home</a>
+  </nav>
+  <div class="pc-header-controls">
+    <button class="pc-icon-btn" aria-label="Search">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="5.5" cy="5.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M9 9l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </button>
+    <button class="pc-icon-btn" aria-label="Notifications">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1a4 4 0 0 0-4 4v4H2v1h10v-1h-1V5a4 4 0 0 0-4-4zm0 12a1.5 1.5 0 0 1-1.5-1.5h3A1.5 1.5 0 0 1 7 13z" fill="currentColor"/></svg>
+    </button>
+    <div class="pc-avatar" role="button" aria-label="User account" tabindex="0">JR</div>
+  </div>
+</header>
+
+<!-- ── PAGE HERO ──────────────────────────────────────────── -->
+<div class="pc-hero" role="region" aria-label="Page header">
+  <h1 class="pc-hero-title">Deal Registration</h1>
+  <p class="pc-hero-sub">All required fields must be filled out in English. You can save and return later if you don't have all the information now.</p>
+  <div class="pc-hero-context">
+    <span>Registration type:</span>
+    <span class="pc-hero-context-chip">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><circle cx="5" cy="5" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M3 5l1.5 1.5L7 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Referral
+    </span>
+    <span style="margin-left:8px;">Prospect:</span>
+    <span style="font-weight:600;color:var(--wf-ink);">Acme Corporation</span>
+  </div>
+</div>
+
+<!-- ── WIZARD LAYOUT ──────────────────────────────────────── -->
+<div class="pc-wizard-wrap">
+
+  <main id="main-content">
+
+    <!-- Progress stepper -->
+    <nav class="pc-stepper" aria-label="Deal registration progress">
+      <div class="pc-step complete">
+        <div class="pc-step-dot" aria-label="Step 1 complete">✓</div>
+        <span class="pc-step-label">Prospect Information</span>
+      </div>
+      <div class="pc-step active" aria-current="step">
+        <div class="pc-step-dot" aria-label="Step 2, current">2</div>
+        <span class="pc-step-label">Deal Details</span>
+      </div>
+      <div class="pc-step">
+        <div class="pc-step-dot" aria-hidden="true">3</div>
+        <span class="pc-step-label">Sales Contact</span>
+      </div>
+      <div class="pc-step">
+        <div class="pc-step-dot" aria-hidden="true">4</div>
+        <span class="pc-step-label">Review</span>
+      </div>
+    </nav>
+
+    <p class="form-req-note">Fields marked <span class="req">*</span> are required.</p>
+
+    <!-- Deal Information -->
+    <section class="form-section" aria-labelledby="section-deal-info">
+      <h2 class="form-section-title" id="section-deal-info">Deal Information</h2>
+
+      <div class="form-cols-2">
+        <div class="form-row">
+          <label class="form-label" for="distributor">Distributor</label>
+          <select id="distributor" class="form-input">
+            <option value="">Select distributor…</option>
+            <option>Arrow Electronics</option>
+            <option>Ingram Micro</option>
+            <option>TD SYNNEX</option>
+            <option>Westcon-Comstor</option>
+            <option>None (direct)</option>
+          </select>
+          <p class="form-hint">Select if you're working through a distribution channel.</p>
+        </div>
+        <div class="form-row">
+          <label class="form-label" for="deal-type">Deal Registration Type <span class="req">*</span></label>
+          <select id="deal-type" class="form-input" required aria-required="true">
+            <option value="">Select type…</option>
+            <option>New Business</option>
+            <option>Expansion / Upsell</option>
+            <option>Renewal Influence</option>
+            <option>Migration</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label" for="project-code">Partner Project Code</label>
+        <input type="text" id="project-code" class="form-input" placeholder="e.g. CB-2026-0042">
+        <p class="form-hint">Your internal reference code for this opportunity — optional but useful for tracking.</p>
+      </div>
+
+    </section>
+
+    <!-- Locations -->
+    <section class="form-section" aria-labelledby="section-locations">
+      <h2 class="form-section-title" id="section-locations">Locations <span class="req" aria-hidden="true">*</span></h2>
+
+      <p class="form-hint" style="margin-bottom:14px;">Select the region first, then choose one or more IBX data centers from that region.</p>
+
+      <div role="group" aria-labelledby="section-locations">
+        <div class="region-group" aria-label="Select region">
+          <input type="radio" name="region" id="region-amer" value="AMER" class="region-radio" checked>
+          <label for="region-amer" class="region-label">Americas</label>
+          <input type="radio" name="region" id="region-emea" value="EMEA" class="region-radio">
+          <label for="region-emea" class="region-label">EMEA</label>
+          <input type="radio" name="region" id="region-apac" value="APAC" class="region-radio">
+          <label for="region-apac" class="region-label">Asia-Pacific</label>
+        </div>
+
+        <div class="dual-listbox" role="group" aria-label="IBX location selection">
+          <div class="dlb-pane">
+            <div class="dlb-pane-hd" id="dlb-available-label">Available Locations</div>
+            <select multiple class="dlb-list" aria-labelledby="dlb-available-label"
+                    id="dlb-available" aria-describedby="dlb-hint">
+              <option>NY5 — New York, NY</option>
+              <option>NY7 — New York, NY</option>
+              <option>NY9 — New York, NY</option>
+              <option>DC2 — Ashburn, VA</option>
+              <option>DC6 — Ashburn, VA</option>
+              <option>CH1 — Chicago, IL</option>
+              <option>CH2 — Chicago, IL</option>
+              <option>SV1 — Silicon Valley, CA</option>
+              <option>SV5 — Silicon Valley, CA</option>
+              <option>LA1 — Los Angeles, CA</option>
+              <option>DA1 — Dallas, TX</option>
+              <option>DA3 — Dallas, TX</option>
+              <option>SE2 — Seattle, WA</option>
+              <option>AT1 — Atlanta, GA</option>
+              <option>MI1 — Miami, FL</option>
+              <option>TR1 — Toronto, ON</option>
+              <option>TR2 — Toronto, ON</option>
+              <option>SP2 — São Paulo, Brazil</option>
+              <option>SP4 — São Paulo, Brazil</option>
+            </select>
+          </div>
+          <div class="dlb-controls" aria-hidden="true">
+            <button class="dlb-btn" type="button" title="Add selected">→</button>
+            <button class="dlb-btn" type="button" title="Remove selected">←</button>
+          </div>
+          <div class="dlb-pane">
+            <div class="dlb-pane-hd" id="dlb-selected-label">Selected Locations</div>
+            <select multiple class="dlb-list" aria-labelledby="dlb-selected-label" id="dlb-selected">
+              <!-- populated by user selection -->
+            </select>
+          </div>
+        </div>
+        <p class="form-hint" id="dlb-hint" style="margin-top:8px;">Hold Ctrl (Windows) or ⌘ (Mac) to select multiple locations.</p>
+      </div>
+
+    </section>
+
+    <!-- Services -->
+    <section class="form-section" aria-labelledby="section-services">
+      <h2 class="form-section-title" id="section-services">Equinix Services</h2>
+
+      <div class="form-row">
+        <label class="form-label">Primary Services <span class="req">*</span></label>
+        <p class="form-hint" style="margin-bottom:10px;">Select all Equinix services that are core to this deal.</p>
+        <div class="checkbox-grid" role="group" aria-label="Primary services">
+          <div class="checkbox-item">
+            <input type="checkbox" id="svc-colocation" checked>
+            <label for="svc-colocation">Colocation</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="svc-fabric">
+            <label for="svc-fabric">Equinix Fabric</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="svc-metal">
+            <label for="svc-metal">Equinix Metal</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="svc-network-edge">
+            <label for="svc-network-edge">Network Edge</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="svc-ix">
+            <label for="svc-ix">Internet Exchange</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="svc-connect">
+            <label for="svc-connect">Equinix Connect</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row" style="margin-top:20px;">
+        <label class="form-label">Additional Services</label>
+        <p class="form-hint" style="margin-bottom:10px;">Select any complementary services that may be part of this engagement.</p>
+        <div class="checkbox-grid" role="group" aria-label="Additional services">
+          <div class="checkbox-item">
+            <input type="checkbox" id="svc-smb">
+            <label for="svc-smb">Smart Hands / Remote Hands</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="svc-cable">
+            <label for="svc-cable">Cross Connect</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="svc-ecia">
+            <label for="svc-ecia">ECIA / Advanced Suite</label>
+          </div>
+          <div class="checkbox-item">
+            <input type="checkbox" id="svc-peering">
+            <label for="svc-peering">Peering / Private Interconnect</label>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Deal Description -->
+    <section class="form-section" aria-labelledby="section-description">
+      <h2 class="form-section-title" id="section-description">Deal Description</h2>
+
+      <div class="form-row">
+        <label class="form-label" for="description">Description <span class="req">*</span></label>
+        <textarea id="description" class="form-input" rows="5"
+          placeholder="Describe the opportunity — what the customer is trying to solve, why Equinix, and your role in the deal."
+          required aria-required="true"></textarea>
+        <p class="form-hint">Minimum 50 characters. This helps the Equinix team understand and prioritize your deal.</p>
+      </div>
+
+      <div class="form-row">
+        <label class="form-label">Supporting Documents</label>
+        <div class="file-drop" role="button" tabindex="0" aria-label="Upload supporting documents">
+          <div class="file-drop-icon" aria-hidden="true">📎</div>
+          <p><a href="#">Browse files</a> or drag and drop here</p>
+          <small>PDF, DOCX, PPTX — max 10 MB per file</small>
+        </div>
+        <p class="form-hint" style="margin-top:8px;">Optional: proposal, architecture diagram, or customer brief.</p>
+      </div>
+
+    </section>
+
+    <!-- Alliance Partners -->
+    <section class="form-section" aria-labelledby="section-alliance">
+      <h2 class="form-section-title" id="section-alliance">Alliance Partners</h2>
+
+      <p class="form-hint" style="margin-bottom:14px;">If another partner is co-selling or influencing this deal, add them here.</p>
+
+      <div class="dual-listbox" role="group" aria-label="Alliance partner selection">
+        <div class="dlb-pane">
+          <div class="dlb-pane-hd" id="alliance-available-label">Available Partners</div>
+          <select multiple class="dlb-list" aria-labelledby="alliance-available-label">
+            <option>AWS — Amazon Web Services</option>
+            <option>Microsoft Azure</option>
+            <option>Google Cloud Platform</option>
+            <option>IBM Cloud</option>
+            <option>Oracle Cloud</option>
+            <option>Salesforce</option>
+            <option>ServiceNow</option>
+            <option>Cisco Systems</option>
+            <option>VMware</option>
+            <option>Zscaler</option>
+          </select>
+        </div>
+        <div class="dlb-controls" aria-hidden="true">
+          <button class="dlb-btn" type="button" title="Add selected">→</button>
+          <button class="dlb-btn" type="button" title="Remove selected">←</button>
+        </div>
+        <div class="dlb-pane">
+          <div class="dlb-pane-hd" id="alliance-selected-label">Selected Partners</div>
+          <select multiple class="dlb-list" aria-labelledby="alliance-selected-label">
+            <!-- empty by default -->
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- Actions -->
+    <div class="pc-actions">
+      <button class="btn-pc btn-pc-text" type="button">Save &amp; Exit</button>
+      <div class="pc-actions-right">
+        <a href="pc-dr-step1.html" class="btn-pc btn-pc-ghost">← Back</a>
+        <a href="pc-dr-step3.html" class="btn-pc btn-pc-primary">Next →</a>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- RIGHT: AI assistance rail -->
+  <aside class="pc-ai-rail" aria-label="AI assistance">
+    <div class="pc-ai-rail-hd">
+      <div class="pc-ai-icon" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M8 1l1.5 4H14l-3.5 2.5 1.5 4.5L8 9.5 4 12l1.5-4.5L2 5h4.5z" fill="var(--wf-muted)"/>
+        </svg>
+      </div>
+      <span class="pc-ai-rail-hd-title">AI Assistant</span>
+      <span class="pc-ai-badge">Coming Soon</span>
+    </div>
+    <div class="pc-ai-rail-bd">
+      <div class="pc-ai-placeholder">
+        <div class="pc-ai-placeholder-icon" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" stroke="var(--wf-line)" stroke-width="1.5"/>
+            <path d="M8 12h8M12 8v8" stroke="var(--wf-line)" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <p>The AI assistant will recommend relevant Equinix services based on your prospect's profile and suggest the right locations for their use case.</p>
+      </div>
+      <ul class="pc-ai-hint-list" aria-label="Planned AI features for this step">
+        <li><span class="pc-ai-hint-dot" aria-hidden="true"></span><span>Service recommendations based on prospect industry and size</span></li>
+        <li><span class="pc-ai-hint-dot" aria-hidden="true"></span><span>IBX suggestions based on prospect address and latency needs</span></li>
+        <li><span class="pc-ai-hint-dot" aria-hidden="true"></span><span>Description drafting assistance</span></li>
+        <li><span class="pc-ai-hint-dot" aria-hidden="true"></span><span>Alliance partner matching from Equinix partner network</span></li>
+      </ul>
+    </div>
+  </aside>
+
+</div><!-- /.pc-wizard-wrap -->
+
+<!-- ── SPEC PANEL ─────────────────────────────────────────── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Notes</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+
+    <h3>Summary</h3>
+    <p>Step 2 of the Deal Registration wizard. Jordan Reeves enters deal specifics: distributor, deal type, partner project code, IBX locations (dual listbox with region filter), primary and additional Equinix services, a deal description, optional file uploads, and alliance partners. Prospect name is surfaced in the hero context bar for continuity.</p>
+
+    <hr class="spec-divider">
+
+    <h3>Flow Position</h3>
+    <ul>
+      <li><strong>Previous:</strong> pc-dr-step1.html (Prospect Information)</li>
+      <li><strong>Next:</strong> pc-dr-step3.html (Sales Contact)</li>
+    </ul>
+
+    <hr class="spec-divider">
+
+    <h3>Design Decisions</h3>
+    <ul>
+      <li><strong>Region radio + dual listbox</strong> — Region pill filters the available IBX list. User moves locations to the selected column. Familiar pattern from the live Equinix Partner Central product.</li>
+      <li><strong>Alliance partner listbox</strong> — Optional. Pre-populated with common cloud/tech alliance partners. Empty by default.</li>
+      <li><strong>Context bar</strong> — Prospect name added to the hero context row so users maintain orientation across steps</li>
+      <li><strong>AI rail</strong> — Will surface service recommendations and IBX suggestions based on company profile in a future release</li>
+    </ul>
+
+    <hr class="spec-divider">
+
+    <h3>Form Fields</h3>
+    <ul>
+      <li><strong>Distributor</strong> — optional dropdown</li>
+      <li><strong>Deal Registration Type</strong> — required dropdown (New Business, Expansion, Renewal, Migration)</li>
+      <li><strong>Partner Project Code</strong> — optional text</li>
+      <li><strong>Locations</strong> — required; region radio filter + dual listbox</li>
+      <li><strong>Primary Services</strong> — required; checkboxes</li>
+      <li><strong>Additional Services</strong> — optional; checkboxes</li>
+      <li><strong>Description</strong> — required; textarea, min 50 chars</li>
+      <li><strong>Supporting Documents</strong> — optional; file upload</li>
+      <li><strong>Alliance Partners</strong> — optional; dual listbox</li>
+    </ul>
+
+  </div>
+</aside>
+
+<script>
+  function toggleSpec() {
+    var p = document.getElementById('spec-panel');
+    var b = document.getElementById('spec-toggle');
+    if (!p || !b) return;
+    var isOpen = p.classList.toggle('open');
+    b.setAttribute('aria-expanded', isOpen);
+  }
+</script>
+
+<script src="wf-nav.js"></script>
+</body>
+</html>

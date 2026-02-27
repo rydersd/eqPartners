@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Review &amp; Submit — Deal Registration · Partner Central · Equinix PCP</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: var(--wf-white); }
+
+    /* ── Partner Central Header ──────────────────────────────── */
+    .pc-header {
+      background: var(--wf-ink); height: 56px; display: flex; align-items: center;
+      padding: 0 24px; gap: 16px; position: sticky; top: 0; z-index: 100;
+    }
+    .pc-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; flex-shrink: 0; }
+    .pc-logo-wordmark { font-size: 14px; font-weight: 590; color: white; }
+    .pc-logo-divider { opacity: 0.4; }
+    .pc-logo-product { opacity: 0.8; }
+    .pc-header-nav { flex: 1; display: flex; align-items: center; height: 56px; }
+    .pc-header-nav a {
+      display: flex; align-items: center; height: 56px; padding: 0 16px;
+      font-size: 13px; color: rgba(255,255,255,0.8); text-decoration: none;
+      border-bottom: 3px solid transparent; transition: all 0.15s;
+    }
+    .pc-header-nav a.active { color: white; border-bottom-color: white; }
+    .pc-header-nav a:hover { color: white; background: rgba(255,255,255,0.05); }
+    .pc-header-controls { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .pc-icon-btn {
+      width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.15);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: rgba(255,255,255,0.7); border: none;
+    }
+    .pc-icon-btn:hover { background: rgba(255,255,255,0.25); }
+    .pc-avatar {
+      width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; color: white; cursor: pointer; flex-shrink: 0;
+    }
+
+    /* ── Page Hero ───────────────────────────────────────────── */
+    .pc-hero { background: var(--wf-canvas); border-bottom: 1px solid var(--wf-tint); padding: 20px 24px; }
+    .pc-hero-title { font-size: 22px; font-weight: 700; color: var(--wf-ink); margin-bottom: 4px; }
+    .pc-hero-sub { font-size: 13px; color: var(--wf-muted); line-height: 1.5; }
+    .pc-hero-context { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 12px; color: var(--wf-muted); }
+    .pc-hero-context-chip {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 2px 10px; border-radius: 12px;
+      background: rgba(61,109,170,0.1); color: var(--wf-accent);
+      font-size: 12px; font-weight: 600;
+    }
+
+    /* ── Two-column wizard layout ────────────────────────────── */
+    .pc-wizard-wrap {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 32px;
+      padding: 28px 24px 48px;
+    }
+
+    /* ── Stepper ─────────────────────────────────────────────── */
+    .pc-stepper { display: flex; align-items: flex-start; margin-bottom: 36px; }
+    .pc-step { display: flex; flex-direction: column; align-items: center; flex: 1; position: relative; }
+    .pc-step:not(:last-child)::after {
+      content: ''; position: absolute; top: 14px; left: 50%;
+      width: 100%; height: 2px; background: var(--wf-tint); z-index: 0;
+    }
+    .pc-step.complete::after { background: var(--wf-accent); }
+    .pc-step-dot {
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; border: 2px solid var(--wf-tint);
+      background: white; color: var(--wf-muted); position: relative; z-index: 1;
+    }
+    .pc-step.active .pc-step-dot { border-color: var(--wf-accent); background: var(--wf-accent); color: white; }
+    .pc-step.complete .pc-step-dot { border-color: var(--wf-accent); background: var(--wf-accent); color: white; }
+    .pc-step-label { font-size: 11px; margin-top: 7px; color: var(--wf-muted); text-align: center; line-height: 1.3; max-width: 80px; }
+    .pc-step.active .pc-step-label { color: var(--wf-ink); font-weight: 600; }
+    .pc-step.complete .pc-step-label { color: var(--wf-accent); }
+
+    /* ── Review accordion sections ───────────────────────────── */
+    .review-section {
+      border: 1px solid var(--wf-tint);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .review-section-hd {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      background: var(--wf-canvas);
+      cursor: pointer;
+      user-select: none;
+    }
+    .review-section-hd:hover { background: var(--wf-tint); }
+    .review-section-title {
+      font-size: 14px; font-weight: 700; color: var(--wf-ink);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .review-section-badge {
+      font-size: 11px; font-weight: 600; padding: 2px 8px;
+      border-radius: 10px; background: rgba(61,109,170,0.12); color: var(--wf-accent);
+    }
+    .review-chevron {
+      color: var(--wf-muted); transition: transform 0.2s;
+      font-size: 11px;
+    }
+    .review-section.open .review-chevron { transform: rotate(180deg); }
+    .review-section-bd {
+      display: none;
+      padding: 0 20px 20px;
+      background: white;
+    }
+    .review-section.open .review-section-bd { display: block; }
+
+    /* ── Review field rows ───────────────────────────────────── */
+    .review-grid {
+      display: grid;
+      grid-template-columns: 180px 1fr;
+      gap: 0;
+      margin-top: 16px;
+    }
+    .review-row {
+      display: contents;
+    }
+    .review-row > * {
+      padding: 9px 0;
+      border-bottom: 1px solid var(--wf-surface);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .review-row:last-child > * { border-bottom: none; }
+    .review-label {
+      color: var(--wf-muted);
+      font-weight: 500;
+      padding-right: 16px;
+    }
+    .review-value { color: var(--wf-ink); font-weight: 500; }
+    .review-edit-link {
+      font-size: 12px; color: var(--wf-accent); text-decoration: none;
+      float: right; font-weight: 500; margin-top: 2px;
+    }
+    .review-edit-link:hover { text-decoration: underline; }
+    .review-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .review-tag {
+      padding: 3px 10px; border-radius: 12px; font-size: 12px; font-weight: 500;
+      background: var(--wf-surface); color: var(--wf-text); border: 1px solid var(--wf-tint);
+    }
+
+    /* ── Legal notice ────────────────────────────────────────── */
+    .legal-notice {
+      background: var(--wf-canvas);
+      border: 1px solid var(--wf-tint);
+      border-radius: 6px;
+      padding: 20px 24px;
+      margin: 28px 0;
+    }
+    .legal-notice h3 {
+      font-size: 13px; font-weight: 700; color: var(--wf-ink); margin-bottom: 10px;
+    }
+    .legal-notice p {
+      font-size: 12px; color: var(--wf-muted); line-height: 1.7; margin-bottom: 10px;
+    }
+    .legal-notice p:last-child { margin-bottom: 0; }
+    .legal-accept {
+      display: flex; align-items: flex-start; gap: 10px; margin-top: 16px;
+      padding-top: 16px; border-top: 1px solid var(--wf-tint);
+    }
+    .legal-accept input[type="checkbox"] {
+      width: 16px; height: 16px; margin-top: 2px; flex-shrink: 0;
+      accent-color: var(--wf-accent); cursor: pointer;
+    }
+    .legal-accept label { font-size: 13px; color: var(--wf-text); cursor: pointer; line-height: 1.5; }
+    .legal-accept label strong { color: var(--wf-ink); }
+
+    /* ── Actions bar ─────────────────────────────────────────── */
+    .pc-actions {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 28px; border-top: 1px solid var(--wf-tint); margin-top: 8px;
+    }
+    .pc-actions-right { display: flex; gap: 12px; }
+    .btn-pc {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 10px 24px; border-radius: 4px; font-size: 14px; font-weight: 600;
+      cursor: pointer; text-decoration: none; border: none; font-family: inherit; transition: all 0.15s;
+    }
+    .btn-pc-primary { background: var(--wf-accent); color: white; }
+    .btn-pc-primary:hover { background: #2c5a94; }
+    .btn-pc-submit {
+      background: #1a7a4a; color: white;
+      padding: 10px 32px;
+    }
+    .btn-pc-submit:hover { background: #166040; }
+    .btn-pc-ghost { background: transparent; color: var(--wf-muted); border: 1px solid var(--wf-line); }
+    .btn-pc-ghost:hover { color: var(--wf-ink); border-color: var(--wf-text); }
+    .btn-pc-text { background: transparent; color: var(--wf-muted); padding: 10px 0; border: none; }
+    .btn-pc-text:hover { color: var(--wf-ink); text-decoration: underline; }
+
+    /* ── AI rail ─────────────────────────────────────────────── */
+    .pc-ai-rail {
+      position: sticky; top: 76px; height: fit-content;
+      border: 1px dashed var(--wf-line); border-radius: 8px;
+      background: var(--wf-canvas); overflow: hidden;
+    }
+    .pc-ai-rail-hd {
+      display: flex; align-items: center; gap: 8px;
+      padding: 14px 16px; background: white; border-bottom: 1px solid var(--wf-tint);
+    }
+    .pc-ai-icon {
+      width: 28px; height: 28px; border-radius: 6px; background: var(--wf-tint);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .pc-ai-rail-hd-title { font-size: 13px; font-weight: 600; color: var(--wf-ink); flex: 1; }
+    .pc-ai-badge {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.05em; padding: 2px 8px; border-radius: 10px;
+      background: var(--wf-tint); color: var(--wf-muted);
+    }
+    .pc-ai-rail-bd { padding: 20px 16px; }
+    .pc-ai-placeholder {
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center; gap: 12px; padding: 16px 0;
+    }
+    .pc-ai-placeholder-icon {
+      width: 48px; height: 48px; border-radius: 50%; background: var(--wf-tint);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .pc-ai-placeholder p { font-size: 12px; color: var(--wf-muted); line-height: 1.6; }
+    .pc-ai-hint-list { list-style: none; padding: 0; margin-top: 4px; }
+    .pc-ai-hint-list li {
+      font-size: 12px; color: var(--wf-muted); line-height: 1.5;
+      padding: 8px 0; border-bottom: 1px solid var(--wf-tint);
+      display: flex; gap: 8px; align-items: flex-start;
+    }
+    .pc-ai-hint-list li:last-child { border-bottom: none; padding-bottom: 0; }
+    .pc-ai-hint-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--wf-line); flex-shrink: 0; margin-top: 5px; }
+  </style>
+</head>
+<body>
+
+<!-- ── WIREFRAME CONTEXT BAR ──────────────────────────────── -->
+<div class="page-context-bar">
+  <div style="max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:flex-end;">
+    <span class="persona-badge persona-badge--pm" title="Jordan Reeves — Portal Admin / Sales Ops">Admin</span>
+  </div>
+</div>
+
+<!-- ── SPEC NOTES TAB ──────────────────────────────────────── -->
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+<!-- ── PARTNER CENTRAL HEADER ─────────────────────────────── -->
+<header class="pc-header" role="banner">
+  <a href="pc-home.html" class="pc-logo" aria-label="Equinix Partner Central home">
+    <div class="wf-header-logo">
+      <svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix">
+        <path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/>
+      </svg>
+    </div>
+    <span class="pc-logo-wordmark">
+      EQUINIX
+      <span class="pc-logo-divider"> | </span>
+      <span class="pc-logo-product">Partner Central</span>
+    </span>
+  </a>
+  <nav class="pc-header-nav" aria-label="Primary navigation">
+    <a href="pc-home.html" class="active" aria-current="page">Home</a>
+  </nav>
+  <div class="pc-header-controls">
+    <button class="pc-icon-btn" aria-label="Search">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="5.5" cy="5.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M9 9l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </button>
+    <button class="pc-icon-btn" aria-label="Notifications">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1a4 4 0 0 0-4 4v4H2v1h10v-1h-1V5a4 4 0 0 0-4-4zm0 12a1.5 1.5 0 0 1-1.5-1.5h3A1.5 1.5 0 0 1 7 13z" fill="currentColor"/></svg>
+    </button>
+    <div class="pc-avatar" role="button" aria-label="User account" tabindex="0">JR</div>
+  </div>
+</header>
+
+<!-- ── PAGE HERO ──────────────────────────────────────────── -->
+<div class="pc-hero" role="region" aria-label="Page header">
+  <h1 class="pc-hero-title">Deal Registration</h1>
+  <p class="pc-hero-sub">Review everything before submitting. You can go back to edit any section.</p>
+  <div class="pc-hero-context">
+    <span>Registration type:</span>
+    <span class="pc-hero-context-chip">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><circle cx="5" cy="5" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M3 5l1.5 1.5L7 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Referral
+    </span>
+    <span style="margin-left:8px;">Prospect:</span>
+    <span style="font-weight:600;color:var(--wf-ink);">Acme Corporation</span>
+  </div>
+</div>
+
+<!-- ── WIZARD LAYOUT ──────────────────────────────────────── -->
+<div class="pc-wizard-wrap">
+
+  <main id="main-content">
+
+    <!-- Progress stepper -->
+    <nav class="pc-stepper" aria-label="Deal registration progress">
+      <div class="pc-step complete">
+        <div class="pc-step-dot" aria-label="Step 1 complete">✓</div>
+        <span class="pc-step-label">Prospect Information</span>
+      </div>
+      <div class="pc-step complete">
+        <div class="pc-step-dot" aria-label="Step 2 complete">✓</div>
+        <span class="pc-step-label">Deal Details</span>
+      </div>
+      <div class="pc-step complete">
+        <div class="pc-step-dot" aria-label="Step 3 complete">✓</div>
+        <span class="pc-step-label">Sales Contact</span>
+      </div>
+      <div class="pc-step active" aria-current="step">
+        <div class="pc-step-dot" aria-label="Step 4, current">4</div>
+        <span class="pc-step-label">Review</span>
+      </div>
+    </nav>
+
+    <!-- Review: Prospect Information -->
+    <div class="review-section open" id="section-prospect">
+      <div class="review-section-hd" onclick="toggleSection('section-prospect')"
+           role="button" tabindex="0" aria-expanded="true"
+           aria-controls="section-prospect-bd">
+        <div class="review-section-title">
+          Prospect Information
+          <span class="review-section-badge">Step 1</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <a href="pc-dr-step1.html" class="review-edit-link" onclick="event.stopPropagation()">Edit</a>
+          <span class="review-chevron" aria-hidden="true">▲</span>
+        </div>
+      </div>
+      <div class="review-section-bd" id="section-prospect-bd">
+        <div class="review-grid">
+          <div class="review-row">
+            <span class="review-label">Company Name</span>
+            <span class="review-value">Acme Corporation</span>
+          </div>
+          <div class="review-row">
+            <span class="review-label">Country</span>
+            <span class="review-value">United States</span>
+          </div>
+          <div class="review-row">
+            <span class="review-label">Website</span>
+            <span class="review-value"><a href="#" style="color:var(--wf-accent);">https://acmecorp.com</a></span>
+          </div>
+          <div class="review-row">
+            <span class="review-label">DUNS Number</span>
+            <span class="review-value">807654321</span>
+          </div>
+          <div class="review-row">
+            <span class="review-label">Address</span>
+            <span class="review-value">100 Enterprise Way, Suite 400<br>New York, NY 10001</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Review: Deal Details -->
+    <div class="review-section open" id="section-deal">
+      <div class="review-section-hd" onclick="toggleSection('section-deal')"
+           role="button" tabindex="0" aria-expanded="true"
+           aria-controls="section-deal-bd">
+        <div class="review-section-title">
+          Deal Details
+          <span class="review-section-badge">Step 2</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <a href="pc-dr-step2.html" class="review-edit-link" onclick="event.stopPropagation()">Edit</a>
+          <span class="review-chevron" aria-hidden="true">▲</span>
+        </div>
+      </div>
+      <div class="review-section-bd" id="section-deal-bd">
+        <div class="review-grid">
+          <div class="review-row">
+            <span class="review-label">Deal Type</span>
+            <span class="review-value">New Business · Referral</span>
+          </div>
+          <div class="review-row">
+            <span class="review-label">Distributor</span>
+            <span class="review-value">None (direct)</span>
+          </div>
+          <div class="review-row">
+            <span class="review-label">Partner Project Code</span>
+            <span class="review-value">CB-2026-0042</span>
+          </div>
+          <div class="review-row">
+            <span class="review-label">Locations</span>
+            <span class="review-value">
+              <div class="review-tags">
+                <span class="review-tag">NY5 — New York</span>
+                <span class="review-tag">NY7 — New York</span>
+                <span class="review-tag">DC2 — Ashburn</span>
+              </div>
+            </span>
+          </div>
+          <div class="review-row">
+            <span class="review-label">Primary Services</span>
+            <span class="review-value">
+              <div class="review-tags">
+                <span class="review-tag">Colocation</span>
+                <span class="review-tag">Equinix Fabric</span>
+              </div>
+            </span>
+          </div>
+          <div class="review-row">
+            <span class="review-label">Additional Services</span>
+            <span class="review-value">
+              <div class="review-tags">
+                <span class="review-tag">Cross Connect</span>
+              </div>
+            </span>
+          </div>
+          <div class="review-row">
+            <span class="review-label">Description</span>
+            <span class="review-value" style="font-size:13px;line-height:1.6;">
+              Acme Corporation is expanding their hybrid cloud footprint across the northeast US and requires interconnection at NY5 and DC2. Looking to leverage Equinix Fabric for private connectivity to AWS and Azure. CloudBridge is the integration partner and introduced this opportunity.
+            </span>
+          </div>
+          <div class="review-row">
+            <span class="review-label">Supporting Documents</span>
+            <span class="review-value"><a href="#" style="color:var(--wf-accent);">Acme_Architecture_Brief.pdf</a></span>
+          </div>
+          <div class="review-row">
+            <span class="review-label">Alliance Partners</span>
+            <span class="review-value">
+              <div class="review-tags">
+                <span class="review-tag">AWS</span>
+                <span class="review-tag">Microsoft Azure</span>
+              </div>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Review: Sales Contact -->
+    <div class="review-section open" id="section-contact">
+      <div class="review-section-hd" onclick="toggleSection('section-contact')"
+           role="button" tabindex="0" aria-expanded="true"
+           aria-controls="section-contact-bd">
+        <div class="review-section-title">
+          Primary Sales Contact
+          <span class="review-section-badge">Step 3</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;">
+          <a href="pc-dr-step3.html" class="review-edit-link" onclick="event.stopPropagation()">Edit</a>
+          <span class="review-chevron" aria-hidden="true">▲</span>
+        </div>
+      </div>
+      <div class="review-section-bd" id="section-contact-bd">
+        <div class="review-grid">
+          <div class="review-row">
+            <span class="review-label">Name</span>
+            <span class="review-value">Jordan Reeves</span>
+          </div>
+          <div class="review-row">
+            <span class="review-label">Job Title</span>
+            <span class="review-value">Sales Operations Manager</span>
+          </div>
+          <div class="review-row">
+            <span class="review-label">Partner Company</span>
+            <span class="review-value">CloudBridge Solutions</span>
+          </div>
+          <div class="review-row">
+            <span class="review-label">Email</span>
+            <span class="review-value"><a href="mailto:jordan.reeves@cloudbridge.io" style="color:var(--wf-accent);">jordan.reeves@cloudbridge.io</a></span>
+          </div>
+          <div class="review-row">
+            <span class="review-label">Phone</span>
+            <span class="review-value">+1 (415) 555-0182</span>
+          </div>
+          <div class="review-row">
+            <span class="review-label">Equinix Partner ID</span>
+            <span class="review-value">P-0047291</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Legal notice -->
+    <div class="legal-notice" role="region" aria-labelledby="legal-heading">
+      <h3 id="legal-heading">Terms &amp; Conditions</h3>
+      <p>By submitting this deal registration, you confirm that the information provided is accurate and complete to the best of your knowledge. You agree that this submission is subject to Equinix's Deal Registration Program terms, including eligibility criteria, exclusivity windows, and approval requirements.</p>
+      <p>Equinix reserves the right to approve, reject, or request additional information before confirming deal protection. Submission does not guarantee approval or exclusivity. Deal registration is valid for 90 days from the date of approval unless extended by your Partner Success Manager.</p>
+      <div class="legal-accept">
+        <input type="checkbox" id="legal-cb" required aria-required="true">
+        <label for="legal-cb">
+          I confirm the information above is accurate and I agree to the
+          <strong>Equinix Deal Registration Program Terms</strong>.
+        </label>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="pc-actions">
+      <button class="btn-pc btn-pc-text" type="button">Save &amp; Exit</button>
+      <div class="pc-actions-right">
+        <a href="pc-dr-step3.html" class="btn-pc btn-pc-ghost">← Back</a>
+        <button class="btn-pc btn-pc-submit" type="submit" id="submit-btn">
+          Submit Registration
+        </button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- RIGHT: AI assistance rail -->
+  <aside class="pc-ai-rail" aria-label="AI assistance">
+    <div class="pc-ai-rail-hd">
+      <div class="pc-ai-icon" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M8 1l1.5 4H14l-3.5 2.5 1.5 4.5L8 9.5 4 12l1.5-4.5L2 5h4.5z" fill="var(--wf-muted)"/>
+        </svg>
+      </div>
+      <span class="pc-ai-rail-hd-title">AI Assistant</span>
+      <span class="pc-ai-badge">Coming Soon</span>
+    </div>
+    <div class="pc-ai-rail-bd">
+      <div class="pc-ai-placeholder">
+        <div class="pc-ai-placeholder-icon" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" stroke="var(--wf-line)" stroke-width="1.5"/>
+            <path d="M8 12h8M12 8v8" stroke="var(--wf-line)" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <p>Before you submit, the AI assistant will run a final check — flagging potential issues, duplicate deals, or missing data that could delay approval.</p>
+      </div>
+      <ul class="pc-ai-hint-list" aria-label="Planned AI features for this step">
+        <li><span class="pc-ai-hint-dot" aria-hidden="true"></span><span>Pre-submission duplicate detection across registered deals</span></li>
+        <li><span class="pc-ai-hint-dot" aria-hidden="true"></span><span>Completeness score and suggested improvements</span></li>
+        <li><span class="pc-ai-hint-dot" aria-hidden="true"></span><span>Estimated approval likelihood based on similar deals</span></li>
+      </ul>
+    </div>
+  </aside>
+
+</div><!-- /.pc-wizard-wrap -->
+
+<!-- ── SPEC PANEL ─────────────────────────────────────────── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Notes</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+
+    <h3>Summary</h3>
+    <p>Step 4 (final) of the Deal Registration wizard. Jordan Reeves reviews a read-only summary of all information entered across the prior three steps. Each section is collapsible and has an inline Edit link that returns to the relevant step. A legal terms acceptance checkbox is required before submission. The Submit button is visually distinct (green) to signal finality.</p>
+
+    <hr class="spec-divider">
+
+    <h3>Flow Position</h3>
+    <ul>
+      <li><strong>Previous:</strong> pc-dr-step3.html (Sales Contact)</li>
+      <li><strong>Next:</strong> Deal registration confirmation / Registered Deals list (pm-deal-registration.html)</li>
+    </ul>
+
+    <hr class="spec-divider">
+
+    <h3>Design Decisions</h3>
+    <ul>
+      <li><strong>Accordion sections</strong> — Each step's data shown as a collapsible block. All open by default so the full summary is immediately visible on arrival. User can collapse to reduce scroll if needed.</li>
+      <li><strong>Inline Edit links</strong> — Each section header has an "Edit" link back to the relevant step, making correction frictionless without having to navigate the stepper manually.</li>
+      <li><strong>Legal checkbox</strong> — Required before Submit is active (validation on submit). Separate from the form data sections so it's visually distinct as a consent action.</li>
+      <li><strong>Green Submit button</strong> — Color-differentiated from the blue "Next" buttons on prior steps to signal this is the terminal action. Label reads "Submit Registration" not "Next."</li>
+      <li><strong>Sample data</strong> — Review sections are pre-populated with realistic CloudBridge / Acme Corporation scenario data to make the wireframe legible as a design artifact.</li>
+      <li><strong>AI rail</strong> — Will surface pre-submission checks (duplicates, completeness, approval likelihood) in a future release.</li>
+    </ul>
+
+    <hr class="spec-divider">
+
+    <h3>Post-Submit State</h3>
+    <ul>
+      <li>On success: redirect to a confirmation screen (not yet wired) → then to pm-deal-registration.html (Registered Deals list)</li>
+      <li>On duplicate detected: show inline warning, allow user to proceed or cancel</li>
+      <li>On server error: show error banner, preserve form data, allow retry</li>
+    </ul>
+
+  </div>
+</aside>
+
+<script>
+  function toggleSpec() {
+    var p = document.getElementById('spec-panel');
+    var b = document.getElementById('spec-toggle');
+    if (!p || !b) return;
+    var isOpen = p.classList.toggle('open');
+    b.setAttribute('aria-expanded', isOpen);
+  }
+
+  function toggleSection(id) {
+    var section = document.getElementById(id);
+    if (!section) return;
+    var isOpen = section.classList.toggle('open');
+    var hd = section.querySelector('.review-section-hd');
+    if (hd) hd.setAttribute('aria-expanded', isOpen);
+  }
+
+  // Keyboard support for accordion headers
+  document.querySelectorAll('.review-section-hd').forEach(function(hd) {
+    hd.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        hd.click();
+      }
+    });
+  });
+</script>
+
+<script src="wf-nav.js"></script>
+</body>
+</html>

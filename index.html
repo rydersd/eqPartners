@@ -2221,10 +2221,30 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
       </div>
       <div class="section-body">
 
+        <div class="node" style="border-left:3px solid #3d6daa;">
+          <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+            <div class="node-type t-workflow" title="Workflow">W</div>
+            <span class="node-label">Deal Registration Wizard
+              <span style="font-size:.57rem;padding:1px 5px;border-radius:2px;background:#ddeeff;color:#2b5797;border:1px solid #b3d4f5;font-weight:700;margin-left:5px;white-space:nowrap;">Partner Central</span>
+            </span>
+            <a href="pc-dr-deal-type.html" class="node-mockup-link" title="View Mockup">→</a>
+            <span class="node-chevron">›</span>
+          </div>
+          <div class="node-children">
+            <div class="child"><span class="child-type ct-form">Form</span> <a href="pc-dr-deal-type.html" style="color:#3d6daa;">pc-dr-deal-type.html</a> — Relationship type (Referral vs. Resale)</div>
+            <div class="child"><span class="child-type ct-form">Form</span> <a href="pc-dr-step1.html" style="color:#3d6daa;">pc-dr-step1.html</a> — Step 1: Prospect Information (company, address)</div>
+            <div class="child"><span class="child-type ct-form">Form</span> <a href="pc-dr-step2.html" style="color:#3d6daa;">pc-dr-step2.html</a> — Step 2: Deal Details (distributor, locations, services, alliance partners)</div>
+            <div class="child"><span class="child-type ct-form">Form</span> <a href="pc-dr-step3.html" style="color:#3d6daa;">pc-dr-step3.html</a> — Step 3: Primary Sales Contact</div>
+            <div class="child"><span class="child-type ct-form">Form</span> <a href="pc-dr-step4.html" style="color:#3d6daa;">pc-dr-step4.html</a> — Step 4: Review &amp; Submit</div>
+            <div class="child"><span class="child-type ct-widget">Widget</span> 4-step stepper, full-width; no split-view; right column reserved for AI assistance rail</div>
+            <div class="child"><span class="child-type ct-action">Action</span> Save &amp; Exit (draft), Back, Next, Submit Registration</div>
+          </div>
+        </div>
+
         <div class="node">
           <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
             <div class="node-type t-form" title="Form">F</div>
-            <span class="node-label">Register a Deal</span>
+            <span class="node-label">Register a Deal <span style="font-size:.57rem;padding:1px 5px;border-radius:2px;background:#f5eeff;color:#6d28d9;border:1px solid #ddd6fe;font-weight:700;margin-left:5px;">SFDC</span></span>
             <a href="rep-register-deal.html" class="node-mockup-link" title="View Mockup">→</a>
             <span class="node-chevron">›</span>
           </div>
@@ -2232,7 +2252,7 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
             <div class="child"><span class="child-type ct-form">Form</span> Step 1: Deal Basics (customer, contact, description)</div>
             <div class="child"><span class="child-type ct-form">Form</span> Step 2: Deal Details (revenue, close date, product)</div>
             <div class="child"><span class="child-type ct-form">Form</span> Step 3: Competitive Info</div>
-            <div class="child"><span class="child-type ct-form">Form</span> Step 4: Review & Submit</div>
+            <div class="child"><span class="child-type ct-form">Form</span> Step 4: Review &amp; Submit</div>
             <div class="child"><span class="child-type ct-widget">Widget</span> Progress indicator (Step x of 4)</div>
             <div class="child"><span class="child-type ct-action">Action</span> Save Draft / Submit for Approval</div>
             <div class="child"><span class="child-type ct-table">Table</span> Draft deals list (continue where you left off)</div>

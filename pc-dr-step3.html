@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sales Contact — Deal Registration · Partner Central · Equinix PCP</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: var(--wf-white); }
+
+    /* ── Partner Central Header ──────────────────────────────── */
+    .pc-header {
+      background: var(--wf-ink); height: 56px; display: flex; align-items: center;
+      padding: 0 24px; gap: 16px; position: sticky; top: 0; z-index: 100;
+    }
+    .pc-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; flex-shrink: 0; }
+    .pc-logo-wordmark { font-size: 14px; font-weight: 590; color: white; }
+    .pc-logo-divider { opacity: 0.4; }
+    .pc-logo-product { opacity: 0.8; }
+    .pc-header-nav { flex: 1; display: flex; align-items: center; height: 56px; }
+    .pc-header-nav a {
+      display: flex; align-items: center; height: 56px; padding: 0 16px;
+      font-size: 13px; color: rgba(255,255,255,0.8); text-decoration: none;
+      border-bottom: 3px solid transparent; transition: all 0.15s;
+    }
+    .pc-header-nav a.active { color: white; border-bottom-color: white; }
+    .pc-header-nav a:hover { color: white; background: rgba(255,255,255,0.05); }
+    .pc-header-controls { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .pc-icon-btn {
+      width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.15);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: rgba(255,255,255,0.7); border: none;
+    }
+    .pc-icon-btn:hover { background: rgba(255,255,255,0.25); }
+    .pc-avatar {
+      width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; color: white; cursor: pointer; flex-shrink: 0;
+    }
+
+    /* ── Page Hero ───────────────────────────────────────────── */
+    .pc-hero { background: var(--wf-canvas); border-bottom: 1px solid var(--wf-tint); padding: 20px 24px; }
+    .pc-hero-title { font-size: 22px; font-weight: 700; color: var(--wf-ink); margin-bottom: 4px; }
+    .pc-hero-sub { font-size: 13px; color: var(--wf-muted); line-height: 1.5; }
+    .pc-hero-context { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 12px; color: var(--wf-muted); }
+    .pc-hero-context-chip {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 2px 10px; border-radius: 12px;
+      background: rgba(61,109,170,0.1); color: var(--wf-accent);
+      font-size: 12px; font-weight: 600;
+    }
+
+    /* ── Two-column wizard layout ────────────────────────────── */
+    .pc-wizard-wrap {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 32px;
+      padding: 28px 24px 48px;
+    }
+
+    /* ── Stepper ─────────────────────────────────────────────── */
+    .pc-stepper { display: flex; align-items: flex-start; margin-bottom: 36px; }
+    .pc-step { display: flex; flex-direction: column; align-items: center; flex: 1; position: relative; }
+    .pc-step:not(:last-child)::after {
+      content: ''; position: absolute; top: 14px; left: 50%;
+      width: 100%; height: 2px; background: var(--wf-tint); z-index: 0;
+    }
+    .pc-step.complete::after { background: var(--wf-accent); }
+    .pc-step-dot {
+      width: 28px; height: 28px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; border: 2px solid var(--wf-tint);
+      background: white; color: var(--wf-muted); position: relative; z-index: 1;
+    }
+    .pc-step.active .pc-step-dot { border-color: var(--wf-accent); background: var(--wf-accent); color: white; }
+    .pc-step.complete .pc-step-dot { border-color: var(--wf-accent); background: var(--wf-accent); color: white; }
+    .pc-step-label { font-size: 11px; margin-top: 7px; color: var(--wf-muted); text-align: center; line-height: 1.3; max-width: 80px; }
+    .pc-step.active .pc-step-label { color: var(--wf-ink); font-weight: 600; }
+    .pc-step.complete .pc-step-label { color: var(--wf-accent); }
+
+    /* ── Form styles ─────────────────────────────────────────── */
+    .form-req-note { font-size: 12px; color: var(--wf-muted); margin-bottom: 24px; }
+    .form-req-note .req { color: #c0392b; }
+    .form-section { margin-bottom: 36px; }
+    .form-section-title { font-size: 15px; font-weight: 700; color: var(--wf-ink); margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--wf-tint); }
+    .form-row { margin-bottom: 18px; }
+    .form-row:last-child { margin-bottom: 0; }
+    .form-label { display: block; font-size: 13px; font-weight: 600; color: var(--wf-ink); margin-bottom: 5px; }
+    .form-label .req { color: #c0392b; }
+    .form-input { width: 100%; padding: 9px 12px; border: 1px solid var(--wf-line); border-radius: 4px; font-size: 14px; color: var(--wf-ink); background: white; font-family: inherit; }
+    .form-input:focus { outline: none; border-color: var(--wf-accent); box-shadow: 0 0 0 2px rgba(61,109,170,0.15); }
+    .form-hint { font-size: 12px; color: var(--wf-muted); margin-top: 4px; line-height: 1.4; }
+    .form-cols-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-input:disabled { background: var(--wf-canvas); color: var(--wf-muted); cursor: not-allowed; }
+
+    /* ── Self-contact toggle ─────────────────────────────────── */
+    .self-contact-banner {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 18px 20px;
+      background: var(--wf-canvas);
+      border: 1px solid var(--wf-tint);
+      border-radius: 6px;
+      margin-bottom: 28px;
+      cursor: pointer;
+    }
+    .self-contact-banner:has(input:checked) {
+      border-color: var(--wf-accent);
+      background: rgba(61,109,170,0.04);
+    }
+    .self-contact-cb {
+      width: 18px; height: 18px; accent-color: var(--wf-accent);
+      flex-shrink: 0; margin-top: 2px; cursor: pointer;
+    }
+    .self-contact-text { flex: 1; }
+    .self-contact-text strong { font-size: 14px; color: var(--wf-ink); display: block; margin-bottom: 3px; }
+    .self-contact-text span { font-size: 13px; color: var(--wf-muted); }
+    .self-contact-prefill {
+      display: none;
+      margin-top: 12px;
+      padding: 12px 14px;
+      background: white;
+      border: 1px solid var(--wf-tint);
+      border-radius: 4px;
+      font-size: 12px;
+      color: var(--wf-muted);
+    }
+    .self-contact-prefill strong { color: var(--wf-ink); }
+
+    /* ── Form field group that can be disabled ───────────────── */
+    .form-fields-group { transition: opacity 0.2s; }
+    .form-fields-group.prefilled { opacity: 0.7; }
+
+    /* ── Actions bar ─────────────────────────────────────────── */
+    .pc-actions {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 28px; border-top: 1px solid var(--wf-tint); margin-top: 8px;
+    }
+    .pc-actions-right { display: flex; gap: 12px; }
+    .btn-pc {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 10px 24px; border-radius: 4px; font-size: 14px; font-weight: 600;
+      cursor: pointer; text-decoration: none; border: none; font-family: inherit; transition: all 0.15s;
+    }
+    .btn-pc-primary { background: var(--wf-accent); color: white; }
+    .btn-pc-primary:hover { background: #2c5a94; }
+    .btn-pc-ghost { background: transparent; color: var(--wf-muted); border: 1px solid var(--wf-line); }
+    .btn-pc-ghost:hover { color: var(--wf-ink); border-color: var(--wf-text); }
+    .btn-pc-text { background: transparent; color: var(--wf-muted); padding: 10px 0; border: none; }
+    .btn-pc-text:hover { color: var(--wf-ink); text-decoration: underline; }
+
+    /* ── AI rail ─────────────────────────────────────────────── */
+    .pc-ai-rail {
+      position: sticky; top: 76px; height: fit-content;
+      border: 1px dashed var(--wf-line); border-radius: 8px;
+      background: var(--wf-canvas); overflow: hidden;
+    }
+    .pc-ai-rail-hd {
+      display: flex; align-items: center; gap: 8px;
+      padding: 14px 16px; background: white; border-bottom: 1px solid var(--wf-tint);
+    }
+    .pc-ai-icon {
+      width: 28px; height: 28px; border-radius: 6px; background: var(--wf-tint);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .pc-ai-rail-hd-title { font-size: 13px; font-weight: 600; color: var(--wf-ink); flex: 1; }
+    .pc-ai-badge {
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.05em; padding: 2px 8px; border-radius: 10px;
+      background: var(--wf-tint); color: var(--wf-muted);
+    }
+    .pc-ai-rail-bd { padding: 20px 16px; }
+    .pc-ai-placeholder {
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center; gap: 12px; padding: 16px 0;
+    }
+    .pc-ai-placeholder-icon {
+      width: 48px; height: 48px; border-radius: 50%; background: var(--wf-tint);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .pc-ai-placeholder p { font-size: 12px; color: var(--wf-muted); line-height: 1.6; }
+    .pc-ai-hint-list { list-style: none; padding: 0; margin-top: 4px; }
+    .pc-ai-hint-list li {
+      font-size: 12px; color: var(--wf-muted); line-height: 1.5;
+      padding: 8px 0; border-bottom: 1px solid var(--wf-tint);
+      display: flex; gap: 8px; align-items: flex-start;
+    }
+    .pc-ai-hint-list li:last-child { border-bottom: none; padding-bottom: 0; }
+    .pc-ai-hint-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--wf-line); flex-shrink: 0; margin-top: 5px; }
+  </style>
+</head>
+<body>
+
+<!-- ── WIREFRAME CONTEXT BAR ──────────────────────────────── -->
+<div class="page-context-bar">
+  <div style="max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:flex-end;">
+    <span class="persona-badge persona-badge--pm" title="Jordan Reeves — Portal Admin / Sales Ops">Admin</span>
+  </div>
+</div>
+
+<!-- ── SPEC NOTES TAB ──────────────────────────────────────── -->
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+<!-- ── PARTNER CENTRAL HEADER ─────────────────────────────── -->
+<header class="pc-header" role="banner">
+  <a href="pc-home.html" class="pc-logo" aria-label="Equinix Partner Central home">
+    <div class="wf-header-logo">
+      <svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix">
+        <path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/>
+      </svg>
+    </div>
+    <span class="pc-logo-wordmark">
+      EQUINIX
+      <span class="pc-logo-divider"> | </span>
+      <span class="pc-logo-product">Partner Central</span>
+    </span>
+  </a>
+  <nav class="pc-header-nav" aria-label="Primary navigation">
+    <a href="pc-home.html" class="active" aria-current="page">Home</a>
+  </nav>
+  <div class="pc-header-controls">
+    <button class="pc-icon-btn" aria-label="Search">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="5.5" cy="5.5" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M9 9l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </button>
+    <button class="pc-icon-btn" aria-label="Notifications">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1a4 4 0 0 0-4 4v4H2v1h10v-1h-1V5a4 4 0 0 0-4-4zm0 12a1.5 1.5 0 0 1-1.5-1.5h3A1.5 1.5 0 0 1 7 13z" fill="currentColor"/></svg>
+    </button>
+    <div class="pc-avatar" role="button" aria-label="User account" tabindex="0">JR</div>
+  </div>
+</header>
+
+<!-- ── PAGE HERO ──────────────────────────────────────────── -->
+<div class="pc-hero" role="region" aria-label="Page header">
+  <h1 class="pc-hero-title">Deal Registration</h1>
+  <p class="pc-hero-sub">All required fields must be filled out in English. You can save and return later if you don't have all the information now.</p>
+  <div class="pc-hero-context">
+    <span>Registration type:</span>
+    <span class="pc-hero-context-chip">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true"><circle cx="5" cy="5" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M3 5l1.5 1.5L7 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Referral
+    </span>
+    <span style="margin-left:8px;">Prospect:</span>
+    <span style="font-weight:600;color:var(--wf-ink);">Acme Corporation</span>
+  </div>
+</div>
+
+<!-- ── WIZARD LAYOUT ──────────────────────────────────────── -->
+<div class="pc-wizard-wrap">
+
+  <main id="main-content">
+
+    <!-- Progress stepper -->
+    <nav class="pc-stepper" aria-label="Deal registration progress">
+      <div class="pc-step complete">
+        <div class="pc-step-dot" aria-label="Step 1 complete">✓</div>
+        <span class="pc-step-label">Prospect Information</span>
+      </div>
+      <div class="pc-step complete">
+        <div class="pc-step-dot" aria-label="Step 2 complete">✓</div>
+        <span class="pc-step-label">Deal Details</span>
+      </div>
+      <div class="pc-step active" aria-current="step">
+        <div class="pc-step-dot" aria-label="Step 3, current">3</div>
+        <span class="pc-step-label">Sales Contact</span>
+      </div>
+      <div class="pc-step">
+        <div class="pc-step-dot" aria-hidden="true">4</div>
+        <span class="pc-step-label">Review</span>
+      </div>
+    </nav>
+
+    <p class="form-req-note">Fields marked <span class="req">*</span> are required.</p>
+
+    <!-- Self-contact toggle -->
+    <label class="self-contact-banner" for="self-contact-cb">
+      <input type="checkbox" id="self-contact-cb" class="self-contact-cb"
+             onchange="toggleSelfContact(this.checked)">
+      <div class="self-contact-text">
+        <strong>I am the primary sales contact for this deal</strong>
+        <span>Check this to pre-fill the fields below with your profile information.</span>
+        <div class="self-contact-prefill" id="self-contact-prefill" aria-live="polite">
+          Pre-filling with: <strong>Jordan Reeves</strong> · jordan.reeves@cloudbridge.io · CloudBridge Solutions
+        </div>
+      </div>
+    </label>
+
+    <!-- Contact fields -->
+    <section class="form-section" aria-labelledby="section-contact">
+      <h2 class="form-section-title" id="section-contact">Primary Sales Contact</h2>
+
+      <div class="form-fields-group" id="contact-fields">
+
+        <div class="form-cols-2">
+          <div class="form-row">
+            <label class="form-label" for="first-name">First Name <span class="req">*</span></label>
+            <input type="text" id="first-name" class="form-input" autocomplete="given-name" required aria-required="true">
+          </div>
+          <div class="form-row">
+            <label class="form-label" for="last-name">Last Name <span class="req">*</span></label>
+            <input type="text" id="last-name" class="form-input" autocomplete="family-name" required aria-required="true">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label class="form-label" for="job-title">Job Title <span class="req">*</span></label>
+          <input type="text" id="job-title" class="form-input" placeholder="e.g. Sales Manager" autocomplete="organization-title" required aria-required="true">
+        </div>
+
+        <div class="form-row">
+          <label class="form-label" for="partner-company">Partner Company <span class="req">*</span></label>
+          <input type="text" id="partner-company" class="form-input" autocomplete="organization" required aria-required="true">
+          <p class="form-hint">The partner organization this contact works for.</p>
+        </div>
+
+        <div class="form-cols-2">
+          <div class="form-row">
+            <label class="form-label" for="contact-email">Email Address <span class="req">*</span></label>
+            <input type="email" id="contact-email" class="form-input" autocomplete="email" required aria-required="true">
+          </div>
+          <div class="form-row">
+            <label class="form-label" for="contact-phone">Phone Number</label>
+            <input type="tel" id="contact-phone" class="form-input" placeholder="+1 (555) 000-0000" autocomplete="tel">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <label class="form-label" for="partner-id">Equinix Partner ID</label>
+          <input type="text" id="partner-id" class="form-input" placeholder="e.g. P-0012345">
+          <p class="form-hint">Your Equinix-assigned partner identifier. Found in your partner profile or onboarding confirmation email.</p>
+        </div>
+
+      </div><!-- /.form-fields-group -->
+
+    </section>
+
+    <!-- Actions -->
+    <div class="pc-actions">
+      <button class="btn-pc btn-pc-text" type="button">Save &amp; Exit</button>
+      <div class="pc-actions-right">
+        <a href="pc-dr-step2.html" class="btn-pc btn-pc-ghost">← Back</a>
+        <a href="pc-dr-step4.html" class="btn-pc btn-pc-primary">Next →</a>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- RIGHT: AI assistance rail -->
+  <aside class="pc-ai-rail" aria-label="AI assistance">
+    <div class="pc-ai-rail-hd">
+      <div class="pc-ai-icon" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M8 1l1.5 4H14l-3.5 2.5 1.5 4.5L8 9.5 4 12l1.5-4.5L2 5h4.5z" fill="var(--wf-muted)"/>
+        </svg>
+      </div>
+      <span class="pc-ai-rail-hd-title">AI Assistant</span>
+      <span class="pc-ai-badge">Coming Soon</span>
+    </div>
+    <div class="pc-ai-rail-bd">
+      <div class="pc-ai-placeholder">
+        <div class="pc-ai-placeholder-icon" aria-hidden="true">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" stroke="var(--wf-line)" stroke-width="1.5"/>
+            <path d="M8 12h8M12 8v8" stroke="var(--wf-line)" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <p>The AI assistant will look up contact details from your partner directory and verify the Equinix Partner ID automatically.</p>
+      </div>
+      <ul class="pc-ai-hint-list" aria-label="Planned AI features for this step">
+        <li><span class="pc-ai-hint-dot" aria-hidden="true"></span><span>Lookup contacts by name or email from your partner org</span></li>
+        <li><span class="pc-ai-hint-dot" aria-hidden="true"></span><span>Auto-validate Equinix Partner ID against partner registry</span></li>
+        <li><span class="pc-ai-hint-dot" aria-hidden="true"></span><span>Suggest contacts based on deal location and services</span></li>
+      </ul>
+    </div>
+  </aside>
+
+</div><!-- /.pc-wizard-wrap -->
+
+<!-- ── SPEC PANEL ─────────────────────────────────────────── -->
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design Specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Notes</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+
+    <h3>Summary</h3>
+    <p>Step 3 of the Deal Registration wizard. Jordan Reeves identifies the primary sales contact for the deal. A "I am the primary contact" checkbox auto-fills the form from the logged-in user's profile. Manual entry covers first/last name, job title, partner company, email, phone, and Equinix Partner ID.</p>
+
+    <hr class="spec-divider">
+
+    <h3>Flow Position</h3>
+    <ul>
+      <li><strong>Previous:</strong> pc-dr-step2.html (Deal Details)</li>
+      <li><strong>Next:</strong> pc-dr-step4.html (Review)</li>
+    </ul>
+
+    <hr class="spec-divider">
+
+    <h3>Design Decisions</h3>
+    <ul>
+      <li><strong>Self-contact shortcut</strong> — The "I am the primary contact" checkbox pre-fills all fields from the authenticated user's profile, reducing friction for the common case where the person registering the deal is also the contact. Fields become visually muted/read-only when pre-filled but can still be overridden.</li>
+      <li><strong>Equinix Partner ID</strong> — Optional but important for attribution. Hint text points users to where to find it.</li>
+      <li><strong>AI rail</strong> — Will surface contact lookup and Partner ID validation in a future release.</li>
+    </ul>
+
+    <hr class="spec-divider">
+
+    <h3>Form Fields</h3>
+    <ul>
+      <li><strong>Self-contact checkbox</strong> — optional; auto-fills form from user profile</li>
+      <li><strong>First Name</strong> — required</li>
+      <li><strong>Last Name</strong> — required</li>
+      <li><strong>Job Title</strong> — required</li>
+      <li><strong>Partner Company</strong> — required</li>
+      <li><strong>Email Address</strong> — required</li>
+      <li><strong>Phone Number</strong> — optional</li>
+      <li><strong>Equinix Partner ID</strong> — optional</li>
+    </ul>
+
+  </div>
+</aside>
+
+<script>
+  function toggleSpec() {
+    var p = document.getElementById('spec-panel');
+    var b = document.getElementById('spec-toggle');
+    if (!p || !b) return;
+    var isOpen = p.classList.toggle('open');
+    b.setAttribute('aria-expanded', isOpen);
+  }
+
+  function toggleSelfContact(checked) {
+    var prefill = document.getElementById('self-contact-prefill');
+    var fields = document.getElementById('contact-fields');
+    if (!prefill || !fields) return;
+
+    if (checked) {
+      prefill.style.display = 'block';
+      fields.classList.add('prefilled');
+      // Pre-fill with canonical persona data
+      document.getElementById('first-name').value = 'Jordan';
+      document.getElementById('last-name').value = 'Reeves';
+      document.getElementById('job-title').value = 'Sales Operations Manager';
+      document.getElementById('partner-company').value = 'CloudBridge Solutions';
+      document.getElementById('contact-email').value = 'jordan.reeves@cloudbridge.io';
+      document.getElementById('contact-phone').value = '+1 (415) 555-0182';
+      document.getElementById('partner-id').value = 'P-0047291';
+      // Mark as read-only (can still override)
+      document.querySelectorAll('#contact-fields .form-input').forEach(function(el) {
+        el.setAttribute('aria-readonly', 'true');
+        el.style.background = 'var(--wf-canvas)';
+      });
+    } else {
+      prefill.style.display = 'none';
+      fields.classList.remove('prefilled');
+      document.querySelectorAll('#contact-fields .form-input').forEach(function(el) {
+        el.removeAttribute('aria-readonly');
+        el.style.background = '';
+      });
+    }
+  }
+</script>
+
+<script src="wf-nav.js"></script>
+</body>
+</html>
