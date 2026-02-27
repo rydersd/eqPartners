@@ -192,7 +192,7 @@
       position: sticky;
       top: 76px;
       height: fit-content;
-      border: 1px dashed var(--wf-line);
+      border: 1px solid var(--wf-tint);
       border-radius: 8px;
       background: var(--wf-canvas);
       overflow: hidden;
@@ -212,28 +212,27 @@
       letter-spacing: 0.05em; padding: 2px 8px; border-radius: 10px;
       background: var(--wf-tint); color: var(--wf-muted);
     }
-    .pc-ai-rail-bd { padding: 20px 16px; }
-    .pc-ai-placeholder {
-      display: flex; flex-direction: column; align-items: center;
-      text-align: center; gap: 12px; padding: 16px 0;
+    .pc-ai-rail-bd { padding: 0; }
+    .pc-ai-illus {
+      width: 100%; background: white;
+      padding: 24px 20px 20px;
+      display: flex; justify-content: center;
+      border-bottom: 1px solid var(--wf-tint);
     }
-    .pc-ai-placeholder-icon {
-      width: 48px; height: 48px; border-radius: 50%;
-      background: var(--wf-tint); display: flex; align-items: center;
-      justify-content: center;
+    .pc-ai-instructions { padding: 18px 16px 20px; }
+    .pc-ai-step-label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.06em; color: var(--wf-accent); margin-bottom: 6px; display: block;
     }
-    .pc-ai-placeholder p { font-size: 12px; color: var(--wf-muted); line-height: 1.6; }
-    .pc-ai-hint-list { list-style: none; padding: 0; margin-top: 4px; }
-    .pc-ai-hint-list li {
-      font-size: 12px; color: var(--wf-muted); line-height: 1.5;
+    .pc-ai-instructions > p { font-size: 12px; color: var(--wf-muted); line-height: 1.6; margin-bottom: 14px; }
+    .pc-ai-checklist { list-style: none; padding: 0; }
+    .pc-ai-checklist li {
+      font-size: 12px; color: var(--wf-text); line-height: 1.4;
       padding: 8px 0; border-bottom: 1px solid var(--wf-tint);
-      display: flex; gap: 8px; align-items: flex-start;
+      display: flex; gap: 10px; align-items: flex-start;
     }
-    .pc-ai-hint-list li:last-child { border-bottom: none; padding-bottom: 0; }
-    .pc-ai-hint-dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--wf-line); flex-shrink: 0; margin-top: 5px;
-    }
+    .pc-ai-checklist li:last-child { border-bottom: none; padding-bottom: 0; }
+    .pc-ai-check { width: 16px; height: 16px; flex-shrink: 0; margin-top: 0; }
   </style>
 </head>
 <body>
@@ -430,41 +429,50 @@
 
   </main>
 
-  <!-- RIGHT: AI assistance rail -->
-  <aside class="pc-ai-rail" aria-label="AI assistance">
+  <!-- RIGHT: Step guidance -->
+  <aside class="pc-ai-rail" aria-label="Step guidance">
     <div class="pc-ai-rail-hd">
-      <div class="pc-ai-icon" aria-hidden="true">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-          <path d="M8 1l1.5 4H14l-3.5 2.5 1.5 4.5L8 9.5 4 12l1.5-4.5L2 5h4.5z" fill="var(--wf-muted)"/>
-        </svg>
-      </div>
-      <span class="pc-ai-rail-hd-title">AI Assistant</span>
-      <span class="pc-ai-badge">Coming Soon</span>
+      <span class="pc-ai-rail-hd-title">What you'll need</span>
     </div>
     <div class="pc-ai-rail-bd">
-      <div class="pc-ai-placeholder">
-        <div class="pc-ai-placeholder-icon" aria-hidden="true">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <circle cx="12" cy="12" r="9" stroke="var(--wf-line)" stroke-width="1.5"/>
-            <path d="M8 12h8M12 8v8" stroke="var(--wf-line)" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <p>The AI assistant will help you fill out deal information — suggesting relevant Equinix services, flagging potential duplicate registrations, and looking up company details as you type.</p>
+      <div class="pc-ai-illus" aria-hidden="true">
+        <svg width="100" height="80" viewBox="0 0 100 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Building -->
+          <rect x="18" y="20" width="56" height="52" rx="2" fill="var(--wf-tint)" stroke="var(--wf-line)" stroke-width="1.5"/>
+          <rect x="26" y="29" width="10" height="9" rx="1" fill="var(--wf-line)"/>
+          <rect x="40" y="29" width="10" height="9" rx="1" fill="var(--wf-line)"/>
+          <rect x="54" y="29" width="10" height="9" rx="1" fill="var(--wf-line)"/>
+          <rect x="26" y="44" width="10" height="9" rx="1" fill="var(--wf-line)"/>
+          <rect x="40" y="44" width="10" height="9" rx="1" fill="var(--wf-line)"/>
+          <rect x="54" y="44" width="10" height="9" rx="1" fill="var(--wf-line)"/>
+          <rect x="35" y="58" width="22" height="14" rx="1" fill="var(--wf-line)"/>
+          <!-- Magnifying glass -->
+          <circle cx="76" cy="26" r="13" fill="white" stroke="var(--wf-accent)" stroke-width="2"/>
+          <path d="M86 36 L92 42" stroke="var(--wf-accent)" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
       </div>
-      <ul class="pc-ai-hint-list" aria-label="Planned AI features for this step">
-        <li>
-          <span class="pc-ai-hint-dot" aria-hidden="true"></span>
-          <span>Auto-fill company details from DUNS lookup</span>
-        </li>
-        <li>
-          <span class="pc-ai-hint-dot" aria-hidden="true"></span>
-          <span>Detect and flag similar registered prospects</span>
-        </li>
-        <li>
-          <span class="pc-ai-hint-dot" aria-hidden="true"></span>
-          <span>Address validation and formatting suggestions</span>
-        </li>
-      </ul>
+      <div class="pc-ai-instructions">
+        <span class="pc-ai-step-label">Prospect Information</span>
+        <p>Gather the following before filling out this step:</p>
+        <ul class="pc-ai-checklist">
+          <li>
+            <svg class="pc-ai-check" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="7" stroke="var(--wf-accent)" stroke-width="1.5"/><path d="M5 8l2 2 4-4" stroke="var(--wf-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Legal registered company name</span>
+          </li>
+          <li>
+            <svg class="pc-ai-check" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="7" stroke="var(--wf-accent)" stroke-width="1.5"/><path d="M5 8l2 2 4-4" stroke="var(--wf-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Company website or domain</span>
+          </li>
+          <li>
+            <svg class="pc-ai-check" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="7" stroke="var(--wf-accent)" stroke-width="1.5"/><path d="M5 8l2 2 4-4" stroke="var(--wf-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>D-U-N-S number (optional but speeds up approval)</span>
+          </li>
+          <li>
+            <svg class="pc-ai-check" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="8" cy="8" r="7" stroke="var(--wf-accent)" stroke-width="1.5"/><path d="M5 8l2 2 4-4" stroke="var(--wf-accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Registered business address</span>
+          </li>
+        </ul>
+      </div>
     </div>
   </aside>
 
