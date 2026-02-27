@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onboarding Flow — Equinix PCP</title>
+<link rel="stylesheet" href="wireframe.css">
+<style>
+/* ── Swimlane grid ───────────────────────────────────────────── */
+.sw-grid {
+  display: grid;
+  grid-template-columns: 108px repeat(7, 1fr);
+  grid-auto-rows: auto;
+  border-left: 1px solid var(--gray-border);
+  border-top: 1px solid var(--gray-border);
+  min-width: 860px;
+}
+.sw-grid > * {
+  border-right: 1px solid var(--gray-border);
+  border-bottom: 1px solid var(--gray-border);
+}
+
+/* Corner + step headers */
+.sw-corner {
+  background: #f8fafc;
+  position: sticky;
+  left: 0;
+  z-index: 2;
+}
+.sw-hd {
+  padding: .5rem .6rem;
+  font-size: .7rem;
+  font-weight: 700;
+  color: var(--wf-muted);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  background: #f8fafc;
+  text-align: center;
+  line-height: 1.3;
+}
+.sw-step-num {
+  display: block;
+  font-size: .625rem;
+  font-weight: 400;
+  color: #cbd5e1;
+  margin-bottom: .15rem;
+}
+
+/* Lane label column */
+.sw-lbl {
+  padding: .6rem .5rem;
+  font-size: .7rem;
+  font-weight: 700;
+  color: var(--wf-muted);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  line-height: 1.35;
+  display: flex;
+  align-items: center;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+}
+
+/* Cell defaults */
+.sw-cell {
+  padding: .55rem .65rem;
+  font-size: .75rem;
+  line-height: 1.4;
+  color: var(--wf-ink);
+  vertical-align: top;
+  min-height: 80px;
+}
+.sw-cell strong { display: block; font-size: .7rem; margin-bottom: .2rem; }
+.sw-cell a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+.sw-cell a:hover { opacity: .75; }
+
+/* Empty cell */
+.sw-cell.empty {
+  background: repeating-linear-gradient(
+    -45deg, transparent, transparent 6px,
+    rgba(0,0,0,.025) 6px, rgba(0,0,0,.025) 7px
+  );
+  min-height: 80px;
+}
+
+/* Wait cell — partner is waiting for something */
+.sw-cell.wait {
+  border-style: dashed;
+  opacity: .75;
+  font-style: italic;
+}
+
+/* Auto badge */
+.badge {
+  display: inline-block;
+  font-size: .58rem;
+  font-weight: 700;
+  padding: .1rem .3rem;
+  border-radius: 2px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin-left: .3rem;
+  vertical-align: middle;
+}
+.badge-auto  { background: #dbeafe; color: #1d4ed8; }
+.badge-sla   { background: #fef3c7; color: #92400e; }
+.badge-async { background: #f3f4f6; color: #6b7280; }
+
+/* ── Lane colors ─────────────────────────────────────────────── */
+/* Partner Org */
+.lc-partner .sw-lbl { background: #eff6ff; color: #1e40af; border-right-color: #bfdbfe; }
+.lc-partner .sw-cell { background: #f8fbff; }
+.lc-partner .sw-cell.empty { background: #eff6ff; }
+
+/* Equinix PSM */
+.lc-psm .sw-lbl { background: #f8fafc; color: #475569; border-right-color: #e2e8f0; }
+.lc-psm .sw-cell { background: #fafafa; }
+.lc-psm .sw-cell.empty { background: #f8fafc; }
+
+/* Salesforce */
+.lc-sf .sw-lbl { background: #f5f3ff; color: #5b21b6; border-right-color: #ddd6fe; }
+.lc-sf .sw-cell { background: #faf8ff; }
+.lc-sf .sw-cell.empty { background: #f5f3ff; }
+
+/* External Systems */
+.lc-ext .sw-lbl { background: #f0fdf4; color: #166534; border-right-color: #bbf7d0; }
+.lc-ext .sw-cell { background: #f7fef9; }
+.lc-ext .sw-cell.empty { background: #f0fdf4; }
+
+/* Flow connector arrow between active steps */
+.sw-cell.has-next::after {
+  content: '→';
+  float: right;
+  color: #cbd5e1;
+  font-size: .75rem;
+  margin-top: .1rem;
+}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Equinix Partner Channel Program</h1>
+    <p>Site Map &amp; Information Architecture — v2.6 (92 pages)</p>
+  </div>
+  <div class="header-meta">
+    <span>Feb 2026</span>
+    <span>Draft — Design Phase</span>
+  </div>
+</header>
+
+<nav class="view-control" aria-label="View selector">
+  <span class="view-control-label">View</span>
+  <div class="view-btns" role="navigation" aria-label="Select view">
+    <a class="view-btn" href="index.html">Sitemap</a>
+    <a class="view-btn" href="jobs-to-be-done.html">Jobs to Be Done</a>
+    <a class="view-btn" href="service-diagram.html">Service Diagram</a>
+    <a class="view-btn active" href="flows-reference.html" aria-current="page">Flows &amp; Reference</a>
+  </div>
+</nav>
+
+<div class="container">
+<div class="sd-wrap">
+  <div class="sd-hd">
+    <h3>Partner Onboarding — Swimlane Diagram</h3>
+    <p style="font-size:.8125rem;color:var(--wf-muted);margin:.25rem 0 0;">
+      End-to-end view across four actors: Partner Org, Equinix PSM, Salesforce automation, and External Systems.
+      <a href="flows-reference.html#onboarding" style="color:var(--wf-accent);margin-left:.5rem;">← Flows Reference</a>
+    </p>
+  </div>
+
+  <div style="overflow-x:auto;padding:.75rem 1rem 1rem;">
+  <div class="sw-grid" role="table" aria-label="Onboarding swimlane diagram">
+
+    <!-- ── Step header row ───────────────────────────────────── -->
+    <div class="sw-corner" role="columnheader"></div>
+    <div class="sw-hd" role="columnheader"><span class="sw-step-num">Step 1</span>Discovery &amp; Type</div>
+    <div class="sw-hd" role="columnheader"><span class="sw-step-num">Step 2</span>Apply</div>
+    <div class="sw-hd" role="columnheader"><span class="sw-step-num">Step 3</span>PSM Review</div>
+    <div class="sw-hd" role="columnheader"><span class="sw-step-num">Step 4</span>Agreement</div>
+    <div class="sw-hd" role="columnheader"><span class="sw-step-num">Step 5</span>Countersign</div>
+    <div class="sw-hd" role="columnheader"><span class="sw-step-num">Step 6</span>Provisioning</div>
+    <div class="sw-hd" role="columnheader"><span class="sw-step-num">Step 7</span>Active</div>
+
+    <!-- ── Lane 1: Partner Org ───────────────────────────────── -->
+    <div class="sw-lbl lc-partner" role="rowheader">Partner Org</div>
+
+    <div class="sw-cell lc-partner has-next" role="cell">
+      <strong><a href="onboarding-partner-type.html">Select Partner Type</a></strong>
+      Discovers program via equinix.com or AE/partner referral. Selects type: SI, Reseller, ISV, or Referral.
+    </div>
+
+    <div class="sw-cell lc-partner has-next" role="cell">
+      <strong><a href="onboarding-apply-wizard.html">4-Step Apply Wizard</a></strong>
+      D&amp;B company lookup → contact setup → partner type → legal attestation. Search-before-create prevents duplicates.
+    </div>
+
+    <div class="sw-cell lc-partner wait" role="cell">
+      <strong>Awaiting PSM Decision</strong>
+      Receives PCP-CONFIRM confirmation email. Status tracker shows "Under Review." No action required.
+    </div>
+
+    <div class="sw-cell lc-partner has-next" role="cell">
+      <strong><a href="onboarding-agreement.html">Sign Program Agreement</a></strong>
+      Receives DocuSign link via email. Reviews and e-signs partner program agreement.
+    </div>
+
+    <div class="sw-cell lc-partner wait" role="cell">
+      <strong><a href="onboarding-agreement-confirmation.html">Status Tracker</a></strong>
+      Monitors countersign progress. Receives PCP-AGRMNT email once fully executed.
+    </div>
+
+    <div class="sw-cell lc-partner" role="cell">
+      <strong><a href="onboarding-welcome.html">Welcome &amp; Credentials</a></strong>
+      Receives PCP-WELCOME email with portal login link, temporary credentials, and PSM contact details.
+    </div>
+
+    <div class="sw-cell lc-partner" role="cell">
+      <strong><a href="onboarding-wizard.html">6-Step Setup Wizard</a></strong>
+      Profile, team member invites, competency selections, required doc uploads, and checklist completion.
+    </div>
+
+    <!-- ── Lane 2: Equinix PSM ───────────────────────────────── -->
+    <div class="sw-lbl lc-psm" role="rowheader">Equinix PSM</div>
+
+    <div class="sw-cell lc-psm empty" role="cell"></div>
+    <div class="sw-cell lc-psm empty" role="cell"></div>
+
+    <div class="sw-cell lc-psm has-next" role="cell">
+      <strong>Review Application <span class="badge badge-sla">48h SLA</span></strong>
+      Validates revenue fit, segment alignment, existing partner conflicts. Approves or declines in SF.
+    </div>
+
+    <div class="sw-cell lc-psm has-next" role="cell">
+      <strong>Generate Agreement</strong>
+      Selects agreement template in SF, confirms terms and tier classification, initiates DocuSign envelope.
+    </div>
+
+    <div class="sw-cell lc-psm has-next" role="cell">
+      <strong>Countersign <span class="badge badge-sla">1-2 day SLA</span></strong>
+      Reviews executed partner signature, countersigns in DocuSign to fully execute agreement.
+    </div>
+
+    <div class="sw-cell lc-psm has-next" role="cell">
+      <strong>Activate &amp; Assign</strong>
+      Activates portal access, confirms PSM assignment in Partner_Account__c, schedules kickoff call.
+    </div>
+
+    <div class="sw-cell lc-psm" role="cell">
+      <strong>Monitor Checklist</strong>
+      Tracks onboarding wizard completion % in SF dashboard. Follows up on overdue items. Plans first QBR.
+    </div>
+
+    <!-- ── Lane 3: Salesforce ────────────────────────────────── -->
+    <div class="sw-lbl lc-sf" role="rowheader">Salesforce</div>
+
+    <div class="sw-cell lc-sf empty" role="cell"></div>
+
+    <div class="sw-cell lc-sf has-next" role="cell">
+      <strong>Create Application Record <span class="badge badge-auto">auto</span></strong>
+      Provisions Partner_Application__c with D&amp;B-matched company data, contact info, and partner type.
+    </div>
+
+    <div class="sw-cell lc-sf has-next" role="cell">
+      <strong>Route to PSM Queue <span class="badge badge-auto">auto</span></strong>
+      Assigns to regional PSM queue. Triggers Marketing Cloud to send PCP-CONFIRM email to applicant.
+    </div>
+
+    <div class="sw-cell lc-sf has-next" role="cell">
+      <strong>Create Agreement Record <span class="badge badge-auto">auto</span></strong>
+      Provisions Partner_Agreement__c. Sends DocuSign envelope via SF DocuSign package integration.
+    </div>
+
+    <div class="sw-cell lc-sf has-next" role="cell">
+      <strong>Monitor E-Sign <span class="badge badge-auto">auto</span></strong>
+      Polls DocuSign status. Auto-sends reminder emails at 7, 11, and 13 days if unsigned.
+    </div>
+
+    <div class="sw-cell lc-sf has-next" role="cell">
+      <strong>Provision Account <span class="badge badge-auto">auto</span></strong>
+      Creates Partner_Account__c, Onboarding_Checklist__c. Sets status to Active. Triggers PCP-WELCOME.
+    </div>
+
+    <div class="sw-cell lc-sf" role="cell">
+      <strong>Track Progress <span class="badge badge-auto">auto</span></strong>
+      Updates checklist completion %, tier eligibility clock starts, enables deal registration object access.
+    </div>
+
+    <!-- ── Lane 4: External Systems ──────────────────────────── -->
+    <div class="sw-lbl lc-ext" role="rowheader">External Systems</div>
+
+    <div class="sw-cell lc-ext empty" role="cell"></div>
+
+    <div class="sw-cell lc-ext has-next" role="cell">
+      <strong>D&amp;B Optimizer <span class="badge badge-auto">auto</span></strong>
+      Validates company name against D&amp;B database; returns canonical DUNS record for dedup and data quality.
+    </div>
+
+    <div class="sw-cell lc-ext has-next" role="cell">
+      <strong>Marketing Cloud <span class="badge badge-auto">auto</span></strong>
+      Delivers <strong>PCP-CONFIRM</strong> transactional email with application reference ID and expected timeline.
+    </div>
+
+    <div class="sw-cell lc-ext has-next" role="cell">
+      <strong>DocuSign <span class="badge badge-auto">auto</span></strong>
+      Receives envelope from SF, delivers signing link to partner contact, stores executed PDF.
+    </div>
+
+    <div class="sw-cell lc-ext has-next" role="cell">
+      <strong>DocuSign → SF Webhook <span class="badge badge-async">async</span></strong>
+      Webhook fires on partner signature → SF updates Agreement status. Marketing Cloud sends PCP-AGRMNT.
+    </div>
+
+    <div class="sw-cell lc-ext" role="cell">
+      <strong>Marketing Cloud <span class="badge badge-auto">auto</span></strong>
+      Delivers <strong>PCP-WELCOME</strong> email with portal URL, temporary credentials, and PSM contact info.
+    </div>
+
+    <div class="sw-cell lc-ext empty" role="cell"></div>
+
+  </div><!-- /.sw-grid -->
+  </div><!-- /overflow-x:auto -->
+
+  <div style="padding:.5rem 1.25rem .75rem;font-size:.75rem;color:var(--wf-muted);border-top:1px solid var(--gray-border);display:flex;gap:1.5rem;flex-wrap:wrap;">
+    <span><span style="border:1px dashed #94a3b8;padding:.05rem .3rem;border-radius:2px;">Dashed border</span> = partner is waiting, no action required</span>
+    <span><span class="badge badge-auto">auto</span> = Salesforce or Marketing Cloud automation</span>
+    <span><span class="badge badge-sla">SLA</span> = committed response time</span>
+    <span><span class="badge badge-async">async</span> = webhook / background process</span>
+    <span style="margin-left:auto;"><a href="flows-reference.html" style="color:var(--wf-accent);">← All Flows Reference</a></span>
+  </div>
+</div><!-- /.sd-wrap -->
+</div><!-- /.container -->
+
+<script src="wf-nav.js"></script>
+</body>
+</html>
