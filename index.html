@@ -854,7 +854,7 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
     <div style="margin:10px 0 5px 0;padding:4px 10px;background:linear-gradient(90deg,#1a2535,#28394d);color:#fff;font-size:.67rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:6px;border-radius:3px;">
       <span style="background:rgba(255,255,255,.18);padding:1px 5px;border-radius:2px;font-size:.57rem;font-weight:600;letter-spacing:.03em;">⚡ SF NAV</span>
       Home &amp; Portfolio
-      <span style="font-size:.6rem;font-weight:400;opacity:.6;margin-left:auto;">2 pages</span>
+      <span style="font-size:.6rem;font-weight:400;opacity:.6;margin-left:auto;">3 pages</span>
     </div>
 
     <div class="node">
@@ -875,6 +875,21 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
 
     <div class="node">
       <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="node-type t-dashboard" title="Dashboard">D</div>
+        <span class="node-label">Program Dashboard <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">PAM — program-wide health view</span></span>
+        <a href="pam-home-dashboard.html" class="node-mockup-link" title="View Mockup">→</a>
+        <span class="node-chevron">›</span>
+      </div>
+      <div class="node-children">
+        <div class="child"><span class="child-type ct-kpi">KPI</span> Partner-Sourced ARR · Active Partners · Applications Pending · MDF Utilization · At-Risk Tier Downgrade</div>
+        <div class="child"><span class="child-type ct-chart">Chart</span> Revenue trend by quarter, partner tier breakdown, MDF spend vs budget</div>
+        <div class="child"><span class="child-type ct-card">Card</span> At-risk partners widget: tier demotion candidates, expiring agreements, training gaps</div>
+        <div class="child"><span class="child-type ct-note">Note</span> PAM's program-level view; pam-dashboard.html is the Americas operational view with partner attention list</div>
+      </div>
+    </div>
+
+    <div class="node">
+      <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
         <div class="node-type t-list" title="List View">L</div>
         <span class="node-label">Partner Portfolio</span>
         <a href="pam-partner-portfolio.html" class="node-mockup-link" title="View Mockup">→</a>
@@ -884,6 +899,29 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
         <div class="child"><span class="child-type ct-table">Table</span> All managed partners: tier, type, score, revenue YTD, health, tier review date, agreement status</div>
         <div class="child"><span class="child-type ct-filter">Filter</span> Tier · Type · Region · Health · Sort by revenue or score</div>
         <div class="child"><span class="child-type ct-action">Action</span> Export CSV · + Recruit Partner</div>
+      </div>
+    </div>
+
+    <!-- ── Recruitment & Applications ───────────────── -->
+    <div style="margin:10px 0 5px 0;padding:4px 10px;background:linear-gradient(90deg,#1a2535,#28394d);color:#fff;font-size:.67rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:6px;border-radius:3px;">
+      <span style="background:rgba(255,255,255,.18);padding:1px 5px;border-radius:2px;font-size:.57rem;font-weight:600;letter-spacing:.03em;">⚡ SF NAV</span>
+      Recruitment &amp; Applications
+      <span style="font-size:.6rem;font-weight:400;opacity:.6;margin-left:auto;">1 page</span>
+    </div>
+
+    <div class="node">
+      <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="node-type t-list" title="List View">L</div>
+        <span class="node-label">Application Review Queue <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">PAM — new partner applicants</span></span>
+        <a href="pam-application-queue.html" class="node-mockup-link" title="View Mockup">→</a>
+        <span class="node-chevron">›</span>
+      </div>
+      <div class="node-children">
+        <div class="child"><span class="child-type ct-kpi">KPI</span> In Queue · SLA Overdue · Avg Days in Queue · Approved MTD · Rejection Rate</div>
+        <div class="child"><span class="child-type ct-table">Table</span> Applicant rows: company, type, region, days in queue, SLA status, assigned PAM, actions</div>
+        <div class="child"><span class="child-type ct-filter">Filter</span> Status / Region / Partner Type / Assigned PAM</div>
+        <div class="child"><span class="child-type ct-action">Action</span> Approve → triggers onboarding handoff to PSM · Reject with reason · Request More Info</div>
+        <div class="child"><span class="child-type ct-note">Note</span> Entry point: onboarding-apply-wizard.html (Partner Manager Portal) → creates Partner_Application__c in SF</div>
       </div>
     </div>
 
@@ -910,7 +948,7 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
     <div style="margin:10px 0 5px 0;padding:4px 10px;background:linear-gradient(90deg,#1a2535,#28394d);color:#fff;font-size:.67rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:6px;border-radius:3px;">
       <span style="background:rgba(255,255,255,.18);padding:1px 5px;border-radius:2px;font-size:.57rem;font-weight:600;letter-spacing:.03em;">⚡ SF NAV</span>
       Tier Governance
-      <span style="font-size:.6rem;font-weight:400;opacity:.6;margin-left:auto;">1 page</span>
+      <span style="font-size:.6rem;font-weight:400;opacity:.6;margin-left:auto;">3 pages</span>
     </div>
 
     <div class="node">
@@ -926,6 +964,37 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
         <div class="child"><span class="child-type ct-action">Action</span> Approve upgrade / Confirm downgrade / Override / Set remediation plan</div>
         <div class="child"><span class="child-type ct-table">Table</span> Tier movement history (last 4 quarters)</div>
         <div class="child"><span class="child-type ct-card">Card</span> Tier threshold config (read-only; editable in PSM Admin)</div>
+      </div>
+    </div>
+
+    <div class="node">
+      <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="node-type t-dashboard" title="Dashboard">D</div>
+        <span class="node-label">Tier Distribution Dashboard <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">program-wide tier health</span></span>
+        <a href="pam-tier-dashboard.html" class="node-mockup-link" title="View Mockup">→</a>
+        <span class="node-chevron">›</span>
+      </div>
+      <div class="node-children">
+        <div class="child"><span class="child-type ct-kpi">KPI</span> Active Partners · At Risk of Demotion · Upgrade Candidates · Reviews Due Q1 · Total Program ARR</div>
+        <div class="child"><span class="child-type ct-chart">Chart</span> Tier distribution bar (Platinum / Gold / Silver / Bronze) with YoY delta</div>
+        <div class="child"><span class="child-type ct-table">Table</span> At-risk and upgrade candidate list: partner, current tier, score, gap to threshold, recommendation</div>
+        <div class="child"><span class="child-type ct-note">Note</span> Companion to pam-tier-management.html; this is the read-only analytics view, not the action queue</div>
+      </div>
+    </div>
+
+    <div class="node">
+      <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="node-type t-workflow" title="Workflow">W</div>
+        <span class="node-label">Tier Demotion <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">PAM — confirm or defer downgrade</span></span>
+        <a href="pam-tier-demotion.html" class="node-mockup-link" title="View Mockup">→</a>
+        <span class="node-chevron">›</span>
+      </div>
+      <div class="node-children">
+        <div class="child"><span class="child-type ct-alert">Alert</span> Amber banner: partner has failed to meet tier requirements for 2 consecutive review periods</div>
+        <div class="child"><span class="child-type ct-table">Table</span> Requirement scorecard: criteria, threshold, actual, status — shows which requirements are unmet</div>
+        <div class="child"><span class="child-type ct-card">Card</span> Impact summary: commission rate change, MDF budget reduction, deal protection window change</div>
+        <div class="child"><span class="child-type ct-form">Form</span> Action: Confirm Demotion / Grant 90-day Remediation Period / Override (VP approval required)</div>
+        <div class="child"><span class="child-type ct-note">Note</span> Triggered by: Tier_Review__c record where Recommendation = Downgrade; confirmation initiates ppa-amendment flow</div>
       </div>
     </div>
 
@@ -949,6 +1018,45 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
         <div class="child"><span class="child-type ct-action">Action</span> Generate New Agreement (Salesforce Document Builder)</div>
         <div class="child"><span class="child-type ct-action">Action</span> Renew → psm-contract-renewal.html · View PDF · Send for countersignature</div>
         <div class="child"><span class="child-type ct-alert">Alert</span> Escalation briefs use Agentforce DocGen — see psm-escalation-brief.html</div>
+      </div>
+    </div>
+
+    <!-- ── MDF Management ─────────────────────────── -->
+    <div style="margin:10px 0 5px 0;padding:4px 10px;background:linear-gradient(90deg,#1a2535,#28394d);color:#fff;font-size:.67rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:6px;border-radius:3px;">
+      <span style="background:rgba(255,255,255,.18);padding:1px 5px;border-radius:2px;font-size:.57rem;font-weight:600;letter-spacing:.03em;">⚡ SF NAV</span>
+      MDF Management
+      <span style="font-size:.6rem;font-weight:400;opacity:.6;margin-left:auto;">2 pages</span>
+    </div>
+
+    <div class="node">
+      <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="node-type t-list" title="List View">L</div>
+        <span class="node-label">MDF Request Queue <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">PAM — approve, return, or reject partner MDF requests</span></span>
+        <a href="pam-mdf-queue.html" class="node-mockup-link" title="View Mockup">→</a>
+        <span class="node-chevron">›</span>
+      </div>
+      <div class="node-children">
+        <div class="child"><span class="child-type ct-kpi">KPI</span> Pending Approval · SLA Warning (&lt;3 days) · Total Requested · Remaining Program Budget · Approved MTD</div>
+        <div class="child"><span class="child-type ct-table">Table</span> Open requests: partner, activity type, amount, tier, submission date, SLA countdown, action buttons</div>
+        <div class="child"><span class="child-type ct-action">Action</span> Approve / Request Revision / Reject — all with required reason</div>
+        <div class="child"><span class="child-type ct-note">Note</span> SLA: 5 business days from submission. Budget guard: cannot approve if remaining budget &lt; request. Flow: pm-mdf-request.html → here → psm-mdf-management.html (CC)</div>
+        <div class="child"><span class="child-type ct-note">Note</span> Full lifecycle: flow-mdf-lifecycle.html · SF Object: MDF_Request__c</div>
+      </div>
+    </div>
+
+    <div class="node">
+      <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="node-type t-record" title="Record Detail">R</div>
+        <span class="node-label">MDF Claim Review <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">PAM — verify post-activity claim and approve reimbursement</span></span>
+        <a href="pam-mdf-claims.html" class="node-mockup-link" title="View Mockup">→</a>
+        <span class="node-chevron">›</span>
+      </div>
+      <div class="node-children">
+        <div class="child"><span class="child-type ct-kpi">KPI</span> Approved Amount · Amount Claimed · Claim SLA · Proof Docs received</div>
+        <div class="child"><span class="child-type ct-card">Card</span> Left: claim detail — activity type, dates, receipts, attendance/outcome evidence, claim amount vs approved</div>
+        <div class="child"><span class="child-type ct-card">Card</span> Right: claim history for this partner + related claims from same campaign</div>
+        <div class="child"><span class="child-type ct-action">Action</span> Approve (full or partial) / Reject with reason / Request additional proof</div>
+        <div class="child"><span class="child-type ct-note">Note</span> SLA: 10 business days. Max reimbursement 50% of approved budget (matching). Rejection triggers dispute path: pm-mdf-dispute.html</div>
       </div>
     </div>
 
@@ -1116,6 +1224,44 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
         <div class="child"><span class="child-type ct-widget">Widget</span> Partner Selector sidebar: filters + recommended Pacific Rim Solutions</div>
         <div class="child"><span class="child-type ct-action">Action</span> Execute All Assigned Transfers — irreversible action with tooltip warning</div>
         <div class="child"><span class="child-type ct-note">Note</span> Protection window recalculates from transfer date (not original registration date); object: DealHandover__c</div>
+      </div>
+    </div>
+
+    <!-- ── Financials & Reporting ─────────────────── -->
+    <div style="margin:10px 0 5px 0;padding:4px 10px;background:linear-gradient(90deg,#1a2535,#28394d);color:#fff;font-size:.67rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:6px;border-radius:3px;">
+      <span style="background:rgba(255,255,255,.18);padding:1px 5px;border-radius:2px;font-size:.57rem;font-weight:600;letter-spacing:.03em;">⚡ SF NAV</span>
+      Financials &amp; Reporting
+      <span style="font-size:.6rem;font-weight:400;opacity:.6;margin-left:auto;">2 pages</span>
+    </div>
+
+    <div class="node">
+      <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="node-type t-record" title="Record Detail">R</div>
+        <span class="node-label">Partner Financial Detail <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">PAM — commercial overview per partner</span></span>
+        <a href="pam-partner-financial.html" class="node-mockup-link" title="View Mockup">→</a>
+        <span class="node-chevron">›</span>
+      </div>
+      <div class="node-children">
+        <div class="child"><span class="child-type ct-card">Card</span> Left: partner identity, compliance status, agreement reference</div>
+        <div class="child"><span class="child-type ct-card">Card</span> Right: financial overview — revenue YTD, commission accrued, MDF budget vs spend</div>
+        <div class="child"><span class="child-type ct-table">Table</span> MDF Activity History FY2026: campaign, approved, claimed, reimbursed, status</div>
+        <div class="child"><span class="child-type ct-note">Note</span> Read-only PAM view; editable budget fields controlled by Finance. Companion to pam-partner-account.html (Financials tab).</div>
+      </div>
+    </div>
+
+    <div class="node">
+      <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="node-type t-dashboard" title="Dashboard">D</div>
+        <span class="node-label">Program Report <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">PAM — exportable program health report</span></span>
+        <a href="pam-program-report.html" class="node-mockup-link" title="View Mockup">→</a>
+        <span class="node-chevron">›</span>
+      </div>
+      <div class="node-children">
+        <div class="child"><span class="child-type ct-kpi">KPI</span> Partner-Sourced ARR · Total MDF Invested · Program ROI · Avg MDF Utilization · New Partners Q1 · Churn Risk</div>
+        <div class="child"><span class="child-type ct-table">Table</span> Top Partners by Revenue FY2026: rank, tier, revenue, YoY delta, MDF invested, ROI</div>
+        <div class="child"><span class="child-type ct-chart">Chart</span> Revenue by tier, MDF efficiency (spend vs pipeline generated), partner cohort analysis</div>
+        <div class="child"><span class="child-type ct-action">Action</span> Export PDF / Export CSV · Share to VP / exec stakeholder</div>
+        <div class="child"><span class="child-type ct-note">Note</span> Primary QBR prep artifact for PAM; feeds into executive reporting and board-level partner program metrics</div>
       </div>
     </div>
 
@@ -2551,9 +2697,9 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
       <strong><a href="flow-deal-registration.html" style="color:#6d28d9;">Deal Registration Lifecycle →</a></strong>
       <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Rep submits DR → system validates → PSM approves → protection window starts on approval date → pipeline tracked → Deal Desk qualifies commission → close-out. 5 actors, 7 steps.</div>
     </div>
-    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #0369a1;opacity:.65;">
-      <strong style="color:#0369a1;">MDF Request &amp; Claim Flow → <span style="font-weight:400;font-size:.7rem;">(planned)</span></strong>
-      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Partner requests MDF → PAM approves → partner executes activity → claim submitted with proof → reimbursement cycle.</div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #0369a1;">
+      <strong><a href="flow-mdf-lifecycle.html" style="color:#0369a1;">MDF Lifecycle →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Partner requests MDF → PSM reviews eligibility → PAM approves budget → partner executes activity → claim submitted with proof → PAM verifies → Finance reimburses. Dispute branch included. 4 actors, 7 steps.</div>
     </div>
     <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid var(--teal);opacity:.65;">
       <strong style="color:var(--teal);">Partner Onboarding Journey → <span style="font-weight:400;font-size:.7rem;">(see above)</span></strong>
@@ -2569,8 +2715,8 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
     </div>
   </div>
   <div style="padding:.5rem .75rem;background:#f5f3ff;border:1px solid #c4b5fd;border-radius:4px;font-size:.75rem;color:#4c1d95;">
-    <strong>Wired:</strong> Emergency Escalation Brief (flow-escalation-brief.html) · Deal Registration Lifecycle (flow-deal-registration.html) — full cross-actor swimlane diagrams.
-    <strong style="margin-left:.75rem;">Planned:</strong> MDF Request &amp; Claim, Tier Review Cycle, JBP Creation flows — stubs defined, diagrams pending.
+    <strong>Wired:</strong> Emergency Escalation Brief · Deal Registration Lifecycle · MDF Lifecycle — full cross-actor swimlane diagrams.
+    <strong style="margin-left:.75rem;">Planned:</strong> Tier Review Cycle, JBP Creation flows — stubs defined, diagrams pending.
   </div>
 </div>
 

@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MDF Lifecycle Process Flow — Equinix Partner Connect Portal</title>
+  <style>
+    :root {
+      --wf-canvas: #f5f6f8;
+      --wf-ink: #111827;
+      --wf-muted: #6b7280;
+      --gray-border: #d1d5db;
+      --wf-accent: #0070d2;
+      --teal: #0d9488;
+      --orange: #f59e0b;
+      --red: #dc2626;
+      --green: #16a34a;
+      --purple: #6d28d9;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+      background: var(--wf-canvas);
+      color: var(--wf-ink);
+      line-height: 1.5;
+      padding: 0;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    header {
+      margin-bottom: 32px;
+    }
+
+    h1 {
+      font-size: 28px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .meta {
+      font-size: 13px;
+      color: var(--wf-muted);
+      display: flex;
+      gap: 24px;
+    }
+
+    .meta span {
+      display: flex;
+      gap: 8px;
+    }
+
+    .auth-check {
+      display: none;
+    }
+
+    .flow-container {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .flow-diagram {
+      background: white;
+      border: 1px solid var(--gray-border);
+      border-radius: 8px;
+      padding: 24px;
+      overflow-x: auto;
+    }
+
+    .swimlanes {
+      display: flex;
+      flex-direction: column;
+      min-width: 1200px;
+    }
+
+    .swimlane-header {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 0;
+      border-bottom: 2px solid var(--gray-border);
+      margin-bottom: 16px;
+    }
+
+    .swimlane-label {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 16px 12px;
+      border-right: 1px solid var(--gray-border);
+    }
+
+    .swimlane-label.partner { background: rgba(13, 148, 136, 0.08); color: var(--teal); }
+    .swimlane-label.psm { background: rgba(0, 112, 210, 0.08); color: var(--wf-accent); }
+    .swimlane-label.pam { background: rgba(109, 40, 217, 0.08); color: var(--purple); }
+    .swimlane-label.finance { background: rgba(22, 163, 74, 0.08); color: var(--green); }
+
+    .swimlane-content {
+      padding: 8px 12px;
+    }
+
+    .swimlane {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 0;
+      border-bottom: 1px solid var(--gray-border);
+      min-height: 140px;
+    }
+
+    .swimlane:last-child {
+      border-bottom: none;
+    }
+
+    .swimlane-name {
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 12px;
+      border-right: 1px solid var(--gray-border);
+      display: flex;
+      align-items: flex-start;
+      padding-top: 16px;
+    }
+
+    .swimlane-name.partner { background: rgba(13, 148, 136, 0.08); color: var(--teal); }
+    .swimlane-name.psm { background: rgba(0, 112, 210, 0.08); color: var(--wf-accent); }
+    .swimlane-name.pam { background: rgba(109, 40, 217, 0.08); color: var(--purple); }
+    .swimlane-name.finance { background: rgba(22, 163, 74, 0.08); color: var(--green); }
+
+    .swimlane-flow {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .swimlane-flow::-webkit-scrollbar {
+      display: none;
+    }
+
+    .flow-box {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 16px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      text-align: center;
+      white-space: nowrap;
+      flex-shrink: 0;
+      min-height: 48px;
+      border: 1px solid;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .flow-box:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .flow-box.process {
+      background: white;
+      border-color: var(--gray-border);
+      color: var(--wf-ink);
+      min-width: 110px;
+    }
+
+    .flow-box.process.partner { border-left: 4px solid var(--teal); }
+    .flow-box.process.psm { border-left: 4px solid var(--wf-accent); }
+    .flow-box.process.pam { border-left: 4px solid var(--purple); }
+    .flow-box.process.finance { border-left: 4px solid var(--green); }
+
+    .flow-box.decision {
+      background: var(--orange);
+      color: white;
+      border-color: var(--orange);
+      clip-path: polygon(30% 0%, 70% 0%, 100% 50%, 70% 100%, 30% 100%, 0% 50%);
+      padding: 12px 20px;
+      min-width: 130px;
+    }
+
+    .flow-box.external {
+      background: #f3f4f6;
+      border-color: var(--gray-border);
+      color: var(--wf-muted);
+      font-style: italic;
+      min-width: 110px;
+    }
+
+    .flow-arrow {
+      display: inline-flex;
+      align-items: center;
+      color: var(--wf-muted);
+      flex-shrink: 0;
+      font-weight: 600;
+    }
+
+    .flow-arrow::before {
+      content: '→';
+      font-size: 16px;
+    }
+
+    .dispute-branch {
+      margin-top: 32px;
+      padding: 20px;
+      background: rgba(220, 38, 38, 0.04);
+      border-left: 4px solid var(--red);
+      border-radius: 4px;
+    }
+
+    .dispute-branch h3 {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--red);
+    }
+
+    .dispute-flow {
+      font-size: 12px;
+      color: var(--wf-ink);
+      line-height: 1.8;
+    }
+
+    .dispute-flow strong {
+      color: var(--red);
+    }
+
+    .sidebar {
+      background: white;
+      border: 1px solid var(--gray-border);
+      border-radius: 8px;
+      padding: 20px;
+    }
+
+    .sidebar-section {
+      margin-bottom: 24px;
+    }
+
+    .sidebar-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .sidebar h3 {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+      color: var(--wf-muted);
+    }
+
+    .sidebar-list {
+      list-style: none;
+    }
+
+    .sidebar-list li {
+      margin-bottom: 8px;
+      font-size: 12px;
+    }
+
+    .sidebar-list a {
+      color: var(--wf-accent);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: all 0.2s ease;
+    }
+
+    .sidebar-list a:hover {
+      border-bottom-color: var(--wf-accent);
+    }
+
+    .legend {
+      margin-bottom: 24px;
+    }
+
+    .legend-items {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+    }
+
+    .legend-swatch {
+      width: 16px;
+      height: 16px;
+      border-radius: 2px;
+      flex-shrink: 0;
+      border: 1px solid var(--gray-border);
+    }
+
+    .swatch.process { background: white; border-left: 4px solid var(--wf-accent); }
+    .swatch.decision { background: var(--orange); }
+    .swatch.external { background: #f3f4f6; }
+
+    .business-rules {
+      background: #fef3c7;
+      border: 1px solid #fcd34d;
+      border-radius: 4px;
+      padding: 16px;
+      margin-bottom: 32px;
+    }
+
+    .business-rules h3 {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--wf-ink);
+    }
+
+    .business-rules ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .business-rules li {
+      font-size: 12px;
+      margin-bottom: 6px;
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .business-rules li:before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      color: var(--orange);
+      font-weight: bold;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 11px;
+      color: var(--wf-muted);
+      margin-top: 48px;
+      padding-top: 24px;
+      border-top: 1px solid var(--gray-border);
+    }
+
+    .decision-note {
+      display: block;
+      font-size: 10px;
+      font-weight: 400;
+      margin-top: 4px;
+      opacity: 0.9;
+    }
+
+    .step-label {
+      display: inline-block;
+      background: rgba(0, 0, 0, 0.08);
+      padding: 2px 6px;
+      border-radius: 2px;
+      font-size: 10px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    @media (max-width: 1400px) {
+      .flow-container {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        order: -1;
+      }
+    }
+
+    .timeline-note {
+      font-size: 10px;
+      color: var(--wf-muted);
+      margin-top: 12px;
+      padding: 8px;
+      background: rgba(0, 0, 0, 0.02);
+      border-radius: 4px;
+    }
+
+    .sla-badge {
+      display: inline-block;
+      background: var(--orange);
+      color: white;
+      padding: 2px 6px;
+      border-radius: 2px;
+      font-size: 9px;
+      font-weight: 600;
+      margin-left: 4px;
+    }
+  </style>
+</head>
+<body>
+  <script>
+    if (localStorage.getItem('pcp-wf-auth') !== '1') {
+      location.replace('gate.html');
+    }
+  </script>
+
+  <div class="container">
+    <header>
+      <h1>MDF Lifecycle Process Flow</h1>
+      <div class="meta">
+        <span><strong>Portal:</strong> Equinix Partner Connect (PCP)</span>
+        <span><strong>Version:</strong> 1.0</span>
+        <span><strong>Updated:</strong> 2026-02-27</span>
+      </div>
+    </header>
+
+    <div class="business-rules">
+      <h3>Key Business Rules</h3>
+      <ul>
+        <li>MDF available to Gold (limited) and Platinum tier partners only</li>
+        <li>Requests must be submitted BEFORE activity start date — no retroactive approvals</li>
+        <li>Execution window: 90 days from approval date</li>
+        <li>Claims must be submitted within 30 days of activity end</li>
+        <li>Maximum reimbursement: 50% of approved budget (matching requirement)</li>
+        <li>Proof required: receipts + attendance/outcome evidence</li>
+      </ul>
+    </div>
+
+    <div class="flow-container">
+      <div class="flow-diagram">
+        <div class="swimlanes">
+          <!-- Header Row -->
+          <div class="swimlane-header">
+            <div class="swimlane-label partner">Jordan (Partner)</div>
+            <div></div>
+          </div>
+
+          <!-- Step 1: Request -->
+          <div class="swimlane">
+            <div class="swimlane-name partner">Jordan<br>Reeves</div>
+            <div class="swimlane-flow">
+              <div class="flow-box process partner">
+                <div>
+                  <div class="step-label">1</div>
+                  <a href="pm-mdf-request.html" style="color: inherit; text-decoration: none;">Submit MDF Request</a>
+                  <div style="font-size: 10px; margin-top: 4px; opacity: 0.8;">Activity type, budget, dates, objectives</div>
+                </div>
+              </div>
+              <div class="flow-arrow"></div>
+              <div style="display: inline-flex; align-items: center; color: var(--wf-muted);">
+                <span style="font-size: 11px;">Pre-activity</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- PSM Header -->
+          <div class="swimlane-header">
+            <div class="swimlane-label psm">Marcus Chen (PSM)</div>
+            <div></div>
+          </div>
+
+          <!-- Step 2: PSM Review -->
+          <div class="swimlane">
+            <div class="swimlane-name psm">Marcus<br>Chen<br>(PSM)</div>
+            <div class="swimlane-flow">
+              <div class="flow-box process psm">
+                <div>
+                  <div class="step-label">2</div>
+                  <a href="psm-mdf-management.html" style="color: inherit; text-decoration: none;">Review Request</a>
+                  <div style="font-size: 10px; margin-top: 4px; opacity: 0.8;">Tier, co-sell, eligibility check</div>
+                </div>
+              </div>
+              <div class="flow-arrow"></div>
+              <div class="flow-box decision">
+                <div>Eligible?<span class="decision-note">Tier, Budget, Agreement</span></div>
+              </div>
+              <div class="flow-arrow"></div>
+              <div style="display: inline-flex; flex-direction: column; gap: 4px;">
+                <span style="font-size: 10px; color: var(--green); font-weight: 600;">✓ Yes → PAM</span>
+                <span style="font-size: 10px; color: var(--red); font-weight: 600;">✗ No → Return</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- PAM Header -->
+          <div class="swimlane-header">
+            <div class="swimlane-label pam">Alex Rivera (PAM)</div>
+            <div></div>
+          </div>
+
+          <!-- Step 3: PAM Approval -->
+          <div class="swimlane">
+            <div class="swimlane-name pam">Alex<br>Rivera<br>(PAM)</div>
+            <div class="swimlane-flow">
+              <div class="flow-box process pam">
+                <div>
+                  <div class="step-label">3</div>
+                  <a href="pam-mdf-queue.html" style="color: inherit; text-decoration: none;">Approve Budget</a>
+                  <div style="font-size: 10px; margin-top: 4px; opacity: 0.8;">Check program balance<span class="sla-badge">5 days</span></div>
+                </div>
+              </div>
+              <div class="flow-arrow"></div>
+              <div class="flow-box decision">
+                <div>Approve?<span class="decision-note">Budget Check</span></div>
+              </div>
+              <div class="flow-arrow"></div>
+              <div style="display: inline-flex; flex-direction: column; gap: 4px; font-size: 10px;">
+                <span style="color: var(--green); font-weight: 600;">✓ Approved</span>
+                <span style="color: var(--orange); font-weight: 600;">→ Revision</span>
+                <span style="color: var(--red); font-weight: 600;">✗ Rejected</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 4: Execution (External) -->
+          <div class="swimlane">
+            <div class="swimlane-name partner">Jordan<br>(Activity)</div>
+            <div class="swimlane-flow">
+              <div class="flow-box external">
+                <div>
+                  <div class="step-label">4</div>
+                  Execute Activity
+                  <div style="font-size: 10px; margin-top: 4px;">External (90-day window)</div>
+                </div>
+              </div>
+              <div class="flow-arrow"></div>
+              <div style="display: inline-flex; align-items: center; color: var(--wf-muted);">
+                <span style="font-size: 11px;">Webinar, Event,<br>Campaign, etc.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 5: Claim Submission -->
+          <div class="swimlane">
+            <div class="swimlane-name partner">Jordan<br>Reeves</div>
+            <div class="swimlane-flow">
+              <div class="flow-box process partner">
+                <div>
+                  <div class="step-label">5</div>
+                  <a href="pm-mdf-comarketing.html" style="color: inherit; text-decoration: none;">Submit Claim</a>
+                  <div style="font-size: 10px; margin-top: 4px; opacity: 0.8;">Proof docs, outcomes (within 30 days)</div>
+                </div>
+              </div>
+              <div class="flow-arrow"></div>
+              <div style="display: inline-flex; align-items: center; color: var(--wf-muted);">
+                <span style="font-size: 11px;">Receipts,<br>Attendance,<br>Results</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 6: PAM Claim Review -->
+          <div class="swimlane">
+            <div class="swimlane-name pam">Alex<br>Rivera<br>(PAM)</div>
+            <div class="swimlane-flow">
+              <div class="flow-box process pam">
+                <div>
+                  <div class="step-label">6</div>
+                  <a href="pam-mdf-claims.html" style="color: inherit; text-decoration: none;">Review Claim</a>
+                  <div style="font-size: 10px; margin-top: 4px; opacity: 0.8;">Verify proof vs scope<span class="sla-badge">10 days</span></div>
+                </div>
+              </div>
+              <div class="flow-arrow"></div>
+              <div class="flow-box decision">
+                <div>Valid?<span class="decision-note">Scope, Proof</span></div>
+              </div>
+              <div class="flow-arrow"></div>
+              <div style="display: inline-flex; flex-direction: column; gap: 4px;">
+                <span style="font-size: 10px; color: var(--green); font-weight: 600;">✓ Approved</span>
+                <span style="font-size: 10px; color: var(--red); font-weight: 600;">✗ Rejected</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Finance Header -->
+          <div class="swimlane-header">
+            <div class="swimlane-label finance">Finance Team</div>
+            <div></div>
+          </div>
+
+          <!-- Step 7: Reimbursement -->
+          <div class="swimlane">
+            <div class="swimlane-name finance">Finance</div>
+            <div class="swimlane-flow">
+              <div class="flow-box process finance">
+                <div>
+                  <div class="step-label">7</div>
+                  Process Reimbursement
+                  <div style="font-size: 10px; margin-top: 4px; opacity: 0.8;">Payment + record in history</div>
+                </div>
+              </div>
+              <div class="flow-arrow"></div>
+              <div class="flow-box process finance">
+                <div>
+                  <a href="pam-partner-financial.html" style="color: inherit; text-decoration: none;">Update Partner<br>Financial History</a>
+                </div>
+              </div>
+              <div class="flow-arrow"></div>
+              <div style="display: inline-flex; align-items: center; color: var(--wf-muted);">
+                <span style="font-size: 11px;">Complete</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dispute Branch -->
+          <div class="dispute-branch">
+            <h3>Dispute Path (If Claim Rejected at Step 6)</h3>
+            <div class="dispute-flow">
+              <strong>Jordan</strong> submits dispute via <a href="pm-mdf-dispute.html" style="color: var(--red); text-decoration: none; border-bottom: 1px solid var(--red);">pm-mdf-dispute.html</a> →
+              <strong>Marcus (PSM)</strong> reviews and investigates scope mismatch →
+              <strong>Marcus</strong> mediates and may request additional proof or negotiate revised reimbursement →
+              <strong>Resolution</strong> sent back to <strong>Alex (PAM)</strong> for final decision.
+              If escalation needed, reviewed by Equinix Program Director.
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-note">
+          <strong>End-to-End Timeline:</strong> Request → Approval (5 biz days) → Execution (up to 90 days) → Claim (within 30 days of activity) → Review (10 biz days) → Reimbursement (5–10 biz days). Total: ~4–5 months typical.
+        </div>
+      </div>
+
+      <div class="sidebar">
+        <div class="sidebar-section">
+          <h3>Legend</h3>
+          <div class="legend-items">
+            <div class="legend-item">
+              <div class="legend-swatch process"></div>
+              <span>Process Step</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-swatch decision" style="background: var(--orange);"></div>
+              <span>Decision Gate</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-swatch external"></div>
+              <span>External Activity</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sidebar-section">
+          <h3>Screens in This Flow</h3>
+          <ul class="sidebar-list">
+            <li><a href="pm-mdf-request.html">pm-mdf-request.html</a> — Request</li>
+            <li><a href="pm-mdf-comarketing.html">pm-mdf-comarketing.html</a> — Claim</li>
+            <li><a href="pm-mdf-balance.html">pm-mdf-balance.html</a> — Track Balance</li>
+            <li><a href="pm-mdf-dispute.html">pm-mdf-dispute.html</a> — Dispute</li>
+            <li><a href="psm-mdf-management.html">psm-mdf-management.html</a> — PSM Review</li>
+            <li><a href="psm-mdf-analytics.html">psm-mdf-analytics.html</a> — Analytics</li>
+            <li><a href="pam-mdf-queue.html">pam-mdf-queue.html</a> — PAM Queue</li>
+            <li><a href="pam-mdf-claims.html">pam-mdf-claims.html</a> — PAM Claims</li>
+            <li><a href="pam-partner-financial.html">pam-partner-financial.html</a> — Financial History</li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <h3>SLAs</h3>
+          <ul class="sidebar-list">
+            <li><strong>PAM Approval:</strong> 5 biz days</li>
+            <li><strong>Claim Review:</strong> 10 biz days</li>
+            <li><strong>Execution Window:</strong> 90 days</li>
+            <li><strong>Claim Submission:</strong> Within 30 days of activity end</li>
+          </ul>
+        </div>
+
+        <div class="sidebar-section">
+          <h3>Key Actors</h3>
+          <ul class="sidebar-list">
+            <li><strong>Jordan Reeves:</strong> Partner Manager (CloudBridge)</li>
+            <li><strong>Marcus Chen:</strong> PSM at Equinix</li>
+            <li><strong>Alex Rivera:</strong> PAM at Equinix</li>
+            <li><strong>Finance:</strong> Reimbursement processing</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      PCP Wireframe · Internal · MDF Lifecycle Process Flow v1.0 · Equinix Partner Connect Portal
+    </footer>
+  </div>
+</body>
+</html>
