@@ -340,6 +340,22 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
 
     <div class="node">
       <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="node-type t-record" title="Record Detail">R</div>
+        <span class="node-label">Deal Dispute <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">Marcus — PSM mediating a partner deal conflict</span></span>
+        <a href="psm-deal-dispute.html" class="node-mockup-link" title="View Mockup">→</a>
+        <span class="node-chevron">›</span>
+      </div>
+      <div class="node-children">
+        <div class="child"><span class="child-type ct-card">Card</span> Dispute header: case ID, disputing partner (Vertex Networks), deal at issue, TCV, claim type</div>
+        <div class="child"><span class="child-type ct-card">Card</span> Evidence panel: competing registrations, protection window timeline, activity log from both partners</div>
+        <div class="child"><span class="child-type ct-form">Form</span> PSM ruling: Uphold / Split / Reject — with required rationale field</div>
+        <div class="child"><span class="child-type ct-widget">Widget</span> Message thread: PSM ↔ both partner contacts + Deal Desk CC</div>
+        <div class="child"><span class="child-type ct-note">Note</span> Escalation path: unresolved disputes route to PAM (Alex) via pam-application-queue; SF Object: Deal_Dispute__c</div>
+      </div>
+    </div>
+
+    <div class="node">
+      <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
         <div class="node-type t-list" title="List View">L</div>
         <span class="node-label">Co-Sell Queue <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">Marcus — portfolio view across all partners</span></span>
         <a href="psm-deal-cosell-queue.html" class="node-mockup-link" title="View Mockup">→</a>
@@ -351,6 +367,21 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
         <div class="child"><span class="child-type ct-table">Table</span> Co-sell rows: partner, customer, TCV, stage, last activity, owner, actions</div>
         <div class="child"><span class="child-type ct-note">Note</span> Amber banner when new requests exist — SLA 48h acknowledgment required</div>
         <div class="child"><span class="child-type ct-note">Note</span> Platinum-only eligibility; SF Object: CoSell_Opportunity__c · Detail: psm-deal-cosell.html</div>
+      </div>
+    </div>
+
+    <div class="node">
+      <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="node-type t-record" title="Record Detail">R</div>
+        <span class="node-label">Co-Sell Collaboration <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">single co-sell record detail</span></span>
+        <a href="psm-deal-cosell.html" class="node-mockup-link" title="View Mockup">→</a>
+        <span class="node-chevron">›</span>
+      </div>
+      <div class="node-children">
+        <div class="child"><span class="child-type ct-card">Card</span> Co-sell header: partner, customer, TCV, stage, PSM + partner rep owners</div>
+        <div class="child"><span class="child-type ct-tab">Tab</span> Overview · Activity · Documents · Related Deals</div>
+        <div class="child"><span class="child-type ct-action">Action</span> Advance stage / Log activity / Request Equinix support / Close as Won/Lost</div>
+        <div class="child"><span class="child-type ct-note">Note</span> Detail record from psm-deal-cosell-queue.html; SF Object: CoSell_Opportunity__c</div>
       </div>
     </div>
 
@@ -394,7 +425,7 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
     <div style="margin:10px 0 5px 0;padding:4px 10px;background:linear-gradient(90deg,#1a2535,#28394d);color:#fff;font-size:.67rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:6px;border-radius:3px;">
       <span style="background:rgba(255,255,255,.18);padding:1px 5px;border-radius:2px;font-size:.57rem;font-weight:600;letter-spacing:.03em;">⚡ SF NAV</span>
       Partners
-      <span style="font-size:.6rem;font-weight:400;opacity:.6;margin-left:auto;">6 pages</span>
+      <span style="font-size:.6rem;font-weight:400;opacity:.6;margin-left:auto;">9 pages</span>
     </div>
 
     <div class="node">
@@ -511,6 +542,51 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
       </div>
     </div>
 
+    <div class="node">
+      <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="node-type t-record" title="Record Detail">R</div>
+        <span class="node-label">Partner Application Review <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">PSM — vet inbound application before setup</span></span>
+        <a href="psm-partner-application.html" class="node-mockup-link" title="View Mockup">→</a>
+        <span class="node-chevron">›</span>
+      </div>
+      <div class="node-children">
+        <div class="child"><span class="child-type ct-card">Card</span> Applicant summary: company, contact, partner type, region, referral source</div>
+        <div class="child"><span class="child-type ct-card">Card</span> PSM qualification checklist: territory fit, product alignment, conflict check</div>
+        <div class="child"><span class="child-type ct-action">Action</span> Approve → triggers psm-partner-setup.html · Reject with reason · Request more info</div>
+        <div class="child"><span class="child-type ct-note">Note</span> Entry: pam-application-queue.html routes approved apps to PSM; SF Object: Partner_Application__c</div>
+      </div>
+    </div>
+
+    <div class="node">
+      <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="node-type t-form" title="Form">F</div>
+        <span class="node-label">New Partner Configuration <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">PSM — provision portal access and set initial state</span></span>
+        <a href="psm-partner-setup.html" class="node-mockup-link" title="View Mockup">→</a>
+        <span class="node-chevron">›</span>
+      </div>
+      <div class="node-children">
+        <div class="child"><span class="child-type ct-form">Form</span> Partner account fields: tier assignment, territory, PSM owner, MDF initial allocation</div>
+        <div class="child"><span class="child-type ct-form">Form</span> Portal provisioning: create PM and Rep user accounts, assign permission sets</div>
+        <div class="child"><span class="child-type ct-form">Form</span> Initial onboarding plan selection: standard 30-60-90 template or custom</div>
+        <div class="child"><span class="child-type ct-action">Action</span> Provision & Send Welcome → triggers day-0 email sequence</div>
+      </div>
+    </div>
+
+    <div class="node">
+      <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="node-type t-list" title="List View">L</div>
+        <span class="node-label">Partner Communications <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">Marcus — outreach log and message center</span></span>
+        <a href="psm-partner-comms.html" class="node-mockup-link" title="View Mockup">→</a>
+        <span class="node-chevron">›</span>
+      </div>
+      <div class="node-children">
+        <div class="child"><span class="child-type ct-table">Table</span> Communication history: date, type (email/call/portal), subject, partner contact, outcome</div>
+        <div class="child"><span class="child-type ct-action">Action</span> Log call / Compose email / Schedule follow-up</div>
+        <div class="child"><span class="child-type ct-filter">Filter</span> Partner / Date range / Type / Initiated by</div>
+        <div class="child"><span class="child-type ct-note">Note</span> Aggregates Activity__c records tagged to Account; links to SF Activity timeline on account record</div>
+      </div>
+    </div>
+
     <!-- ── SF NAV: Programs (MDF · JBP · Reports) ──── -->
     <div style="margin:10px 0 5px 0;padding:4px 10px;background:linear-gradient(90deg,#1a2535,#28394d);color:#fff;font-size:.67rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:6px;border-radius:3px;">
       <span style="background:rgba(255,255,255,.18);padding:1px 5px;border-radius:2px;font-size:.57rem;font-weight:600;letter-spacing:.03em;">⚡ SF NAV</span>
@@ -599,6 +675,22 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
         <div class="child"><span class="child-type ct-card">Card</span> Training & certification progress</div>
         <div class="child"><span class="child-type ct-table">Table</span> Action items & owners</div>
         <div class="child"><span class="child-type ct-field">Field</span> Next QBR date</div>
+      </div>
+    </div>
+
+    <div class="node">
+      <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="node-type t-form" title="Form">F</div>
+        <span class="node-label">QBR Prep <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">Marcus — data-pull and talking points before the call</span></span>
+        <a href="psm-qbr-prep.html" class="node-mockup-link" title="View Mockup">→</a>
+        <span class="node-chevron">›</span>
+      </div>
+      <div class="node-children">
+        <div class="child"><span class="child-type ct-kpi">KPI</span> Revenue vs target, deal reg activity, training completion, MDF utilization — all pulled for QBR period</div>
+        <div class="child"><span class="child-type ct-card">Card</span> Auto-generated talking points: 3 wins, 2 gaps, 1 ask — editable before the call</div>
+        <div class="child"><span class="child-type ct-card">Card</span> Action items carried forward from last QBR</div>
+        <div class="child"><span class="child-type ct-action">Action</span> Generate agenda → pre-populates psm-qbr-minutes.html with context</div>
+        <div class="child"><span class="child-type ct-note">Note</span> Companion to pm-qbr-view.html (partner-facing) and psm-qbr-minutes.html (minutes record); SF Object: QBR__c</div>
       </div>
     </div>
 
@@ -1378,6 +1470,21 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
         <div class="node">
           <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
             <div class="node-type t-dashboard" title="Dashboard">D</div>
+            <span class="node-label">Executive Summary <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">Jordan — partner exec view: pipeline, revenue, program health</span></span>
+            <a href="pm-exec-dashboard.html" class="node-mockup-link" title="View Mockup">→</a>
+            <span class="node-chevron">›</span>
+          </div>
+          <div class="node-children">
+            <div class="child"><span class="child-type ct-kpi">KPI</span> Partner-sourced revenue, active pipeline, certification progress, MDF utilization</div>
+            <div class="child"><span class="child-type ct-chart">Chart</span> Quarterly revenue trend, tier trajectory, deal win rate</div>
+            <div class="child"><span class="child-type ct-card">Card</span> Top reps by pipeline, training completion summary, open risks</div>
+            <div class="child"><span class="child-type ct-note">Note</span> Designed for CloudBridge VP or exec sponsor — aggregated view, no deal-level detail; read-only</div>
+          </div>
+        </div>
+
+        <div class="node">
+          <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+            <div class="node-type t-dashboard" title="Dashboard">D</div>
             <span class="node-label">Org Health Dashboard</span>
             <a href="pm-org-health.html" class="node-mockup-link" title="View Mockup">→</a>
             <span class="node-chevron">›</span>
@@ -1598,6 +1705,36 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
 
         <div class="node">
           <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+            <div class="node-type t-dashboard" title="Dashboard">D</div>
+            <span class="node-label">MDF Balance <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">Jordan — track allocated, spent, and available MDF</span></span>
+            <a href="pm-mdf-balance.html" class="node-mockup-link" title="View Mockup">→</a>
+            <span class="node-chevron">›</span>
+          </div>
+          <div class="node-children">
+            <div class="child"><span class="child-type ct-kpi">KPI</span> Total allocated / spent YTD / remaining / expiry date</div>
+            <div class="child"><span class="child-type ct-table">Table</span> Activity history: campaign, request date, approved amount, claimed, reimbursed, status</div>
+            <div class="child"><span class="child-type ct-chart">Chart</span> Monthly spend trend vs allocation; category breakdown</div>
+            <div class="child"><span class="child-type ct-note">Note</span> Read-only view of MDF_Request__c records for this partner; companion to pam-partner-financial.html (PAM view)</div>
+          </div>
+        </div>
+
+        <div class="node">
+          <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+            <div class="node-type t-form" title="Form">F</div>
+            <span class="node-label">MDF Claim Dispute <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">Jordan — contest a rejected claim</span></span>
+            <a href="pm-mdf-dispute.html" class="node-mockup-link" title="View Mockup">→</a>
+            <span class="node-chevron">›</span>
+          </div>
+          <div class="node-children">
+            <div class="child"><span class="child-type ct-card">Card</span> Rejected claim summary: amount, activity, rejection reason from PAM</div>
+            <div class="child"><span class="child-type ct-form">Form</span> Dispute reason + supporting evidence upload</div>
+            <div class="child"><span class="child-type ct-widget">Widget</span> Message thread with Marcus (PSM) who mediates</div>
+            <div class="child"><span class="child-type ct-note">Note</span> Triggered from pam-mdf-claims.html rejection → 30-day dispute window; routes to PSM for mediation first, then PAM for final decision</div>
+          </div>
+        </div>
+
+        <div class="node">
+          <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
             <div class="node-type t-form" title="Form">F</div>
             <span class="node-label">Proof of Performance Submission</span>
             <a href="pm-pop-submission.html" class="node-mockup-link" title="View Mockup">→</a>
@@ -1689,7 +1826,7 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
     <div class="section">
       <div class="section-title" onclick="toggleSection(this)" tabindex="0" role="button" aria-expanded="true">
         <span class="chevron open">›</span> Administration &amp; Agreements
-        <span class="count">5</span>
+        <span class="count">7</span>
       </div>
       <div class="section-body">
 
@@ -1708,6 +1845,22 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
             <div class="child"><span class="child-type ct-action">Action</span> Request Amendment → notifies PSM, creates task in psm-ppa-amendment.html</div>
             <div class="child"><span class="child-type ct-card">Card</span> Renewal Status sidebar: 322 days remaining, auto-renewal enabled, renewal reminder CTA</div>
             <div class="child"><span class="child-type ct-note">Note</span> Partner read-only — PSM owns all edits; amendment initiation routes to Marcus Chen</div>
+          </div>
+        </div>
+
+        <div class="node">
+          <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+            <div class="node-type t-workflow" title="Workflow">W</div>
+            <span class="node-label">Contract Renewal <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">Jordan — review proposed terms and confirm</span></span>
+            <a href="pm-contract-renewal.html" class="node-mockup-link" title="View Mockup">→</a>
+            <span class="node-chevron">›</span>
+          </div>
+          <div class="node-children">
+            <div class="child"><span class="child-type ct-alert">Alert</span> Amber banner: PPA-2025-CB-0047 expires in 58 days — review required</div>
+            <div class="child"><span class="child-type ct-table">Table</span> Current vs proposed terms: 6 provisions, deal protection window highlighted (90 → 120 days)</div>
+            <div class="child"><span class="child-type ct-form">Form</span> Jordan's decision: Accept proposed terms / I have questions — with optional notes field</div>
+            <div class="child"><span class="child-type ct-card">Card</span> What happens next: 5-step process from confirmation to DocuSign to activation</div>
+            <div class="child"><span class="child-type ct-note">Note</span> Triggered by Renewal_Alert__c workflow (90 days before expiry); companion PSM screen: psm-contract-renewal.html</div>
           </div>
         </div>
 
@@ -1779,6 +1932,22 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
             <div class="child"><span class="child-type ct-action">Action</span> Edit Permissions</div>
             <div class="child"><span class="child-type ct-tab">Tab</span> Roles Overview | Permission Matrix | Audit Log</div>
             <div class="child"><span class="child-type ct-field">Field</span> SF Permission Set mapping per role</div>
+          </div>
+        </div>
+
+        <div class="node">
+          <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+            <div class="node-type t-form" title="Form">F</div>
+            <span class="node-label">Tier Appeal <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">Jordan — contest a tier downgrade decision</span></span>
+            <a href="pm-tier-appeal.html" class="node-mockup-link" title="View Mockup">→</a>
+            <span class="node-chevron">›</span>
+          </div>
+          <div class="node-children">
+            <div class="child"><span class="child-type ct-alert">Alert</span> Amber banner: 30-day appeal window open — downgrade effective unless appealed</div>
+            <div class="child"><span class="child-type ct-card">Card</span> Downgrade details: from/to tier, requirements missed, effective date</div>
+            <div class="child"><span class="child-type ct-form">Form</span> Appeal grounds: dropdown (extenuating circumstances / data error / remediation plan already in progress) + explanation</div>
+            <div class="child"><span class="child-type ct-form">Form</span> Supporting evidence upload: performance data, renewal commitments, activity logs</div>
+            <div class="child"><span class="child-type ct-note">Note</span> Appeal routes to Marcus (PSM) for initial review, then Alex (PAM) for final decision; flow: flow-tier-review.html</div>
           </div>
         </div>
 
@@ -2705,9 +2874,9 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
       <strong style="color:var(--teal);">Partner Onboarding Journey → <span style="font-weight:400;font-size:.7rem;">(see above)</span></strong>
       <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Pre-auth → application → agreement → provisioning → Day-0 orientation → active selling. Fully wired above.</div>
     </div>
-    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #1a7a3c;opacity:.65;">
-      <strong style="color:#1a7a3c;">Tier Review Cycle → <span style="font-weight:400;font-size:.7rem;">(planned)</span></strong>
-      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">Annual tier evaluation: performance data pull → PSM review → provisional notice → appeal window → final tier change notification.</div>
+    <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #1a7a3c;">
+      <strong><a href="flow-tier-review.html" style="color:#1a7a3c;">Tier Review Cycle →</a></strong>
+      <div style="font-size:.75rem;color:var(--wf-muted);margin-top:.25rem;">System triggers annual eval → PSM reviews health scorecard → PAM authorizes tier change → 3 outcome paths (upgrade / maintain / downgrade) → partner notified → optional 30-day appeal → tier change on renewal date. 4 actors, 8 steps.</div>
     </div>
     <div style="padding:.75rem;border:1px solid var(--gray-border);border-radius:4px;border-left:3px solid #7c3aed;opacity:.65;">
       <strong style="color:#7c3aed;">Joint Business Plan Creation → <span style="font-weight:400;font-size:.7rem;">(planned)</span></strong>
@@ -2715,8 +2884,8 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
     </div>
   </div>
   <div style="padding:.5rem .75rem;background:#f5f3ff;border:1px solid #c4b5fd;border-radius:4px;font-size:.75rem;color:#4c1d95;">
-    <strong>Wired:</strong> Emergency Escalation Brief · Deal Registration Lifecycle · MDF Lifecycle — full cross-actor swimlane diagrams.
-    <strong style="margin-left:.75rem;">Planned:</strong> Tier Review Cycle, JBP Creation flows — stubs defined, diagrams pending.
+    <strong>Wired:</strong> Emergency Escalation Brief · Deal Registration Lifecycle · MDF Lifecycle · Tier Review Cycle — full cross-actor swimlane diagrams.
+    <strong style="margin-left:.75rem;">Planned:</strong> JBP Creation flow — stub defined, diagram pending.
   </div>
 </div>
 

@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html class="wireframe" lang="en">
+<head>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contract Renewal · PM · Equinix PCP</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Salesforce Sans, sans-serif;
+      background-color: #f5f6f8;
+      color: #111827;
+    }
+    .container { max-width: 1400px; margin: 0 auto; padding: 24px; }
+    .page-title { font-size: 20px; font-weight: 700; margin-bottom: 24px; color: #111827; }
+
+    /* ── Renewal Alert Banner ───────────────────────────────────── */
+    .renewal-alert {
+      background: #fef3c7;
+      border-left: 4px solid #f59e0b;
+      border-radius: 6px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .renewal-alert-icon {
+      flex-shrink: 0;
+      width: 24px;
+      height: 24px;
+      background: #f59e0b;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 14px;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+    .renewal-alert-content { flex: 1; }
+    .renewal-alert-title { font-size: 14px; font-weight: 700; color: #d97706; margin-bottom: 4px; }
+    .renewal-alert-text { font-size: 13px; color: #92400e; line-height: 1.5; }
+
+    /* ── Three-Column Layout ───────────────────────────────────── */
+    .layout-wrapper { display: grid; grid-template-columns: 280px 1fr 320px; gap: 24px; }
+
+    /* ── Left Navigation ───────────────────────────────────── */
+    .sidebar-left {
+      background: white;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+      height: fit-content;
+      position: sticky;
+      top: 24px;
+    }
+    .sidebar-left-section { border-bottom: 1px solid #d1d5db; }
+    .sidebar-left-section:last-child { border-bottom: none; }
+    .sidebar-left-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #6b7280;
+      padding: 12px 16px;
+      background: #f5f6f8;
+    }
+    .sidebar-left-item {
+      padding: 12px 16px;
+      font-size: 13px;
+      color: #111827;
+      text-decoration: none;
+      display: block;
+      border-left: 3px solid transparent;
+      transition: all 0.2s;
+    }
+    .sidebar-left-item:hover { background: #f9fafb; }
+    .sidebar-left-item.active {
+      background: #e6f3ff;
+      border-left-color: #0070d2;
+      color: #0070d2;
+      font-weight: 600;
+    }
+
+    /* ── Main Content ───────────────────────────────────── */
+    .main-content { }
+
+    .card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+    .card-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid #d1d5db;
+      background: #f9fafb;
+    }
+    .card-header-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #111827;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .card-body { padding: 24px; }
+    .card-footer { padding: 20px 24px; background: #f9fafb; border-top: 1px solid #d1d5db; }
+
+    /* ── Agreement Summary ───────────────────────────────────── */
+    .agreement-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+    .agreement-field {
+      border-bottom: 1px solid #d1d5db;
+      padding-bottom: 16px;
+    }
+    .agreement-field:nth-child(odd):nth-last-child(-n+2),
+    .agreement-field:nth-child(even):nth-last-child(-n+2) {
+      border-bottom: none;
+    }
+    .agreement-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #6b7280;
+      margin-bottom: 6px;
+    }
+    .agreement-value {
+      font-size: 14px;
+      font-weight: 600;
+      color: #111827;
+    }
+    .agreement-meta { font-size: 12px; color: #6b7280; margin-top: 4px; }
+
+    /* ── Status Badge ───────────────────────────────────── */
+    .status-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .status-pending {
+      background: #fef3c7;
+      color: #d97706;
+    }
+    .status-accepted {
+      background: #d1fae5;
+      color: #065f46;
+    }
+    .status-review {
+      background: #dbeafe;
+      color: #0c4a6e;
+    }
+
+    /* ── Proposed Terms Section ───────────────────────────────────── */
+    .terms-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .term-item {
+      padding: 16px;
+      background: #f9fafb;
+      border-radius: 6px;
+      border: 1px solid #d1d5db;
+    }
+    .term-item.highlighted {
+      background: #fef3c7;
+      border: 1px solid #f59e0b;
+    }
+    .term-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #6b7280;
+      margin-bottom: 8px;
+    }
+    .term-current {
+      font-size: 13px;
+      color: #6b7280;
+      margin-bottom: 8px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #d1d5db;
+    }
+    .term-current-label { font-size: 10px; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; }
+    .term-current-value { font-size: 13px; font-weight: 600; color: #111827; margin-top: 4px; }
+    .term-proposed {
+      font-size: 13px;
+      font-weight: 600;
+      color: #0070d2;
+    }
+    .term-proposed-label { font-size: 10px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+    .term-change-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      background: #dcfce7;
+      color: #166534;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 700;
+      margin-left: 8px;
+    }
+
+    /* ── Decision Section ───────────────────────────────────── */
+    .decision-section {
+      margin-bottom: 24px;
+    }
+    .decision-section-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 16px;
+    }
+    .radio-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .radio-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .radio-item:hover { background: #f9fafb; }
+    .radio-item input[type="radio"] {
+      margin-top: 4px;
+      cursor: pointer;
+    }
+    .radio-item-label {
+      flex: 1;
+      cursor: pointer;
+    }
+    .radio-item-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #111827;
+      display: block;
+      margin-bottom: 2px;
+    }
+    .radio-item-desc {
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    .textarea-group {
+      margin-top: 16px;
+      display: none;
+    }
+    .textarea-group.active { display: block; }
+    .textarea-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 8px;
+    }
+    .textarea-group textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #d1d5db;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 13px;
+      resize: vertical;
+      min-height: 100px;
+    }
+    .textarea-group textarea:focus {
+      outline: none;
+      border-color: #0070d2;
+      box-shadow: 0 0 0 3px rgba(0, 112, 210, 0.1);
+    }
+
+    /* ── Next Steps ───────────────────────────────────── */
+    .next-steps-list {
+      list-style: none;
+      padding: 0;
+    }
+    .next-steps-item {
+      display: flex;
+      gap: 16px;
+      padding: 12px 0;
+      border-bottom: 1px solid #d1d5db;
+    }
+    .next-steps-item:last-child { border-bottom: none; }
+    .next-steps-number {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      background: #e6f3ff;
+      color: #0070d2;
+      border-radius: 50%;
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .next-steps-content {
+      flex: 1;
+    }
+    .next-steps-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 2px;
+    }
+    .next-steps-desc {
+      font-size: 12px;
+      color: #6b7280;
+    }
+
+    /* ── Right Sidebar ───────────────────────────────────── */
+    .sidebar-right {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .sidebar-card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+      padding: 16px;
+      height: fit-content;
+      position: sticky;
+      top: 24px;
+    }
+    .sidebar-card-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #6b7280;
+      margin-bottom: 12px;
+    }
+
+    /* ── Countdown Card ───────────────────────────────────── */
+    .countdown {
+      text-align: center;
+      padding: 8px 0;
+      margin-bottom: 12px;
+    }
+    .countdown-days {
+      font-size: 32px;
+      font-weight: 700;
+      color: #f59e0b;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .countdown-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #6b7280;
+      margin-bottom: 8px;
+    }
+    .countdown-date {
+      font-size: 13px;
+      font-weight: 600;
+      color: #111827;
+      margin-bottom: 12px;
+    }
+    .countdown-warning {
+      font-size: 11px;
+      color: #dc2626;
+      line-height: 1.4;
+    }
+
+    /* ── Benefits Summary ───────────────────────────────────── */
+    .benefits-list {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .benefits-item {
+      display: flex;
+      gap: 8px;
+      font-size: 12px;
+      color: #111827;
+    }
+    .benefits-item-key {
+      color: #6b7280;
+      font-weight: 600;
+      min-width: 80px;
+    }
+    .benefits-item-value {
+      color: #111827;
+      font-weight: 600;
+    }
+
+    /* ── PSM Card ───────────────────────────────────── */
+    .psm-card {
+      background: #e6f3ff;
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .psm-photo {
+      width: 48px;
+      height: 48px;
+      background: #d1e4f7;
+      border-radius: 50%;
+      margin-bottom: 12px;
+    }
+    .psm-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 4px;
+    }
+    .psm-email {
+      font-size: 12px;
+      color: #0070d2;
+      margin-bottom: 12px;
+      word-break: break-all;
+    }
+    .psm-call-link {
+      display: inline-block;
+      padding: 6px 12px;
+      background: #0070d2;
+      color: white;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .psm-call-link:hover { background: #0059a8; }
+
+    /* ── Archive Link ───────────────────────────────────── */
+    .archive-section {
+      border-top: 1px solid #d1d5db;
+      padding-top: 12px;
+      margin-top: 12px;
+    }
+    .archive-link {
+      font-size: 12px;
+      color: #0070d2;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .archive-link:hover { text-decoration: underline; }
+
+    /* ── Buttons ───────────────────────────────────── */
+    .btn {
+      padding: 10px 20px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: #0070d2;
+      color: white;
+    }
+    .btn-primary:hover { background: #0059a8; }
+    .btn-primary:disabled {
+      background: #d1d5db;
+      color: #6b7280;
+      cursor: not-allowed;
+    }
+    .btn-secondary {
+      background: #f5f6f8;
+      color: #111827;
+      border: 1px solid #d1d5db;
+    }
+    .btn-secondary:hover { background: #eef1f6; }
+
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    /* ── Footer ───────────────────────────────────── */
+    .wf-footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 12px;
+      color: #6b7280;
+      border-top: 1px solid #d1d5db;
+      margin-top: 40px;
+    }
+
+    /* ── Responsive ───────────────────────────────────── */
+    @media (max-width: 1200px) {
+      .layout-wrapper { grid-template-columns: 1fr; }
+      .sidebar-left, .sidebar-right { display: none; }
+      .terms-grid { grid-template-columns: repeat(2, 1fr); }
+      .agreement-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .container { padding: 16px; }
+      .terms-grid { grid-template-columns: 1fr; }
+      .button-group { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+<div class="page-context-bar">
+  <div style="max-width:1400px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;">
+    <nav class="wf-breadcrumb" aria-label="Breadcrumb" style="margin-bottom:0;">
+      <a href="pm-home-dashboard.html">Home</a>
+      <span class="wf-breadcrumb-sep">›</span>
+      <a href="pm-contracts.html">Agreements</a>
+      <span class="wf-breadcrumb-sep">›</span>
+      <span class="wf-breadcrumb-current">Contract Renewal</span>
+    </nav>
+    <span class="persona-badge persona-badge--pm">PM</span>
+  </div>
+</div>
+
+  <header class="wf-header">
+    <div class="wf-header-logo"><svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix"><path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/></svg></div>
+    <div class="wf-header-title">Partner Central</div>
+    <nav class="wf-header-nav">
+      <a href="pm-home-dashboard.html">Dashboard</a>
+      <a href="pm-team-management.html">Team</a>
+      <a href="pm-deals-revenue.html">Deals</a>
+      <a href="pm-team-training.html">Training</a>
+      <a href="pm-resources.html">Resources</a>
+    </nav>
+    <div class="wf-header-util">
+      <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="9" r="2.5"/><path d="M9 1v2m0 12v2m-5.66-2.34l1.42-1.42m9.48-9.48l1.42-1.42M1 9h2m12 0h2m-2.34 5.66l-1.42-1.42M4.76 4.76L3.34 3.34"/></svg>
+      <svg class="wf-icon-sm" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="5" r="3"/><path d="M2 16v-1a5 5 0 0110 0v1"/></svg>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="renewal-alert">
+      <div class="renewal-alert-icon">!</div>
+      <div class="renewal-alert-content">
+        <div class="renewal-alert-title">Your Partnership Agreement expires in 58 days</div>
+        <div class="renewal-alert-text">Review the proposed terms and confirm acceptance or flag questions for your PSM before April 25, 2026.</div>
+      </div>
+    </div>
+
+    <div class="layout-wrapper">
+      <!-- ── LEFT SIDEBAR NAV ──────────────────────────────────── -->
+      <div class="sidebar-left">
+        <div class="sidebar-left-section">
+          <div class="sidebar-left-title">Company &amp; Program</div>
+          <a href="pm-profile.html" class="sidebar-left-item">Profile</a>
+          <a href="pm-org-health.html" class="sidebar-left-item">Org Health</a>
+          <a href="pm-contracts.html" class="sidebar-left-item">Agreements</a>
+          <a href="pm-contract-renewal.html" class="sidebar-left-item active">Renewal</a>
+        </div>
+        <div class="sidebar-left-section">
+          <div class="sidebar-left-title">Program Management</div>
+          <a href="pm-mdf-request.html" class="sidebar-left-item">MDF Requests</a>
+          <a href="pm-deal-registration.html" class="sidebar-left-item">Deal Registration</a>
+          <a href="pm-opportunities.html" class="sidebar-left-item">Opportunities</a>
+        </div>
+        <div class="sidebar-left-section">
+          <div class="sidebar-left-title">Training &amp; Resources</div>
+          <a href="pm-cert-tracker.html" class="sidebar-left-item">Certifications</a>
+          <a href="pm-playbooks.html" class="sidebar-left-item">Playbooks</a>
+          <a href="pm-support-center.html" class="sidebar-left-item">Support</a>
+        </div>
+      </div>
+
+      <!-- ── MAIN CONTENT ──────────────────────────────────── -->
+      <div class="main-content">
+        <div class="page-title">Contract Renewal — PPA-2025-CB-0047</div>
+
+        <!-- ── AGREEMENT SUMMARY ──────────────────────────────────── -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-title">Agreement Summary</div>
+          </div>
+          <div class="card-body">
+            <div class="agreement-grid">
+              <div class="agreement-field">
+                <div class="agreement-label">Agreement ID</div>
+                <div class="agreement-value">PPA-2025-CB-0047</div>
+              </div>
+              <div class="agreement-field">
+                <div class="agreement-label">Partner Tier</div>
+                <div class="agreement-value">Gold</div>
+              </div>
+              <div class="agreement-field">
+                <div class="agreement-label">Current Effective Dates</div>
+                <div class="agreement-value">April 25, 2025 – April 25, 2026</div>
+              </div>
+              <div class="agreement-field">
+                <div class="agreement-label">Renewal Period</div>
+                <div class="agreement-value">1 Year (to April 25, 2027)</div>
+              </div>
+              <div class="agreement-field">
+                <div class="agreement-label">PSM Owner</div>
+                <div class="agreement-value">Marcus Chen</div>
+                <div class="agreement-meta">marcus.chen@equinix.com</div>
+              </div>
+              <div class="agreement-field">
+                <div class="agreement-label">Renewal Status</div>
+                <div style="margin-top: 6px;">
+                  <span class="status-badge status-pending">Renewal Pending — 58 Days</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer">
+            <div style="font-size: 12px; color: #6b7280;">
+              <strong>DocuSign Status:</strong> Not yet sent — pending your review confirmation
+            </div>
+          </div>
+        </div>
+
+        <!-- ── PROPOSED TERMS ──────────────────────────────────── -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-title">Proposed Renewal Terms</div>
+          </div>
+          <div class="card-body">
+            <div style="margin-bottom: 16px; padding: 12px; background: #e6f3ff; border-radius: 6px; font-size: 12px; color: #0c4a6e;">
+              <strong>Selected Option:</strong> Same Terms — Maintaining current partnership benefits
+            </div>
+            <div class="terms-grid">
+              <div class="term-item">
+                <div class="term-label">Commission Rate</div>
+                <div class="term-current">
+                  <div class="term-current-label">Current</div>
+                  <div class="term-current-value">8%</div>
+                </div>
+                <div class="term-proposed-label">Proposed</div>
+                <div class="term-proposed">
+                  8% (Maintained)
+                </div>
+              </div>
+              <div class="term-item">
+                <div class="term-label">MDF Annual Allocation</div>
+                <div class="term-current">
+                  <div class="term-current-label">Current</div>
+                  <div class="term-current-value">$40,000</div>
+                </div>
+                <div class="term-proposed-label">Proposed</div>
+                <div class="term-proposed">
+                  $40,000 (Maintained)
+                </div>
+              </div>
+              <div class="term-item highlighted">
+                <div class="term-label">Deal Protection Window <span class="term-change-badge">Updated</span></div>
+                <div class="term-current">
+                  <div class="term-current-label">Current</div>
+                  <div class="term-current-value">90 days</div>
+                </div>
+                <div class="term-proposed-label">Proposed</div>
+                <div class="term-proposed">
+                  120 days
+                </div>
+              </div>
+              <div class="term-item">
+                <div class="term-label">Certification Requirement</div>
+                <div class="term-current">
+                  <div class="term-current-label">Current</div>
+                  <div class="term-current-value">2 active certs</div>
+                </div>
+                <div class="term-proposed-label">Proposed</div>
+                <div class="term-proposed">
+                  2 active certs (Maintained)
+                </div>
+              </div>
+              <div class="term-item">
+                <div class="term-label">Co-sell Eligibility</div>
+                <div class="term-current">
+                  <div class="term-current-label">Current</div>
+                  <div class="term-current-value">Yes</div>
+                </div>
+                <div class="term-proposed-label">Proposed</div>
+                <div class="term-proposed">
+                  Yes (Maintained)
+                </div>
+              </div>
+              <div class="term-item">
+                <div class="term-label">QBR Cadence</div>
+                <div class="term-current">
+                  <div class="term-current-label">Current</div>
+                  <div class="term-current-value">Quarterly</div>
+                </div>
+                <div class="term-proposed-label">Proposed</div>
+                <div class="term-proposed">
+                  Quarterly (Maintained)
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── DECISION SECTION ──────────────────────────────────── -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-title">Your Decision</div>
+          </div>
+          <div class="card-body">
+            <div class="decision-section">
+              <div class="decision-section-title">How would you like to proceed?</div>
+              <div class="radio-group">
+                <label class="radio-item" style="border-color: #0070d2; background: #f0f7ff;">
+                  <input type="radio" name="decision" value="accept" checked>
+                  <div class="radio-item-label">
+                    <span class="radio-item-title">Accept proposed terms</span>
+                    <span class="radio-item-desc">I agree to renew with the same terms + deal protection window extension</span>
+                  </div>
+                </label>
+                <label class="radio-item">
+                  <input type="radio" name="decision" value="questions">
+                  <div class="radio-item-label">
+                    <span class="radio-item-title">I have questions — hold for discussion with PSM</span>
+                    <span class="radio-item-desc">I need to clarify terms or discuss changes before accepting</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- Notes textarea for accepted decision -->
+            <div class="textarea-group active" id="notes-accept">
+              <label for="notes-accept-textarea">Any notes for Marcus? (optional)</label>
+              <textarea id="notes-accept-textarea" placeholder="E.g., 'Great improvement on deal protection window. Ready to sign.' or leave blank."></textarea>
+            </div>
+
+            <!-- Questions textarea for questions decision -->
+            <div class="textarea-group" id="notes-questions">
+              <label for="notes-questions-textarea">What questions do you have? (required)</label>
+              <textarea id="notes-questions-textarea" placeholder="E.g., 'Can we discuss quarterly vs bi-weekly QBR cadence?' or 'What drove the deal protection extension?'"></textarea>
+            </div>
+
+            <div class="button-group">
+              <button class="btn btn-primary" id="submit-btn">Confirm Review &amp; Notify PSM</button>
+              <button class="btn btn-secondary">Cancel</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── WHAT HAPPENS NEXT ──────────────────────────────────── -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-title">What Happens Next</div>
+          </div>
+          <div class="card-body">
+            <ul class="next-steps-list">
+              <li class="next-steps-item">
+                <div class="next-steps-number">1</div>
+                <div class="next-steps-content">
+                  <div class="next-steps-title">PSM reviews your confirmation</div>
+                  <div class="next-steps-desc">Marcus Chen receives notification of your decision within 1 business day</div>
+                </div>
+              </li>
+              <li class="next-steps-item">
+                <div class="next-steps-number">2</div>
+                <div class="next-steps-content">
+                  <div class="next-steps-title">Marcus finalizes agreement</div>
+                  <div class="next-steps-desc">If no questions, agreement is prepared for DocuSign execution</div>
+                </div>
+              </li>
+              <li class="next-steps-item">
+                <div class="next-steps-number">3</div>
+                <div class="next-steps-content">
+                  <div class="next-steps-title">DocuSign email sent to you</div>
+                  <div class="next-steps-desc">You receive signing invite at jordan.reeves@cloudbridge.io</div>
+                </div>
+              </li>
+              <li class="next-steps-item">
+                <div class="next-steps-number">4</div>
+                <div class="next-steps-content">
+                  <div class="next-steps-title">Equinix countersigns</div>
+                  <div class="next-steps-desc">Agreement is executed by Equinix within 2 business days</div>
+                </div>
+              </li>
+              <li class="next-steps-item">
+                <div class="next-steps-number">5</div>
+                <div class="next-steps-content">
+                  <div class="next-steps-title">New agreement activates</div>
+                  <div class="next-steps-desc">Renewal terms take effect on April 25, 2026</div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── RIGHT SIDEBAR ──────────────────────────────────── -->
+      <div class="sidebar-right">
+        <!-- ── COUNTDOWN CARD ──────────────────────────────────── -->
+        <div class="sidebar-card">
+          <div class="countdown">
+            <div class="countdown-days">58</div>
+            <div class="countdown-label">Days Remaining</div>
+            <div class="countdown-date">Expires April 25, 2026</div>
+            <div class="countdown-warning">
+              Deal protection and MDF access lapse immediately if agreement expires without renewal.
+            </div>
+          </div>
+        </div>
+
+        <!-- ── BENEFITS CARD ──────────────────────────────────── -->
+        <div class="sidebar-card">
+          <div class="sidebar-card-title">Current Tier Benefits</div>
+          <ul class="benefits-list">
+            <li class="benefits-item">
+              <span class="benefits-item-key">Commission</span>
+              <span class="benefits-item-value">8%</span>
+            </li>
+            <li class="benefits-item">
+              <span class="benefits-item-key">MDF Budget</span>
+              <span class="benefits-item-value">$40K/year</span>
+            </li>
+            <li class="benefits-item">
+              <span class="benefits-item-key">Deal Protection</span>
+              <span class="benefits-item-value">90 days</span>
+            </li>
+            <li class="benefits-item">
+              <span class="benefits-item-key">Certifications</span>
+              <span class="benefits-item-value">2 required</span>
+            </li>
+            <li class="benefits-item">
+              <span class="benefits-item-key">Co-sell</span>
+              <span class="benefits-item-value">Eligible</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- ── PSM CARD ──────────────────────────────────── -->
+        <div class="sidebar-card">
+          <div class="sidebar-card-title">Your PSM</div>
+          <div class="psm-card">
+            <div class="psm-photo"></div>
+            <div class="psm-name">Marcus Chen</div>
+            <div class="psm-email">marcus.chen@equinix.com</div>
+            <button class="psm-call-link" onclick="alert('Schedule a call feature coming soon')">Schedule a Call</button>
+            <div class="archive-section">
+              <a href="#" class="archive-link">View prior agreements</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="wf-footer">
+    PCP Wireframe · Internal
+  </footer>
+
+  <script>
+    const decisionRadios = document.querySelectorAll('input[name="decision"]');
+    const notesAccept = document.getElementById('notes-accept');
+    const notesQuestions = document.getElementById('notes-questions');
+    const submitBtn = document.getElementById('submit-btn');
+
+    decisionRadios.forEach(radio => {
+      radio.addEventListener('change', function() {
+        if (this.value === 'accept') {
+          notesAccept.classList.add('active');
+          notesQuestions.classList.remove('active');
+          submitBtn.disabled = false;
+        } else {
+          notesAccept.classList.remove('active');
+          notesQuestions.classList.add('active');
+          submitBtn.disabled = true;
+        }
+      });
+    });
+
+    submitBtn.addEventListener('click', function() {
+      const selectedDecision = document.querySelector('input[name="decision"]:checked').value;
+      if (selectedDecision === 'accept') {
+        alert('✓ Renewal confirmed and PSM notified. Watch for DocuSign email soon.');
+      } else {
+        const questions = document.getElementById('notes-questions-textarea').value;
+        if (!questions.trim()) {
+          alert('Please describe your questions before proceeding.');
+          return;
+        }
+        alert('✓ Questions submitted to Marcus Chen. He will reach out within 1 business day.');
+      }
+    });
+  </script>
+</body>
+</html>
