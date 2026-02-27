@@ -17,17 +17,9 @@ body {
   background: var(--wf-canvas, #f5f7fb);
 }
 
-.slds-page {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-}
 
-.slds-main {
-  flex: 1;
-  overflow-y: auto;
-  padding: 16px;
-}
+
+.page-container { padding: 16px; max-width: 1400px; margin: 0 auto; }
 
 /* Page-specific styles */
 .sync-banner {
@@ -476,7 +468,6 @@ tbody tr:hover {
 </style>
 </head>
 <body>
-<div class="slds-page">
 <header class="wf-header">
   <div class="wf-header-logo"><svg height="20" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix"><path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/></svg></div>
   <div class="wf-header-title">SFDC</div>
@@ -508,7 +499,7 @@ tbody tr:hover {
   </button>
 </div>
 
-<div class="slds-main">
+<div class="page-container">
 
 
 <!-- Sync Status Banner (shows conditionally) -->
@@ -805,7 +796,6 @@ tbody tr:hover {
   </div>
 </div>
 
-</div>
 </div>
 
     
