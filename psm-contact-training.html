@@ -155,8 +155,11 @@
     }
 
     .diagnostic-banner {
-      background-color: var(--wf-amber, #8b7745);
-      border-left: 4px solid var(--wf-amber, #8b7745);
+      background-color: #fffbeb;           /* amber-50 — light enough for dark text */
+      border-left: 4px solid #d97706;      /* amber-600 border accent */
+      border: 1px solid #fde68a;           /* amber-200 outline */
+      border-left-width: 4px;
+      border-left-color: #d97706;
       padding: 12px 16px;
       border-radius: 4px;
       margin-bottom: 24px;
@@ -172,8 +175,11 @@
 
     .diagnostic-banner-text {
       font-size: 13px;
-      color: var(--wf-text, #3b4f68);
+      color: #78350f;                      /* amber-900 — 8.9:1 on #fffbeb, AA pass */
       line-height: 1.4;
+    }
+    .diagnostic-banner-text strong {
+      color: #78350f;
     }
 
     .three-column-layout {
@@ -236,10 +242,15 @@
     }
 
     .progress-widget {
-      background: var(--wf-ink, #1e2a3a);
+      background: var(--wf-surface, #edf1f7);
       padding: 16px;
       border-radius: 4px;
-      border-left: 4px solid var(--wf-ink, #1e2a3a);
+      border-left: 4px solid var(--wf-accent, #3d6daa);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    .progress-widget .card-title {
+      color: var(--wf-ink, #111827);
     }
 
     .progress-stat {
@@ -251,18 +262,18 @@
     }
 
     .progress-label {
-      color: var(--wf-muted, #6b7f99);
+      color: #4b5563;                      /* gray-600 — 7.7:1 on light surface, AA pass */
     }
 
     .progress-value {
       font-weight: 700;
-      color: var(--wf-accent, var(--wf-accent, #3d6daa));
+      color: var(--wf-ink, #111827);       /* near-black — 16:1 on light surface */
     }
 
     .progress-bar {
       width: 100%;
       height: 6px;
-      background-color: var(--wf-surface, #edf1f7);
+      background-color: #d1d5db;           /* gray-300 track — visible on light bg */
       border-radius: 3px;
       margin: 8px 0;
       overflow: hidden;
@@ -270,7 +281,7 @@
 
     .progress-fill {
       height: 100%;
-      background-color: var(--wf-ink, #1e2a3a);
+      background-color: var(--wf-accent, #3d6daa);
       border-radius: 3px;
     }
 
@@ -284,8 +295,8 @@
     }
 
     .status-behind {
-      background-color: var(--wf-surface, #edf1f7);
-      color: var(--wf-red, #8b4553);
+      background-color: #fee2e2;           /* red-100 */
+      color: #991b1b;                      /* red-800 — 7.5:1 on red-100, AA pass */
     }
 
     .sync-indicator {
@@ -302,7 +313,7 @@
       width: 8px;
       height: 8px;
       border-radius: 50%;
-      background-color: var(--wf-ink, #1e2a3a);
+      background-color: #16a34a;           /* green-600 — synced/healthy state */
     }
 
     .table-wrapper {
@@ -499,7 +510,7 @@
 <div class="page-container">
 
   <div class="breadcrumb">
-    <a href="#accounts">Accounts</a> > <a href="#stark">CloudBridge Solutions</a> > <strong>Sarah Connor</strong> > Training
+    <a href="#accounts">Accounts</a> > <a href="#cloudbridge">CloudBridge Solutions</a> > <strong>Sarah Connor</strong> > Training
   </div>
 
   
@@ -538,7 +549,7 @@
         <div style="font-size: 11px; color: var(--wf-muted, #6b7f99); line-height: 1.8;">
           <div style="margin-bottom: 8px;">
             <strong style="color: var(--wf-text, #3b4f68);">Email</strong><br>
-            sarah.connor@starkindustries.com
+            sarah.connor@cloudbridge.io
           </div>
           <div style="margin-bottom: 8px;">
             <strong style="color: var(--wf-text, #3b4f68);">Phone</strong><br>
@@ -755,7 +766,7 @@
           <br><br>
           <span class="warning-indicator"></span><strong>Deal Risk:</strong> Sarah is listed on $95K TCV Global Finance Corp opportunity. Expired cert may trigger deal review. Marcus Chen recommends urgent re-enrollment via PSM action.
           <br><br>
-          Partner Manager (Pepper Potts) should contact Sarah to re-enroll in Security Fundamentals before quarter-end to protect Stark's path to Platinum tier.
+          Partner Manager (Jordan Reeves) should contact Sarah to re-enroll in Security Fundamentals before quarter-end to protect CloudBridge Solutions' path to Platinum tier.
         </div>
       </div>
 
