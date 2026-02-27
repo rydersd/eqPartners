@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Commission Dispute – Equinix Partner Connect</title>
+  <script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <style>
+    :root {
+      --wf-canvas: #f5f6f8;
+      --wf-ink: #111827;
+      --wf-muted: #6b7280;
+      --wf-accent: #0070d2;
+      --gray-border: #d1d5db;
+      --teal: #0d9488;
+      --orange: #f59e0b;
+      --red: #dc2626;
+      --green: #16a34a;
+      --bg-white: #ffffff;
+      --bg-light: #f9fafb;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+      --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.1), 0 2px 4px rgba(0,0,0,0.06);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--wf-canvas);
+      color: var(--wf-ink);
+      line-height: 1.5;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: 280px 1fr 320px;
+      min-height: 100vh;
+      gap: 0;
+    }
+
+    /* Left Navigation */
+    .nav-left {
+      background: var(--bg-white);
+      border-right: 1px solid var(--gray-border);
+      padding: 20px 16px;
+      overflow-y: auto;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .nav-left .logo {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--wf-accent);
+      margin-bottom: 24px;
+      padding-left: 8px;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-section {
+      margin-bottom: 24px;
+    }
+
+    .nav-section-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--wf-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 0 8px 8px 8px;
+    }
+
+    .nav-item {
+      display: block;
+      padding: 10px 12px;
+      margin-bottom: 4px;
+      font-size: 14px;
+      color: var(--wf-ink);
+      text-decoration: none;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+
+    .nav-item:hover {
+      background: var(--wf-canvas);
+    }
+
+    .nav-item.active {
+      background: var(--wf-canvas);
+      color: var(--wf-accent);
+      font-weight: 600;
+    }
+
+    /* Main Content */
+    .main {
+      background: var(--wf-canvas);
+      padding: 32px;
+      overflow-y: auto;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 32px;
+    }
+
+    .header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--wf-ink);
+      margin-bottom: 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      background: #fef3c7;
+      color: #78350f;
+    }
+
+    .status-badge.amber {
+      background: #fef3c7;
+      color: #78350f;
+    }
+
+    .status-badge.blue {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    /* Card Layouts */
+    .card {
+      background: var(--bg-white);
+      border: 1px solid var(--gray-border);
+      border-radius: 8px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--wf-ink);
+      margin-bottom: 20px;
+    }
+
+    .deal-summary {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 20px;
+    }
+
+    .deal-row {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .deal-row-label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--wf-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .deal-row-value {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--wf-ink);
+    }
+
+    .deal-row-value.large {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .deal-row-value.red {
+      color: var(--red);
+    }
+
+    .deal-row-value.green {
+      color: var(--green);
+    }
+
+    .dispute-amount {
+      grid-column: 1 / -1;
+      padding: 16px;
+      background: #fef2f2;
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .dispute-amount-label {
+      font-size: 13px;
+      color: var(--wf-muted);
+    }
+
+    .dispute-amount-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--red);
+    }
+
+    /* Form Sections */
+    .form-section {
+      margin-bottom: 28px;
+    }
+
+    .form-section-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--wf-ink);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-number {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--wf-accent);
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--wf-ink);
+      margin-bottom: 8px;
+    }
+
+    .form-select,
+    .form-textarea {
+      width: 100%;
+      padding: 12px;
+      font-size: 14px;
+      border: 1px solid var(--gray-border);
+      border-radius: 6px;
+      font-family: inherit;
+      background: var(--bg-white);
+      color: var(--wf-ink);
+      transition: border-color 0.2s;
+    }
+
+    .form-select:focus,
+    .form-textarea:focus {
+      outline: none;
+      border-color: var(--wf-accent);
+      box-shadow: 0 0 0 3px rgba(0, 112, 210, 0.1);
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .form-hint {
+      font-size: 12px;
+      color: var(--wf-muted);
+      margin-top: 6px;
+    }
+
+    /* File Upload */
+    .upload-area {
+      border: 2px dashed var(--gray-border);
+      border-radius: 8px;
+      padding: 24px;
+      text-align: center;
+      background: var(--bg-light);
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .upload-area:hover {
+      border-color: var(--wf-accent);
+      background: #f0f7ff;
+    }
+
+    .upload-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .upload-text {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--wf-ink);
+      margin-bottom: 4px;
+    }
+
+    .upload-subtext {
+      font-size: 12px;
+      color: var(--wf-muted);
+    }
+
+    .attached-files {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--gray-border);
+    }
+
+    .attached-file {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px;
+      background: var(--bg-light);
+      border-radius: 6px;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+
+    .attached-file-name {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--wf-ink);
+      font-weight: 500;
+    }
+
+    .attached-file-icon {
+      font-size: 16px;
+    }
+
+    .remove-file {
+      background: none;
+      border: none;
+      color: var(--wf-muted);
+      cursor: pointer;
+      font-size: 18px;
+      padding: 0;
+      transition: color 0.2s;
+    }
+
+    .remove-file:hover {
+      color: var(--red);
+    }
+
+    /* Info Box */
+    .info-box {
+      background: #dbeafe;
+      border-left: 4px solid var(--wf-accent);
+      border-radius: 6px;
+      padding: 16px;
+      font-size: 13px;
+      color: #1e40af;
+      line-height: 1.6;
+    }
+
+    .info-box strong {
+      font-weight: 600;
+    }
+
+    /* Message Thread */
+    .message-thread {
+      margin-bottom: 24px;
+    }
+
+    .thread-message {
+      background: var(--bg-light);
+      border-left: 4px solid var(--wf-accent);
+      padding: 16px;
+      margin-bottom: 12px;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+
+    .thread-timestamp {
+      font-size: 12px;
+      color: var(--wf-muted);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .thread-content {
+      color: var(--wf-ink);
+      line-height: 1.5;
+    }
+
+    .reply-area {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--gray-border);
+    }
+
+    .reply-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--wf-muted);
+      display: block;
+      margin-bottom: 12px;
+    }
+
+    .reply-input-wrapper {
+      display: flex;
+      gap: 12px;
+    }
+
+    .reply-textarea {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid var(--gray-border);
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: inherit;
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .reply-textarea:focus {
+      outline: none;
+      border-color: var(--wf-accent);
+      box-shadow: 0 0 0 3px rgba(0, 112, 210, 0.1);
+    }
+
+    .reply-send {
+      align-self: flex-end;
+      padding: 10px 16px;
+      background: var(--wf-accent);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .reply-send:hover {
+      background: #0055a4;
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+      display: flex;
+      gap: 12px;
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid var(--gray-border);
+    }
+
+    .btn {
+      padding: 12px 20px;
+      font-size: 14px;
+      font-weight: 600;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-primary {
+      background: var(--wf-accent);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #0055a4;
+    }
+
+    .btn-secondary {
+      background: var(--bg-light);
+      color: var(--wf-ink);
+      border: 1px solid var(--gray-border);
+    }
+
+    .btn-secondary:hover {
+      background: #f3f4f6;
+    }
+
+    .btn-danger {
+      background: white;
+      color: var(--red);
+      border: 1.5px solid var(--red);
+    }
+
+    .btn-danger:hover {
+      background: #fef2f2;
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Right Sidebar */
+    .sidebar-right {
+      background: var(--bg-white);
+      border-left: 1px solid var(--gray-border);
+      padding: 24px 16px;
+      overflow-y: auto;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .sidebar-card {
+      background: var(--bg-light);
+      border: 1px solid var(--gray-border);
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+      font-size: 13px;
+    }
+
+    .sidebar-card-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--wf-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    .sidebar-card-content {
+      color: var(--wf-ink);
+    }
+
+    .sidebar-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+
+    .sidebar-row-label {
+      color: var(--wf-muted);
+    }
+
+    .sidebar-row-value {
+      font-weight: 600;
+      color: var(--wf-ink);
+      text-align: right;
+    }
+
+    .contact-item {
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+
+    .contact-name {
+      font-weight: 600;
+      color: var(--wf-ink);
+      font-size: 13px;
+      margin-bottom: 2px;
+    }
+
+    .contact-title {
+      font-size: 12px;
+      color: var(--wf-muted);
+      margin-bottom: 4px;
+    }
+
+    .contact-email {
+      font-size: 12px;
+      color: var(--wf-accent);
+      text-decoration: none;
+    }
+
+    .contact-email:hover {
+      text-decoration: underline;
+    }
+
+    .outcomes-list {
+      margin-top: 12px;
+    }
+
+    .outcome-item {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+      padding: 12px;
+      background: var(--bg-white);
+      border-radius: 6px;
+      border: 1px solid var(--gray-border);
+      font-size: 12px;
+    }
+
+    .outcome-icon {
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .outcome-text {
+      line-height: 1.4;
+      color: var(--wf-ink);
+    }
+
+    .related-links {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--gray-border);
+    }
+
+    .related-link {
+      display: block;
+      padding: 8px 0;
+      font-size: 12px;
+      color: var(--wf-accent);
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+
+    .related-link:hover {
+      background: var(--bg-light);
+      padding-left: 4px;
+    }
+
+    /* Responsive */
+    @media (max-width: 1400px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+      .nav-left,
+      .sidebar-right {
+        display: none;
+      }
+      .deal-summary {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- LEFT NAVIGATION -->
+    <nav class="nav-left">
+      <div class="logo">PCP</div>
+
+      <div class="nav-section">
+        <div class="nav-section-label">Dashboard</div>
+        <a href="rep-home.html" class="nav-item">Home</a>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-label">Sales</div>
+        <a href="rep-pipeline.html" class="nav-item">Pipeline</a>
+        <a href="rep-register-deal.html" class="nav-item">Register Deal</a>
+        <a href="rep-deals-commission.html" class="nav-item">Deals & Commission</a>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-label">Learn</div>
+        <a href="rep-certifications.html" class="nav-item">Certifications</a>
+        <a href="rep-course-catalog.html" class="nav-item">Training</a>
+        <a href="rep-resources.html" class="nav-item">Resources</a>
+      </div>
+
+      <div class="nav-section">
+        <div class="nav-section-label">Support</div>
+        <a href="rep-notifications.html" class="nav-item">Notifications</a>
+        <a href="rep-messages.html" class="nav-item">Messages</a>
+      </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="main">
+      <div class="header">
+        <h1>
+          Commission Dispute
+          <span class="status-badge amber">
+            <span class="status-dot"></span>
+            Submitted — Awaiting Deal Desk Review
+          </span>
+        </h1>
+      </div>
+
+      <!-- DEAL SUMMARY CARD -->
+      <div class="card">
+        <div class="card-title">Deal Summary</div>
+        <div class="deal-summary">
+          <div class="deal-row">
+            <span class="deal-row-label">Deal Name</span>
+            <span class="deal-row-value">Harrington Financial Group — Q1 2026 Colo Expansion</span>
+          </div>
+          <div class="deal-row">
+            <span class="deal-row-label">DR Number</span>
+            <span class="deal-row-value">DR-2026-HFG-0041</span>
+          </div>
+          <div class="deal-row">
+            <span class="deal-row-label">Customer</span>
+            <span class="deal-row-value">Harrington Financial Group</span>
+          </div>
+          <div class="deal-row">
+            <span class="deal-row-label">Close Date</span>
+            <span class="deal-row-value">January 31, 2026</span>
+          </div>
+          <div class="deal-row">
+            <span class="deal-row-label">TCV</span>
+            <span class="deal-row-value">$480,000</span>
+          </div>
+          <div class="deal-row">
+            <span class="deal-row-label">Commission Rate</span>
+            <span class="deal-row-value">8% (Gold Tier)</span>
+          </div>
+          <div class="deal-row">
+            <span class="deal-row-label">Expected Commission</span>
+            <span class="deal-row-value green large">$38,400</span>
+          </div>
+          <div class="deal-row">
+            <span class="deal-row-label">Commission Paid</span>
+            <span class="deal-row-value">$35,200</span>
+          </div>
+        </div>
+        <div class="dispute-amount">
+          <span class="dispute-amount-label">Disputed Amount</span>
+          <span class="dispute-amount-value">−$3,200</span>
+        </div>
+      </div>
+
+      <!-- DISPUTE FORM -->
+      <div class="card">
+        <!-- Section 1: Dispute Reason -->
+        <div class="form-section">
+          <div class="form-section-title">
+            <span class="section-number">1</span>
+            Dispute Reason
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Reason for Dispute</label>
+            <select class="form-select">
+              <option selected>Protection window was active at close</option>
+              <option>Incorrect commission rate applied</option>
+              <option>Deal scope/TCV incorrect</option>
+              <option>Missing co-sell credit</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Explain Your Dispute</label>
+            <textarea class="form-textarea" placeholder="Provide context and detail...">DR-2026-HFG-0041 was registered January 3, 2026 and approved January 5. The protection window (90 days for new logo) runs through April 5, 2026. The deal closed January 31 — well within the window. At 8% on $480K TCV, the expected commission is $38,400. The $35,200 paid is $3,200 short and I cannot identify the basis for the reduction.</textarea>
+            <p class="form-hint">Provide as much detail as possible so Deal Desk can expedite review.</p>
+          </div>
+        </div>
+
+        <!-- Section 2: Supporting Evidence -->
+        <div class="form-section">
+          <div class="form-section-title">
+            <span class="section-number">2</span>
+            Supporting Evidence
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Attach Supporting Documents</label>
+            <div class="upload-area">
+              <div class="upload-icon">📎</div>
+              <div class="upload-text">Drag & drop files or click to browse</div>
+              <div class="upload-subtext">PDF, Word, Excel, or image (max 10MB per file)</div>
+            </div>
+
+            <div class="attached-files">
+              <div class="attached-file">
+                <span class="attached-file-name">
+                  <span class="attached-file-icon">📄</span>
+                  DR-2026-HFG-0041-confirmation.pdf
+                </span>
+                <button class="remove-file" aria-label="Remove file">✕</button>
+              </div>
+            </div>
+
+            <p class="form-hint">Evidence is shared with Deal Desk (Priya Nair) and your PSM (Marcus Chen). It is not shared externally.</p>
+          </div>
+        </div>
+
+        <!-- Section 3: Timeline -->
+        <div class="form-section">
+          <div class="form-section-title">
+            <span class="section-number">3</span>
+            What to Expect
+          </div>
+
+          <div class="info-box">
+            <strong>Deal Desk typically reviews commission disputes within 3–5 business days.</strong> You'll receive an email notification at steve.rogers@cloudbridge.io when the review is complete. If your dispute is upheld, the corrected commission will appear in your next statement.
+          </div>
+        </div>
+
+        <!-- MESSAGE THREAD -->
+        <div class="message-thread">
+          <div class="form-section-title">Message History</div>
+
+          <div class="thread-message">
+            <div class="thread-timestamp">Feb 12, 2026 · 9:14 AM</div>
+            <div class="thread-content">Dispute CDR-2026-041 opened by Steve Rogers. Assigned to Priya Nair (Deal Desk).</div>
+          </div>
+
+          <div class="thread-message">
+            <div class="thread-timestamp">Feb 12, 2026 · 9:14 AM</div>
+            <div class="thread-content">Marcus Chen (PSM) notified.</div>
+          </div>
+
+          <div class="reply-area">
+            <label class="reply-label">Send a message to Deal Desk or your PSM</label>
+            <div class="reply-input-wrapper">
+              <textarea class="reply-textarea" placeholder="Type your message here..."></textarea>
+              <button class="reply-send">Send</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div class="action-buttons">
+          <button class="btn btn-secondary">Update Dispute</button>
+          <button class="btn btn-danger" onclick="if(confirm('Are you sure? Withdrawing will close this dispute. You can file a new dispute later if needed.')) { alert('Dispute withdrawn.'); }">Withdraw Dispute</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- RIGHT SIDEBAR -->
+    <aside class="sidebar-right">
+      <!-- Dispute Reference Card -->
+      <div class="sidebar-card">
+        <div class="sidebar-card-title">Dispute Reference</div>
+        <div class="sidebar-card-content">
+          <div class="sidebar-row">
+            <span class="sidebar-row-label">ID</span>
+            <span class="sidebar-row-value">CDR-2026-041</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row-label">Submitted</span>
+            <span class="sidebar-row-value">Feb 12, 2026</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row-label">Assigned To</span>
+            <span class="sidebar-row-value">Priya Nair</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row-label">CC</span>
+            <span class="sidebar-row-value">Marcus Chen</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLA Card -->
+      <div class="sidebar-card">
+        <div class="sidebar-card-title">SLA & Timeline</div>
+        <div class="sidebar-card-content">
+          <div class="sidebar-row">
+            <span class="sidebar-row-label">Target</span>
+            <span class="sidebar-row-value">3–5 business days</span>
+          </div>
+          <div class="sidebar-row">
+            <span class="sidebar-row-label">Days Elapsed</span>
+            <span class="sidebar-row-value">1</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Key Contacts Card -->
+      <div class="sidebar-card">
+        <div class="sidebar-card-title">Key Contacts</div>
+        <div class="sidebar-card-content">
+          <div class="contact-item">
+            <div class="contact-name">Priya Nair</div>
+            <div class="contact-title">Deal Desk</div>
+            <a href="mailto:priya.nair@equinix.com" class="contact-email">priya.nair@equinix.com</a>
+          </div>
+          <div class="contact-item">
+            <div class="contact-name">Marcus Chen</div>
+            <div class="contact-title">PSM</div>
+            <a href="mailto:marcus.chen@equinix.com" class="contact-email">marcus.chen@equinix.com</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Outcomes Card -->
+      <div class="sidebar-card">
+        <div class="sidebar-card-title">Possible Outcomes</div>
+        <div class="sidebar-card-content">
+          <div class="outcomes-list">
+            <div class="outcome-item">
+              <span class="outcome-icon">✓</span>
+              <span class="outcome-text"><strong>Upheld:</strong> Corrected commission in next statement</span>
+            </div>
+            <div class="outcome-item">
+              <span class="outcome-icon">→</span>
+              <span class="outcome-text"><strong>Rejected:</strong> You may appeal to your PSM</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Related Links -->
+      <div class="sidebar-card">
+        <div class="related-links">
+          <a href="rep-deals-commission.html" class="related-link">← Back to Deals & Commission</a>
+          <a href="rep-pipeline.html" class="related-link">View Pipeline</a>
+        </div>
+      </div>
+    </aside>
+  </div>
+</body>
+</html>

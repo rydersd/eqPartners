@@ -340,6 +340,22 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
 
     <div class="node">
       <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="node-type t-list" title="List View">L</div>
+        <span class="node-label">Co-Sell Queue <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">Marcus — portfolio view across all partners</span></span>
+        <a href="psm-deal-cosell-queue.html" class="node-mockup-link" title="View Mockup">→</a>
+        <span class="node-chevron">›</span>
+      </div>
+      <div class="node-children">
+        <div class="child"><span class="child-type ct-card">Card</span> 4 metric chips: New Requests / Active / Closed Won QTD / Avg First Response</div>
+        <div class="child"><span class="child-type ct-filter">Filter</span> Tab bar: All / New Requests / Active / Closed This Quarter</div>
+        <div class="child"><span class="child-type ct-table">Table</span> Co-sell rows: partner, customer, TCV, stage, last activity, owner, actions</div>
+        <div class="child"><span class="child-type ct-note">Note</span> Amber banner when new requests exist — SLA 48h acknowledgment required</div>
+        <div class="child"><span class="child-type ct-note">Note</span> Platinum-only eligibility; SF Object: CoSell_Opportunity__c · Detail: psm-deal-cosell.html</div>
+      </div>
+    </div>
+
+    <div class="node">
+      <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
         <div class="node-type t-record" title="Record Detail">R</div>
         <span class="node-label">Opportunity Record (Partner View) <span style="font-size:.57rem;padding:1px 5px;border-radius:2px;background:#ddeeff;color:#2b5797;border:1px solid #b3d4f5;font-weight:700;margin-left:5px;white-space:nowrap;" title="Partners view linked opportunity in PM Portal after approval">⟷ EC</span></span>
         <a href="psm-opportunity-record.html" class="node-mockup-link" title="View Mockup">→</a>
@@ -1882,6 +1898,23 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
             <div class="child"><span class="child-type ct-card">Card</span> Rate info: org tier determines rate (Bronze 8% / Silver 12% / Gold 15%)</div>
             <div class="child"><span class="child-type ct-table">Table</span> Payout history / historical statements</div>
             <div class="child"><span class="child-type ct-action">Action</span> Export commission statement (CSV)</div>
+            <div class="child"><span class="child-type ct-action">Action</span> Dispute a commission line item → rep-commission-dispute.html</div>
+          </div>
+        </div>
+
+        <div class="node">
+          <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+            <div class="node-type t-form" title="Form">F</div>
+            <span class="node-label">Commission Dispute <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">Steve — "why is my commission short?"</span></span>
+            <a href="rep-commission-dispute.html" class="node-mockup-link" title="View Mockup">→</a>
+            <span class="node-chevron">›</span>
+          </div>
+          <div class="node-children">
+            <div class="child"><span class="child-type ct-card">Card</span> Deal summary (read-only): DR number, TCV, rate, expected vs paid, disputed amount</div>
+            <div class="child"><span class="child-type ct-form">Form</span> Dispute reason dropdown + explanation textarea + file attachments</div>
+            <div class="child"><span class="child-type ct-widget">Widget</span> Message thread: Steve ↔ Priya Nair (Deal Desk) + Marcus Chen (CC)</div>
+            <div class="child"><span class="child-type ct-note">Note</span> SLA: Deal Desk reviews within 3–5 business days. Outcomes: upheld (corrected in next statement) or rejected (appeal to PSM)</div>
+            <div class="child"><span class="child-type ct-note">Note</span> SF Object: Commission_Dispute__c · Routes to: dealdesk-queue.html (Priya), psm-commission-processing.html (Marcus CC)</div>
           </div>
         </div>
 
