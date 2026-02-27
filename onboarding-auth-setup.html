@@ -113,6 +113,28 @@
     .totp-panel { display: none; }
     .totp-panel.visible { display: block; }
 
+    /* ── Email OTP panel ─────────────────────────────────── */
+    .email-otp-panel { display: none; }
+    .email-otp-panel.visible { display: block; }
+
+    .eml-email-badge {
+      display: flex; align-items: center; gap: 8px;
+      background: var(--wf-tint, #dce4ef);
+      border: 1px solid var(--wf-line, #b0bdd0);
+      border-radius: 6px; padding: 10px 14px; margin: 14px 0;
+      font-size: 13px; font-weight: 600; color: var(--wf-ink, #1e2a3a);
+    }
+    .eml-icon { font-size: 15px; }
+
+    .eml-code-step { display: none; }
+    .eml-code-step.visible { display: block; }
+    .eml-sent-banner {
+      display: flex; align-items: center; gap: 8px;
+      background: #e6f4ec; border: 1px solid #86d9a4;
+      border-radius: 6px; padding: 10px 14px; margin-bottom: 14px;
+      font-size: 13px; color: #1d6b3c;
+    }
+
     .totp-steps { counter-reset: totp-counter; margin-bottom: 20px; }
     .totp-step {
       display: flex; gap: 14px; margin-bottom: 18px; align-items: flex-start;
@@ -298,6 +320,14 @@
           <div class="am-desc">Use Google Authenticator, Authy, or any TOTP-compatible app to generate a 6-digit login code.</div>
         </div>
       </div>
+      <div class="auth-method-card" id="method-email" role="radio" aria-checked="false" tabindex="0" onclick="selectMethod('email')" onkeydown="if(event.key==='Enter'||event.key===' ')selectMethod('email')">
+        <div class="am-radio" id="radio-email"></div>
+        <div class="am-icon" aria-hidden="true">✉</div>
+        <div class="am-body">
+          <div class="am-title">Email code</div>
+          <div class="am-desc">We'll send a 6-digit code to your work email each time you log in. No app or SSO required.</div>
+        </div>
+      </div>
     </div>
 
     <!-- SSO panel -->
@@ -384,6 +414,54 @@
       </div>
     </div>
 
+    <!-- Email OTP panel -->
+    <div class="email-otp-panel" id="email-panel">
+      <p style="font-size:13px; color:var(--wf-muted, #6b7f99); line-height:1.5; margin:14px 0 4px;">
+        Every time you log in, a 6-digit code will be sent to your work email. No app or password needed.
+      </p>
+      <div class="eml-email-badge">
+        <span class="eml-icon" aria-hidden="true">✉</span>
+        steve.rogers@cloudbridge.com
+      </div>
+
+      <!-- Initial CTA -->
+      <div id="eml-send-step">
+        <button class="btn btn-primary" onclick="sendEmailVerification()">Send a test code to verify →</button>
+      </div>
+
+      <!-- Code entry — shown after send -->
+      <div class="eml-code-step" id="eml-code-step">
+        <div class="eml-sent-banner" role="status">
+          <span aria-hidden="true">✓</span>
+          Code sent — check your inbox. Expires in 10 minutes.
+        </div>
+        <div class="code-input-row" role="group" aria-label="6-digit verification code">
+          <div class="digit-box filled" aria-label="Digit 1">8</div>
+          <div class="digit-box filled" aria-label="Digit 2">4</div>
+          <div class="digit-box filled" aria-label="Digit 3">3</div>
+          <div class="code-input-sep" aria-hidden="true"></div>
+          <div class="digit-box" aria-label="Digit 4, empty"></div>
+          <div class="digit-box" aria-label="Digit 5, empty"></div>
+          <div class="digit-box" aria-label="Digit 6, empty"></div>
+        </div>
+        <p class="code-hint">Didn't receive it? <button class="btn-link" onclick="sendEmailVerification()">Resend code</button></p>
+
+        <button class="btn btn-primary" style="margin-top:14px;" onclick="confirmEmailOTP()">Verify &amp; Continue →</button>
+
+        <div class="verify-block" id="email-verify-success">
+          <div class="verify-success" role="status">
+            <span class="vs-icon" aria-hidden="true">✓</span>
+            Email verified. Setting up your account…
+          </div>
+        </div>
+      </div>
+
+      <div class="security-note" style="margin-top: 16px;">
+        <span class="sn-icon" aria-hidden="true">📧</span>
+        <p>Codes expire after 10 minutes and are single-use. If you lose access to this email address, contact <a href="mailto:partner-support@equinix.com" style="color:var(--wf-accent, #3d6daa);">partner-support@equinix.com</a> to update your method.</p>
+      </div>
+    </div>
+
   </div><!-- /card -->
 
   <!-- Recovery options card (shown after method confirmed) -->
@@ -438,7 +516,7 @@
 
     <div class="spec-section">
       <h3 class="spec-section-title">Summary</h3>
-      <p>Pre-authentication page reached from the tokenized link in the acceptance email. The user sets up their authentication method (SSO or TOTP), saves recovery codes, and is redirected to the onboarding wizard.</p>
+      <p>Pre-authentication page reached from the tokenized link in the acceptance email. The user sets up their authentication method (SSO, TOTP authenticator, or email OTP), saves recovery codes where applicable, and is redirected to the onboarding wizard.</p>
     </div>
 
     <div class="spec-section">
@@ -450,9 +528,10 @@
       <h3 class="spec-section-title">Jobs to Be Done</h3>
       <ul class="spec-list">
         <li>Establish a secure, user-owned credential (not just email magic links)</li>
-        <li>Offer SSO as the low-friction path; TOTP as the fallback</li>
+        <li>Offer SSO as the low-friction path; TOTP as the secondary fallback</li>
+        <li>Provide email OTP for users without corporate SSO and without a personal device for an authenticator app</li>
         <li>Confirm the user's identity is tied to their work email domain</li>
-        <li>Surface recovery codes before first login — users who skip this get locked out</li>
+        <li>Surface recovery codes before first login for TOTP users — users who skip this get locked out</li>
         <li>Get the user to the onboarding wizard without unnecessary friction</li>
       </ul>
     </div>
@@ -462,14 +541,15 @@
       <p class="spec-subsection-label">Primary Content</p>
       <ul class="spec-list">
         <li>Verified badge confirms invitation token is valid (checked on page load)</li>
-        <li>Step 1: Auth method selector — SSO (recommended) vs Authenticator App (TOTP)</li>
+        <li>Step 1: Auth method selector — SSO (recommended), Authenticator App (TOTP), or Email code</li>
         <li>SSO sub-panel: Google and Microsoft provider buttons</li>
         <li>TOTP sub-panel: app download links, QR code, manual key, 6-digit code entry</li>
-        <li>Step 2 (recovery): 6 single-use recovery codes, copy/download actions, confirm-saved checkbox gates the CTA</li>
+        <li>Email OTP sub-panel: pre-filled work email, "Send test code" CTA, inline code entry, single-step flow</li>
+        <li>Step 2 (recovery): 6 single-use recovery codes, copy/download actions, confirm-saved checkbox gates the CTA — TOTP path only</li>
       </ul>
       <p class="spec-subsection-label">Interactive Elements</p>
       <ul class="spec-list">
-        <li>Method radio selector (SSO / TOTP) — shows/hides relevant sub-panel</li>
+        <li>Method radio selector (SSO / TOTP / Email code) — shows/hides relevant sub-panel; updates step count pill</li>
         <li>SSO provider buttons (Google, Microsoft) — trigger OAuth redirect</li>
         <li>TOTP digit boxes — keyboard-navigable, auto-advance on input</li>
         <li>Verify &amp; Continue — validates TOTP code, reveals recovery card</li>
@@ -484,6 +564,7 @@
         <li>Recovery codes: generated server-side, bcrypt-hashed in DB, displayed once</li>
         <li>On successful setup, session established → redirect to <code>onboarding-wizard.html</code></li>
         <li>SSO path skips Step 2 (recovery) — recovery handled by IdP</li>
+        <li>Email OTP: POST /auth/email-otp/send {email} → Marketing Cloud delivers 6-digit code; POST /auth/email-otp/verify {email, code} — bcrypt-hashed, 10-min TTL, rate-limited to 5 sends/user/hour; no recovery codes required (the email account itself is the recovery path)</li>
       </ul>
     </div>
 
@@ -493,7 +574,8 @@
         <li>SSO marked as "Recommended" because it has better recovery paths and lower support burden</li>
         <li>TOTP QR code in wireframe is a decorative placeholder — production generates per-user TOTP secrets</li>
         <li>Digit boxes are a wireframe affordance; production implementation uses a single &lt;input type="text" inputmode="numeric" maxlength="6"&gt; with visual styling</li>
-        <li>Recovery card only appears after TOTP verification (SSO users don't need it)</li>
+        <li>Recovery card only appears after TOTP verification — SSO and email OTP users don't need it</li>
+        <li>Email OTP is a 1-step flow (step pill updates to "Step 1 of 1" on selection); TOTP and SSO are "Step 1 of 2"</li>
         <li>Checkbox on recovery step is a soft gate — forces acknowledgment but users could technically skip via keyboard</li>
         <li>Page is intentionally minimal — single column, no nav clutter — to maximize completion rate at this high-drop-off step</li>
       </ul>
@@ -504,18 +586,35 @@
 
 <script>
   let currentMethod = 'sso';
+  const ALL_METHODS = ['sso', 'totp', 'email'];
 
   function selectMethod(method) {
     currentMethod = method;
-    ['sso', 'totp'].forEach(m => {
+    ALL_METHODS.forEach(m => {
       const card  = document.getElementById('method-' + m);
-      const radio = document.getElementById('radio-' + m);
-      const panel = document.getElementById(m + '-panel');
       const isSelected = m === method;
-      card.classList.toggle('selected', isSelected);
-      card.setAttribute('aria-checked', String(isSelected));
-      panel.classList.toggle('visible', isSelected);
+      if (card) {
+        card.classList.toggle('selected', isSelected);
+        card.setAttribute('aria-checked', String(isSelected));
+      }
     });
+    // Show/hide sub-panels
+    document.getElementById('sso-panel').classList.toggle('visible', method === 'sso');
+    document.getElementById('totp-panel').classList.toggle('visible', method === 'totp');
+    document.getElementById('email-panel').classList.toggle('visible', method === 'email');
+    // Update step pill — email OTP is 1-step (no recovery codes); others are 2-step
+    var pill = document.querySelector('.step-pill');
+    if (pill) pill.textContent = 'Step 1 of ' + (method === 'email' ? '1' : '2') + ' — Choose method';
+  }
+
+  function sendEmailVerification() {
+    document.getElementById('eml-send-step').style.display = 'none';
+    document.getElementById('eml-code-step').classList.add('visible');
+  }
+
+  function confirmEmailOTP() {
+    document.getElementById('email-verify-success').classList.add('visible');
+    setTimeout(function() { window.location.href = 'onboarding-wizard.html'; }, 1200);
   }
 
   function triggerSSOFlow(provider) {
