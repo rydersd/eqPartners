@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Log In — Partner Central (Passwordless)</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: var(--wf-ink, #1e2a3a); color: var(--wf-ink, #1e2a3a); min-height: 100vh; display: flex; flex-direction: column; }
+
+    .login-bg { flex: 1; display: flex; flex-direction: column; background: var(--wf-ink, #1e2a3a); background-image: linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px); background-size: 40px 40px; }
+
+    /* Top bar — same visual as partner-login.html */
+    .login-topbar { padding: 20px 32px; display: flex; align-items: center; justify-content: space-between; }
+    .login-topbar-logo { display: flex; align-items: center; gap: 14px; }
+    .login-topbar-divider { color: rgba(255,255,255,.2); font-size: 18px; }
+    .login-topbar-product { color: rgba(255,255,255,.65); font-size: 13px; font-weight: 500; }
+    .login-topbar-help { color: rgba(255,255,255,.5); font-size: 13px; text-decoration: none; }
+    .login-topbar-help:hover { color: rgba(255,255,255,.85); }
+
+    /* Card stage */
+    .login-stage { flex: 1; display: flex; align-items: center; justify-content: center; padding: 24px 16px 64px; }
+    .login-card { background: white; border-radius: 12px; width: 100%; max-width: 400px; box-shadow: 0 8px 40px rgba(0,0,0,.4); overflow: hidden; }
+    .login-card-hd { padding: 32px 36px 0; text-align: center; }
+    .login-card-hd h1 { font-size: 20px; font-weight: 700; margin: 0 0 6px; color: var(--wf-ink, #1e2a3a); }
+    .login-card-hd p { font-size: 13px; color: var(--wf-muted, #6b7f99); margin: 0 0 28px; line-height: 1.5; }
+    .login-card-body { padding: 0 36px 28px; }
+
+    /* Fields */
+    .form-field { margin-bottom: 16px; }
+    .form-label { display: block; font-size: 12px; font-weight: 600; color: var(--wf-text, #3b4f68); margin-bottom: 6px; }
+    .form-input { width: 100%; padding: 10px 12px; border: 1px solid var(--wf-line, #b0bdd0); border-radius: 6px; font-size: 14px; color: var(--wf-ink, #1e2a3a); background: var(--wf-canvas, #f5f7fb); outline: none; font-family: inherit; }
+    .form-input:focus { border-color: var(--wf-accent, #3d6daa); background: white; box-shadow: 0 0 0 3px rgba(61,109,170,.12); }
+    .form-input::placeholder { color: var(--wf-text, #3b4f68); opacity: .5; }
+    .form-input[readonly] { color: var(--wf-muted, #6b7f99); cursor: default; background: #f0f4f8; }
+
+    /* Primary CTA */
+    .btn-primary { width: 100%; padding: 12px; background: var(--wf-accent, #3d6daa); color: white; border: none; border-radius: 6px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; letter-spacing: .01em; margin-bottom: 12px; }
+    .btn-primary:hover { background: #2f5a91; }
+
+    /* SSO separator */
+    .login-or { display: flex; align-items: center; gap: 12px; margin: 4px 0 14px; }
+    .login-or::before, .login-or::after { content: ""; flex: 1; height: 1px; background: var(--wf-line, #b0bdd0); }
+    .login-or span { font-size: 12px; color: var(--wf-muted, #6b7f99); white-space: nowrap; }
+
+    /* SSO button */
+    .btn-sso { width: 100%; padding: 11px; border: 1px solid var(--wf-line, #b0bdd0); border-radius: 6px; background: white; color: var(--wf-ink, #1e2a3a); font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .btn-sso:hover { background: var(--wf-canvas, #f5f7fb); }
+
+    /* ── Code entry state ─────────────────────────────────────── */
+    .delivery-banner {
+      background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px;
+      padding: 12px 14px; font-size: 13px; color: #1e3a5f;
+      display: flex; gap: 10px; align-items: flex-start; margin-bottom: 20px;
+    }
+    .delivery-banner strong { display: block; margin-bottom: 2px; color: #1e3a5f; }
+    .delivery-banner-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+    /* 6-digit OTP boxes */
+    .otp-row {
+      display: flex; gap: 8px; justify-content: flex-start; margin-bottom: 6px;
+    }
+    .otp-box {
+      width: 48px; height: 56px;
+      border: 2px solid var(--wf-line, #b0bdd0); border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; font-weight: 700; color: var(--wf-ink, #1e2a3a);
+    }
+    .otp-box.active { border-color: var(--wf-accent, #3d6daa); box-shadow: 0 0 0 3px rgba(61,109,170,.12); }
+    .otp-box.filled { background: var(--wf-tint, #dce4ef); border-color: var(--wf-accent, #3d6daa); }
+    .otp-sep { width: 10px; height: 2px; background: var(--wf-line, #b0bdd0); align-self: center; }
+
+    .otp-hint { font-size: 12px; color: var(--wf-muted, #6b7f99); margin-bottom: 20px; }
+    .otp-hint a { color: var(--wf-accent, #3d6daa); font-weight: 600; text-decoration: none; cursor: pointer; }
+    .otp-hint a:hover { text-decoration: underline; }
+
+    /* Resend / change email row */
+    .otp-meta { display: flex; justify-content: space-between; align-items: center; font-size: 12px; margin-bottom: 20px; }
+    .otp-meta a { color: var(--wf-accent, #3d6daa); font-weight: 600; text-decoration: none; cursor: pointer; }
+    .otp-meta a:hover { text-decoration: underline; }
+    .otp-timer { color: var(--wf-muted, #6b7f99); }
+
+    /* Error state */
+    .login-error { background: #fff0f0; border: 1px solid #f5c6c6; border-radius: 6px; padding: 10px 14px; font-size: 13px; color: #c0392b; margin-bottom: 16px; display: none; gap: 8px; align-items: flex-start; }
+    .login-error.visible { display: flex; }
+
+    /* Card footer */
+    .login-card-ft { padding: 14px 36px 18px; background: var(--wf-canvas, #f5f7fb); border-top: 1px solid var(--wf-line, #b0bdd0); text-align: center; }
+    .login-card-ft p { font-size: 12px; color: var(--wf-muted, #6b7f99); margin: 0; line-height: 1.7; }
+    .login-card-ft a { color: var(--wf-accent, #3d6daa); text-decoration: none; }
+
+    /* Page footer */
+    .login-footer { padding: 20px 32px; text-align: center; }
+    .login-footer p { font-size: 12px; color: rgba(255,255,255,.3); margin: 0; line-height: 1.8; }
+    .login-footer a { color: rgba(255,255,255,.5); text-decoration: none; }
+
+    /* State switcher */
+    .state-switcher { position: fixed; bottom: 20px; right: 20px; background: var(--wf-surface, #edf1f7); border: 1px solid var(--wf-line, #b0bdd0); border-radius: 8px; padding: 12px 14px; z-index: 200; box-shadow: 0 2px 12px rgba(0,0,0,.15); min-width: 180px; }
+    .state-switcher p { font-size: 11px; font-weight: 700; color: var(--wf-muted, #6b7f99); text-transform: uppercase; letter-spacing: .05em; margin: 0 0 8px; }
+    .state-btn { display: block; width: 100%; text-align: left; background: none; border: 1px solid var(--wf-line, #b0bdd0); border-radius: 4px; padding: 5px 10px; font-size: 12px; color: var(--wf-text, #3b4f68); cursor: pointer; margin-bottom: 5px; font-family: inherit; }
+    .state-btn:last-child { margin-bottom: 0; }
+    .state-btn.active { background: var(--wf-accent, #3d6daa); color: white; border-color: var(--wf-accent, #3d6daa); font-weight: 600; }
+  </style>
+  <link rel="stylesheet" href="wireframe.css">
+</head>
+<body>
+<div class="login-bg">
+
+  <div class="login-topbar">
+    <div class="login-topbar-logo">
+      <svg height="16" viewBox="0 0 92 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Equinix">
+        <path d="M45.8839 0L36.7208 3.21551V51.3797L30.5665 49.2588V5.33638L12.2403 11.7674V42.8278L6.15433 40.707V13.8883L0 16.0091V45.0171L18.3262 51.4481V16.0775L24.4806 13.9567V53.569L42.8068 60V7.52566L45.8839 6.49943L48.9611 7.52566V60L67.2873 53.569V13.9567L73.4417 16.0775V51.4481L91.7679 45.0171V16.0091L85.6819 13.8883V40.707L79.5276 42.8278V11.7674L61.2014 5.33638V49.2588L55.047 51.3797V3.21551L45.8839 0Z" fill="white"/>
+      </svg>
+      <span class="login-topbar-divider">/</span>
+      <span class="login-topbar-product">Partner Central</span>
+    </div>
+    <a href="#" class="login-topbar-help">Need help?</a>
+  </div>
+
+  <div class="login-stage">
+    <div class="login-card" id="login-card">
+
+      <!-- ══ STATE 1: Email entry ══════════════════════════════ -->
+      <div id="state-email">
+        <div class="login-card-hd">
+          <h1>Log in to Partner Central</h1>
+          <p>Enter your email and we'll send a one-time code. No password needed.</p>
+        </div>
+        <div class="login-card-body">
+
+          <div class="login-error" id="err-email" role="alert">
+            <span style="font-weight:700;flex-shrink:0;">!</span>
+            <span>We couldn't find an account for that email. <a href="onboarding-partner-type.html" style="color:#c0392b;">Apply to become a partner →</a></span>
+          </div>
+
+          <div class="form-field">
+            <label class="form-label" for="login-email">Work email address</label>
+            <input class="form-input" type="email" id="login-email" placeholder="you@company.com" autocomplete="email">
+          </div>
+
+          <button class="btn-primary" type="button" onclick="sendCode()">Send me a code</button>
+
+          <div class="login-or"><span>or</span></div>
+
+          <button class="btn-sso" type="button">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+              <rect x="3" y="11" width="18" height="11" rx="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            Continue with company SSO
+          </button>
+        </div>
+        <div class="login-card-ft">
+          <p>Don't have an account? <a href="onboarding-partner-type.html">Apply to become a partner</a><br>
+          Having trouble? <a href="#">Contact Partner Support</a></p>
+        </div>
+      </div>
+
+      <!-- ══ STATE 2: Code entry ═══════════════════════════════ -->
+      <div id="state-code" style="display:none;">
+        <div class="login-card-hd">
+          <h1>Check your email</h1>
+          <p>We sent a 6-digit code. It expires in 10 minutes.</p>
+        </div>
+        <div class="login-card-body">
+
+          <div class="delivery-banner" role="status" aria-live="polite">
+            <span class="delivery-banner-icon" aria-hidden="true">✉</span>
+            <div>
+              <strong>Code sent to jordan.reeves@cloudbridge.io</strong>
+              Check your inbox — the email comes from <em>noreply@equinix.com</em>
+            </div>
+          </div>
+
+          <div class="login-error" id="err-code" role="alert">
+            <span style="font-weight:700;flex-shrink:0;">!</span>
+            <span>That code is incorrect or has expired. <a href="#" onclick="resendCode();return false;" style="color:#c0392b;">Send a new code →</a></span>
+          </div>
+
+          <div class="form-field" role="group" aria-label="6-digit login code">
+            <label class="form-label" for="otp-hidden-input">Enter the 6-digit code</label>
+            <!-- Wireframe: styled digit boxes (production: single hidden <input type="text"> + JS overlay) -->
+            <div class="otp-row" aria-hidden="true">
+              <div class="otp-box filled">4</div>
+              <div class="otp-box filled">7</div>
+              <div class="otp-box filled">2</div>
+              <div class="otp-sep"></div>
+              <div class="otp-box active"></div>
+              <div class="otp-box"></div>
+              <div class="otp-box"></div>
+            </div>
+            <input type="text" id="otp-hidden-input" class="form-input" style="margin-top:8px;" placeholder="Or paste the full 6-digit code" inputmode="numeric" maxlength="6" autocomplete="one-time-code">
+          </div>
+
+          <div class="otp-meta">
+            <span class="otp-timer" id="otp-timer" aria-live="polite">Resend in <strong>0:42</strong></span>
+            <a href="#" onclick="resendCode();return false;" id="resend-link" style="pointer-events:none;opacity:.4;">Resend code</a>
+          </div>
+
+          <button class="btn-primary" type="button" onclick="verifyCode()">Verify and log in</button>
+
+          <div style="text-align:center;margin-top:4px;">
+            <a href="#" onclick="goBack();return false;" style="font-size:12px;color:var(--wf-muted,#6b7f99);">← Use a different email</a>
+          </div>
+        </div>
+        <div class="login-card-ft">
+          <p>Can't find the email? Check your spam folder.<br>
+          Still stuck? <a href="#">Contact Partner Support</a></p>
+        </div>
+      </div>
+
+    </div><!-- /.login-card -->
+  </div><!-- /.login-stage -->
+
+  <div class="login-footer">
+    <p>
+      &copy; 2026 Equinix, Inc. &nbsp;·&nbsp;
+      <a href="#">Privacy Policy</a> &nbsp;·&nbsp;
+      <a href="#">Terms of Use</a> &nbsp;·&nbsp;
+      <a href="#">Partner Support</a>
+    </p>
+  </div>
+</div><!-- /.login-bg -->
+
+<!-- Wireframe state switcher -->
+<div class="state-switcher" aria-label="Wireframe state switcher">
+  <p>View state</p>
+  <button class="state-btn active" onclick="setState('email')">1. Email entry</button>
+  <button class="state-btn" onclick="setState('code-partial')">2. Code entry (partial)</button>
+  <button class="state-btn" onclick="setState('code-filled')">2b. Code filled</button>
+  <button class="state-btn" onclick="setState('email-error')">Error: unknown email</button>
+  <button class="state-btn" onclick="setState('code-error')">Error: bad code</button>
+</div>
+
+<!-- Spec panel -->
+<div class="spec-tab-anchor">
+  <button class="spec-tab-btn" id="spec-toggle" onclick="toggleSpec()" aria-expanded="false" aria-controls="spec-panel">
+    <span>&#128203;</span> Notes
+  </button>
+</div>
+
+<aside id="spec-panel" class="spec-panel" role="complementary" aria-label="Design specifications">
+  <div class="spec-panel-hd">
+    <h3>Design Specs</h3>
+    <button class="spec-panel-x" onclick="toggleSpec()" aria-label="Close">×</button>
+  </div>
+  <div class="spec-panel-bd">
+    <h3>Summary</h3>
+    <p>Passwordless login for users who set up "Email code" as their auth method during onboarding. Replaces <code>partner-login.html</code> password form for this user segment. Two-step: email entry → 6-digit OTP → authenticated session.</p>
+
+    <hr class="spec-divider">
+    <h3>Flow Position</h3>
+    <p>This screen handles <strong>ongoing logins</strong> only. It is not the first-login experience. New users arrive via the magic link in the welcome email → <code>onboarding-auth-setup.html</code> (where they choose SSO, TOTP, or Email code as their method). This screen is what Email-code users see on every subsequent login.</p>
+
+    <hr class="spec-divider">
+    <h3>Comparison: Three Auth Paths</h3>
+    <ul>
+      <li><strong>SSO</strong>: user enters email → redirected to IdP (Google/Okta/Microsoft) → authenticated. No code, no password.</li>
+      <li><strong>TOTP</strong>: user enters email → enters 6-digit code from their authenticator app. Code is generated locally, not sent.</li>
+      <li><strong>Email code (this screen)</strong>: user enters email → system sends a 6-digit OTP to that inbox → user enters it here. Works on any device with email access. No app required.</li>
+    </ul>
+
+    <hr class="spec-divider">
+    <h3>States</h3>
+    <ul>
+      <li><strong>Email entry:</strong> Single email field + "Send me a code" CTA. SSO option shown below for SSO-eligible domains.</li>
+      <li><strong>Code entry:</strong> Blue delivery banner confirms which address received the code. 6 OTP boxes + paste-capable hidden input. Countdown timer (10 min). Resend link becomes active after 60 seconds.</li>
+      <li><strong>Error — unknown email:</strong> Red banner inline on email step. Link to apply.</li>
+      <li><strong>Error — bad code:</strong> Red banner inline on code step with "Send a new code" shortcut.</li>
+    </ul>
+
+    <hr class="spec-divider">
+    <h3>Technical Details</h3>
+    <ul>
+      <li><strong>OTP generation:</strong> 6-digit numeric code, cryptographically random (CSPRNG). Stored hashed (bcrypt) against user record. Single use.</li>
+      <li><strong>TTL:</strong> 10 minutes from issue. Expired codes return the same "incorrect or expired" error as wrong codes — no timing difference exposed.</li>
+      <li><strong>Email delivery:</strong> Marketing Cloud transactional send (same template as PCP-CONFIRM family). Subject: "Your Partner Central login code: 472 XXX".</li>
+      <li><strong>Rate limit:</strong> Max 5 sends per user per hour. After 5: show "Too many attempts — try again in 1 hour" and suppress the send button.</li>
+      <li><strong>Resend timer:</strong> 60-second cooldown before resend is enabled, to reduce duplicate sends. Timer shown in the UI.</li>
+      <li><strong>SSO domain detection:</strong> On blur of email field, check domain against SSO_Domain__c. If match, suggest SSO as primary path.</li>
+      <li><strong>One-time code input:</strong> Production uses a single hidden <code>&lt;input type="text" inputmode="numeric" autocomplete="one-time-code"&gt;</code> — browser autofill from SMS/email will populate this. The styled digit boxes are a visual overlay.</li>
+      <li><strong>On success:</strong> POST /auth/verify-otp → session cookie issued → redirect to <code>pm-home-dashboard.html</code> (or <code>rep-home.html</code> based on role).</li>
+    </ul>
+
+    <hr class="spec-divider">
+    <h3>Accessibility</h3>
+    <ul>
+      <li>Email field: <code>autocomplete="email"</code>, labeled</li>
+      <li>OTP input: <code>autocomplete="one-time-code"</code> supports iOS/Android SMS autofill</li>
+      <li>Delivery banner: <code>role="status" aria-live="polite"</code></li>
+      <li>Error banners: <code>role="alert"</code> — announced immediately to screen readers</li>
+      <li>Timer: <code>aria-live="polite"</code> so it doesn't interrupt but updates are heard</li>
+    </ul>
+  </div>
+</aside>
+
+<script>
+  function setState(state) {
+    var btns = document.querySelectorAll('.state-btn');
+    btns.forEach(function(b) { b.classList.remove('active'); });
+    event.target.classList.add('active');
+
+    var emailState = document.getElementById('state-email');
+    var codeState  = document.getElementById('state-code');
+    var errEmail   = document.getElementById('err-email');
+    var errCode    = document.getElementById('err-code');
+
+    // Reset errors
+    errEmail.classList.remove('visible');
+    errCode.classList.remove('visible');
+
+    // Reset OTP boxes
+    var boxes = document.querySelectorAll('.otp-box');
+    boxes.forEach(function(b) { b.classList.remove('filled','active'); b.textContent = ''; });
+
+    if (state === 'email' || state === 'email-error') {
+      emailState.style.display = '';
+      codeState.style.display  = 'none';
+      if (state === 'email-error') errEmail.classList.add('visible');
+    } else {
+      emailState.style.display = 'none';
+      codeState.style.display  = '';
+      if (state === 'code-partial') {
+        boxes[0].classList.add('filled'); boxes[0].textContent = '4';
+        boxes[1].classList.add('filled'); boxes[1].textContent = '7';
+        boxes[2].classList.add('filled'); boxes[2].textContent = '2';
+        boxes[4].classList.add('active');
+      } else if (state === 'code-filled') {
+        var digits = ['4','7','2','8','0','1'];
+        boxes.forEach(function(b, i) { if (i !== 3) { b.classList.add('filled'); b.textContent = digits[i > 3 ? i - 1 : i]; } });
+      } else if (state === 'code-error') {
+        errCode.classList.add('visible');
+      }
+    }
+  }
+
+  function sendCode() {
+    // Wireframe: skip email validation, go straight to code state
+    setState('code-partial');
+    document.querySelectorAll('.state-btn')[1].classList.remove('active');
+    document.querySelectorAll('.state-btn')[0].classList.remove('active');
+    document.querySelectorAll('.state-btn')[1].classList.add('active');
+  }
+
+  function verifyCode() {
+    // Wireframe: simulate successful verify
+    window.location.href = 'pm-home-dashboard.html';
+  }
+
+  function resendCode() {
+    document.getElementById('err-code').classList.remove('visible');
+    // Wireframe: reset boxes to show fresh start
+    var boxes = document.querySelectorAll('.otp-box');
+    boxes.forEach(function(b) { b.classList.remove('filled'); b.textContent = ''; });
+    boxes[0].classList.add('active');
+    document.getElementById('otp-hidden-input').value = '';
+    document.getElementById('otp-timer').innerHTML = 'Resend in <strong>1:00</strong>';
+    document.getElementById('resend-link').style.pointerEvents = 'none';
+    document.getElementById('resend-link').style.opacity = '0.4';
+  }
+
+  function goBack() {
+    setState('email');
+    document.querySelectorAll('.state-btn')[0].classList.add('active');
+    document.querySelectorAll('.state-btn')[1].classList.remove('active');
+  }
+
+  function toggleSpec() {
+    var p = document.getElementById('spec-panel');
+    var b = document.getElementById('spec-toggle');
+    if (!p || !b) return;
+    var isOpen = p.classList.toggle('open');
+    b.setAttribute('aria-expanded', isOpen);
+  }
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>
