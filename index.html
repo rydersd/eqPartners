@@ -31,19 +31,53 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
 .header-meta { display:flex; gap:1rem; align-items:center; font-size:.75rem; opacity:.8; }
 .header-meta span { background:rgba(255,255,255,.15); padding:.25rem .75rem; border-radius:4px; }
 
-/* ── Legend ── */
-.legend-bar { background:#fff; border-bottom:1px solid var(--gray-border); padding:.75rem 2rem; display:flex; gap:1.5rem; flex-wrap:wrap; align-items:center; position:sticky; top:0; z-index:10; }
-.legend-bar .legend-title { font-size:.6875rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--wf-muted); margin-right:.5rem; }
-.legend-item { display:flex; align-items:center; gap:.375rem; font-size:.75rem; }
-.type-dot { width:10px; height:10px; border-radius:2px; flex-shrink:0; }
-.type-dot.t-dashboard { background:var(--wf-accent); }
-.type-dot.t-list { background:var(--wf-muted); }
-.type-dot.t-record { background:var(--wf-muted); }
-.type-dot.t-form { background:var(--wf-amber); }
-.type-dot.t-report { background:var(--wf-red); }
-.type-dot.t-settings { background:var(--wf-ink); }
-.type-dot.t-modal { background:var(--wf-muted); }
-.type-dot.t-workflow { background:var(--wf-ink); }
+/* ── View Control (3-view toggle — replaces legend bar) ── */
+.view-control { background:#fff; border-bottom:1px solid var(--gray-border); padding:.5rem 2rem; display:flex; align-items:center; gap:1.25rem; position:sticky; top:0; z-index:20; }
+.view-control-label { font-size:.6875rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--wf-muted); white-space:nowrap; }
+.view-btns { display:flex; border:1px solid var(--gray-border); border-radius:6px; overflow:hidden; }
+.view-btn { padding:.375rem 1rem; font-size:.8125rem; font-weight:600; background:var(--wf-surface); color:var(--wf-text); border:none; border-right:1px solid var(--gray-border); cursor:pointer; font-family:var(--font); transition:all .15s; white-space:nowrap; }
+.view-btn:last-child { border-right:none; }
+.view-btn:hover { background:var(--wf-tint,#f0f4f8); color:var(--wf-ink); }
+.view-btn.active { background:var(--wf-accent); color:#fff; }
+.view-control-sep { width:1px; background:var(--gray-border); height:20px; }
+/* Icon legend (compact, right side of view bar) */
+.icon-legend { display:flex; gap:1rem; align-items:center; flex-wrap:wrap; margin-left:auto; }
+.icon-legend-item { display:flex; align-items:center; gap:.3rem; font-size:.6875rem; color:var(--wf-text); }
+.il-swatch { width:16px; height:16px; border-radius:3px; display:flex; align-items:center; justify-content:center; font-size:7px; color:#fff; font-weight:700; flex-shrink:0; }
+
+/* ── View panels ── */
+.view-panel { display:none; }
+.view-panel.active { display:block; }
+
+/* ── JTBD view ── */
+.jtbd-view { padding-top:1.5rem; }
+.jtbd-audience-hd { font-size:.6875rem; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--wf-muted); padding:.375rem .5rem; border-bottom:1px solid var(--gray-border); margin-bottom:1rem; display:flex; align-items:center; gap:.5rem; }
+.jtbd-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(340px, 1fr)); gap:1.25rem; margin-bottom:1.5rem; }
+.jtbd-persona-block { background:#fff; border:1px solid var(--gray-border); border-radius:8px; overflow:hidden; }
+.jtbd-persona-hd { padding:.75rem 1rem; display:flex; align-items:center; gap:.75rem; border-bottom:1px solid var(--gray-border); }
+.jtbd-avatar { width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.875rem; font-weight:700; color:#fff; flex-shrink:0; }
+.jtbd-persona-name { font-size:.875rem; font-weight:700; color:var(--wf-ink); line-height:1.2; }
+.jtbd-persona-role { font-size:.6875rem; color:var(--wf-muted); }
+.jtbd-list { padding:0; }
+.jtbd-item { padding:.5rem 1rem; border-top:1px solid var(--wf-tint,#f0f4f8); display:flex; gap:.625rem; align-items:flex-start; }
+.jtbd-item:first-child { border-top:none; }
+.jtbd-num { font-size:.5625rem; font-weight:700; color:var(--wf-muted); background:var(--wf-surface); border:1px solid var(--wf-line); padding:.125rem .3rem; border-radius:10px; flex-shrink:0; margin-top:.125rem; min-width:22px; text-align:center; }
+.jtbd-text { font-size:.8125rem; color:var(--wf-ink); line-height:1.45; }
+.jtbd-screens { font-size:.6875rem; color:var(--wf-muted); display:block; margin-top:.25rem; font-style:italic; }
+/* Solo persona (1 JTBD) — highlighted */
+.jtbd-persona-block.solo-persona { border-left:3px solid var(--wf-amber); }
+.jtbd-persona-block.solo-persona .jtbd-persona-hd { background:var(--wf-tint,#f0f4f8); }
+
+/* ── Service Diagram ── */
+.sd-wrap { margin-top:1.5rem; background:#fff; border:1px solid var(--gray-border); border-radius:8px; overflow:hidden; }
+.sd-hd { padding:.875rem 1.25rem; border-bottom:1px solid var(--gray-border); display:flex; align-items:center; gap:1rem; flex-wrap:wrap; }
+.sd-hd h3 { font-size:.9375rem; font-weight:700; flex:1; }
+.sd-filters { display:flex; gap:.375rem; flex-wrap:wrap; }
+.sd-btn { padding:.25rem .625rem; font-size:.6875rem; font-weight:600; border-radius:3px; cursor:pointer; font-family:var(--font); border:1px solid var(--gray-border); background:var(--wf-surface); color:var(--wf-text); transition:all .15s; }
+.sd-btn:hover { background:var(--wf-tint,#f0f4f8); }
+.sd-btn.active { color:#fff; border-color:transparent; }
+.sd-body { overflow-x:auto; padding:1.25rem; }
+.sd-body svg { min-width:860px; display:block; }
 
 /* ── Platform badges ── */
 .platform-bar { background:#fff; border-bottom:1px solid var(--gray-border); padding:.5rem 2rem; display:flex; gap:1rem; align-items:center; font-size:.75rem; }
@@ -178,24 +212,23 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
   </div>
 </header>
 
-<div class="legend-bar" role="navigation" aria-label="Legend">
-  <span class="legend-title">Screen Types</span>
-  <div class="legend-item"><div class="type-dot t-dashboard"></div> Dashboard</div>
-  <div class="legend-item"><div class="type-dot t-list"></div> List View</div>
-  <div class="legend-item"><div class="type-dot t-record"></div> Record Page</div>
-  <div class="legend-item"><div class="type-dot t-form"></div> Form / Wizard</div>
-  <div class="legend-item"><div class="type-dot t-modal"></div> Modal / Dialog</div>
-  <div class="legend-item"><div class="type-dot t-report"></div> Report</div>
-  <div class="legend-item"><div class="type-dot t-settings"></div> Settings / Config</div>
-  <div class="legend-item"><div class="type-dot t-workflow"></div> Workflow / Process</div>
-</div>
-
-<div class="platform-bar">
-  <span style="font-size:.6875rem;font-weight:700;color:var(--wf-muted);text-transform:uppercase;letter-spacing:.05em;">Platform</span>
-  <span class="plat-badge plat-sf">Salesforce Lightning</span>
-  <span class="plat-badge plat-ec">Experience Cloud</span>
-  <span class="plat-badge plat-both">Cross-Platform</span>
-</div>
+<nav class="view-control" aria-label="View selector">
+  <span class="view-control-label">View</span>
+  <div class="view-btns" role="group" aria-label="Select view">
+    <button class="view-btn active" id="vbtn-sitemap" onclick="switchView('sitemap')" aria-pressed="true">Sitemap</button>
+    <button class="view-btn" id="vbtn-jtbd" onclick="switchView('jtbd')" aria-pressed="false">Jobs to Be Done</button>
+    <button class="view-btn" id="vbtn-service" onclick="switchView('service')" aria-pressed="false">Service Diagram</button>
+  </div>
+  <div class="view-control-sep" aria-hidden="true"></div>
+  <div class="icon-legend" aria-label="Page type key">
+    <span class="icon-legend-item"><span class="il-swatch" style="background:var(--wf-accent)">D</span> Dashboard</span>
+    <span class="icon-legend-item"><span class="il-swatch" style="background:var(--wf-muted)">L</span> List</span>
+    <span class="icon-legend-item"><span class="il-swatch" style="background:var(--wf-amber)">F</span> Form</span>
+    <span class="icon-legend-item"><span class="il-swatch" style="background:var(--wf-muted)">R</span> Record</span>
+    <span class="icon-legend-item"><span class="il-swatch" style="background:var(--wf-ink)">W</span> Workflow</span>
+    <span class="icon-legend-item"><span class="il-swatch" style="background:var(--wf-ink)">S</span> Settings</span>
+  </div>
+</nav>
 
 <div class="container">
 
@@ -203,9 +236,12 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
 <div class="stats-bar">
   <div class="stat"><div class="num">4</div><div class="lbl">Portals</div></div>
   <div class="stat"><div class="num">12</div><div class="lbl">Program Areas</div></div>
-  <div class="stat"><div class="num">7</div><div class="lbl">Personas</div></div>
+  <div class="stat"><div class="num">9</div><div class="lbl">Personas</div></div>
   <div class="stat"><div class="num">3</div><div class="lbl">Tiers</div></div>
 </div>
+
+<!-- ═══════ VIEW: SITEMAP ═══════ -->
+<div id="view-sitemap" class="view-panel active">
 
 <div class="sitemap-tabs">
 
@@ -3111,6 +3147,573 @@ header p { font-size:.8125rem; opacity:.85; margin-top:.125rem; }
   </div>
 </div>
 
+
+<!-- ═══════════════════════════════════════════════════
+     DEAL REGISTRATION FLOW
+     ═══════════════════════════════════════════════════ -->
+<div class="cross-section" style="border:2px solid #2563eb;">
+  <h3><div class="dot" style="background:#2563eb;"></div> Deal Registration Flow <span style="font-size:.75rem;font-weight:400;color:var(--wf-muted);margin-left:.5rem;">Partner Portal Submission · PSM Review · Protection Window</span></h3>
+  <div class="chain">
+    <div class="chain-step" style="border-color:#2563eb;border-width:2px;"><a href="pc-dr-deal-type.html" style="color:#2563eb;text-decoration:none;">1. Deal Type</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Referral vs. Resale</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:#2563eb;border-width:2px;"><a href="pc-dr-step1.html" style="color:#2563eb;text-decoration:none;">2. Customer</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Prospect details</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:#2563eb;border-width:2px;"><a href="pc-dr-step2.html" style="color:#2563eb;text-decoration:none;">3. Opportunity</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Deal context</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:#2563eb;border-width:2px;"><a href="pc-dr-step3.html" style="color:#2563eb;text-decoration:none;">4. Products</a><br><span style="font-size:.625rem;color:var(--wf-muted);">IBXs + SKUs</span></div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step" style="border-color:#2563eb;border-width:2px;"><a href="pc-dr-step4.html" style="color:#2563eb;text-decoration:none;">5. Review &amp; Submit</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Confirm + submit</span></div>
+  </div>
+
+  <!-- Internal continuation -->
+  <div style="margin-top:1.25rem;padding-top:1.25rem;border-top:1px dashed var(--gray-border);">
+    <h4 style="font-size:.8125rem;font-weight:700;color:var(--wf-ink);margin:0 0 .625rem;display:flex;align-items:center;gap:.5rem;">
+      <div style="width:8px;height:8px;border-radius:2px;background:#1e40af;flex-shrink:0;"></div>
+      Equinix-Side — PSM Review &amp; Approval
+      <span style="font-size:.75rem;font-weight:400;color:var(--wf-muted);">Pending queue → individual review → approve / reject / dispute</span>
+    </h4>
+    <div class="chain">
+      <div class="chain-step" style="border-color:#1e40af;border-width:2px;"><a href="psm-deal-registration.html" style="color:#1e40af;text-decoration:none;">PSM Queue</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Pending DRs</span></div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-step" style="border-color:#1e40af;border-width:2px;"><a href="psm-deal-review-detail.html" style="color:#1e40af;text-decoration:none;">Review Detail</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Approve / reject</span></div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-step" style="border-color:#1e40af;border-width:2px;"><a href="psm-deal-reg-rules.html" style="color:#1e40af;text-decoration:none;">DR Rules</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Eligibility config</span></div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-step" style="border-color:#059669;border-width:2px;"><a href="rep-deals-commission.html" style="color:#059669;text-decoration:none;">Commission View</a><br><span style="font-size:.625rem;color:var(--wf-muted);">Rep — earnings tracker</span></div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px,1fr));gap:.75rem;margin-top:1rem;font-size:.8125rem;">
+    <div><strong>Protection window:</strong> Starts on PSM approval date (not submission). Standard window: 90 days. Alerts at expiry → <a href="rep-deal-expiring.html" style="color:#2563eb;">rep-deal-expiring.html</a></div>
+    <div><strong>SF Objects:</strong> Deal_Registration__c created on submission → linked to Opportunity on approval. Status: Pending → Approved / Rejected / Expired.</div>
+    <div><strong>Dispute path:</strong> PSM can flag overlap with existing deal or Equinix AE opportunity → <a href="psm-deal-dispute.html" style="color:#2563eb;">psm-deal-dispute.html</a></div>
+    <div><strong>PM Dashboard:</strong> Jordan sees all org DRs at <a href="pm-deal-registration.html" style="color:#2563eb;">pm-deal-registration.html</a>. Deal Desk review queue → <a href="dealdesk-queue.html" style="color:#2563eb;">dealdesk-queue.html</a></div>
+  </div>
+
+  <div style="margin-top:.75rem;padding:.5rem .75rem;background:#eff6ff;border:1px solid #bfdbfe;border-radius:4px;font-size:.75rem;color:#1e40af;">
+    <strong>Full lifecycle flow:</strong> <a href="flow-deal-registration.html" style="color:#2563eb;">Deal Registration Lifecycle →</a> — cross-actor swimlane: Rep submits → validation → PSM reviews → protection window → Deal Desk qualifies commission → close-out. 5 actors, 7 steps.
+  </div>
+</div>
+
+</div><!-- end view-sitemap -->
+
+
+<!-- ═══════ VIEW: JTBD ═══════ -->
+<div id="view-jtbd" class="view-panel">
+<div class="jtbd-view">
+
+  <!-- JTBD External/Internal tabs -->
+  <div class="sitemap-tabs">
+    <div class="tab-nav" role="tablist" aria-label="Audience">
+      <button class="tab-btn active" id="jtbd-tab-external" role="tab" aria-selected="true" aria-controls="jtbd-panel-external" onclick="switchJtbdTab('external')">
+        External — Partner-Facing <span class="tab-count">25</span>
+      </button>
+      <button class="tab-btn" id="jtbd-tab-internal" role="tab" aria-selected="false" aria-controls="jtbd-panel-internal" onclick="switchJtbdTab('internal')">
+        Internal — Equinix <span class="tab-count">22</span>
+      </button>
+    </div>
+
+    <!-- EXTERNAL JTBD PANEL -->
+    <div class="tab-panel active" id="jtbd-panel-external">
+      <div style="padding:.5rem .75rem;background:#fffbe6;border:1px solid #f0d060;border-radius:4px;font-size:.75rem;color:#6b5a00;margin:.75rem 0 1.25rem;">
+        ⚠ Proto-personas — not yet research-validated. Treat as design hypotheses.
+      </div>
+
+      <!-- Sam Chen — Solo self-registration persona -->
+      <div style="margin-bottom:.75rem;">
+        <div class="jtbd-audience-hd">New Rep — Self-Registration Path</div>
+      </div>
+      <div class="jtbd-grid" style="grid-template-columns:1fr;">
+        <div class="jtbd-persona-block solo-persona" style="max-width:640px;">
+          <div class="jtbd-persona-hd">
+            <div class="jtbd-avatar" style="background:#1a7a3c;">SC</div>
+            <div>
+              <div class="jtbd-persona-name">Sam Chen</div>
+              <div class="jtbd-persona-role">Sales Rep — CloudBridge Solutions · Found out about the portal secondhand</div>
+            </div>
+          </div>
+          <div class="jtbd-list">
+            <div class="jtbd-item">
+              <span class="jtbd-num">1</span>
+              <div class="jtbd-text">Find my company's portal org and request access so I can start registering deals without going through Jordan every time.
+                <span class="jtbd-screens">partner-user-request → onboarding-rep-approval-email → onboarding-auth-setup → rep-first-login → rep-home-day0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Jordan Reeves -->
+      <div style="margin-bottom:.75rem;">
+        <div class="jtbd-audience-hd">PM Portal — Jordan Reeves, Portal Admin / RevOps Manager</div>
+      </div>
+      <div class="jtbd-grid">
+        <div class="jtbd-persona-block">
+          <div class="jtbd-persona-hd">
+            <div class="jtbd-avatar" style="background:var(--wf-accent);">JR</div>
+            <div>
+              <div class="jtbd-persona-name">Jordan Reeves</div>
+              <div class="jtbd-persona-role">Portal Admin / RevOps Manager · CloudBridge Solutions</div>
+            </div>
+          </div>
+          <div class="jtbd-list">
+            <div class="jtbd-item"><span class="jtbd-num">1</span><div class="jtbd-text">Apply to the program and set up the org from scratch.<span class="jtbd-screens">onboarding-partner-type → apply-wizard → confirmation → agreement → welcome → onboarding-wizard → pm-home-day0 → pm-admin-setup</span></div></div>
+            <div class="jtbd-item"><span class="jtbd-num">2</span><div class="jtbd-text">Get oriented on Day 0 — know what the portal does, complete admin setup, designate a backup admin.<span class="jtbd-screens">pm-home-day0, pm-admin-setup</span></div></div>
+            <div class="jtbd-item"><span class="jtbd-num">3</span><div class="jtbd-text">Monitor my org's health at a glance — tier standing, training completion, deal pipeline, certifications.<span class="jtbd-screens">pm-home-dashboard, pm-org-health, pm-exec-dashboard</span></div></div>
+            <div class="jtbd-item"><span class="jtbd-num">4</span><div class="jtbd-text">Keep my team trained and certified — assign courses, track completion, send reminders, prevent cert lapses.<span class="jtbd-screens">pm-team-training, pm-team-training-user, pm-cert-tracker, pm-course-catalog</span></div></div>
+            <div class="jtbd-item"><span class="jtbd-num">5</span><div class="jtbd-text">Prepare for my QBR — see Marcus's agenda, preview what data he'll show, add private notes.<span class="jtbd-screens">pm-qbr-view</span></div></div>
+            <div class="jtbd-item"><span class="jtbd-num">6</span><div class="jtbd-text">Register and track deals for my org — submit deals, monitor status across the pipeline funnel.<span class="jtbd-screens">pm-deal-registration, pm-opportunities</span></div></div>
+            <div class="jtbd-item"><span class="jtbd-num">7</span><div class="jtbd-text">Understand our revenue and commission earned — YTD revenue, commission rates by tier, payout history.<span class="jtbd-screens">pm-deals-revenue, pm-opportunities</span></div></div>
+          </div>
+        </div>
+        <div class="jtbd-persona-block">
+          <div class="jtbd-persona-hd">
+            <div class="jtbd-avatar" style="background:var(--wf-accent);">JR</div>
+            <div>
+              <div class="jtbd-persona-name">Jordan Reeves (cont.)</div>
+              <div class="jtbd-persona-role">Portal Admin / RevOps Manager · CloudBridge Solutions</div>
+            </div>
+          </div>
+          <div class="jtbd-list">
+            <div class="jtbd-item"><span class="jtbd-num">8</span><div class="jtbd-text">Request, execute, and claim MDF — submit campaign, track budget, submit proof of performance, get reimbursed.<span class="jtbd-screens">pm-mdf-comarketing, pm-mdf-request, pm-mdf-balance, pm-pop-submission</span></div></div>
+            <div class="jtbd-item"><span class="jtbd-num">9</span><div class="jtbd-text">Review and respond to a contract renewal before it lapses — compare proposed vs. current terms, accept or raise questions.<span class="jtbd-screens">pm-contract-renewal, pm-contracts</span></div></div>
+            <div class="jtbd-item"><span class="jtbd-num">10</span><div class="jtbd-text">Track an amendment request in flight — follow the 7-step tracker, sign DocuSign, message Marcus.<span class="jtbd-screens">pm-amendment-request-status</span></div></div>
+            <div class="jtbd-item"><span class="jtbd-num">11</span><div class="jtbd-text">Dispute a rejected MDF claim — see rejection reason, submit evidence, route to PSM for mediation.<span class="jtbd-screens">pm-mdf-dispute</span></div></div>
+            <div class="jtbd-item"><span class="jtbd-num">12</span><div class="jtbd-text">Contest a tier downgrade decision — submit appeal grounds, upload evidence, track outcome within the 30-day window.<span class="jtbd-screens">pm-tier-appeal</span></div></div>
+            <div class="jtbd-item"><span class="jtbd-num">13</span><div class="jtbd-text">Manage who has access to the portal — invite users, set roles, deactivate leavers.<span class="jtbd-screens">pm-team-management, pm-role-permissions</span></div></div>
+            <div class="jtbd-item"><span class="jtbd-num">14</span><div class="jtbd-text">Download sales collateral and get support when something's broken.<span class="jtbd-screens">pm-playbooks, pm-resources, pm-support-center</span></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Steve Rogers -->
+      <div style="margin-bottom:.75rem; margin-top:.5rem;">
+        <div class="jtbd-audience-hd">Rep Portal — Steve Rogers, Sales Rep / AE</div>
+      </div>
+      <div class="jtbd-grid">
+        <div class="jtbd-persona-block">
+          <div class="jtbd-persona-hd">
+            <div class="jtbd-avatar" style="background:#3d6daa;">SR</div>
+            <div>
+              <div class="jtbd-persona-name">Steve Rogers</div>
+              <div class="jtbd-persona-role">Sales Rep / AE · CloudBridge Solutions</div>
+            </div>
+          </div>
+          <div class="jtbd-list">
+            <div class="jtbd-item"><span class="jtbd-num">15</span><div class="jtbd-text">Get oriented on first login — complete security setup, fill in profile, understand training requirements.<span class="jtbd-screens">rep-first-login, rep-home-day0</span></div></div>
+            <div class="jtbd-item"><span class="jtbd-num">16</span><div class="jtbd-text">Register a deal before someone else claims the prospect — submit details, start protection window, track approval.<span class="jtbd-screens">pc-dr-deal-type → pc-dr-step1–4; rep-register-deal (SFDC variant)</span></div></div>
+            <div class="jtbd-item"><span class="jtbd-num">17</span><div class="jtbd-text">Track my pipeline and know when protection is about to expire.<span class="jtbd-screens">rep-pipeline, rep-deal-expiring</span></div></div>
+            <div class="jtbd-item"><span class="jtbd-num">18</span><div class="jtbd-text">Track my commission and flag when a payment is short.<span class="jtbd-screens">rep-deals-commission, rep-commission-dispute</span></div></div>
+          </div>
+        </div>
+        <div class="jtbd-persona-block">
+          <div class="jtbd-persona-hd">
+            <div class="jtbd-avatar" style="background:#3d6daa;">SR</div>
+            <div>
+              <div class="jtbd-persona-name">Steve Rogers (cont.)</div>
+              <div class="jtbd-persona-role">Sales Rep / AE · CloudBridge Solutions</div>
+            </div>
+          </div>
+          <div class="jtbd-list">
+            <div class="jtbd-item"><span class="jtbd-num">19</span><div class="jtbd-text">Complete required training and keep my certifications current so I stay eligible to earn.<span class="jtbd-screens">rep-my-training, rep-course-detail, rep-certifications, rep-course-catalog</span></div></div>
+            <div class="jtbd-item"><span class="jtbd-num">20</span><div class="jtbd-text">Know my numbers against quota before my manager does — attainment, JBP health, deal risk, forecast scenarios.<span class="jtbd-screens">rep-forecast</span></div></div>
+            <div class="jtbd-item"><span class="jtbd-num">21</span><div class="jtbd-text">Grab the sales tools I need to close this deal — playbooks, battle cards, proposal templates.<span class="jtbd-screens">rep-sales-tools</span></div></div>
+            <div class="jtbd-item"><span class="jtbd-num">22</span><div class="jtbd-text">Initiate a co-sell request with Equinix for a strategic Platinum-tier opportunity.<span class="jtbd-screens">rep-co-sell</span></div></div>
+            <div class="jtbd-item"><span class="jtbd-num">23</span><div class="jtbd-text">Manage my notifications so I don't miss deal expirations or cert renewals.<span class="jtbd-screens">rep-notifications, rep-notification-preferences, rep-notification-history</span></div></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end jtbd-panel-external -->
+
+    <!-- INTERNAL JTBD PANEL -->
+    <div class="tab-panel" id="jtbd-panel-internal">
+      <div class="jtbd-grid" style="margin-top:1.25rem;">
+
+        <!-- Marcus Chen — PSM -->
+        <div class="jtbd-persona-block">
+          <div class="jtbd-persona-hd">
+            <div class="jtbd-avatar" style="background:var(--wf-ink);">MC</div>
+            <div>
+              <div class="jtbd-persona-name">Marcus Chen</div>
+              <div class="jtbd-persona-role">Partner Success Manager · Equinix · SFDC Lightning</div>
+            </div>
+          </div>
+          <div class="jtbd-list">
+            <div class="jtbd-item"><span class="jtbd-num">24</span><div class="jtbd-text">Review and approve deal registrations within SLA — validate eligibility, start protection window.<span class="jtbd-screens">psm-dr-queue, psm-dr-review-detail</span></div></div>
+            <div class="jtbd-item"><span class="jtbd-num">25</span><div class="jtbd-text">Resolve deal disputes and commission discrepancies before they escalate.<span class="jtbd-screens">psm-deal-dispute, psm-commission-processing</span></div></div>
+            <div class="jtbd-item"><span class="jtbd-num">26</span><div class="jtbd-text">Co-sell with a partner rep on a strategic opportunity — assign AE support, track collaboration.<span class="jtbd-screens">psm-co-sell-queue, psm-co-sell-collab</span></div></div>
+            <div class="jtbd-item"><span class="jtbd-num">27</span><div class="jtbd-text">Monitor my portfolio and surface at-risk partners before they go dormant.<span class="jtbd-screens">psm-partner-portfolio, psm-partnership-health-scorecard</span></div></div>
+            <div class="jtbd-item"><span class="jtbd-num">28</span><div class="jtbd-text">Onboard a newly approved partner through their 30/60/90-day plan.<span class="jtbd-screens">psm-partner-app-review, psm-new-partner-config, psm-30-60-90</span></div></div>
+            <div class="jtbd-item"><span class="jtbd-num">29</span><div class="jtbd-text">Send a supportive nudge to a partner manager whose team is falling behind on training.<span class="jtbd-screens">psm-encourage-modal, psm-partner-comms</span></div></div>
+            <div class="jtbd-item"><span class="jtbd-num">30</span><div class="jtbd-text">Run a productive QBR — pull data, set agenda, take minutes, track action items.<span class="jtbd-screens">psm-qbr-prep, psm-qbr-agenda</span></div></div>
+            <div class="jtbd-item"><span class="jtbd-num">31</span><div class="jtbd-text">Manage the PPA renewal cycle before it lapses — present options, send DocuSign, track countersign.<span class="jtbd-screens">psm-contract-renewal, psm-contracts</span></div></div>
+            <div class="jtbd-item"><span class="jtbd-num">32</span><div class="jtbd-text">Approve MDF requests, validate proof of performance, and process reimbursement.<span class="jtbd-screens">psm-mdf-approval, psm-pop-review, psm-reimbursement</span></div></div>
+            <div class="jtbd-item"><span class="jtbd-num">33</span><div class="jtbd-text">Generate an executive escalation brief quickly when a relationship is at risk.<span class="jtbd-screens">psm-escalation screens, flow-escalation-brief</span></div></div>
+            <div class="jtbd-item"><span class="jtbd-num">34</span><div class="jtbd-text">Flag dormant partners and manage offboarding cleanly.<span class="jtbd-screens">psm-dormancy-offboarding</span></div></div>
+          </div>
+        </div>
+
+        <!-- Alex Rivera — PAM -->
+        <div class="jtbd-persona-block">
+          <div class="jtbd-persona-hd">
+            <div class="jtbd-avatar" style="background:#6d28d9;">AR</div>
+            <div>
+              <div class="jtbd-persona-name">Alex Rivera</div>
+              <div class="jtbd-persona-role">Partner Account Manager · Equinix · SFDC Lightning</div>
+            </div>
+          </div>
+          <div class="jtbd-list">
+            <div class="jtbd-item"><span class="jtbd-num">35</span><div class="jtbd-text">Govern the tier review cycle — evaluate partners, authorize upgrades and downgrades at scale.<span class="jtbd-screens">pam-tier-governance, pam-tier-distribution, pam-tier-demotion, pam-tier-upgrade-rec</span></div></div>
+            <div class="jtbd-item"><span class="jtbd-num">36</span><div class="jtbd-text">Manage all partner agreements across the portfolio — expiry alerts, generate new PPAs.<span class="jtbd-screens">pam-program-agreements, pam-ppa-amendment, pam-agreement-renewal</span></div></div>
+            <div class="jtbd-item"><span class="jtbd-num">37</span><div class="jtbd-text">Control MDF budget allocations and review claim approvals.<span class="jtbd-screens">pam-mdf-queue, pam-mdf-claims</span></div></div>
+            <div class="jtbd-item"><span class="jtbd-num">38</span><div class="jtbd-text">Onboard a newly recruited partner — process application queue, approve org, trigger provisioning.<span class="jtbd-screens">pam-app-review-queue, pam-partner-account-strategic</span></div></div>
+            <div class="jtbd-item"><span class="jtbd-num">39</span><div class="jtbd-text">Run a portfolio health review and surface at-risk partners for leadership.<span class="jtbd-screens">pam-dashboard, pam-partner-portfolio, pam-program-report</span></div></div>
+            <div class="jtbd-item"><span class="jtbd-num">40</span><div class="jtbd-text">Create and check in on a Joint Business Plan with a strategic partner.<span class="jtbd-screens">pam-create-jbp, pam-jbp-checkin</span></div></div>
+            <div class="jtbd-item"><span class="jtbd-num">41</span><div class="jtbd-text">Manage partner offboarding and transfer open deals cleanly to a new partner or AE.<span class="jtbd-screens">pam-partner-dormancy-offboarding, pam-deal-handover</span></div></div>
+            <div class="jtbd-item"><span class="jtbd-num">42</span><div class="jtbd-text">Handle an escalation at the program level — review brief, manage resolution, close loop.<span class="jtbd-screens">pam-escalation-brief, pam-escalation-queue</span></div></div>
+            <div class="jtbd-item"><span class="jtbd-num">43</span><div class="jtbd-text">Produce a program health report and financial detail for leadership review.<span class="jtbd-screens">pam-program-report, pam-partner-financial</span></div></div>
+          </div>
+        </div>
+
+        <!-- Equinix AE -->
+        <div class="jtbd-persona-block solo-persona">
+          <div class="jtbd-persona-hd">
+            <div class="jtbd-avatar" style="background:#0891b2;">AE</div>
+            <div>
+              <div class="jtbd-persona-name">Equinix AE</div>
+              <div class="jtbd-persona-role">Account Executive · Equinix · SFDC Lightning</div>
+            </div>
+          </div>
+          <div class="jtbd-list">
+            <div class="jtbd-item"><span class="jtbd-num">44</span><div class="jtbd-text">See which partner-sourced opportunities are in my territory, create a quote, and fulfill the order.<span class="jtbd-screens">ae-partner-opps, ae-create-order, ae-order-fulfillment</span></div></div>
+          </div>
+        </div>
+
+        <!-- Priya Nair — CMM -->
+        <div class="jtbd-persona-block solo-persona">
+          <div class="jtbd-persona-hd">
+            <div class="jtbd-avatar" style="background:#7c3aed;">PN</div>
+            <div>
+              <div class="jtbd-persona-name">Priya Nair</div>
+              <div class="jtbd-persona-role">Channel Marketing Manager · Equinix · SFDC Lightning</div>
+            </div>
+          </div>
+          <div class="jtbd-list">
+            <div class="jtbd-item"><span class="jtbd-num">45</span><div class="jtbd-text">Govern the MDF program budget across all partner tiers — track utilization, campaign performance, allocation health.<span class="jtbd-screens">cmm-home-dashboard</span></div></div>
+          </div>
+        </div>
+
+        <!-- Rachel Kim — Deal Desk -->
+        <div class="jtbd-persona-block solo-persona">
+          <div class="jtbd-persona-hd">
+            <div class="jtbd-avatar" style="background:#0891b2;">RK</div>
+            <div>
+              <div class="jtbd-persona-name">Rachel Kim</div>
+              <div class="jtbd-persona-role">Deal Desk · Equinix · SFDC Lightning</div>
+            </div>
+          </div>
+          <div class="jtbd-list">
+            <div class="jtbd-item"><span class="jtbd-num">46</span><div class="jtbd-text">Resolve commission disputes and deal exceptions within the 3–5 day SLA.<span class="jtbd-screens">dealdesk-queue</span></div></div>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- end jtbd-panel-internal -->
+
+  </div><!-- end sitemap-tabs (jtbd) -->
+</div><!-- end jtbd-view -->
+</div><!-- end view-jtbd -->
+
+
+<!-- ═══════ VIEW: SERVICE DIAGRAM ═══════ -->
+<div id="view-service" class="view-panel">
+<div class="sd-wrap">
+  <div class="sd-hd">
+    <h3>Service Blueprint — Partner Channel Program</h3>
+    <div class="sd-filters" role="group" aria-label="Highlight workflow">
+      <button class="sd-btn active" id="sd-all" onclick="highlightFlow('all')" style="background:var(--wf-ink);color:#fff;border-color:var(--wf-ink);">All</button>
+      <button class="sd-btn" id="sd-onboarding" onclick="highlightFlow('onboarding')" style="--sd-c:#0d9488;">Onboarding</button>
+      <button class="sd-btn" id="sd-dealreg" onclick="highlightFlow('dealreg')" style="--sd-c:#2563eb;">Deal Registration</button>
+      <button class="sd-btn" id="sd-mdf" onclick="highlightFlow('mdf')" style="--sd-c:#d97706;">MDF Lifecycle</button>
+      <button class="sd-btn" id="sd-tier" onclick="highlightFlow('tier')" style="--sd-c:#7c3aed;">Tier Review</button>
+      <button class="sd-btn" id="sd-agreement" onclick="highlightFlow('agreement')" style="--sd-c:#166534;">Agreements</button>
+    </div>
+  </div>
+  <div class="sd-body">
+    <svg class="sd-svg" viewBox="0 0 1060 520" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Service blueprint swim lane diagram showing how partner workflows cross user-facing portals, Salesforce, and external systems">
+
+      <!-- Lane backgrounds -->
+      <rect x="0" y="0" width="1060" height="520" fill="#f9fafb"/>
+
+      <!-- Lane 1: Partner Org actors -->
+      <rect x="0" y="0" width="1060" height="108" fill="#f0f7ff"/>
+      <!-- Lane 2: External Portals -->
+      <rect x="0" y="108" width="1060" height="120" fill="#fff"/>
+      <!-- Lane 3: Transaction / Data Layer -->
+      <rect x="0" y="228" width="1060" height="96" fill="#f8f6ff"/>
+      <!-- Lane 4: Salesforce Internal -->
+      <rect x="0" y="324" width="1060" height="104" fill="#fff"/>
+      <!-- Lane 5: External Systems -->
+      <rect x="0" y="428" width="1060" height="92" fill="#f0fdf4"/>
+
+      <!-- Lane dividers -->
+      <line x1="0" y1="108" x2="1060" y2="108" stroke="#e2e8f0" stroke-width="1"/>
+      <line x1="0" y1="228" x2="1060" y2="228" stroke="#e2e8f0" stroke-width="1"/>
+      <line x1="0" y1="324" x2="1060" y2="324" stroke="#e2e8f0" stroke-width="1"/>
+      <line x1="0" y1="428" x2="1060" y2="428" stroke="#e2e8f0" stroke-width="1"/>
+
+      <!-- Lane labels -->
+      <text x="8" y="18" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" text-transform="uppercase" fill="#94a3b8" letter-spacing="0.06em">PARTNER ORG</text>
+      <text x="8" y="126" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="#94a3b8" letter-spacing="0.06em">EXPERIENCE CLOUD</text>
+      <text x="8" y="246" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="#94a3b8" letter-spacing="0.06em">WORKFLOWS &amp; TRANSACTIONS</text>
+      <text x="8" y="342" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="#94a3b8" letter-spacing="0.06em">SALESFORCE LIGHTNING</text>
+      <text x="8" y="446" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="#94a3b8" letter-spacing="0.06em">EXTERNAL SYSTEMS</text>
+
+      <!-- ─── LANE 1: Partner Org actors ─── -->
+      <!-- Jordan -->
+      <g id="actor-jordan">
+        <circle cx="130" cy="55" r="20" fill="#3b82f6"/>
+        <text x="130" y="59" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" font-weight="700" fill="#fff">JR</text>
+        <text x="130" y="84" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="#1e40af">Jordan</text>
+        <text x="130" y="95" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#94a3b8">Portal Admin</text>
+      </g>
+      <!-- Steve -->
+      <g id="actor-steve">
+        <circle cx="250" cy="55" r="20" fill="#3d6daa"/>
+        <text x="250" y="59" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" font-weight="700" fill="#fff">SR</text>
+        <text x="250" y="84" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="#1e3a5f">Steve</text>
+        <text x="250" y="95" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#94a3b8">Sales Rep</text>
+      </g>
+      <!-- Sam -->
+      <g id="actor-sam">
+        <circle cx="370" cy="55" r="20" fill="#1a7a3c" fill-opacity="0.7" stroke="#1a7a3c" stroke-width="1.5" stroke-dasharray="4,3"/>
+        <text x="370" y="59" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" font-weight="700" fill="#fff">SC</text>
+        <text x="370" y="84" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="#1a7a3c">Sam</text>
+        <text x="370" y="95" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#94a3b8">Self-registers</text>
+      </g>
+      <!-- Brian (exec) -->
+      <g id="actor-brian">
+        <circle cx="480" cy="55" r="16" fill="#64748b"/>
+        <text x="480" y="59" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="#fff">BW</text>
+        <text x="480" y="80" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="#475569">Brian</text>
+        <text x="480" y="91" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#94a3b8">Partner Exec</text>
+      </g>
+      <!-- Maria (EUC) -->
+      <g id="actor-maria">
+        <circle cx="580" cy="55" r="16" fill="#dc2626"/>
+        <text x="580" y="59" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="#fff">MH</text>
+        <text x="580" y="80" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" fill="#991b1b">Maria</text>
+        <text x="580" y="91" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#94a3b8">End Customer</text>
+      </g>
+
+      <!-- ─── LANE 2: Experience Cloud Portals ─── -->
+      <!-- Onboarding portal -->
+      <rect x="60" y="120" width="110" height="40" rx="5" fill="#ccfbf1" stroke="#0d9488" stroke-width="1.5"/>
+      <text x="115" y="137" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" font-weight="700" fill="#134e4a">Onboarding</text>
+      <text x="115" y="149" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#134e4a">Pre-auth flow</text>
+
+      <!-- PM Portal -->
+      <rect x="195" y="120" width="110" height="40" rx="5" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5"/>
+      <text x="250" y="137" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" font-weight="700" fill="#1e40af">PM Portal</text>
+      <text x="250" y="149" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#1e40af">Experience Cloud</text>
+
+      <!-- Rep Portal -->
+      <rect x="325" y="120" width="110" height="40" rx="5" fill="#e0e7ff" stroke="#3d6daa" stroke-width="1.5"/>
+      <text x="380" y="137" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" font-weight="700" fill="#1e3a5f">Rep Portal</text>
+      <text x="380" y="149" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#1e3a5f">Experience Cloud</text>
+
+      <!-- ECP -->
+      <rect x="455" y="120" width="90" height="40" rx="5" fill="#fee2e2" stroke="#dc2626" stroke-width="1.5"/>
+      <text x="500" y="137" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" font-weight="700" fill="#991b1b">ECP</text>
+      <text x="500" y="149" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#991b1b">Customer Portal</text>
+
+      <!-- ─── LANE 3: Workflows / Transactions ─── -->
+      <!-- Key workflow nodes -->
+      <rect x="60" y="242" width="90" height="34" rx="4" fill="#ccfbf1" stroke="#0d9488" stroke-width="1" class="flow-onboarding"/>
+      <text x="105" y="256" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="#134e4a">Partner</text>
+      <text x="105" y="267" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#134e4a">Onboarding</text>
+
+      <rect x="170" y="242" width="90" height="34" rx="4" fill="#dbeafe" stroke="#2563eb" stroke-width="1" class="flow-dealreg"/>
+      <text x="215" y="256" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="#1e40af">Deal</text>
+      <text x="215" y="267" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#1e40af">Registration</text>
+
+      <rect x="280" y="242" width="90" height="34" rx="4" fill="#fef3c7" stroke="#d97706" stroke-width="1" class="flow-mdf"/>
+      <text x="325" y="256" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="#92400e">MDF</text>
+      <text x="325" y="267" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#92400e">Lifecycle</text>
+
+      <rect x="390" y="242" width="90" height="34" rx="4" fill="#ede9fe" stroke="#7c3aed" stroke-width="1" class="flow-tier"/>
+      <text x="435" y="256" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="#4c1d95">Tier</text>
+      <text x="435" y="267" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#4c1d95">Review</text>
+
+      <rect x="500" y="242" width="90" height="34" rx="4" fill="#dcfce7" stroke="#166534" stroke-width="1" class="flow-agreement"/>
+      <text x="545" y="256" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="#166534">Agreements</text>
+      <text x="545" y="267" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#166534">&amp; Renewals</text>
+
+      <rect x="610" y="242" width="90" height="34" rx="4" fill="#f1f5f9" stroke="#64748b" stroke-width="1"/>
+      <text x="655" y="256" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="#475569">Training</text>
+      <text x="655" y="267" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#475569">Certification</text>
+
+      <rect x="720" y="242" width="90" height="34" rx="4" fill="#f1f5f9" stroke="#64748b" stroke-width="1"/>
+      <text x="765" y="256" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="#475569">QBR /</text>
+      <text x="765" y="267" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#475569">JBP</text>
+
+      <rect x="830" y="242" width="90" height="34" rx="4" fill="#f1f5f9" stroke="#64748b" stroke-width="1"/>
+      <text x="875" y="256" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="#475569">Commission</text>
+      <text x="875" y="267" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#475569">Disputes</text>
+
+      <!-- ─── LANE 4: Salesforce Internal ─── -->
+      <!-- PSM -->
+      <rect x="60" y="338" width="100" height="42" rx="4" fill="#f0f0f0" stroke="#1e2a3a" stroke-width="1.5"/>
+      <text x="110" y="356" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" font-weight="700" fill="#1e2a3a">PSM</text>
+      <text x="110" y="368" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#475569">Marcus Chen</text>
+
+      <!-- PAM -->
+      <rect x="185" y="338" width="100" height="42" rx="4" fill="#ede9fe" stroke="#6d28d9" stroke-width="1.5"/>
+      <text x="235" y="356" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" font-weight="700" fill="#4c1d95">PAM</text>
+      <text x="235" y="368" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#4c1d95">Alex Rivera</text>
+
+      <!-- AE -->
+      <rect x="310" y="338" width="80" height="42" rx="4" fill="#f0f9ff" stroke="#0891b2" stroke-width="1"/>
+      <text x="350" y="356" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" font-weight="700" fill="#0e7490">Equinix AE</text>
+      <text x="350" y="368" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#0e7490">Order mgmt</text>
+
+      <!-- CMM -->
+      <rect x="415" y="338" width="80" height="42" rx="4" fill="#faf5ff" stroke="#7c3aed" stroke-width="1"/>
+      <text x="455" y="356" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" font-weight="700" fill="#6d28d9">CMM</text>
+      <text x="455" y="368" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#6d28d9">Priya Nair</text>
+
+      <!-- Deal Desk -->
+      <rect x="520" y="338" width="80" height="42" rx="4" fill="#f0f9ff" stroke="#0891b2" stroke-width="1"/>
+      <text x="560" y="356" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" font-weight="700" fill="#0e7490">Deal Desk</text>
+      <text x="560" y="368" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#0e7490">Rachel Kim</text>
+
+      <!-- Agentforce -->
+      <rect x="625" y="338" width="90" height="42" rx="4" fill="#fafaf0" stroke="#b45309" stroke-width="1"/>
+      <text x="670" y="356" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="9" font-weight="700" fill="#92400e">Agentforce</text>
+      <text x="670" y="368" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#92400e">AI layer</text>
+
+      <!-- ─── LANE 5: External Systems ─── -->
+      <rect x="60" y="444" width="85" height="34" rx="4" fill="#f0fdf4" stroke="#16a34a" stroke-width="1"/>
+      <text x="102" y="458" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="#166534">SumTotal LMS</text>
+      <text x="102" y="469" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#166534">Training sync</text>
+
+      <rect x="165" y="444" width="80" height="34" rx="4" fill="#f0fdf4" stroke="#16a34a" stroke-width="1"/>
+      <text x="205" y="458" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="#166534">DocuSign</text>
+      <text x="205" y="469" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#166534">e-signatures</text>
+
+      <rect x="265" y="444" width="80" height="34" rx="4" fill="#f0fdf4" stroke="#16a34a" stroke-width="1"/>
+      <text x="305" y="458" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="#166534">D&amp;B</text>
+      <text x="305" y="469" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#166534">Company data</text>
+
+      <rect x="365" y="444" width="90" height="34" rx="4" fill="#f0fdf4" stroke="#16a34a" stroke-width="1"/>
+      <text x="410" y="458" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="#166534">Mktg Cloud</text>
+      <text x="410" y="469" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#166534">Email/notifs</text>
+
+      <rect x="475" y="444" width="80" height="34" rx="4" fill="#f0fdf4" stroke="#16a34a" stroke-width="1"/>
+      <text x="515" y="458" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" font-weight="700" fill="#166534">ERP / Finance</text>
+      <text x="515" y="469" text-anchor="middle" font-family="-apple-system,sans-serif" font-size="8" fill="#166534">Commissions</text>
+
+      <!-- ─── Connecting arrows (always visible) ─── -->
+      <!-- Partner org → portals -->
+      <line x1="130" y1="75" x2="115" y2="119" stroke="#cbd5e1" stroke-width="1.5" marker-end="url(#arr-gray)"/>
+      <line x1="130" y1="75" x2="200" y2="119" stroke="#cbd5e1" stroke-width="1.5" marker-end="url(#arr-gray)"/>
+      <line x1="250" y1="75" x2="250" y2="119" stroke="#cbd5e1" stroke-width="1.5" marker-end="url(#arr-gray)"/>
+      <line x1="370" y1="75" x2="340" y2="119" stroke="#cbd5e1" stroke-width="1.5" marker-end="url(#arr-gray)"/>
+      <!-- Portals → workflows -->
+      <line x1="115" y1="161" x2="105" y2="241" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr-gray)"/>
+      <line x1="250" y1="161" x2="215" y2="241" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr-gray)"/>
+      <line x1="380" y1="161" x2="215" y2="241" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr-gray)"/>
+      <!-- Workflows → SF internal -->
+      <line x1="215" y1="277" x2="110" y2="337" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr-gray)"/>
+      <line x1="325" y1="277" x2="235" y2="337" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr-gray)"/>
+      <!-- SF → external systems -->
+      <line x1="110" y1="381" x2="102" y2="443" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr-gray)"/>
+      <line x1="110" y1="381" x2="165" y2="443" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr-gray)"/>
+      <line x1="235" y1="381" x2="205" y2="443" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arr-gray)"/>
+
+      <!-- Arrow marker definitions -->
+      <defs>
+        <marker id="arr-gray" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L6,3 z" fill="#cbd5e1"/>
+        </marker>
+        <marker id="arr-teal" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L6,3 z" fill="#0d9488"/>
+        </marker>
+        <marker id="arr-blue" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L6,3 z" fill="#2563eb"/>
+        </marker>
+        <marker id="arr-amber" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L6,3 z" fill="#d97706"/>
+        </marker>
+        <marker id="arr-purple" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L6,3 z" fill="#7c3aed"/>
+        </marker>
+        <marker id="arr-green" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L6,3 z" fill="#166534"/>
+        </marker>
+      </defs>
+
+      <!-- ─── Workflow highlight paths (hidden by default, shown via JS) ─── -->
+      <!-- Onboarding path -->
+      <g id="path-onboarding" opacity="0" style="transition:opacity .3s">
+        <line x1="130" y1="75" x2="115" y2="119" stroke="#0d9488" stroke-width="2.5" marker-end="url(#arr-teal)"/>
+        <line x1="115" y1="161" x2="105" y2="241" stroke="#0d9488" stroke-width="2.5" marker-end="url(#arr-teal)"/>
+        <line x1="105" y1="277" x2="110" y2="337" stroke="#0d9488" stroke-width="2.5" marker-end="url(#arr-teal)"/>
+        <line x1="110" y1="381" x2="165" y2="443" stroke="#0d9488" stroke-width="2.5" marker-end="url(#arr-teal)"/>
+        <rect x="58" y="240" width="94" height="38" rx="4" fill="none" stroke="#0d9488" stroke-width="2.5"/>
+      </g>
+      <!-- Deal Registration path -->
+      <g id="path-dealreg" opacity="0" style="transition:opacity .3s">
+        <line x1="250" y1="75" x2="250" y2="119" stroke="#2563eb" stroke-width="2.5" marker-end="url(#arr-blue)"/>
+        <line x1="370" y1="75" x2="340" y2="119" stroke="#2563eb" stroke-width="2.5" marker-end="url(#arr-blue)"/>
+        <line x1="380" y1="161" x2="215" y2="241" stroke="#2563eb" stroke-width="2.5" marker-end="url(#arr-blue)"/>
+        <line x1="215" y1="277" x2="110" y2="337" stroke="#2563eb" stroke-width="2.5" marker-end="url(#arr-blue)"/>
+        <line x1="350" y1="381" x2="515" y2="443" stroke="#2563eb" stroke-width="2.5" marker-end="url(#arr-blue)"/>
+        <rect x="168" y="240" width="94" height="38" rx="4" fill="none" stroke="#2563eb" stroke-width="2.5"/>
+      </g>
+      <!-- MDF path -->
+      <g id="path-mdf" opacity="0" style="transition:opacity .3s">
+        <line x1="130" y1="75" x2="200" y2="119" stroke="#d97706" stroke-width="2.5" marker-end="url(#arr-amber)"/>
+        <line x1="250" y1="161" x2="325" y2="241" stroke="#d97706" stroke-width="2.5" marker-end="url(#arr-amber)"/>
+        <line x1="325" y1="277" x2="235" y2="337" stroke="#d97706" stroke-width="2.5" marker-end="url(#arr-amber)"/>
+        <line x1="235" y1="381" x2="455" y2="443" stroke="#d97706" stroke-width="2.5" marker-end="url(#arr-amber)"/>
+        <rect x="278" y="240" width="94" height="38" rx="4" fill="none" stroke="#d97706" stroke-width="2.5"/>
+      </g>
+      <!-- Tier Review path -->
+      <g id="path-tier" opacity="0" style="transition:opacity .3s">
+        <line x1="670" y1="381" x2="435" y2="278" stroke="#7c3aed" stroke-width="2.5" stroke-dasharray="6,3" marker-end="url(#arr-purple)"/>
+        <line x1="110" y1="337" x2="235" y2="337" stroke="#7c3aed" stroke-width="2.5" marker-end="url(#arr-purple)"/>
+        <line x1="435" y1="277" x2="250" y2="161" stroke="#7c3aed" stroke-width="2.5" marker-end="url(#arr-purple)"/>
+        <rect x="388" y="240" width="94" height="38" rx="4" fill="none" stroke="#7c3aed" stroke-width="2.5"/>
+      </g>
+      <!-- Agreement path -->
+      <g id="path-agreement" opacity="0" style="transition:opacity .3s">
+        <line x1="130" y1="75" x2="115" y2="119" stroke="#166534" stroke-width="2.5" marker-end="url(#arr-green)"/>
+        <line x1="115" y1="161" x2="545" y2="241" stroke="#166534" stroke-width="2.5" marker-end="url(#arr-green)"/>
+        <line x1="545" y1="277" x2="110" y2="337" stroke="#166534" stroke-width="2.5" marker-end="url(#arr-green)"/>
+        <line x1="110" y1="381" x2="205" y2="443" stroke="#166534" stroke-width="2.5" marker-end="url(#arr-green)"/>
+        <rect x="498" y="240" width="94" height="38" rx="4" fill="none" stroke="#166534" stroke-width="2.5"/>
+      </g>
+
+      <!-- Line of visibility markers -->
+      <line x1="0" y1="108" x2="1060" y2="108" stroke="#94a3b8" stroke-width="0.5" stroke-dasharray="8,4"/>
+      <line x1="0" y1="228" x2="1060" y2="228" stroke="#94a3b8" stroke-width="0.5" stroke-dasharray="8,4"/>
+      <line x1="0" y1="324" x2="1060" y2="324" stroke="#94a3b8" stroke-width="0.5" stroke-dasharray="8,4"/>
+      <line x1="0" y1="428" x2="1060" y2="428" stroke="#94a3b8" stroke-width="0.5" stroke-dasharray="8,4"/>
+
+      <!-- "Line of visibility" labels -->
+      <text x="950" y="106" text-anchor="end" font-family="-apple-system,sans-serif" font-size="7" fill="#94a3b8" font-style="italic">— line of visibility (partner / portal) —</text>
+      <text x="950" y="226" text-anchor="end" font-family="-apple-system,sans-serif" font-size="7" fill="#94a3b8" font-style="italic">— line of internal interaction —</text>
+      <text x="950" y="322" text-anchor="end" font-family="-apple-system,sans-serif" font-size="7" fill="#94a3b8" font-style="italic">— line of support (external systems) —</text>
+    </svg>
+  </div>
+  <div style="padding:.5rem 1.25rem;font-size:.75rem;color:var(--wf-muted);border-top:1px solid var(--gray-border);">
+    Click a workflow above to highlight its path. Dashed circles = Sam Chen's self-registration arc (not invited — discovers portal externally). Dashed connector lines = async/background processes. "Lines of visibility" follow standard service blueprint convention.
+  </div>
+</div>
+</div><!-- end view-service -->
+
 </div><!-- end container -->
 
 <script>
@@ -3128,13 +3731,6 @@ function switchTab(id) {
   // Persist preference
   try { sessionStorage.setItem('pcp-sitemap-tab', id); } catch(e) {}
 }
-// Restore last tab on load — default to 'partner'
-document.addEventListener('DOMContentLoaded', function() {
-  var saved = 'partner';
-  try { saved = sessionStorage.getItem('pcp-sitemap-tab') || 'partner'; } catch(e) {}
-  switchTab(saved);
-});
-
 function toggleSection(el) {
   const body = el.nextElementSibling;
   const chev = el.querySelector('.chevron');
@@ -3160,6 +3756,79 @@ document.addEventListener('keydown', function(e) {
     e.target.click();
   }
 });
+
+// ── 3-View toggle ──────────────────────────────────────
+function switchView(view) {
+  document.querySelectorAll('.view-panel').forEach(function(p) {
+    p.classList.toggle('active', p.id === 'view-' + view);
+  });
+  document.querySelectorAll('.view-btn').forEach(function(b) {
+    var isActive = b.id === 'vbtn-' + view;
+    b.classList.toggle('active', isActive);
+    b.setAttribute('aria-pressed', String(isActive));
+  });
+  try { sessionStorage.setItem('pcp-view', view); } catch(e) {}
+}
+// Restore last view on load — default to 'sitemap'
+document.addEventListener('DOMContentLoaded', function() {
+  var saved = 'sitemap';
+  try { saved = sessionStorage.getItem('pcp-view') || 'sitemap'; } catch(e) {}
+  switchView(saved);
+  // Sitemap tab also restored via its own handler — call after view switch
+  var savedTab = 'partner';
+  try { savedTab = sessionStorage.getItem('pcp-sitemap-tab') || 'partner'; } catch(e) {}
+  switchTab(savedTab);
+});
+
+// ── JTBD External / Internal tabs ──────────────────────
+function switchJtbdTab(tab) {
+  var view = document.getElementById('view-jtbd');
+  if (!view) return;
+  view.querySelectorAll('.tab-panel').forEach(function(p) {
+    p.classList.toggle('active', p.id === 'jtbd-panel-' + tab);
+  });
+  view.querySelectorAll('.tab-btn').forEach(function(b) {
+    var isActive = b.id === 'jtbd-tab-' + tab;
+    b.classList.toggle('active', isActive);
+    b.setAttribute('aria-selected', String(isActive));
+  });
+}
+
+// ── Service Diagram flow highlighting ──────────────────
+var _flowColors = {
+  onboarding: '#0d9488',
+  dealreg:    '#2563eb',
+  mdf:        '#d97706',
+  tier:       '#7c3aed',
+  agreement:  '#166534'
+};
+function highlightFlow(flow) {
+  // Reset all paths
+  document.querySelectorAll('[id^="path-"]').forEach(function(p) {
+    p.style.opacity = flow === 'all' ? '1' : '0';
+  });
+  // Show selected path
+  if (flow !== 'all') {
+    var el = document.getElementById('path-' + flow);
+    if (el) el.style.opacity = '1';
+  }
+  // Update filter buttons
+  document.querySelectorAll('.sd-btn').forEach(function(b) {
+    var btnFlow = b.id.replace('sd-', '');
+    var isActive = btnFlow === flow;
+    b.classList.toggle('active', isActive);
+    if (isActive) {
+      var c = flow === 'all' ? 'var(--wf-ink)' : (_flowColors[flow] || '#2563eb');
+      b.style.background = c;
+      b.style.color = '#fff';
+      b.style.borderColor = 'transparent';
+    } else {
+      b.style.background = '';
+      b.style.color = '';
+      b.style.borderColor = '';
+    }
+  });
+}
 </script>
 
 <script src="wf-nav.js"></script>
