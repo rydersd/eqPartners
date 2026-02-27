@@ -455,6 +455,29 @@
 
     // 3. Get or create the context bar element
     var ctxBar = document.querySelector('.page-context-bar');
+
+    // 3a. Format document.lastModified → mm/dd/yy HH:MM AM/PM TZ
+    //     Uses the local timezone of the viewer's browser.
+    function fmtLastModified() {
+      var d = new Date(document.lastModified);
+      if (isNaN(d.getTime())) return '';
+      var mm  = String(d.getMonth() + 1).padStart(2, '0');
+      var dd  = String(d.getDate()).padStart(2, '0');
+      var yy  = String(d.getFullYear()).slice(-2);
+      var h   = d.getHours();
+      var min = String(d.getMinutes()).padStart(2, '0');
+      var ampm = h >= 12 ? 'PM' : 'AM';
+      h = h % 12 || 12;
+      var hh  = String(h).padStart(2, '0');
+      // Extract short timezone abbreviation (e.g. "PST", "EST", "UTC")
+      var tzAbbr = d.toLocaleTimeString('en-US', { timeZoneName: 'short' })
+                    .split(' ').pop();
+      return mm + '/' + dd + '/' + yy + ' ' + hh + ':' + min + ' ' + ampm + '\u00a0' + tzAbbr;
+    }
+    var tsText = fmtLastModified();
+    var timestampEl = tsText
+      ? '<span class="wf-ctx-timestamp" aria-label="Last updated ' + tsText + '">' + tsText + '</span>'
+      : '';
     if (!ctxBar) {
       ctxBar = document.createElement('div');
     }
@@ -499,6 +522,7 @@
           '</nav>' +
         '</div>' +
         '<div class="wf-ctx-right">' +
+          timestampEl +
           personaChip +
           copyBtn +
           notesBtn +

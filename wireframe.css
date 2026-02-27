@@ -975,6 +975,22 @@ html.wireframe .wf-ctx-persona-chip-role { font-weight: 700; color: var(--wf-ink
 html.wireframe .wf-ctx-persona-chip-sep  { color: var(--wf-line); }
 html.wireframe .wf-ctx-persona-chip-name { color: var(--wf-muted); }
 
+/* ── Last-updated timestamp ──────────────────────────────────────
+   Shown right of breadcrumbs in the context bar; reads
+   document.lastModified so it always reflects the file's own date. */
+html.wireframe .wf-ctx-timestamp {
+  font-size: 10px;
+  color: var(--wf-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+  letter-spacing: .01em;
+}
+html.wireframe .wf-ctx-timestamp::before {
+  content: 'Updated\00a0';
+  font-weight: 600;
+  color: var(--wf-text);
+}
+
 /* Dot colours match the persona colour system */
 html.wireframe .wf-ctx-persona-chip--ae  .wf-ctx-persona-chip-dot { background: var(--wf-muted); }
 html.wireframe .wf-ctx-persona-chip--pm  .wf-ctx-persona-chip-dot { background: var(--wf-accent); }
