@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Directory Listing — Partner Central</title>
+  <link rel="stylesheet" href="wireframe.css">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: var(--wf-canvas, #f5f7fb); color: var(--wf-ink, #1e2a3a); }
+
+    /* ── Page layout ────────────────────────────────────── */
+    .page-shell { max-width: 1140px; margin: 0 auto; padding: 32px 24px 80px; }
+
+    .page-hd { margin-bottom: 24px; }
+    .page-hd-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .page-title { font-size: 22px; font-weight: 700; margin: 0 0 4px; }
+    .page-sub   { font-size: 13px; color: var(--wf-muted, #6b7f99); margin: 0; }
+
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      border-radius: 20px; padding: 5px 12px; font-size: 12px; font-weight: 700;
+      white-space: nowrap;
+    }
+    .status-live    { background: #e6f4ec; border: 1px solid #86d9a4; color: #1d6b3c; }
+    .status-pending { background: #fef9e7; border: 1px solid #f5d76e; color: #7d5a00; }
+    .status-draft   { background: var(--wf-tint, #dce4ef); border: 1px solid var(--wf-line, #b0bdd0); color: var(--wf-muted, #6b7f99); }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+
+    .action-row { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; align-items: center; }
+    .action-row .last-sync { font-size: 11px; color: var(--wf-muted, #6b7f99); margin-left: auto; }
+
+    /* ── Two-column layout ──────────────────────────────── */
+    .dl-grid {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 24px;
+      align-items: start;
+    }
+
+    /* ── Cards / sections ───────────────────────────────── */
+    .card {
+      background: white; border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.10);
+      padding: 24px 28px; margin-bottom: 16px;
+    }
+    .card:last-child { margin-bottom: 0; }
+    .card-title { font-size: 15px; font-weight: 700; margin: 0 0 2px; color: var(--wf-ink, #1e2a3a); }
+    .card-desc  { font-size: 12px; color: var(--wf-muted, #6b7f99); margin: 0 0 20px; line-height: 1.5; }
+    .section-divider { border: none; border-top: 1px solid var(--wf-line, #b0bdd0); margin: 20px 0; }
+
+    /* ── Form fields ────────────────────────────────────── */
+    .field { margin-bottom: 18px; }
+    .field:last-child { margin-bottom: 0; }
+    .field-label {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 12px; font-weight: 700; color: var(--wf-ink, #1e2a3a);
+      margin-bottom: 6px;
+    }
+    .field-hint { font-size: 11px; color: var(--wf-muted, #6b7f99); margin-bottom: 6px; display: block; }
+    .field-input {
+      width: 100%; padding: 9px 12px;
+      border: 1px solid var(--wf-line, #b0bdd0); border-radius: 6px;
+      font-size: 13px; font-family: inherit; color: var(--wf-ink, #1e2a3a);
+      background: white;
+    }
+    .field-input:focus { outline: 2px solid var(--wf-accent, #3d6daa); outline-offset: 1px; }
+    textarea.field-input { resize: vertical; min-height: 80px; line-height: 1.5; }
+
+    /* Read-only (auto-synced) fields */
+    .field-input.readonly {
+      background: var(--wf-canvas, #f5f7fb);
+      color: var(--wf-muted, #6b7f99);
+      cursor: default;
+    }
+    .readonly-note {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 11px; color: var(--wf-muted, #6b7f99); margin-top: 5px;
+    }
+    .readonly-note .rn-icon { font-size: 11px; }
+
+    /* Character counter */
+    .char-row { display: flex; justify-content: flex-end; margin-top: 4px; }
+    .char-count { font-size: 11px; color: var(--wf-muted, #6b7f99); }
+    .char-count.near-limit { color: #e07b00; }
+    .char-count.at-limit   { color: #c0392b; font-weight: 700; }
+
+    /* Review-gated badge */
+    .review-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+      background: #fef3cd; border: 1px solid #f5c842;
+      color: #7d5a00; border-radius: 3px; padding: 1px 6px;
+    }
+    .auto-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+      background: var(--wf-tint, #dce4ef); border: 1px solid var(--wf-line, #b0bdd0);
+      color: var(--wf-muted, #6b7f99); border-radius: 3px; padding: 1px 6px;
+    }
+
+    /* ── Logo upload ────────────────────────────────────── */
+    .logo-row { display: flex; align-items: center; gap: 16px; }
+    .logo-preview {
+      width: 72px; height: 72px; border-radius: 8px;
+      background: var(--wf-canvas, #f5f7fb); border: 2px dashed var(--wf-line, #b0bdd0);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.06em; color: var(--wf-muted, #6b7f99);
+      flex-shrink: 0;
+    }
+    .logo-preview.has-logo {
+      background: #1e40af; border-style: solid;
+      font-size: 14px; font-weight: 900; color: white; letter-spacing: 0;
+    }
+    .logo-actions { display: flex; flex-direction: column; gap: 6px; }
+    .logo-actions p { font-size: 11px; color: var(--wf-muted, #6b7f99); margin: 0; line-height: 1.4; }
+
+    /* ── Tags / multi-select ────────────────────────────── */
+    .tag-grid {
+      display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px;
+    }
+    .tag {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 5px 11px; border-radius: 20px; font-size: 12px; font-weight: 600;
+      cursor: pointer; border: 1.5px solid var(--wf-line, #b0bdd0);
+      background: white; color: var(--wf-ink, #1e2a3a);
+      transition: all 0.12s; user-select: none;
+    }
+    .tag:hover { border-color: var(--wf-accent, #3d6daa); }
+    .tag.selected {
+      border-color: var(--wf-accent, #3d6daa);
+      background: var(--wf-tint, #dce4ef); color: var(--wf-accent, #3d6daa);
+    }
+    .tag.readonly { cursor: default; opacity: 0.7; }
+    .tag-checkmark { font-size: 10px; display: none; }
+    .tag.selected .tag-checkmark { display: inline; }
+    .tag-sub { font-size: 11px; color: var(--wf-muted, #6b7f99); margin-top: 8px; }
+
+    /* ── Tier / cert display ────────────────────────────── */
+    .cert-list { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; }
+    .cert-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 14px; border-radius: 6px;
+      background: var(--wf-canvas, #f5f7fb); border: 1px solid var(--wf-line, #b0bdd0);
+    }
+    .cert-icon { font-size: 16px; flex-shrink: 0; }
+    .cert-body { flex: 1; }
+    .cert-name { font-size: 13px; font-weight: 700; color: var(--wf-ink, #1e2a3a); }
+    .cert-meta { font-size: 11px; color: var(--wf-muted, #6b7f99); margin-top: 1px; }
+    .cert-earned { color: #1d6b3c; font-size: 11px; font-weight: 600; }
+    .tier-row {
+      display: flex; align-items: center; gap: 12px; padding: 12px 16px;
+      border-radius: 6px; background: linear-gradient(135deg, #f8fafc 0%, #eff6ff 100%);
+      border: 1px solid #bfdbfe; margin-bottom: 12px;
+    }
+    .tier-badge-lg {
+      padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 0.08em;
+    }
+    .tier-gold { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; }
+    .tier-body { flex: 1; }
+    .tier-name { font-size: 13px; font-weight: 700; }
+    .tier-note { font-size: 11px; color: var(--wf-muted, #6b7f99); margin-top: 2px; }
+
+    /* ── Sticky preview panel ───────────────────────────── */
+    .preview-panel {
+      position: sticky; top: 24px;
+    }
+    .preview-card {
+      background: white; border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.10);
+      padding: 20px;
+    }
+    .preview-label {
+      font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+      color: var(--wf-muted, #6b7f99); margin-bottom: 14px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .preview-label-dot { width: 6px; height: 6px; border-radius: 50%; background: #2d9e5a; }
+
+    /* Directory card mockup */
+    .dir-card {
+      border: 1px solid var(--wf-line, #b0bdd0); border-radius: 8px;
+      overflow: hidden; font-size: 12px;
+    }
+    .dir-card-header { padding: 14px 14px 10px; border-bottom: 1px solid var(--wf-line, #b0bdd0); }
+    .dir-card-logo-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .dir-card-logo {
+      width: 36px; height: 36px; border-radius: 6px;
+      background: #1e40af; display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 900; color: white; flex-shrink: 0;
+    }
+    .dir-card-name { font-weight: 700; font-size: 13px; color: var(--wf-ink, #1e2a3a); }
+    .dir-card-tier { font-size: 10px; color: var(--wf-muted, #6b7f99); margin-top: 1px; }
+    .dir-card-tagline { font-size: 12px; color: var(--wf-ink, #1e2a3a); line-height: 1.45; }
+    .dir-card-body { padding: 10px 14px; }
+    .dir-card-desc { font-size: 11px; color: var(--wf-muted, #6b7f99); line-height: 1.5; margin-bottom: 10px; }
+    .dir-card-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 10px; }
+    .dir-tag {
+      font-size: 10px; padding: 2px 7px; border-radius: 10px;
+      background: var(--wf-tint, #dce4ef); color: var(--wf-accent, #3d6daa);
+      font-weight: 600;
+    }
+    .dir-card-cta {
+      display: block; text-align: center; padding: 7px 12px;
+      border: 1.5px solid var(--wf-accent, #3d6daa); border-radius: 5px;
+      font-size: 12px; font-weight: 700; color: var(--wf-accent, #3d6daa);
+      text-decoration: none; margin-top: 10px;
+    }
+    .dir-card-geo { font-size: 10px; color: var(--wf-muted, #6b7f99); margin-top: 8px; }
+
+    .preview-note { font-size: 11px; color: var(--wf-muted, #6b7f99); margin-top: 12px; line-height: 1.5; }
+    .preview-note a { color: var(--wf-accent, #3d6daa); text-decoration: none; font-weight: 600; }
+
+    /* ── Buttons ────────────────────────────────────────── */
+    .btn { display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; border: none; cursor: pointer; transition: background 0.15s; font-family: inherit; white-space: nowrap; }
+    .btn-primary   { background: var(--wf-accent, #3d6daa); color: white; }
+    .btn-primary:hover  { background: var(--wf-ink, #1e2a3a); }
+    .btn-secondary { background: var(--wf-tint, #dce4ef); color: var(--wf-ink, #1e2a3a); border: 1px solid var(--wf-line, #b0bdd0); }
+    .btn-secondary:hover { background: var(--wf-line, #b0bdd0); }
+    .btn-ghost { background: none; color: var(--wf-accent, #3d6daa); border: 1.5px solid var(--wf-accent, #3d6daa); }
+    .btn-ghost:hover { background: var(--wf-tint, #dce4ef); }
+    .btn-sm { padding: 6px 12px; font-size: 12px; }
+
+    /* ── Review gate banner ─────────────────────────────── */
+    .review-gate {
+      display: flex; gap: 10px; align-items: flex-start;
+      background: #fef9e7; border: 1px solid #f5c842;
+      border-radius: 6px; padding: 12px 14px; margin-bottom: 20px;
+    }
+    .review-gate .rg-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+    .review-gate p { font-size: 12px; color: #7d5a00; margin: 0; line-height: 1.55; }
+
+    /* ── Context bar ────────────────────────────────────── */
+    .context-bar {
+      display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 600;
+      color: var(--wf-muted, #6b7f99); text-transform: uppercase; letter-spacing: 0.06em;
+      margin-bottom: 28px; padding-bottom: 14px; border-bottom: 1px solid var(--wf-line, #b0bdd0);
+    }
+    .context-bar a { color: var(--wf-accent, #3d6daa); font-weight: 600; text-decoration: none; text-transform: none; letter-spacing: 0; font-size: 12px; }
+    .cb-sep { color: var(--wf-line, #b0bdd0); }
+  </style>
+</head>
+<body>
+
+<header class="wf-header">
+  <div class="wf-header-inner">
+    <div class="wf-logo">
+      <span class="wf-logo-mark">EQ</span>
+      <div class="wf-logo-text">
+        <span class="wf-product-name">Partner Central</span>
+        <span class="wf-product-sub">Equinix</span>
+      </div>
+    </div>
+    <nav class="wf-nav" aria-label="Site navigation">
+      <a href="pm-home-dashboard.html" class="wf-nav-link">Dashboard</a>
+      <a href="pm-deal-registration.html" class="wf-nav-link">Deals</a>
+      <a href="#" class="wf-nav-link wf-nav-active">Company</a>
+      <a href="pm-resources.html" class="wf-nav-link">Resources</a>
+    </nav>
+  </div>
+</header>
+
+<div class="page-shell">
+
+  <div class="context-bar">
+    <span>Company</span>
+    <span class="cb-sep">·</span>
+    <a href="pm-team-management.html">Team</a>
+    <span class="cb-sep">·</span>
+    <strong style="color: var(--wf-ink, #1e2a3a); text-transform: none; letter-spacing: 0; font-size: 12px;">Directory Listing</strong>
+    <span class="cb-sep">·</span>
+    <a href="pm-org-health.html">Program Health</a>
+  </div>
+
+  <div class="page-hd">
+    <div class="page-hd-row">
+      <div>
+        <h1 class="page-title">Directory Listing</h1>
+        <p class="page-sub">Control how CloudBridge appears on the Equinix Partner Finder at equinix.com</p>
+      </div>
+      <span class="status-badge status-live">
+        <span class="status-dot"></span>
+        Listed on equinix.com
+      </span>
+    </div>
+  </div>
+
+  <div class="action-row">
+    <button class="btn btn-secondary btn-sm" onclick="previewListing()">Preview listing</button>
+    <button class="btn btn-ghost btn-sm" onclick="saveDraft()">Save draft</button>
+    <button class="btn btn-primary btn-sm" onclick="submitReview()">Submit for review →</button>
+    <span class="last-sync">Last published: Feb 14, 2026 · <a href="#" style="color:var(--wf-accent,#3d6daa); font-size:11px; text-decoration:none;">View live listing ↗</a></span>
+  </div>
+
+  <div class="review-gate" role="note">
+    <span class="rg-icon" aria-hidden="true">⚠</span>
+    <p>You have <strong>unsaved changes</strong> to Solution Areas and Geographic Reach. These fields require PSM review before appearing on equinix.com — typically 2–3 business days. Other changes (logo, description, contact URL) publish within 4 hours of submission.</p>
+  </div>
+
+  <div class="dl-grid">
+
+    <!-- ── LEFT COLUMN: form ────────────────────────────── -->
+    <div class="dl-form">
+
+      <!-- Company overview -->
+      <div class="card">
+        <p class="card-title">Company overview</p>
+        <p class="card-desc">Appears in the header of your directory card. Keep the description concise — buyers scan quickly.</p>
+
+        <div class="field">
+          <div class="field-label">Company logo</div>
+          <div class="logo-row">
+            <div class="logo-preview has-logo" aria-label="Current logo: CB initials placeholder">CB</div>
+            <div class="logo-actions">
+              <button class="btn btn-secondary btn-sm">Upload new logo</button>
+              <p>PNG or SVG, min 200 × 200 px. Displays at 36 × 36 px in the directory card.</p>
+            </div>
+          </div>
+        </div>
+
+        <hr class="section-divider">
+
+        <div class="field">
+          <div class="field-label">
+            Company name
+            <span class="auto-badge">Auto-synced</span>
+          </div>
+          <input class="field-input readonly" type="text" value="CloudBridge Technologies" readonly aria-label="Company name — synced from Salesforce, read only">
+          <div class="readonly-note"><span class="rn-icon">🔒</span> Synced from Salesforce. To update, contact your PSM.</div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">Tagline <span style="font-weight:400; color:var(--wf-muted,#6b7f99);">(optional)</span></div>
+          <span class="field-hint">One sentence that tells buyers what you do. Shows below your company name.</span>
+          <input class="field-input" type="text" id="tagline-input" value="Hybrid multicloud networking for mid-market enterprises." maxlength="100" oninput="updateCharCount('tagline-input','tagline-count',100)" aria-label="Company tagline">
+          <div class="char-row"><span class="char-count" id="tagline-count">54 / 100</span></div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">Directory description</div>
+          <span class="field-hint">Shown in the expanded view of your directory card. Focus on what buyers get, not who you are.</span>
+          <textarea class="field-input" id="desc-input" maxlength="220" oninput="updateCharCount('desc-input','desc-count',220)" aria-label="Directory description">CloudBridge designs and deploys secure, scalable hybrid network architectures on Equinix infrastructure — helping mid-market companies connect cloud, colo, and on-premises environments without complexity.</textarea>
+          <div class="char-row"><span class="char-count" id="desc-count">196 / 220</span></div>
+        </div>
+
+        <div class="field">
+          <div class="field-label">Company website</div>
+          <input class="field-input" type="url" value="https://cloudbridge.io" aria-label="Company website URL">
+        </div>
+      </div>
+
+      <!-- Partner standing (read-only) -->
+      <div class="card">
+        <p class="card-title">Partner standing <span class="auto-badge" style="vertical-align:middle;">Auto-synced</span></p>
+        <p class="card-desc">Your tier and earned certifications appear automatically on your listing. These are set by your program activity — contact your PSM if anything looks incorrect.</p>
+
+        <div class="tier-row">
+          <span class="tier-badge-lg tier-gold" aria-label="Gold tier">Gold</span>
+          <div class="tier-body">
+            <div class="tier-name">Gold Partner</div>
+            <div class="tier-note">Next review: Q3 2026 · <a href="pm-org-health.html" style="color:var(--wf-accent,#3d6daa); text-decoration:none; font-weight:600;">View program health →</a></div>
+          </div>
+        </div>
+
+        <div class="cert-list" role="list" aria-label="Earned certifications">
+          <div class="cert-row" role="listitem">
+            <span class="cert-icon" aria-hidden="true">🏅</span>
+            <div class="cert-body">
+              <div class="cert-name">Network Edge Specialization</div>
+              <div class="cert-meta">Earned Jan 2025 · <span class="cert-earned">Active</span></div>
+            </div>
+          </div>
+          <div class="cert-row" role="listitem">
+            <span class="cert-icon" aria-hidden="true">🏅</span>
+            <div class="cert-body">
+              <div class="cert-name">Equinix Fabric Certified</div>
+              <div class="cert-meta">Earned Aug 2024 · <span class="cert-earned">Active</span></div>
+            </div>
+          </div>
+          <div class="cert-row" role="listitem" style="opacity:0.55;">
+            <span class="cert-icon" aria-hidden="true">🔲</span>
+            <div class="cert-body">
+              <div class="cert-name">Cloud Exchange Pro</div>
+              <div class="cert-meta">Not yet earned · <a href="pm-cert-tracker.html" style="color:var(--wf-accent,#3d6daa); text-decoration:none; font-weight:600;">View path →</a></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Solutions & expertise -->
+      <div class="card">
+        <p class="card-title">Solutions &amp; expertise <span class="review-badge" style="vertical-align:middle;">PSM review</span></p>
+        <p class="card-desc">These become the filters buyers use on Partner Finder. Only select areas where you have active deployments or delivery capability — Equinix PSMs verify these before they appear.</p>
+
+        <div class="field-label" style="margin-bottom:6px;">Solution areas</div>
+        <div class="tag-grid" role="group" aria-label="Solution area selection">
+          <div class="tag selected" onclick="toggleTag(this)" role="checkbox" aria-checked="true" tabindex="0">
+            <span class="tag-checkmark">✓</span> Network
+          </div>
+          <div class="tag selected" onclick="toggleTag(this)" role="checkbox" aria-checked="true" tabindex="0">
+            <span class="tag-checkmark">✓</span> Cloud
+          </div>
+          <div class="tag" onclick="toggleTag(this)" role="checkbox" aria-checked="false" tabindex="0">
+            <span class="tag-checkmark">✓</span> Security
+          </div>
+          <div class="tag" onclick="toggleTag(this)" role="checkbox" aria-checked="false" tabindex="0">
+            <span class="tag-checkmark">✓</span> Workplace
+          </div>
+          <div class="tag" onclick="toggleTag(this)" role="checkbox" aria-checked="false" tabindex="0">
+            <span class="tag-checkmark">✓</span> Marketplace
+          </div>
+          <div class="tag" onclick="toggleTag(this)" role="checkbox" aria-checked="false" tabindex="0">
+            <span class="tag-checkmark">✓</span> Data Center Services
+          </div>
+        </div>
+
+        <hr class="section-divider">
+
+        <div class="field-label" style="margin-bottom:4px;">Technology specializations <span style="font-weight:400; color:var(--wf-muted,#6b7f99);">(optional)</span></div>
+        <span class="field-hint" style="display:block; margin-bottom:6px;">Freeform tags that help buyers find specific expertise. Separate with commas.</span>
+        <input class="field-input" type="text" value="SD-WAN, MPLS, BGP routing, Equinix Fabric, AWS Direct Connect, Azure ExpressRoute" aria-label="Technology specialization tags">
+        <p class="tag-sub">These display as small tags on your directory card and are not filterable — they add context for buyers who click through.</p>
+      </div>
+
+      <!-- Geographic reach -->
+      <div class="card">
+        <p class="card-title">Geographic reach <span class="review-badge" style="vertical-align:middle;">PSM review</span></p>
+        <p class="card-desc">Select every region where you can deliver services. Buyers filter Partner Finder by geography, so accuracy matters.</p>
+
+        <div class="tag-grid" role="group" aria-label="Geographic region selection">
+          <div class="tag selected" onclick="toggleTag(this)" role="checkbox" aria-checked="true" tabindex="0"><span class="tag-checkmark">✓</span> North America</div>
+          <div class="tag selected" onclick="toggleTag(this)" role="checkbox" aria-checked="true" tabindex="0"><span class="tag-checkmark">✓</span> Latin America</div>
+          <div class="tag" onclick="toggleTag(this)" role="checkbox" aria-checked="false" tabindex="0"><span class="tag-checkmark">✓</span> EMEA</div>
+          <div class="tag" onclick="toggleTag(this)" role="checkbox" aria-checked="false" tabindex="0"><span class="tag-checkmark">✓</span> Asia-Pacific</div>
+          <div class="tag" onclick="toggleTag(this)" role="checkbox" aria-checked="false" tabindex="0"><span class="tag-checkmark">✓</span> Japan</div>
+          <div class="tag" onclick="toggleTag(this)" role="checkbox" aria-checked="false" tabindex="0"><span class="tag-checkmark">✓</span> Australia / NZ</div>
+        </div>
+        <p class="tag-sub">Need country-level targeting? Ask your PSM to enable fine-grained geography on your listing.</p>
+      </div>
+
+      <!-- Contact & CTA -->
+      <div class="card">
+        <p class="card-title">Contact &amp; CTA</p>
+        <p class="card-desc">How buyers reach you from the directory. Changes here publish within 4 hours, no PSM review required.</p>
+
+        <div class="field">
+          <div class="field-label">Partner inquiry email</div>
+          <span class="field-hint">Where "Contact this partner" inquiries are routed. Use a shared mailbox, not a personal address.</span>
+          <input class="field-input" type="email" value="partners@cloudbridge.io" aria-label="Partner inquiry email address">
+        </div>
+
+        <div class="field">
+          <div class="field-label">Partner landing page URL <span style="font-weight:400; color:var(--wf-muted,#6b7f99);">(optional)</span></div>
+          <span class="field-hint">Linked from the "Learn more" button on your directory card. Should be a dedicated partner page, not your homepage.</span>
+          <input class="field-input" type="url" value="https://cloudbridge.io/equinix-partners" aria-label="Partner landing page URL">
+        </div>
+
+        <div class="field">
+          <div class="field-label">Primary CTA</div>
+          <div style="display:flex; gap:10px; margin-top:4px;">
+            <label style="display:flex; align-items:center; gap:6px; font-size:13px; cursor:pointer;">
+              <input type="radio" name="cta-type" value="form" checked> Contact form (Equinix-hosted)
+            </label>
+            <label style="display:flex; align-items:center; gap:6px; font-size:13px; cursor:pointer;">
+              <input type="radio" name="cta-type" value="url"> Direct URL
+            </label>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /dl-form -->
+
+    <!-- ── RIGHT COLUMN: preview ─────────────────────────── -->
+    <div class="preview-panel">
+      <div class="preview-card">
+        <div class="preview-label">
+          <span class="preview-label-dot" aria-hidden="true"></span>
+          Live on equinix.com
+        </div>
+
+        <!-- Directory card mockup -->
+        <div class="dir-card" role="img" aria-label="Preview of how this listing appears in the Equinix Partner Finder directory">
+          <div class="dir-card-header">
+            <div class="dir-card-logo-row">
+              <div class="dir-card-logo" aria-hidden="true">CB</div>
+              <div>
+                <div class="dir-card-name">CloudBridge Technologies</div>
+                <div class="dir-card-tier">Gold Partner · Network Edge Specialization</div>
+              </div>
+            </div>
+            <div class="dir-card-tagline">Hybrid multicloud networking for mid-market enterprises.</div>
+          </div>
+          <div class="dir-card-body">
+            <div class="dir-card-desc">CloudBridge designs and deploys secure, scalable hybrid network architectures on Equinix infrastructure…</div>
+            <div class="dir-card-tags">
+              <span class="dir-tag">Network</span>
+              <span class="dir-tag">Cloud</span>
+              <span class="dir-tag">SD-WAN</span>
+              <span class="dir-tag">Equinix Fabric</span>
+            </div>
+            <div class="dir-card-geo">🌎 North America · Latin America</div>
+            <a href="#" class="dir-card-cta" aria-label="Contact CloudBridge Technologies">Contact this partner</a>
+          </div>
+        </div>
+
+        <p class="preview-note">
+          This is a static wireframe preview. The live listing at <a href="#">equinix.com/partners/partner-directory ↗</a> updates within 4 hours of submission for most fields.
+        </p>
+      </div>
+    </div>
+
+  </div><!-- /dl-grid -->
+
+</div><!-- /page-shell -->
+
+<!-- ── Spec panel ─────────────────────────────────────────────── -->
+<button class="spec-toggle" onclick="document.getElementById('spec').classList.toggle('open')" aria-label="Toggle spec panel">Spec</button>
+<aside class="spec-panel" id="spec" role="complementary" aria-label="Design specification">
+  <div class="spec-inner">
+    <button class="spec-close" onclick="document.getElementById('spec').classList.remove('open')" aria-label="Close spec panel">×</button>
+
+    <div class="spec-section">
+      <h3 class="spec-section-title">Summary</h3>
+      <p>Partner-facing editor for the equinix.com Partner Finder directory listing. PCP is the single source of truth — this page is where partners manage their public-facing presence without needing to contact marketing or submit a separate request.</p>
+    </div>
+
+    <div class="spec-section">
+      <h3 class="spec-section-title">Data Model</h3>
+      <ul class="spec-list">
+        <li><strong>Auto-synced (read-only in UI):</strong> Company name (from D&amp;B via Salesforce), tier badge, earned certifications. Partners contact PSM to dispute.</li>
+        <li><strong>Partner-managed, immediate publish (&lt;4h):</strong> Logo, tagline, description, website URL, CTA email, landing page URL.</li>
+        <li><strong>Partner-managed, PSM review required (2–3 days):</strong> Solution areas, technology specializations, geographic regions. PSM validates before these appear as filterable attributes on the public directory.</li>
+      </ul>
+    </div>
+
+    <div class="spec-section">
+      <h3 class="spec-section-title">Jobs to Be Done</h3>
+      <ul class="spec-list">
+        <li>Partner should never need to email marketing or submit a Jira ticket to update their directory listing</li>
+        <li>PSM should see review queue in their dashboard when solution areas / geo tags change</li>
+        <li>Tier and cert badges should reflect program reality without manual updates</li>
+        <li>Partner knows exactly what buyers see (live preview) without visiting the public site</li>
+      </ul>
+    </div>
+
+    <div class="spec-section">
+      <h3 class="spec-section-title">Data Flow</h3>
+      <ul class="spec-list">
+        <li>PCP → Salesforce PRM → equinix.com directory (via API or scheduled export; target &lt;4h propagation for immediate fields)</li>
+        <li>Tier / certs: sourced from program achievement data in Salesforce; write-back to PCP profile on change</li>
+        <li>Company name / firmographic: sourced from D&amp;B lookup at onboarding; update only via PSM to prevent data drift</li>
+        <li>PSM review queue: changes to solution areas / geo create a Salesforce task assigned to the partner's PSM</li>
+      </ul>
+    </div>
+
+    <div class="spec-section">
+      <h3 class="spec-section-title">Industry patterns</h3>
+      <ul class="spec-list">
+        <li><strong>AWS Partner Network:</strong> APN profile in Partner Central is the source for the public Partner Finder. Competency badges appear within 24h of being earned. No separate marketing form.</li>
+        <li><strong>HubSpot Solutions Directory:</strong> Tier (Gold → Elite) auto-reflects in directory. Partners manage description / specializations from within HubSpot Partner Portal. Editorial review before first publish only.</li>
+        <li><strong>Salesforce AppExchange:</strong> Listing managed in Partner Community. Compatibility tags (clouds, industries) come from partner profile. Human review before each publish.</li>
+        <li>The review gate on solution areas is intentional — it prevents partners from gaming filters. AWS uses a similar model: competency badges require Equinix (or AWS) validation, not self-declaration.</li>
+      </ul>
+    </div>
+
+    <div class="spec-section">
+      <h3 class="spec-section-title">Design Notes</h3>
+      <ul class="spec-list">
+        <li>Visual distinction between auto-synced (gray/locked), immediate (white), and review-gated (yellow badge) fields is the core UX affordance — partners must understand why some changes take longer</li>
+        <li>Preview panel is sticky at 300px to give persistent feedback as partner edits</li>
+        <li>Character counters on description fields match directory card truncation limits</li>
+        <li>Tech specialization tags are freeform (not filterable) — reduces PSM review burden while giving partners expressive latitude</li>
+        <li>Logo upload: display at 36px, require 200px source — prevents blurry logos without burdening partners with strict format rules</li>
+      </ul>
+    </div>
+
+  </div>
+</aside>
+
+<script>
+  function toggleTag(el) {
+    const selected = el.classList.toggle('selected');
+    el.setAttribute('aria-checked', String(selected));
+    markPendingChanges();
+  }
+
+  function updateCharCount(inputId, countId, max) {
+    const input = document.getElementById(inputId);
+    const counter = document.getElementById(countId);
+    const len = input.value.length;
+    counter.textContent = len + ' / ' + max;
+    counter.classList.toggle('near-limit', len > max * 0.85 && len < max);
+    counter.classList.toggle('at-limit', len >= max);
+  }
+
+  function markPendingChanges() {
+    // In production: set unsaved state, update action bar
+  }
+
+  function saveDraft() {
+    const btn = event.target;
+    btn.textContent = 'Saving…';
+    setTimeout(() => { btn.textContent = 'Saved ✓'; }, 800);
+    setTimeout(() => { btn.textContent = 'Save draft'; }, 2400);
+  }
+
+  function submitReview() {
+    const btn = event.target;
+    btn.textContent = 'Submitting…';
+    setTimeout(() => {
+      btn.textContent = 'Submitted ✓';
+      btn.style.background = '#2d9e5a';
+    }, 900);
+  }
+
+  function previewListing() {
+    alert('Wireframe: in production this opens a full-page preview of the equinix.com directory card at actual size.');
+  }
+
+  // Init char counts
+  document.addEventListener('DOMContentLoaded', function() {
+    updateCharCount('tagline-input', 'tagline-count', 100);
+    updateCharCount('desc-input', 'desc-count', 220);
+  });
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>
