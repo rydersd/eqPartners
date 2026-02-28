@@ -54,7 +54,16 @@
   </div>
   <div class="sd-body">
     <!-- SVG is built at runtime by sd-render.js reading sd-data.js -->
-    <div id="sd-svg-container" role="img" aria-label="Service blueprint swim lane diagram showing how partner workflows cross user-facing portals, Salesforce, and external systems"></div>
+    <div id="sd-svg-container" role="img" aria-label="Service blueprint swim lane diagram showing how partner workflows cross user-facing portals, Salesforce, and external systems">
+      <!-- Fallback: visible until SD_RENDER.init() succeeds -->
+      <div id="sd-fallback" style="padding:2.5rem 2rem;text-align:center;color:var(--wf-muted);font-size:.8125rem;line-height:1.6;">
+        <div style="font-size:1.75rem;margin-bottom:.75rem;" aria-hidden="true">⬡</div>
+        <strong style="display:block;font-size:.9375rem;color:var(--wf-ink);margin-bottom:.4rem;">Service Blueprint is loading…</strong>
+        If this message persists, the diagram scripts (sd-data.js, sd-render.js) may not have loaded correctly.
+        Try <a href="service-diagram.html" style="color:var(--wf-accent);">reloading the page</a>.
+        The diagram covers five workflow paths across four system layers — Onboarding, Deal Registration, MDF Lifecycle, Tier Review, and Agreements.
+      </div>
+    </div>
   </div>
   <div style="padding:.5rem 1.25rem;font-size:.75rem;color:var(--wf-muted);border-top:1px solid var(--gray-border);">
     Click a workflow above to highlight its path. Dashed circles = Sam Chen's self-registration arc (not invited — discovers portal externally). Dashed connector lines = async/background processes. "Lines of visibility" follow standard service blueprint convention.
@@ -66,7 +75,20 @@
 <script src="sd-render.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  SD_RENDER.init();
+  try {
+    SD_RENDER.init();
+    // Hide fallback if SVG was successfully rendered
+    var svg = document.querySelector('#sd-svg-container svg');
+    var fallback = document.getElementById('sd-fallback');
+    if (svg && fallback) fallback.style.display = 'none';
+  } catch (e) {
+    console.error('SD_RENDER.init() failed:', e);
+    var fallback = document.getElementById('sd-fallback');
+    if (fallback) {
+      fallback.querySelector('strong').textContent = 'The diagram failed to render.';
+    }
+    // fallback remains visible
+  }
 });
 </script>
 <script src="wf-nav.js"></script>

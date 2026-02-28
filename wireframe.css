@@ -237,6 +237,57 @@ html.wireframe header:not(.wf-header) {
   padding-right: 20px !important;
 }
 
+/* ── wf-header--public: equinix.com public site variant ─────────
+   Use for pages that represent the public equinix.com experience,
+   not the internal Partner Central portal. Extends wf-header —
+   never define a bespoke header in an individual page file.
+   Usage: <header class="wf-header wf-header--public">            */
+html.wireframe .wf-header.wf-header--public {
+  background: #1a1a2e;                    /* deeper brand dark     */
+  position: sticky; top: 0; z-index: 50;
+}
+html.wireframe .wf-header.wf-header--public .wf-logo {
+  border-color: #e31837;                  /* Equinix red border    */
+  color: white;
+}
+html.wireframe .wf-header.wf-header--public .wf-logo-mark {
+  /* optional span for product shortname */
+  font-size: 11px; font-weight: 900;
+}
+html.wireframe .wf-header.wf-header--public .wf-portal-name {
+  color: white;
+  font-size: 15px; font-weight: 700; letter-spacing: -0.3px;
+}
+html.wireframe .wf-header.wf-header--public nav a {
+  font-size: 13px;
+}
+html.wireframe .wf-header.wf-header--public nav a.active {
+  border-bottom-color: #e31837;          /* red active underline  */
+}
+html.wireframe .wf-header.wf-header--public .wf-nav-cta {
+  background: #e31837;
+  color: white !important;
+  padding: 6px 14px; border-radius: 4px;
+  font-weight: 700 !important;
+  border-bottom: none !important;
+}
+html.wireframe .wf-header.wf-header--public .wf-nav-cta:hover {
+  background: #b91c1c;
+}
+
+/* ── wf-header--preauth: minimal centered logo, no nav ──────────
+   Use for pre-auth pages (login, onboarding-auth-setup, etc.)
+   Usage: <header class="wf-header wf-header--preauth">           */
+html.wireframe .wf-header.wf-header--preauth {
+  justify-content: center;
+}
+html.wireframe .wf-header.wf-header--preauth nav {
+  display: none;
+}
+html.wireframe .wf-header.wf-header--preauth .wf-utils {
+  display: none;
+}
+
 /* ── Page Title & Breadcrumb ────────────────────────────────── */
 html.wireframe .wf-page-title {
   font-size: 18px;

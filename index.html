@@ -279,6 +279,38 @@
     <div class="node">
       <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
         <div class="node-type t-list" title="List View"><svg width="10" height="10" viewBox="0 0 10 10" fill="white" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect y="1" width="10" height="1.75" rx=".75"/><rect y="4.25" width="10" height="1.75" rx=".75"/><rect y="7.5" width="7" height="1.75" rx=".75"/></svg></div>
+        <span class="node-label">My Partners — IC View <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">Marcus — assigned partner roster with health, pipeline, QBR status</span></span>
+        <a href="psm-my-partners.html" class="node-mockup-link" title="View Mockup">→</a>
+        <span class="node-chevron">›</span>
+      </div>
+      <div class="node-children">
+        <div class="child"><span class="child-type ct-kpi">KPI</span> Portfolio summary: partners assigned, avg health, open deals, pipeline value</div>
+        <div class="child"><span class="child-type ct-table">Table</span> Partner rows: health score, open deals, pipeline, last/next QBR, pending actions</div>
+        <div class="child"><span class="child-type ct-alert">Alert</span> Pending directory review queue — fields awaiting PSM approval</div>
+        <div class="child"><span class="child-type ct-action">Action</span> Approve / reject partner-submitted directory changes</div>
+        <div class="child"><span class="child-type ct-filter">Filter</span> At-risk / Pending QBR / Tier</div>
+      </div>
+    </div>
+
+    <div class="node">
+      <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="node-type t-report" title="Report"><svg width="10" height="10" viewBox="0 0 10 10" fill="white" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect x="1" y="5" width="2" height="4" rx=".3"/><rect x="4" y="2" width="2" height="7" rx=".3"/><rect x="7" y="3.5" width="2" height="5.5" rx=".3"/></svg></div>
+        <span class="node-label">Region View — Manager <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">channel manager — PSM workload + partner distribution across AMER West</span></span>
+        <a href="psm-region-view.html" class="node-mockup-link" title="View Mockup">→</a>
+        <span class="node-chevron">›</span>
+      </div>
+      <div class="node-children">
+        <div class="child"><span class="child-type ct-kpi">KPI</span> PSM headcount, total partners, avg health, unassigned partner count</div>
+        <div class="child"><span class="child-type ct-table">Table</span> PSM rows: name, partner count, avg health score, open deals, last activity</div>
+        <div class="child"><span class="child-type ct-table">Table</span> Full partner list (all PSMs): partner, tier, health, PSM owner</div>
+        <div class="child"><span class="child-type ct-alert">Alert</span> Partners without PSM assignment</div>
+        <div class="child"><span class="child-type ct-chart">Chart</span> Regional health distribution by tier</div>
+      </div>
+    </div>
+
+    <div class="node">
+      <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="node-type t-list" title="List View"><svg width="10" height="10" viewBox="0 0 10 10" fill="white" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect y="1" width="10" height="1.75" rx=".75"/><rect y="4.25" width="10" height="1.75" rx=".75"/><rect y="7.5" width="7" height="1.75" rx=".75"/></svg></div>
         <span class="node-label">Partner Account Portfolio</span>
         <span class="node-screen">Screen 4</span>
         <a href="psm-partner-account-list.html" class="node-mockup-link" title="View Mockup">→</a>
@@ -1856,6 +1888,23 @@
             <div class="child"><span class="child-type ct-note">Note</span> Language and timezone configured here; cascades to new rep invitations as default</div>
           </div>
         </div>
+
+        <div class="node">
+          <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+            <div class="node-type t-form" title="Form"><svg width="10" height="10" viewBox="0 0 10 10" fill="white" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.5 7.5L7.5 1.5L8.5 2.5L2.5 8.5L0.5 9.5Z"/><path d="M7.5 1.5L8.5.5L9.5 1.5L8.5 2.5Z"/></svg></div>
+            <span class="node-label">Directory Listing Editor <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">Jordan — manage how CloudBridge appears on equinix.com Partner Finder</span></span>
+            <a href="pm-directory-listing.html" class="node-mockup-link" title="View Mockup">→</a>
+            <span class="node-chevron">›</span>
+          </div>
+          <div class="node-children">
+            <div class="child"><span class="child-type ct-form">Form</span> Company overview: logo, tagline, description (immediate publish)</div>
+            <div class="child"><span class="child-type ct-form">Form</span> Solutions &amp; expertise, geographic reach (PSM-review-gated, 2–3 day SLA)</div>
+            <div class="child"><span class="child-type ct-widget">Widget</span> Read-only: partner standing (tier, certifications — auto-synced from Salesforce)</div>
+            <div class="child"><span class="child-type ct-card">Card</span> Live preview panel: directory card as it appears on equinix.com/partners</div>
+            <div class="child"><span class="child-type ct-note">Note</span> PCP is source of truth → equinix.com partner-finder.html is the public projection</div>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -2712,6 +2761,63 @@
   </div>
 </div>
 
+
+<!-- ═══════════════════════════════════════════════════
+     EXTERNAL — PUBLIC SITE & PRE-AUTH SCREENS
+     ═══════════════════════════════════════════════════ -->
+<div class="portal-branch" style="border-left:4px solid #e31837;margin-bottom:1.5rem;">
+  <div class="portal-header" style="background:linear-gradient(90deg,#1a1a2e,#2d3561);">
+    <span style="font-size:.75rem;font-weight:700;color:#fca5a5;letter-spacing:.06em;text-transform:uppercase;">🌐 equinix.com</span>
+    <span style="font-weight:700;">Public Site &amp; Pre-Auth Screens</span>
+    <span style="font-size:.8rem;opacity:.75;margin-left:auto;">Prospect-facing · No auth required</span>
+  </div>
+  <div style="padding:.75rem 1rem;">
+
+    <div class="node">
+      <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="node-type t-list" title="List View"><svg width="10" height="10" viewBox="0 0 10 10" fill="white" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect y="1" width="10" height="1.75" rx=".75"/><rect y="4.25" width="10" height="1.75" rx=".75"/><rect y="7.5" width="7" height="1.75" rx=".75"/></svg></div>
+        <span class="node-label">Partner Finder <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">equinix.com/partners/partner-directory — buyer-facing directory projection</span></span>
+        <a href="partner-finder.html" class="node-mockup-link" title="View Mockup">→</a>
+        <span class="node-chevron">›</span>
+      </div>
+      <div class="node-children">
+        <div class="child"><span class="child-type ct-filter">Filter</span> Solution area, geography, tier pills, certifications (collapsed) — AND logic across groups, OR within tier</div>
+        <div class="child"><span class="child-type ct-table">Table</span> Partner cards: logo, tier badge, tagline, solution tags, geo tags, certs, Contact + Learn more CTAs</div>
+        <div class="child"><span class="child-type ct-note">Note</span> Read-only projection of PCP data — partners edit via pm-directory-listing.html; no content entered here</div>
+        <div class="child"><span class="child-type ct-note">Note</span> Filterable data (solution areas, geography) requires PSM review before appearing — 2–3 day SLA</div>
+      </div>
+    </div>
+
+    <div class="node">
+      <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="node-type t-form" title="Form"><svg width="10" height="10" viewBox="0 0 10 10" fill="white" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.5 7.5L7.5 1.5L8.5 2.5L2.5 8.5L0.5 9.5Z"/><path d="M7.5 1.5L8.5.5L9.5 1.5L8.5 2.5Z"/></svg></div>
+        <span class="node-label">Email OTP Login <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">passwordless login — portal entry for email-code users</span></span>
+        <a href="partner-login-otp.html" class="node-mockup-link" title="View Mockup">→</a>
+        <span class="node-chevron">›</span>
+      </div>
+      <div class="node-children">
+        <div class="child"><span class="child-type ct-form">Form</span> Enter work email → receive 6-digit code via Marketing Cloud → enter code to authenticate</div>
+        <div class="child"><span class="child-type ct-note">Note</span> One of three auth methods; chosen during onboarding-auth-setup.html · counterpart is SSO redirect and TOTP flow</div>
+        <div class="child"><span class="child-type ct-note">Note</span> Code: 6-digit, 10-min TTL, single-use, bcrypt-hashed · 60s resend cooldown · 5 sends/user/hour</div>
+      </div>
+    </div>
+
+    <div class="node">
+      <div class="node-header" onclick="toggleNode(this)" tabindex="0" role="button" aria-expanded="false">
+        <div class="node-type t-form" title="Form"><svg width="10" height="10" viewBox="0 0 10 10" fill="white" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M1.5 7.5L7.5 1.5L8.5 2.5L2.5 8.5L0.5 9.5Z"/><path d="M7.5 1.5L8.5.5L9.5 1.5L8.5 2.5Z"/></svg></div>
+        <span class="node-label">Auth Method Setup <span style="font-weight:400;color:var(--wf-muted);font-size:11px;">onboarding step — choose SSO, TOTP, or email code</span></span>
+        <a href="onboarding-auth-setup.html" class="node-mockup-link" title="View Mockup">→</a>
+        <span class="node-chevron">›</span>
+      </div>
+      <div class="node-children">
+        <div class="child"><span class="child-type ct-card">Card</span> Three method cards: Corporate SSO (SAML), Authenticator app (TOTP), Email code (OTP)</div>
+        <div class="child"><span class="child-type ct-form">Form</span> SSO path: IdP domain entry + test SSO · TOTP path: QR setup + verify · Email path: confirm address + test code</div>
+        <div class="child"><span class="child-type ct-note">Note</span> Step 1 of 2 for SSO/TOTP (recovery codes follow); Step 1 of 1 for email OTP (email is the recovery path)</div>
+      </div>
+    </div>
+
+  </div>
+</div>
 
 <!-- ═══════════════════════════════════════════════════
      FLOWS & REFERENCE — moved to dedicated view

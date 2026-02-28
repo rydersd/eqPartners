@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Partners — PSM IC View · Equinix PCP</title>
+<link rel="stylesheet" href="wireframe.css">
+<style>
+  /* ── Layout ──────────────────────────────────────────────── */
+  .page-wrap { max-width: 1180px; margin: 0 auto; padding: 24px 20px 80px; }
+
+  /* ── KPI bar ─────────────────────────────────────────────── */
+  .kpi-bar {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+    margin-bottom: 24px;
+  }
+  .kpi-card {
+    background: var(--wf-white); border: 1px solid var(--wf-line);
+    border-radius: 6px; padding: 14px 16px;
+  }
+  .kpi-label { font-size: .68rem; font-weight: 700; color: var(--wf-muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 4px; }
+  .kpi-value { font-size: 1.5rem; font-weight: 800; color: var(--wf-ink); line-height: 1; }
+  .kpi-sub   { font-size: .7rem; color: var(--wf-muted); margin-top: 3px; }
+  .kpi-card.warn .kpi-value { color: var(--wf-red); }
+  .kpi-card.good .kpi-value { color: var(--wf-green); }
+
+  /* ── Section header ──────────────────────────────────────── */
+  .section-hd {
+    display: flex; align-items: center; justify-content: space-between;
+    margin: 0 0 10px;
+  }
+  .section-hd h2 { font-size: .8125rem; font-weight: 700; color: var(--wf-ink); margin: 0; }
+  .section-hd .hd-meta { font-size: .72rem; color: var(--wf-muted); }
+
+  /* ── Filter row ──────────────────────────────────────────── */
+  .filter-row { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; align-items: center; }
+  .filter-chip {
+    padding: 4px 12px; border-radius: 20px; border: 1px solid var(--wf-line);
+    font-size: .7rem; font-weight: 600; color: var(--wf-muted); cursor: pointer;
+    background: var(--wf-white); transition: all .12s;
+  }
+  .filter-chip.active {
+    background: var(--wf-ink); color: var(--wf-white); border-color: var(--wf-ink);
+  }
+  .filter-chip:hover:not(.active) { border-color: var(--wf-accent); color: var(--wf-accent); }
+
+  /* ── Partner table ───────────────────────────────────────── */
+  .partner-table {
+    width: 100%; border-collapse: collapse;
+    background: var(--wf-white); border: 1px solid var(--wf-line); border-radius: 6px;
+    overflow: hidden; font-size: .78rem;
+    margin-bottom: 28px;
+  }
+  .partner-table thead th {
+    background: var(--wf-surface); padding: 8px 12px;
+    font-size: .65rem; font-weight: 700; color: var(--wf-muted);
+    text-align: left; text-transform: uppercase; letter-spacing: .05em;
+    border-bottom: 1px solid var(--wf-line); white-space: nowrap;
+  }
+  .partner-table tbody tr {
+    border-bottom: 1px solid var(--wf-tint);
+    transition: background .1s;
+  }
+  .partner-table tbody tr:last-child { border-bottom: none; }
+  .partner-table tbody tr:hover { background: var(--wf-accent-lt); }
+  .partner-table tbody tr.at-risk { border-left: 3px solid var(--wf-red); }
+  .partner-table tbody td { padding: 10px 12px; vertical-align: middle; }
+
+  /* Partner name cell */
+  .pt-name { font-weight: 700; color: var(--wf-ink); display: flex; align-items: center; gap: 7px; }
+  .pt-type  { font-size: .65rem; color: var(--wf-muted); margin-top: 1px; }
+
+  /* Health score pill */
+  .health-pill {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 8px; border-radius: 10px;
+    font-size: .68rem; font-weight: 700;
+  }
+  .hp-green  { background: #d1fae5; color: #065f46; }
+  .hp-amber  { background: #fef3c7; color: #92400e; }
+  .hp-red    { background: #fee2e2; color: #991b1b; }
+
+  /* Tier badge */
+  .tier-b { display: inline-flex; align-items: center; gap: 3px; font-size: .65rem; font-weight: 800; padding: 2px 7px; border-radius: 10px; text-transform: uppercase; letter-spacing: .04em; white-space: nowrap; }
+  .t-gold     { background: #fef3cd; color: #92400e; }
+  .t-silver   { background: #f1f5f9; color: #475569; }
+  .t-platinum { background: #ede9fe; color: #5b21b6; }
+  .t-select   { background: #ecfeff; color: #0e7490; }
+
+  /* QBR date indicator */
+  .qbr-date { font-size: .72rem; }
+  .qbr-overdue { color: var(--wf-red); font-weight: 700; }
+  .qbr-soon    { color: var(--wf-amber); font-weight: 600; }
+  .qbr-ok      { color: var(--wf-muted); }
+
+  /* Action badges */
+  .action-pills { display: flex; flex-wrap: wrap; gap: 4px; }
+  .action-badge {
+    font-size: .62rem; padding: 2px 6px; border-radius: 3px;
+    font-weight: 700; white-space: nowrap;
+  }
+  .ab-dir-review { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; }
+  .ab-qbr        { background: #ede9fe; color: #5b21b6; border: 1px solid #ddd6fe; }
+  .ab-deal       { background: #dbeafe; color: #1d4ed8; border: 1px solid #bfdbfe; }
+  .ab-agreement  { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+
+  /* Pipeline value */
+  .pipeline-val { font-weight: 700; color: var(--wf-ink); }
+  .pipeline-sub { font-size: .65rem; color: var(--wf-muted); }
+
+  /* Row action link */
+  .row-action { font-size: .7rem; color: var(--wf-accent); text-decoration: none; white-space: nowrap; }
+  .row-action:hover { text-decoration: underline; }
+
+  /* ── Directory review queue ──────────────────────────────── */
+  .review-queue {
+    background: var(--wf-white); border: 1px solid var(--wf-line);
+    border-top: 3px solid var(--wf-amber); border-radius: 6px;
+    margin-bottom: 28px; overflow: hidden;
+  }
+  .rq-header {
+    padding: 12px 16px; background: #fffbeb; border-bottom: 1px solid var(--wf-line);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .rq-header h3 { font-size: .8125rem; font-weight: 700; color: var(--wf-ink); margin: 0; }
+  .rq-badge { background: #fbbf24; color: #78350f; font-size: .65rem; font-weight: 800; padding: 1px 7px; border-radius: 10px; }
+  .rq-header p { font-size: .72rem; color: var(--wf-muted); margin: 0 0 0 auto; }
+
+  .rq-item {
+    padding: 12px 16px; border-bottom: 1px solid var(--wf-tint);
+    display: grid; grid-template-columns: 2fr 1.5fr 1fr 1fr auto;
+    gap: 12px; align-items: center; font-size: .78rem;
+  }
+  .rq-item:last-child { border-bottom: none; }
+  .rq-item:hover { background: #fffbeb; }
+  .rq-partner { font-weight: 700; color: var(--wf-ink); }
+  .rq-field   { color: var(--wf-muted); font-size: .72rem; }
+  .rq-field strong { color: var(--wf-text); display: block; font-size: .75rem; font-weight: 600; }
+  .rq-submitted { font-size: .7rem; color: var(--wf-muted); }
+  .rq-actions { display: flex; gap: 6px; }
+  .rq-btn-approve, .rq-btn-reject {
+    padding: 5px 10px; border-radius: 4px; border: none;
+    font-size: .7rem; font-weight: 700; cursor: pointer; font-family: inherit;
+  }
+  .rq-btn-approve { background: #d1fae5; color: #065f46; }
+  .rq-btn-approve:hover { background: #a7f3d0; }
+  .rq-btn-reject  { background: #fee2e2; color: #991b1b; }
+  .rq-btn-reject:hover  { background: #fecaca; }
+  .rq-btn-view { padding: 5px 10px; border-radius: 4px; border: 1px solid var(--wf-line); background: var(--wf-white); font-size: .7rem; font-weight: 600; cursor: pointer; font-family: inherit; color: var(--wf-text); }
+  .rq-btn-view:hover { background: var(--wf-surface); }
+
+  /* ── Upcoming QBRs ───────────────────────────────────────── */
+  .qbr-row-mini {
+    display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px;
+  }
+  .qbr-card-mini {
+    background: var(--wf-white); border: 1px solid var(--wf-line); border-radius: 6px;
+    padding: 12px 14px; flex: 1; min-width: 160px; max-width: 220px;
+  }
+  .qbr-card-mini .qcm-name { font-size: .78rem; font-weight: 700; color: var(--wf-ink); margin-bottom: 2px; }
+  .qbr-card-mini .qcm-date { font-size: .7rem; color: var(--wf-muted); }
+  .qbr-card-mini .qcm-date.overdue { color: var(--wf-red); font-weight: 700; }
+  .qbr-card-mini .qcm-status { margin-top: 6px; font-size: .65rem; font-weight: 700; padding: 2px 6px; border-radius: 3px; display: inline-block; }
+  .qs-scheduled  { background: #d1fae5; color: #065f46; }
+  .qs-unscheduled{ background: #fee2e2; color: #991b1b; }
+  .qs-overdue    { background: #fef3c7; color: #92400e; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>Equinix Partner Channel Program</h1>
+    <p>Site Map &amp; Information Architecture — v2.6 (92 pages)</p>
+  </div>
+  <div class="header-meta">
+    <span>Feb 2026</span>
+    <span>Draft — Design Phase</span>
+  </div>
+</header>
+
+<nav class="view-control" aria-label="View selector">
+  <span class="view-control-label">View</span>
+  <div class="view-btns" role="navigation" aria-label="Select view">
+    <a class="view-btn" href="index.html">Sitemap</a>
+    <a class="view-btn" href="jobs-to-be-done.html">Jobs to Be Done</a>
+    <a class="view-btn" href="service-diagram.html">Service Diagram</a>
+    <a class="view-btn" href="flows-reference.html">Flows &amp; Reference</a>
+  </div>
+</nav>
+
+<div class="container">
+
+<!-- Page header with context -->
+<div class="page-title-bar" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px;">
+  <div>
+    <div style="font-size:.7rem;color:var(--wf-muted);margin-bottom:2px;">
+      <a href="index.html" style="color:var(--wf-accent);">Salesforce Lightning</a>
+      · PSM Experience · My Partners
+    </div>
+    <h2 style="margin:0;font-size:1.0625rem;color:var(--wf-ink);">My Partners</h2>
+    <p style="margin:2px 0 0;font-size:.78rem;color:var(--wf-muted);">Marcus Chen · AMER West PSM · 8 assigned partners</p>
+  </div>
+  <div style="display:flex;gap:8px;">
+    <a href="psm-region-view.html" style="color:var(--wf-accent);font-size:.78rem;font-weight:600;text-decoration:none;border:1px solid var(--wf-line);padding:6px 12px;border-radius:4px;">Region View (Manager) →</a>
+    <button style="background:var(--wf-ink);color:var(--wf-white);border:none;border-radius:4px;padding:6px 14px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;">+ New Partner</button>
+  </div>
+</div>
+
+<div class="page-wrap" style="padding:0 0 80px;">
+
+  <!-- ── KPI summary ───────────────────────────────────────── -->
+  <div class="kpi-bar" role="region" aria-label="Portfolio summary">
+    <div class="kpi-card">
+      <div class="kpi-label">Partners Assigned</div>
+      <div class="kpi-value">8</div>
+      <div class="kpi-sub">AMER West territory</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Avg Health Score</div>
+      <div class="kpi-value">74</div>
+      <div class="kpi-sub">↑ 6 pts from last quarter</div>
+    </div>
+    <div class="kpi-card warn">
+      <div class="kpi-label">Partners At Risk</div>
+      <div class="kpi-value">2</div>
+      <div class="kpi-sub">Health &lt; 50 · QBR overdue</div>
+    </div>
+    <div class="kpi-card good">
+      <div class="kpi-label">Open Pipeline</div>
+      <div class="kpi-value">$4.2M</div>
+      <div class="kpi-sub">Across 14 active deals</div>
+    </div>
+  </div>
+
+  <!-- ── Directory Review Queue ────────────────────────────── -->
+  <div class="review-queue" role="region" aria-label="Directory review queue">
+    <div class="rq-header">
+      <h3>Directory Review Queue</h3>
+      <span class="rq-badge">3 pending</span>
+      <p>Partner-submitted changes to solution areas and geography — requires PSM approval before publishing to equinix.com</p>
+    </div>
+
+    <!-- Row 1 -->
+    <div class="rq-item" role="row">
+      <div>
+        <div class="rq-partner">CloudBridge Technologies</div>
+        <div class="rq-field"><strong>Proposed change:</strong> Add "Security" to solution areas</div>
+      </div>
+      <div class="rq-field">
+        <strong>Current:</strong> Network, Cloud, Workplace
+        <div style="margin-top:3px;">→ + Security (new)</div>
+      </div>
+      <div class="rq-submitted">Submitted 2 days ago</div>
+      <div>
+        <a href="pm-directory-listing.html" class="row-action">View listing →</a>
+      </div>
+      <div class="rq-actions">
+        <button class="rq-btn-approve" onclick="approveReview(this)" aria-label="Approve CloudBridge directory change">Approve</button>
+        <button class="rq-btn-reject" onclick="rejectReview(this)" aria-label="Reject CloudBridge directory change">Reject</button>
+      </div>
+    </div>
+
+    <!-- Row 2 -->
+    <div class="rq-item" role="row">
+      <div>
+        <div class="rq-partner">Nexlink Systems</div>
+        <div class="rq-field"><strong>Proposed change:</strong> Add EMEA to geographic reach</div>
+      </div>
+      <div class="rq-field">
+        <strong>Current:</strong> North America, Asia-Pacific
+        <div style="margin-top:3px;">→ + EMEA (new)</div>
+      </div>
+      <div class="rq-submitted">Submitted 5 days ago</div>
+      <div>
+        <a href="pm-directory-listing.html" class="row-action">View listing →</a>
+      </div>
+      <div class="rq-actions">
+        <button class="rq-btn-approve" onclick="approveReview(this)" aria-label="Approve Nexlink directory change">Approve</button>
+        <button class="rq-btn-reject" onclick="rejectReview(this)" aria-label="Reject Nexlink directory change">Reject</button>
+      </div>
+    </div>
+
+    <!-- Row 3 -->
+    <div class="rq-item" role="row">
+      <div>
+        <div class="rq-partner">Vault Digital</div>
+        <div class="rq-field"><strong>Proposed change:</strong> Remove "Marketplace" from solution areas</div>
+      </div>
+      <div class="rq-field">
+        <strong>Current:</strong> Workplace, UC/Collab, Marketplace
+        <div style="margin-top:3px;">→ Remove Marketplace (no longer offered)</div>
+      </div>
+      <div class="rq-submitted">Submitted 1 day ago</div>
+      <div>
+        <a href="pm-directory-listing.html" class="row-action">View listing →</a>
+      </div>
+      <div class="rq-actions">
+        <button class="rq-btn-approve" onclick="approveReview(this)" aria-label="Approve Vault Digital directory change">Approve</button>
+        <button class="rq-btn-reject" onclick="rejectReview(this)" aria-label="Reject Vault Digital directory change">Reject</button>
+      </div>
+    </div>
+
+  </div><!-- /review-queue -->
+
+  <!-- ── Partner table ─────────────────────────────────────── -->
+  <div class="section-hd">
+    <h2>Assigned Partners</h2>
+    <div class="hd-meta">Sorted by health score · Click partner to view account record</div>
+  </div>
+
+  <div class="filter-row" role="group" aria-label="Filter partners">
+    <span class="filter-chip active" onclick="toggleChip(this)">All (8)</span>
+    <span class="filter-chip" onclick="toggleChip(this)">At risk</span>
+    <span class="filter-chip" onclick="toggleChip(this)">QBR due</span>
+    <span class="filter-chip" onclick="toggleChip(this)">Gold</span>
+    <span class="filter-chip" onclick="toggleChip(this)">Silver</span>
+  </div>
+
+  <div style="overflow-x:auto;">
+  <table class="partner-table" aria-label="Assigned partner roster">
+    <thead>
+      <tr>
+        <th scope="col">Partner</th>
+        <th scope="col">Tier</th>
+        <th scope="col">Health</th>
+        <th scope="col">Open Deals</th>
+        <th scope="col">Pipeline</th>
+        <th scope="col">Last QBR</th>
+        <th scope="col">Next QBR</th>
+        <th scope="col">Pending Actions</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+
+      <tr>
+        <td>
+          <div class="pt-name">
+            <div style="width:28px;height:28px;border-radius:5px;background:#1e40af;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:#fff;flex-shrink:0;" aria-hidden="true">CB</div>
+            <div>
+              <div>CloudBridge Technologies</div>
+              <div class="pt-type">SI · Mid-market</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="tier-b t-gold">Gold</span></td>
+        <td><span class="health-pill hp-green">82</span></td>
+        <td>4</td>
+        <td>
+          <div class="pipeline-val">$1.4M</div>
+          <div class="pipeline-sub">3 qualifying, 1 pending</div>
+        </td>
+        <td><span class="qbr-date qbr-ok">Nov 14, 2025</span></td>
+        <td><span class="qbr-date qbr-soon">Mar 5, 2026</span></td>
+        <td>
+          <div class="action-pills">
+            <span class="action-badge ab-dir-review" title="Directory change pending review">Dir. review</span>
+            <span class="action-badge ab-qbr" title="QBR in 5 days">QBR soon</span>
+          </div>
+        </td>
+        <td><a href="psm-partner-account-record.html" class="row-action">View →</a></td>
+      </tr>
+
+      <tr>
+        <td>
+          <div class="pt-name">
+            <div style="width:28px;height:28px;border-radius:5px;background:#065f46;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:#fff;flex-shrink:0;" aria-hidden="true">NX</div>
+            <div>
+              <div>Nexlink Systems</div>
+              <div class="pt-type">SI · Enterprise</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="tier-b t-gold">Gold</span></td>
+        <td><span class="health-pill hp-green">78</span></td>
+        <td>3</td>
+        <td>
+          <div class="pipeline-val">$980K</div>
+          <div class="pipeline-sub">2 qualifying, 1 at risk</div>
+        </td>
+        <td><span class="qbr-date qbr-ok">Dec 9, 2025</span></td>
+        <td><span class="qbr-date qbr-ok">Mar 15, 2026</span></td>
+        <td>
+          <div class="action-pills">
+            <span class="action-badge ab-dir-review">Dir. review</span>
+            <span class="action-badge ab-deal">Deal pending</span>
+          </div>
+        </td>
+        <td><a href="psm-partner-account-record.html" class="row-action">View →</a></td>
+      </tr>
+
+      <tr>
+        <td>
+          <div class="pt-name">
+            <div style="width:28px;height:28px;border-radius:5px;background:#7c3aed;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:#fff;flex-shrink:0;" aria-hidden="true">MI</div>
+            <div>
+              <div>Meridian Infra</div>
+              <div class="pt-type">SI · Regional</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="tier-b t-gold">Gold</span></td>
+        <td><span class="health-pill hp-green">71</span></td>
+        <td>2</td>
+        <td>
+          <div class="pipeline-val">$640K</div>
+          <div class="pipeline-sub">Both qualifying</div>
+        </td>
+        <td><span class="qbr-date qbr-ok">Oct 22, 2025</span></td>
+        <td><span class="qbr-date qbr-ok">Mar 20, 2026</span></td>
+        <td>—</td>
+        <td><a href="psm-partner-account-record.html" class="row-action">View →</a></td>
+      </tr>
+
+      <tr>
+        <td>
+          <div class="pt-name">
+            <div style="width:28px;height:28px;border-radius:5px;background:#0e7490;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:#fff;flex-shrink:0;" aria-hidden="true">VD</div>
+            <div>
+              <div>Vault Digital</div>
+              <div class="pt-type">Reseller · Mid-market</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="tier-b t-silver">Silver</span></td>
+        <td><span class="health-pill hp-green">66</span></td>
+        <td>2</td>
+        <td>
+          <div class="pipeline-val">$420K</div>
+          <div class="pipeline-sub">1 qualifying, 1 new</div>
+        </td>
+        <td><span class="qbr-date qbr-ok">Jan 8, 2026</span></td>
+        <td><span class="qbr-date qbr-ok">Apr 2, 2026</span></td>
+        <td>
+          <div class="action-pills">
+            <span class="action-badge ab-dir-review">Dir. review</span>
+          </div>
+        </td>
+        <td><a href="psm-partner-account-record.html" class="row-action">View →</a></td>
+      </tr>
+
+      <tr>
+        <td>
+          <div class="pt-name">
+            <div style="width:28px;height:28px;border-radius:5px;background:#b45309;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:#fff;flex-shrink:0;" aria-hidden="true">OC</div>
+            <div>
+              <div>Orbis Connect</div>
+              <div class="pt-type">SI · LATAM specialist</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="tier-b t-gold">Gold</span></td>
+        <td><span class="health-pill hp-amber">58</span></td>
+        <td>1</td>
+        <td>
+          <div class="pipeline-val">$290K</div>
+          <div class="pipeline-sub">1 deal, early stage</div>
+        </td>
+        <td><span class="qbr-date qbr-ok">Sep 30, 2025</span></td>
+        <td><span class="qbr-date qbr-soon">Mar 1, 2026</span></td>
+        <td>
+          <div class="action-pills">
+            <span class="action-badge ab-qbr">QBR overdue</span>
+            <span class="action-badge ab-deal">Deal stale</span>
+          </div>
+        </td>
+        <td><a href="psm-partner-account-record.html" class="row-action">View →</a></td>
+      </tr>
+
+      <tr>
+        <td>
+          <div class="pt-name">
+            <div style="width:28px;height:28px;border-radius:5px;background:#166534;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:#fff;flex-shrink:0;" aria-hidden="true">SN</div>
+            <div>
+              <div>Stratos Networks</div>
+              <div class="pt-type">SI · Network specialist</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="tier-b t-silver">Silver</span></td>
+        <td><span class="health-pill hp-amber">54</span></td>
+        <td>1</td>
+        <td>
+          <div class="pipeline-val">$180K</div>
+          <div class="pipeline-sub">1 deal, qualifying</div>
+        </td>
+        <td><span class="qbr-date qbr-ok">Nov 5, 2025</span></td>
+        <td><span class="qbr-date qbr-ok">Mar 28, 2026</span></td>
+        <td>—</td>
+        <td><a href="psm-partner-account-record.html" class="row-action">View →</a></td>
+      </tr>
+
+      <!-- At-risk rows -->
+      <tr class="at-risk">
+        <td>
+          <div class="pt-name">
+            <div style="width:28px;height:28px;border-radius:5px;background:#4b5563;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:#fff;flex-shrink:0;" aria-hidden="true">AR</div>
+            <div>
+              <div>Arcline Resources</div>
+              <div class="pt-type">Reseller · SMB</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="tier-b t-silver">Silver</span></td>
+        <td><span class="health-pill hp-red">38</span></td>
+        <td>0</td>
+        <td>
+          <div class="pipeline-val">$0</div>
+          <div class="pipeline-sub">No active deals</div>
+        </td>
+        <td><span class="qbr-date qbr-overdue">Aug 14, 2025 ↑</span></td>
+        <td><span class="qbr-date qbr-overdue">Overdue</span></td>
+        <td>
+          <div class="action-pills">
+            <span class="action-badge ab-agreement">Agmt expiring</span>
+            <span class="action-badge ab-qbr">QBR overdue</span>
+          </div>
+        </td>
+        <td><a href="psm-partner-account-record.html" class="row-action">View →</a></td>
+      </tr>
+
+      <tr class="at-risk">
+        <td>
+          <div class="pt-name">
+            <div style="width:28px;height:28px;border-radius:5px;background:#92400e;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:#fff;flex-shrink:0;" aria-hidden="true">PT</div>
+            <div>
+              <div>Praxis Technologies</div>
+              <div class="pt-type">ISV · Platform</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="tier-b t-select">Select</span></td>
+        <td><span class="health-pill hp-red">31</span></td>
+        <td>0</td>
+        <td>
+          <div class="pipeline-val">$0</div>
+          <div class="pipeline-sub">Inactive 90+ days</div>
+        </td>
+        <td><span class="qbr-date qbr-overdue">Jul 2, 2025 ↑</span></td>
+        <td><span class="qbr-date qbr-overdue">Overdue</span></td>
+        <td>
+          <div class="action-pills">
+            <span class="action-badge ab-agreement">Agmt expiring</span>
+          </div>
+        </td>
+        <td><a href="psm-partner-account-record.html" class="row-action">View →</a></td>
+      </tr>
+
+    </tbody>
+  </table>
+  </div>
+
+  <div style="background:#fff8f8;border:1px solid #fecaca;border-radius:5px;padding:10px 14px;font-size:.78rem;color:#991b1b;margin-bottom:28px;">
+    <strong>2 partners at risk</strong> — Arcline Resources and Praxis Technologies have health scores below 40 and no active pipeline. QBRs are overdue. Consider outreach or escalation to PAM before tier review cycle in April.
+  </div>
+
+</div><!-- /page-wrap -->
+</div><!-- /container -->
+
+<!-- ── Spec panel ─────────────────────────────────────────────── -->
+<button class="spec-toggle" onclick="document.getElementById('spec').classList.toggle('open')" aria-label="Toggle spec panel">Spec</button>
+<aside class="spec-panel" id="spec" role="complementary" aria-label="Design specification">
+  <div class="spec-inner">
+    <button class="spec-close" onclick="document.getElementById('spec').classList.remove('open')" aria-label="Close spec panel">×</button>
+
+    <div class="spec-section">
+      <h3 class="spec-section-title">Summary</h3>
+      <p>Salesforce Lightning list view for the PSM IC (Marcus Chen). Shows all 8 assigned partners with health score, pipeline, QBR status, and pending actions — including a queue of partner-submitted directory changes awaiting PSM approval before publishing to equinix.com.</p>
+    </div>
+
+    <div class="spec-section">
+      <h3 class="spec-section-title">Directory Review Queue</h3>
+      <ul class="spec-list">
+        <li>Partners can submit changes to solution areas and geographic reach via <a href="pm-directory-listing.html" style="color:var(--wf-accent);">pm-directory-listing.html</a></li>
+        <li>These fields are PSM-gated — they appear in a review queue here before publishing</li>
+        <li>PSM approves or rejects each change · rejection triggers an email to partner with reason</li>
+        <li>SLA: 2–3 business days per Equinix directory policy</li>
+        <li>Approved changes sync to equinix.com partner-finder.html within 24h (batch sync)</li>
+      </ul>
+    </div>
+
+    <div class="spec-section">
+      <h3 class="spec-section-title">Health Score Logic</h3>
+      <ul class="spec-list">
+        <li>Green: ≥70 · Amber: 50–69 · Red: &lt;50</li>
+        <li>Calculated from: Training completion (30%) + Revenue vs target (40%) + Active deals (30%)</li>
+        <li>Updated hourly from Salesforce batch job</li>
+        <li>At-risk indicator: health &lt;50 OR QBR overdue &gt;30 days OR no active deals &gt;90 days</li>
+      </ul>
+    </div>
+
+    <div class="spec-section">
+      <h3 class="spec-section-title">Related Views</h3>
+      <ul class="spec-list">
+        <li><a href="psm-region-view.html" style="color:var(--wf-accent);">psm-region-view.html</a> — manager regional overview (all PSMs)</li>
+        <li><a href="psm-portfolio.html" style="color:var(--wf-accent);">psm-portfolio.html</a> — visual health portfolio (donut + sortable list)</li>
+        <li><a href="psm-partner-account-record.html" style="color:var(--wf-accent);">psm-partner-account-record.html</a> — account record detail</li>
+        <li><a href="pm-directory-listing.html" style="color:var(--wf-accent);">pm-directory-listing.html</a> — partner-facing directory editor</li>
+        <li><a href="partner-finder.html" style="color:var(--wf-accent);">partner-finder.html</a> — public equinix.com Partner Finder</li>
+      </ul>
+    </div>
+
+  </div>
+</aside>
+
+<script>
+  function toggleChip(el) {
+    document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+  }
+  function approveReview(btn) {
+    const row = btn.closest('.rq-item');
+    row.style.opacity = '.4';
+    row.style.pointerEvents = 'none';
+    const name = row.querySelector('.rq-partner').textContent;
+    const flash = document.createElement('div');
+    flash.textContent = '✓ Approved — ' + name + ' directory change published';
+    flash.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#065f46;color:#d1fae5;padding:10px 18px;border-radius:5px;font-size:.8rem;font-weight:700;z-index:9999;';
+    document.body.appendChild(flash);
+    setTimeout(() => flash.remove(), 2800);
+  }
+  function rejectReview(btn) {
+    const row = btn.closest('.rq-item');
+    row.style.opacity = '.4';
+    row.style.pointerEvents = 'none';
+    const name = row.querySelector('.rq-partner').textContent;
+    const flash = document.createElement('div');
+    flash.textContent = '✕ Rejected — ' + name + ' notified via email';
+    flash.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#991b1b;color:#fee2e2;padding:10px 18px;border-radius:5px;font-size:.8rem;font-weight:700;z-index:9999;';
+    document.body.appendChild(flash);
+    setTimeout(() => flash.remove(), 2800);
+  }
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>

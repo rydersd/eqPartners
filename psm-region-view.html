@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en" class="wireframe">
+<head>
+<script>if(localStorage.getItem('pcp-wf-auth')!=='1')location.replace('gate.html');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AMER West Region — PSM Manager View · Equinix PCP</title>
+<link rel="stylesheet" href="wireframe.css">
+<style>
+  /* ── Layout ──────────────────────────────────────────────── */
+  .page-wrap { max-width: 1200px; margin: 0 auto; padding: 24px 20px 80px; }
+
+  /* ── KPI bar ─────────────────────────────────────────────── */
+  .kpi-bar {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+    margin-bottom: 28px;
+  }
+  .kpi-card {
+    background: var(--wf-white); border: 1px solid var(--wf-line);
+    border-radius: 6px; padding: 14px 16px;
+  }
+  .kpi-label { font-size: .68rem; font-weight: 700; color: var(--wf-muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 4px; }
+  .kpi-value { font-size: 1.5rem; font-weight: 800; color: var(--wf-ink); line-height: 1; }
+  .kpi-sub   { font-size: .7rem; color: var(--wf-muted); margin-top: 3px; }
+  .kpi-card.warn .kpi-value { color: var(--wf-red); }
+  .kpi-card.good .kpi-value { color: var(--wf-green); }
+
+  /* ── Section header ──────────────────────────────────────── */
+  .section-hd {
+    display: flex; align-items: center; justify-content: space-between;
+    margin: 0 0 10px;
+  }
+  .section-hd h2 { font-size: .8125rem; font-weight: 700; color: var(--wf-ink); margin: 0; }
+  .section-hd .hd-meta { font-size: .72rem; color: var(--wf-muted); }
+  .section-hd .hd-action { font-size: .72rem; color: var(--wf-accent); text-decoration: none; }
+  .section-hd .hd-action:hover { text-decoration: underline; }
+
+  /* ── Health score pill ───────────────────────────────────── */
+  .health-pill {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 8px; border-radius: 10px;
+    font-size: .68rem; font-weight: 700;
+  }
+  .hp-green  { background: #d1fae5; color: #065f46; }
+  .hp-amber  { background: #fef3c7; color: #92400e; }
+  .hp-red    { background: #fee2e2; color: #991b1b; }
+
+  /* ── Tier badge ──────────────────────────────────────────── */
+  .tier-b { display: inline-flex; align-items: center; gap: 3px; font-size: .65rem; font-weight: 800; padding: 2px 7px; border-radius: 10px; text-transform: uppercase; letter-spacing: .04em; white-space: nowrap; }
+  .t-gold     { background: #fef3cd; color: #92400e; }
+  .t-silver   { background: #f1f5f9; color: #475569; }
+  .t-platinum { background: #ede9fe; color: #5b21b6; }
+  .t-select   { background: #ecfeff; color: #0e7490; }
+
+  /* ── Generic data table ──────────────────────────────────── */
+  .data-table {
+    width: 100%; border-collapse: collapse;
+    background: var(--wf-white); border: 1px solid var(--wf-line); border-radius: 6px;
+    overflow: hidden; font-size: .78rem;
+    margin-bottom: 28px;
+  }
+  .data-table thead th {
+    background: var(--wf-surface); padding: 8px 12px;
+    font-size: .65rem; font-weight: 700; color: var(--wf-muted);
+    text-align: left; text-transform: uppercase; letter-spacing: .05em;
+    border-bottom: 1px solid var(--wf-line); white-space: nowrap;
+  }
+  .data-table tbody tr {
+    border-bottom: 1px solid var(--wf-tint); transition: background .1s;
+  }
+  .data-table tbody tr:last-child { border-bottom: none; }
+  .data-table tbody tr:hover { background: var(--wf-accent-lt); }
+  .data-table tbody tr.at-risk { border-left: 3px solid var(--wf-red); }
+  .data-table tbody tr.unassigned-row { border-left: 3px solid var(--wf-amber); background: #fffbeb; }
+  .data-table tbody tr.unassigned-row:hover { background: #fef3c7; }
+  .data-table tbody td { padding: 10px 12px; vertical-align: middle; }
+
+  /* PSM name cell */
+  .psm-name { font-weight: 700; color: var(--wf-ink); }
+  .psm-sub  { font-size: .65rem; color: var(--wf-muted); margin-top: 1px; }
+
+  /* Partner name cell */
+  .pt-name { font-weight: 700; color: var(--wf-ink); display: flex; align-items: center; gap: 7px; }
+  .pt-type  { font-size: .65rem; color: var(--wf-muted); margin-top: 1px; }
+
+  /* Avatar stub */
+  .avatar {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--wf-surface); border: 1px solid var(--wf-line);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: .6rem; font-weight: 800; color: var(--wf-muted);
+    flex-shrink: 0;
+  }
+
+  /* Partner logo stub */
+  .pt-logo {
+    width: 28px; height: 28px; border-radius: 4px;
+    background: var(--wf-surface); border: 1px solid var(--wf-line);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: .55rem; font-weight: 800; color: var(--wf-muted);
+    flex-shrink: 0;
+  }
+
+  /* Row action link */
+  .row-action { font-size: .7rem; color: var(--wf-accent); text-decoration: none; white-space: nowrap; }
+  .row-action:hover { text-decoration: underline; }
+
+  /* Stat number */
+  .stat-num { font-weight: 700; color: var(--wf-ink); }
+  .stat-muted { color: var(--wf-muted); font-size: .7rem; }
+
+  /* ── Unassigned alert banner ─────────────────────────────── */
+  .unassigned-alert {
+    background: #fffbeb; border: 1px solid var(--wf-line);
+    border-top: 3px solid var(--wf-amber); border-radius: 6px;
+    margin-bottom: 28px; overflow: hidden;
+  }
+  .ua-header {
+    padding: 12px 16px; border-bottom: 1px solid var(--wf-line);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .ua-header h3 { font-size: .8125rem; font-weight: 700; color: var(--wf-ink); margin: 0; }
+  .ua-badge { background: #fbbf24; color: #78350f; font-size: .65rem; font-weight: 800; padding: 1px 7px; border-radius: 10px; }
+  .ua-header p { font-size: .72rem; color: var(--wf-muted); margin: 0 0 0 auto; }
+
+  /* ── Health distribution mini chart ─────────────────────── */
+  .health-dist-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+    margin-bottom: 28px;
+  }
+  .hd-card {
+    background: var(--wf-white); border: 1px solid var(--wf-line);
+    border-radius: 6px; padding: 16px;
+  }
+  .hd-card-title { font-size: .72rem; font-weight: 700; color: var(--wf-muted); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 14px; }
+  .bar-group { display: flex; flex-direction: column; gap: 8px; }
+  .bar-row { display: flex; align-items: center; gap: 8px; font-size: .72rem; }
+  .bar-label { width: 70px; color: var(--wf-text); flex-shrink: 0; }
+  .bar-track { flex: 1; height: 10px; background: var(--wf-tint); border-radius: 5px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 5px; }
+  .bf-green  { background: #10b981; }
+  .bf-amber  { background: #f59e0b; }
+  .bf-red    { background: #ef4444; }
+  .bar-val { width: 30px; text-align: right; font-weight: 700; color: var(--wf-ink); }
+
+  .tier-breakdown { display: flex; flex-direction: column; gap: 10px; }
+  .tier-row { display: flex; align-items: center; gap: 10px; font-size: .72rem; }
+  .tier-row .tier-b { width: 70px; justify-content: center; }
+  .tier-mini-bars { flex: 1; display: flex; gap: 3px; align-items: center; }
+  .tmb { height: 10px; border-radius: 2px; }
+  .tmb-g { background: #10b981; }
+  .tmb-a { background: #f59e0b; }
+  .tmb-r { background: #ef4444; }
+  .tier-counts { font-size: .68rem; color: var(--wf-muted); white-space: nowrap; }
+
+  /* ── Spec panel ──────────────────────────────────────────── */
+  .spec-panel {
+    background: var(--wf-surface); border: 1px solid var(--wf-line);
+    border-radius: 6px; padding: 16px 18px; margin-top: 32px;
+    font-size: .75rem; color: var(--wf-text); line-height: 1.6;
+  }
+  .spec-panel h4 { font-size: .72rem; font-weight: 700; color: var(--wf-muted); text-transform: uppercase; letter-spacing: .05em; margin: 0 0 8px; }
+  .spec-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .spec-links { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--wf-line); }
+  .spec-links a { font-size: .72rem; color: var(--wf-accent); text-decoration: none; margin-right: 14px; }
+  .spec-links a:hover { text-decoration: underline; }
+
+  /* ── QBR coverage bar ────────────────────────────────────── */
+  .coverage-inline {
+    display: flex; align-items: center; gap: 6px;
+  }
+  .cov-track { width: 80px; height: 6px; background: var(--wf-tint); border-radius: 3px; overflow: hidden; }
+  .cov-fill { height: 100%; border-radius: 3px; background: #10b981; }
+  .cov-fill.warn { background: #f59e0b; }
+  .cov-label { font-size: .68rem; color: var(--wf-muted); }
+
+  /* Overdue badge */
+  .overdue-badge {
+    font-size: .62rem; padding: 2px 6px; border-radius: 3px;
+    font-weight: 700; background: #fee2e2; color: #991b1b; border: 1px solid #fecaca;
+    white-space: nowrap;
+  }
+  .none-badge {
+    font-size: .62rem; padding: 2px 6px; border-radius: 3px;
+    font-weight: 700; background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0;
+    white-space: nowrap;
+  }
+
+  /* Pipeline */
+  .pipeline-val { font-weight: 700; color: var(--wf-ink); }
+  .pipeline-sub { font-size: .65rem; color: var(--wf-muted); }
+
+  /* ── Toast ───────────────────────────────────────────────── */
+  #toast {
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--wf-ink); color: #fff;
+    padding: 10px 16px; border-radius: 6px;
+    font-size: .78rem; font-weight: 600;
+    opacity: 0; pointer-events: none;
+    transition: opacity .2s; z-index: 999;
+  }
+  #toast.show { opacity: 1; }
+
+  /* ── Filter row ──────────────────────────────────────────── */
+  .filter-row { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; align-items: center; }
+  .filter-chip {
+    padding: 4px 12px; border-radius: 20px; border: 1px solid var(--wf-line);
+    font-size: .7rem; font-weight: 600; color: var(--wf-muted); cursor: pointer;
+    background: var(--wf-white); transition: all .12s;
+  }
+  .filter-chip.active { background: var(--wf-ink); color: var(--wf-white); border-color: var(--wf-ink); }
+  .filter-chip:hover:not(.active) { border-color: var(--wf-accent); color: var(--wf-accent); }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>Equinix Partner Channel Program</h1>
+    <p>Site Map &amp; Information Architecture — v2.6 (92 pages)</p>
+  </div>
+  <div class="header-meta">
+    <span>Feb 2026</span>
+    <span>Draft — Design Phase</span>
+  </div>
+</header>
+
+<nav class="view-control" aria-label="View selector">
+  <span class="view-control-label">View</span>
+  <div class="view-btns" role="navigation" aria-label="Select view">
+    <a class="view-btn" href="index.html">Sitemap</a>
+    <a class="view-btn" href="jobs-to-be-done.html">Jobs to Be Done</a>
+    <a class="view-btn" href="service-diagram.html">Service Diagram</a>
+    <a class="view-btn" href="flows-reference.html">Flows &amp; Reference</a>
+  </div>
+</nav>
+
+<div class="container">
+
+<!-- Page header -->
+<div class="page-title-bar" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px;">
+  <div>
+    <div style="font-size:.7rem;color:var(--wf-muted);margin-bottom:2px;">
+      <a href="index.html" style="color:var(--wf-accent);">Salesforce Lightning</a>
+      &rsaquo; PSM Workspace &rsaquo; Region View
+    </div>
+    <h2 style="font-size:1.0625rem;font-weight:800;color:var(--wf-ink);margin:0 0 2px;">AMER West Region</h2>
+    <p style="font-size:.75rem;color:var(--wf-muted);margin:0;">Diana Flores · PSM Manager · 4 PSMs · 28 partners</p>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center;">
+    <a href="psm-my-partners.html" class="row-action" style="padding:6px 12px;border:1px solid var(--wf-line);border-radius:4px;background:var(--wf-white);">← IC View (Marcus Chen)</a>
+    <button onclick="showToast('QBR report exported')" style="padding:6px 12px;border:1px solid var(--wf-line);border-radius:4px;background:var(--wf-white);font-size:.72rem;font-weight:600;cursor:pointer;font-family:inherit;color:var(--wf-text);">Export report</button>
+  </div>
+</div>
+
+<div class="page-wrap" style="padding-top:0;">
+
+  <!-- KPI bar -->
+  <div class="kpi-bar" role="region" aria-label="Region KPIs">
+    <div class="kpi-card">
+      <div class="kpi-label">PSM Headcount</div>
+      <div class="kpi-value">4</div>
+      <div class="kpi-sub">AMER West team</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Total Partners</div>
+      <div class="kpi-value">28</div>
+      <div class="kpi-sub">26 assigned · 2 unassigned</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Avg Health Score</div>
+      <div class="kpi-value">72</div>
+      <div class="kpi-sub">↑ 3 pts vs last quarter</div>
+    </div>
+    <div class="kpi-card warn">
+      <div class="kpi-label">Unassigned Partners</div>
+      <div class="kpi-value">2</div>
+      <div class="kpi-sub">Need PSM assignment</div>
+    </div>
+  </div>
+
+  <!-- Unassigned alert -->
+  <div class="unassigned-alert" role="alert" aria-label="Partners without PSM assignment">
+    <div class="ua-header">
+      <h3>Unassigned Partners</h3>
+      <span class="ua-badge">2</span>
+      <p>Partners recently onboarded or dropped — need PSM assignment</p>
+    </div>
+    <table class="data-table" style="margin-bottom:0;border:none;border-radius:0;">
+      <thead>
+        <tr>
+          <th>Partner</th>
+          <th>Tier</th>
+          <th>Joined</th>
+          <th>Region</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="unassigned-row">
+          <td>
+            <div class="pt-name">
+              <div class="pt-logo">GF</div>
+              <div>
+                <div>Goldfield Systems</div>
+                <div class="pt-type">SI — SMB</div>
+              </div>
+            </div>
+          </td>
+          <td><span class="tier-b t-gold">Gold</span></td>
+          <td><span style="font-size:.72rem;color:var(--wf-muted);">2025-11-14</span></td>
+          <td><span style="font-size:.72rem;">AMER West</span></td>
+          <td><button onclick="showToast('Assignment flow opened for Goldfield Systems')" style="padding:5px 10px;border-radius:4px;border:none;background:#dbeafe;color:#1d4ed8;font-size:.7rem;font-weight:700;cursor:pointer;font-family:inherit;">Assign PSM</button></td>
+        </tr>
+        <tr class="unassigned-row">
+          <td>
+            <div class="pt-name">
+              <div class="pt-logo">MI</div>
+              <div>
+                <div>Meridian IT Group</div>
+                <div class="pt-type">VAR — Mid-Market</div>
+              </div>
+            </div>
+          </td>
+          <td><span class="tier-b t-silver">Silver</span></td>
+          <td><span style="font-size:.72rem;color:var(--wf-muted);">2026-01-08</span></td>
+          <td><span style="font-size:.72rem;">AMER West</span></td>
+          <td><button onclick="showToast('Assignment flow opened for Meridian IT Group')" style="padding:5px 10px;border-radius:4px;border:none;background:#dbeafe;color:#1d4ed8;font-size:.7rem;font-weight:700;cursor:pointer;font-family:inherit;">Assign PSM</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- PSM Team table -->
+  <div class="section-hd">
+    <h2>PSM Team</h2>
+    <span class="hd-meta">4 PSMs · Updated today</span>
+  </div>
+  <table class="data-table" aria-label="PSM team summary">
+    <thead>
+      <tr>
+        <th>PSM</th>
+        <th>Partners</th>
+        <th>Avg Health</th>
+        <th>Open Deals</th>
+        <th>Pipeline</th>
+        <th>Overdue QBRs</th>
+        <th>QBR Coverage</th>
+        <th>Last Active</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div class="avatar">MC</div>
+            <div>
+              <div class="psm-name">Marcus Chen</div>
+              <div class="psm-sub">IC · AMER West</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="stat-num">8</span></td>
+        <td><span class="health-pill hp-green">● 74</span></td>
+        <td><span class="stat-num">11</span></td>
+        <td>
+          <div class="pipeline-val">$4.2M</div>
+          <div class="pipeline-sub">3 in late stage</div>
+        </td>
+        <td><span class="none-badge">None</span></td>
+        <td>
+          <div class="coverage-inline">
+            <div class="cov-track"><div class="cov-fill" style="width:88%;"></div></div>
+            <span class="cov-label">88%</span>
+          </div>
+        </td>
+        <td><span style="font-size:.72rem;color:var(--wf-muted);">Today</span></td>
+        <td><a href="psm-my-partners.html" class="row-action">View →</a></td>
+      </tr>
+      <tr>
+        <td>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div class="avatar">SK</div>
+            <div>
+              <div class="psm-name">Sarah Kim</div>
+              <div class="psm-sub">IC · AMER West</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="stat-num">7</span></td>
+        <td><span class="health-pill hp-amber">● 68</span></td>
+        <td><span class="stat-num">9</span></td>
+        <td>
+          <div class="pipeline-val">$3.1M</div>
+          <div class="pipeline-sub">1 in late stage</div>
+        </td>
+        <td><span class="overdue-badge">1 overdue</span></td>
+        <td>
+          <div class="coverage-inline">
+            <div class="cov-track"><div class="cov-fill warn" style="width:71%;"></div></div>
+            <span class="cov-label">71%</span>
+          </div>
+        </td>
+        <td><span style="font-size:.72rem;color:var(--wf-muted);">Yesterday</span></td>
+        <td><a href="#" class="row-action">View →</a></td>
+      </tr>
+      <tr>
+        <td>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div class="avatar">JO</div>
+            <div>
+              <div class="psm-name">James Okafor</div>
+              <div class="psm-sub">IC · AMER West</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="stat-num">6</span></td>
+        <td><span class="health-pill hp-green">● 81</span></td>
+        <td><span class="stat-num">14</span></td>
+        <td>
+          <div class="pipeline-val">$5.8M</div>
+          <div class="pipeline-sub">5 in late stage</div>
+        </td>
+        <td><span class="none-badge">None</span></td>
+        <td>
+          <div class="coverage-inline">
+            <div class="cov-track"><div class="cov-fill" style="width:100%;"></div></div>
+            <span class="cov-label">100%</span>
+          </div>
+        </td>
+        <td><span style="font-size:.72rem;color:var(--wf-muted);">Today</span></td>
+        <td><a href="#" class="row-action">View →</a></td>
+      </tr>
+      <tr class="at-risk">
+        <td>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div class="avatar">PP</div>
+            <div>
+              <div class="psm-name">Priya Patel</div>
+              <div class="psm-sub">IC · AMER West</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="stat-num">5</span></td>
+        <td><span class="health-pill hp-red">● 55</span></td>
+        <td><span class="stat-num">4</span></td>
+        <td>
+          <div class="pipeline-val">$1.4M</div>
+          <div class="pipeline-sub">0 in late stage</div>
+        </td>
+        <td><span class="overdue-badge">2 overdue</span></td>
+        <td>
+          <div class="coverage-inline">
+            <div class="cov-track"><div class="cov-fill warn" style="width:60%;"></div></div>
+            <span class="cov-label">60%</span>
+          </div>
+        </td>
+        <td><span style="font-size:.72rem;color:var(--wf-red);font-weight:700;">3 days ago</span></td>
+        <td><a href="#" class="row-action">View →</a></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Health distribution charts -->
+  <div class="health-dist-grid">
+    <div class="hd-card">
+      <div class="hd-card-title">Region health breakdown</div>
+      <div class="bar-group" role="img" aria-label="Region health breakdown: 17 green, 7 amber, 4 red">
+        <div class="bar-row">
+          <span class="bar-label">Healthy ≥70</span>
+          <div class="bar-track"><div class="bar-fill bf-green" style="width:61%;"></div></div>
+          <span class="bar-val">17</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">At risk 50–69</span>
+          <div class="bar-track"><div class="bar-fill bf-amber" style="width:25%;"></div></div>
+          <span class="bar-val">7</span>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label">Critical &lt;50</span>
+          <div class="bar-track"><div class="bar-fill bf-red" style="width:14%;"></div></div>
+          <span class="bar-val">4</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hd-card">
+      <div class="hd-card-title">Health by tier</div>
+      <div class="tier-breakdown" role="img" aria-label="Health by tier: Platinum 3 green; Gold 6 green 2 amber; Silver 5 green 3 amber 2 red; Select 3 green 2 amber 2 red">
+        <div class="tier-row">
+          <span class="tier-b t-platinum">Platinum</span>
+          <div class="tier-mini-bars">
+            <div class="tmb tmb-g" style="width:70px;" title="3 healthy"></div>
+          </div>
+          <span class="tier-counts">3 G · 0 A · 0 R</span>
+        </div>
+        <div class="tier-row">
+          <span class="tier-b t-gold">Gold</span>
+          <div class="tier-mini-bars">
+            <div class="tmb tmb-g" style="width:56px;" title="6 healthy"></div>
+            <div class="tmb tmb-a" style="width:19px;" title="2 at risk"></div>
+          </div>
+          <span class="tier-counts">6 G · 2 A · 0 R</span>
+        </div>
+        <div class="tier-row">
+          <span class="tier-b t-silver">Silver</span>
+          <div class="tier-mini-bars">
+            <div class="tmb tmb-g" style="width:47px;" title="5 healthy"></div>
+            <div class="tmb tmb-a" style="width:28px;" title="3 at risk"></div>
+            <div class="tmb tmb-r" style="width:19px;" title="2 critical"></div>
+          </div>
+          <span class="tier-counts">5 G · 3 A · 2 R</span>
+        </div>
+        <div class="tier-row">
+          <span class="tier-b t-select">Select</span>
+          <div class="tier-mini-bars">
+            <div class="tmb tmb-g" style="width:28px;" title="3 healthy"></div>
+            <div class="tmb tmb-a" style="width:19px;" title="2 at risk"></div>
+            <div class="tmb tmb-r" style="width:19px;" title="2 critical"></div>
+          </div>
+          <span class="tier-counts">3 G · 2 A · 2 R</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Full partner list -->
+  <div class="section-hd">
+    <h2>All Region Partners</h2>
+    <span class="hd-meta">Showing 10 of 28 &nbsp;·&nbsp; <a href="#" class="hd-action">View all</a></span>
+  </div>
+
+  <div class="filter-row" role="group" aria-label="Filter partners">
+    <button class="filter-chip active">All (28)</button>
+    <button class="filter-chip">At risk (11)</button>
+    <button class="filter-chip">No PSM (2)</button>
+    <button class="filter-chip">Platinum</button>
+    <button class="filter-chip">Gold</button>
+    <button class="filter-chip">Silver</button>
+  </div>
+
+  <table class="data-table" aria-label="All region partners">
+    <thead>
+      <tr>
+        <th>Partner</th>
+        <th>Tier</th>
+        <th>Health</th>
+        <th>PSM Owner</th>
+        <th>Open Deals</th>
+        <th>Pipeline</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <div class="pt-name">
+            <div class="pt-logo">CB</div>
+            <div>
+              <div>CloudBridge Solutions</div>
+              <div class="pt-type">SI — Mid-Market</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="tier-b t-gold">Gold</span></td>
+        <td><span class="health-pill hp-green">● 82</span></td>
+        <td>
+          <div style="display:flex;align-items:center;gap:5px;">
+            <div class="avatar" style="width:20px;height:20px;font-size:.55rem;">MC</div>
+            <span style="font-size:.72rem;">Marcus Chen</span>
+          </div>
+        </td>
+        <td><span class="stat-num">4</span></td>
+        <td><span class="pipeline-val">$1.2M</span></td>
+        <td><a href="psm-my-partners.html" class="row-action">View →</a></td>
+      </tr>
+      <tr>
+        <td>
+          <div class="pt-name">
+            <div class="pt-logo">AP</div>
+            <div>
+              <div>Apex Digital Partners</div>
+              <div class="pt-type">VAR — Enterprise</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="tier-b t-platinum">Platinum</span></td>
+        <td><span class="health-pill hp-green">● 91</span></td>
+        <td>
+          <div style="display:flex;align-items:center;gap:5px;">
+            <div class="avatar" style="width:20px;height:20px;font-size:.55rem;">JO</div>
+            <span style="font-size:.72rem;">James Okafor</span>
+          </div>
+        </td>
+        <td><span class="stat-num">7</span></td>
+        <td><span class="pipeline-val">$3.1M</span></td>
+        <td><a href="#" class="row-action">View →</a></td>
+      </tr>
+      <tr>
+        <td>
+          <div class="pt-name">
+            <div class="pt-logo">NX</div>
+            <div>
+              <div>Nexlink Technologies</div>
+              <div class="pt-type">SI — Enterprise</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="tier-b t-gold">Gold</span></td>
+        <td><span class="health-pill hp-amber">● 67</span></td>
+        <td>
+          <div style="display:flex;align-items:center;gap:5px;">
+            <div class="avatar" style="width:20px;height:20px;font-size:.55rem;">SK</div>
+            <span style="font-size:.72rem;">Sarah Kim</span>
+          </div>
+        </td>
+        <td><span class="stat-num">3</span></td>
+        <td><span class="pipeline-val">$880K</span></td>
+        <td><a href="#" class="row-action">View →</a></td>
+      </tr>
+      <tr>
+        <td>
+          <div class="pt-name">
+            <div class="pt-logo">VD</div>
+            <div>
+              <div>Vault Digital</div>
+              <div class="pt-type">MSP — Mid-Market</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="tier-b t-silver">Silver</span></td>
+        <td><span class="health-pill hp-amber">● 61</span></td>
+        <td>
+          <div style="display:flex;align-items:center;gap:5px;">
+            <div class="avatar" style="width:20px;height:20px;font-size:.55rem;">MC</div>
+            <span style="font-size:.72rem;">Marcus Chen</span>
+          </div>
+        </td>
+        <td><span class="stat-num">2</span></td>
+        <td><span class="pipeline-val">$340K</span></td>
+        <td><a href="#" class="row-action">View →</a></td>
+      </tr>
+      <tr class="at-risk">
+        <td>
+          <div class="pt-name">
+            <div class="pt-logo">AG</div>
+            <div>
+              <div>Arcline Resources</div>
+              <div class="pt-type">VAR — SMB</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="tier-b t-silver">Silver</span></td>
+        <td><span class="health-pill hp-red">● 44</span></td>
+        <td>
+          <div style="display:flex;align-items:center;gap:5px;">
+            <div class="avatar" style="width:20px;height:20px;font-size:.55rem;">MC</div>
+            <span style="font-size:.72rem;">Marcus Chen</span>
+          </div>
+        </td>
+        <td><span class="stat-num">0</span></td>
+        <td><span class="pipeline-val" style="color:var(--wf-muted);">—</span></td>
+        <td><a href="psm-my-partners.html" class="row-action">View →</a></td>
+      </tr>
+      <tr>
+        <td>
+          <div class="pt-name">
+            <div class="pt-logo">BT</div>
+            <div>
+              <div>Bridgetech Systems</div>
+              <div class="pt-type">SI — Enterprise</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="tier-b t-platinum">Platinum</span></td>
+        <td><span class="health-pill hp-green">● 88</span></td>
+        <td>
+          <div style="display:flex;align-items:center;gap:5px;">
+            <div class="avatar" style="width:20px;height:20px;font-size:.55rem;">JO</div>
+            <span style="font-size:.72rem;">James Okafor</span>
+          </div>
+        </td>
+        <td><span class="stat-num">5</span></td>
+        <td><span class="pipeline-val">$2.4M</span></td>
+        <td><a href="#" class="row-action">View →</a></td>
+      </tr>
+      <tr class="at-risk">
+        <td>
+          <div class="pt-name">
+            <div class="pt-logo">PX</div>
+            <div>
+              <div>Praxis Technologies</div>
+              <div class="pt-type">VAR — Mid-Market</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="tier-b t-select">Select</span></td>
+        <td><span class="health-pill hp-red">● 38</span></td>
+        <td>
+          <div style="display:flex;align-items:center;gap:5px;">
+            <div class="avatar" style="width:20px;height:20px;font-size:.55rem;">PP</div>
+            <span style="font-size:.72rem;">Priya Patel</span>
+          </div>
+        </td>
+        <td><span class="stat-num">1</span></td>
+        <td><span class="pipeline-val">$95K</span></td>
+        <td><a href="#" class="row-action">View →</a></td>
+      </tr>
+      <tr>
+        <td>
+          <div class="pt-name">
+            <div class="pt-logo">SF</div>
+            <div>
+              <div>Stellar Five Group</div>
+              <div class="pt-type">MSP — Enterprise</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="tier-b t-gold">Gold</span></td>
+        <td><span class="health-pill hp-green">● 76</span></td>
+        <td>
+          <div style="display:flex;align-items:center;gap:5px;">
+            <div class="avatar" style="width:20px;height:20px;font-size:.55rem;">SK</div>
+            <span style="font-size:.72rem;">Sarah Kim</span>
+          </div>
+        </td>
+        <td><span class="stat-num">3</span></td>
+        <td><span class="pipeline-val">$1.1M</span></td>
+        <td><a href="#" class="row-action">View →</a></td>
+      </tr>
+      <tr>
+        <td>
+          <div class="pt-name">
+            <div class="pt-logo">KL</div>
+            <div>
+              <div>Koreline Network</div>
+              <div class="pt-type">VAR — SMB</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="tier-b t-silver">Silver</span></td>
+        <td><span class="health-pill hp-amber">● 63</span></td>
+        <td>
+          <div style="display:flex;align-items:center;gap:5px;">
+            <div class="avatar" style="width:20px;height:20px;font-size:.55rem;">PP</div>
+            <span style="font-size:.72rem;">Priya Patel</span>
+          </div>
+        </td>
+        <td><span class="stat-num">2</span></td>
+        <td><span class="pipeline-val">$270K</span></td>
+        <td><a href="#" class="row-action">View →</a></td>
+      </tr>
+      <tr>
+        <td>
+          <div class="pt-name">
+            <div class="pt-logo">OR</div>
+            <div>
+              <div>Orbit Systems</div>
+              <div class="pt-type">SI — Mid-Market</div>
+            </div>
+          </div>
+        </td>
+        <td><span class="tier-b t-gold">Gold</span></td>
+        <td><span class="health-pill hp-green">● 79</span></td>
+        <td>
+          <div style="display:flex;align-items:center;gap:5px;">
+            <div class="avatar" style="width:20px;height:20px;font-size:.55rem;">JO</div>
+            <span style="font-size:.72rem;">James Okafor</span>
+          </div>
+        </td>
+        <td><span class="stat-num">4</span></td>
+        <td><span class="pipeline-val">$1.6M</span></td>
+        <td><a href="#" class="row-action">View →</a></td>
+      </tr>
+    </tbody>
+  </table>
+  <div style="text-align:center;margin-top:-20px;margin-bottom:28px;">
+    <a href="#" class="row-action" style="font-size:.75rem;">View all 28 partners →</a>
+  </div>
+
+  <!-- Spec panel -->
+  <div class="spec-panel">
+    <h4>Design Notes — PSM Region View</h4>
+    <div class="spec-row">
+      <div>
+        <p style="margin:0 0 6px;"><strong>Persona:</strong> Diana Flores, PSM Manager — oversees 4 ICs in AMER West. Cares about portfolio health distribution, QBR coverage gaps, unassigned partners, and PSM performance comparisons.</p>
+        <p style="margin:0 0 6px;"><strong>PSM table:</strong> One row per IC. Health pill reflects average across their portfolio. At-risk row (Priya Patel) highlighted in red — triggers when avg health &lt;60 or overdue QBRs ≥2. "View →" links to that IC's psm-my-partners.html.</p>
+        <p style="margin:0;"><strong>QBR coverage:</strong> % of partners with QBR scheduled in current or next quarter. 100% = full coverage. Below 75% triggers amber indicator.</p>
+      </div>
+      <div>
+        <p style="margin:0 0 6px;"><strong>Unassigned partners:</strong> Surface immediately at top. Triggered by: partner completes onboarding with no PSM auto-assigned (region or tier mismatch), or PSM departure leaves orphaned partners. "Assign PSM" opens a Salesforce Lightning assignment flow.</p>
+        <p style="margin:0 0 6px;"><strong>Health by tier chart:</strong> G/A/R counts per tier. Helps manager spot systemic issues (e.g., Select tier skewing red) vs. isolated PSM gaps.</p>
+        <p style="margin:0;"><strong>Full partner list:</strong> Paginated, 10 rows default. Filters: At risk, No PSM, by tier. Table is cross-PSM — useful for reassignment conversations and QBRs.</p>
+      </div>
+    </div>
+    <div class="spec-links">
+      <strong style="font-size:.72rem;color:var(--wf-muted);">Related views:</strong>
+      <a href="psm-my-partners.html">My Partners — IC View</a>
+      <a href="index.html">Sitemap</a>
+      <a href="flows-reference.html">Flows &amp; Reference</a>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2800);
+}
+// Filter chip toggle (visual only — no real filtering in wireframe)
+document.querySelectorAll('.filter-chip').forEach(function(chip) {
+  chip.addEventListener('click', function() {
+    chip.closest('.filter-row').querySelectorAll('.filter-chip').forEach(function(c){ c.classList.remove('active'); });
+    chip.classList.add('active');
+  });
+});
+</script>
+<script src="wf-nav.js"></script>
+</body>
+</html>
